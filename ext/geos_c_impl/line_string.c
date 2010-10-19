@@ -276,9 +276,9 @@ static VALUE method_line_string_eql(VALUE self, VALUE rhs)
 static GEOSCoordSequence* coord_seq_from_array(GEOSContextHandle_t context, VALUE array)
 {
   Check_Type(array, T_ARRAY);
-  long len = RARRAY_LEN(array);
+  unsigned int len = (unsigned int)RARRAY_LEN(array);
   char has_z = 0;
-  long i;
+  unsigned int i;
   for (i=0; i<len; ++i) {
     const GEOSGeometry* entry_geom = rgeo_get_geos_geometry_safe(rb_ary_entry(array, i));
     if (!entry_geom || GEOSGeomTypeId_r(context, entry_geom) != GEOS_POINT) {

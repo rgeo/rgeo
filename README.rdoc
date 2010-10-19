@@ -35,8 +35,8 @@ Use RGeo to:
 
 RGeo has the following prerequisites:
 
-* Ruby 1.8.7 or later
-* GEOS 3.2 or later. This C/C++ library should be available via your
+* Ruby 1.8.7 or later. Ruby 1.9.2 or later preferred.
+* GEOS 3.2 or later. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
   http://trac.osgeo.org/geos/
 
@@ -65,15 +65,17 @@ For example:
 RGeo is currently under development and several planned features are not
 yet complete. These include:
 
+* Test coverage of the SimpleMercator implementation.
 * The spherical geometry data objects.
-* Rails (ActiveModel) integration.
-* SimpleGeo integration.
+* Rails (ActiveRecord or ActiveModel) integration.
+* Other third-party integration, including possibly SimpleGeo.
 * JRuby support via JTS.
 * Rubinius support.
 
 Additionally, not all implemented features are well-tested yet. In
-general, we currently consider this library to be "pre-alpha" quality. It
-is deployed in production at GeoPage, but only in a limited capacity.
+general, we currently consider this library to be "pre-alpha" quality,
+intended for experimentation and feedback but not production. It has been
+deployed in production at GeoPage, but only in a limited capacity.
 
 === Development and support
 

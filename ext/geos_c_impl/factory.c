@@ -389,7 +389,7 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
           if (GEOSCoordSeq_getSize_r(context, cs1, &len1) && GEOSCoordSeq_getSize_r(context, cs2, &len2)) {
             if (len1 == len2) {
               result = Qtrue;
-              int i;
+              unsigned int i;
               double val1, val2;
               for (i=0; i<len1; ++i) {
                 if (GEOSCoordSeq_getX_r(context, cs1, i, &val1) && GEOSCoordSeq_getX_r(context, cs2, i, &val2)) {

@@ -105,9 +105,9 @@ static char compute_collection_klasses_internal(int type, VALUE factory, const G
 
 static VALUE compute_collection_klasses(int type, VALUE factory, VALUE array)
 {
-  int len = RARRAY_LEN(array);
+  unsigned int len = (unsigned int)RARRAY_LEN(array);
   VALUE result = rb_ary_new();
-  int i;
+  unsigned int i;
   for (i=0; i<len; ++i) {
     VALUE entry = rb_ary_entry(array, i);
     const GEOSGeometry* geom = rgeo_get_geos_geometry_safe(entry);
@@ -134,7 +134,7 @@ static VALUE compute_collection_klasses(int type, VALUE factory, VALUE array)
 }
 
 
-static char gather_geometry_collection_internal(int type, VALUE factory, GEOSGeometry** geoms, int* ci, const GEOSGeometry* geom, char geom_mine)
+static char gather_geometry_collection_internal(int type, VALUE factory, GEOSGeometry** geoms, unsigned int* ci, const GEOSGeometry* geom, char geom_mine)
 {
   char good = 1;
   int geom_type = GEOSGeomTypeId_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
@@ -168,13 +168,13 @@ static char gather_geometry_collection_internal(int type, VALUE factory, GEOSGeo
 // If we're building a MultiPoint, MultiLineString, or MultiPolygon, we
 // recursively gather the contents of any collections we encounter.
 
-static GEOSGeometry** gather_geometry_collection(int type, VALUE factory, VALUE array, int len)
+static GEOSGeometry** gather_geometry_collection(int type, VALUE factory, VALUE array, unsigned int len)
 {
   GEOSGeometry** geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
-  int ci = 0;
+  unsigned int ci = 0;
   if (geoms) {
-    int array_len = RARRAY_LEN(array);
-    int ai;
+    unsigned int array_len = (unsigned int)RARRAY_LEN(array);
+    unsigned int ai;
     for (ai=0; ai<array_len; ++ai) {
       GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(array, ai), NULL);
       if (geom) {
@@ -188,7 +188,7 @@ static GEOSGeometry** gather_geometry_collection(int type, VALUE factory, VALUE 
     }
   }
   if (ci != len) {
-    int i;
+    unsigned int i;
     for (i=0; i<ci; ++i) {
       GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), geoms[i]);
     }
@@ -210,7 +210,7 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
   // build the klasses array.
   VALUE klasses = compute_collection_klasses(type, factory, array);
   if (!NIL_P(klasses)) {
-    int len = RARRAY_LEN(klasses);
+    unsigned int len = (unsigned int)RARRAY_LEN(klasses);
     // Second pass: we gather the actual geometries into a C array
     GEOSGeometry** geoms = gather_geometry_collection(type, factory, array, len);
     if (geoms) {
@@ -220,7 +220,7 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
       // We do that manually here.
       if (collection && type == GEOS_MULTIPOLYGON && (RGEO_FACTORY_DATA_PTR(factory)->flags & 1) == 0) {
         char problem = 0;
-        int i, j;
+        unsigned int i, j;
         for (i=1; i<len; ++i) {
           for (j=0; j<i; ++j) {
             GEOSGeometry* igeom = geoms[i];

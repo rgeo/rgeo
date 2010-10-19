@@ -171,11 +171,11 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
   Check_Type(interior_array, T_ARRAY);
   GEOSGeometry* exterior_geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), exterior, NULL);
   if (exterior_geom) {
-    int len = RARRAY_LEN(interior_array);
+    unsigned int len = (unsigned int)RARRAY_LEN(interior_array);
     GEOSGeometry** interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
     if (interior_geoms) {
-      int actual_len = 0;
-      int i;
+      unsigned int actual_len = 0;
+      unsigned int i;
       for (i=0; i<len; ++i) {
         GEOSGeometry* interior_geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(interior_array, i), NULL);
         if (interior_geom) {
