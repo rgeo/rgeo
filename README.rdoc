@@ -1,0 +1,122 @@
+== RGeo
+
+RGeo is a spatial data library for Ruby.
+
+It provides an implementation of the Open Geospatial Consortium's Simple
+Features Specification, used by most standard spatial/geographic data
+storage systems such as PostGIS. It also provides a suite of useful tools
+for writing location-based applications using Ruby-based frameworks such
+as Ruby On Rails.
+
+=== Summary
+
+RGeo is a core component for writing location-based applications in the
+Ruby programming language. It provides the basic tools for modeling
+location data and communicating with geolocation-aware storage systems
+and location-based services.
+
+Use RGeo to:
+
+* Represent spatial and geolocation data objects such as points, lines,
+  and polygons in your Ruby application.
+* Perform standard spatial analysis operations such as finding
+  intersections, creating buffers, and computing lengths and areas.
+* Correctly handle spherical geometry, and compute projections for
+  geographic data analysis.
+* Store and retrieve spatial data in industry standard spatial storage
+  systems such as PostGIS.
+* Generate and interpret GeoJSON data for communication with common
+  location-based services.
+* Extend Ruby On Rails to handle location data in a web application.
+* Write spatial applications following the latest open standards from
+  the Open Geospatial Consortium.
+
+=== Requirements
+
+RGeo has the following prerequisites:
+
+* Ruby 1.8.7 or later
+* GEOS 3.2 or later. This C/C++ library should be available via your
+  operating system's package manager, or you can download it from
+  http://trac.osgeo.org/geos/
+
+=== Installation
+
+Install RGeo as a gem:
+
+ gem install rgeo
+
+Note: By default, the gem installation looks for the required GEOS
+library in the following locations:
+
+* /usr/local
+* /usr/local/geos
+* /opt/local
+* /usr
+
+If GEOS has been installed in a different location, you must provide its
+installation prefix directory using the "--with-geos-dir" option.
+For example:
+
+ gem install rgeo -- --with-geos-dir=/var/local
+
+=== Known issues and to-do items
+
+RGeo is currently under development and several planned features are not
+yet complete. These include:
+
+* The spherical geometry data objects.
+* Rails (ActiveModel) integration.
+* SimpleGeo integration.
+* JRuby support via JTS.
+* Rubinius support.
+
+Additionally, not all implemented features are well-tested yet. In
+general, we currently consider this library to be "pre-alpha" quality. It
+is deployed in production at GeoPage, but only in a limited capacity.
+
+=== Development and support
+
+Documentation is available at http://virtuoso.rubyforge.org/rgeo/README_rdoc.html
+
+Source code is hosted on Github at http://github.com/dazuma/rgeo
+
+Report bugs on Github issues at http://github.org/dazuma/rgeo/issues
+
+Contact the author at dazuma at gmail dot com.
+
+=== Acknowledgments
+
+RGeo is written by Daniel Azuma (http://www.daniel-azuma.com/).
+
+Development of RGeo is sponsored by GeoPage, Inc. (http://www.geopage.com/).
+
+=== License
+
+Copyright 2010 Daniel Azuma
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+* Neither the name of the copyright holder, nor the names of any other
+  contributors to this software, may be used to endorse or promote products
+  derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.

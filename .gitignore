@@ -1,0 +1,10 @@
+/doc/
+/pkg/
+.DS_Store
+*.class
+*.jar
+*.bundle
+*.o
+*.rbc
+Makefile*
+mkmf.log

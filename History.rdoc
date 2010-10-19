@@ -1,0 +1,13 @@
+=== 0.2.0 / 2010-10-??
+
+* Initial public release.
+* GEOS implementation is tested and should be fairly stable.
+* GeoJSON parsers and generators are tested and should be fairly stable.
+* Parts of SimpleMercator implementation are fairly stable, but test coverage of more advanced features is still lacking.
+* SimpleSpherical implementation is under construction and not yet available.
+* Rails integration is pending.
+* SimpleGeo integration is pending.
+
+=== 0.1.x alpha versions
+
+* These versions were tested internally at GeoPage, Inc. but not publicly released.
