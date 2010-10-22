@@ -46,7 +46,7 @@ module RGeo
         
         def _setup(exterior_ring_, interior_rings_)
           @exterior_ring = exterior_ring_
-          @interior_rings = (interior_rings_ || []).map{ |elem_| factory.convert(elem_) }
+          @interior_rings = (interior_rings_ || []).map{ |elem_| factory.coerce(elem_) }
           unless Features::LinearRing.check_type(@exterior_ring)
             raise Errors::InvalidGeometry, 'Exterior ring must be a LinearRing'
           end

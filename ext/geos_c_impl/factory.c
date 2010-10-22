@@ -332,7 +332,7 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 
 const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj)
 {
-  VALUE object = rb_funcall(factory, rb_intern("convert"), 1, obj);
+  VALUE object = rb_funcall(factory, rb_intern("coerce"), 1, obj);
   const GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
     geom = RGEO_GET_GEOS_GEOMETRY(object);
@@ -346,7 +346,7 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(RGeo_Globals* globals, VALU
   if (klasses) {
     *klasses = Qnil;
   }
-  VALUE object = rb_funcall(globals->default_factory, rb_intern("convert"), 2, obj, Qtrue);
+  VALUE object = rb_funcall(globals->default_factory, rb_intern("coerce"), 2, obj, Qtrue);
   GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
     geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;

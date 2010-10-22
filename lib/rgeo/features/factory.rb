@@ -173,12 +173,12 @@ module RGeo
       end
       
       
-      # Convert an existing feature to a feature of the type created by
+      # Coerce an existing feature to a feature of the type created by
       # this implementation.
       # If force_new is true, a new object is returned even if the original
       # is already of this implementation.
       
-      def convert(original_, force_new_=false)
+      def coerce(original_, force_new_=false)
         nil
       end
       

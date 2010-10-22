@@ -189,6 +189,8 @@ module RGeo
       # See ::RGeo::Features::Factory#multi_point
       
       def multi_point(elems_)
+        elems_ = _flatten(elems_, Features::Point)
+        return nil unless elems_
         @namespace.const_get(:MultiPointImpl).new(self, elems_) rescue nil
       end
       
@@ -196,6 +198,8 @@ module RGeo
       # See ::RGeo::Features::Factory#multi_line_string
       
       def multi_line_string(elems_)
+        elems_ = _flatten(elems_, Features::LineString)
+        return nil unless elems_
         @namespace.const_get(:MultiLineStringImpl).new(self, elems_) rescue nil
       end
       
@@ -203,13 +207,15 @@ module RGeo
       # See ::RGeo::Features::Factory#multi_polygon
       
       def multi_polygon(elems_)
+        elems_ = _flatten(elems_, Features::Polygon)
+        return nil unless elems_
         @namespace.const_get(:MultiPolygonImpl).new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#convert
+      # See ::RGeo::Features::Factory#coerce
       
-      def convert(original_, force_new_=false)
+      def coerce(original_, force_new_=false)
         if self == original_.factory
           force_new_ ? original_.dup : original_
         else
@@ -217,25 +223,40 @@ module RGeo
           when Features::Point
             @namespace.const_get(:PointImpl).new(self, original_.x, original_.y) rescue nil
           when Features::Line
-            @namespace.const_get(:LineImpl).new(self, original_.start_point, original_.end_point) rescue nil
+            @namespace.const_get(:LineImpl).new(self, coerce(original_.start_point), coerce(original_.end_point)) rescue nil
           when Features::LinearRing
-            @namespace.const_get(:LinearRingImpl).new(self, original_.points) rescue nil
+            @namespace.const_get(:LinearRingImpl).new(self, original_.points.map{ |g_| coerce(g_) }) rescue nil
           when Features::LineString
-            @namespace.const_get(:LineStringImpl).new(self, original_.points) rescue nil
+            @namespace.const_get(:LineStringImpl).new(self, original_.points.map{ |g_| coerce(g_) }) rescue nil
           when Features::Polygon
-            @namespace.const_get(:PolygonImpl).new(self, original_.exterior_ring, original_.interior_rings) rescue nil
+            @namespace.const_get(:PolygonImpl).new(self, coerce(original_.exterior_ring), original_.interior_rings.map{ |g_| coerce(g_) }) rescue nil
           when Features::MultiPoint
-            @namespace.const_get(:MultiPointImpl).new(self, original_.to_a) rescue nil
+            @namespace.const_get(:MultiPointImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
           when Features::MultiLineString
-            @namespace.const_get(:MultiLineStringImpl).new(self, original_.to_a) rescue nil
+            @namespace.const_get(:MultiLineStringImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
           when Features::MultiPolygon
-            @namespace.const_get(:MultiPolygonImpl).new(self, original_.to_a) rescue nil
+            @namespace.const_get(:MultiPolygonImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
           when Features::GeometryCollection
-            @namespace.const_get(:GeometryCollectionImpl).new(self, original_.to_a) rescue nil
+            @namespace.const_get(:GeometryCollectionImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
           else
             nil
           end
         end
+      end
+      
+      
+      def _flatten(elems_, type_, array_=[])
+        elems_.each do |elem_|
+          case elem_
+          when type_
+            array_ << elem_
+          when Features::GeometryCollection
+            return nil unless _flatten(elem_, type_, array_)
+          else
+            return nil
+          end
+        end
+        array_
       end
       
       

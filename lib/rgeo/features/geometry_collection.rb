@@ -94,8 +94,18 @@ module RGeo
       end
       
       
-      alias_method :size, :num_geometries
-      alias_method :[], :geometry_n
+      # Alias of the num_geometries method.
+      
+      def size
+        num_geometries
+      end
+      
+      
+      # Alias of the geometry_n method.
+      
+      def [](n_)
+        geometry_n(n_)
+      end
       
       
       # Iterates over the geometries of this GeometryCollection.

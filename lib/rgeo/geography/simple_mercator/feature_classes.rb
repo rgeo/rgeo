@@ -46,7 +46,7 @@ module RGeo
         
         include Features::Point
         include Common::GeometryMethods
-        include GeometryMethods
+        include SimpleMercator::GeometryMethods
         include Common::PointMethods
         
         
@@ -95,11 +95,11 @@ module RGeo
         
         include Features::LineString
         include Common::GeometryMethods
-        include GeometryMethods
-        include NCurveMethods
-        include CurveMethods
+        include SimpleMercator::GeometryMethods
+        include SimpleMercator::NCurveMethods
+        include SimpleMercator::CurveMethods
         include Common::LineStringMethods
-        include LineStringMethods
+        include SimpleMercator::LineStringMethods
         
         
         def initialize(factory_, points_)
@@ -121,11 +121,11 @@ module RGeo
         
         include Features::Line
         include Common::GeometryMethods
-        include GeometryMethods
-        include NCurveMethods
-        include CurveMethods
+        include SimpleMercator::GeometryMethods
+        include SimpleMercator::NCurveMethods
+        include SimpleMercator::CurveMethods
         include Common::LineStringMethods
-        include LineStringMethods
+        include SimpleMercator::LineStringMethods
         include Common::LinearRingMethods
         
         
@@ -148,11 +148,11 @@ module RGeo
         
         include Features::Line
         include Common::GeometryMethods
-        include GeometryMethods
-        include NCurveMethods
-        include CurveMethods
+        include SimpleMercator::GeometryMethods
+        include SimpleMercator::NCurveMethods
+        include SimpleMercator::CurveMethods
         include Common::LineStringMethods
-        include LineStringMethods
+        include SimpleMercator::LineStringMethods
         include Common::LineMethods
         
         
@@ -175,9 +175,9 @@ module RGeo
         
         include Features::Polygon
         include Common::GeometryMethods
-        include GeometryMethods
-        include NSurfaceMethods
-        include SurfaceMethods
+        include SimpleMercator::GeometryMethods
+        include SimpleMercator::NSurfaceMethods
+        include SimpleMercator::SurfaceMethods
         include Common::PolygonMethods
         
         
@@ -209,9 +209,9 @@ module RGeo
         
         include Features::GeometryCollection
         include Common::GeometryMethods
-        include GeometryMethods
+        include SimpleMercator::GeometryMethods
         include Common::GeometryCollectionMethods
-        include GeometryCollectionMethods
+        include SimpleMercator::GeometryCollectionMethods
         
         
         def initialize(factory_, elements_)
@@ -233,9 +233,9 @@ module RGeo
         
         include Features::GeometryCollection
         include Common::GeometryMethods
-        include GeometryMethods
+        include SimpleMercator::GeometryMethods
         include Common::GeometryCollectionMethods
-        include GeometryCollectionMethods
+        include SimpleMercator::GeometryCollectionMethods
         include Common::MultiPointMethods
         
         
@@ -258,10 +258,10 @@ module RGeo
         
         include Features::GeometryCollection
         include Common::GeometryMethods
-        include GeometryMethods
-        include NCurveMethods
+        include SimpleMercator::GeometryMethods
+        include SimpleMercator::NCurveMethods
         include Common::GeometryCollectionMethods
-        include GeometryCollectionMethods
+        include SimpleMercator::GeometryCollectionMethods
         include Common::MultiLineStringMethods
         
         
@@ -284,10 +284,10 @@ module RGeo
         
         include Features::GeometryCollection
         include Common::GeometryMethods
-        include GeometryMethods
-        include NSurfaceMethods
+        include SimpleMercator::GeometryMethods
+        include SimpleMercator::NSurfaceMethods
         include Common::GeometryCollectionMethods
-        include GeometryCollectionMethods
+        include SimpleMercator::GeometryCollectionMethods
         include Common::MultiPolygonMethods
         
         

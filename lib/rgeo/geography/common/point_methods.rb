@@ -113,7 +113,7 @@ module RGeo
         
         def equals?(rhs_)
           return false unless rhs_.factory.is_a?(Factory)
-          rhs_ = factory.convert(rhs_)
+          rhs_ = factory.coerce(rhs_)
           case rhs_
           when Features::Point
             if @y == 90

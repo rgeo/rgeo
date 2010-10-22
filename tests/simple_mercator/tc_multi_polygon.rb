@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS geometry collection implementation
+# Tests for the simple mercator multi polygon implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,22 +37,23 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/geometry_collection_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/multi_polygon_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module SimpleMercator
       
-      class TestGeometryCollection < ::Test::Unit::TestCase  # :nodoc:
+      class TestMultiPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          ::RGeo::Geos.factory
+        def create_factories
+          @factory = ::RGeo::Geography.simple_mercator
+          @lenient_factory = ::RGeo::Geography.simple_mercator(:lenient_multi_polygon_assertions => true)
         end
         
         
-        include ::RGeo::Tests::Common::GeometryCollectionTests
+        include ::RGeo::Tests::Common::MultiPolygonTests
         
         
       end

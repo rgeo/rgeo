@@ -37,6 +37,8 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
@@ -50,11 +52,12 @@ module RGeo
         end
         
         
-        def test_2d_creation
-          point_ = @factory.point(21, 22)
-          assert_equal(21, point_.x)
-          assert_equal(22, point_.y)
-          assert_nil(point_.z)
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_has_no_projection
+          point_ = @factory.point(21, -22)
+          assert(!point_.respond_to?(:projection))
         end
         
         
@@ -63,44 +66,18 @@ module RGeo
           assert_equal(11, point_.x)
           assert_equal(12, point_.y)
           assert_equal(13, point_.z)
+          point2_ = @factory.point(21, 22)
+          assert_nil(point2_.z)
         end
         
         
-        def test_wkt_creation
+        def test_wkt_creation_3d
           point1_ = @factory.parse_wkt('POINT(21 22)')
-          assert_equal(21, point1_.x)
-          assert_equal(22, point1_.y)
           assert_nil(point1_.z)
           point2_ = @factory.parse_wkt('POINT(11 12 13)')
           assert_equal(11, point2_.x)
           assert_equal(12, point2_.y)
           assert_equal(13, point2_.z)
-        end
-        
-        
-        def test_clone
-          point1_ = @factory.point(11, 12)
-          point2_ = point1_.clone
-          assert_equal(point1_, point2_)
-          point3_ = @factory.point(13, 12)
-          point4_ = point3_.dup
-          assert_equal(point3_, point4_)
-          assert_not_equal(point2_, point4_)
-        end
-        
-        
-        def test_type_check
-          point_ = @factory.point(21, 22)
-          assert(::RGeo::Features::Geometry.check_type(point_))
-          assert(::RGeo::Features::Point.check_type(point_))
-          assert(!::RGeo::Features::GeometryCollection.check_type(point_))
-          assert(!::RGeo::Features::Curve.check_type(point_))
-        end
-        
-        
-        def test_geometry_type
-          point_ = @factory.point(11, 12)
-          assert_equal(::RGeo::Features::Point, point_.geometry_type)
         end
         
         
@@ -110,191 +87,12 @@ module RGeo
         end
         
         
-        def test_dimension
-          point_ = @factory.point(11, 12)
-          assert_equal(0, point_.dimension)
-        end
-        
-        
-        def test_envelope
-          point_ = @factory.point(11, 12)
-          assert_equal(point_, point_.envelope)
-        end
-        
-        
-        def test_as_text_wkt_round_trip
-          point1_ = @factory.point(11, 12)
-          text_ = point1_.as_text
-          point2_ = @factory.parse_wkt(text_)
-          assert(point2_.eql?(point1_))
-        end
-        
-        
-        def test_as_binary_wkb_round_trip
-          point1_ = @factory.point(211, 12)
-          binary_ = point1_.as_binary
-          point2_ = @factory.parse_wkb(binary_)
-          assert(point2_.eql?(point1_))
-        end
-        
-        
-        def test_is_empty
-          point1_ = @factory.point(0, 0)
-          assert(!point1_.is_empty?)
-        end
-        
-        
-        def test_is_simple
-          point1_ = @factory.point(0, 0)
-          assert(point1_.is_simple?)
-        end
-        
-        
-        def test_boundary
-          point_ = @factory.point(11, 12)
-          boundary_ = point_.boundary
-          assert_kind_of(::RGeo::Geos::GeometryCollectionImpl, boundary_)
-          assert(boundary_.is_empty?)
-        end
-        
-        
-        def test_equals
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(13, 12)
-          assert(point1_.equals?(point2_))
-          assert(point1_.eql?(point2_))
-          assert(!point1_.equals?(point3_))
-          assert(!point1_.eql?(point3_))
-        end
-        
-        
-        def test_disjoint
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(!point1_.disjoint?(point2_))
-          assert(point1_.disjoint?(point3_))
-        end
-        
-        
-        def test_intersects
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(point1_.intersects?(point2_))
-          assert(!point1_.intersects?(point3_))
-        end
-        
-        
-        def test_touches
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(!point1_.touches?(point2_))
-          assert(!point1_.touches?(point3_))
-        end
-        
-        
-        def test_crosses
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(!point1_.crosses?(point2_))
-          assert(!point1_.crosses?(point3_))
-        end
-        
-        
-        def test_within
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(point1_.within?(point2_))
-          assert(!point1_.within?(point3_))
-        end
-        
-        
-        def test_contains
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(point1_.contains?(point2_))
-          assert(!point1_.contains?(point3_))
-        end
-        
-        
-        def test_overlaps
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert(!point1_.overlaps?(point2_))
-          assert(!point1_.overlaps?(point3_))
-        end
-        
-        
         def test_distance
           point1_ = @factory.point(11, 12)
           point2_ = @factory.point(11, 12)
           point3_ = @factory.point(13, 12)
           assert_equal(0, point1_.distance(point2_))
           assert_equal(2, point1_.distance(point3_))
-        end
-        
-        
-        def test_convex_hull
-          point_ = @factory.point(11, 12)
-          hull_ = point_.convex_hull
-          assert_equal(point_, hull_)
-        end
-        
-        
-        def test_intersection
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          assert_equal(point1_, point1_.intersection(point2_))
-          int13_ = point1_.intersection(point3_)
-          assert_kind_of(::RGeo::Geos::GeometryCollectionImpl, int13_)
-          assert(int13_.is_empty?)
-        end
-        
-        
-        def test_union
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          union12_ = point1_.union(point2_)
-          union13_ = point1_.union(point3_)
-          assert_equal(point1_, union12_)
-          assert_kind_of(::RGeo::Geos::MultiPointImpl, union13_)
-          assert(union13_.contains?(point1_))
-          assert(union13_.contains?(point3_))
-        end
-        
-        
-        def test_difference
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          diff12_ = point1_.difference(point2_)
-          diff13_ = point1_.difference(point3_)
-          assert_kind_of(::RGeo::Geos::GeometryCollectionImpl, diff12_)
-          assert(diff12_.is_empty?)
-          assert_equal(point1_, diff13_)
-        end
-        
-        
-        def test_sym_difference
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(12, 12)
-          diff12_ = point1_.sym_difference(point2_)
-          diff13_ = point1_.sym_difference(point3_)
-          assert_kind_of(::RGeo::Geos::GeometryCollectionImpl, diff12_)
-          assert(diff12_.is_empty?)
-          assert_kind_of(::RGeo::Geos::MultiPointImpl, diff13_)
-          assert(diff13_.contains?(point1_))
-          assert(diff13_.contains?(point3_))
         end
         
         

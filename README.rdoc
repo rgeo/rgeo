@@ -8,6 +8,12 @@ storage systems such as PostGIS. It also provides a suite of useful tools
 for writing location-based applications using Ruby-based frameworks such
 as Ruby On Rails.
 
+IMPORTANT: RGeo is currently under development, and we consider it to be
+in a "pre-alpha" state. A number of features (such as Rails integration)
+are not yet complete, and there are numerous known bugs and holes in the
+test suite. We also expect the APIs to be in flux for a short while
+longer. Therefore, we do not yet recommend the use of RGeo in production.
+
 === Summary
 
 RGeo is a core component for writing location-based applications in the

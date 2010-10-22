@@ -37,6 +37,8 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/multi_polygon_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
@@ -45,162 +47,13 @@ module RGeo
       class TestMultiPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def setup
+        def create_factories
           @factory = ::RGeo::Geos.factory
           @lenient_factory = ::RGeo::Geos.factory(:lenient_multi_polygon_assertions => true)
-          point1_ = @factory.point(0, 0)
-          point2_ = @factory.point(0, 10)
-          point3_ = @factory.point(10, 10)
-          point4_ = @factory.point(10, 0)
-          point5_ = @factory.point(4, 4)
-          point6_ = @factory.point(5, 6)
-          point7_ = @factory.point(6, 4)
-          point8_ = @factory.point(0, -10)
-          point9_ = @factory.point(-10, 0)
-          exterior1_ = @factory.linear_ring([point1_, point8_, point9_, point1_])
-          exterior2_ = @factory.linear_ring([point1_, point2_, point3_, point4_, point1_])
-          exterior3_ = @factory.linear_ring([point1_, point2_, point3_, point1_])
-          exterior4_ = @factory.linear_ring([point1_, point3_, point4_, point1_])
-          interior1_ = @factory.linear_ring([point5_, point6_, point7_, point5_])
-          @poly1 = @factory.polygon(exterior1_)
-          @poly2 = @factory.polygon(exterior2_, [interior1_])
-          @poly3 = @factory.polygon(exterior3_)
-          @poly4 = @factory.polygon(exterior4_)
-          @line1 = interior1_
         end
         
         
-        def test_creation_simple
-          geom_ = @factory.multi_polygon([@poly1, @poly2])
-          assert_not_nil(geom_)
-          assert_kind_of(::RGeo::Geos::MultiPolygonImpl, geom_)
-          assert(::RGeo::Features::MultiPolygon === geom_)
-          assert_equal(::RGeo::Features::MultiPolygon, geom_.geometry_type)
-          assert_equal(2, geom_.num_geometries)
-          assert_equal([@poly1, @poly2], geom_.to_a)
-        end
-        
-        
-        def test_creation_empty
-          geom_ = @factory.multi_polygon([])
-          assert_not_nil(geom_)
-          assert_kind_of(::RGeo::Geos::MultiPolygonImpl, geom_)
-          assert(::RGeo::Features::MultiPolygon === geom_)
-          assert_equal(::RGeo::Features::MultiPolygon, geom_.geometry_type)
-          assert_equal(0, geom_.num_geometries)
-          assert_equal([], geom_.to_a)
-        end
-        
-        
-        def test_creation_wrong_type
-          geom_ = @factory.multi_polygon([@poly1, @line1])
-          assert_nil(geom_)
-        end
-        
-        
-        def test_creation_overlapping
-          geom_ = @factory.multi_polygon([@poly1, @poly1])
-          assert_nil(geom_)
-          geom2_ = @lenient_factory.multi_polygon([@poly1, @poly1])
-          assert_not_nil(geom2_)
-        end
-        
-        
-        def test_creation_connected
-          geom_ = @factory.multi_polygon([@poly3, @poly4])
-          assert_nil(geom_)
-          geom2_ = @lenient_factory.multi_polygon([@poly3, @poly4])
-          assert_not_nil(geom2_)
-        end
-        
-        
-        def test_equal
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          geom2_ = @factory.multi_polygon([@poly1, @poly2])
-          assert(geom1_.eql?(geom2_))
-          assert(geom1_.equals?(geom2_))
-        end
-        
-        
-        def test_not_equal
-          geom1_ = @factory.multi_polygon([@poly1])
-          geom2_ = @factory.multi_polygon([@poly2])
-          assert(!geom1_.eql?(geom2_))
-          assert(!geom1_.equals?(geom2_))
-        end
-        
-        
-        def test_wkt_creation_simple
-          parsed_geom_ = @factory.parse_wkt('MULTIPOLYGON(((0 0, 0 -10, -10 0, 0 0)), ((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))')
-          built_geom_ = @factory.multi_polygon([@poly1, @poly2])
-          assert_equal(built_geom_, parsed_geom_)
-        end
-        
-        
-        def test_wkt_creation_empty
-          parsed_geom_ = @factory.parse_wkt('MULTIPOLYGON EMPTY')
-          assert_equal(::RGeo::Features::MultiPolygon, parsed_geom_.geometry_type)
-          assert_equal(0, parsed_geom_.num_geometries)
-          assert_equal([], parsed_geom_.to_a)
-        end
-        
-        
-        def test_clone
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          geom2_ = geom1_.clone
-          assert_equal(geom1_, geom2_)
-          assert_equal(::RGeo::Features::MultiPolygon, geom2_.geometry_type)
-          assert_equal(2, geom2_.num_geometries)
-          assert_equal([@poly1, @poly2], geom2_.to_a)
-        end
-        
-        
-        def test_type_check
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          assert(::RGeo::Features::Geometry.check_type(geom1_))
-          assert(!::RGeo::Features::Polygon.check_type(geom1_))
-          assert(::RGeo::Features::GeometryCollection.check_type(geom1_))
-          assert(!::RGeo::Features::MultiPoint.check_type(geom1_))
-          assert(::RGeo::Features::MultiPolygon.check_type(geom1_))
-          geom2_ = @factory.multi_polygon([])
-          assert(::RGeo::Features::Geometry.check_type(geom2_))
-          assert(!::RGeo::Features::Polygon.check_type(geom2_))
-          assert(::RGeo::Features::GeometryCollection.check_type(geom2_))
-          assert(!::RGeo::Features::MultiPoint.check_type(geom2_))
-          assert(::RGeo::Features::MultiPolygon.check_type(geom2_))
-        end
-        
-        
-        def test_as_text_wkt_round_trip
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          text_ = geom1_.as_text
-          geom2_ = @factory.parse_wkt(text_)
-          assert_equal(geom1_, geom2_)
-        end
-        
-        
-        def test_as_binary_wkb_round_trip
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          binary_ = geom1_.as_binary
-          geom2_ = @factory.parse_wkb(binary_)
-          assert_equal(geom1_, geom2_)
-        end
-        
-        
-        def test_dimension
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          assert_equal(2, geom1_.dimension)
-          geom2_ = @factory.multi_polygon([])
-          assert_equal(-1, geom2_.dimension)
-        end
-        
-        
-        def test_is_empty
-          geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          assert(!geom1_.is_empty?)
-          geom2_ = @factory.multi_polygon([])
-          assert(geom2_.is_empty?)
-        end
+        include ::RGeo::Tests::Common::MultiPolygonTests
         
         
       end

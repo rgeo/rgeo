@@ -45,7 +45,7 @@ module RGeo
         
         
         def _setup(points_)
-          @points = points_.map{ |elem_| factory.convert(elem_) }
+          @points = points_.map{ |elem_| factory.coerce(elem_) }
           _validate_geometry
         end
         

@@ -62,12 +62,16 @@ module RAKEFILE
     else 'unknown'
     end
   
+  PRODUCT_NAME = 'rgeo'
+  PRODUCT_VERSION = ::File.read(::File.dirname(__FILE__)+'/Version').strip.freeze
+  RUBYFORGE_PROJECT = 'virtuoso'
+  
   SOURCE_FILES = ::Dir.glob('lib/**/*.rb')
   
   EXTRA_RDOC_FILES = ::Dir.glob('*.rdoc')
   ALL_RDOC_FILES = SOURCE_FILES + EXTRA_RDOC_FILES
   MAIN_RDOC_FILE = 'README.rdoc'
-  RDOC_TITLE = 'RGeo Documentation'
+  RDOC_TITLE = 'RGeo #{PRODUCT_VERSION} Documentation'
   
   TEST_FILES = ::Dir.glob('tests/**/*.rb')
   
@@ -80,18 +84,15 @@ module RAKEFILE
     'geos_c_impl' => 'lib/rgeo/geos/geos_c_impl'
   }
   
-  PRODUCT_NAME = 'rgeo'
-  PRODUCT_VERSION = ::File.read(::File.dirname(__FILE__)+'/Version').strip.freeze
-  
   GEMSPEC = ::Gem::Specification.new do |s_|
     s_.name = PRODUCT_NAME
-    s_.summary = "Spatial data library for Ruby."
+    s_.summary = "RGeo is a spatial data library for Ruby."
     s_.description = "RGeo is a spatial data library for Ruby. It provides an implementation of the Open Geospatial Consortium's Simple Features Specification, used by most standard spatial/geographic data storage systems such as PostGIS. It also provides a suite of useful tools for writing location-based applications using Ruby-based frameworks such as Ruby On Rails."
     s_.version = "#{PRODUCT_VERSION}"
     s_.author = 'Daniel Azuma'
     s_.email = 'dazuma@gmail.com'
-    s_.homepage = 'http://virtuoso.rubyforge.org/rgeo'
-    s_.rubyforge_project = 'virtuoso'
+    s_.homepage = "http://#{RUBYFORGE_PROJECT}.rubyforge.org/#{PRODUCT_NAME}"
+    s_.rubyforge_project = RUBYFORGE_PROJECT
     s_.required_ruby_version = '>= 1.8.7'
     s_.files = SOURCE_FILES + EXTRA_RDOC_FILES + TEST_FILES + ::Dir.glob('ext/**/*.{rb,c,h}') + ['Version']
     s_.extra_rdoc_files = EXTRA_RDOC_FILES
@@ -99,6 +100,7 @@ module RAKEFILE
     s_.test_files = TEST_FILES
     s_.platform = ::Gem::Platform::RUBY
     s_.extensions = ::Dir.glob('ext/**/extconf.rb')
+    s_.add_dependency('json', '>= 1.4.6')
   end
   
 end
@@ -167,6 +169,13 @@ file "#{::RAKEFILE::DOC_DIRECTORY}/index.html" => ::RAKEFILE::ALL_RDOC_FILES do
 end
 
 
+task :publish_rdoc => :build_rdoc do
+  config_ = ::YAML.load(::File.read(::File.expand_path("~/.rubyforge/user-config.yml")))
+  username_ = config_['username']
+  sh "rsync -av --delete #{::RAKEFILE::DOC_DIRECTORY}/ #{username_}@rubyforge.org:/var/www/gforge-projects/#{::RAKEFILE::RUBYFORGE_PROJECT}/#{::RAKEFILE::PRODUCT_NAME}"
+end
+
+
 task :build_gem do
   ::Gem::Builder.new(::RAKEFILE::GEMSPEC).build
   mkdir_p ::RAKEFILE::PKG_DIRECTORY
@@ -176,15 +185,23 @@ end
 
 task :release_gem => [:build_gem] do
   ::Dir.chdir(::RAKEFILE::PKG_DIRECTORY) do
-    sh "gem push #{::RAKEFILE::PRODUCT_NAME}-#{::RAKEFILE::PRODUCT_VERSION}.gem"
+    sh "#{::RbConfig::TOPDIR}/bin/gem push #{::RAKEFILE::PRODUCT_NAME}-#{::RAKEFILE::PRODUCT_VERSION}.gem"
   end
 end
 
 
 task :test => :build_ext do
   $:.unshift(::File.expand_path('lib', ::File.dirname(__FILE__)))
-  ::RAKEFILE::TEST_FILES.each do |path_|
+  if ::ENV['TESTCASE']
+    test_files_ = ::Dir.glob("tests/#{::ENV['TESTCASE']}.rb")
+  else
+    test_files_ = ::RAKEFILE::TEST_FILES
+  end
+  test_files_.each do |path_|
     load path_
     puts "Loaded testcase #{path_}"
   end
 end
+
+
+task :default => [:clean, :build_rdoc, :build_gem, :test]

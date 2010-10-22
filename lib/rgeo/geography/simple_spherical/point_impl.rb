@@ -65,6 +65,11 @@ module RGeo
         end
         
         
+        def xyz
+          @xyz ||= PointXYZ.from_latlon(@y, @x)
+        end
+        
+        
         def distance(rhs_)
           case rhs_
           when Features::Point

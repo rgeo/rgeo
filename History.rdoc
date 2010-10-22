@@ -1,3 +1,15 @@
+=== 0.1.11 / 2010-10-21
+
+Further development and fixing in the geographic coordinate systems.
+
+Changes since 0.1.10:
+
+* API CHANGE: Factory#convert renamed to Factory#coerce.
+* Some implementations that inherit from RGeo::Features::Geometry (e.g. the Geography implementations) raised Unimplemented from operator implementations because they had aliased the wrong methods. Fixed.
+* Geos coercer didn't properly coerce "contained" elements in a compound geometry. Fixed.
+* The SimpleMercator and SimpleSpherical factories failed to properly check and coerce inputs into the typed collection methods. Fixed.
+* A bunch of additional test cases and minor fixes for SimpleMercator and SimpleSpherical.
+
 === 0.1.10 / 2010-10-19
 
 Initial public release. This release is considered pre-alpha quality and is being released for experimentation and feedback. We are using it in production in a limited capacity at GeoPage, but we do not yet recommend general production deployment because there are a number of known bugs and incomplete areas, and many features and APIs are still in flux.

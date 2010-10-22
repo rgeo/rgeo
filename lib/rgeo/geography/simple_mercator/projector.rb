@@ -49,7 +49,7 @@ module RGeo
         def initialize(geography_factory_, opts_={})
           @geography_factory = geography_factory_
           if ::RGeo.const_defined?(:Geos) && Geos.supported?
-            @projection_factory = Geos.factory(:srid => 3857, :buffer_resolution => opts_[:buffer_resolution])
+            @projection_factory = Geos.factory(:srid => 3857, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions])
           else
             @projection_factory = nil
           end

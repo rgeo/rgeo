@@ -44,8 +44,19 @@ module RGeo
       module GeometryCollectionMethods
         
         
+        def self._check_types(enum_, type_)
+          enum_.all? do |elem_|
+            case elem_
+            when type_ then true
+            when Features::GeometryCollection then _check_types(elem_, type_)
+            else false
+            end
+          end
+        end
+        
+        
         def _setup(elements_)
-          @elements = elements_.map{ |elem_| factory.convert(elem_) }
+          @elements = elements_.map{ |elem_| factory.coerce(elem_) }
           _validate_geometry
         end
         

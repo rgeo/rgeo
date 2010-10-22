@@ -66,7 +66,8 @@ module RGeo
         #   example, the buffer around a point to be approximated by a
         #   4-sided polygon. A resolution of 2 would cause that buffer
         #   to be approximated by an 8-sided polygon. The exact behavior
-        #   for different kinds of buffers is not well-defined.
+        #   for different kinds of buffers is internal to GEOS, and is not
+        #   well-specified as far as I can tell.
         # <tt>:srid</tt>::
         #   Set the SRID returned by geometries created by this factory.
         #   Default is 0.
@@ -202,9 +203,9 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#convert
+      # See ::RGeo::Features::Factory#coerce
       
-      def convert(original_, force_new_=false)
+      def coerce(original_, force_new_=false)
         return nil unless Geos.supported?
         case original_
         when GeometryImpl
@@ -224,21 +225,21 @@ module RGeo
             PointImpl.create(self, original_.x, original_.y)
           end
         when Features::Line
-          LineImpl.create(self, original_.start_point, original_.end_point)
+          LineImpl.create(self, coerce(original_.start_point), coerce(original_.end_point))
         when Features::LinearRing
-          LinearRingImpl.create(self, original_.points)
+          LinearRingImpl.create(self, original_.points.map{ |g_| coerce(g_) })
         when Features::LineString
-          LineStringImpl.create(self, original_.points)
+          LineStringImpl.create(self, original_.points.map{ |g_| coerce(g_) })
         when Features::Polygon
-          PolygonImpl.create(self, original_.exterior_ring, original_.interior_rings)
+          PolygonImpl.create(self, coerce(original_.exterior_ring), original_.interior_rings.map{ |g_| coerce(g_) })
         when Features::MultiPoint
-          MultiPointImpl.create(self, original_.to_a)
+          MultiPointImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
         when Features::MultiLineString
-          MultiLineStringImpl.create(self, original_.to_a)
+          MultiLineStringImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
         when Features::MultiPolygon
-          MultiPolygonImpl.create(self, original_.to_a)
+          MultiPolygonImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
         when Features::GeometryCollection
-          GeometryCollectionImpl.create(self, original_.to_a)
+          GeometryCollectionImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
         else
           nil
         end

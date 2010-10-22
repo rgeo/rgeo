@@ -44,6 +44,67 @@ module RGeo
       RADIUS = 6371007.2
       
       
+      # Represents a point on the sphere in (x,y,z) coordinates instead
+      # of lat-lon. This form is often faster, more convenient, and more
+      # numerically stable for certain computations.
+      # 
+      # The coordinate system is a right-handed system where the z-axis
+      # goes through the north pole, the x-axis goes through the prime
+      # meridian, and the y-axis goes through +90 degrees longitude.
+      # 
+      # This object is also used to represent a great circle, as its axis
+      # of rotation.
+      
+      class PointXYZ
+        
+        def initialize(x_, y_, z_)
+          r_ = ::Math.sqrt(x_ * x_ + y_ * y_ + z_ * z_)
+          @x = x_ / r_
+          @y = y_ / r_
+          @z = z_ / r_
+        end
+        
+        
+        attr_reader :x
+        attr_reader :y
+        attr_reader :z
+        
+        
+        def latlon
+          lat_rad_ = ::Math.asin(@z)
+          lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
+          rpd_ = Common::Helper::RADIANS_PER_DEGREE
+          [lat_rad_ / rpd_, lon_rad_ / rpd_]
+        end
+        
+        
+        def *(rhs_)
+          @x * rhs_.x + @y * rhs_.y + @z * rhs_.z
+        end
+        
+        
+        def %(rhs_)
+          rx_ = rhs_.x
+          ry_ = rhs_.y
+          rz_ = rhs_.z
+          PointXYZ.new(@y*rz_-@z*ry_, @z*rx_-@x*rz_, @x*ry_-@y-rx_) rescue nil
+        end
+        
+        
+        def self.from_latlon(lat_, lon_)
+          rpd_ = Common::Helper::RADIANS_PER_DEGREE
+          lat_rad_ = rpd_ * lat_
+          lon_rad_ = rpd_ * lon_
+          z_ = ::Math.sin(lat_rad_)
+          r_ = ::Math.cos(lat_rad_)
+          x_ = ::Math.cos(lon_rad_) * r_
+          y_ = ::Math.sin(lon_rad_) * r_
+          new(x_, y_, z_)
+        end
+        
+      end
+      
+      
       module Calculations
         
         

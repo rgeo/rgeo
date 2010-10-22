@@ -546,10 +546,32 @@ module RGeo
       end
       
       
-      alias_method :==, :equals?
-      alias_method :-, :difference
-      alias_method :+, :union
-      alias_method :*, :intersection
+      # Alias of the equals? method.
+      
+      def ==(rhs_)
+        equals?(rhs_)
+      end
+      
+      
+      # Alias of the difference method.
+      
+      def -(rhs_)
+        difference(rhs_)
+      end
+      
+      
+      # Alias of the union method.
+      
+      def +(rhs_)
+        union(rhs_)
+      end
+      
+      
+      # Alias of the intersection method.
+      
+      def *(rhs_)
+        intersection(rhs_)
+      end
       
       
     end
