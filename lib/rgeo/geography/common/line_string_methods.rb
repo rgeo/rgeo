@@ -45,7 +45,12 @@ module RGeo
         
         
         def _setup(points_)
-          @points = points_.map{ |elem_| factory.coerce(elem_) }
+          @points = points_.map do |elem_|
+            unless Features::Point.check_type(elem_)
+              raise Errors::InvalidGeometry, 'Element #{elem_} is not a point'
+            end
+            factory.cast(elem_)
+          end
           _validate_geometry
         end
         
@@ -53,6 +58,15 @@ module RGeo
         def _validate_geometry
           if @points.size == 1
             raise Errors::InvalidGeometry, 'LineString cannot have 1 point'
+          end
+        end
+        
+        
+        def eql?(rhs_)
+          if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @points.size == rhs_.num_points
+            rhs_.points.each_with_index{ |p_, i_| return false unless @points[i_].eql?(p_) }
+          else
+            false
           end
         end
         

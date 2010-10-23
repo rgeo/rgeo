@@ -213,9 +213,9 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#coerce
+      # See ::RGeo::Features::Factory#cast
       
-      def coerce(original_, force_new_=false)
+      def cast(original_, force_new_=false)
         if self == original_.factory
           force_new_ ? original_.dup : original_
         else
@@ -223,21 +223,21 @@ module RGeo
           when Features::Point
             @namespace.const_get(:PointImpl).new(self, original_.x, original_.y) rescue nil
           when Features::Line
-            @namespace.const_get(:LineImpl).new(self, coerce(original_.start_point), coerce(original_.end_point)) rescue nil
+            @namespace.const_get(:LineImpl).new(self, cast(original_.start_point), cast(original_.end_point)) rescue nil
           when Features::LinearRing
-            @namespace.const_get(:LinearRingImpl).new(self, original_.points.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:LinearRingImpl).new(self, original_.points.map{ |g_| cast(g_) }) rescue nil
           when Features::LineString
-            @namespace.const_get(:LineStringImpl).new(self, original_.points.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:LineStringImpl).new(self, original_.points.map{ |g_| cast(g_) }) rescue nil
           when Features::Polygon
-            @namespace.const_get(:PolygonImpl).new(self, coerce(original_.exterior_ring), original_.interior_rings.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:PolygonImpl).new(self, cast(original_.exterior_ring), original_.interior_rings.map{ |g_| cast(g_) }) rescue nil
           when Features::MultiPoint
-            @namespace.const_get(:MultiPointImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:MultiPointImpl).new(self, original_.to_a.map{ |g_| cast(g_) }) rescue nil
           when Features::MultiLineString
-            @namespace.const_get(:MultiLineStringImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:MultiLineStringImpl).new(self, original_.to_a.map{ |g_| cast(g_) }) rescue nil
           when Features::MultiPolygon
-            @namespace.const_get(:MultiPolygonImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:MultiPolygonImpl).new(self, original_.to_a.map{ |g_| cast(g_) }) rescue nil
           when Features::GeometryCollection
-            @namespace.const_get(:GeometryCollectionImpl).new(self, original_.to_a.map{ |g_| coerce(g_) }) rescue nil
+            @namespace.const_get(:GeometryCollectionImpl).new(self, original_.to_a.map{ |g_| cast(g_) }) rescue nil
           else
             nil
           end

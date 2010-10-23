@@ -61,6 +61,26 @@ module RGeo
       
       # Returns a factory for the GEOS implementation.
       # Returns nil if the GEOS implementation is not supported.
+      # 
+      # Options include:
+      # 
+      # <tt>:lenient_multi_polygon_assertions</tt>::
+      #   If set to true, assertion checking on MultiPolygon is disabled.
+      #   This may speed up creation of MultiPolygon objects, at the
+      #   expense of not doing the proper checking for OGC MultiPolygon
+      #   compliance. See RGeo::Features::MultiPolygon for details on
+      #   the MultiPolygon assertions. Default is false.
+      # <tt>:buffer_resolution</tt>::
+      #   The resolution of buffers around geometries created by this
+      #   factory. This controls the number of line segments used to
+      #   approximate curves. The default is 1, which causes, for
+      #   example, the buffer around a point to be approximated by a
+      #   4-sided polygon. A resolution of 2 would cause that buffer
+      #   to be approximated by an 8-sided polygon. The exact behavior
+      #   for different kinds of buffers is defined by GEOS.
+      # <tt>:srid</tt>::
+      #   Set the SRID returned by geometries created by this factory.
+      #   Default is 0.
       
       def factory(opts_={})
         supported? ? Factory.create(opts_) : nil

@@ -62,9 +62,8 @@ module RGeo
         
         
         def eql?(rhs_)
-          rhs_.is_a?(self.class) && @x == rhs_.x && @y == rhs_.y
+          rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y
         end
-        alias_method :==, :eql?
         
         
         def cast(type_)
@@ -111,9 +110,14 @@ module RGeo
         end
         
         
+        def convex_hull
+          self
+        end
+        
+        
         def equals?(rhs_)
           return false unless rhs_.factory.is_a?(Factory)
-          rhs_ = factory.coerce(rhs_)
+          rhs_ = factory.cast(rhs_)
           case rhs_
           when Features::Point
             if @y == 90

@@ -230,7 +230,6 @@ module RGeo
           point3_ = @factory.point(12, 12)
           assert_close_enough(point1_, point1_.intersection(point2_))
           int13_ = point1_.intersection(point3_)
-          assert_equal(::RGeo::Features::GeometryCollection, int13_.geometry_type)
           assert(int13_.is_empty?)
         end
         

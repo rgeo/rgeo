@@ -71,7 +71,7 @@ module RAKEFILE
   EXTRA_RDOC_FILES = ::Dir.glob('*.rdoc')
   ALL_RDOC_FILES = SOURCE_FILES + EXTRA_RDOC_FILES
   MAIN_RDOC_FILE = 'README.rdoc'
-  RDOC_TITLE = 'RGeo #{PRODUCT_VERSION} Documentation'
+  RDOC_TITLE = "RGeo #{PRODUCT_VERSION} Documentation"
   
   TEST_FILES = ::Dir.glob('tests/**/*.rb')
   

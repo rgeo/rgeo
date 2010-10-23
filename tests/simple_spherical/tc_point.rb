@@ -144,7 +144,6 @@ module RGeo
         def test_boundary
           point_ = @factory.point(11, 12)
           boundary_ = point_.boundary
-          assert_equal(::RGeo::Features::GeometryCollection, boundary_.geometry_type)
           assert(boundary_.is_empty?)
         end
         
@@ -153,8 +152,40 @@ module RGeo
           point1_ = @factory.point(11, 12)
           point2_ = @factory.point(11, 12)
           point3_ = @factory.point(13, 12)
-          assert_equal(point1_, point2_)
-          assert_not_equal(point1_, point3_)
+          assert(point1_.equals?(point2_))
+          assert(point1_ == point2_)
+          assert(point1_.eql?(point2_))
+          assert(!point1_.equals?(point3_))
+          assert(point1_ != point3_)
+          assert(!point1_.eql?(point3_))
+        end
+        
+        
+        def test_convex_hull
+          point_ = @factory.point(11, 12)
+          assert_equal(point_, point_.convex_hull)
+        end
+        
+        
+        def test_latlon
+          point_ = @factory.point(21, -22)
+          assert_equal(21, point_.longitude)
+          assert_equal(-22, point_.latitude)
+        end
+        
+        
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(4326, point_.srid)
+        end
+        
+        
+        def test_distance
+          point1_ = @factory.point(0, 10)
+          point2_ = @factory.point(0, 10)
+          point3_ = @factory.point(0, 40)
+          assert_in_delta(0, point1_.distance(point2_), 0.0001)
+          assert_in_delta(::Math::PI / 6.0 * ::RGeo::Geography::SimpleSpherical::RADIUS, point1_.distance(point3_), 0.0001)
         end
         
         

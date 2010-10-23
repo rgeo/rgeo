@@ -46,7 +46,7 @@ module RGeo
         
         include Features::Point
         include Common::GeometryMethods
-        include GeometryMethods
+        include SimpleSpherical::GeometryMethods
         include Common::PointMethods
         
         
@@ -65,15 +65,16 @@ module RGeo
         end
         
         
-        def xyz
+        def _xyz
           @xyz ||= PointXYZ.from_latlon(@y, @x)
         end
         
         
         def distance(rhs_)
+          rhs_ = @factory.cast(rhs_)
           case rhs_
-          when Features::Point
-            Calculator.point_distance(self, rhs_)
+          when PointImpl
+            _xyz.dist_to_point(rhs_._xyz) * SimpleSpherical::RADIUS
           else
             super
           end

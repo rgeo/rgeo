@@ -116,7 +116,7 @@ module RGeo
         
         
         def included(mod_)  # :nodoc:
-          mod_.extend(ClassMethods)
+          mod_.extend(ClassMethods) unless mod_.kind_of?(Class)
         end
         
       end

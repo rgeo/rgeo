@@ -69,26 +69,26 @@ module RGeo
         def self.parse_wkt(str_, factory_)
           helper_factory_ = self.factory
           obj_ = helper_factory_ ? helper_factory_.parse_wkt(str_) : nil
-          obj_ ? factory_.coerce(obj_) : nil
+          obj_ ? factory_.cast(obj_) : nil
         end
         
         
         def self.parse_wkb(str_, factory_)
           helper_factory_ = self.factory
           obj_ = helper_factory_ ? helper_factory_.parse_wkb(str_) : nil
-          obj_ ? factory_.coerce(obj_) : nil
+          obj_ ? factory_.cast(obj_) : nil
         end
         
         
         def self.unparse_wkt(obj_)
           helper_factory_ = self.factory
-          helper_factory_ ? helper_factory_.coerce(obj_).as_text : nil
+          helper_factory_ ? helper_factory_.cast(obj_).as_text : nil
         end
         
         
         def self.unparse_wkb(obj_)
           helper_factory_ = self.factory
-          helper_factory_ ? helper_factory_.coerce(obj_).as_binary : nil
+          helper_factory_ ? helper_factory_.cast(obj_).as_binary : nil
         end
         
         

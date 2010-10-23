@@ -103,52 +103,52 @@ module RGeo
         
         
         def equals?(rhs_)
-          projection.equals?(factory.coerce(rhs_).projection)
+          projection.equals?(factory.cast(rhs_).projection)
         end
         
         
         def disjoint?(rhs_)
-          projection.disjoint?(factory.coerce(rhs_).projection)
+          projection.disjoint?(factory.cast(rhs_).projection)
         end
         
         
         def intersects?(rhs_)
-          projection.intersects?(factory.coerce(rhs_).projection)
+          projection.intersects?(factory.cast(rhs_).projection)
         end
         
         
         def touches?(rhs_)
-          projection.touches?(factory.coerce(rhs_).projection)
+          projection.touches?(factory.cast(rhs_).projection)
         end
         
         
         def crosses?(rhs_)
-          projection.crosses?(factory.coerce(rhs_).projection)
+          projection.crosses?(factory.cast(rhs_).projection)
         end
         
         
         def within?(rhs_)
-          projection.within?(factory.coerce(rhs_).projection)
+          projection.within?(factory.cast(rhs_).projection)
         end
         
         
         def contains?(rhs_)
-          projection.contains?(factory.coerce(rhs_).projection)
+          projection.contains?(factory.cast(rhs_).projection)
         end
         
         
         def overlaps?(rhs_)
-          projection.overlaps?(factory.coerce(rhs_).projection)
+          projection.overlaps?(factory.cast(rhs_).projection)
         end
         
         
         def relate(rhs_, pattern_)
-          projection.relate(factory.coerce(rhs_).projection, pattern_)
+          projection.relate(factory.cast(rhs_).projection, pattern_)
         end
         
         
         def distance(rhs_)
-          projection.distance(factory.coerce(rhs_).projection) / scaling_factor
+          projection.distance(factory.cast(rhs_).projection) / scaling_factor
         end
         
         
@@ -163,22 +163,22 @@ module RGeo
         
         
         def intersection(rhs_)
-          factory.unproject(projection.intersection(factory.coerce(rhs_).projection))
+          factory.unproject(projection.intersection(factory.cast(rhs_).projection))
         end
         
         
         def union(rhs_)
-          factory.unproject(projection.union(factory.coerce(rhs_).projection))
+          factory.unproject(projection.union(factory.cast(rhs_).projection))
         end
         
         
         def difference(rhs_)
-          factory.unproject(projection.difference(factory.coerce(rhs_).projection))
+          factory.unproject(projection.difference(factory.cast(rhs_).projection))
         end
         
         
         def sym_difference(rhs_)
-          factory.unproject(projection.sym_difference(factory.coerce(rhs_).projection))
+          factory.unproject(projection.sym_difference(factory.cast(rhs_).projection))
         end
         
         

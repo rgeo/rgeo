@@ -56,7 +56,7 @@ module RGeo
         
         
         def _setup(elements_)
-          @elements = elements_.map{ |elem_| factory.coerce(elem_) }
+          @elements = elements_.map{ |elem_| factory.cast(elem_) }
           _validate_geometry
         end
         

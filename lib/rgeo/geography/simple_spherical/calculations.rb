@@ -62,12 +62,24 @@ module RGeo
           @x = x_ / r_
           @y = y_ / r_
           @z = z_ / r_
+          raise "Not a number" if @x.nan? || @y.nan? || @z.nan?
+        end
+        
+        
+        def to_s
+          "(#{@x}, #{@y}, #{@z})"
         end
         
         
         attr_reader :x
         attr_reader :y
         attr_reader :z
+        
+        
+        def eql?(rhs_)
+          rhs_.kind_of?(PointXYZ) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z
+        end
+        alias_method :==, :eql?
         
         
         def latlon
@@ -79,7 +91,10 @@ module RGeo
         
         
         def *(rhs_)
-          @x * rhs_.x + @y * rhs_.y + @z * rhs_.z
+          val_ = @x * rhs_.x + @y * rhs_.y + @z * rhs_.z
+          val_ = 1.0 if val_ > 1.0
+          val_ = -1.0 if val_ < -1.0
+          val_
         end
         
         
@@ -87,7 +102,20 @@ module RGeo
           rx_ = rhs_.x
           ry_ = rhs_.y
           rz_ = rhs_.z
-          PointXYZ.new(@y*rz_-@z*ry_, @z*rx_-@x*rz_, @x*ry_-@y-rx_) rescue nil
+          PointXYZ.new(@y*rz_-@z*ry_, @z*rx_-@x*rz_, @x*ry_-@y*rx_) rescue nil
+        end
+        
+        
+        def dist_to_point(rhs_)
+          rx_ = rhs_.x
+          ry_ = rhs_.y
+          rz_ = rhs_.z
+          x_ = @y*rz_-@z*ry_
+          y_ = @z*rx_-@x*rz_
+          z_ = @x*ry_-@y*rx_
+          r_ = ::Math.sqrt(x_*x_ + y_*y_ + z_*z_)
+          r_ = 1.0 if r_ > 1.0
+          ::Math.asin(r_)
         end
         
         
@@ -105,22 +133,67 @@ module RGeo
       end
       
       
-      module Calculations
+      # Represents a finite arc on the sphere.
+      
+      class ArcXYZ
         
-        
-        def point_distance(p1_, p2_)
-          rpd_ = Common::Helper::RADIANS_PER_DEGREE
-          from_lat_rad_ = rpd_ * from_.lat
-          to_lat_rad_ = rpd_ * to_.lat
-          delta_lon_rad_ = rpd_ * (to_.lon - from_.lon)
-          val_ = ::Math.sin(from_lat_rad_) * ::Math.sin(to_lat_rad_) + 
-            ::Math.cos(from_lat_rad_) * ::Math.cos(to_lat_rad_) * ::Math.cos(delta_lon_rad_)
-          val_ = 1.0 if val_ > 1.0
-          val_ = -1.0 if val_ < -1.0
-          ::Math.acos(val_) * RADIUS
+        def initialize(start_, end_)
+          @s = start_
+          @e = end_
+          @axis = false
         end
         
         
+        attr_reader :s
+        attr_reader :e
+        
+        
+        def to_s
+          "#{@s} - #{@e}"
+        end
+        
+        
+        def eql?(rhs_)
+          rhs_.kind_of?(ArcXYZ) && @s == rhs_.s && @e == rhs_.e
+        end
+        alias_method :==, :eql?
+        
+        
+        def axis
+          if @axis == false
+            @axis = @s % @e
+          end
+          @axis
+        end
+        
+        
+        def contains_point?(obj_)
+          axis_ = axis
+          saxis_ = ArcXYZ.new(@s, obj_).axis
+          eaxis_ = ArcXYZ.new(obj_, @e).axis
+          !saxis_ || !eaxis_ || obj_ * axis_ == 0.0 && saxis_ * axis_ > 0 && eaxis_ * axis_ > 0
+        end
+        
+        
+        def intersects_arc?(obj_)
+          my_axis_ = axis
+          dot1_ = my_axis_ * obj_.s
+          dot2_ = my_axis_ * obj_.e
+          if dot1_ >= 0.0 && dot2_ <= 0.0 || dot1_ <= 0.0 && dot2_ >= 0.0
+            ob_axis_ = obj_.axis
+            dot1_ = ob_axis_ * @s
+            dot2_ = ob_axis_ * @e
+            dot1_ >= 0.0 && dot2_ <= 0.0 || dot1_ <= 0.0 && dot2_ >= 0.0
+          else
+            false
+          end
+        end
+        
+        
+      end
+      
+      
+      module Calculations
       end
       
       

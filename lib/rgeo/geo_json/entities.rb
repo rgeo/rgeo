@@ -77,7 +77,7 @@ module RGeo
       
       # Two features are equal if their geometries, IDs, and properties
       # are all equal.
-      # This methods uses the eql? method to test geometry equality, which
+      # This method uses the eql? method to test geometry equality, which
       # may behave differently than the == operator.
       
       def eql?(rhs_)
@@ -87,7 +87,7 @@ module RGeo
       
       # Two features are equal if their geometries, IDs, and properties
       # are all equal.
-      # This methods uses the == operator to test geometry equality, which
+      # This method uses the == operator to test geometry equality, which
       # may behave differently than the eql? method.
       
       def ==(rhs_)

@@ -46,6 +46,7 @@ module RGeo
       
       def setup
         @mercator_factory = ::RGeo::Geography.simple_mercator
+        @spherical_factory = ::RGeo::Geography.simple_spherical
         @geos_factory = ::RGeo::Geos.factory(:srid => 4326)
         @entity_factory = ::RGeo::GeoJSON::EntityFactory.instance
       end

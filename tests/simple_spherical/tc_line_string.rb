@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Common tests for line string implementations
+# Tests for the simple spherical point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,17 +34,23 @@
 ;
 
 
+require 'test/unit'
 require 'rgeo'
 
 
 module RGeo
   module Tests  # :nodoc:
-    module Common  # :nodoc:
+    module SimpleSpherical  # :nodoc:
       
-      module LineStringTests  # :nodoc:
+      class TestLineString < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def test_creation_success
+        def setup
+          @factory = ::RGeo::Geography.simple_spherical
+        end
+        
+        
+        def _test_creation_success
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
           point3_ = @factory.point(1, 0)
@@ -74,7 +80,7 @@ module RGeo
         end
         
         
-        def test_creation_line_string
+        def _test_creation_line_string
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
           point3_ = @factory.point(1, 1)
@@ -105,7 +111,7 @@ module RGeo
         end
         
         
-        def test_creation_line
+        def _test_creation_line
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
           line1_ = @factory.line(point1_, point2_)
@@ -122,81 +128,6 @@ module RGeo
           assert_nil(line1_)
           line2_ = @factory.line_string([point1_, collection_])
           assert_nil(line2_)
-        end
-        
-        
-        def test_fully_equal
-          point1_ = @factory.point(0, 0)
-          point2_ = @factory.point(0, 1)
-          point3_ = @factory.point(1, 0)
-          line1_ = @factory.line_string([point1_, point2_, point3_])
-          point4_ = @factory.point(0, 0)
-          point5_ = @factory.point(0, 1)
-          point6_ = @factory.point(1, 0)
-          line2_ = @factory.line_string([point4_, point5_, point6_])
-          assert(line1_.eql?(line2_))
-          assert(line1_.equals?(line2_))
-        end
-        
-        
-        def test_geometrically_equal_but_different_type
-          point1_ = @factory.point(0, 0)
-          point2_ = @factory.point(0, 1)
-          line1_ = @factory.line_string([point1_, point2_])
-          point4_ = @factory.point(0, 0)
-          point5_ = @factory.point(0, 1)
-          line2_ = @factory.line(point4_, point5_)
-          assert(!line1_.eql?(line2_))
-          assert(line1_.equals?(line2_))
-        end
-        
-        
-        def test_geometrically_equal_but_different_type2
-          point1_ = @factory.point(0, 0)
-          point2_ = @factory.point(0, 1)
-          point3_ = @factory.point(1, 0)
-          line1_ = @factory.line_string([point1_, point2_, point3_, point1_])
-          point4_ = @factory.point(0, 0)
-          point5_ = @factory.point(0, 1)
-          point6_ = @factory.point(1, 0)
-          line2_ = @factory.linear_ring([point4_, point5_, point6_, point4_])
-          assert(!line1_.eql?(line2_))
-          assert(line1_.equals?(line2_))
-        end
-        
-        
-        def test_geometrically_equal_but_different_overlap
-          point1_ = @factory.point(0, 0)
-          point2_ = @factory.point(0, 1)
-          point3_ = @factory.point(1, 0)
-          line1_ = @factory.line_string([point1_, point2_, point3_])
-          point4_ = @factory.point(0, 0)
-          point5_ = @factory.point(0, 1)
-          point6_ = @factory.point(1, 0)
-          line2_ = @factory.line_string([point4_, point5_, point6_, point5_])
-          assert(!line1_.eql?(line2_))
-          assert(line1_.equals?(line2_))
-        end
-        
-        
-        def test_empty_equal
-          line1_ = @factory.line_string([])
-          line2_ = @factory.line_string([])
-          assert(line1_.eql?(line2_))
-          assert(line1_.equals?(line2_))
-        end
-        
-        
-        def test_not_equal
-          point1_ = @factory.point(0, 0)
-          point2_ = @factory.point(0, 1)
-          line1_ = @factory.line_string([point1_, point2_])
-          point4_ = @factory.point(0, 0)
-          point5_ = @factory.point(0, 1)
-          point6_ = @factory.point(1, 0)
-          line2_ = @factory.line_string([point4_, point5_, point6_])
-          assert(!line1_.eql?(line2_))
-          assert(!line1_.equals?(line2_))
         end
         
         

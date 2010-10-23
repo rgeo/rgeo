@@ -127,7 +127,8 @@ module RGeo
       #   If set to true, assertion checking on MultiPolygon is disabled.
       #   This may speed up creation of MultiPolygon objects, at the
       #   expense of not doing the proper checking for OGC MultiPolygon
-      #   compliance. Default is false.
+      #   compliance. See RGeo::Features::MultiPolygon for details on
+      #   the MultiPolygon assertions. Default is false.
       # <tt>:buffer_resolution</tt>::
       #   The resolution of buffers around geometries created by this
       #   factory. This controls the number of line segments used to
@@ -135,7 +136,7 @@ module RGeo
       #   example, the buffer around a point to be approximated by a
       #   4-sided polygon. A resolution of 2 would cause that buffer
       #   to be approximated by an 8-sided polygon. The exact behavior
-      #   for different kinds of buffers is not specified.
+      #   for different kinds of buffers is defined by GEOS.
       
       def simple_mercator(opts_={})
         Geography::Factory.new(Geography::SimpleMercator, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions])

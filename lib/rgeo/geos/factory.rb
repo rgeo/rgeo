@@ -58,7 +58,8 @@ module RGeo
         #   If set to true, assertion checking on MultiPolygon is disabled.
         #   This may speed up creation of MultiPolygon objects, at the
         #   expense of not doing the proper checking for OGC MultiPolygon
-        #   compliance. Default is false.
+        #   compliance. See RGeo::Features::MultiPolygon for details on
+        #   the MultiPolygon assertions. Default is false.
         # <tt>:buffer_resolution</tt>::
         #   The resolution of buffers around geometries created by this
         #   factory. This controls the number of line segments used to
@@ -66,8 +67,7 @@ module RGeo
         #   example, the buffer around a point to be approximated by a
         #   4-sided polygon. A resolution of 2 would cause that buffer
         #   to be approximated by an 8-sided polygon. The exact behavior
-        #   for different kinds of buffers is internal to GEOS, and is not
-        #   well-specified as far as I can tell.
+        #   for different kinds of buffers is defined by GEOS.
         # <tt>:srid</tt>::
         #   Set the SRID returned by geometries created by this factory.
         #   Default is 0.
@@ -203,9 +203,9 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#coerce
+      # See ::RGeo::Features::Factory#cast
       
-      def coerce(original_, force_new_=false)
+      def cast(original_, force_new_=false)
         return nil unless Geos.supported?
         case original_
         when GeometryImpl
@@ -225,21 +225,21 @@ module RGeo
             PointImpl.create(self, original_.x, original_.y)
           end
         when Features::Line
-          LineImpl.create(self, coerce(original_.start_point), coerce(original_.end_point))
+          LineImpl.create(self, cast(original_.start_point), cast(original_.end_point))
         when Features::LinearRing
-          LinearRingImpl.create(self, original_.points.map{ |g_| coerce(g_) })
+          LinearRingImpl.create(self, original_.points.map{ |g_| cast(g_) })
         when Features::LineString
-          LineStringImpl.create(self, original_.points.map{ |g_| coerce(g_) })
+          LineStringImpl.create(self, original_.points.map{ |g_| cast(g_) })
         when Features::Polygon
-          PolygonImpl.create(self, coerce(original_.exterior_ring), original_.interior_rings.map{ |g_| coerce(g_) })
+          PolygonImpl.create(self, cast(original_.exterior_ring), original_.interior_rings.map{ |g_| cast(g_) })
         when Features::MultiPoint
-          MultiPointImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
+          MultiPointImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
         when Features::MultiLineString
-          MultiLineStringImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
+          MultiLineStringImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
         when Features::MultiPolygon
-          MultiPolygonImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
+          MultiPolygonImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
         when Features::GeometryCollection
-          GeometryCollectionImpl.create(self, original_.to_a.map{ |g_| coerce(g_) })
+          GeometryCollectionImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
         else
           nil
         end
