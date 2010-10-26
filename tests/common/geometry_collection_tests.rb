@@ -62,7 +62,8 @@ module RGeo
           assert(::RGeo::Features::GeometryCollection === geom_)
           assert_equal(::RGeo::Features::GeometryCollection, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
-          assert_equal([@point1, @line1], geom_.to_a)
+          assert(@point1.eql?(geom_[0]))
+          assert(@line1.eql?(geom_[1]))
         end
         
         
@@ -105,7 +106,7 @@ module RGeo
           assert(::RGeo::Features::GeometryCollection === geom2_)
           assert_equal(::RGeo::Features::GeometryCollection, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
-          assert(::RGeo::Features::Line === geom2_[1][1])
+          assert_equal(::RGeo::Features::Line, geom2_[1][1].geometry_type)
         end
         
         
@@ -144,7 +145,7 @@ module RGeo
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('GEOMETRYCOLLECTION(POINT(0 0), LINESTRING(-4 2, -5 3))')
           built_geom_ = @factory.collection([@point1, @line1])
-          assert_equal(built_geom_, parsed_geom_)
+          assert(built_geom_.eql?(parsed_geom_))
         end
         
         
@@ -158,10 +159,11 @@ module RGeo
         def test_clone
           geom1_ = @factory.collection([@point1, @line1])
           geom2_ = geom1_.clone
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
           assert_equal(::RGeo::Features::GeometryCollection, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
-          assert_equal([@point1, @line1], geom2_.to_a)
+          assert(@point1.eql?(geom2_[0]))
+          assert(@line1.eql?(geom2_[1]))
         end
         
         
@@ -183,7 +185,7 @@ module RGeo
           geom1_ = @factory.collection([@point1, @line1])
           text_ = geom1_.as_text
           geom2_ = @factory.parse_wkt(text_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         
@@ -191,7 +193,7 @@ module RGeo
           geom1_ = @factory.collection([@point1, @line1])
           binary_ = geom1_.as_binary
           geom2_ = @factory.parse_wkb(binary_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         

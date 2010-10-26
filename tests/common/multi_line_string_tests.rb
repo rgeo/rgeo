@@ -64,7 +64,8 @@ module RGeo
           assert(::RGeo::Features::MultiLineString === geom_)
           assert_equal(::RGeo::Features::MultiLineString, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
-          assert_equal([@linestring1, @linestring2], geom_.to_a)
+          assert(@linestring1.eql?(geom_[0]))
+          assert(@linestring2.eql?(geom_[1]))
         end
         
         
@@ -89,16 +90,17 @@ module RGeo
         end
         
         
-        def test_creation_compound
-          mls1_ = @factory.multi_line_string([@linestring1, @linestring2])
-          mls2_ = @factory.collection([@line1])
-          mls3_ = @factory.collection([mls1_])
-          geom_ = @factory.multi_line_string([mls3_, mls2_, @linearring1])
+        def test_creation_casting
+          mls1_ = @factory.collection([@line1])
+          mls2_ = @factory.multi_line_string([@linearring1])
+          geom_ = @factory.multi_line_string([@linestring1, @linestring2, mls1_, mls2_])
           assert_not_nil(geom_)
-          assert(::RGeo::Features::MultiLineString === geom_)
           assert_equal(::RGeo::Features::MultiLineString, geom_.geometry_type)
           assert_equal(4, geom_.num_geometries)
-          assert(geom_.to_a.eql?([@linestring1, @linestring2, @line1, @linearring1]))
+          assert(@linestring1.eql?(geom_[0]))
+          assert(@linestring2.eql?(geom_[1]))
+          assert(@line1.eql?(geom_[2]))
+          assert(@linearring1.eql?(geom_[3]))
         end
         
         
@@ -129,7 +131,7 @@ module RGeo
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('MULTILINESTRING((0 0, 1 0), (-4 2, -5 3, -3 5))')
           built_geom_ = @factory.multi_line_string([@linestring1, @linestring2])
-          assert_equal(built_geom_, parsed_geom_)
+          assert(built_geom_.eql?(parsed_geom_))
         end
         
         
@@ -144,10 +146,11 @@ module RGeo
         def test_clone
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
           geom2_ = geom1_.clone
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
           assert_equal(::RGeo::Features::MultiLineString, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
-          assert_equal([@linestring1, @linestring2], geom2_.to_a)
+          assert(@linestring1.eql?(geom2_[0]))
+          assert(@linestring2.eql?(geom2_[1]))
         end
         
         
@@ -171,7 +174,7 @@ module RGeo
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
           text_ = geom1_.as_text
           geom2_ = @factory.parse_wkt(text_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         
@@ -179,7 +182,7 @@ module RGeo
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
           binary_ = geom1_.as_binary
           geom2_ = @factory.parse_wkb(binary_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         

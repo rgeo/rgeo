@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Mercator geography feature classes
+# Spherical geography feature classes
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -38,7 +38,7 @@ module RGeo
   
   module Geography
     
-    module SimpleMercator
+    module SimpleSpherical
       
       
       class PointImpl
@@ -46,37 +46,31 @@ module RGeo
         
         include Features::Point
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicPointMethods
         
         
         def _validate_geometry
-          @y = 85.0511287 if @y > 85.0511287
-          @y = -85.0511287 if @y < -85.0511287
+          @x = @x % 360.0
+          @x -= 360.0 if @x >= 180.0
+          @y = 90.0 if @y > 90.0
+          @y = -90.0 if @y < -90.0
           super
         end
         
         
-        def _make_projection(projection_factory_)  # :nodoc:
-          rpd_ = Helper::RADIANS_PER_DEGREE
-          mpr_ = EQUATORIAL_RADIUS
-          projection_factory_.point(@x * rpd_ * mpr_,
-            ::Math.log(::Math.tan(::Math::PI / 4.0 + @y * rpd_ / 2.0)) * mpr_)
+        def _xyz
+          @xyz ||= PointXYZ.from_latlon(@y, @x)
         end
         
         
-        def scaling_factor
-          1.0 / ::Math.cos(Helper::RADIANS_PER_DEGREE * @y)
-        end
-        
-        
-        def canonical_point
-          if @x >= -180.0 && @x < 180.0
-            self
+        def distance(rhs_)
+          rhs_ = Features.cast(rhs_, @factory)
+          case rhs_
+          when PointImpl
+            _xyz.dist_to_point(rhs_._xyz) * SimpleSpherical::RADIUS
           else
-            x_ = @x % 360.0
-            x_ -= 360.0 if x_ >= 180.0
-            PointImpl.new(@factory, x_, @y)
+            super
           end
         end
         
@@ -89,37 +83,9 @@ module RGeo
         
         include Features::LineString
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
-        include SimpleMercator::NCurveMethods
-        include SimpleMercator::CurveMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicLineStringMethods
-        include SimpleMercator::LineStringMethods
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.line_string(@points.map{ |p_| p_.projection })
-        end
-        
-        
-      end
-      
-      
-      class LinearRingImpl
-        
-        
-        include Features::Line
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
-        include SimpleMercator::NCurveMethods
-        include SimpleMercator::CurveMethods
-        include ImplHelpers::BasicLineStringMethods
-        include SimpleMercator::LineStringMethods
-        include ImplHelpers::BasicLinearRingMethods
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.linear_ring(@points.map{ |p_| p_.projection })
-        end
+        include SimpleSpherical::LineStringMethods
         
         
       end
@@ -130,17 +96,24 @@ module RGeo
         
         include Features::Line
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
-        include SimpleMercator::NCurveMethods
-        include SimpleMercator::CurveMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicLineStringMethods
-        include SimpleMercator::LineStringMethods
+        include SimpleSpherical::LineStringMethods
         include ImplHelpers::BasicLineMethods
         
         
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.line(start_point.projection, end_point.projection)
-        end
+      end
+      
+      
+      class LinearRingImpl
+        
+        
+        include Features::Line
+        include ImplHelpers::BasicGeometryMethods
+        include SimpleSpherical::GeometryMethods
+        include ImplHelpers::BasicLineStringMethods
+        include SimpleSpherical::LineStringMethods
+        include ImplHelpers::BasicLinearRingMethods
         
         
       end
@@ -151,24 +124,8 @@ module RGeo
         
         include Features::Polygon
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
-        include SimpleMercator::NSurfaceMethods
-        include SimpleMercator::SurfaceMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicPolygonMethods
-        
-        
-        def _validate_geometry
-          super
-          unless projection
-            raise Errors::InvalidGeometry, 'Polygon failed assertions'
-          end
-        end
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.polygon(@exterior_ring.projection,
-                                      @interior_rings.map{ |p_| p_.projection })
-        end
         
         
       end
@@ -179,14 +136,8 @@ module RGeo
         
         include Features::GeometryCollection
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicGeometryCollectionMethods
-        include SimpleMercator::GeometryCollectionMethods
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.collection(@elements.map{ |p_| p_.projection })
-        end
         
         
       end
@@ -197,15 +148,9 @@ module RGeo
         
         include Features::GeometryCollection
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicGeometryCollectionMethods
-        include SimpleMercator::GeometryCollectionMethods
         include ImplHelpers::BasicMultiPointMethods
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.multi_point(@elements.map{ |p_| p_.projection })
-        end
         
         
       end
@@ -216,16 +161,9 @@ module RGeo
         
         include Features::GeometryCollection
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
-        include SimpleMercator::NCurveMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicGeometryCollectionMethods
-        include SimpleMercator::GeometryCollectionMethods
         include ImplHelpers::BasicMultiLineStringMethods
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.multi_line_string(@elements.map{ |p_| p_.projection })
-        end
         
         
       end
@@ -236,24 +174,9 @@ module RGeo
         
         include Features::GeometryCollection
         include ImplHelpers::BasicGeometryMethods
-        include SimpleMercator::GeometryMethods
-        include SimpleMercator::NSurfaceMethods
+        include SimpleSpherical::GeometryMethods
         include ImplHelpers::BasicGeometryCollectionMethods
-        include SimpleMercator::GeometryCollectionMethods
         include ImplHelpers::BasicMultiPolygonMethods
-        
-        
-        def _validate_geometry
-          super
-          unless projection
-            raise Errors::InvalidGeometry, 'MultiPolygon failed assertions'
-          end
-        end
-        
-        
-        def _make_projection(projection_factory_)  # :nodoc:
-          projection_factory_.multi_polygon(@elements.map{ |p_| p_.projection })
-        end
         
         
       end

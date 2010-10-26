@@ -85,5 +85,6 @@ paths_ = [
   'features/multi_line_string',
   'features/multi_surface',
   'features/multi_polygon',
+  'features/cast',
 ]
 paths_.each{ |path_| require "rgeo/#{path_}" }

@@ -53,7 +53,7 @@ module RGeo
           assert_not_nil(polygon_)
           assert(::RGeo::Features::Polygon === polygon_)
           assert_equal(::RGeo::Features::Polygon, polygon_.geometry_type)
-          assert_equal(exterior_, polygon_.exterior_ring)
+          assert(exterior_.eql?(polygon_.exterior_ring))
           assert_equal(0, polygon_.num_interior_rings)
         end
         
@@ -72,9 +72,9 @@ module RGeo
           assert_not_nil(polygon_)
           assert(::RGeo::Features::Polygon === polygon_)
           assert_equal(::RGeo::Features::Polygon, polygon_.geometry_type)
-          assert_equal(exterior_, polygon_.exterior_ring)
+          assert(exterior_.eql?(polygon_.exterior_ring))
           assert_equal(1, polygon_.num_interior_rings)
-          assert_equal([interior_], polygon_.interior_rings)
+          assert(interior_.eql?(polygon_.interior_ring_n(0)))
         end
         
         
@@ -127,7 +127,7 @@ module RGeo
           point3_ = @factory.point(1, 0)
           exterior_ = @factory.linear_ring([point1_, point2_, point3_, point1_])
           built_poly_ = @factory.polygon(exterior_)
-          assert_equal(built_poly_, parsed_poly_)
+          assert(built_poly_.eql?(parsed_poly_))
         end
         
         
@@ -143,7 +143,7 @@ module RGeo
           exterior_ = @factory.linear_ring([point1_, point2_, point3_, point4_, point1_])
           interior_ = @factory.linear_ring([point5_, point6_, point7_, point5_])
           built_poly_ = @factory.polygon(exterior_, [interior_])
-          assert_equal(built_poly_, parsed_poly_)
+          assert(built_poly_.eql?(parsed_poly_))
         end
         
         
@@ -154,8 +154,8 @@ module RGeo
           exterior_ = @factory.linear_ring([point1_, point2_, point3_, point1_])
           poly1_ = @factory.polygon(exterior_)
           poly2_ = poly1_.clone
-          assert_equal(poly1_, poly2_)
-          assert_equal(exterior_, poly2_.exterior_ring)
+          assert(poly1_.eql?(poly2_))
+          assert(exterior_.eql?(poly2_.exterior_ring))
           assert_equal(0, poly2_.num_interior_rings)
         end
         
@@ -182,7 +182,7 @@ module RGeo
           poly1_ = @factory.polygon(exterior_)
           text_ = poly1_.as_text
           poly2_ = @factory.parse_wkt(text_)
-          assert_equal(poly1_, poly2_)
+          assert(poly1_.eql?(poly2_))
         end
         
         
@@ -194,7 +194,7 @@ module RGeo
           poly1_ = @factory.polygon(exterior_)
           binary_ = poly1_.as_binary
           poly2_ = @factory.parse_wkb(binary_)
-          assert_equal(poly1_, poly2_)
+          assert(poly1_.eql?(poly2_))
         end
         
         

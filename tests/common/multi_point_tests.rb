@@ -60,7 +60,8 @@ module RGeo
           assert(::RGeo::Features::MultiPoint === geom_)
           assert_equal(::RGeo::Features::MultiPoint, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
-          assert_equal([@point1, @point2], geom_.to_a)
+          assert(@point1.eql?(geom_[0]))
+          assert(@point2.eql?(geom_[1]))
         end
         
         
@@ -74,16 +75,17 @@ module RGeo
         end
         
         
-        def test_creation_compound
-          mp1_ = @factory.multi_point([@point1, @point2])
-          mp2_ = @factory.collection([@point3])
-          mp3_ = @factory.collection([mp1_])
-          geom_ = @factory.multi_point([mp3_, mp2_, @point4])
+        def test_creation_casting
+          mp1_ = @factory.collection([@point3])
+          mp2_ = @factory.multi_point([@point4])
+          geom_ = @factory.multi_point([@point1, @point2, mp1_, mp2_])
           assert_not_nil(geom_)
-          assert(::RGeo::Features::MultiPoint === geom_)
           assert_equal(::RGeo::Features::MultiPoint, geom_.geometry_type)
           assert_equal(4, geom_.num_geometries)
-          assert_equal([@point1, @point2, @point3, @point4], geom_.to_a)
+          assert(@point1.eql?(geom_[0]))
+          assert(@point2.eql?(geom_[1]))
+          assert(@point3.eql?(geom_[2]))
+          assert(@point4.eql?(geom_[3]))
         end
         
         
@@ -121,7 +123,7 @@ module RGeo
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('MULTIPOINT((0 0), (-4 2), (-5 3))')
           built_geom_ = @factory.multi_point([@point1, @point3, @point4])
-          assert_equal(built_geom_, parsed_geom_)
+          assert(built_geom_.eql?(parsed_geom_))
         end
         
         
@@ -136,10 +138,11 @@ module RGeo
         def test_clone
           geom1_ = @factory.multi_point([@point1, @point2])
           geom2_ = geom1_.clone
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
           assert_equal(::RGeo::Features::MultiPoint, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
-          assert_equal([@point1, @point2], geom2_.to_a)
+          assert(@point1.eql?(geom2_[0]))
+          assert(@point2.eql?(geom2_[1]))
         end
         
         
@@ -163,7 +166,7 @@ module RGeo
           geom1_ = @factory.multi_point([@point1, @point2])
           text_ = geom1_.as_text
           geom2_ = @factory.parse_wkt(text_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         
@@ -171,7 +174,7 @@ module RGeo
           geom1_ = @factory.multi_point([@point1, @point2])
           binary_ = geom1_.as_binary
           geom2_ = @factory.parse_wkb(binary_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         

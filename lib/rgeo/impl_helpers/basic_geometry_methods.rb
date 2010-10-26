@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS multi line string implementation
+# Basic methods used by geometry objects
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,29 +34,55 @@
 ;
 
 
-require 'test/unit'
-require 'rgeo'
-
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
-
-
 module RGeo
-  module Tests  # :nodoc:
-    module Geos
+  
+  module ImplHelpers
+    
+    
+    module BasicGeometryMethods
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
-        
-        
-        def create_factory
-          ::RGeo::Geos.factory
-        end
-        
-        
-        include ::RGeo::Tests::Common::MultiLineStringTests
-        
-        
+      
+      def inspect  # :nodoc:
+        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
       end
       
+      def to_s  # :nodoc:
+        as_text
+      end
+      
+      
+      def _validate_geometry  # :nodoc:
+      end
+      
+      
+      def _set_factory(factory_)  # :nodoc:
+        @factory = factory_
+      end
+      
+      
+      def factory
+        @factory
+      end
+      
+      
+      def cast(type_)
+        type_ == geometry_type ? self : nil
+      end
+      
+      
+      def as_text
+        Serialization.unparse_wkt(self)
+      end
+      
+      
+      def as_binary
+        Serialization.unparse_wkb(self)
+      end
+      
+      
     end
+    
+    
   end
+  
 end

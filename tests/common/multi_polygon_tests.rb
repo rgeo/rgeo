@@ -74,7 +74,8 @@ module RGeo
           assert(::RGeo::Features::MultiPolygon === geom_)
           assert_equal(::RGeo::Features::MultiPolygon, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
-          assert_equal([@poly1, @poly2], geom_.to_a)
+          assert(@poly1.eql?(geom_[0]))
+          assert(@poly2.eql?(geom_[1]))
         end
         
         
@@ -129,7 +130,7 @@ module RGeo
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('MULTIPOLYGON(((0 0, 0 -10, -10 0, 0 0)), ((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))')
           built_geom_ = @factory.multi_polygon([@poly1, @poly2])
-          assert_equal(built_geom_, parsed_geom_)
+          assert(built_geom_.eql?(parsed_geom_))
         end
         
         
@@ -144,10 +145,11 @@ module RGeo
         def test_clone
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           geom2_ = geom1_.clone
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
           assert_equal(::RGeo::Features::MultiPolygon, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
-          assert_equal([@poly1, @poly2], geom2_.to_a)
+          assert(@poly1.eql?(geom2_[0]))
+          assert(@poly2.eql?(geom2_[1]))
         end
         
         
@@ -171,7 +173,7 @@ module RGeo
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           text_ = geom1_.as_text
           geom2_ = @factory.parse_wkt(text_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         
@@ -179,7 +181,7 @@ module RGeo
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           binary_ = geom1_.as_binary
           geom2_ = @factory.parse_wkb(binary_)
-          assert_equal(geom1_, geom2_)
+          assert(geom1_.eql?(geom2_))
         end
         
         

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Geography helpers
+# Implementation helpers namespace for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,67 +36,21 @@
 
 module RGeo
   
-  module Geography
-    
-    module Common
-      
-      
-      # This is an internal module used by Geography. You generally should
-      # not need to call these methods directly.
-      
-      module Helper
-        
-        
-        RADIANS_PER_DEGREE = ::Math::PI/180.0
-        DEGREES_PER_RADIAN = 180.0/::Math::PI
-        
-        
-        @basic_factory = false
-        
-        
-        def self.factory
-          if @basic_factory == false
-            if Geos.supported?
-              @basic_factory = Geos.factory(:srid => 0)
-            else
-              @basic_factory = nil
-            end
-          end
-          @basic_factory
-        end
-        
-        
-        def self.parse_wkt(str_, factory_)
-          helper_factory_ = self.factory
-          obj_ = helper_factory_ ? helper_factory_.parse_wkt(str_) : nil
-          obj_ ? factory_.cast(obj_) : nil
-        end
-        
-        
-        def self.parse_wkb(str_, factory_)
-          helper_factory_ = self.factory
-          obj_ = helper_factory_ ? helper_factory_.parse_wkb(str_) : nil
-          obj_ ? factory_.cast(obj_) : nil
-        end
-        
-        
-        def self.unparse_wkt(obj_)
-          helper_factory_ = self.factory
-          helper_factory_ ? helper_factory_.cast(obj_).as_text : nil
-        end
-        
-        
-        def self.unparse_wkb(obj_)
-          helper_factory_ = self.factory
-          helper_factory_ ? helper_factory_.cast(obj_).as_binary : nil
-        end
-        
-        
-      end
-      
-      
-    end
-    
+  
+  module ImplHelpers  # :nodoc:
   end
   
+  
 end
+
+
+# Dependency source files.
+paths_ = [
+  'impl_helpers/basic_geometry_methods',
+  'impl_helpers/basic_geometry_collection_methods',
+  'impl_helpers/basic_point_methods',
+  'impl_helpers/basic_line_string_methods',
+  'impl_helpers/basic_polygon_methods',
+  'impl_helpers/serialization',
+]
+paths_.each{ |path_| require "rgeo/#{path_}" }

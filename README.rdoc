@@ -71,12 +71,12 @@ For example:
 RGeo is currently under development and several planned features are not
 yet complete. These include:
 
-* Test coverage of the SimpleMercator implementation.
-* The spherical geometry data objects.
+* Some operations on SimpleCartesian and SimpleSpherical.
 * Rails (ActiveRecord or ActiveModel) integration.
 * Other third-party integration, including possibly SimpleGeo.
-* JRuby support via JTS.
-* Rubinius support.
+* Support for additional formats such as ESRI shapefiles.
+* JRuby support via JTS integration.
+* Rubinius support for Geos integration.
 
 Additionally, not all implemented features are well-tested yet. In
 general, we currently consider this library to be "pre-alpha" quality,

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical base methods
+# Helper for geography implementations
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -38,19 +38,10 @@ module RGeo
   
   module Geography
     
-    module SimpleSpherical
+    module Helper  # :nodoc:
       
-      
-      module GeometryMethods
-        
-        
-        def srid
-          4326
-        end
-        
-        
-      end
-      
+      RADIANS_PER_DEGREE = ::Math::PI/180.0
+      DEGREES_PER_RADIAN = 180.0/::Math::PI
       
     end
     

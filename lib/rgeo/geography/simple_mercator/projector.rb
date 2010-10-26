@@ -48,11 +48,7 @@ module RGeo
         
         def initialize(geography_factory_, opts_={})
           @geography_factory = geography_factory_
-          if ::RGeo.const_defined?(:Geos) && Geos.supported?
-            @projection_factory = Geos.factory(:srid => 3857, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions])
-          else
-            @projection_factory = nil
-          end
+          @projection_factory = Cartesian.preferred_factory(:srid => 3857, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions])
         end
         
         
@@ -69,7 +65,7 @@ module RGeo
         def unproject(geometry_)
           case geometry_
           when Features::Point
-            dpr_ = Common::Helper::DEGREES_PER_RADIAN
+            dpr_ = Helper::DEGREES_PER_RADIAN
             radius_ = EQUATORIAL_RADIUS
             @geography_factory.point(geometry_.x / radius_ * dpr_,
               (2.0 * ::Math.atan(::Math.exp(geometry_.y / radius_)) - ::Math::PI / 2.0) * dpr_)

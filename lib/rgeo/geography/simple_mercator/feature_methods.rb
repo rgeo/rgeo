@@ -44,15 +44,6 @@ module RGeo
       module GeometryMethods
         
         
-        def eql?(rhs_)
-          if rhs_.respond_to?(:factory) && rhs_.factory.eql?(@factory)
-            projection.eql?(rhs_.projection)
-          else
-            false
-          end
-        end
-        
-        
         def srid
           4326
         end
@@ -103,52 +94,52 @@ module RGeo
         
         
         def equals?(rhs_)
-          projection.equals?(factory.cast(rhs_).projection)
+          projection.equals?(Features.cast(rhs_, factory).projection)
         end
         
         
         def disjoint?(rhs_)
-          projection.disjoint?(factory.cast(rhs_).projection)
+          projection.disjoint?(Features.cast(rhs_, factory).projection)
         end
         
         
         def intersects?(rhs_)
-          projection.intersects?(factory.cast(rhs_).projection)
+          projection.intersects?(Features.cast(rhs_, factory).projection)
         end
         
         
         def touches?(rhs_)
-          projection.touches?(factory.cast(rhs_).projection)
+          projection.touches?(Features.cast(rhs_, factory).projection)
         end
         
         
         def crosses?(rhs_)
-          projection.crosses?(factory.cast(rhs_).projection)
+          projection.crosses?(Features.cast(rhs_, factory).projection)
         end
         
         
         def within?(rhs_)
-          projection.within?(factory.cast(rhs_).projection)
+          projection.within?(Features.cast(rhs_, factory).projection)
         end
         
         
         def contains?(rhs_)
-          projection.contains?(factory.cast(rhs_).projection)
+          projection.contains?(Features.cast(rhs_, factory).projection)
         end
         
         
         def overlaps?(rhs_)
-          projection.overlaps?(factory.cast(rhs_).projection)
+          projection.overlaps?(Features.cast(rhs_, factory).projection)
         end
         
         
         def relate(rhs_, pattern_)
-          projection.relate(factory.cast(rhs_).projection, pattern_)
+          projection.relate(Features.cast(rhs_, factory).projection, pattern_)
         end
         
         
         def distance(rhs_)
-          projection.distance(factory.cast(rhs_).projection) / scaling_factor
+          projection.distance(Features.cast(rhs_, factory).projection) / scaling_factor
         end
         
         
@@ -163,22 +154,22 @@ module RGeo
         
         
         def intersection(rhs_)
-          factory.unproject(projection.intersection(factory.cast(rhs_).projection))
+          factory.unproject(projection.intersection(Features.cast(rhs_, factory).projection))
         end
         
         
         def union(rhs_)
-          factory.unproject(projection.union(factory.cast(rhs_).projection))
+          factory.unproject(projection.union(Features.cast(rhs_, factory).projection))
         end
         
         
         def difference(rhs_)
-          factory.unproject(projection.difference(factory.cast(rhs_).projection))
+          factory.unproject(projection.difference(Features.cast(rhs_, factory).projection))
         end
         
         
         def sym_difference(rhs_)
-          factory.unproject(projection.sym_difference(factory.cast(rhs_).projection))
+          factory.unproject(projection.sym_difference(Features.cast(rhs_, factory).projection))
         end
         
         

@@ -330,9 +330,9 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 }
 
 
-const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj)
+const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
 {
-  VALUE object = rb_funcall(factory, rb_intern("cast"), 1, obj);
+  VALUE object = rb_funcall(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("cast"), 3, obj, factory, type);
   const GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
     geom = RGEO_GET_GEOS_GEOMETRY(object);
@@ -341,21 +341,24 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj)
 }
 
 
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(RGeo_Globals* globals, VALUE obj, VALUE* klasses)
+GEOSGeometry* rgeo_convert_to_detached_geos_geometry(RGeo_Globals* globals, VALUE obj, VALUE type, VALUE* klasses)
 {
   if (klasses) {
     *klasses = Qnil;
   }
-  VALUE object = rb_funcall(globals->default_factory, rb_intern("cast"), 2, obj, Qtrue);
+  VALUE object = rb_funcall(globals->features_module, rb_intern("cast"), 5, obj, globals->default_factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
   GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
     geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;
+    if (klasses) {
+      *klasses = RGEO_KLASSES_FROM_GEOMETRY(object);
+      if (NIL_P(*klasses)) {
+        *klasses = CLASS_OF(object);
+      }
+    }
     RGEO_GEOMETRY_DATA_PTR(object)->geom = NULL;
     RGEO_GEOMETRY_DATA_PTR(object)->factory = Qnil;
     RGEO_GEOMETRY_DATA_PTR(object)->klasses = Qnil;
-    if (klasses) {
-      *klasses = rgeo_is_geos_object(obj) ? RGEO_KLASSES_FROM_GEOMETRY(obj) : Qnil;
-    }
   }
   return geom;
 }

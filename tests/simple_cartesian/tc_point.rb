@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS multi line string implementation
+# Tests for the simple cartesian point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,22 +37,49 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module SimpleCartesian  # :nodoc:
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
+      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          ::RGeo::Geos.factory
+        def setup
+          @factory = ::RGeo::Cartesian.simple_factory(:srid => 1)
         end
         
         
-        include ::RGeo::Tests::Common::MultiLineStringTests
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(1, point_.srid)
+        end
+        
+        
+        def test_distance
+          point1_ = @factory.point(2, 2)
+          point2_ = @factory.point(7, 14)
+          assert_in_delta(13, point1_.distance(point2_), 0.0001)
+        end
+        
+        
+        undef_method :test_disjoint
+        undef_method :test_intersects
+        undef_method :test_touches
+        undef_method :test_crosses
+        undef_method :test_within
+        undef_method :test_contains
+        undef_method :test_overlaps
+        undef_method :test_convex_hull
+        undef_method :test_intersection
+        undef_method :test_union
+        undef_method :test_difference
+        undef_method :test_sym_difference
         
         
       end

@@ -219,8 +219,7 @@ module RGeo
         
         def test_convex_hull
           point_ = @factory.point(11, 12)
-          hull_ = point_.convex_hull
-          assert_close_enough(point_, hull_)
+          assert_close_enough(point_, point_.convex_hull)
         end
         
         

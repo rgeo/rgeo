@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical Point implementation
+# Common methods for Polygon features
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,55 +36,75 @@
 
 module RGeo
   
-  module Geography
+  module ImplHelpers
     
-    module SimpleSpherical
+    
+    module BasicPolygonMethods
       
       
-      class PointImpl
-        
-        
-        include Features::Point
-        include Common::GeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include Common::PointMethods
-        
-        
-        def initialize(factory_, x_, y_)
-          _set_factory(factory_)
-          _setup(x_, y_)
+      def initialize(factory_, exterior_ring_, interior_rings_)
+        _set_factory(factory_)
+        @exterior_ring = Features.cast(exterior_ring_, factory_, Features::LinearRing)
+        unless @exterior_ring
+          raise Errors::InvalidGeometry, "Failed to cast exterior ring #{exterior_ring_}"
         end
-        
-        
-        def _validate_geometry
-          @x = @x % 360.0
-          @x -= 360.0 if @x >= 180.0
-          @y = 90.0 if @y > 90.0
-          @y = -90.0 if @y < -90.0
-          super
-        end
-        
-        
-        def _xyz
-          @xyz ||= PointXYZ.from_latlon(@y, @x)
-        end
-        
-        
-        def distance(rhs_)
-          rhs_ = @factory.cast(rhs_)
-          case rhs_
-          when PointImpl
-            _xyz.dist_to_point(rhs_._xyz) * SimpleSpherical::RADIUS
-          else
-            super
+        @interior_rings = (interior_rings_ || []).map do |elem_|
+          elem_ = Features.cast(elem_, factory_, Features::LinearRing)
+          unless elem_
+            raise Errors::InvalidGeometry, "Could not cast interior ring #{elem_}"
           end
+          elem_
         end
-        
-        
+        _validate_geometry
+      end
+      
+      
+      def eql?(rhs_)
+        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @exterior_ring.eql?(rhs_.exterior_ring) && @interior_rings.size == rhs_.num_interior_rings
+          rhs_.interior_rings.each_with_index{ |r_, i_| return false unless @interior_rings[i_].eql?(r_) }
+        else
+          false
+        end
+      end
+      
+      
+      def exterior_ring
+        @exterior_ring
+      end
+      
+      
+      def num_interior_rings
+        @interior_rings.size
+      end
+      
+      
+      def interior_ring_n(n_)
+        @interior_rings[n_]
+      end
+      
+      
+      def interior_rings
+        @interior_rings.dup
+      end
+      
+      
+      def dimension
+        2
+      end
+      
+      
+      def geometry_type
+        Features::Polygon
+      end
+      
+      
+      def is_empty?
+        @exterior_ring.is_empty?
       end
       
       
     end
+    
     
   end
   

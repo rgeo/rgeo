@@ -36,93 +36,33 @@
 
 module RGeo
   
-  module Geography
+  module Cartesian
     
     
-    # This class implements the various factories for geography features.
-    # See methods of the RGeo::Geography module for the API for creating
-    # geography factories.
+    # This class implements the factory for the simple cartesian
+    # implementation.
     
-    class Factory
+    class SimpleFactory
       
       include Features::Factory::Instance
       
-      
-      def initialize(namespace_, opts_={})  # :nodoc:
-        @namespace = namespace_
-        @opts = opts_.dup
-        @projector = @namespace.const_get(:Projector).new(self, opts_) rescue nil
+      def initialize(opts_={})
+        @srid = opts_[:srid].to_i
       end
       
       
       # Equivalence test.
       
       def eql?(rhs_)
-        rhs_.is_a?(self.class) && @namespace == rhs_.instance_variable_get(:@namespace) &&
-          @opts == rhs_.instance_variable_get(:@opts)
+        rhs_.is_a?(self.class) && @srid == rhs_.srid
       end
       alias_method :==, :eql?
       
       
-      # Returns true if this factory supports a projection.
+      # Returns the SRID.
       
-      def has_projection?
-        !@projector.nil?
-      end
-      
-      
-      # Returns the factory for the projected coordinate space,
-      # or nil if this factory does not support a projection.
-      
-      def projection_factory
-        @projector ? @projector.projection_factory : nil
-      end
-      
-      
-      # Projects the given geometry into the projected coordinate space,
-      # and returns the projected geometry.
-      # Returns nil if this factory does not support a projection.
-      # Raises Errors::IllegalGeometry if the given geometry is not of
-      # this factory.
-      
-      def project(geometry_)
-        return nil unless @projector
-        unless geometry_.factory == self
-          raise Errors::IllegalGeometry, 'Wrong geometry type'
-        end
-        @projector.project(geometry_)
-      end
-      
-      
-      # Reverse-projects the given geometry from the projected coordinate
-      # space into lat-long space.
-      # Raises Errors::IllegalGeometry if the given geometry is not of
-      # the projection defined by this factory.
-      
-      def unproject(geometry_)
-        unless @projector && @projector.projection_factory == geometry_.factory
-          raise Errors::IllegalGeometry, 'You can unproject only features that are in the projected coordinate space.'
-        end
-        @projector.unproject(geometry_)
-      end
-      
-      
-      # Returns true if this factory supports a projection and the
-      # projection wraps its x (easting) direction. For example, a
-      # Mercator projection wraps, but a local projection that is valid
-      # only for a small area does not wrap.
-      
-      def projection_wraps?
-        @projector ? @projector.wraps? : nil
-      end
-      
-      
-      # Returns a ProjectedWindow specifying the limits of the domain of
-      # the projection space.
-      # Returns nil if this factory does not support a projection.
-      
-      def projection_limits_window
-        @projector ? (@projection_limits_window ||= @projector.limits_window) : nil
+      def srid
+        @srid
       end
       
       
@@ -143,63 +83,63 @@ module RGeo
       # See ::RGeo::Features::Factory#point
       
       def point(x_, y_)
-        @namespace.const_get(:PointImpl).new(self, x_, y_) rescue nil
+        SimplePointImpl.new(self, x_, y_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#line_string
       
       def line_string(points_)
-        @namespace.const_get(:LineStringImpl).new(self, points_) rescue nil
+        SimpleLineStringImpl.new(self, points_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#line
       
       def line(start_, end_)
-        @namespace.const_get(:LineImpl).new(self, start_, end_) rescue nil
+        SimpleLineImpl.new(self, start_, end_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#linear_ring
       
       def linear_ring(points_)
-        @namespace.const_get(:LinearRingImpl).new(self, points_) rescue nil
+        SimpleLinearRingImpl.new(self, points_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
-        @namespace.const_get(:PolygonImpl).new(self, outer_ring_, inner_rings_) rescue nil
+        SimplePolygonImpl.new(self, outer_ring_, inner_rings_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#collection
       
       def collection(elems_)
-        @namespace.const_get(:GeometryCollectionImpl).new(self, elems_) rescue nil
+        SimpleGeometryCollectionImpl.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#multi_point
       
       def multi_point(elems_)
-        @namespace.const_get(:MultiPointImpl).new(self, elems_) rescue nil
+        SimpleMultiPointImpl.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#multi_line_string
       
       def multi_line_string(elems_)
-        @namespace.const_get(:MultiLineStringImpl).new(self, elems_) rescue nil
+        SimpleMultiLineStringImpl.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#multi_polygon
       
       def multi_polygon(elems_)
-        @namespace.const_get(:MultiPolygonImpl).new(self, elems_) rescue nil
+        SimpleMultiPolygonImpl.new(self, elems_) rescue nil
       end
       
       

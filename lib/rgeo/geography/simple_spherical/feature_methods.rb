@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical MultiPolygon implementation
+# Spherical geometry common methods
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -41,19 +41,53 @@ module RGeo
     module SimpleSpherical
       
       
-      class MultiPolygonImpl
+      module GeometryMethods
         
         
-        include Features::GeometryCollection
-        include Common::GeometryMethods
-        include GeometryMethods
-        include Common::GeometryCollectionMethods
-        include Common::MultiPolygonMethods
+        def srid
+          4326
+        end
         
         
-        def initialize(factory_, elements_)
-          _set_factory(factory_)
-          _setup(elements_)
+      end
+      
+      
+      module LineStringMethods
+        
+        
+        def _arcs
+          unless @arcs
+            @arcs = (0..num_points-2).map do |i_|
+              ArcXYZ.new(point_n(i_)._xyz, point_n(i_+1)._xyz)
+            end
+          end
+          @arcs
+        end
+        
+        
+        def is_simple?
+          arcs_ = _arcs
+          len_ = arcs_.length
+          return false if arcs_.any?{ |a_| a_.degenerate? }
+          return true if len_ == 1
+          return arcs_[0].s != arcs_[1].e if len_ == 2
+          arcs_.each_with_index do |arc_, index_|
+            nindex_ = index_ + 1
+            nindex_ = nil if nindex_ == len_
+            return false if nindex_ && arc_.contains_point?(arcs_[nindex_].e)
+            pindex_ = index_ - 1
+            pindex_ = nil if pindex_ < 0
+            return false if pindex_ && arc_.contains_point?(arcs_[pindex_].s)
+            if nindex_
+              oindex_ = nindex_ + 1
+              while oindex_ < len_
+                oarc_ = arcs_[oindex_]
+                return false if !(index_ == 0 && oindex_ == len_-1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
+                oindex_ += 1
+              end
+            end
+          end
+          true
         end
         
         

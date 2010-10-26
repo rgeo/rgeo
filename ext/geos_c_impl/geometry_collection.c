@@ -176,7 +176,7 @@ static GEOSGeometry** gather_geometry_collection(int type, VALUE factory, VALUE 
     unsigned int array_len = (unsigned int)RARRAY_LEN(array);
     unsigned int ai;
     for (ai=0; ai<array_len; ++ai) {
-      GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(array, ai), NULL);
+      GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(array, ai), Qnil, NULL);
       if (geom) {
         if (!gather_geometry_collection_internal(type, factory, geoms, &ci, geom, 1)) {
           break;
@@ -203,6 +203,96 @@ static GEOSGeometry** gather_geometry_collection(int type, VALUE factory, VALUE 
 // You must pass in the correct GEOS geometry type ID.
 
 static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
+{
+  VALUE result = Qnil;
+  Check_Type(array, T_ARRAY);
+  unsigned int len = (unsigned int)RARRAY_LEN(array);
+  GEOSGeometry** geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
+  if (geoms) {
+    VALUE klass;
+    unsigned int i,j;
+    VALUE klasses = Qnil;
+    VALUE cast_type = Qnil;
+    switch (type) {
+    case GEOS_MULTIPOINT:
+      cast_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("Point"));
+      break;
+    case GEOS_MULTILINESTRING:
+      cast_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("LineString"));
+      break;
+    case GEOS_MULTIPOLYGON:
+      cast_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("Polygon"));
+      break;
+    }
+    for (i=0; i<len; ++i) {
+      GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(array, i), cast_type, &klass);
+      if (!geom) {
+        break;
+      }
+      geoms[i] = geom;
+      if (!NIL_P(klass) && NIL_P(klasses)) {
+        klasses = rb_ary_new2(len);
+        for (j=0; j<i; ++j) {
+          rb_ary_push(klasses, Qnil);
+        }
+      }
+      if (!NIL_P(klasses)) {
+        rb_ary_push(klasses, klass);
+      }
+    }
+    if (i != len) {
+      for (j=0; j<i; ++j) {
+        GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), geoms[j]);
+      }
+    }
+    else {
+      GEOSGeometry* collection = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_FACTORY(factory), type, geoms, len);
+      // Due to a limitation of GEOS, the MultiPolygon assertions are not checked.
+      // We do that manually here.
+      if (collection && type == GEOS_MULTIPOLYGON && (RGEO_FACTORY_DATA_PTR(factory)->flags & 1) == 0) {
+        char problem = 0;
+        for (i=1; i<len; ++i) {
+          for (j=0; j<i; ++j) {
+            GEOSGeometry* igeom = geoms[i];
+            GEOSGeometry* jgeom = geoms[j];
+            problem = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_FACTORY(factory), igeom, jgeom, "2********");
+            if (problem) {
+              break;
+            }
+            problem = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_FACTORY(factory), igeom, jgeom, "****1****");
+            if (problem) {
+              break;
+            }
+          }
+          if (problem) {
+            break;
+          }
+        }
+        if (problem) {
+          GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), collection);
+          collection = NULL;
+        }
+      }
+      if (collection) {
+        result = rgeo_wrap_geos_geometry(factory, collection, module);
+        RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
+      }
+      // NOTE: We are assuming that GEOS will do its own cleanup of the
+      // element geometries if it fails to create the collection, so we
+      // are not doing that ourselves. If that turns out not to be the
+      // case, this will be a memory leak.
+    }
+    free(geoms);
+  }
+  
+  return result;
+}
+
+
+// Main implementation of the "create" class method for geometry collections.
+// You must pass in the correct GEOS geometry type ID.
+
+static VALUE create_geometry_collection2(VALUE module, int type, VALUE factory, VALUE array)
 {
   VALUE result = Qnil;
   Check_Type(array, T_ARRAY);

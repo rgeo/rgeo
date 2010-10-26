@@ -169,7 +169,8 @@ static VALUE method_polygon_interior_rings(VALUE self)
 static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE interior_array)
 {
   Check_Type(interior_array, T_ARRAY);
-  GEOSGeometry* exterior_geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), exterior, NULL);
+  VALUE linear_ring_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("LinearRing"));
+  GEOSGeometry* exterior_geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), exterior, linear_ring_type, NULL);
   if (exterior_geom) {
     unsigned int len = (unsigned int)RARRAY_LEN(interior_array);
     GEOSGeometry** interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
@@ -177,7 +178,7 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
       unsigned int actual_len = 0;
       unsigned int i;
       for (i=0; i<len; ++i) {
-        GEOSGeometry* interior_geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(interior_array, i), NULL);
+        GEOSGeometry* interior_geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(interior_array, i), linear_ring_type, NULL);
         if (interior_geom) {
           interior_geoms[actual_len++] = interior_geom;
         }

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS multi line string implementation
+# Cartesian toplevel interface
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,29 +34,52 @@
 ;
 
 
-require 'test/unit'
-require 'rgeo'
-
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
-
-
 module RGeo
-  module Tests  # :nodoc:
-    module Geos
+  
+  module Cartesian
+    
+    class << self
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
-        
-        
-        def create_factory
-          ::RGeo::Geos.factory
+      
+      # Creates and returns a cartesian factory of the preferred
+      # implementation.
+      # 
+      # The actual implementation returned depends on which ruby
+      # interpreter is running and what libraries are available.
+      # RGeo will try to provide a fully-functional and performant
+      # implementation if possible. If not, the simple cartesian
+      # implementation will be returned.
+      # 
+      # The given options are passed to the factory's constructor.
+      # What options are available depends on the particular
+      # implementation. Unsupported options are ignored.
+      
+      def preferred_factory(opts_={})
+        if Geos.supported?
+          Geos.factory(opts_)
+        else
+          simple_factory(opts_)
         end
-        
-        
-        include ::RGeo::Tests::Common::MultiLineStringTests
-        
-        
+      end
+      alias_method :factory, :preferred_factory
+      
+      
+      # Returns a factory for the simple cartesian implementation.
+      # This implementation is always available.
+      # 
+      # Options include:
+      # 
+      # <tt>:srid</tt>::
+      #   Set the SRID returned by geometries created by this factory.
+      #   Default is 0.
+      
+      def simple_factory(opts_={})
+        SimpleFactory.new(opts_)
       end
       
+      
     end
+    
   end
+  
 end

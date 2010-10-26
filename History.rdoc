@@ -1,8 +1,13 @@
+=== 0.1.13 / 2010-10-26
+
+* Reworked the way casting is done. Casting has two dimensions: factory casting and type casting, either or both of which can be done at once. Implemented a standard casting algorithm to handle these cases, and an override mechanism for factories that want to do some of their own casting. Removed Factory#cast and Geometry#cast, and implemented a global Features::cast entry point instead.
+* All factory and relational methods now perform auto-casting on inputs.
+* Removed the "auto-flattening" behavior of Factory#multi_point, Factory#multi_line_string, and Factory#multi_polygon because it seemed overkill for factory methods. These methods now just attempt to auto-cast the immediate objects.
+* Filled out more test cases for SimpleSpherical.
+* Provided SimpleCartesian as a fallback implementation in case Geos is not available. SimpleCartesian is like SimpleSpherical in that some operations are not provided, but it is pure ruby and doesn't depend on external libraries.
+* A few more documentation updates.
+
 === 0.1.12 / 2010-10-23
-
-Further development and fixes in the geographic coordinate systems.
-
-Changes since 0.1.11:
 
 * API CHANGE: Factory#coerce renamed to Factory#cast. I think this should be the final name for this function.
 * Some new tests and a lot of fixes in SimpleMercator and SimpleSpherical.
@@ -11,10 +16,6 @@ Changes since 0.1.11:
 * A few more documentation updates.
 
 === 0.1.11 / 2010-10-21
-
-Further development and fixing in the geographic coordinate systems.
-
-Changes since 0.1.10:
 
 * API CHANGE: Factory#convert renamed to Factory#coerce.
 * Some implementations that inherit from RGeo::Features::Geometry (e.g. the Geography implementations) raised Unimplemented from operator implementations because they had aliased the wrong methods. Fixed.

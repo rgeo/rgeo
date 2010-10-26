@@ -52,11 +52,23 @@ module RGeo
     # coordinates or additional subclasses not explicitly required by the
     # Simple Features Specification.
     # 
-    # A particular factory implementation may not necessarily include
-    # this module. Do not depend on kind_of? or === to check for
-    # factory-ness. This module is present primarily for documentation.
+    # Factory is defined as a module and is provided primarily for the
+    # sake of documentation. Implementations need not necessarily include
+    # this module itself. Therefore, you should not depend on the
+    # kind_of? method to check type. However, to support testing for
+    # factory-ness, the Factory::Instance submodule is provided. All
+    # factory implementation classes MUST include Factory::Instance, and
+    # you may use it in kind_of?, ===, and case-when constructs.
     
     module Factory
+      
+      
+      # All factory implementations MUST implement this submodule.
+      # This serves as a marker that may be used to test an object for
+      # factory-ness.
+      
+      module Instance
+      end
       
       
       # Parse the given string in well-known-text format and return the
@@ -84,7 +96,8 @@ module RGeo
       
       
       # Create a feature of type LineString.
-      # The given points argument should be an Enumerable of Point objects.
+      # The given points argument should be an Enumerable of Point
+      # objects, or objects that can be casted to Point.
       
       def line_string(points_)
         nil
@@ -92,7 +105,8 @@ module RGeo
       
       
       # Create a feature of type Line.
-      # The given point arguments should be Point objects.
+      # The given point arguments should be Point objects, or objects
+      # that can be casted to Point.
       
       def line(start_, end_)
         nil
@@ -100,7 +114,8 @@ module RGeo
       
       
       # Create a feature of type LinearRing.
-      # The given points argument should be an Enumerable of Point objects.
+      # The given points argument should be an Enumerable of Point
+      # objects, or objects that can be casted to Point.
       # If the first and last points are not equal, the ring is
       # automatically closed by appending the first point to the end of the
       # string.
@@ -111,9 +126,11 @@ module RGeo
       
       
       # Create a feature of type Polygon.
-      # The outer_ring should be a LinearRing.
+      # The outer_ring should be a LinearRing, or an object that can be
+      # casted to LinearRing.
       # The inner_rings should be a possibly empty Enumerable of
-      # LinearRing. You may also pass nil to indicate no inner rings.
+      # LinearRing (or objects that can be casted to LinearRing).
+      # You may also pass nil to indicate no inner rings.
       
       def polygon(outer_ring_, inner_rings_=nil)
         nil
@@ -122,8 +139,6 @@ module RGeo
       
       # Create a feature of type GeometryCollection.
       # The elems should be an Enumerable of Geometry objects.
-      # This method does not "flatten" collection hierarchies in the way
-      # that multi_point, multi_line_string, and multi_polygon do.
       
       def collection(elems_)
         nil
@@ -131,12 +146,10 @@ module RGeo
       
       
       # Create a feature of type MultiPoint.
-      # The elems should be an Enumerable of Point objects, or collections
-      # whose contents, recursively expanded, eventually include only
-      # Point objects. The resultant MultiPoint will thus be "flattened"
-      # so that its elements include only those leaf Points.
-      # Returns nil if any of the leaf geometries is not a Point, which
-      # would break the MultiPoint contract.
+      # The elems should be an Enumerable of Point objects, or objects
+      # that can be casted to Point.
+      # Returns nil if any of the contained geometries is not a Point,
+      # which would break the MultiPoint contract.
       
       def multi_point(elems_)
         nil
@@ -144,14 +157,10 @@ module RGeo
       
       
       # Create a feature of type MultiLineString.
-      # 
-      # The elems should be an Enumerable of LineString objects, or
-      # collections whose contents, recursively expanded, eventually
-      # include only LineString objects (or subclasses thereof).
-      # The resultant MultiLineString will thus be "flattened" so that its
-      # elements include only those leaf LineStrings.
-      # Returns nil if any of the leaf geometries is not a LineString,
-      # which would break the MultiLineString contract.
+      # The elems should be an Enumerable of objects that are or can be
+      # casted to LineString or any of its subclasses.
+      # Returns nil if any of the contained geometries is not a
+      # LineString, which would break the MultiLineString contract.
       
       def multi_line_string(elems_)
         nil
@@ -159,12 +168,9 @@ module RGeo
       
       
       # Create a feature of type MultiPolygon.
-      # The elems should be an Enumerable of Polygon objects, or
-      # collections whose contents, recursively expanded, eventually
-      # include only Polygon objects.
-      # The resultant MultiPolygon will thus be "flattened" so that its
-      # elements include only those leaf Polygons.
-      # Returns nil if any of the leaf geometries is not a Polygon,
+      # The elems should be an Enumerable of objects that are or can be
+      # casted to Polygon or any of its subclasses.
+      # Returns nil if any of the contained geometries is not a Polygon,
       # which would break the MultiPolygon contract.
       # Also returns nil if any of the other assertions for MultiPolygon
       # are not met-- e.g. if any of the polygons overlap.
@@ -174,13 +180,32 @@ module RGeo
       end
       
       
-      # Cast an existing feature to a feature of the type created by
-      # this implementation.
-      # If force_new is true, a new object is returned even if the original
-      # is already of this implementation.
+      # This is an optional method that may be implemented to customize
+      # casting for this factory. Basically, RGeo defines standard ways
+      # to cast certain types of objects from one factory to another and
+      # one SFS type to another. However, a factory may choose to
+      # override how things are casted TO its implementation using this
+      # method. It can do this to optimize certain casting cases, or
+      # implement special cases particular to this factory.
+      # 
+      # This method will be called (if defined) on the destination
+      # factory, and will be passed the original object (which may or may
+      # not already be created by this factory), the SFS feature type
+      # (which again may or may not already be the type of the original
+      # object), a flag indicating whether to keep the subtype if casting
+      # to a supertype of the current type, and a flag indicating whether
+      # to force the creation of a new object even if the original is
+      # already of the desired factory and type.
+      # 
+      # It should return either a casted result object, false, or nil.
+      # A nil return value indicates that casting should be forced to
+      # fail (and ::RGeo::Features::cast will return nil).
+      # A false return value indicates that this method declines to
+      # override the casting algorithm, and RGeo should use its default
+      # algorithm to cast the object.
       
-      def cast(original_, force_new_=false)
-        nil
+      def override_cast(original_, type_, keep_subtype_, force_new_)
+        false
       end
       
       

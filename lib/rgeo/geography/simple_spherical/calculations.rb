@@ -85,7 +85,7 @@ module RGeo
         def latlon
           lat_rad_ = ::Math.asin(@z)
           lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
-          rpd_ = Common::Helper::RADIANS_PER_DEGREE
+          rpd_ = Helper::RADIANS_PER_DEGREE
           [lat_rad_ / rpd_, lon_rad_ / rpd_]
         end
         
@@ -120,7 +120,7 @@ module RGeo
         
         
         def self.from_latlon(lat_, lon_)
-          rpd_ = Common::Helper::RADIANS_PER_DEGREE
+          rpd_ = Helper::RADIANS_PER_DEGREE
           lat_rad_ = rpd_ * lat_
           lon_rad_ = rpd_ * lon_
           z_ = ::Math.sin(lat_rad_)
@@ -157,6 +157,12 @@ module RGeo
           rhs_.kind_of?(ArcXYZ) && @s == rhs_.s && @e == rhs_.e
         end
         alias_method :==, :eql?
+        
+        
+        def degenerate?
+          axis_ = axis
+          axis_.x == 0 && axis_.y == 0 && axis_.z == 0
+        end
         
         
         def axis

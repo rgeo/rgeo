@@ -43,7 +43,7 @@ module RGeo
     
     class Factory
       
-      include Features::Factory
+      include Features::Factory::Instance
       
       
       class << self
@@ -103,12 +103,12 @@ module RGeo
       
       # Returns true if this factory is lenient with MultiPolygon assertions
       
-      def lenient_multi_polygons?
+      def lenient_multi_polygon_assertions?
         _flags & 0x1 != 0
       end
       
       
-      # Equivalence test.
+      # Factory equivalence test.
       
       def eql?(rhs_)
         rhs_.is_a?(Factory) && rhs_.srid == _srid && rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags
@@ -156,9 +156,6 @@ module RGeo
       
       def linear_ring(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
-        if points_.size > 1 && points_.first != points_.last
-          points_ << points_.first
-        end
         LinearRingImpl.create(self, points_) rescue nil
       end
       
@@ -203,46 +200,35 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#cast
+      # See ::RGeo::Features::Factory#override_cast
       
-      def cast(original_, force_new_=false)
+      def override_cast(original_, ntype_, keep_subtype_, force_new_)
         return nil unless Geos.supported?
-        case original_
-        when GeometryImpl
-          if original_.factory != self
+        type_ = original_.geometry_type
+        ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
+        if original_.factory != self && ntype_ == type_
+          if GeometryImpl === original_
             result_ = original_.dup
-            result_.instance_variable_set(:@_factory, self)
-            result_
-          elsif force_new_
-            original_.dup
-          else
-            original_
+            result_._set_factory(self)
+            return result_
           end
-        when Features::Point
-          if original_.respond_to?(:z)
-            PointImpl.create(self, original_.x, original_.y, original_.z)
-          else
-            PointImpl.create(self, original_.x, original_.y)
+          if type_ == Features::Point && original_.respond_to?(:z)
+            z_ = original_.z
+            return PointImpl.create(self, original_.x, original_.y, z_) if z_
           end
-        when Features::Line
-          LineImpl.create(self, cast(original_.start_point), cast(original_.end_point))
-        when Features::LinearRing
-          LinearRingImpl.create(self, original_.points.map{ |g_| cast(g_) })
-        when Features::LineString
-          LineStringImpl.create(self, original_.points.map{ |g_| cast(g_) })
-        when Features::Polygon
-          PolygonImpl.create(self, cast(original_.exterior_ring), original_.interior_rings.map{ |g_| cast(g_) })
-        when Features::MultiPoint
-          MultiPointImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
-        when Features::MultiLineString
-          MultiLineStringImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
-        when Features::MultiPolygon
-          MultiPolygonImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
-        when Features::GeometryCollection
-          GeometryCollectionImpl.create(self, original_.to_a.map{ |g_| cast(g_) })
-        else
-          nil
         end
+        if GeometryImpl === original_ && (original_.factory != self || ntype_ != type_) &&
+            (type_ == Features::LineString || type_ == Features::Line || type_ == Features::LinearRing)
+        then
+          if ntype_ == Features::LineString
+            return LineStringImpl._copy_from(self, original_)
+          elsif ntype_ == Features::Line
+            return LineImpl._copy_from(self, original_)
+          elsif ntype_ == Features::LinearRing
+            return LinearRingImpl._copy_from(self, original_)
+          end
+        end
+        false
       end
       
       

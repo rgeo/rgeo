@@ -158,25 +158,29 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 /*
   Gets the GEOS geometry for a given ruby Geometry object. If the given
   ruby object is not a GEOS geometry implementation, it is converted to a
-  GEOS implementation first. The returned GEOS geometry is owned by rgeo,
+  GEOS implementation first. You may also optionally cast it to a type,
+  specified by an appropriate feature module. Passing Qnil for the type
+  disables this auto-cast. The returned GEOS geometry is owned by rgeo,
   and you should not dispose it or take ownership of it yourself.
 */
-const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj);
+const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type);
 
 /*
   Gets a GEOS geometry for a given ruby Geometry object. If the given
   ruby object is not a GEOS geometry implementation, it is converted to a
-  GEOS implementation first. The returned GEOS geometry is owned by the
+  GEOS implementation first. You may also optionally cast it to a type,
+  specified by an appropriate feature module. Passing Qnil for the type
+  disables this auto-cast. The returned GEOS geometry is owned by the
   caller-- that is, if the original ruby object is a GEOS implementation,
   the returned GEOS geometry is a clone of the original.
   If the klasses parameters is not NULL, its referent is set to the
-  klasses saved in the original ruby Geometry object (if any), or to Qnil
-  if the original object is not a GEOS implementation. This is so that
-  you can use the result of this function to build a GEOS-backed clone
-  of the original geometry, or to include the given geometry in a
-  collection while keeping the klasses intact.
+  klasses saved in the original ruby Geometry object (if any), or else to
+  the class of the converted GEOS object. This is so that you can use the
+  result of this function to build a GEOS-backed clone of the original
+  geometry, or to include the given geometry in a collection while keeping
+  the klasses intact.
 */
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(RGeo_Globals* globals, VALUE obj, VALUE* klasses);
+GEOSGeometry* rgeo_convert_to_detached_geos_geometry(RGeo_Globals* globals, VALUE obj, VALUE type, VALUE* klasses);
 
 /*
   Returns 1 if the given ruby object is a GEOS Geometry implementation,

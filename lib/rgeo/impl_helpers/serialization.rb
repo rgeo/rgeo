@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical Polygon implementation
+# Basic methods used by geometry objects
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,30 +36,94 @@
 
 module RGeo
   
-  module Geography
+  module ImplHelpers
     
-    module SimpleSpherical
+    
+    module Serialization
       
+      @helper_factory = false
       
-      class PolygonImpl
+      class << self
         
         
-        include Features::Polygon
-        include Common::GeometryMethods
-        include GeometryMethods
-        include Common::PolygonMethods
+        def _helper_factory
+          if @helper_factory == false
+            if Geos.supported?
+              @helper_factory = Geos.factory(:srid => 0)
+            else
+              @helper_factory = nil
+            end
+          end
+          @helper_factory
+        end
         
         
-        def initialize(factory_, exterior_ring_, interior_rings_)
-          _set_factory(factory_)
-          _setup(exterior_ring_, interior_rings_)
+        def parse_wkt(str_, factory_)
+          helper_factory_ = _helper_factory
+          if helper_factory_
+            obj_ = helper_factory_.parse_wkt(str_)
+            obj_ ? Features.cast(obj_, factory_) : nil
+          else
+            default_parse_wkt(str_, factory_)
+          end
+        end
+        
+        
+        def parse_wkb(str_, factory_)
+          helper_factory_ = _helper_factory
+          if helper_factory_
+            obj_ = helper_factory_.parse_wkb(str_)
+            obj_ ? Features.cast(obj_, factory_) : nil
+          else
+            default_parse_wkb(str_, factory_)
+          end
+        end
+        
+        
+        def unparse_wkt(obj_)
+          helper_factory_ = _helper_factory
+          if helper_factory_
+            Features.cast(obj_, helper_factory_).as_text
+          else
+            default_unparse_wkt(obj_)
+          end
+        end
+        
+        
+        def unparse_wkb(obj_)
+          helper_factory_ = _helper_factory
+          if helper_factory_
+            Features.cast(obj_, helper_factory_).as_binary
+          else
+            default_unparse_wkb(obj_)
+          end
+        end
+        
+        
+        def default_parse_wkt(str_, factory_)
+          nil  # TODO
+        end
+        
+        
+        def default_parse_wkb(str_, factory_)
+          nil  # TODO
+        end
+        
+        
+        def default_unparse_wkt(obj_)
+          nil  # TODO
+        end
+        
+        
+        def default_unparse_wkb(obj_)
+          nil  # TODO
         end
         
         
       end
       
-      
     end
+    
     
   end
   

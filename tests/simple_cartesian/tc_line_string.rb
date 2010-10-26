@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical MultiPoint implementation
+# Tests for the simple cartesian line string implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,34 +34,37 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/line_string_tests.rb', ::File.dirname(__FILE__))
+
+
 module RGeo
-  
-  module Geography
-    
-    module SimpleSpherical
+  module Tests  # :nodoc:
+    module SimpleCartesian  # :nodoc:
       
-      
-      class MultiPointImpl
+      class TestLineString < ::Test::Unit::TestCase  # :nodoc:
         
         
-        include Features::GeometryCollection
-        include Common::GeometryMethods
-        include GeometryMethods
-        include Common::GeometryCollectionMethods
-        include Common::MultiPointMethods
-        
-        
-        def initialize(factory_, elements_)
-          _set_factory(factory_)
-          _setup(elements_)
+        def setup
+          @factory = ::RGeo::Cartesian.simple_factory
         end
+        
+        
+        include ::RGeo::Tests::Common::LineStringTests
+        
+        
+        undef_method :test_fully_equal
+        undef_method :test_geometrically_equal_but_different_type
+        undef_method :test_geometrically_equal_but_different_type2
+        undef_method :test_geometrically_equal_but_different_overlap
+        undef_method :test_empty_equal
+        undef_method :test_not_equal
         
         
       end
       
-      
     end
-    
   end
-  
 end

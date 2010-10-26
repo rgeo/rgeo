@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Common methods for Polygon geography features
+# Spherical geometry common methods
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,86 +36,61 @@
 
 module RGeo
   
-  module Geography
+  module Cartesian
     
-    module Common
+    
+    module SimpleGeometryMethods
       
       
-      module PolygonMethods
-        
-        
-        def _setup(exterior_ring_, interior_rings_)
-          @exterior_ring = factory.cast(exterior_ring_)
-          @interior_rings = (interior_rings_ || []).map{ |elem_| factory.cast(elem_) }
-          unless Features::LinearRing.check_type(@exterior_ring)
-            raise Errors::InvalidGeometry, 'Exterior ring must be a LinearRing'
-          end
-          @interior_rings.each do |ring_|
-            unless Features::LinearRing.check_type(ring_)
-              raise Errors::InvalidGeometry, 'Interior ring must be a LinearRing'
-            end
-          end
-          _validate_geometry
-        end
-        
-        
-        def cast(type_)
-          case type_
-          when Features::Polygon
-            self
-          when Features::LinearRing
-            @exterior_ring
-          when Features::LineString
-            @exterior_ring.cast(type_)
-          when Features::GeometryCollection
-            factory.collection([self]) rescue nil
-          when Features::MultiPolygon
-            factory.multi_polygon([self]) rescue nil
-          else
-            super
-          end
-        end
-        
-        
-        def exterior_ring
-          @exterior_ring
-        end
-        
-        
-        def num_interior_rings
-          @interior_rings.size
-        end
-        
-        
-        def interior_ring_n(n_)
-          @interior_rings[n_]
-        end
-        
-        
-        def interior_rings
-          @interior_rings.dup
-        end
-        
-        
-        def dimension
-          2
-        end
-        
-        
-        def geometry_type
-          Features::Polygon
-        end
-        
-        
-        def is_empty?
-          @exterior_ring.is_empty?
-        end
-        
-        
+      def srid
+        factory.srid
       end
       
       
     end
+    
+    
+    module SimpleLineStringMethods
+      
+      
+      def _segments
+        unless @segments
+          @segments = (0..num_points-2).map do |i_|
+            Segment.new(point_n(i_), point_n(i_+1))
+          end
+        end
+        @segments
+      end
+      
+      
+      def is_simple?
+        segs_ = _segments
+        len_ = segs_.length
+        return false if segs_.any?{ |a_| a_.degenerate? }
+        return true if len_ == 1
+        return segs_[0].s != segs_[1].e if len_ == 2
+        segs_.each_with_index do |seg_, index_|
+          nindex_ = index_ + 1
+          nindex_ = nil if nindex_ == len_
+          return false if nindex_ && seg_.contains_point?(segs_[nindex_].e)
+          pindex_ = index_ - 1
+          pindex_ = nil if pindex_ < 0
+          return false if pindex_ && seg_.contains_point?(segs_[pindex_].s)
+          if nindex_
+            oindex_ = nindex_ + 1
+            while oindex_ < len_
+              oseg_ = segs_[oindex_]
+              return false if !(index_ == 0 && oindex_ == len_-1 && seg_.s == oseg_.e) && seg_.intersects_segment?(oseg_)
+              oindex_ += 1
+            end
+          end
+        end
+        true
+      end
+      
+      
+    end
+    
     
   end
   

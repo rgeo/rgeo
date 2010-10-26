@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical MultiLineString implementation
+# Tests for the simple cartesian geometry collection implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,34 +34,35 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/geometry_collection_tests.rb', ::File.dirname(__FILE__))
+
+
 module RGeo
-  
-  module Geography
-    
-    module SimpleSpherical
+  module Tests  # :nodoc:
+    module SimpleCartesian  # :nodoc:
       
-      
-      class MultiLineStringImpl
+      class TestGeometryCollection < ::Test::Unit::TestCase  # :nodoc:
         
         
-        include Features::GeometryCollection
-        include Common::GeometryMethods
-        include GeometryMethods
-        include Common::GeometryCollectionMethods
-        include Common::MultiLineStringMethods
-        
-        
-        def initialize(factory_, elements_)
-          _set_factory(factory_)
-          _setup(elements_)
+        def create_factory
+          @factory = ::RGeo::Cartesian.simple_factory
         end
+        
+        
+        include ::RGeo::Tests::Common::GeometryCollectionTests
+        
+        
+        undef_method :test_fully_equal
+        undef_method :test_geometrically_equal
+        undef_method :test_empty_equal
+        undef_method :test_not_equal
         
         
       end
       
-      
     end
-    
   end
-  
 end

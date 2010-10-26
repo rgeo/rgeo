@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS multi line string implementation
+# Tests for the simple cartesian polygon implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,22 +37,27 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module SimpleCartesian  # :nodoc:
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
+      class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          ::RGeo::Geos.factory
+        def setup
+          @factory = ::RGeo::Cartesian.simple_factory
         end
         
         
-        include ::RGeo::Tests::Common::MultiLineStringTests
+        include ::RGeo::Tests::Common::PolygonTests
+        
+        
+        undef_method :test_fully_equal
+        undef_method :test_geometrically_equal_but_ordered_different
+        undef_method :test_geometrically_equal_but_different_directions
         
         
       end

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Basic methods used by all geography features
+# Cartesian features for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,57 +36,24 @@
 
 module RGeo
   
-  module Geography
-    
-    module Common
-      
-      
-      module GeometryMethods
-        
-        
-        def inspect  # :nodoc:
-          "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
-        end
-        
-        def to_s  # :nodoc:
-          as_text
-        end
-        
-        
-        def _validate_geometry  # :nodoc:
-        end
-        
-        
-        def _set_factory(factory_)  # :nodoc:
-          @factory = factory_
-        end
-        
-        
-        def factory
-          @factory
-        end
-        
-        
-        def cast(type_)
-          type_ == geometry_type ? self : nil
-        end
-        
-        
-        def as_text
-          Helper.unparse_wkt(self)
-        end
-        
-        
-        def as_binary
-          Helper.unparse_wkb(self)
-        end
-        
-        
-      end
-      
-      
-    end
-    
+  
+  # The cartesian features module
+  
+  module Cartesian
   end
   
+  
 end
+
+
+# Dependency source files.
+paths_ = [
+  'features',
+  'geos',
+  'cartesian/calculations',
+  'cartesian/simple_feature_methods',
+  'cartesian/simple_feature_classes',
+  'cartesian/simple_factory',
+  'cartesian/interface',
+]
+paths_.each{ |path_| require "rgeo/#{path_}" }

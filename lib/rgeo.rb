@@ -34,18 +34,6 @@
 ;
 
 
-# The source files that should be required by default.
-paths_ = [
-  'version',
-  'errors',
-  'features',
-  'geos',
-  'geography',
-  'geo_json',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
-
-
 # RGeo is a spatial data library for Ruby.
 # 
 # The RGeo::Features module contains interface specifications for spatial
@@ -66,3 +54,17 @@ paths_.each{ |path_| require "rgeo/#{path_}" }
 
 module RGeo
 end
+
+
+# The source files that should be required by default.
+paths_ = [
+  'version',
+  'errors',
+  'features',
+  'impl_helpers',
+  'geos',
+  'cartesian',
+  'geography',
+  'geo_json',
+]
+paths_.each{ |path_| require "rgeo/#{path_}" }
