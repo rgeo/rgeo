@@ -49,10 +49,11 @@ module RGeo
     # for the sake of documentation. Implementations need not necessarily
     # include this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
-    # class method. A corresponding === operator is also provided to
-    # to support case-when constructs.
+    # class method (or === operator) defined in the Type module.
     
     module Line
+      
+      extend Type
       
       include LineString
       

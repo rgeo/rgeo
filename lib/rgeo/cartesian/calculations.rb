@@ -41,7 +41,7 @@ module RGeo
     
     # Represents a line segment in the plane.
     
-    class Segment
+    class Segment  # :nodoc:
       
       def initialize(start_, end_)
         @s = start_
@@ -121,10 +121,6 @@ module RGeo
       end
       
       
-    end
-    
-    
-    module Calculations
     end
     
     

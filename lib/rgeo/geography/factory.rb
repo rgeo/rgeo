@@ -82,13 +82,13 @@ module RGeo
       # Projects the given geometry into the projected coordinate space,
       # and returns the projected geometry.
       # Returns nil if this factory does not support a projection.
-      # Raises Errors::IllegalGeometry if the given geometry is not of
+      # Raises Errors::InvalidGeometry if the given geometry is not of
       # this factory.
       
       def project(geometry_)
         return nil unless @projector
         unless geometry_.factory == self
-          raise Errors::IllegalGeometry, 'Wrong geometry type'
+          raise Errors::InvalidGeometry, 'Wrong geometry type'
         end
         @projector.project(geometry_)
       end
@@ -96,12 +96,12 @@ module RGeo
       
       # Reverse-projects the given geometry from the projected coordinate
       # space into lat-long space.
-      # Raises Errors::IllegalGeometry if the given geometry is not of
+      # Raises Errors::InvalidGeometry if the given geometry is not of
       # the projection defined by this factory.
       
       def unproject(geometry_)
         unless @projector && @projector.projection_factory == geometry_.factory
-          raise Errors::IllegalGeometry, 'You can unproject only features that are in the projected coordinate space.'
+          raise Errors::InvalidGeometry, 'You can unproject only features that are in the projected coordinate space.'
         end
         @projector.unproject(geometry_)
       end

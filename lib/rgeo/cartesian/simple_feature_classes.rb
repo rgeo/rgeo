@@ -39,7 +39,7 @@ module RGeo
   module Cartesian
     
     
-    class SimplePointImpl
+    class SimplePointImpl  # :nodoc:
       
       
       include Features::Point
@@ -78,7 +78,7 @@ module RGeo
     end
     
     
-    class SimpleLineStringImpl
+    class SimpleLineStringImpl  # :nodoc:
       
       
       include Features::LineString
@@ -91,7 +91,7 @@ module RGeo
     end
     
     
-    class SimpleLineImpl
+    class SimpleLineImpl  # :nodoc:
       
       
       include Features::Line
@@ -105,7 +105,7 @@ module RGeo
     end
     
     
-    class SimpleLinearRingImpl
+    class SimpleLinearRingImpl  # :nodoc:
       
       
       include Features::Line
@@ -119,7 +119,7 @@ module RGeo
     end
     
     
-    class SimplePolygonImpl
+    class SimplePolygonImpl  # :nodoc:
       
       
       include Features::Polygon
@@ -131,7 +131,7 @@ module RGeo
     end
     
     
-    class SimpleGeometryCollectionImpl
+    class SimpleGeometryCollectionImpl  # :nodoc:
       
       
       include Features::GeometryCollection
@@ -143,7 +143,7 @@ module RGeo
     end
     
     
-    class SimpleMultiPointImpl
+    class SimpleMultiPointImpl  # :nodoc:
       
       
       include Features::GeometryCollection
@@ -156,7 +156,7 @@ module RGeo
     end
     
     
-    class SimpleMultiLineStringImpl
+    class SimpleMultiLineStringImpl  # :nodoc:
       
       
       include Features::GeometryCollection
@@ -169,7 +169,7 @@ module RGeo
     end
     
     
-    class SimpleMultiPolygonImpl
+    class SimpleMultiPolygonImpl  # :nodoc:
       
       
       include Features::GeometryCollection

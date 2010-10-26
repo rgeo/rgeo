@@ -36,10 +36,12 @@
 
 module RGeo
   
-  module ImplHelpers
+  module ImplHelpers  # :nodoc:
     
     
-    module BasicGeometryMethods
+    module BasicGeometryMethods  # :nodoc:
+      
+      include ::RGeo::Features::Type::Instance
       
       
       def inspect  # :nodoc:

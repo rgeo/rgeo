@@ -38,7 +38,7 @@ module RGeo
   
   module Geography
     
-    module SimpleSpherical
+    module SimpleSpherical  # :nodoc:
       
       
       RADIUS = 6371007.2
@@ -55,7 +55,7 @@ module RGeo
       # This object is also used to represent a great circle, as its axis
       # of rotation.
       
-      class PointXYZ
+      class PointXYZ  # :nodoc:
         
         def initialize(x_, y_, z_)
           r_ = ::Math.sqrt(x_ * x_ + y_ * y_ + z_ * z_)
@@ -135,7 +135,7 @@ module RGeo
       
       # Represents a finite arc on the sphere.
       
-      class ArcXYZ
+      class ArcXYZ  # :nodoc:
         
         def initialize(start_, end_)
           @s = start_
@@ -196,10 +196,6 @@ module RGeo
         end
         
         
-      end
-      
-      
-      module Calculations
       end
       
       

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Feature factory interface
+# Feature type management and casting
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,6 +37,48 @@
 module RGeo
   
   module Features
+    
+    
+    # These methods are available as class methods (not instance methods)
+    # of the various feature types.
+    # For example, you may determine whether a feature object is a
+    # point by calling:
+    # 
+    #   ::RGeo::Features::Point.check_type(object)
+    # 
+    # A corresponding === operator is provided so you can use the type
+    # modules in a case-when clause.
+    # 
+    # You may also use the presence of this module to determine whether
+    # a particular object is a feature type:
+    # 
+    #   object.kind_of?(::RGeo::Features::Type)
+    
+    module Type
+      
+      
+      # All geometry implementations MUST include this submodule.
+      # This serves as a marker that may be used to test an object for
+      # feature-ness.
+      
+      module Instance
+      end
+      
+      
+      # Returns true if the given object is this type or a subtype
+      # thereof, or if it is a feature object whose geometry_type is
+      # this type or a subtype thereof.
+      # 
+      # Note that feature objects need not actually include this module.
+      
+      def check_type(rhs_)
+        rhs_ = rhs_.geometry_type if rhs_.kind_of?(Instance)
+        rhs_.kind_of?(Type) && (rhs_ == self || rhs_.include?(self))
+      end
+      alias_method :===, :check_type
+      
+      
+    end
     
     
     class << self

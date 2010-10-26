@@ -36,10 +36,10 @@
 
 module RGeo
   
-  module ImplHelpers
+  module ImplHelpers  # :nodoc:
     
     
-    module BasicPolygonMethods
+    module BasicPolygonMethods  # :nodoc:
       
       
       def initialize(factory_, exterior_ring_, interior_rings_)

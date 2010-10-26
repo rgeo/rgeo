@@ -63,7 +63,7 @@ module RGeo
     module Factory
       
       
-      # All factory implementations MUST implement this submodule.
+      # All factory implementations MUST include this submodule.
       # This serves as a marker that may be used to test an object for
       # factory-ness.
       

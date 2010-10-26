@@ -34,14 +34,14 @@
 ;
 
 
-# :stopdoc:
-
 module RGeo
   
   module Geos
     
     
-    class GeometryImpl
+    class GeometryImpl  # :nodoc:
+      
+      include ::RGeo::Features::Type::Instance
       
       def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
@@ -53,5 +53,3 @@ module RGeo
   end
   
 end
-
-# :startdoc:

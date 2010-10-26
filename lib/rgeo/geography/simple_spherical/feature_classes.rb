@@ -38,10 +38,10 @@ module RGeo
   
   module Geography
     
-    module SimpleSpherical
+    module SimpleSpherical  # :nodoc:
       
       
-      class PointImpl
+      class PointImpl  # :nodoc:
         
         
         include Features::Point
@@ -78,7 +78,7 @@ module RGeo
       end
       
       
-      class LineStringImpl
+      class LineStringImpl  # :nodoc:
         
         
         include Features::LineString
@@ -91,7 +91,7 @@ module RGeo
       end
       
       
-      class LineImpl
+      class LineImpl  # :nodoc:
         
         
         include Features::Line
@@ -105,7 +105,7 @@ module RGeo
       end
       
       
-      class LinearRingImpl
+      class LinearRingImpl  # :nodoc:
         
         
         include Features::Line
@@ -119,7 +119,7 @@ module RGeo
       end
       
       
-      class PolygonImpl
+      class PolygonImpl  # :nodoc:
         
         
         include Features::Polygon
@@ -131,7 +131,7 @@ module RGeo
       end
       
       
-      class GeometryCollectionImpl
+      class GeometryCollectionImpl  # :nodoc:
         
         
         include Features::GeometryCollection
@@ -143,7 +143,7 @@ module RGeo
       end
       
       
-      class MultiPointImpl
+      class MultiPointImpl  # :nodoc:
         
         
         include Features::GeometryCollection
@@ -156,7 +156,7 @@ module RGeo
       end
       
       
-      class MultiLineStringImpl
+      class MultiLineStringImpl  # :nodoc:
         
         
         include Features::GeometryCollection
@@ -169,7 +169,7 @@ module RGeo
       end
       
       
-      class MultiPolygonImpl
+      class MultiPolygonImpl  # :nodoc:
         
         
         include Features::GeometryCollection

@@ -36,10 +36,10 @@
 
 module RGeo
   
-  module ImplHelpers
+  module ImplHelpers  # :nodoc:
     
     
-    module BasicPointMethods
+    module BasicPointMethods  # :nodoc:
       
       
       def initialize(factory_, x_, y_)

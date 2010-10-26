@@ -36,10 +36,10 @@
 
 module RGeo
   
-  module ImplHelpers
+  module ImplHelpers  # :nodoc:
     
     
-    module Serialization
+    module Serialization  # :nodoc:
       
       @helper_factory = false
       

@@ -46,6 +46,15 @@ module RGeo
       
       include Features::Factory::Instance
       
+      
+      # Create a new simple cartesian factory.
+      # 
+      # Options supported are:
+      # 
+      # <tt>:srid</tt>::
+      #   The SRID reported by features created by this factory.
+      #   Default is 0.
+      
       def initialize(opts_={})
         @srid = opts_[:srid].to_i
       end

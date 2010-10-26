@@ -38,10 +38,10 @@ module RGeo
   
   module Geography
     
-    module SimpleSpherical
+    module SimpleSpherical  # :nodoc:
       
       
-      module GeometryMethods
+      module GeometryMethods  # :nodoc:
         
         
         def srid
@@ -52,7 +52,7 @@ module RGeo
       end
       
       
-      module LineStringMethods
+      module LineStringMethods  # :nodoc:
         
         
         def _arcs

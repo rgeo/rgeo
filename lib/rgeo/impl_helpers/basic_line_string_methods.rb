@@ -36,10 +36,10 @@
 
 module RGeo
   
-  module ImplHelpers
+  module ImplHelpers  # :nodoc:
     
     
-    module BasicLineStringMethods
+    module BasicLineStringMethods  # :nodoc:
       
       
       def initialize(factory_, points_)
@@ -127,7 +127,7 @@ module RGeo
     end
     
     
-    module BasicLineMethods
+    module BasicLineMethods  # :nodoc:
       
       
       def initialize(factory_, start_, end_)
@@ -161,7 +161,7 @@ module RGeo
     end
     
     
-    module BasicLinearRingMethods
+    module BasicLinearRingMethods  # :nodoc:
       
       
       def _validate_geometry  # :nodoc:

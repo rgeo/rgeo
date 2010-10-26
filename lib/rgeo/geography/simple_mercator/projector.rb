@@ -38,13 +38,13 @@ module RGeo
   
   module Geography
     
-    module SimpleMercator
+    module SimpleMercator  # :nodoc:
       
       
       EQUATORIAL_RADIUS = 6378137.0
       
       
-      class Projector
+      class Projector  # :nodoc:
         
         def initialize(geography_factory_, opts_={})
           @geography_factory = geography_factory_

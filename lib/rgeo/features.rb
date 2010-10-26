@@ -71,6 +71,7 @@ end
 # Dependency source files.
 paths_ = [
   'features/factory',
+  'features/types',
   'features/geometry',
   'features/point',
   'features/curve',
@@ -85,6 +86,5 @@ paths_ = [
   'features/multi_line_string',
   'features/multi_surface',
   'features/multi_polygon',
-  'features/cast',
 ]
 paths_.each{ |path_| require "rgeo/#{path_}" }

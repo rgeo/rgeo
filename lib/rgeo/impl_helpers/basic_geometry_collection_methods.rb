@@ -36,10 +36,10 @@
 
 module RGeo
   
-  module ImplHelpers
+  module ImplHelpers  # :nodoc:
     
     
-    module BasicGeometryCollectionMethods
+    module BasicGeometryCollectionMethods  # :nodoc:
       
       
       def initialize(factory_, elements_)
@@ -104,7 +104,7 @@ module RGeo
     end
     
     
-    module BasicMultiLineStringMethods
+    module BasicMultiLineStringMethods  # :nodoc:
       
       
       def initialize(factory_, elements_)
@@ -133,7 +133,7 @@ module RGeo
     end
     
     
-    module BasicMultiPointMethods
+    module BasicMultiPointMethods  # :nodoc:
       
       
       def initialize(factory_, elements_)
@@ -157,7 +157,7 @@ module RGeo
     end
     
     
-    module BasicMultiPolygonMethods
+    module BasicMultiPolygonMethods  # :nodoc:
       
       
       def initialize(factory_, elements_)

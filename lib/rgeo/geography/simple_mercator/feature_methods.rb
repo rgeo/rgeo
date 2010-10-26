@@ -38,10 +38,10 @@ module RGeo
   
   module Geography
     
-    module SimpleMercator
+    module SimpleMercator  # :nodoc:
       
       
-      module GeometryMethods
+      module GeometryMethods  # :nodoc:
         
         
         def srid
@@ -176,7 +176,7 @@ module RGeo
       end
       
       
-      module GeometryCollectionMethods
+      module GeometryCollectionMethods  # :nodoc:
         
         
         def scaling_factor
@@ -187,7 +187,7 @@ module RGeo
       end
       
       
-      module NCurveMethods
+      module NCurveMethods  # :nodoc:
         
         
         def length
@@ -198,7 +198,7 @@ module RGeo
       end
       
       
-      module CurveMethods
+      module CurveMethods  # :nodoc:
         
         
         def scaling_factor
@@ -209,7 +209,7 @@ module RGeo
       end
       
       
-      module LineStringMethods
+      module LineStringMethods  # :nodoc:
         
         
         def _validate_geometry
@@ -242,7 +242,7 @@ module RGeo
       end
       
       
-      module NSurfaceMethods
+      module NSurfaceMethods  # :nodoc:
         
         
         def area
@@ -264,7 +264,7 @@ module RGeo
       end
       
       
-      module SurfaceMethods
+      module SurfaceMethods  # :nodoc:
         
         
         def scaling_factor

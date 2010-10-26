@@ -39,7 +39,7 @@ module RGeo
   module Cartesian
     
     
-    module SimpleGeometryMethods
+    module SimpleGeometryMethods  # :nodoc:
       
       
       def srid
@@ -50,7 +50,7 @@ module RGeo
     end
     
     
-    module SimpleLineStringMethods
+    module SimpleLineStringMethods  # :nodoc:
       
       
       def _segments

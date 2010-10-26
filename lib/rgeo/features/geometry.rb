@@ -59,8 +59,7 @@ module RGeo
     # sake of documentation. Implementations need not necessarily include
     # this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
-    # class method. A corresponding === operator is also provided to
-    # to support case-when constructs.
+    # class method (or === operator) defined in the Type module.
     # 
     # Some implementations may support higher dimensional objects or
     # coordinate systems, despite the limits of the SFS.
@@ -101,30 +100,7 @@ module RGeo
     
     module Geometry
       
-      
-      module ClassMethods
-        
-        # Returns true if the given object is this type or a subtype
-        # thereof, or if it is a feature object whose geometry_type is
-        # this type or a subtype thereof.
-        # 
-        # Note that feature objects need not actually include this module.
-        
-        def check_type(rhs_)
-          rhs_ = rhs_.geometry_type if rhs_.respond_to?(:geometry_type)
-          rhs_.kind_of?(::Module) && (rhs_ == self || rhs_.include?(self))
-        end
-        alias_method :===, :check_type
-        
-        
-        def included(mod_)  # :nodoc:
-          mod_.extend(ClassMethods) unless mod_.kind_of?(Class)
-        end
-        
-      end
-      
-      
-      extend ClassMethods
+      extend Type
       
       
       # Returns a factory for creating features related to this one.
