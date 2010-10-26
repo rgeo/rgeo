@@ -48,155 +48,10 @@
 #include "polygon.h"
 #include "geometry_collection.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 /**** INTERNAL IMPLEMENTATION OF CREATE ****/
-
-
-static char compute_collection_klasses_internal(int type, VALUE factory, const GEOSGeometry* geom, VALUE in_klass, VALUE out_klasses)
-{
-  char good = 1;
-  int geom_type = GEOSGeomTypeId_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
-  if (type == GEOS_MULTIPOINT && geom_type == GEOS_POINT ||
-      type == GEOS_MULTILINESTRING && (geom_type == GEOS_LINESTRING || geom_type == GEOS_LINEARRING) ||
-      type == GEOS_MULTIPOLYGON && geom_type == GEOS_POLYGON) {
-    rb_ary_push(out_klasses, in_klass);
-  }
-  else if (geom_type == GEOS_GEOMETRYCOLLECTION || type == geom_type) {
-    int len = GEOSGetNumGeometries_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
-    int i;
-    for (i=0; i<len; ++i) {
-      const GEOSGeometry* sub_geom = GEOSGetGeometryN_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom, i);
-      if (sub_geom) {
-        VALUE sub_klass = (TYPE(in_klass) == T_ARRAY) ? rb_ary_entry(in_klass, i) : Qnil;
-        good = compute_collection_klasses_internal(type, factory, sub_geom, sub_klass, out_klasses);
-        if (!good) {
-          break;
-        }
-      }
-      else {
-        good = 0;
-        break;
-      }
-    }
-  }
-  else {
-    good = 0;
-  }
-  return good;
-}
-
-
-// This walks through an array of geometry objects, and determines the
-// size of the collection that should be built. For straight
-// GeometryCollection objects, the size is the same as the length of
-// the array. For MultiPoint, MultiLineString, and MultiPolygon, we do
-// recursive gathering of any sub-geometries, so the resulting collection
-// may have a different length.
-// We also build an array of the klasses for the geometries gathered.
-// The array is returned. If a problem occurs-- usually a type mismatch
-// such as trying to add a LineString to a MultiPoint-- we return Qnil.
-
-static VALUE compute_collection_klasses(int type, VALUE factory, VALUE array)
-{
-  unsigned int len = (unsigned int)RARRAY_LEN(array);
-  VALUE result = rb_ary_new();
-  unsigned int i;
-  for (i=0; i<len; ++i) {
-    VALUE entry = rb_ary_entry(array, i);
-    const GEOSGeometry* geom = rgeo_get_geos_geometry_safe(entry);
-    if (!geom) {
-      result = Qnil;
-      break;
-    }
-    VALUE klass = RGEO_KLASSES_FROM_GEOMETRY(entry);
-    if (NIL_P(klass)) {
-      klass = CLASS_OF(entry);
-    }
-    if (type == GEOS_GEOMETRYCOLLECTION) {
-      rb_ary_push(result, klass);
-    }
-    else {
-      char good = compute_collection_klasses_internal(type, factory, geom, klass, result);
-      if (!good) {
-        result = Qnil;
-        break;
-      }
-    }
-  }
-  return result;
-}
-
-
-static char gather_geometry_collection_internal(int type, VALUE factory, GEOSGeometry** geoms, unsigned int* ci, const GEOSGeometry* geom, char geom_mine)
-{
-  char good = 1;
-  int geom_type = GEOSGeomTypeId_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
-  if (type != GEOS_GEOMETRYCOLLECTION && (geom_type == GEOS_GEOMETRYCOLLECTION || geom_type == type)) {
-    int len = GEOSGetNumGeometries_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
-    int i;
-    for (i=0; i<len; ++i) {
-      const GEOSGeometry* sub_geom = GEOSGetGeometryN_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom, i);
-      if (sub_geom) {
-        good = gather_geometry_collection_internal(type, factory, geoms, ci, sub_geom, 0);
-        if (!good) {
-          break;
-        }
-      }
-      else {
-        good = 0;
-        break;
-      }
-    }
-  }
-  else {
-    geoms[(*ci)++] = geom_mine ? (GEOSGeometry*)geom : GEOSGeom_clone_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
-  }
-  return good;
-}
-
-
-// This walks through the array of geometries and builds a C array of the
-// geometries to add to the collection we're building. If we're building
-// a simple GeometryCollection, we just gather the geometries as they are.
-// If we're building a MultiPoint, MultiLineString, or MultiPolygon, we
-// recursively gather the contents of any collections we encounter.
-
-static GEOSGeometry** gather_geometry_collection(int type, VALUE factory, VALUE array, unsigned int len)
-{
-  GEOSGeometry** geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
-  unsigned int ci = 0;
-  if (geoms) {
-    unsigned int array_len = (unsigned int)RARRAY_LEN(array);
-    unsigned int ai;
-    for (ai=0; ai<array_len; ++ai) {
-      GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(array, ai), Qnil, NULL);
-      if (geom) {
-        if (!gather_geometry_collection_internal(type, factory, geoms, &ci, geom, 1)) {
-          break;
-        }
-      }
-      else {
-        break;
-      }
-    }
-  }
-  if (ci != len) {
-    unsigned int i;
-    for (i=0; i<ci; ++i) {
-      GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), geoms[i]);
-    }
-    free(geoms);
-    geoms = NULL;
-  }
-  return geoms;
-}
 
 
 // Main implementation of the "create" class method for geometry collections.
@@ -285,65 +140,6 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
     free(geoms);
   }
   
-  return result;
-}
-
-
-// Main implementation of the "create" class method for geometry collections.
-// You must pass in the correct GEOS geometry type ID.
-
-static VALUE create_geometry_collection2(VALUE module, int type, VALUE factory, VALUE array)
-{
-  VALUE result = Qnil;
-  Check_Type(array, T_ARRAY);
-  // First pass: we determine the size of the collection to create, and
-  // build the klasses array.
-  VALUE klasses = compute_collection_klasses(type, factory, array);
-  if (!NIL_P(klasses)) {
-    unsigned int len = (unsigned int)RARRAY_LEN(klasses);
-    // Second pass: we gather the actual geometries into a C array
-    GEOSGeometry** geoms = gather_geometry_collection(type, factory, array, len);
-    if (geoms) {
-      // Create the collection itself.
-      GEOSGeometry* collection = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_FACTORY(factory), type, geoms, len);
-      // Due to a limitation of GEOS, the MultiPolygon assertions are not checked.
-      // We do that manually here.
-      if (collection && type == GEOS_MULTIPOLYGON && (RGEO_FACTORY_DATA_PTR(factory)->flags & 1) == 0) {
-        char problem = 0;
-        unsigned int i, j;
-        for (i=1; i<len; ++i) {
-          for (j=0; j<i; ++j) {
-            GEOSGeometry* igeom = geoms[i];
-            GEOSGeometry* jgeom = geoms[j];
-            problem = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_FACTORY(factory), igeom, jgeom, "2********");
-            if (problem) {
-              break;
-            }
-            problem = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_FACTORY(factory), igeom, jgeom, "****1****");
-            if (problem) {
-              break;
-            }
-          }
-          if (problem) {
-            break;
-          }
-        }
-        if (problem) {
-          GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), collection);
-          collection = NULL;
-        }
-      }
-      if (collection) {
-        result = rgeo_wrap_geos_geometry(factory, collection, module);
-        RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
-      }
-      // NOTE: We are assuming that GEOS will do its own cleanup of the
-      // element geometries if it fails to create the collection, so we
-      // are not doing that ourselves. If that turns out not to be the
-      // case, this will be a memory leak.
-      free(geoms);
-    }
-  }
   return result;
 }
 
@@ -660,11 +456,6 @@ VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOS
 }
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

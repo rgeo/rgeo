@@ -46,12 +46,7 @@
 #include "factory.h"
 #include "geometry.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 /**** INTERNAL UTILITY FUNCTIONS ****/
@@ -627,11 +622,6 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
 }
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

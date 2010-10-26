@@ -49,12 +49,7 @@
 #include "polygon.h"
 #include "geometry_collection.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 /**** RUBY AND GEOS CALLBACKS ****/
@@ -461,11 +456,6 @@ VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
 }
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

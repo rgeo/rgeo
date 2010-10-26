@@ -51,6 +51,8 @@
 
 #endif
 
+RGEO_BEGIN_C
+
 
 void Init_geos_c_impl()
 {
@@ -63,3 +65,6 @@ void Init_geos_c_impl()
   rgeo_init_geos_geometry_collection(globals);
 #endif
 }
+
+
+RGEO_END_C

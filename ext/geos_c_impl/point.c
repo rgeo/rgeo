@@ -46,12 +46,7 @@
 #include "geometry.h"
 #include "point.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 static VALUE method_point_geometry_type(VALUE self)
@@ -191,11 +186,6 @@ VALUE rgeo_create_geos_point_3d(VALUE factory, double x, double y, double z)
 }
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

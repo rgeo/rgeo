@@ -5,7 +5,8 @@
 * Removed the "auto-flattening" behavior of Factory#multi_point, Factory#multi_line_string, and Factory#multi_polygon because it seemed overkill for factory methods. These methods now just attempt to auto-cast the immediate objects.
 * Filled out more test cases for SimpleSpherical.
 * Provided SimpleCartesian as a fallback implementation in case Geos is not available. SimpleCartesian is like SimpleSpherical in that some operations are not provided, but it is pure ruby and doesn't depend on external libraries.
-* A few more documentation updates.
+* Improved feature type checking facilities.
+* Documentation updates.
 
 === 0.1.12 / 2010-10-23
 

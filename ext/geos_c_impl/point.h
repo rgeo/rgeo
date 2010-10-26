@@ -42,12 +42,7 @@
 
 #include "factory.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 /*
@@ -67,11 +62,6 @@ VALUE rgeo_create_geos_point_2d(VALUE factory, double x, double y);
 VALUE rgeo_create_geos_point_3d(VALUE factory, double x, double y, double z);
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

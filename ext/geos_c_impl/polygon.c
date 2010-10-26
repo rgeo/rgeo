@@ -47,12 +47,7 @@
 #include "line_string.h"
 #include "polygon.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 static VALUE method_polygon_eql(VALUE self, VALUE rhs)
@@ -250,11 +245,6 @@ VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* ge
 }
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

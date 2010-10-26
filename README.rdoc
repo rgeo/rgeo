@@ -42,7 +42,9 @@ Use RGeo to:
 RGeo has the following prerequisites:
 
 * Ruby 1.8.7 or later. Ruby 1.9.2 or later preferred.
-* GEOS 3.2 or later. This C/C++ library may be available via your
+  Rubinius and JRuby are not yet supported.
+* GEOS 3.2 or later highly recommended. Some functions will not be
+  available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
   http://trac.osgeo.org/geos/
 

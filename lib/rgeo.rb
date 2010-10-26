@@ -38,11 +38,16 @@
 # 
 # The RGeo::Features module contains interface specifications for spatial
 # objects implemented by RGeo. These interfaces closely follow the OGC
-# Simple Features Specifiation.
+# Simple Features Specifiation (SFS).
 # 
-# The RGeo::Geos module contains a spatial implementation that wraps
-# the GEOS library. This is a full implementation that operates on
-# cartesian coordinates.
+# The RGeo::Cartesian module provides basic implementations of spatial
+# objects in a Cartesian (flat) coordinate system. There is a pure ruby
+# implementation that provides basic services, and there are bridges to
+# external implementations that support all the SFS operations.
+# 
+# One of these external bridges is provided by the RGeo::Geos module,
+# which wraps the GEOS library to provide a full, high-performance
+# Cartesian geometry implementation.
 # 
 # The RGeo::Geography module contains spatial implementations that
 # operate in latitude-longitude coordinates. Several different
@@ -51,6 +56,17 @@
 # 
 # The RGeo::GeoJSON module contains tools for GeoJSON serialization of
 # spatial objects.
+# 
+# Future modules in development include:
+# 
+# * RGeo::Shapefile, which provides tools for reading and writing
+#   spatial objects in the ESRI shapefile format.
+# * RGeo::Rails, which provides close integration with Ruby On Rails
+#   for developing location-based web applications.
+# * RGeo::JTS, which provides a Cartesian SFS implementation backed by
+#   the JTS library (which can run natively in JRuby.)
+# * RGeo::Geography extensions to provide highly accurate ellipsoidal
+#   geometric calculations, and support arbitrary map projections.
 
 module RGeo
 end

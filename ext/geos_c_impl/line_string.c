@@ -48,12 +48,7 @@
 #include "point.h"
 #include "line_string.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 static VALUE method_line_string_geometry_type(VALUE self)
@@ -471,11 +466,6 @@ VALUE rgeo_is_geos_line_string_closed(GEOSContextHandle_t context, const GEOSGeo
 }
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

@@ -43,12 +43,7 @@
 
 #include "factory.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 /*
@@ -64,11 +59,6 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals);
 VALUE rgeo_is_geos_line_string_closed(GEOSContextHandle_t context, const GEOSGeometry* geom);
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

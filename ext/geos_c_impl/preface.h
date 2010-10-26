@@ -40,3 +40,11 @@
 #define RGEO_GEOS_SUPPORTED
 #endif
 #endif
+
+#ifdef __cplusplus
+#define RGEO_BEGIN_C extern "C" {
+#define RGEO_END_C }
+#else
+#define RGEO_BEGIN_C
+#define RGEO_END_C
+#endif

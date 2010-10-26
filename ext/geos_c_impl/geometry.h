@@ -40,12 +40,7 @@
 
 #include "factory.h"
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 /*
@@ -55,11 +50,6 @@ extern "C" {
 void rgeo_init_geos_geometry(RGeo_Globals* globals);
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif

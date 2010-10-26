@@ -41,12 +41,7 @@
 #include <ruby.h>
 #include <geos_c.h>
 
-#ifdef __cplusplus
-extern "C" {
-#if 0
-}
-#endif
-#endif
+RGEO_BEGIN_C
 
 
 // Per-interpreter globals
@@ -211,11 +206,6 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
 VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2);
 
 
-#ifdef __cplusplus
-#if 0
-{
-#endif
-}
-#endif
+RGEO_END_C
 
 #endif
