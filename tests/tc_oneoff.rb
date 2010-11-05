@@ -46,8 +46,9 @@ module RGeo
       
       def setup
         @mercator_factory = ::RGeo::Geography.simple_mercator
-        @spherical_factory = ::RGeo::Geography.simple_spherical
-        @geos_factory = ::RGeo::Geos.factory(:srid => 4326)
+        @spherical_factory = ::RGeo::Geography.simple_spherical(:support_z_coordinate => true)
+        @geos_factory = ::RGeo::Geos.factory(:srid => 4326, :support_z_coordinate => true)
+        @cartesian_factory = ::RGeo::Cartesian.simple_factory(:srid => 1, :support_z_coordinate => true)
         @entity_factory = ::RGeo::GeoJSON::EntityFactory.instance
       end
       

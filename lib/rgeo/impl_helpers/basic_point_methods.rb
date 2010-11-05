@@ -42,10 +42,12 @@ module RGeo
     module BasicPointMethods  # :nodoc:
       
       
-      def initialize(factory_, x_, y_)
+      def initialize(factory_, x_, y_, *extra_)
         _set_factory(factory_)
         @x = x_.to_f
         @y = y_.to_f
+        @z = factory_.has_capability?(:z_coordinate) ? extra_.shift.to_f : nil
+        @m = factory_.has_capability?(:m_coordinate) ? extra_.shift.to_f : nil
         _validate_geometry
       end
       
@@ -60,22 +62,18 @@ module RGeo
       end
       
       
-      def eql?(rhs_)
-        rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y
+      def z
+        @z
       end
       
       
-      def cast(type_)
-        case type_
-        when Features::Point
-          self
-        when Features::GeometryCollection
-          factory.collection([self]) rescue nil
-        when Features::MultiPoint
-          factory.multi_point([self]) rescue nil
-        else
-          super
-        end
+      def m
+        @m
+      end
+      
+      
+      def eql?(rhs_)
+        rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z && @m == rhs_.m
       end
       
       

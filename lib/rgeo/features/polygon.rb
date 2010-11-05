@@ -117,7 +117,7 @@ module RGeo
       # 
       # === Notes
       # 
-      # Returns an object that supports the LineString interface, or nil
+      # Returns an object that supports the LinearRing interface, or nil
       # if the given n is out of range.
       
       def interior_ring_n(n_)
@@ -131,7 +131,6 @@ module RGeo
       def interior_rings
         raise Errors::MethodUnimplemented
       end
-      
       
       
     end

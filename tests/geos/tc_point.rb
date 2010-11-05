@@ -49,6 +49,7 @@ module RGeo
         
         def setup
           @factory = ::RGeo::Geos.factory
+          @zfactory = ::RGeo::Geos.factory(:support_z_coordinate => true)
         end
         
         
@@ -58,26 +59,6 @@ module RGeo
         def test_has_no_projection
           point_ = @factory.point(21, -22)
           assert(!point_.respond_to?(:projection))
-        end
-        
-        
-        def test_3d_creation
-          point_ = @factory.point3d(11, 12, 13)
-          assert_equal(11, point_.x)
-          assert_equal(12, point_.y)
-          assert_equal(13, point_.z)
-          point2_ = @factory.point(21, 22)
-          assert_nil(point2_.z)
-        end
-        
-        
-        def test_wkt_creation_3d
-          point1_ = @factory.parse_wkt('POINT(21 22)')
-          assert_nil(point1_.z)
-          point2_ = @factory.parse_wkt('POINT(11 12 13)')
-          assert_equal(11, point2_.x)
-          assert_equal(12, point2_.y)
-          assert_equal(13, point2_.z)
         end
         
         

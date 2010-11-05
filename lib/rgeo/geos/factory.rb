@@ -52,30 +52,17 @@ module RGeo
         # Create a new factory. Returns nil if the GEOS implementation is
         # not supported.
         # 
-        # Options include:
-        # 
-        # <tt>:lenient_multi_polygon_assertions</tt>::
-        #   If set to true, assertion checking on MultiPolygon is disabled.
-        #   This may speed up creation of MultiPolygon objects, at the
-        #   expense of not doing the proper checking for OGC MultiPolygon
-        #   compliance. See RGeo::Features::MultiPolygon for details on
-        #   the MultiPolygon assertions. Default is false.
-        # <tt>:buffer_resolution</tt>::
-        #   The resolution of buffers around geometries created by this
-        #   factory. This controls the number of line segments used to
-        #   approximate curves. The default is 1, which causes, for
-        #   example, the buffer around a point to be approximated by a
-        #   4-sided polygon. A resolution of 2 would cause that buffer
-        #   to be approximated by an 8-sided polygon. The exact behavior
-        #   for different kinds of buffers is defined by GEOS.
-        # <tt>:srid</tt>::
-        #   Set the SRID returned by geometries created by this factory.
-        #   Default is 0.
+        # See ::RGeo::Geos::factory for a list of supported options.
         
         def create(opts_={})
           return nil unless respond_to?(:_create)
           flags_ = 0
           flags_ |= 1 if opts_[:lenient_multi_polygon_assertions]
+          flags_ |= 2 if opts_[:support_z_coordinate]
+          flags_ |= 4 if opts_[:support_m_coordinate]
+          if flags_ & 6 == 6
+            raise Errors::UnsupportedCapability, "GEOS cannot support both Z and M coordinates at the same time."
+          end
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1
           _create(flags_, opts_[:srid].to_i, buffer_resolution_)
@@ -116,6 +103,20 @@ module RGeo
       alias_method :==, :eql?
       
       
+      # See ::RGeo::Features::Factory#has_capability?
+      
+      def has_capability?(name_)
+        case name_
+        when :z_coordinate
+          _flags & 0x2 != 0
+        when :m_coordinate
+          _flags & 0x4 != 0
+        else
+          nil
+        end
+      end
+      
+      
       # See ::RGeo::Features::Factory#parse_wkt
       
       def parse_wkt(str_)
@@ -132,8 +133,12 @@ module RGeo
       
       # See ::RGeo::Features::Factory#point
       
-      def point(x_, y_)
-        PointImpl.create(self, x_, y_) rescue nil
+      def point(x_, y_, *extra_)
+        if extra_.length > (_flags & 6 == 0 ? 0 : 1)
+          nil
+        else
+          PointImpl.create(self, x_, y_, extra_[0].to_f) rescue nil
+        end
       end
       
       
@@ -204,38 +209,27 @@ module RGeo
       
       def override_cast(original_, ntype_, keep_subtype_, force_new_)
         return nil unless Geos.supported?
-        type_ = original_.geometry_type
-        ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
-        if original_.factory != self && ntype_ == type_
-          if GeometryImpl === original_
+        if GeometryImpl === original_
+          type_ = original_.geometry_type
+          ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
+          if original_.factory != self && ntype_ == type_
             result_ = original_.dup
             result_._set_factory(self)
             return result_
           end
-          if type_ == Features::Point && original_.respond_to?(:z)
-            z_ = original_.z
-            return PointImpl.create(self, original_.x, original_.y, z_) if z_
-          end
-        end
-        if GeometryImpl === original_ && (original_.factory != self || ntype_ != type_) &&
-            (type_ == Features::LineString || type_ == Features::Line || type_ == Features::LinearRing)
-        then
-          if ntype_ == Features::LineString
-            return LineStringImpl._copy_from(self, original_)
-          elsif ntype_ == Features::Line
-            return LineImpl._copy_from(self, original_)
-          elsif ntype_ == Features::LinearRing
-            return LinearRingImpl._copy_from(self, original_)
+          if (original_.factory != self || ntype_ != type_) &&
+              (type_ == Features::LineString || type_.include?(Features::LineString))
+          then
+            if ntype_ == Features::LineString
+              return LineStringImpl._copy_from(self, original_)
+            elsif ntype_ == Features::Line
+              return LineImpl._copy_from(self, original_)
+            elsif ntype_ == Features::LinearRing
+              return LinearRingImpl._copy_from(self, original_)
+            end
           end
         end
         false
-      end
-      
-      
-      # A GEOS extension that creates a 3-D point with a Z coordinate.
-      
-      def point3d(x_, y_, z_)
-        PointImpl.create3d(self, x_, y_, z_) rescue nil
       end
       
       

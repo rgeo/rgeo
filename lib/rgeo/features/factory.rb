@@ -71,6 +71,36 @@ module RGeo
       end
       
       
+      # Determine support for the given capability, identified by a
+      # symbolic name. This method may be used to test this factory, and
+      # any features created by it, to determine whether they support
+      # certain capabilities or operations. Most queries return a boolean
+      # value, though some may return other values to indicate different
+      # levels of support. Generally speaking, if a query returns a false
+      # or nil value, support for that capability is not guaranteed, and
+      # calls related to that function may fail or raise exceptions.
+      # 
+      # Each capability must have a symbolic name. Names that have no
+      # periods are considered well-known names and are reserved for use
+      # by RGeo. If you want to define your own capabilities, use a name
+      # that is namespaced, such as <tt>:'mycompany.mycapability'</tt>.
+      # 
+      # Currently defined standard capabilities are:
+      # 
+      # <tt>:z_coordinate</tt>::
+      #   Supports a "z" coordinate. When an implementation supports
+      #   z_coordinate, the Factory#epoint and Point#z methods are
+      #   available.
+      # <tt>:m_coordinate</tt>::
+      #   Supports a "m" coordinate. When an implementation supports
+      #   m_coordinate, the Factory#epoint and Point#m methods are
+      #   available.
+      
+      def has_capability?(name_)
+        nil
+      end
+      
+      
       # Parse the given string in well-known-text format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
       
@@ -89,8 +119,12 @@ module RGeo
       
       # Create a feature of type Point.
       # The x and y parameters should be Float values.
+      # 
+      # The extra parameters should be the Z and/or M coordinates, if the
+      # capabilities are supported. If both Z and M capabilities are
+      # supported, Z should be passed first.
       
-      def point(x_, y_)
+      def point(x_, y_, *extra_)
         nil
       end
       

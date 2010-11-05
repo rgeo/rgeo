@@ -81,6 +81,16 @@ module RGeo
       # <tt>:srid</tt>::
       #   Set the SRID returned by geometries created by this factory.
       #   Default is 0.
+      # <tt>:support_z_coordinate</tt>::
+      #   Support <tt>z_coordinate</tt>. Default is false.
+      #   Note that GEOS factories cannot support both
+      #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
+      #   most support one or the other.
+      # <tt>:support_m_coordinate</tt>::
+      #   Support <tt>m_coordinate</tt>. Default is false.
+      #   Note that GEOS factories cannot support both
+      #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
+      #   most support one or the other.
       
       def factory(opts_={})
         supported? ? Factory.create(opts_) : nil

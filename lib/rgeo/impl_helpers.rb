@@ -51,6 +51,5 @@ paths_ = [
   'impl_helpers/basic_point_methods',
   'impl_helpers/basic_line_string_methods',
   'impl_helpers/basic_polygon_methods',
-  'impl_helpers/serialization',
 ]
 paths_.each{ |path_| require "rgeo/#{path_}" }

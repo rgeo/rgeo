@@ -371,69 +371,64 @@ const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj)
 }
 
 
-VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2)
+VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z)
 {
   VALUE result = Qnil;
   if (geom1 && geom2) {
     const GEOSCoordSequence* cs1 = GEOSGeom_getCoordSeq_r(context, geom1);
     const GEOSCoordSequence* cs2 = GEOSGeom_getCoordSeq_r(context, geom2);
     if (cs1 && cs2) {
-      char hasz1 = GEOSHasZ_r(context, geom1);
-      char hasz2 = GEOSHasZ_r(context, geom2);
-      if (hasz1 != 2 && hasz2 != 2) {
-        if (hasz1 == hasz2) {
-          unsigned int len1 = 0;
-          unsigned int len2 = 0;
-          if (GEOSCoordSeq_getSize_r(context, cs1, &len1) && GEOSCoordSeq_getSize_r(context, cs2, &len2)) {
-            if (len1 == len2) {
-              result = Qtrue;
-              unsigned int i;
-              double val1, val2;
-              for (i=0; i<len1; ++i) {
-                if (GEOSCoordSeq_getX_r(context, cs1, i, &val1) && GEOSCoordSeq_getX_r(context, cs2, i, &val2)) {
+      unsigned int len1 = 0;
+      unsigned int len2 = 0;
+      if (GEOSCoordSeq_getSize_r(context, cs1, &len1) && GEOSCoordSeq_getSize_r(context, cs2, &len2)) {
+        if (len1 == len2) {
+          result = Qtrue;
+          unsigned int i;
+          double val1, val2;
+          for (i=0; i<len1; ++i) {
+            if (GEOSCoordSeq_getX_r(context, cs1, i, &val1) && GEOSCoordSeq_getX_r(context, cs2, i, &val2)) {
+              if (val1 == val2) {
+                if (GEOSCoordSeq_getY_r(context, cs1, i, &val1) && GEOSCoordSeq_getY_r(context, cs2, i, &val2)) {
                   if (val1 == val2) {
-                    if (GEOSCoordSeq_getY_r(context, cs1, i, &val1) && GEOSCoordSeq_getY_r(context, cs2, i, &val2)) {
-                      if (val1 == val2) {
-                        if (hasz1) {
-                          if (GEOSCoordSeq_getZ_r(context, cs1, i, &val1) && GEOSCoordSeq_getZ_r(context, cs2, i, &val2)) {
-                            if (val1 != val2) {
-                              result = Qfalse;
-                              break;
-                            }
-                          }
-                          else {  // Failed to get Z coords
-                            result = Qnil;
-                            break;
-                          }
-                        }
+                    if (check_z) {
+                      val1 = 0;
+                      if (!GEOSCoordSeq_getZ_r(context, cs1, i, &val1)) {
+                        result = Qnil;
+                        break;
                       }
-                      else {  // Y coords are different
+                      val2 = 0;
+                      if (!GEOSCoordSeq_getZ_r(context, cs2, i, &val2)) {
+                        result = Qnil;
+                        break;
+                      }
+                      if (val1 != val2) {
                         result = Qfalse;
                         break;
                       }
                     }
-                    else {  // Failed to get Y coords
-                      result = Qnil;
-                      break;
-                    }
                   }
-                  else {  // X coords are different
+                  else {  // Y coords are different
                     result = Qfalse;
                     break;
                   }
                 }
-                else {  // Failed to get X coords
+                else {  // Failed to get Y coords
                   result = Qnil;
                   break;
                 }
-              }  // Iteration over coords
+              }
+              else {  // X coords are different
+                result = Qfalse;
+                break;
+              }
             }
-            else {  // Lengths are different
-              result = Qfalse;
+            else {  // Failed to get X coords
+              result = Qnil;
+              break;
             }
-          }
+          }  // Iteration over coords
         }
-        else {  // Z coord existence is different
+        else {  // Lengths are different
           result = Qfalse;
         }
       }

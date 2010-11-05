@@ -49,6 +49,7 @@ module RGeo
         
         def setup
           @factory = ::RGeo::Geography.simple_spherical
+          @zfactory = ::RGeo::Geography.simple_spherical(:support_z_coordinate => true)
         end
         
         

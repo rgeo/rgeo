@@ -52,14 +52,9 @@ RGEO_BEGIN_C
 void rgeo_init_geos_point(RGeo_Globals* globals);
 
 /*
-  Creates a 2d point and returns the ruby object.
-*/
-VALUE rgeo_create_geos_point_2d(VALUE factory, double x, double y);
-
-/*
   Creates a 3d point and returns the ruby object.
 */
-VALUE rgeo_create_geos_point_3d(VALUE factory, double x, double y, double z);
+VALUE rgeo_create_geos_point(VALUE factory, double x, double y, double z);
 
 
 RGEO_END_C

@@ -58,7 +58,7 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals);
   Returns Qtrue if the polygons are equal, Qfalse if they are inequal, or
   Qnil if an error occurs.
 */
-VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2);
+VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z);
 
 
 RGEO_END_C

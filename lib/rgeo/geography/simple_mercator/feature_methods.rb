@@ -50,13 +50,9 @@ module RGeo
         
         
         def projection
-          unless @projection
+          if @projection.nil?
             projection_factory_ = @factory.projection_factory
-            if projection_factory_
-              @projection = _make_projection(projection_factory_)
-            else
-              @projection = nil
-            end
+            @projection = projection_factory_ ? _make_projection(projection_factory_) : nil
             @projection = false unless @projection
           end
           @projection ? @projection : nil

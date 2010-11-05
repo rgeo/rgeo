@@ -78,6 +78,7 @@ paths_ = [
   'errors',
   'features',
   'impl_helpers',
+  'wkrep',
   'geos',
   'cartesian',
   'geography',

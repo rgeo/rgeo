@@ -44,16 +44,24 @@ module RGeo
       module LineStringTests  # :nodoc:
         
         
-        def test_creation_success
+        def test_creation_points2
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
-          point3_ = @factory.point(1, 0)
           line1_ = @factory.line_string([point1_, point2_])
           assert_not_nil(line1_)
           assert_equal(::RGeo::Features::LineString, line1_.geometry_type)
           assert_equal(2, line1_.num_points)
           assert_equal(point1_, line1_.point_n(0))
           assert_equal(point2_, line1_.point_n(1))
+          assert_equal(point1_, line1_.start_point)
+          assert_equal(point2_, line1_.end_point)
+        end
+        
+        
+        def test_creation_points3
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          point3_ = @factory.point(1, 0)
           line2_ = @factory.line_string([point1_, point2_, point3_])
           assert_not_nil(line2_)
           assert_equal(::RGeo::Features::LineString, line2_.geometry_type)
@@ -61,16 +69,32 @@ module RGeo
           assert_equal(point1_, line2_.point_n(0))
           assert_equal(point2_, line2_.point_n(1))
           assert_equal(point3_, line2_.point_n(2))
+          assert_nil(line2_.point_n(3))
+          assert_equal(point1_, line2_.start_point)
+          assert_equal(point3_, line2_.end_point)
+        end
+        
+        
+        def test_creation_points2_degenerate
+          point1_ = @factory.point(0, 0)
           line3_ = @factory.line_string([point1_, point1_])
           assert_not_nil(line3_)
           assert_equal(::RGeo::Features::LineString, line3_.geometry_type)
           assert_equal(2, line3_.num_points)
           assert_equal(point1_, line3_.point_n(0))
           assert_equal(point1_, line3_.point_n(1))
+          assert_equal(point1_, line3_.start_point)
+          assert_equal(point1_, line3_.end_point)
+        end
+        
+        
+        def test_creation_points_empty
           line4_ = @factory.line_string([])
           assert_not_nil(line4_)
           assert_equal(::RGeo::Features::LineString, line4_.geometry_type)
           assert_equal(0, line4_.num_points)
+          assert_nil(line4_.start_point)
+          assert_nil(line4_.end_point)
         end
         
         

@@ -73,12 +73,12 @@ module RGeo
       
       
       def as_text
-        Serialization.unparse_wkt(self)
+        WKRep::WKTGenerator.new.generate(self)
       end
       
       
       def as_binary
-        Serialization.unparse_wkb(self)
+        WKRep::WKBGenerator.new.generate(self)
       end
       
       

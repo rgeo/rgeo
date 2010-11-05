@@ -57,6 +57,8 @@ module RGeo
       
       def initialize(opts_={})
         @srid = opts_[:srid].to_i
+        @support_z = opts_[:support_z_coordinate] ? true : false
+        @support_m = opts_[:support_m_coordinate] ? true : false
       end
       
       
@@ -75,24 +77,38 @@ module RGeo
       end
       
       
+      # See ::RGeo::Features::Factory#has_capability?
+      
+      def has_capability?(name_)
+        case name_
+        when :z_coordinate
+          @support_z
+        when :m_coordinate
+          @support_m
+        else
+          nil
+        end
+      end
+      
+      
       # See ::RGeo::Features::Factory#parse_wkt
       
       def parse_wkt(str_)
-        ImplHelpers::Serialization.parse_wkt(str_, self)
+        WKRep::WKTParser.new(self, :support_higher_dimensions => true).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#parse_wkb
       
       def parse_wkb(str_)
-        ImplHelpers::Serialization.parse_wkb(str_, self)
+        WKRep::WKBParser.new(self).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#point
       
-      def point(x_, y_)
-        SimplePointImpl.new(self, x_, y_) rescue nil
+      def point(x_, y_, *extra_)
+        SimplePointImpl.new(self, x_, y_, *extra_) rescue nil
       end
       
       

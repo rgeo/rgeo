@@ -61,7 +61,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals);
   Returns Qtrue if the contents of the two geometry collections are equal,
   Qfalse if they are inequal, or Qnil if an error occurs.
 */
-VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2);
+VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z);
 
 
 RGEO_END_C

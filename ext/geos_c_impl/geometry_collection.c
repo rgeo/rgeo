@@ -151,7 +151,7 @@ static VALUE method_geometry_collection_eql(VALUE self, VALUE rhs)
 {
   VALUE result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
-    result = rgeo_geos_geometry_collections_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs));
+    result = rgeo_geos_geometry_collections_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs), RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   }
   return result;
 }
@@ -390,7 +390,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
 /**** OTHER PUBLIC FUNCTIONS ****/
 
 
-VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2)
+VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z)
 {
   VALUE result = Qnil;
   if (geom1 && geom2) {
@@ -412,16 +412,16 @@ VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOS
                 case GEOS_POINT:
                 case GEOS_LINESTRING:
                 case GEOS_LINEARRING:
-                  result = rgeo_geos_coordseqs_eql(context, sub_geom1, sub_geom2);
+                  result = rgeo_geos_coordseqs_eql(context, sub_geom1, sub_geom2, check_z);
                   break;
                 case GEOS_POLYGON:
-                  result = rgeo_geos_polygons_eql(context, sub_geom1, sub_geom2);
+                  result = rgeo_geos_polygons_eql(context, sub_geom1, sub_geom2, check_z);
                   break;
                 case GEOS_GEOMETRYCOLLECTION:
                 case GEOS_MULTIPOINT:
                 case GEOS_MULTILINESTRING:
                 case GEOS_MULTIPOLYGON:
-                  result = rgeo_geos_geometry_collections_eql(context, sub_geom1, sub_geom2);
+                  result = rgeo_geos_geometry_collections_eql(context, sub_geom1, sub_geom2, check_z);
                   break;
                 default:
                   result = Qnil;

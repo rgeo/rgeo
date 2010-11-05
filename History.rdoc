@@ -1,3 +1,14 @@
+=== 0.1.14 / 2010-11-04
+
+* Introduced capability checking API.
+* Standardized API and semantics for handling of points with Z and/or M coordinates.
+* Fixed several problems with Z coordinates in GEOS.
+* Fixed exceptions and wrong values returned from GEOS LineString#start_point and LineString#end_point.
+* Fixed crash in GEOS LineString#point_n when the index was out of bounds.
+* Fixed GEOS line string closed test.
+* Implemented support for Z and M coordinates in GEOS, SimpleCartesian, SimpleMercator, and SimpleSpherical. GEOS and SimpleMercator support Z or M but not both at once, because the underlying GEOS library supports only 3 dimensions. SimpleCartesian and SimpleSpherical can support both at once.
+* Implemented parsers and generators for WKT/WKB and EWKT/EWKB in Ruby, providing full support for all generally used cases including 3 and 4 dimensional data and embedded SRIDs. This implementation is used by default by all feature implementations except GEOS, which continues to use its own internal WKT/WKB implementation unless the Ruby implementation is invoked explicitly.
+
 === 0.1.13 / 2010-10-26
 
 * Reworked the way casting is done. Casting has two dimensions: factory casting and type casting, either or both of which can be done at once. Implemented a standard casting algorithm to handle these cases, and an override mechanism for factories that want to do some of their own casting. Removed Factory#cast and Geometry#cast, and implemented a global Features::cast entry point instead.

@@ -54,7 +54,7 @@ static VALUE method_polygon_eql(VALUE self, VALUE rhs)
 {
   VALUE result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
-    result = rgeo_geos_polygons_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs));
+    result = rgeo_geos_polygons_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs), RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   }
   return result;
 }
@@ -214,11 +214,11 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
 }
 
 
-VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2)
+VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z)
 {
   VALUE result = Qnil;
   if (geom1 && geom2) {
-    result = rgeo_geos_coordseqs_eql(context, GEOSGetExteriorRing_r(context, geom1), GEOSGetExteriorRing_r(context, geom2));
+    result = rgeo_geos_coordseqs_eql(context, GEOSGetExteriorRing_r(context, geom1), GEOSGetExteriorRing_r(context, geom2), check_z);
     if (RTEST(result)) {
       int len1 = GEOSGetNumInteriorRings_r(context, geom1);
       int len2 = GEOSGetNumInteriorRings_r(context, geom2);
@@ -226,7 +226,7 @@ VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* ge
         if (len1 == len2) {
           int i;
           for (i=0; i<len1; ++i) {
-            result = rgeo_geos_coordseqs_eql(context, GEOSGetInteriorRingN_r(context, geom1, i), GEOSGetInteriorRingN_r(context, geom2, i));
+            result = rgeo_geos_coordseqs_eql(context, GEOSGetInteriorRingN_r(context, geom1, i), GEOSGetInteriorRingN_r(context, geom2, i), check_z);
             if (!RTEST(result)) {
               break;
             }

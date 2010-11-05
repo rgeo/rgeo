@@ -90,6 +90,28 @@ module RGeo
       end
       
       
+      # Returns the z-coordinate for this Point as a floating-point
+      # scalar value.
+      # 
+      # This method may not be available if the point's factory does
+      # not support the <tt>z_coordinate</tt> capability.
+      
+      def z
+        raise Errors::MethodUnimplemented
+      end
+      
+      
+      # Returns the m-coordinate for this Point as a floating-point
+      # scalar value.
+      # 
+      # This method may not be available if the point's factory does
+      # not support the <tt>m_coordinate</tt> capability.
+      
+      def m
+        raise Errors::MethodUnimplemented
+      end
+      
+      
     end
   
     

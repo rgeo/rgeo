@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple mercator point implementation
+# Well-known representation for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,58 +34,26 @@
 ;
 
 
-require 'test/unit'
-require 'rgeo'
-
-require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
-
-
 module RGeo
-  module Tests  # :nodoc:
-    module SimpleMercator
-      
-      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
-        
-        
-        def setup
-          @factory = ::RGeo::Geography.simple_mercator
-          @zfactory = ::RGeo::Geography.simple_mercator(:support_z_coordinate => true)
-        end
-        
-        
-        include ::RGeo::Tests::Common::PointTests
-        
-        
-        def test_has_projection
-          point_ = @factory.point(21, -22)
-          assert(point_.respond_to?(:projection))
-        end
-        
-        
-        def test_latlon
-          point_ = @factory.point(21, -22)
-          assert_equal(21, point_.longitude)
-          assert_equal(-22, point_.latitude)
-        end
-        
-        
-        def test_srid
-          point_ = @factory.point(11, 12)
-          assert_equal(4326, point_.srid)
-        end
-        
-        
-        def test_distance
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(13, 12)
-          assert_in_delta(0, point1_.distance(point2_), 0.0001)
-          assert_in_delta(217773, point1_.distance(point3_), 1)
-        end
-        
-        
-      end
-      
-    end
+  
+  
+  # Implementations of the OpenGIS well-known representation
+  # (i.e. the WKT/WKB) and its variants (e.g. the EWKT/EWKB used by
+  # PostGIS). Provides generation and parsing facilities.
+  
+  module WKRep
   end
+  
+  
 end
+
+
+# Dependency source files.
+paths_ = [
+  'features',
+  'wkrep/wkt_parser',
+  'wkrep/wkt_generator',
+  'wkrep/wkb_parser',
+  'wkrep/wkb_generator',
+]
+paths_.each{ |path_| require "rgeo/#{path_}" }

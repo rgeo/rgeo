@@ -53,6 +53,14 @@ module RGeo
     class InvalidGeometry < RGeoError
     end
     
+    # The specified capability is not supported
+    class UnsupportedCapability < RGeoError
+    end
+    
+    # Parsing failed
+    class ParseError < RGeoError
+    end
+    
   end
   
   

@@ -39,7 +39,7 @@ module RGeo
   module Features
     
     
-    # These methods are available as class methods (not instance methods)
+    # These methods are available as module methods (not instance methods)
     # of the various feature types.
     # For example, you may determine whether a feature object is a
     # point by calling:
@@ -76,6 +76,21 @@ module RGeo
         rhs_.kind_of?(Type) && (rhs_ == self || rhs_.include?(self))
       end
       alias_method :===, :check_type
+      
+      
+      # Returns true if this type is the same type or a subtype of the
+      # given type.
+      
+      def subtype_of?(type_)
+        self == type_ || self.include?(type_)
+      end
+      
+      
+      # Returns the OpenGIS type name of this type.
+      
+      def type_name
+        self.name.sub('RGeo::Features::', '')
+      end
       
       
     end
@@ -135,7 +150,14 @@ module RGeo
           force_new_ ? obj_.dup : obj_
         elsif ntype_ == type_
           if type_ == Point
-            nfactory_.point(obj_.x, obj_.y)
+            extra_ = []
+            if nfactory_.has_capability?(:z_coordinate)
+              extra_ << (factory_.has_capability?(:z_coordinate) ? obj_.z : 0.0)
+            end
+            if nfactory_.has_capability?(:m_coordinate)
+              extra_ << (factory_.has_capability?(:m_coordinate) ? obj_.m : 0.0)
+            end
+            nfactory_.point(obj_.x, obj_.y, *extra_)
           elsif type_ == Line
             nfactory_.line(obj_.start_point, obj_.end_point)
           elsif type_ == LinearRing
@@ -165,24 +187,56 @@ module RGeo
             else
               nil
             end
-          elsif ntype_ == Line && type_ == LineString
-            if obj_.num_points == 2
+          elsif ntype_ == Point
+            nil
+          elsif ntype_ == Line
+            if type_ == LineString && obj_.num_points == 2
               nfactory_.line(obj_.point_n(0), obj_.point_n(1))
             else
               nil
             end
-          elsif ntype_ == LinearRing && type_ == LineString
-            nfactory_.linear_ring(obj_.points)
-          elsif ntype_ == LineString && (type_ == Line || type_ == LinearRing)
-            nfactory_.line_string(obj_.points)
-          elsif ntype_ == MultiPoint && type_ == GeometryCollection
-            nfactory_.multi_point(obj_)
-          elsif ntype_ == MultiLineString && type_ == GeometryCollection
-            nfactory_.multi_line_string(obj_)
-          elsif ntype_ == MultiPolygon && type_ == GeometryCollection
-            nfactory_.multi_polygon(obj_)
-          elsif ntype_ == GeometryCollection && (type_ == MultiPoint || type_ == MultiLineString || type_ == MultiPolygon)
-            nfactory_.collection(obj_)
+          elsif ntype_ == LinearRing
+            if type_ == LineString
+              nfactory_.linear_ring(obj_.points)
+            else
+              nil
+            end
+          elsif ntype_ == LineString
+            if type_ == Line || type_ == LinearRing
+              nfactory_.line_string(obj_.points)
+            else
+              nil
+            end
+          elsif ntype_ == MultiPoint
+            if type_ == Point
+              nfactory_.multi_point([obj_])
+            elsif type_ == GeometryCollection
+              nfactory_.multi_point(obj_)
+            else
+              nil
+            end
+          elsif ntype_ == MultiLineString
+            if type_ == Line || type_ == LinearRing || type_ == LineString
+              nfactory_.multi_line_string([obj_])
+            elsif type_ == GeometryCollection
+              nfactory_.multi_line_string(obj_)
+            else
+              nil
+            end
+          elsif ntype_ == MultiPolygon
+            if type_ == Polygon
+              nfactory_.multi_polygon([obj_])
+            elsif type_ == GeometryCollection
+              nfactory_.multi_polygon(obj_)
+            else
+              nil
+            end
+          elsif ntype_ == GeometryCollection
+            if type_ == MultiPoint || type_ == MultiLineString || type_ == MultiPolygon
+              nfactory_.collection(obj_)
+            else
+              nfactory_.collection([obj_])
+            end
           else
             nil
           end

@@ -272,6 +272,32 @@ module RGeo
         end
         
         
+        def test_3d_creation
+          point_ = @zfactory.point(11, 12, 13)
+          assert_equal(11, point_.x)
+          assert_equal(12, point_.y)
+          assert_equal(13, point_.z)
+          point2_ = @zfactory.point(21, 22)
+          assert_equal(21, point2_.x)
+          assert_equal(22, point2_.y)
+          assert_equal(0, point2_.z)
+        end
+        
+        
+        def test_wkt_creation_3d
+          point2_ = @zfactory.parse_wkt('POINT(11 12 13)')
+          assert_equal(11, point2_.x)
+          assert_equal(12, point2_.y)
+          assert_equal(13, point2_.z)
+          point1_ = @zfactory.parse_wkt('POINT(21 22)')
+          assert_equal(21, point1_.x)
+          assert_equal(22, point1_.y)
+          # Z is undefined in this case.
+          # We'd like to define it to be 0, but the GEOS
+          # parser doesn't behave that way.
+        end
+        
+        
       end
       
     end

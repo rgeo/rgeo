@@ -49,6 +49,7 @@ module RGeo
         
         def setup
           @factory = ::RGeo::Cartesian.simple_factory(:srid => 1)
+          @zfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :support_z_coordinate => true)
         end
         
         

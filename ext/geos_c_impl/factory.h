@@ -72,6 +72,9 @@ typedef struct {
 } RGeo_FactoryData;
 
 #define RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON 1
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z 2
+#define RGEO_FACTORYFLAGS_SUPPORTS_M 4
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M 6
 
 
 // Wrapped structure for Geometry objects.
@@ -196,7 +199,7 @@ const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj);
   Returns Qtrue if the two coordinate sequences are equal, Qfalse
   if they are inequal, or Qnil if an error occurs.
 */
-VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2);
+VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z);
 
 /*
   Compares the ruby classes and geometry factories of the two given ruby

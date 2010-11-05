@@ -94,11 +94,11 @@ static VALUE method_point_y(VALUE self)
 }
 
 
-static VALUE method_point_z(VALUE self)
+static VALUE get_3d_point(VALUE self, int flag)
 {
   VALUE result = Qnil;
   const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
-  if (self_geom && GEOSHasZ_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom) == 1) {
+  if (self_geom && RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->flags & flag) {
     const GEOSCoordSequence* coord_seq = GEOSGeom_getCoordSeq_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
     if (coord_seq) {
       double val;
@@ -111,25 +111,32 @@ static VALUE method_point_z(VALUE self)
 }
 
 
+static VALUE method_point_z(VALUE self)
+{
+  return get_3d_point(self, RGEO_FACTORYFLAGS_SUPPORTS_Z);
+}
+
+
+static VALUE method_point_m(VALUE self)
+{
+  return get_3d_point(self, RGEO_FACTORYFLAGS_SUPPORTS_M);
+}
+
+
 static VALUE method_point_eql(VALUE self, VALUE rhs)
 {
   VALUE result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
-    result = rgeo_geos_coordseqs_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs));
+    result = rgeo_geos_coordseqs_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs), RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   }
   return result;
 }
 
 
-static VALUE cmethod_create(VALUE module, VALUE factory, VALUE x, VALUE y)
+static VALUE cmethod_create(VALUE module, VALUE factory, VALUE x, VALUE y, VALUE z)
 {
-  return rgeo_create_geos_point_2d(factory, rb_num2dbl(x), rb_num2dbl(y));
-}
-
-
-static VALUE cmethod_create3d(VALUE module, VALUE factory, VALUE x, VALUE y, VALUE z)
-{
-  return rgeo_create_geos_point_3d(factory, rb_num2dbl(x), rb_num2dbl(y), rb_num2dbl(z));
+  return rgeo_create_geos_point(factory, rb_num2dbl(x), rb_num2dbl(y),
+    RGEO_FACTORY_DATA_PTR(factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M ? rb_num2dbl(z) : 0);
 }
 
 
@@ -137,39 +144,21 @@ void rgeo_init_geos_point(RGeo_Globals* globals)
 {
   VALUE geos_point_class = rb_define_class_under(globals->geos_module, "PointImpl", rb_const_get_at(globals->geos_module, rb_intern("GeometryImpl")));
   
-  rb_define_module_function(geos_point_class, "create", cmethod_create, 3);
-  rb_define_module_function(geos_point_class, "create3d", cmethod_create3d, 4);
+  rb_define_module_function(geos_point_class, "create", cmethod_create, 4);
   
   rb_define_method(geos_point_class, "eql?", method_point_eql, 1);
   rb_define_method(geos_point_class, "geometry_type", method_point_geometry_type, 0);
   rb_define_method(geos_point_class, "x", method_point_x, 0);
   rb_define_method(geos_point_class, "y", method_point_y, 0);
   rb_define_method(geos_point_class, "z", method_point_z, 0);
+  rb_define_method(geos_point_class, "m", method_point_m, 0);
 }
 
 
-VALUE rgeo_create_geos_point_2d(VALUE factory, double x, double y)
+VALUE rgeo_create_geos_point(VALUE factory, double x, double y, double z)
 {
   VALUE result = Qnil;
-  GEOSCoordSequence* coord_seq = GEOSCoordSeq_create_r(RGEO_CONTEXT_FROM_FACTORY(factory), 1, 2);
-  if (coord_seq) {
-    if (GEOSCoordSeq_setX_r(RGEO_CONTEXT_FROM_FACTORY(factory), coord_seq, 0, x)) {
-      if (GEOSCoordSeq_setY_r(RGEO_CONTEXT_FROM_FACTORY(factory), coord_seq, 0, y)) {
-        GEOSGeometry* geom = GEOSGeom_createPoint_r(RGEO_CONTEXT_FROM_FACTORY(factory), coord_seq);
-        if (geom) {
-          result = rgeo_wrap_geos_geometry(factory, geom, rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->geos_module, rb_intern("PointImpl")));
-        }
-      }
-    }
-  }
-  return result;
-}
-
-
-VALUE rgeo_create_geos_point_3d(VALUE factory, double x, double y, double z)
-{
-  VALUE result = Qnil;
-  GEOSCoordSequence* coord_seq = GEOSCoordSeq_create_r(RGEO_CONTEXT_FROM_FACTORY(factory), 1, 2);
+  GEOSCoordSequence* coord_seq = GEOSCoordSeq_create_r(RGEO_CONTEXT_FROM_FACTORY(factory), 1, 3);
   if (coord_seq) {
     if (GEOSCoordSeq_setX_r(RGEO_CONTEXT_FROM_FACTORY(factory), coord_seq, 0, x)) {
       if (GEOSCoordSeq_setY_r(RGEO_CONTEXT_FROM_FACTORY(factory), coord_seq, 0, y)) {

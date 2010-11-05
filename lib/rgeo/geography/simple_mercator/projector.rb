@@ -48,7 +48,7 @@ module RGeo
         
         def initialize(geography_factory_, opts_={})
           @geography_factory = geography_factory_
-          @projection_factory = Cartesian.preferred_factory(:srid => 3857, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions])
+          @projection_factory = Cartesian.preferred_factory(:srid => 3857, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
         end
         
         

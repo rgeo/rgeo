@@ -2,6 +2,7 @@
 /pkg/
 .#*
 .DS_Store
+*.dSYM
 *.class
 *.jar
 *.bundle
