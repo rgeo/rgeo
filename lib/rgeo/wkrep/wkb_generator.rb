@@ -39,9 +39,42 @@ module RGeo
   module WKRep
     
     
+    # This class provides the functionality of serializing a geometry as
+    # WKB (well-known binary) format. You may also customize the
+    # serializer to generate PostGIS EWKB extensions to the output, or to
+    # follow the Simple Features Specification 1.2 extensions for Z and M
+    # coordinates.
+    # 
+    # To use this class, create an instance with the desired settings and
+    # customizations, and call the generate method.
+    # 
+    # === Configuration options
+    # 
+    # The following options are recognized. These can be passed to the
+    # constructor, or set on the object afterwards.
+    # 
+    # <tt>:type_format</tt>::
+    #   The format for type codes. Possible values are <tt>:wkb11</tt>,
+    #   indicating SFS 1.1 WKB (i.e. no Z or M values); <tt>:ewkb</tt>,
+    #   indicating the PostGIS EWKB extensions (i.e. Z and M presence
+    #   flagged by the two high bits of the type code, and support for
+    #   embedded SRID); or <tt>:wkb12</tt> (indicating SFS 1.2 WKB
+    #   (i.e. Z and M presence flagged by adding 1000 and/or 2000 to
+    #   the type code.) Default is <tt>:wkb11</tt>.
+    # <tt>:emit_ewkb_srid</tt>::
+    #   If true, embed the SRID in the toplevel geometry. Available only
+    #   if <tt>:type_format</tt> is <tt>:ewkb</tt>. Default is false.
+    # <tt>:hex_format</tt>::
+    #   If true, output a hex string instead of a byte string.
+    #   Default is false.
+    # <tt>:little_endian</tt>::
+    #   If true, output little endian (NDR) byte order. If false, output
+    #   big endian (XDR), or network byte order. Default is false.
+    
     class WKBGenerator
       
       
+      # :stopdoc:
       TYPE_CODES = {
         Features::Point => 1,
         Features::LineString => 2,
@@ -53,15 +86,68 @@ module RGeo
         Features::MultiPolygon => 6,
         Features::GeometryCollection => 7,
       }
+      # :startdoc:
       
+      
+      # Create and configure a WKB generator. See the WKBGenerator
+      # documentation for the options that can be passed.
       
       def initialize(opts_={})
-        @type_format = opts_[:type_format]
-        @emit_ewkb_srid = opts_[:emit_ewkb_srid] if @type_format == :ewkb
-        @hex_format = opts_[:hex_format]
-        @little_endian = opts_[:little_endian]
+        @type_format = opts_[:type_format] || :wkb11
+        @emit_ewkb_srid = opts_[:emit_ewkb_srid] ? true : false if @type_format == :ewkb
+        @hex_format = opts_[:hex_format] ? true : false
+        @little_endian = opts_[:little_endian] ? true : false
       end
       
+      
+      # Returns the format for type codes. See WKBGenerator for details.
+      def type_format
+        @type_format
+      end
+      
+      # Sets the format for type codes. See WKBGenerator for details.
+      def type_format=(value_)
+        @type_format = value_
+      end
+      
+      # Returns whether SRID is embedded. See WKBGenerator for details.
+      def emit_ewkb_srid?
+        @emit_ewkb_srid
+      end
+      
+      # Sets whether SRID is embedded. Available only when the type_format
+      # is <tt>:ewkb</tt>. See WKBGenerator for details.
+      def emit_ewkb_srid=(value_)
+        @emit_ewkb_srid = @type_format == :ewkb && value_
+      end
+      
+      # Returns whether output is converted to hex.
+      # See WKBGenerator for details.
+      def hex_format?
+        @hex_format
+      end
+      
+      # Sets whether output is converted to hex.
+      # See WKBGenerator for details.
+      def hex_format=(value_)
+        @hex_format = value_ ? true : false
+      end
+      
+      # Returns whether output is little-endian (NDR).
+      # See WKBGenerator for details.
+      def little_endian?
+        @little_endian
+      end
+      
+      # Sets whether output is little-endian (NDR).
+      # See WKBGenerator for details.
+      def little_endian=(value_)
+        @little_endian = value_ ? true : false
+      end
+      
+      
+      # Generate and return the WKB format for the given geometry object,
+      # according to the current settings.
       
       def generate(obj_)
         factory_ = obj_.factory
@@ -87,13 +173,13 @@ module RGeo
           raise Errors::ParseError, "Unrecognized Geometry Type: #{type_}"
         end
         emit_srid_ = false
-        if @emit_ewkb_srid && toplevel_
-          type_code |= 0x20000000
-          emit_srid_ = true
-        end
         if @type_format == :ewkb
           type_code_ |= 0x80000000 if @cur_has_z
           type_code_ |= 0x40000000 if @cur_has_m
+          if @emit_ewkb_srid && toplevel_
+            type_code |= 0x20000000
+            emit_srid_ = true
+          end
         elsif @type_format == :wkb12
           type_code_ += 1000 if @cur_has_z
           type_code_ += 2000 if @cur_has_m
@@ -169,7 +255,7 @@ module RGeo
       def _finish_emitter  # :nodoc:
         str_ = @cur_array.join
         @cur_array = nil
-        str_
+        @hex_format ? str_.unpack("H*")[0] : str_
       end
       
       

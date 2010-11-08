@@ -48,6 +48,9 @@ module RGeo
         @y = y_.to_f
         @z = factory_.has_capability?(:z_coordinate) ? extra_.shift.to_f : nil
         @m = factory_.has_capability?(:m_coordinate) ? extra_.shift.to_f : nil
+        if extra_.size > 0
+          raise ::ArgumentError, "Too many arguments for point initializer"
+        end
         _validate_geometry
       end
       

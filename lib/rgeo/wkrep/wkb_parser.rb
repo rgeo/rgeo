@@ -39,24 +39,125 @@ module RGeo
   module WKRep
     
     
+    # This class provides the functionality of parsing a geometry from
+    # WKB (well-known binary) format. You may also customize the parser
+    # to recognize PostGIS EWKB extensions to the input, or Simple
+    # Features Specification 1.2 extensions for Z and M coordinates.
+    # 
+    # To use this class, create an instance with the desired settings and
+    # customizations, and call the parse method.
+    # 
+    # === Configuration options
+    # 
+    # The following options are recognized. These can be passed to the
+    # constructor, or set on the object afterwards.
+    # 
+    # <tt>:default_factory</tt>::
+    #   The default factory for generated geometries, used when no SRID
+    #   is explicitly specified in the input. If none is provided, the
+    #   default cartesian factory will be used.
+    # <tt>:factory_from_srid</tt>::
+    #   A Proc that takes an SRID as the sole argument, and returns a
+    #   factory for generated geometries when that SRID is specified in
+    #   the input. If no such Proc is provided, the default_factory is
+    #   used, regardless of the input SRID.
+    # <tt>:support_ewkb</tt>::
+    #   Activate support for PostGIS EWKB type codes, which use high
+    #   order bits in the type code to signal the presence of Z, M, and
+    #   SRID values in the data. Default is false.
+    # <tt>:support_wkb12</tt>::
+    #   Activate support for SFS 1.2 extensions to the type codes, which
+    #   use values greater than 1000 to signal the presence of Z and M
+    #   values in the data. SFS 1.2 types such as triangle, tin, and
+    #   polyhedralsurface are NOT yet supported. Default is false.
+    # <tt>:ignore_extra_bytes</tt>::
+    #   If true, extra bytes at the end of the data are ignored. If
+    #   false (the default), extra bytes will trigger a parse error.
+    
     class WKBParser
       
       
-      def initialize(factory_, opts_={}, &block_)
-        @factory = factory_
-        @factory_factory = block_
-        @support_ewkb = opts_[:support_ewkb]
-        @support_wkb12 = opts_[:support_wkb12]
-        @ignore_extra_bytes = opts_[:ignore_extra_bytes]
+      # Create and configure a WKB parser. See the WKBParser
+      # documentation for the options that can be passed.
+      
+      def initialize(opts_={})
+        @default_factory = opts_[:default_factory] || Cartesian.preferred_factory
+        @factory_from_srid = opts_[:factory_from_srid]
+        @support_ewkb = opts_[:support_ewkb] ? true : false
+        @support_wkb12 = opts_[:support_wkb12] ? true : false
+        @ignore_extra_bytes = opts_[:ignore_extra_bytes] ? true : false
       end
       
+      
+      # Returns the default factory. See WKBParser for details.
+      def default_factory
+        @default_factory
+      end
+      
+      # Sets the default factory. See WKBParser for details.
+      def default_factory=(value_)
+        @default_factory = value_ || Cartesian.preferred_factory
+      end
+      
+      # Returns true if this parser has a factory_from_srid procedure.
+      # See WKBParser for details.
+      def has_factory_from_srid?
+        @factory_from_srid ? true : false
+      end
+      
+      # Sets the factory_from_srid. See WKBParser for details.
+      def factory_from_srid=(value_)
+        @factory_from_srid = value_
+      end
+      
+      # Sets the factory_from_srid to the given block.
+      # See WKBParser for details.
+      def set_factory_from_srid(&block_)
+        @factory_from_srid = block_
+      end
+      
+      # Returns true if this parser supports EWKB.
+      # See WKBParser for details.
+      def support_ewkb?
+        @support_ewkb
+      end
+      
+      # Sets the the support_ewkb flag. See WKBParser for details.
+      def support_ewkb=(value_)
+        @support_ewkb = value_ ? true : false
+      end
+      
+      # Returns true if this parser supports SFS 1.2 extensions.
+      # See WKBParser for details.
+      def support_wkb12?
+        @support_wkb12
+      end
+      
+      # Sets the the support_wkb12 flag. See WKBParser for details.
+      def support_wkb12=(value_)
+        @support_wkb12 = value_ ? true : false
+      end
+      
+      # Returns true if this parser ignores extra bytes.
+      # See WKBParser for details.
+      def ignore_extra_bytes?
+        @ignore_extra_bytes
+      end
+      
+      # Sets the the ignore_extra_bytes flag. See WKBParser for details.
+      def ignore_extra_bytes=(value_)
+        @ignore_extra_bytes = value_ ? true : false
+      end
+      
+      
+      # Parse the given binary data, and return a geometry object.
       
       def parse(data_)
         @cur_has_z = nil
         @cur_has_m = nil
         @cur_srid = nil
         @cur_dims = 2
-        @cur_factory = @factory
+        @cur_factory = @default_factory
         begin
           _start_scanner(data_)
           obj_ = _parse_object(false)
@@ -108,8 +209,8 @@ module RGeo
           @cur_has_m = has_m_
           @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
           @cur_srid = srid_
-          if srid_ && @factory_factory
-            @cur_factory = @factory_factory.call(srid_)
+          if srid_ && @factory_from_srid
+            @cur_factory = @factory_from_srid.call(srid_)
           end
           if @cur_has_z && !@cur_factory.has_capability?(:z_coordinate)
             raise Errors::ParseError, "Data has Z coordinates but the factory doesn't have z_coordinate capability"

@@ -39,19 +39,107 @@ module RGeo
   module WKRep
     
     
+    # This class provides the functionality of serializing a geometry as
+    # WKT (well-known text) format. You may also customize the serializer
+    # to generate PostGIS EWKT extensions to the output, or to follow the
+    # Simple Features Specification 1.2 extensions for Z and M.
+    # 
+    # To use this class, create an instance with the desired settings and
+    # customizations, and call the generate method.
+    # 
+    # === Configuration options
+    # 
+    # The following options are recognized. These can be passed to the
+    # constructor, or set on the object afterwards.
+    # 
+    # <tt>:tag_format</tt>::
+    #   The format for tags. Possible values are <tt>:wkt11</tt>,
+    #   indicating SFS 1.1 WKT (i.e. no Z or M markers in the tags) but
+    #   with Z and/or M values added in if they are present;
+    #   <tt>:wkt11_strict</tt>, indicating SFS 1.1 WKT with Z and M
+    #   dropped from the output (since WKT strictly does not support
+    #   the Z or M dimensions); <tt>:ewkt</tt>, indicating the PostGIS
+    #   EWKT extensions (i.e. "M" appended to tag names if M but not
+    #   Z is present); or <tt>:wkt12</tt>, indicating SFS 1.2 WKT
+    #   tags that indicate the presence of Z and M in a separate token.
+    #   Default is <tt>:wkt11</tt>.
+    # <tt>:emit_ewkt_srid</tt>::
+    #   If true, embed the SRID of the toplevel geometry. Available only
+    #   if <tt>:type_format</tt> is <tt>:ewkt</tt>. Default is false.
+    # <tt>:square_brackets</tt>::
+    #   If true, uses square brackets rather than parentheses.
+    #   Default is false.
+    # <tt>:convert_case</tt>::
+    #   Possible values are <tt>:upper</tt>, which changes all letters
+    #   in the output to ALL CAPS; <tt>:lower</tt>, which changes all
+    #   letters to lower case; or nil, indicating no case changes from
+    #   the default (which is not specified exactly, but is chosen by the
+    #   generator to emphasize readability.) Default is nil.
+    
     class WKTGenerator
       
       
+      # Create and configure a WKT generator. See the WKTGenerator
+      # documentation for the options that can be passed.
+      
       def initialize(opts_={})
-        @tag_format = opts_[:tag_format]
-        @emit_ewkt_srid = opts_[:emit_ewkt_srid] if @tag_format == :ewkt
-        @begin_bracket = opts_[:square_brackets] ? '[' : '('
-        @end_bracket = opts_[:square_brackets] ? ']' : ')'
-        @case = opts_[:case]
+        @tag_format = opts_[:tag_format] || :wkt11
+        @emit_ewkt_srid = opts_[:emit_ewkt_srid] ? true : false if @tag_format == :ewkt
+        @square_brackets = opts_[:square_brackets] ? true : false
+        @convert_case = opts_[:convert_case]
       end
       
       
+      # Returns the format for type tags. See WKTGenerator for details.
+      def tag_format
+        @tag_format
+      end
+      
+      # Sets the format for type tags. See WKTGenerator for details.
+      def tag_format=(value_)
+        @tag_format = value_
+      end
+      
+      # Returns whether SRID is embedded. See WKTGenerator for details.
+      def emit_ewkt_srid?
+        @emit_ewkt_srid
+      end
+      
+      # Sets whether SRID is embedded. Available only when the tag_format
+      # is <tt>:ewkt</tt>. See WKTGenerator for details.
+      def emit_ewkt_srid=(value_)
+        @emit_ewkt_srid = @type_format == :ewkt && value_
+      end
+      
+      # Returns whether square brackets rather than parens are output.
+      # See WKTGenerator for details.
+      def square_brackets?
+        @square_brackets
+      end
+      
+      # Sets whether square brackets rather than parens are output.
+      # See WKTGenerator for details.
+      def square_brackets=(value_)
+        @square_brackets = value_ ? true : false
+      end
+      
+      # Returns the case for output. See WKTGenerator for details.
+      def convert_case
+        @convert_case
+      end
+      
+      # Sets the case for output. See WKTGenerator for details.
+      def convert_case=(value_)
+        @convert_case = value_
+      end
+      
+      
+      # Generate and return the WKT format for the given geometry object,
+      # according to the current settings.
+      
       def generate(obj_)
+        @begin_bracket = @square_brackets ? '[' : '('
+        @end_bracket = @square_brackets ? ']' : ')'
         factory_ = obj_.factory
         if @tag_format == :wkt11_strict
           @cur_support_z = nil
@@ -61,9 +149,9 @@ module RGeo
           @cur_support_m = factory_.has_capability?(:m_coordinate)
         end
         str_ = _generate_feature(obj_, true)
-        if @case == :upper
+        if @convert_case == :upper
           str_.upcase
-        elsif @case == :lower
+        elsif @convert_case == :lower
           str_.downcase
         else
           str_
@@ -78,6 +166,9 @@ module RGeo
           if @cur_support_m && !@cur_support_z
             tag_ << 'M'
           end
+          if toplevel_ && @emit_ewkt_srid
+            tag_ = "SRID=#{obj_.srid};#{tag_}"
+          end
         elsif @tag_format == :wkt12
           if @cur_support_z
             if @cur_support_m
@@ -88,9 +179,6 @@ module RGeo
           elsif @cur_support_m
             tag_ << ' M'
           end
-        end
-        if toplevel_ && @emit_ewkt_srid
-          tag_ = "SRID=#{obj_.srid};#{tag_}"
         end
         if type_ == Features::Point
           tag_ + _generate_point(obj_)
@@ -125,27 +213,27 @@ module RGeo
       end
       
       
-      def _generate_line_string(obj_)  # :nodoc:
+      def _generate_line_string(obj_, contained_=false)  # :nodoc:
         if obj_.is_empty?
-          " EMPTY"
+          contained_ ? 'EMPTY' : ' EMPTY'
         else
           "#{@begin_bracket}#{obj_.points.map{ |p_| _generate_coords(p_) }.join(',')}#{@end_bracket}"
         end
       end
       
       
-      def _generate_polygon(obj_)  # :nodoc:
+      def _generate_polygon(obj_, contained_=false)  # :nodoc:
         if obj_.is_empty?
-          " EMPTY"
+          contained_ ? 'EMPTY' : ' EMPTY'
         else
-          "#{@begin_bracket}#{([_generate_line_string(obj_.exterior_ring)] + obj_.interior_rings.map{ |r_| _generate_line_string(r_) }).join(',')}#{@end_bracket}"
+          "#{@begin_bracket}#{([_generate_line_string(obj_.exterior_ring, true)] + obj_.interior_rings.map{ |r_| _generate_line_string(r_, true) }).join(',')}#{@end_bracket}"
         end
       end
       
       
       def _generate_geometry_collection(obj_)  # :nodoc:
         if obj_.is_empty?
-          " EMPTY"
+          ' EMPTY'
         else
           "#{@begin_bracket}#{obj_.map{ |f_| _generate_feature(f_) }.join(',')}#{@end_bracket}"
         end
@@ -165,7 +253,7 @@ module RGeo
         if obj_.is_empty?
           " EMPTY"
         else
-          "#{@begin_bracket}#{obj_.map{ |f_| _generate_line_string(f_) }.join(',')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.map{ |f_| _generate_line_string(f_, true) }.join(',')}#{@end_bracket}"
         end
       end
       
@@ -174,7 +262,7 @@ module RGeo
         if obj_.is_empty?
           " EMPTY"
         else
-          "#{@begin_bracket}#{obj_.map{ |f_| _generate_polygon(f_) }.join(',')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.map{ |f_| _generate_polygon(f_, true) }.join(',')}#{@end_bracket}"
         end
       end
       
