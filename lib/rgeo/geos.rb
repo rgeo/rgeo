@@ -34,6 +34,10 @@
 ;
 
 
+# Parent file
+require 'rgeo'
+
+
 module RGeo
   
   
@@ -61,12 +65,11 @@ module RGeo
 end
 
 
-# Dependency source files.
-paths_ = [
-  'features',
-  'geos/factory',
-  'geos/interface',
-  'geos/geos_c_impl',
-  'geos/impl_additions',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Dependency files
+require 'rgeo/features'
+
+# Implementation files
+require 'rgeo/geos/factory'
+require 'rgeo/geos/interface'
+require 'rgeo/geos/geos_c_impl'
+require 'rgeo/geos/impl_additions'

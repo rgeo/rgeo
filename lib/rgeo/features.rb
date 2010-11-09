@@ -34,6 +34,10 @@
 ;
 
 
+# Parent file
+require 'rgeo'
+
+
 module RGeo
   
   
@@ -68,23 +72,24 @@ module RGeo
 end
 
 
-# Dependency source files.
-paths_ = [
-  'features/factory',
-  'features/types',
-  'features/geometry',
-  'features/point',
-  'features/curve',
-  'features/line_string',
-  'features/linear_ring',
-  'features/line',
-  'features/surface',
-  'features/polygon',
-  'features/geometry_collection',
-  'features/multi_point',
-  'features/multi_curve',
-  'features/multi_line_string',
-  'features/multi_surface',
-  'features/multi_polygon',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Dependency files
+require 'rgeo/errors'
+
+# Implementation files
+require 'rgeo/features/factory'
+require 'rgeo/features/types'
+require 'rgeo/features/geometry'
+require 'rgeo/features/point'
+require 'rgeo/features/curve'
+require 'rgeo/features/line_string'
+require 'rgeo/features/linear_ring'
+require 'rgeo/features/line'
+require 'rgeo/features/surface'
+require 'rgeo/features/polygon'
+require 'rgeo/features/geometry_collection'
+require 'rgeo/features/multi_point'
+require 'rgeo/features/multi_curve'
+require 'rgeo/features/multi_line_string'
+require 'rgeo/features/multi_surface'
+require 'rgeo/features/multi_polygon'
+

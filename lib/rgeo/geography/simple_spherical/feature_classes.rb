@@ -44,10 +44,10 @@ module RGeo
       class PointImpl  # :nodoc:
         
         
-        include Features::Point
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicPointMethods
+        include ::RGeo::Features::Point
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicPointMethods
         
         
         def _validate_geometry
@@ -81,11 +81,11 @@ module RGeo
       class LineStringImpl  # :nodoc:
         
         
-        include Features::LineString
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicLineStringMethods
-        include SimpleSpherical::LineStringMethods
+        include ::RGeo::Features::LineString
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
         
         
       end
@@ -94,12 +94,12 @@ module RGeo
       class LineImpl  # :nodoc:
         
         
-        include Features::Line
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicLineStringMethods
-        include SimpleSpherical::LineStringMethods
-        include ImplHelpers::BasicLineMethods
+        include ::RGeo::Features::Line
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
+        include ::RGeo::ImplHelpers::BasicLineMethods
         
         
       end
@@ -108,12 +108,12 @@ module RGeo
       class LinearRingImpl  # :nodoc:
         
         
-        include Features::Line
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicLineStringMethods
-        include SimpleSpherical::LineStringMethods
-        include ImplHelpers::BasicLinearRingMethods
+        include ::RGeo::Features::Line
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
+        include ::RGeo::ImplHelpers::BasicLinearRingMethods
         
         
       end
@@ -122,10 +122,10 @@ module RGeo
       class PolygonImpl  # :nodoc:
         
         
-        include Features::Polygon
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicPolygonMethods
+        include ::RGeo::Features::Polygon
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicPolygonMethods
         
         
       end
@@ -134,10 +134,10 @@ module RGeo
       class GeometryCollectionImpl  # :nodoc:
         
         
-        include Features::GeometryCollection
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::Features::GeometryCollection
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
         
         
       end
@@ -146,11 +146,11 @@ module RGeo
       class MultiPointImpl  # :nodoc:
         
         
-        include Features::GeometryCollection
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicGeometryCollectionMethods
-        include ImplHelpers::BasicMultiPointMethods
+        include ::RGeo::Features::GeometryCollection
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelpers::BasicMultiPointMethods
         
         
       end
@@ -159,11 +159,11 @@ module RGeo
       class MultiLineStringImpl  # :nodoc:
         
         
-        include Features::GeometryCollection
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicGeometryCollectionMethods
-        include ImplHelpers::BasicMultiLineStringMethods
+        include ::RGeo::Features::GeometryCollection
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
         
         
       end
@@ -172,11 +172,11 @@ module RGeo
       class MultiPolygonImpl  # :nodoc:
         
         
-        include Features::GeometryCollection
-        include ImplHelpers::BasicGeometryMethods
-        include SimpleSpherical::GeometryMethods
-        include ImplHelpers::BasicGeometryCollectionMethods
-        include ImplHelpers::BasicMultiPolygonMethods
+        include ::RGeo::Features::GeometryCollection
+        include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
         
         
       end

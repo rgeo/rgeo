@@ -39,13 +39,13 @@ module RGeo
   module Cartesian
     
     
-    class SimplePointImpl  # :nodoc:
+    class PointImpl  # :nodoc:
       
       
-      include Features::Point
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicPointMethods
+      include ::RGeo::Features::Point
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicPointMethods
       
       
       def _validate_geometry
@@ -63,9 +63,9 @@ module RGeo
       
       
       def distance(rhs_)
-        rhs_ = Features.cast(rhs_, @factory)
+        rhs_ = ::RGeo::Features.cast(rhs_, @factory)
         case rhs_
-        when SimplePointImpl
+        when PointImpl
           dx_ = @x - rhs_.x
           dy_ = @y - rhs_.y
           ::Math.sqrt(dx_ * dx_ + dy_ * dy_)
@@ -78,105 +78,105 @@ module RGeo
     end
     
     
-    class SimpleLineStringImpl  # :nodoc:
+    class LineStringImpl  # :nodoc:
       
       
-      include Features::LineString
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicLineStringMethods
-      include Cartesian::SimpleLineStringMethods
-      
-      
-    end
-    
-    
-    class SimpleLineImpl  # :nodoc:
-      
-      
-      include Features::Line
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicLineStringMethods
-      include Cartesian::SimpleLineStringMethods
-      include ImplHelpers::BasicLineMethods
+      include ::RGeo::Features::LineString
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicLineStringMethods
+      include ::RGeo::Cartesian::LineStringMethods
       
       
     end
     
     
-    class SimpleLinearRingImpl  # :nodoc:
+    class LineImpl  # :nodoc:
       
       
-      include Features::Line
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicLineStringMethods
-      include Cartesian::SimpleLineStringMethods
-      include ImplHelpers::BasicLinearRingMethods
-      
-      
-    end
-    
-    
-    class SimplePolygonImpl  # :nodoc:
-      
-      
-      include Features::Polygon
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicPolygonMethods
+      include ::RGeo::Features::Line
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicLineStringMethods
+      include ::RGeo::Cartesian::LineStringMethods
+      include ::RGeo::ImplHelpers::BasicLineMethods
       
       
     end
     
     
-    class SimpleGeometryCollectionImpl  # :nodoc:
+    class LinearRingImpl  # :nodoc:
       
       
-      include Features::GeometryCollection
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicGeometryCollectionMethods
-      
-      
-    end
-    
-    
-    class SimpleMultiPointImpl  # :nodoc:
-      
-      
-      include Features::GeometryCollection
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicGeometryCollectionMethods
-      include ImplHelpers::BasicMultiPointMethods
+      include ::RGeo::Features::Line
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicLineStringMethods
+      include ::RGeo::Cartesian::LineStringMethods
+      include ::RGeo::ImplHelpers::BasicLinearRingMethods
       
       
     end
     
     
-    class SimpleMultiLineStringImpl  # :nodoc:
+    class PolygonImpl  # :nodoc:
       
       
-      include Features::GeometryCollection
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicGeometryCollectionMethods
-      include ImplHelpers::BasicMultiLineStringMethods
+      include ::RGeo::Features::Polygon
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicPolygonMethods
       
       
     end
     
     
-    class SimpleMultiPolygonImpl  # :nodoc:
+    class GeometryCollectionImpl  # :nodoc:
       
       
-      include Features::GeometryCollection
-      include ImplHelpers::BasicGeometryMethods
-      include Cartesian::SimpleGeometryMethods
-      include ImplHelpers::BasicGeometryCollectionMethods
-      include ImplHelpers::BasicMultiPolygonMethods
+      include ::RGeo::Features::GeometryCollection
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+      
+      
+    end
+    
+    
+    class MultiPointImpl  # :nodoc:
+      
+      
+      include ::RGeo::Features::GeometryCollection
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+      include ::RGeo::ImplHelpers::BasicMultiPointMethods
+      
+      
+    end
+    
+    
+    class MultiLineStringImpl  # :nodoc:
+      
+      
+      include ::RGeo::Features::GeometryCollection
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+      include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
+      
+      
+    end
+    
+    
+    class MultiPolygonImpl  # :nodoc:
+      
+      
+      include ::RGeo::Features::GeometryCollection
+      include ::RGeo::ImplHelpers::BasicGeometryMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+      include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
       
       
     end

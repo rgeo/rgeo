@@ -150,6 +150,13 @@ module RGeo
       end
       
       
+      # Parse the given hex string, and return a geometry object.
+      
+      def parse_hex(str_)
+        parse([str_].pack('H*'))
+      end
+      
+      
       # Parse the given binary data, and return a geometry object.
       
       def parse(data_)

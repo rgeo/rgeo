@@ -130,6 +130,11 @@ module RGeo
       end
       
       
+      def length
+        @elements.inject(0.0){ |sum_, obj_| sum_ + obj_.length }
+      end
+      
+      
     end
     
     
@@ -175,6 +180,11 @@ module RGeo
       
       def geometry_type
         Features::MultiPolygon
+      end
+      
+      
+      def area
+        @elements.inject(0.0){ |sum_, obj_| sum_ + obj_.area }
       end
       
       

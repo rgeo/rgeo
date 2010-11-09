@@ -65,7 +65,7 @@ module RGeo
         def unproject(geometry_)
           case geometry_
           when Features::Point
-            dpr_ = Helper::DEGREES_PER_RADIAN
+            dpr_ = ::RGeo::ImplHelpers::Math::DEGREES_PER_RADIAN
             radius_ = EQUATORIAL_RADIUS
             @geography_factory.point(geometry_.x / radius_ * dpr_,
               (2.0 * ::Math.atan(::Math.exp(geometry_.y / radius_)) - ::Math::PI / 2.0) * dpr_)

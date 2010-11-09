@@ -34,6 +34,10 @@
 ;
 
 
+# Parent file
+require 'rgeo'
+
+
 module RGeo
   
   
@@ -41,25 +45,15 @@ module RGeo
   # latitude/longitude coordinates measured in degrees.
   
   module Geography
+    
+    autoload(:SimpleSpherical, 'rgeo/geography/simple_spherical')
+    autoload(:SimpleMercator, 'rgeo/geography/simple_mercator')
+    
   end
   
   
 end
 
 
-# Dependency source files.
-paths_ = [
-  'features',
-  'cartesian',
-  'geography/helper',
-  'geography/simple_spherical/calculations',
-  'geography/simple_spherical/feature_methods',
-  'geography/simple_spherical/feature_classes',
-  'geography/simple_mercator/projector',
-  'geography/simple_mercator/feature_methods',
-  'geography/simple_mercator/feature_classes',
-  'geography/factory',
-  'geography/projected_window',
-  'geography/factories',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Implementation files.
+require 'rgeo/geography/interface'

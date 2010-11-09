@@ -1,6 +1,8 @@
 === 0.1.15 / 2010-11-08
 
 * Cleanup, fixes, documentation, and partial test coverage in the WKT/WKB implementations.
+* Implemented autoload for the various modules.
+* A few minor fixes.
 
 === 0.1.14 / 2010-11-04
 

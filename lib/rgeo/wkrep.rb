@@ -34,6 +34,10 @@
 ;
 
 
+# Parent file
+require 'rgeo'
+
+
 module RGeo
   
   
@@ -65,12 +69,11 @@ module RGeo
 end
 
 
-# Dependency source files.
-paths_ = [
-  'features',
-  'wkrep/wkt_parser',
-  'wkrep/wkt_generator',
-  'wkrep/wkb_parser',
-  'wkrep/wkb_generator',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Dependency files
+require 'rgeo/features'
+
+# Implementation files
+require 'rgeo/wkrep/wkt_parser'
+require 'rgeo/wkrep/wkt_generator'
+require 'rgeo/wkrep/wkb_parser'
+require 'rgeo/wkrep/wkb_generator'

@@ -42,18 +42,14 @@ module RGeo
     # This class implements the factory for the simple cartesian
     # implementation.
     
-    class SimpleFactory
+    class Factory
       
       include Features::Factory::Instance
       
       
       # Create a new simple cartesian factory.
       # 
-      # Options supported are:
-      # 
-      # <tt>:srid</tt>::
-      #   The SRID reported by features created by this factory.
-      #   Default is 0.
+      # See ::RGeo::Cartesian::simple_factory for a list of supported options.
       
       def initialize(opts_={})
         @srid = opts_[:srid].to_i
@@ -94,81 +90,82 @@ module RGeo
       # See ::RGeo::Features::Factory#parse_wkt
       
       def parse_wkt(str_)
-        WKRep::WKTParser.new(:default_factory => self).parse(str_)
+        ::RGeo::WKRep::WKTParser.new(:default_factory => self).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#parse_wkb
       
       def parse_wkb(str_)
-        WKRep::WKBParser.new(:default_factory => self).parse(str_)
+        ::RGeo::WKRep::WKBParser.new(:default_factory => self).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#point
       
       def point(x_, y_, *extra_)
-        SimplePointImpl.new(self, x_, y_, *extra_) rescue nil
+        PointImpl.new(self, x_, y_, *extra_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#line_string
       
       def line_string(points_)
-        SimpleLineStringImpl.new(self, points_) rescue nil
+        LineStringImpl.new(self, points_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#line
       
       def line(start_, end_)
-        SimpleLineImpl.new(self, start_, end_) rescue nil
+        LineImpl.new(self, start_, end_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#linear_ring
       
       def linear_ring(points_)
-        SimpleLinearRingImpl.new(self, points_) rescue nil
+        LinearRingImpl.new(self, points_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
-        SimplePolygonImpl.new(self, outer_ring_, inner_rings_) rescue nil
+        PolygonImpl.new(self, outer_ring_, inner_rings_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#collection
       
       def collection(elems_)
-        SimpleGeometryCollectionImpl.new(self, elems_) rescue nil
+        GeometryCollectionImpl.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#multi_point
       
       def multi_point(elems_)
-        SimpleMultiPointImpl.new(self, elems_) rescue nil
+        MultiPointImpl.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#multi_line_string
       
       def multi_line_string(elems_)
-        SimpleMultiLineStringImpl.new(self, elems_) rescue nil
+        MultiLineStringImpl.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Features::Factory#multi_polygon
       
       def multi_polygon(elems_)
-        SimpleMultiPolygonImpl.new(self, elems_) rescue nil
+        MultiPolygonImpl.new(self, elems_) rescue nil
       end
       
       
     end
+    
     
   end
   

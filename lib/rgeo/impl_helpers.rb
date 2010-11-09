@@ -34,6 +34,10 @@
 ;
 
 
+# Parent file
+require 'rgeo'
+
+
 module RGeo
   
   
@@ -44,12 +48,13 @@ module RGeo
 end
 
 
-# Dependency source files.
-paths_ = [
-  'impl_helpers/basic_geometry_methods',
-  'impl_helpers/basic_geometry_collection_methods',
-  'impl_helpers/basic_point_methods',
-  'impl_helpers/basic_line_string_methods',
-  'impl_helpers/basic_polygon_methods',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Dependency files
+require 'rgeo/features'
+
+# Implementation files
+require 'rgeo/impl_helpers/math'
+require 'rgeo/impl_helpers/basic_geometry_methods'
+require 'rgeo/impl_helpers/basic_geometry_collection_methods'
+require 'rgeo/impl_helpers/basic_point_methods'
+require 'rgeo/impl_helpers/basic_line_string_methods'
+require 'rgeo/impl_helpers/basic_polygon_methods'

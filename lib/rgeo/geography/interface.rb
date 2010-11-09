@@ -100,7 +100,8 @@ module RGeo
       #   most support one or the other.
       
       def simple_spherical(opts_={})
-        Geography::Factory.new(Geography::SimpleSpherical, :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
+        namespace_ = Geography::SimpleSpherical
+        Geography::Factory.new(namespace_, :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
       end
       
       
@@ -176,7 +177,8 @@ module RGeo
       #   most support one or the other.
       
       def simple_mercator(opts_={})
-        Geography::Factory.new(Geography::SimpleMercator, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
+        namespace_ = Geography::SimpleMercator
+        Geography::Factory.new(namespace_, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
       end
       
       

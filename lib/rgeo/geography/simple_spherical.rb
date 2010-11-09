@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Cartesian toplevel interface
+# Simple spherical geography implementation for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,56 +34,35 @@
 ;
 
 
+require 'rgeo/geography'
+
+
 module RGeo
   
-  module Cartesian
+  module Geography
     
-    class << self
-      
-      
-      # Creates and returns a cartesian factory of the preferred
-      # implementation.
-      # 
-      # The actual implementation returned depends on which ruby
-      # interpreter is running and what libraries are available.
-      # RGeo will try to provide a fully-functional and performant
-      # implementation if possible. If not, the simple cartesian
-      # implementation will be returned.
-      # 
-      # The given options are passed to the factory's constructor.
-      # What options are available depends on the particular
-      # implementation. Unsupported options are ignored.
-      
-      def preferred_factory(opts_={})
-        if ::RGeo::Geos.supported?
-          ::RGeo::Geos.factory(opts_)
-        else
-          simple_factory(opts_)
-        end
-      end
-      alias_method :factory, :preferred_factory
-      
-      
-      # Returns a factory for the simple cartesian implementation.
-      # This implementation is always available.
-      # 
-      # Options include:
-      # 
-      # <tt>:srid</tt>::
-      #   Set the SRID returned by geometries created by this factory.
-      #   Default is 0.
-      # <tt>:support_z_coordinate</tt>::
-      #   Support <tt>z_coordinate</tt>. Default is false.
-      # <tt>:support_m_coordinate</tt>::
-      #   Support <tt>m_coordinate</tt>. Default is false.
-      
-      def simple_factory(opts_={})
-        Cartesian::Factory.new(opts_)
-      end
-      
-      
+    
+    # This namespace contains the simple spherical implementation.
+    
+    module SimpleSpherical
     end
+    
     
   end
   
+  
 end
+
+
+# Dependency source files.
+paths_ = [
+  'features',
+  'wkrep',
+  'impl_helpers',
+  'geography/simple_spherical/calculations',
+  'geography/simple_spherical/feature_methods',
+  'geography/simple_spherical/feature_classes',
+  'geography/factory',
+  'geography/projected_window',
+]
+paths_.each{ |path_| require "rgeo/#{path_}" }

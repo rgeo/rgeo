@@ -40,7 +40,7 @@ require 'rgeo'
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleCartesian  # :nodoc:
+    module Cartesian  # :nodoc:
       
       class TestCalculations < ::Test::Unit::TestCase  # :nodoc:
         
@@ -54,13 +54,13 @@ module RGeo
           @point5 = @factory.point(-1, 2)
           @point6 = @factory.point(-1, 1)
           @point7 = @factory.point(5, 4)
-          @horiz_seg = Cartesian::Segment.new(@point1, @point3)
-          @vert_seg = Cartesian::Segment.new(@point4, @point1)
-          @short_rising_seg = Cartesian::Segment.new(@point1, @point2)
-          @long_rising_seg = Cartesian::Segment.new(@point5, @point2)
-          @parallel_rising_seg = Cartesian::Segment.new(@point6, @point7)
-          @steep_rising_seg = Cartesian::Segment.new(@point6, @point4)
-          @degenerate_seg = Cartesian::Segment.new(@point5, @point5)
+          @horiz_seg = ::RGeo::Cartesian::Segment.new(@point1, @point3)
+          @vert_seg = ::RGeo::Cartesian::Segment.new(@point4, @point1)
+          @short_rising_seg = ::RGeo::Cartesian::Segment.new(@point1, @point2)
+          @long_rising_seg = ::RGeo::Cartesian::Segment.new(@point5, @point2)
+          @parallel_rising_seg = ::RGeo::Cartesian::Segment.new(@point6, @point7)
+          @steep_rising_seg = ::RGeo::Cartesian::Segment.new(@point6, @point4)
+          @degenerate_seg = ::RGeo::Cartesian::Segment.new(@point5, @point5)
         end
         
         

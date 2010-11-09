@@ -34,6 +34,10 @@
 ;
 
 
+# Parent file
+require 'rgeo'
+
+
 module RGeo
   
   
@@ -47,12 +51,10 @@ module RGeo
 end
 
 
-# Dependency source files.
-paths_ = [
-  'features',
-  'geo_json/entities',
-  'geo_json/coder',
-  'geo_json/interface',
-]
+# Dependency files
+require 'rgeo/features'
 
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Implementation files
+require 'rgeo/geo_json/entities'
+require 'rgeo/geo_json/coder'
+require 'rgeo/geo_json/interface'

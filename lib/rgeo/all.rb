@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Cartesian toplevel interface
+# All RGeo submodules
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,56 +34,15 @@
 ;
 
 
-module RGeo
-  
-  module Cartesian
-    
-    class << self
-      
-      
-      # Creates and returns a cartesian factory of the preferred
-      # implementation.
-      # 
-      # The actual implementation returned depends on which ruby
-      # interpreter is running and what libraries are available.
-      # RGeo will try to provide a fully-functional and performant
-      # implementation if possible. If not, the simple cartesian
-      # implementation will be returned.
-      # 
-      # The given options are passed to the factory's constructor.
-      # What options are available depends on the particular
-      # implementation. Unsupported options are ignored.
-      
-      def preferred_factory(opts_={})
-        if ::RGeo::Geos.supported?
-          ::RGeo::Geos.factory(opts_)
-        else
-          simple_factory(opts_)
-        end
-      end
-      alias_method :factory, :preferred_factory
-      
-      
-      # Returns a factory for the simple cartesian implementation.
-      # This implementation is always available.
-      # 
-      # Options include:
-      # 
-      # <tt>:srid</tt>::
-      #   Set the SRID returned by geometries created by this factory.
-      #   Default is 0.
-      # <tt>:support_z_coordinate</tt>::
-      #   Support <tt>z_coordinate</tt>. Default is false.
-      # <tt>:support_m_coordinate</tt>::
-      #   Support <tt>m_coordinate</tt>. Default is false.
-      
-      def simple_factory(opts_={})
-        Cartesian::Factory.new(opts_)
-      end
-      
-      
-    end
-    
-  end
-  
-end
+# Parent file
+require 'rgeo'
+
+# Implementation files
+require 'rgeo/errors'
+require 'rgeo/features'
+require 'rgeo/impl_helpers'
+require 'rgeo/wkrep'
+require 'rgeo/geos'
+require 'rgeo/cartesian'
+require 'rgeo/geography/all'
+require 'rgeo/geo_json'

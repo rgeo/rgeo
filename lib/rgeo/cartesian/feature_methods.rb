@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Cartesian toplevel interface
+# Spherical geometry common methods
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -38,47 +38,59 @@ module RGeo
   
   module Cartesian
     
-    class << self
+    
+    module GeometryMethods  # :nodoc:
       
       
-      # Creates and returns a cartesian factory of the preferred
-      # implementation.
-      # 
-      # The actual implementation returned depends on which ruby
-      # interpreter is running and what libraries are available.
-      # RGeo will try to provide a fully-functional and performant
-      # implementation if possible. If not, the simple cartesian
-      # implementation will be returned.
-      # 
-      # The given options are passed to the factory's constructor.
-      # What options are available depends on the particular
-      # implementation. Unsupported options are ignored.
-      
-      def preferred_factory(opts_={})
-        if ::RGeo::Geos.supported?
-          ::RGeo::Geos.factory(opts_)
-        else
-          simple_factory(opts_)
-        end
+      def srid
+        factory.srid
       end
-      alias_method :factory, :preferred_factory
       
       
-      # Returns a factory for the simple cartesian implementation.
-      # This implementation is always available.
-      # 
-      # Options include:
-      # 
-      # <tt>:srid</tt>::
-      #   Set the SRID returned by geometries created by this factory.
-      #   Default is 0.
-      # <tt>:support_z_coordinate</tt>::
-      #   Support <tt>z_coordinate</tt>. Default is false.
-      # <tt>:support_m_coordinate</tt>::
-      #   Support <tt>m_coordinate</tt>. Default is false.
+    end
+    
+    
+    module LineStringMethods  # :nodoc:
       
-      def simple_factory(opts_={})
-        Cartesian::Factory.new(opts_)
+      
+      def _segments
+        unless @segments
+          @segments = (0..num_points-2).map do |i_|
+            Segment.new(point_n(i_), point_n(i_+1))
+          end
+        end
+        @segments
+      end
+      
+      
+      def is_simple?
+        segs_ = _segments
+        len_ = segs_.length
+        return false if segs_.any?{ |a_| a_.degenerate? }
+        return true if len_ == 1
+        return segs_[0].s != segs_[1].e if len_ == 2
+        segs_.each_with_index do |seg_, index_|
+          nindex_ = index_ + 1
+          nindex_ = nil if nindex_ == len_
+          return false if nindex_ && seg_.contains_point?(segs_[nindex_].e)
+          pindex_ = index_ - 1
+          pindex_ = nil if pindex_ < 0
+          return false if pindex_ && seg_.contains_point?(segs_[pindex_].s)
+          if nindex_
+            oindex_ = nindex_ + 1
+            while oindex_ < len_
+              oseg_ = segs_[oindex_]
+              return false if !(index_ == 0 && oindex_ == len_-1 && seg_.s == oseg_.e) && seg_.intersects_segment?(oseg_)
+              oindex_ += 1
+            end
+          end
+        end
+        true
+      end
+      
+      
+      def length
+        @segments.inject(0.0){ |sum_, seg_| sum_ + seg_.length }
       end
       
       

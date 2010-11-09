@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Helper for geography implementations
+# Simple spherical geography implementation for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,17 +34,36 @@
 ;
 
 
+require 'rgeo/geography'
+
+
 module RGeo
   
   module Geography
     
-    module Helper  # :nodoc:
-      
-      RADIANS_PER_DEGREE = ::Math::PI/180.0
-      DEGREES_PER_RADIAN = 180.0/::Math::PI
-      
+    
+    # This namespace contains the simple mercator implementation.
+    
+    module SimpleMercator
     end
+    
     
   end
   
+  
 end
+
+
+# Dependency source files.
+paths_ = [
+  'features',
+  'wkrep',
+  'impl_helpers',
+  'cartesian',
+  'geography/simple_mercator/projector',
+  'geography/simple_mercator/feature_methods',
+  'geography/simple_mercator/feature_classes',
+  'geography/factory',
+  'geography/projected_window',
+]
+paths_.each{ |path_| require "rgeo/#{path_}" }

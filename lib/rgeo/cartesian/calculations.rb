@@ -121,6 +121,11 @@ module RGeo
       end
       
       
+      def length
+        ::Math.sqrt(@lensq)
+      end
+      
+      
     end
     
     
