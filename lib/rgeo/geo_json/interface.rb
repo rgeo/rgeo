@@ -62,11 +62,23 @@ module RGeo
       # to read the JSON string. You must also provide the
       # RGeo::Features::Factory to use to create geometric objects.
       # 
-      # The only option supported is <tt>:entity_factory</tt>, which lets
-      # you override the types of GeoJSON entities that can be created.
-      # See RGeo::GeoJSON::EntityFactory for more information. By default,
-      # decode generates objects of type RGeo::GeoJSON::Feature and
-      # RGeo::GeoJSON::FeatureCollection.
+      # Options include:
+      # 
+      # <tt>:entity_factory</tt>::
+      #   Specifies an entity factory, which lets you override the types
+      #   of GeoJSON entities that are created. It defaults to the default
+      #   RGeo::GeoJSON::EntityFactory, which generates objects of type
+      #   RGeo::GeoJSON::Feature or RGeo::GeoJSON::FeatureCollection.
+      #   See RGeo::GeoJSON::EntityFactory for more information.
+      # <tt>:json_parser</tt>::
+      #   Specifies a JSON parser to use when decoding a String or IO
+      #   object. The value may be a Proc object taking the string as the
+      #   sole argument and returning the JSON hash, or it may be one of
+      #   the special values <tt>:json_gem</tt>, <tt>:yajl</tt>, or
+      #   <tt>:active_support</tt>. Setting one of those special values
+      #   will require the corresponding library to be available. If
+      #   a <tt>json_parser</tt> is not provided, then decode will not
+      #   accept a String or IO object; it will require a Hash.
       
       def decode(input_, geo_factory_, opts_={})
         Coder.new(geo_factory_, opts_).decode(input_)
@@ -77,11 +89,24 @@ module RGeo
       # that encapsulates encoding and decoding settings (principally the
       # RGeo::Features::Factory and the RGeo::GeoJSON::EntityFactory to be
       # used).
-      # The geo factory is a required argument. The entity factory is
-      # optional. To provide one, pass an option with key
-      # <tt>:entity_factory</tt>. It defaults to the default
-      # RGeo::GeoJSON::EntityFactory, which generates objects of type
-      # RGeo::GeoJSON::Feature or RGeo::GeoJSON::FeatureCollection.
+      # 
+      # The geo factory is a required argument. Other options include:
+      # 
+      # <tt>:entity_factory</tt>::
+      #   Specifies an entity factory, which lets you override the types
+      #   of GeoJSON entities that are created. It defaults to the default
+      #   RGeo::GeoJSON::EntityFactory, which generates objects of type
+      #   RGeo::GeoJSON::Feature or RGeo::GeoJSON::FeatureCollection.
+      #   See RGeo::GeoJSON::EntityFactory for more information.
+      # <tt>:json_parser</tt>::
+      #   Specifies a JSON parser to use when decoding a String or IO
+      #   object. The value may be a Proc object taking the string as the
+      #   sole argument and returning the JSON hash, or it may be one of
+      #   the special values <tt>:json_gem</tt>, <tt>:yajl</tt>, or
+      #   <tt>:active_support</tt>. Setting one of those special values
+      #   will require the corresponding library to be available. If
+      #   a <tt>json_parser</tt> is not provided, then decode will not
+      #   accept a String or IO object; it will require a Hash.
       
       def coder(geo_factory_, opts_={})
         Coder.new(geo_factory_, opts_)

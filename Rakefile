@@ -100,7 +100,6 @@ module RAKEFILE
     s_.test_files = TEST_FILES
     s_.platform = ::Gem::Platform::RUBY
     s_.extensions = ::Dir.glob('ext/**/extconf.rb')
-    s_.add_dependency('json', '>= 1.4.6')
   end
   
 end

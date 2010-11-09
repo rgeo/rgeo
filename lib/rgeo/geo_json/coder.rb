@@ -34,9 +34,6 @@
 ;
 
 
-require 'json'
-
-
 module RGeo
   
   module GeoJSON
@@ -51,14 +48,45 @@ module RGeo
       
       
       # Create a new coder settings object. The geo factory is passed as
-      # a required argument. The entity factory is optional. To provide
-      # one, pass an option with key <tt>:entity_factory</tt>. It defaults
-      # to the default RGeo::GeoJSON::EntityFactory, which generates
-      # objects of type RGeo::GeoJSON::Feature or RGeo::GeoJSON::FeatureCollection.
+      # a required argument.
+      # 
+      # Options include:
+      # 
+      # <tt>:entity_factory</tt>::
+      #   Specifies an entity factory, which lets you override the types
+      #   of GeoJSON entities that are created. It defaults to the default
+      #   RGeo::GeoJSON::EntityFactory, which generates objects of type
+      #   RGeo::GeoJSON::Feature or RGeo::GeoJSON::FeatureCollection.
+      #   See RGeo::GeoJSON::EntityFactory for more information.
+      # <tt>:json_parser</tt>::
+      #   Specifies a JSON parser to use when decoding a String or IO
+      #   object. The value may be a Proc object taking the string as the
+      #   sole argument and returning the JSON hash, or it may be one of
+      #   the special values <tt>:json_gem</tt>, <tt>:yajl</tt>, or
+      #   <tt>:active_support</tt>. Setting one of those special values
+      #   will require the corresponding library to be available. If
+      #   a <tt>json_parser</tt> is not provided, then decode will not
+      #   accept a String or IO object; it will require a Hash.
       
       def initialize(geo_factory_, opts_={})
         @geo_factory = geo_factory_
         @entity_factory = opts_[:entity_factory] || EntityFactory.instance
+        @json_parser = opts_[:json_parser]
+        case @json_parser
+        when :json_gem
+          require 'json'
+          @json_parser = ::Proc.new{ |str_| ::JSON.parse(str_) }
+        when :yajl
+          require 'yajl'
+          @json_parser = ::Proc.new{ |str_| ::Yajl::Parser.new.parse(str_) }
+        when :active_support
+          require 'active_support/json'
+          @json_parser = ::Proc.new{ |str_| ::ActiveSupport::JSON.decode(str_) }
+        when ::Proc, nil
+          # Leave as is
+        else
+          raise ::ArgumentError, "Unrecognzied json_parser: #{@json_parser.inspect}"
+        end
       end
       
       
@@ -82,13 +110,14 @@ module RGeo
       
       # Decode an object from GeoJSON. The input may be a JSON hash, a
       # String, or an IO object from which to read the JSON string.
+      # If an error occurs, nil is returned.
       
       def decode(input_)
         if input_.kind_of?(::IO)
           input_ = input_.read rescue nil
         end
         if input_.kind_of?(::String)
-          input_ = ::JSON.parse(input_) rescue nil
+          input_ = @json_parser.call(input_) rescue nil
         end
         unless input_.kind_of?(::Hash)
           return nil
