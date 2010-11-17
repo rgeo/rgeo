@@ -74,10 +74,12 @@ module RGeo
       #   Specifies a JSON parser to use when decoding a String or IO
       #   object. The value may be a Proc object taking the string as the
       #   sole argument and returning the JSON hash, or it may be one of
-      #   the special values <tt>:json_gem</tt>, <tt>:yajl</tt>, or
+      #   the special values <tt>:json</tt>, <tt>:yajl</tt>, or
       #   <tt>:active_support</tt>. Setting one of those special values
-      #   will require the corresponding library to be available. If
-      #   a <tt>json_parser</tt> is not provided, then decode will not
+      #   will require the corresponding library to be available. The
+      #   default is <tt>:json</tt>, which is present in the standard
+      #   library in Ruby 1.9, but requires the "json" gem in Ruby 1.8.
+      #   If the specified parser is not available, then decode will not
       #   accept a String or IO object; it will require a Hash.
       
       def decode(input_, geo_factory_, opts_={})
@@ -102,10 +104,12 @@ module RGeo
       #   Specifies a JSON parser to use when decoding a String or IO
       #   object. The value may be a Proc object taking the string as the
       #   sole argument and returning the JSON hash, or it may be one of
-      #   the special values <tt>:json_gem</tt>, <tt>:yajl</tt>, or
+      #   the special values <tt>:json</tt>, <tt>:yajl</tt>, or
       #   <tt>:active_support</tt>. Setting one of those special values
-      #   will require the corresponding library to be available. If
-      #   a <tt>json_parser</tt> is not provided, then decode will not
+      #   will require the corresponding library to be available. The
+      #   default is <tt>:json</tt>, which is present in the standard
+      #   library in Ruby 1.9, but requires the "json" gem in Ruby 1.8.
+      #   If the specified parser is not available, then decode will not
       #   accept a String or IO object; it will require a Hash.
       
       def coder(geo_factory_, opts_={})

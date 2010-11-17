@@ -62,27 +62,38 @@ module RGeo
       #   Specifies a JSON parser to use when decoding a String or IO
       #   object. The value may be a Proc object taking the string as the
       #   sole argument and returning the JSON hash, or it may be one of
-      #   the special values <tt>:json_gem</tt>, <tt>:yajl</tt>, or
+      #   the special values <tt>:json</tt>, <tt>:yajl</tt>, or
       #   <tt>:active_support</tt>. Setting one of those special values
-      #   will require the corresponding library to be available. If
-      #   a <tt>json_parser</tt> is not provided, then decode will not
+      #   will require the corresponding library to be available. The
+      #   default is <tt>:json</tt>, which is present in the standard
+      #   library in Ruby 1.9, but requires the "json" gem in Ruby 1.8.
+      #   If the specified parser is not available, then decode will not
       #   accept a String or IO object; it will require a Hash.
       
       def initialize(geo_factory_, opts_={})
         @geo_factory = geo_factory_
         @entity_factory = opts_[:entity_factory] || EntityFactory.instance
-        @json_parser = opts_[:json_parser]
+        @json_parser = opts_[:json_parser] || :json
         case @json_parser
-        when :json_gem
-          require 'json'
-          @json_parser = ::Proc.new{ |str_| ::JSON.parse(str_) }
+        when :json
+          begin
+            require 'json'
+            @json_parser = ::Proc.new{ |str_| ::JSON.parse(str_) }
+          rescue ::LoadError
+          end
         when :yajl
-          require 'yajl'
-          @json_parser = ::Proc.new{ |str_| ::Yajl::Parser.new.parse(str_) }
+          begin
+            require 'yajl'
+            @json_parser = ::Proc.new{ |str_| ::Yajl::Parser.new.parse(str_) }
+          rescue ::LoadError
+          end
         when :active_support
-          require 'active_support/json'
-          @json_parser = ::Proc.new{ |str_| ::ActiveSupport::JSON.decode(str_) }
-        when ::Proc, nil
+          begin
+            require 'active_support/json'
+            @json_parser = ::Proc.new{ |str_| ::ActiveSupport::JSON.decode(str_) }
+          rescue ::LoadError
+          end
+        when ::Proc
           # Leave as is
         else
           raise ::ArgumentError, "Unrecognzied json_parser: #{@json_parser.inspect}"
