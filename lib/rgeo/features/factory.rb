@@ -44,13 +44,14 @@ module RGeo
     # methods as a standard way to create features.
     # 
     # If the implementation is unable to create the given feature,
-    # it should return nil.
+    # it should generally return nil. Implementations may also choose to
+    # raise an exception on failure.
     # 
     # Some implementations may extend this interface to provide facilities
-    # for creating additional objects according to the features handled
-    # by that implementation. Examples might include higher-dimensional
-    # coordinates or additional subclasses not explicitly required by the
-    # Simple Features Specification.
+    # for creating additional objects according to the capabilities
+    # provided by that implementation. Examples might include
+    # higher-dimensional coordinates or additional subclasses not
+    # explicitly required by the Simple Features Specification.
     # 
     # Factory is defined as a module and is provided primarily for the
     # sake of documentation. Implementations need not necessarily include

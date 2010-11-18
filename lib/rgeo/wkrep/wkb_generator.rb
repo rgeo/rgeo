@@ -177,7 +177,7 @@ module RGeo
           type_code_ |= 0x80000000 if @cur_has_z
           type_code_ |= 0x40000000 if @cur_has_m
           if @emit_ewkb_srid && toplevel_
-            type_code |= 0x20000000
+            type_code_ |= 0x20000000
             emit_srid_ = true
           end
         elsif @type_format == :wkb12

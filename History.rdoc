@@ -1,6 +1,7 @@
-=== 0.1.16 / 2010-11-09
+=== 0.1.16 / 2010-11-17
 
 * Eliminated the hard dependency on the JSON gem, and allow configuration of GeoJSON with an alternate JSON parser such as YAJL or ActiveSupport.
+* Test coverage for WKB generator and parser.
 
 === 0.1.15 / 2010-11-08
 
