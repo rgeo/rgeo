@@ -101,12 +101,27 @@ module RGeo
       
       # Cast the given object according to the given parameters.
       # 
-      # You may optionally pass a factory, a feature type, and the value
-      # <tt>:force_new</tt> as the parameters. The given object will be
-      # casted into the given factory and feature type, if possible.
+      # You may optionally pass a factory, a feature type, the value
+      # <tt>:force_new</tt>, and the value <tt>:keep_subtype</tt> as the
+      # parameters. You may also pass the parameters as a hash, with the
+      # keys <tt>:factory</tt>, <tt>:type</tt>, <tt>:force_new</tt> and
+      # <tt>:keep_subtype</tt>.
+      # 
+      # The given object will be casted into the given factory and
+      # feature type, if possible.
       # If the cast is not possible to accomplish, nil is returned.
       # If the factory or type is not provided, or is the same as the
       # object's current attribute, that attribute is not modified.
+      # 
+      # Normally, casting to a particular type always casts strictly to
+      # that type, even if the old type is a subtype of the new type.
+      # You can cause cast to retain the subtype by passing
+      # <tt>:keep_subtype</tt> as one of the parameters. For example,
+      # casting a LinearRing to a LineString will normally yield a
+      # LineString. However, if you specify <tt>:keep_subtype</tt>, the
+      # casted object will remain a LinearRing. You cannot cast to a
+      # non-instantiable type (such as Curve) without specifying
+      # <tt>:keep_subtype</tt>.
       # 
       # Normally, if neither the factory nor the type are set to be
       # modified, the original object is returned. However, you may cause
@@ -135,6 +150,11 @@ module RGeo
             force_new_ = param_
           when :keep_subtype
             keep_subtype_ = param_
+          when ::Hash
+            nfactory_ = param_[:factory] || nfactory_
+            ntype_ = param_[:type] || ntype_
+            force_new_ = param_[:force_new] if param_.include?(:force_new)
+            keep_subtype_ = param_[:keep_subtype] if param_.include?(:keep_subtype)
           end
         end
         

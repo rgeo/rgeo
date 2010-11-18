@@ -63,7 +63,7 @@ module RGeo
       
       
       def inspect  # :nodoc:
-        "#<#{self.class}:0x#{object_id.to_s(16)} id=#{@id.inspect} geom=#{@geometry.as_text.inspect}>"
+        "#<#{self.class}:0x#{object_id.to_s(16)} id=#{@id.inspect} geom=#{@geometry ? @geometry.as_text.inspect : 'nil'}>"
       end
       
       def to_s  # :nodoc:
@@ -95,7 +95,7 @@ module RGeo
       end
       
       
-      # Returns the geometry contained in this feature.
+      # Returns the geometry contained in this feature, which may be nil.
       
       def geometry
         @geometry
@@ -208,10 +208,11 @@ module RGeo
       
       
       # Create and return a new feature, given geometry, ID, and
-      # properties hash.
+      # properties hash. Note that, per the GeoJSON spec, geometry and/or
+      # properties may be nil.
       
-      def feature(geometry_, id_=nil, properties_={})
-        Feature.new(geometry_, id_, properties_)
+      def feature(geometry_, id_=nil, properties_=nil)
+        Feature.new(geometry_, id_, properties_ || {})
       end
       
       

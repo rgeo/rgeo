@@ -1,7 +1,11 @@
-=== 0.1.16 / 2010-11-17
+=== 0.1.16 / 2010-11-18
 
+* Test coverage for WKB generator and parser; fixed a few bugs.
 * Eliminated the hard dependency on the JSON gem, and allow configuration of GeoJSON with an alternate JSON parser such as YAJL or ActiveSupport.
-* Test coverage for WKB generator and parser.
+* API CHANGE: geo factory is now a hash option in GeoJSON, and is now optional.
+* GeoJSON now handles Z and M coordinates, according to the capabilities of the geo factory.
+* GeoJSON feature objects can now handle null geometry and null properties, per the spec.
+* Factory::cast now optionally lets you pass the parameters as a hash.
 
 === 0.1.15 / 2010-11-08
 

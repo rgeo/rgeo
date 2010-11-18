@@ -53,17 +53,19 @@ module RGeo
       # RGeo::GeoJSON::FeatureCollection.
       
       def encode(object_, opts_={})
-        Coder.new(nil, opts_).encode(object_)
+        Coder.new(opts_).encode(object_)
       end
       
       
       # High-level convenience routine for decoding an object from GeoJSON.
       # The input may be a JSON hash, a String, or an IO object from which
-      # to read the JSON string. You must also provide the
-      # RGeo::Features::Factory to use to create geometric objects.
+      # to read the JSON string.
       # 
       # Options include:
       # 
+      # <tt>:geo_factory</tt>::
+      #   Specifies the geo factory to use to create geometry objects.
+      #   Defaults to the preferred cartesian factory.
       # <tt>:entity_factory</tt>::
       #   Specifies an entity factory, which lets you override the types
       #   of GeoJSON entities that are created. It defaults to the default
@@ -82,8 +84,8 @@ module RGeo
       #   If the specified parser is not available, then decode will not
       #   accept a String or IO object; it will require a Hash.
       
-      def decode(input_, geo_factory_, opts_={})
-        Coder.new(geo_factory_, opts_).decode(input_)
+      def decode(input_, opts_={})
+        Coder.new(opts_).decode(input_)
       end
       
       
@@ -94,6 +96,9 @@ module RGeo
       # 
       # The geo factory is a required argument. Other options include:
       # 
+      # <tt>:geo_factory</tt>::
+      #   Specifies the geo factory to use to create geometry objects.
+      #   Defaults to the preferred cartesian factory.
       # <tt>:entity_factory</tt>::
       #   Specifies an entity factory, which lets you override the types
       #   of GeoJSON entities that are created. It defaults to the default
@@ -112,8 +117,8 @@ module RGeo
       #   If the specified parser is not available, then decode will not
       #   accept a String or IO object; it will require a Hash.
       
-      def coder(geo_factory_, opts_={})
-        Coder.new(geo_factory_, opts_)
+      def coder(opts_={})
+        Coder.new(opts_)
       end
       
       

@@ -45,7 +45,10 @@ module RGeo
       
       
       def setup
-        @geo_factory = ::RGeo::Geos.factory(:srid => 4326)
+        @geo_factory = ::RGeo::Cartesian.simple_factory(:srid => 4326)
+        @geo_factory_z = ::RGeo::Cartesian.simple_factory(:srid => 4326, :support_z_coordinate => true)
+        @geo_factory_m = ::RGeo::Cartesian.simple_factory(:srid => 4326, :support_m_coordinate => true)
+        @geo_factory_zm = ::RGeo::Cartesian.simple_factory(:srid => 4326, :support_z_coordinate => true, :support_m_coordinate => true)
         @entity_factory = ::RGeo::GeoJSON::EntityFactory.instance
       end
       
@@ -57,7 +60,40 @@ module RGeo
           'coordinates' => [10.0, 20.0],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
+      end
+      
+      
+      def test_point_z
+        object_ = @geo_factory_z.point(10, 20, -1)
+        json_ = {
+          'type' => 'Point',
+          'coordinates' => [10.0, 20.0, -1.0],
+        }
+        assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory_z).eql?(object_))
+      end
+      
+      
+      def test_point_m
+        object_ = @geo_factory_m.point(10, 20, -1)
+        json_ = {
+          'type' => 'Point',
+          'coordinates' => [10.0, 20.0, -1.0],
+        }
+        assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory_m).eql?(object_))
+      end
+      
+      
+      def test_point_zm
+        object_ = @geo_factory_zm.point(10, 20, -1, -2)
+        json_ = {
+          'type' => 'Point',
+          'coordinates' => [10.0, 20.0, -1.0, -2.0],
+        }
+        assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory_zm).eql?(object_))
       end
       
       
@@ -68,7 +104,7 @@ module RGeo
           'coordinates' => [[10.0, 20.0], [12.0, 22.0], [-3.0, 24.0]],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -79,7 +115,7 @@ module RGeo
           'coordinates' => [[[10.0, 20.0], [12.0, 22.0], [-3.0, 24.0], [10.0, 20.0]]],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -90,7 +126,7 @@ module RGeo
           'coordinates' => [[[0.0, 0.0], [10.0, 0.0], [10.0, 10.0], [0.0, 10.0], [0.0, 0.0]], [[4.0, 4.0], [6.0, 5.0], [4.0, 6.0], [4.0, 4.0]]],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -101,7 +137,7 @@ module RGeo
           'coordinates' => [[10.0, 20.0], [12.0, 22.0], [-3.0, 24.0]],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -112,7 +148,7 @@ module RGeo
           'coordinates' => [[[10.0, 20.0], [12.0, 22.0], [-3.0, 24.0]], [[1.0, 2.0], [3.0, 4.0]]],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -123,7 +159,7 @@ module RGeo
           'coordinates' => [[[[0.0, 0.0], [10.0, 0.0], [10.0, 10.0], [0.0, 10.0], [0.0, 0.0]], [[4.0, 4.0], [6.0, 5.0], [4.0, 6.0], [4.0, 4.0]]], [[[-10.0, -10.0], [-15.0, -10.0], [-10.0, -15.0], [-10.0, -10.0]]]]
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -152,7 +188,7 @@ module RGeo
           ],
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -167,7 +203,20 @@ module RGeo
           'properties' => {},
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
+      end
+      
+      
+      def test_feature_nulls
+        json_ = {
+          'type' => 'Feature',
+          'geometry' => nil,
+          'properties' => nil,
+        }
+        obj_ = ::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory)
+        assert_not_nil(obj_)
+        assert_nil(obj_.geometry)
+        assert_equal({}, obj_.properties)
       end
       
       
@@ -183,7 +232,7 @@ module RGeo
           'properties' => {'prop1' => 'foo', 'prop2' => 'bar'},
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       
@@ -220,7 +269,7 @@ module RGeo
           ]
         }
         assert_equal(json_, ::RGeo::GeoJSON.encode(object_))
-        assert(::RGeo::GeoJSON.decode(json_, @geo_factory).eql?(object_))
+        assert(::RGeo::GeoJSON.decode(json_, :geo_factory => @geo_factory).eql?(object_))
       end
       
       

@@ -76,6 +76,7 @@ yet complete. These include:
 * Some operations on SimpleCartesian and SimpleSpherical.
 * Rails (ActiveRecord or ActiveModel) integration.
 * Other third-party integration, including possibly SimpleGeo.
+* Support for bbox and crs elements of GeoJSON.
 * Support for additional formats such as ESRI shapefiles.
 * JRuby support via JTS integration.
 * Rubinius support for Geos integration.

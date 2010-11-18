@@ -90,14 +90,14 @@ module RGeo
       # See ::RGeo::Features::Factory#parse_wkt
       
       def parse_wkt(str_)
-        ::RGeo::WKRep::WKTParser.new(:default_factory => self).parse(str_)
+        WKRep::WKTParser.new(:default_factory => self).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#parse_wkb
       
       def parse_wkb(str_)
-        ::RGeo::WKRep::WKBParser.new(:default_factory => self).parse(str_)
+        WKRep::WKBParser.new(:default_factory => self).parse(str_)
       end
       
       

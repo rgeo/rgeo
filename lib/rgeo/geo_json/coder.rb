@@ -52,6 +52,9 @@ module RGeo
       # 
       # Options include:
       # 
+      # <tt>:geo_factory</tt>::
+      #   Specifies the geo factory to use to create geometry objects.
+      #   Defaults to the preferred cartesian factory.
       # <tt>:entity_factory</tt>::
       #   Specifies an entity factory, which lets you override the types
       #   of GeoJSON entities that are created. It defaults to the default
@@ -70,8 +73,8 @@ module RGeo
       #   If the specified parser is not available, then decode will not
       #   accept a String or IO object; it will require a Hash.
       
-      def initialize(geo_factory_, opts_={})
-        @geo_factory = geo_factory_
+      def initialize(opts_={})
+        @geo_factory = opts_[:geo_factory] || ::RGeo::Cartesian.preferred_factory
         @entity_factory = opts_[:entity_factory] || EntityFactory.instance
         @json_parser = opts_[:json_parser] || :json
         case @json_parser
@@ -98,6 +101,9 @@ module RGeo
         else
           raise ::ArgumentError, "Unrecognzied json_parser: #{@json_parser.inspect}"
         end
+        @num_coordinates = 2
+        @num_coordinates += 1 if @geo_factory.has_capability?(:z_coordinate)
+        @num_coordinates += 1 if @geo_factory.has_capability?(:m_coordinate)
       end
       
       
@@ -179,42 +185,57 @@ module RGeo
       end
       
       
-      def _encode_geometry(object_)  # :nodoc:
+      def _encode_geometry(object_, point_encoder_=nil)  # :nodoc:
+        unless point_encoder_
+          if object_.factory.has_capability?(:z_coordinate)
+            if object_.factory.has_capability?(:m_coordinate)
+              point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y, p_.z, p_.m] }
+            else
+              point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y, p_.z] }
+            end
+          else
+            if object_.factory.has_capability?(:m_coordinate)
+              point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y, p_.m] }
+            else
+              point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y] }
+            end
+          end
+        end
         case object_
         when Features::Point
           {
             'type' => 'Point',
-            'coordinates' => [object_.x, object_.y],
+            'coordinates' => point_encoder_.call(object_),
           }
         when Features::LineString
           {
             'type' => 'LineString',
-            'coordinates' => object_.points.map{ |p_| [p_.x, p_.y] },
+            'coordinates' => object_.points.map(&point_encoder_),
           }
         when Features::Polygon
           {
             'type' => 'Polygon',
-            'coordinates' => [object_.exterior_ring.points.map{ |p_| [p_.x, p_.y] }] + object_.interior_rings.map{ |r_| r_.points.map{ |p_| [p_.x, p_.y] } }
+            'coordinates' => [object_.exterior_ring.points.map(&point_encoder_)] + object_.interior_rings.map{ |r_| r_.points.map(&point_encoder_) }
           }
         when Features::MultiPoint
           {
             'type' => 'MultiPoint',
-            'coordinates' => object_.map{ |p_| [p_.x, p_.y] },
+            'coordinates' => object_.map(&point_encoder_),
           }
         when Features::MultiLineString
           {
             'type' => 'MultiLineString',
-            'coordinates' => object_.map{ |ls_| ls_.points.map{ |p_| [p_.x, p_.y] } },
+            'coordinates' => object_.map{ |ls_| ls_.points.map(&point_encoder_) },
           }
         when Features::MultiPolygon
           {
             'type' => 'MultiPolygon',
-            'coordinates' => object_.map{ |poly_| [poly_.exterior_ring.points.map{ |p_| [p_.x, p_.y] }] + poly_.interior_rings.map{ |r_| r_.points.map{ |p_| [p_.x, p_.y] } } },
+            'coordinates' => object_.map{ |poly_| [poly_.exterior_ring.points.map(&point_encoder_)] + poly_.interior_rings.map{ |r_| r_.points.map(&point_encoder_) } },
           }
         when Features::GeometryCollection
           {
             'type' => 'GeometryCollection',
-            'geometries' => object_.map{ |geom_| _encode_geometry(geom_) },
+            'geometries' => object_.map{ |geom_| _encode_geometry(geom_, point_encoder_) },
           }
         else
           nil
@@ -223,12 +244,12 @@ module RGeo
       
       
       def _decode_feature(input_)  # :nodoc:
-        geometry_ = _decode_geometry(input_['geometry'])
+        geometry_ = input_['geometry']
         if geometry_
-          @entity_factory.feature(geometry_, input_['id'], input_['properties'])
-        else
-          nil
+          geometry_ = _decode_geometry(geometry_)
+          return nil unless geometry_
         end
+        @entity_factory.feature(geometry_, input_['id'], input_['properties'])
       end
       
       
@@ -268,7 +289,7 @@ module RGeo
       
       def _decode_point_coords(point_coords_)  # :nodoc:
         return nil unless point_coords_.kind_of?(::Array)
-        @geo_factory.point(point_coords_[0].to_f, point_coords_[1].to_f) rescue nil
+        @geo_factory.point(*(point_coords_[0...@num_coordinates].map{ |c_| c_.to_f })) rescue nil
       end
       
       
