@@ -74,6 +74,7 @@ module RAKEFILE
   RDOC_TITLE = "RGeo #{PRODUCT_VERSION} Documentation"
   
   TEST_FILES = ::Dir.glob('tests/**/*.rb')
+  AUX_TEST_FILES = ::Dir.glob('tests/**/*.txt')
   
   DOC_DIRECTORY = 'doc'
   PKG_DIRECTORY = 'pkg'
@@ -94,7 +95,7 @@ module RAKEFILE
     s_.homepage = "http://#{RUBYFORGE_PROJECT}.rubyforge.org/#{PRODUCT_NAME}"
     s_.rubyforge_project = RUBYFORGE_PROJECT
     s_.required_ruby_version = '>= 1.8.7'
-    s_.files = SOURCE_FILES + EXTRA_RDOC_FILES + TEST_FILES + ::Dir.glob('ext/**/*.{rb,c,h}') + ['Version']
+    s_.files = SOURCE_FILES + EXTRA_RDOC_FILES + TEST_FILES + AUX_TEST_FILES + ::Dir.glob('ext/**/*.{rb,c,h}') + ['Version']
     s_.extra_rdoc_files = EXTRA_RDOC_FILES
     s_.has_rdoc = true
     s_.test_files = TEST_FILES

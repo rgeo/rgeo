@@ -34,7 +34,7 @@
 ;
 
 
-if ::File.exists?(::File.dirname(__FILE__)+'/databases.yml')
+if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
   
   require 'test/unit'
   require 'rgeo'
@@ -46,7 +46,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/databases.yml')
     module Tests  # :nodoc:
       module ActiveRecord  # :nodoc:
         
-        ALL_DATABASES_CONFIG = ::YAML.load_file(::File.dirname(__FILE__)+'/databases.yml')
+        ALL_DATABASES_CONFIG = ::YAML.load_file(::File.dirname(__FILE__)+'/database.yml')
         
         
         module Classes  # :nodoc:
@@ -191,7 +191,8 @@ if ::File.exists?(::File.dirname(__FILE__)+'/databases.yml')
             include CommonTestMethods
           end
         else
-          puts "WARNING: Couldn't find mysqlspatial in databases.yml"
+          puts "WARNING: Couldn't find mysqlspatial in database.yml. Skipping those tests."
+          puts "         See tests/active_record/readme.txt for more info."
         end
         
         
@@ -201,7 +202,8 @@ if ::File.exists?(::File.dirname(__FILE__)+'/databases.yml')
             include CommonTestMethods
           end
         else
-          puts "WARNING: Couldn't find mysql2spatial in databases.yml"
+          puts "WARNING: Couldn't find mysql2spatial in database.yml. Skipping those tests."
+          puts "         See tests/active_record/readme.txt for more info."
         end
         
         
@@ -212,5 +214,6 @@ if ::File.exists?(::File.dirname(__FILE__)+'/databases.yml')
   
   
 else
-  puts "WARNING: databases.yml not found. Skipping ActiveRecord tests."
+  puts "WARNING: database.yml not found. Skipping ActiveRecord tests."
+  puts "         See tests/active_record/readme.txt for more info."
 end

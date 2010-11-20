@@ -1,4 +1,4 @@
-=== 0.1.17 / 2010-11-19
+=== 0.1.17 / 2010-11-20
 
 * Implemented ActiveRecord adapters that cover MySQL Spatial for the mysql and mysql2 gems. SpatiaLite and PostGIS adapters are coming later.
 * Added and documented FactoryGenerator.
