@@ -1,3 +1,10 @@
+=== 0.1.17 / 2010-11-19
+
+* Implemented ActiveRecord adapters that cover MySQL Spatial for the mysql and mysql2 gems. SpatiaLite and PostGIS adapters are coming later.
+* Added and documented FactoryGenerator.
+* API CHANGE: WKRep parsers now take FactoryGenerator rather than the ad-hoc factory_from_srid.
+* API CHANGE: Factory#override_cast now takes its optional flags in a hash so it can be extended more cleanly in the future.
+
 === 0.1.16 / 2010-11-18
 
 * Test coverage for WKB generator and parser; fixed a few bugs.

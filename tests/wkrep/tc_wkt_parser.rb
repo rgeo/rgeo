@@ -219,8 +219,8 @@ module RGeo
         def test_point_ewkt_with_srid
           factory_ = ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_ewkt => true)
-          parser_.set_factory_from_srid do |srid_|
-            ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true, :srid => srid_)
+          parser_.to_generate_factory do |config_|
+            ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true, :srid => config_[:srid])
           end
           obj_ = parser_.parse('SRID=1000;POINTM(1 2 3)')
           assert_equal(::RGeo::Features::Point, obj_.geometry_type)
@@ -251,9 +251,7 @@ module RGeo
         def test_point_non_ewkt_with_srid
           factory_ = ::RGeo::Cartesian.preferred_factory
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_)
-          parser_.set_factory_from_srid do |srid_|
-            ::RGeo::Cartesian.preferred_factory(:srid => srid_)
-          end
+          parser_.factory_generator = ::RGeo::Cartesian.method(:preferred_factory)
           assert_raise(::RGeo::Errors::ParseError) do
             obj_ = parser_.parse('SRID=1000;POINT(1 2)')
           end
@@ -307,8 +305,8 @@ module RGeo
         def test_linestring_ewkt_with_srid
           factory_ = ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_ewkt => true)
-          parser_.set_factory_from_srid do |srid_|
-            ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true, :srid => srid_)
+          parser_.to_generate_factory do |config_|
+            ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true, :srid => config_[:srid])
           end
           obj_ = parser_.parse('SRID=1000;LINESTRINGM(1 2 3, 4 5 6)')
           assert_equal(::RGeo::Features::LineString, obj_.geometry_type)

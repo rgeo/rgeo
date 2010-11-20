@@ -144,8 +144,8 @@ module RGeo
         def test_point_with_ewkb_z_and_srid
           factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(:default_factory => factory_, :support_ewkb => true)
-          parser_.set_factory_from_srid do |srid_|
-            ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :srid => srid_)
+          parser_.to_generate_factory do |config_|
+            ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :srid => config_[:srid])
           end
           obj_ = parser_.parse_hex('00a0000001000003e83ff000000000000040000000000000004008000000000000')
           assert_equal(::RGeo::Features::Point, obj_.geometry_type)
@@ -179,8 +179,8 @@ module RGeo
         def test_linestring_with_ewkb_z_and_srid
           factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(:default_factory => factory_, :support_ewkb => true)
-          parser_.set_factory_from_srid do |srid_|
-            ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :srid => srid_)
+          parser_.to_generate_factory do |config_|
+            ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :srid => config_[:srid])
           end
           obj_ = parser_.parse_hex('00a0000002000003e8000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000')
           assert_equal(::RGeo::Features::LineString, obj_.geometry_type)

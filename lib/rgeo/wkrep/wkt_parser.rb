@@ -56,14 +56,17 @@ module RGeo
     # constructor, or set on the object afterwards.
     # 
     # <tt>:default_factory</tt>::
-    #   The default factory for generated geometries, used when no SRID
-    #   is explicitly specified in the input. If none is provided, the
-    #   default cartesian factory will be used.
-    # <tt>:factory_from_srid</tt>::
-    #   A Proc that takes an SRID as the sole argument, and returns a
-    #   factory for generated geometries when that SRID is specified in
-    #   the input. If no such Proc is provided, the default_factory is
-    #   used, regardless of the input SRID.
+    #   The default factory for parsed geometries, used when no factory
+    #   generator is provided. If no default is provided either, the
+    #   default cartesian factory will be used as the default.
+    # <tt>:factory_generator</tt>::
+    #   A factory generator that should return a factory based on the
+    #   srid and dimension settings in the input. The factory generator
+    #   should understand the configuration options <tt>:srid</tt>,
+    #   <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
+    #   See RGeo::Features::FactoryGenerator for more information.
+    #   If no generator is provided, the <tt>:default_factory</tt> is
+    #   used.
     # <tt>:support_ewkt</tt>::
     #   Activate support for PostGIS EWKT type tags, which appends an "M"
     #   to tags to indicate the presence of M but not Z, and also
@@ -89,7 +92,7 @@ module RGeo
       
       def initialize(opts_={})
         @default_factory = opts_[:default_factory] || Cartesian.preferred_factory
-        @factory_from_srid = opts_[:factory_from_srid]
+        @factory_generator = opts_[:factory_generator]
         @support_ewkt = opts_[:support_ewkt] ? true : false
         @support_wkt12 = opts_[:support_wkt12] ? true : false
         @strict_wkt11 = @support_ewkt || @support_wkt12 ? false : opts_[:strict_wkt11] ? true : false
@@ -107,21 +110,21 @@ module RGeo
         @default_factory = value_ || Cartesian.preferred_factory
       end
       
-      # Returns true if this parser has a factory_from_srid procedure.
+      # Returns the factory generator, or nil if there is none.
       # See WKTParser for details.
-      def has_factory_from_srid?
-        @factory_from_srid ? true : false
+      def factory_generator
+        @factory_generator
       end
       
-      # Sets the factory_from_srid. See WKTParser for details.
-      def factory_from_srid=(value_)
-        @factory_from_srid = value_
+      # Sets the factory_generator. See WKTParser for details.
+      def factory_generator=(value_)
+        @factory_generator = value_
       end
       
-      # Sets the factory_from_srid to the given block.
+      # Sets the factory_generator to the given block.
       # See WKTParser for details.
-      def set_factory_from_srid(&block_)
-        @factory_from_srid = block_
+      def to_generate_factory(&block_)
+        @factory_generator = block_
       end
       
       # Returns true if this parser supports EWKT.
@@ -172,21 +175,22 @@ module RGeo
       # Parse the given string, and return a geometry object.
       
       def parse(str_)
-        @cur_factory = @default_factory
         str_ = str_.downcase
-        if @support_ewkt && str_ =~ /^srid=(\d+);/i
-          str_ = $'
-          if @factory_from_srid
-            @cur_factory = @factory_from_srid.call($1.to_i)
-          end
+        @cur_factory = @factory_generator ? nil : @default_factory
+        if @cur_factory
+          @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate) ? true : false
+          @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate) ? true : false
         end
-        @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate)
-        @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate)
         @cur_expect_z = nil
         @cur_expect_m = nil
+        @cur_srid = nil
+        if @support_ewkt && str_ =~ /^srid=(\d+);/i
+          str_ = $'
+          @cur_srid = $1.to_i
+        end
         begin
           _start_scanner(str_)
-          obj_ = _parse_type_tag
+          obj_ = _parse_type_tag(false)
           if @cur_token && !@ignore_extra_tokens
             raise Errors::ParseError, "Extra tokens beginning with #{@cur_token.inspect}."
           end
@@ -197,7 +201,31 @@ module RGeo
       end
       
       
-      def _parse_type_tag  # :nodoc:
+      def _check_factory_support  # :nodoc:
+        if @cur_expect_z && !@cur_factory_support_z
+          raise Errors::ParseError, "Geometry calls for Z coordinate but factory doesn't support it."
+        end
+        if @cur_expect_m && !@cur_factory_support_m
+          raise Errors::ParseError, "Geometry calls for M coordinate but factory doesn't support it."
+        end
+      end
+      
+      
+      def _ensure_factory  # :nodoc:
+        unless @cur_factory
+          if @factory_generator
+            @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => @cur_expect_z, :support_m_coordinate => @cur_expect_m)
+          end
+          @cur_factory ||= @default_factory
+          @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate) ? true : false
+          @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate) ? true : false
+          _check_factory_support unless @cur_expect_z.nil?
+        end
+        @cur_factory
+      end
+      
+      
+      def _parse_type_tag(contained_)  # :nodoc:
         _expect_token_type(::String)
         if @support_ewkt && @cur_token =~ /^(.+)(m)$/
           type_ = $1
@@ -212,22 +240,26 @@ module RGeo
           _next_token
         end
         if zm_.length > 0 || @strict_wkt11
-          expect_z_ = zm_[0,1] == 'z'
-          if !@cur_expect_z.nil? && expect_z_ != @cur_expect_z
+          creating_expectation_ = @cur_expect_z.nil?
+          expect_z_ = zm_[0,1] == 'z' ? true : false
+          if @cur_expect_z.nil?
+            @cur_expect_z = expect_z_
+          elsif expect_z_ != @cur_expect_z
             raise Errors::ParseError, "Surrounding collection has Z but contained geometry doesn't."
           end
-          @cur_expect_z = expect_z_
-          expect_m_ = zm_[-1,1] == 'm'
-          if !@cur_expect_m.nil? && expect_m_ != @cur_expect_m
+          expect_m_ = zm_[-1,1] == 'm' ? true : false
+          if @cur_expect_m.nil?
+            @cur_expect_m = expect_m_
+          else expect_m_ != @cur_expect_m
             raise Errors::ParseError, "Surrounding collection has M but contained geometry doesn't."
           end
-          @cur_expect_m = expect_m_
-        end
-        if @cur_expect_z && !@cur_factory_support_z
-          raise Errors::ParseError, "Type tag declares #{zm_.inspect} but factory doesn't support Z."
-        end
-        if @cur_expect_m && !@cur_factory_support_m
-          raise Errors::ParseError, "Type tag declares #{zm_.inspect} but factory doesn't support M."
+          if creating_expectation_
+            if @cur_factory
+              _check_factory_support
+            else
+              _ensure_factory
+            end
+          end
         end
         case type_
         when 'point'
@@ -264,31 +296,32 @@ module RGeo
             _next_token
           end
           num_extras_ = extra_.size
-          @cur_expect_z = num_extras_ > 0 && @cur_factory_support_z ? true : false
+          @cur_expect_z = num_extras_ > 0 && (!@cur_factory || @cur_factory_support_z) ? true : false
           num_extras_ -= 1 if @cur_expect_z
-          @cur_expect_m = num_extras_ > 0 && @cur_factory_support_m ? true : false
+          @cur_expect_m = num_extras_ > 0 && (!@cur_factory || @cur_factory_support_m) ? true : false
           num_extras_ -= 1 if @cur_expect_m
           if num_extras_ > 0
             raise Errors::ParseError, "Found #{extra_.size+2} coordinates, which is too many for this factory."
           end
+          _ensure_factory
         else
+          val_ = 0
+          if @cur_expect_z
+            _expect_token_type(::Numeric)
+            val_ = @cur_token
+            _next_token
+          end
           if @cur_factory_support_z
-            if @cur_expect_z
-              _expect_token_type(::Numeric)
-              extra_ << @cur_token
-              _next_token
-            else
-              extra_ << 0
-            end
+            extra_ << val_
+          end
+          val_ = 0
+          if @cur_expect_m
+            _expect_token_type(::Numeric)
+            val_ = @cur_token
+            _next_token
           end
           if @cur_factory_support_m
-            if @cur_expect_m
-              _expect_token_type(::Numeric)
-              extra_ << @cur_token
-              _next_token
-            else
-              extra_ << 0
-            end
+            extra_ << val_
           end
         end
         @cur_factory.point(x_, y_, *extra_)
@@ -297,7 +330,7 @@ module RGeo
       
       def _parse_point(convert_empty_=false)  # :nodoc:
         if convert_empty_ && @cur_token == 'empty'
-          point_ = @cur_factory.multi_point([])
+          point_ = _ensure_factory.multi_point([])
         else
           _expect_token_type(:begin)
           _next_token
@@ -322,7 +355,7 @@ module RGeo
           end
         end
         _next_token
-        @cur_factory.line_string(points_)
+        _ensure_factory.line_string(points_)
       end
       
       
@@ -342,7 +375,7 @@ module RGeo
           end
         end
         _next_token
-        @cur_factory.polygon(outer_ring_, inner_rings_)
+        _ensure_factory.polygon(outer_ring_, inner_rings_)
       end
       
       
@@ -352,14 +385,14 @@ module RGeo
           _expect_token_type(:begin)
           _next_token
           loop do
-            geometries_ << _parse_type_tag
+            geometries_ << _parse_type_tag(true)
             break if @cur_token == :end
             _expect_token_type(:comma)
             _next_token
           end
         end
         _next_token
-        @cur_factory.collection(geometries_)
+        _ensure_factory.collection(geometries_)
       end
       
       
@@ -376,7 +409,7 @@ module RGeo
           end
         end
         _next_token
-        @cur_factory.multi_point(points_)
+        _ensure_factory.multi_point(points_)
       end
       
       
@@ -393,7 +426,7 @@ module RGeo
           end
         end
         _next_token
-        @cur_factory.multi_line_string(line_strings_)
+        _ensure_factory.multi_line_string(line_strings_)
       end
       
       
@@ -410,7 +443,7 @@ module RGeo
           end
         end
         _next_token
-        @cur_factory.multi_polygon(polygons_)
+        _ensure_factory.multi_polygon(polygons_)
       end
       
       

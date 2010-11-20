@@ -227,19 +227,24 @@ module RGeo
       # factory, and will be passed the original object (which may or may
       # not already be created by this factory), the SFS feature type
       # (which again may or may not already be the type of the original
-      # object), a flag indicating whether to keep the subtype if casting
-      # to a supertype of the current type, and a flag indicating whether
-      # to force the creation of a new object even if the original is
-      # already of the desired factory and type.
+      # object), and a hash of additional flags. These flags are:
+      # 
+      # <tt>:keep_subtype</tt>::
+      #   indicates whether to keep the subtype if casting to a supertype
+      #   of the current type
+      # <tt>:force_new</tt>::
+      #   indicates whether to force the creation of a new object even if
+      #   the original is already of the desired factory and type.
       # 
       # It should return either a casted result object, false, or nil.
       # A nil return value indicates that casting should be forced to
       # fail (and ::RGeo::Features::cast will return nil).
       # A false return value indicates that this method declines to
       # override the casting algorithm, and RGeo should use its default
-      # algorithm to cast the object.
+      # algorithm to cast the object. Therefore, by default, you should
+      # return false.
       
-      def override_cast(original_, type_, keep_subtype_, force_new_)
+      def override_cast(original_, type_, flags_)
         false
       end
       

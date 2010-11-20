@@ -160,7 +160,7 @@ module RGeo
         
         # Let the factory override
         if nfactory_.respond_to?(:override_cast)
-          override_ = nfactory_.override_cast(obj_, ntype_, keep_subtype_, force_new_)
+          override_ = nfactory_.override_cast(obj_, ntype_, :keep_subtype => keep_subtype_, :force_new => force_new_)
           return override_ unless override_ == false
         end
         
