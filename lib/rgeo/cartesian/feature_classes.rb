@@ -48,20 +48,6 @@ module RGeo
       include ::RGeo::ImplHelpers::BasicPointMethods
       
       
-      def _validate_geometry
-        @x = @x % 360.0
-        @x -= 360.0 if @x >= 180.0
-        @y = 90.0 if @y > 90.0
-        @y = -90.0 if @y < -90.0
-        super
-      end
-      
-      
-      def _xyz
-        @xyz ||= PointXYZ.from_latlon(@y, @x)
-      end
-      
-      
       def distance(rhs_)
         rhs_ = ::RGeo::Features.cast(rhs_, @factory)
         case rhs_

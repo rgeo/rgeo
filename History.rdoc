@@ -1,9 +1,10 @@
 === 0.1.18 / 2010-11-22
 
 * API CHANGE: GeoJSON defaults to no JSON parser rather than to the JSON library. GeoJSON also fails better when attempting to use a JSON parser that isn't installed.
-* Added a decorator for FactoryGenerator
+* Added a decorator tool for FactoryGenerator
 * Added an analysis module for Cartesian geometries, and implemented an algorithm for determining whether a ring is clockwise or counterclockwise. (We needed this to interpret shapefiles.)
-* First pass implementation of shapefile reading. Not well tested yet.
+* First pass implementation of shapefile reading. It passes a basic test suite I borrowed from shapelib, but I haven't yet done an exhaustive test on every case.
+* The simple Cartesian implementation mistakenly clamped x and y to lat/lon limits. Fixed.
 
 === 0.1.17 / 2010-11-20
 

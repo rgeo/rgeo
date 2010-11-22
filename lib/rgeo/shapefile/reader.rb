@@ -36,7 +36,7 @@
 
 begin
   require 'dbf'
-rescue ::LoadError
+rescue ::LoadError => ex_
 end
 
 
@@ -50,8 +50,11 @@ module RGeo
     # You can use this object to read a shapefile straight through,
     # yielding the data in a block; or you can perform random access
     # reads of indexed records.
-    # You must close this object after you are done, in order to
-    # close the underlying files.
+    # 
+    # You must close this object after you are done, in order to close
+    # the underlying files. Alternatively, you can pass a block to
+    # Reader::open, and the reader will be closed automatically for
+    # you at the end of the block.
     # 
     # === Dependencies
     # 
@@ -66,7 +69,7 @@ module RGeo
     # not available or the GEOS library is not installed. It is possible
     # to bypass this requirement by relaxing the polygon tests and making
     # some assumptions about the file format. See the documentation for
-    # ShapeFile::new for details.
+    # Reader::open for details.
     # 
     # === Shapefile support
     # 
@@ -84,7 +87,8 @@ module RGeo
     # * All shape types documented in the 1998 publication are supported,
     #   including point, polyline, polygon, multipoint, and multipatch,
     #   along with Z and M versions.
-    # * Null shapes are translated into nil geometry objects.
+    # * Null shapes are translated into nil geometry objects. That is,
+    #   Record#geometry will return nil if that record has a null shape.
     # * The point shape type yields Point geometries.
     # * The multipoint shape type yields MultiPoint geometries.
     # * The polyline shape type yields MultiLineString geometries.
@@ -93,8 +97,13 @@ module RGeo
     #   (See below for an explanation of why we do not return a
     #   MultiPolygon.)
     # 
-    # This class has the following limitations in its shapefile support.
+    # Some special notes and limitations in our shapefile support:
     # 
+    # * Our implementation assumes that shapefile data is in a Cartesian
+    #   coordinate system when it performs certain computations, such as
+    #   directionality of polygon rings. It also ignores the 180 degree
+    #   longitude seam, so it may not correctly interpret objects whose
+    #   coordinates are in lat/lon space and which span that seam.
     # * The ESRI polygon specification allows interior rings to touch
     #   their exterior ring in a finite number of points. This technically
     #   violates the OGC Polygon definition. However, such a structure
@@ -102,21 +111,26 @@ module RGeo
     #   to detect this case and transform the geometry type accordingly.
     #   We do not yet do this. Therefore, it is possible for a shapefile
     #   with polygon type to yield an illegal geometry.
+    # * The ESRI polygon specification clearly specifies the winding order
+    #   for inner and outer rings: outer rings are clockwise while inner
+    #   rings are counterclockwise. We have heard it reported that there
+    #   may be shapefiles out there that do not conform to this spec. Such
+    #   shapefiles may not read correctly.
     # * The ESRI multipatch specification includes triangle strips and
-    #   triangle fans as ways of constructing polygonal patches. We do
-    #   not preserve the individual triangles in these patches, but
-    #   translate the patches directly into aggregate polygons.
+    #   triangle fans as ways of constructing polygonal patches. We read
+    #   in the aggregate polygonal patches, and do not preserve the
+    #   individual triangles.
     # * The ESRI multipatch specification allows separate patch parts to
     #   share common boundaries, thus effectively becoming a single
     #   polygon. It is in principle possible to detect this case and
-    #   merge the constituent polygons; however, such data in a shapefile
+    #   merge the constituent polygons; however, such a data structure
     #   implies that the intent is for such polygons to remain distinct
-    #   though they share a common boundary. Therefore, we do not attempt
-    #   to merge such polygons. However, this means it is possible for a
-    #   multipatch to violate the OGC MultiPolygon assertions, which do
-    #   not allow constituent polygons to share a common boundary.
-    #   Therefore, when reading a multipatch, we return a
-    #   GeometryCollection instead of a MultiPolygon.
+    #   objects even though they share a common boundary. Therefore, we
+    #   do not attempt to merge such polygons. However, this means it is
+    #   possible for a multipatch to violate the OGC MultiPolygon
+    #   assertions, which do not allow constituent polygons to share a
+    #   common boundary. Therefore, when reading a multipatch, we return
+    #   a GeometryCollection instead of a MultiPolygon.
     
     class Reader
       
@@ -393,8 +407,8 @@ module RGeo
       # Seek to the given record index.
       
       def seek_index(index_)
-        unless index_ == @cur_record_index || index_ >= @num_records || index_ < 0
-          if index_ < @num_records
+        if index_ >= 0 && index_ <= @num_records
+          if index_ < @num_records && index_ != @cur_record_index
             @index_file.seek(100+8*index_)
             offset_ = @index_file.read(4).unpack('N').first
             @main_file.seek(offset_*2)
@@ -447,7 +461,7 @@ module RGeo
           end
         dbf_record_ = @attr_dbf ? @attr_dbf.record(@cur_record_index) : nil
         attrs_ = {}
-        attrs.merge!(dbf_record_.attributes) if dbf_record_
+        attrs_.merge!(dbf_record_.attributes) if dbf_record_
         result_ = Record.new(@cur_record_index, geometry_, attrs_)
         @cur_record_index += 1
         result_
@@ -458,7 +472,7 @@ module RGeo
         case opt_
         when :z
           x_, y_, z_, m_ = data_[4,32].unpack('EEEE')
-          m_ = 0 if m_ < NODATA_LIMIT
+          m_ = 0 if m_.nil? || m_ < NODATA_LIMIT
         when :m
           x_, y_, m_ = data_[4,24].unpack('EEE')
           z_ = 0
@@ -492,7 +506,7 @@ module RGeo
           if opt_ == :z
             zs_ = ms_
             ms_ = values_.slice!(4, num_points_)
-            ms_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ }
+            ms_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ } if ms_
           end
         end
         
@@ -575,7 +589,7 @@ module RGeo
           if opt_ == :z
             zs_ = ms_
             ms_ = values_.slice!(4, num_points_)
-            ms_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ }
+            ms_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ } if ms_
           end
         end
         
@@ -601,21 +615,27 @@ module RGeo
           end
         end
         
-        # Collect some data on the rings:
-        # ring direction, a GEOS polygon (for intersection calculation), and an
-        # initial guess of which polygon index the ring belongs to.
+        # Special case: if there's only one part, treat it as an outer
+        # ring, regardless of its direction. This isn't strictly compliant
+        # with the shapefile spec, but the shapelib test cases seem to
+        # include this case, so we'll relax the assertions here.
+        if parts_.size == 1
+          return @factory.multi_polygon([@factory.polygon(parts_[0])])
+        end
+        
+        # Collect some data on the rings: the ring direction, a GEOS
+        # polygon (for intersection calculation), and an initial guess
+        # of which polygon index the ring belongs to.
         parts_.map! do |ring_|
           [ring_, Cartesian::Analysis.ring_direction(ring_) < 0, geos_factory_ ? geos_factory_.polygon(ring_) : nil, nil]
         end
         
         # Initial population of the polygon data array.
-        # Each element is an array of the part data for the rings, first the outer ring
-        # and then the inner rings.
-        # Here we populate the outer rings, and we do an initial assignment of
-        # rings to polygon index. The initial guess is that inner rings always
-        # follow their outer ring.
-        # If :assume_inner_follows_outer is in effect, we assume this initial
-        # guess is the correct one, and we don't do the intersection tests.
+        # Each element is an array of the part data for the rings, first
+        # the outer ring and then the inner rings.
+        # Here we populate the outer rings, and we do an initial
+        # assignment of rings to polygon index. The initial guess is that
+        # inner rings always follow their outer ring.
         polygons_ = []
         parts_.each do |part_data_|
           if part_data_[1]
@@ -626,35 +646,52 @@ module RGeo
           part_data_[3] = polygons_.size - 1
         end
         
+        # If :assume_inner_follows_outer is in effect, we assume this
+        # initial guess is the correct one, and we don't run the
+        # potentially expensive intersection tests.
         unless @assume_inner_follows_outer
-          # Go through the remaining (inner) rings, and assign them to the correct
-          # polygon. For each inner ring, we find the outer ring it intersects
-          # and add it to that polygon's data. We check the initial guess first,
-          # and if it fails we go through the remaining polygons in order.
-          parts_.each do |part_data_|
-            unless part_data_[1]
-              # This will hold the true polygon index for this inner ring.
-              parent_index_ = nil
-              # The initial guess. It could be -1 if this inner ring appeared before
-              # any outer rings had appeared.
-              first_try_ = part_data_[3]
-              if first_try_ >= 0 && part_data_[2].intersects?(polygons_[first_try_].first[2])
-                parent_index_ = first_try_
+          case polygons_.size
+          when 0
+            # Skip this algorithm if there's no outer
+          when 1
+            # Shortcut if there's only one outer. Assume all the inners
+            # are members of this one polygon.
+            parts_.each do |part_data_|
+              unless part_data_[1]
+                polygons_[0] << part_data_
               end
-              # If the initial guess didn't work, go through the remaining polygons
-              # and check their outer rings.
-              unless parent_index_
-                polygons_.each_with_index do |poly_data_, index_|
-                  if index_ != first_try_ && part_data_[2].intersects?(poly_data_.first[2])
-                    parent_index_ = index_
-                    break
+            end
+          else
+            # Go through the remaining (inner) rings, and assign them to
+            # the correct polygon. For each inner ring, we find the outer
+            # ring containing it, and add it to that polygon's data. We
+            # check the initial guess first, and if it fails we go through
+            # the remaining polygons in order.
+            parts_.each do |part_data_|
+              unless part_data_[1]
+                # This will hold the polygon index for this inner ring.
+                parent_index_ = nil
+                # The initial guess. It could be -1 if this inner ring
+                # appeared before any outer rings had appeared.
+                first_try_ = part_data_[3]
+                if first_try_ >= 0 && part_data_[2].within?(polygons_[first_try_].first[2])
+                  parent_index_ = first_try_
+                end
+                # If the initial guess didn't work, go through the
+                # remaining polygons and check their outer rings.
+                unless parent_index_
+                  polygons_.each_with_index do |poly_data_, index_|
+                    if index_ != first_try_ && part_data_[2].within?(poly_data_.first[2])
+                      parent_index_ = index_
+                      break
+                    end
                   end
                 end
-              end
-              # If we found a match, append this inner ring to that polygon data.
-              # Otherwise, we just throw away the inner ring.
-              if parent_index_
-                polygons_[parent_index_] << part_data_
+                # If we found a match, append this inner ring to that
+                # polygon data. Otherwise, just throw away the inner ring.
+                if parent_index_
+                  polygons_[parent_index_] << part_data_
+                end
               end
             end
           end
@@ -662,7 +699,7 @@ module RGeo
         
         # Generate the actual polygons from the collected polygon data
         polygons_.map! do |poly_data_|
-          outer_ = poly_data_[0]
+          outer_ = poly_data_[0][0]
           inner_ = poly_data_[1..-1].map{ |part_data_| part_data_[0] }
           @factory.polygon(outer_, inner_)
         end
@@ -677,10 +714,7 @@ module RGeo
         num_parts_, num_points_ = data_[36,8].unpack('VV')
         
         # Read remaining data
-        size_ = num_parts_*8 + num_points_*16
-        size_ += 16 + num_points_*8 if opt_
-        size_ += 16 + num_points_*8 if opt_ == :z
-        values_ = data_[44, size_].unpack("V#{num_parts_*2}E*")
+        values_ = data_[44, 32 + num_parts_*8 + num_points_*32].unpack("V#{num_parts_*2}E*")
         
         # Parts arrays
         part_indexes_ = values_.slice!(0, num_parts_) + [num_points_]
@@ -688,16 +722,10 @@ module RGeo
         
         # Extract XY, Z, and M values
         xys_ = values_.slice!(0, num_points_*2)
-        ms_ = nil
-        zs_ = nil
-        if opt_
-          ms_ = values_.slice!(2, num_points_)
-          if opt_ == :z
-            zs_ = ms_
-            ms_ = values_.slice!(4, num_points_)
-            ms_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ }
-          end
-        end
+        zs_ = values_.slice!(2, num_points_)
+        zs_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ } if zs_
+        ms_ = values_.slice!(4, num_points_)
+        ms_.map!{ |val_| val_ < NODATA_LIMIT ? 0 : val_ } if ms_
         
         # Generate points
         points_ = (0..num_points_-1).map do |i_|
@@ -804,12 +832,14 @@ module RGeo
             end
           end
           
-          # State is now :empty. We allow any type except 3
-          # (an inner must come during an outer-led sequence).
+          # State is now :empty. We allow any type except 3 (since an
+          # (inner must come during an outer-led sequence).
+          # We treat a type 5 ring that isn't part of a first-led sequence
+          # as an outer ring.
           case type_
-          when 0, 1, 5
+          when 0, 1
             polygons_ << @factory.polygon(part_)
-          when 2
+          when 2, 5
             sequence_ << part_
             state_ = :outer
           when 4
@@ -832,10 +862,10 @@ module RGeo
       
       class Record
         
-        def initialize(index_, geometry_, attrs_)  # :nodoc:
+        def initialize(index_, geometry_, attributes_)  # :nodoc:
           @index = index_
           @geometry = geometry_
-          @attrs = attrs_
+          @attributes = attributes_
         end
         
         # The 0-based record number
@@ -845,16 +875,16 @@ module RGeo
         attr_reader :geometry
         
         # The attributes as a hash.
-        attr_reader :attrs
+        attr_reader :attributes
         
         # Returns an array of keys for all this record's attributes.
         def keys
-          @attrs.keys
+          @attributes.keys
         end
         
         # Returns the value for the given attribute key.
         def [](key_)
-          @attrs[key_]
+          @attributes[key_]
         end
         
       end
