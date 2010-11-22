@@ -30,10 +30,10 @@ Use RGeo to:
 * Correctly handle spherical geometry, and compute projections for
   geographic data analysis.
 * Store and retrieve spatial data in industry standard spatial database
-  systems such as PostGIS.
+  systems such as MySQL Spatial, SpatiaLite, and PostGIS.
 * Generate and interpret GeoJSON data for communication with common
-  location-based services; and read and write ESRI shapefiles for
-  interaction with legacy GIS data.
+  location-based web services such as SimpleGeo.
+* Read legacy GIS data from ESRI shapefiles.
 * Extend Ruby On Rails to handle location data in a web application.
 * Write spatial applications following the latest open standards from
   the Open Geospatial Consortium.
@@ -48,6 +48,14 @@ RGeo has the following prerequisites:
   available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
   http://geos.osgeo.org/
+* If you are using the GeoJSON tools under Ruby 1.8.7, you should
+  install the "json" gem. Ruby 1.9 has JSON support in its standard
+  library and does not require the gem.
+* If you are using the shapefile reader, you should install the "dbf"
+  gem for access to shape attributes.
+* The ActiveRecord adapters for MySQL Spatial, PostGIS, and SpatiaLite
+  require ActiveRecord 3.0.3 or later, and the corresponding database
+  driver gems (e.g. "mysql" or "mysql2").
 
 === Installation
 
@@ -75,13 +83,17 @@ the switches interpreted by the gem command. For example:
 RGeo is currently under development and several planned features are not
 yet complete. These include:
 
-* SpatiaLite and PostGIS adapters for ActiveRecord.
+* SpatiaLite and PostGIS adapters for ActiveRecord. (We already have an
+  adapter for MySQL Spatial.)
 * Support for bbox and crs elements of GeoJSON.
-* Support for ESRI shapefile reading and writing.
-* Projection subsystem, and support for arbitrary projections in the geography module, utilizing proj4.
+* Support for writing shapefiles. (Reading is now implemented.)
+* Projection subsystem, and support for arbitrary projections in the
+  geography module, utilizing proj4.
 * Several more operations on SimpleCartesian and SimpleSpherical.
-* Geography implementation utilizing ellipsoidal geometry, probably utilizing geographiclib.
-* Additional third-party integration, possibly including SimpleGeo, GeoRSS, KML.
+* Geography implementation utilizing ellipsoidal geometry, probably
+  utilizing geographiclib.
+* Integration with other third-party formats and services, potentially
+  including SimpleGeo, GeoRSS, KML.
 * JRuby support via JTS integration.
 * Rubinius support for GEOS integration.
 

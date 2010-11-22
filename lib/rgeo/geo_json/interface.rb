@@ -78,10 +78,10 @@ module RGeo
       #   sole argument and returning the JSON hash, or it may be one of
       #   the special values <tt>:json</tt>, <tt>:yajl</tt>, or
       #   <tt>:active_support</tt>. Setting one of those special values
-      #   will require the corresponding library to be available. The
-      #   default is <tt>:json</tt>, which is present in the standard
+      #   will require the corresponding library to be available. Note
+      #   that the <tt>:json</tt> library is present in the standard
       #   library in Ruby 1.9, but requires the "json" gem in Ruby 1.8.
-      #   If the specified parser is not available, then decode will not
+      #   If a parser is not specified, then the decode method will not
       #   accept a String or IO object; it will require a Hash.
       
       def decode(input_, opts_={})
@@ -111,10 +111,10 @@ module RGeo
       #   sole argument and returning the JSON hash, or it may be one of
       #   the special values <tt>:json</tt>, <tt>:yajl</tt>, or
       #   <tt>:active_support</tt>. Setting one of those special values
-      #   will require the corresponding library to be available. The
-      #   default is <tt>:json</tt>, which is present in the standard
+      #   will require the corresponding library to be available. Note
+      #   that the <tt>:json</tt> library is present in the standard
       #   library in Ruby 1.9, but requires the "json" gem in Ruby 1.8.
-      #   If the specified parser is not available, then decode will not
+      #   If a parser is not specified, then the decode method will not
       #   accept a String or IO object; it will require a Hash.
       
       def coder(opts_={})

@@ -73,8 +73,8 @@ module RAKEFILE
   MAIN_RDOC_FILE = 'README.rdoc'
   RDOC_TITLE = "RGeo #{PRODUCT_VERSION} Documentation"
   
-  TEST_FILES = ::Dir.glob('tests/**/*.rb')
-  AUX_TEST_FILES = ::Dir.glob('tests/**/*.txt')
+  TESTCASE_FILES = ::Dir.glob('tests/**/tc_*.rb')
+  ALL_TEST_FILES = ::Dir.glob('tests/**/*.{rb,txt,shp,shx,dbf}')
   
   DOC_DIRECTORY = 'doc'
   PKG_DIRECTORY = 'pkg'
@@ -95,12 +95,17 @@ module RAKEFILE
     s_.homepage = "http://#{RUBYFORGE_PROJECT}.rubyforge.org/#{PRODUCT_NAME}"
     s_.rubyforge_project = RUBYFORGE_PROJECT
     s_.required_ruby_version = '>= 1.8.7'
-    s_.files = SOURCE_FILES + EXTRA_RDOC_FILES + TEST_FILES + AUX_TEST_FILES + ::Dir.glob('ext/**/*.{rb,c,h}') + ['Version']
+    s_.files = SOURCE_FILES + EXTRA_RDOC_FILES + ALL_TEST_FILES + ::Dir.glob('ext/**/*.{rb,c,h}') + ['Version']
     s_.extra_rdoc_files = EXTRA_RDOC_FILES
     s_.has_rdoc = true
-    s_.test_files = TEST_FILES
+    s_.test_files = TESTCASE_FILES
     s_.platform = ::Gem::Platform::RUBY
     s_.extensions = ::Dir.glob('ext/**/extconf.rb')
+    s_.add_development_dependency('activerecord', '>= 3.0.3')
+    s_.add_development_dependency('arel', '>= 2.0.3')
+    s_.add_development_dependency('mysql', '>= 2.8.1')
+    s_.add_development_dependency('mysql2', '>= 0.6.2')
+    s_.add_development_dependency('json', '>= 1.4.6')
   end
   
 end
@@ -195,7 +200,7 @@ task :test => :build_ext do
   if ::ENV['TESTCASE']
     test_files_ = ::Dir.glob("tests/#{::ENV['TESTCASE']}.rb")
   else
-    test_files_ = ::RAKEFILE::TEST_FILES
+    test_files_ = ::RAKEFILE::TESTCASE_FILES
   end
   test_files_.each do |path_|
     load path_

@@ -47,6 +47,11 @@ module RGeo
     class Coder
       
       
+      @@json_available = nil
+      @@yajl_available = nil
+      @@activesupport_available = nil
+      
+      
       # Create a new coder settings object. The geo factory is passed as
       # a required argument.
       # 
@@ -67,36 +72,60 @@ module RGeo
       #   sole argument and returning the JSON hash, or it may be one of
       #   the special values <tt>:json</tt>, <tt>:yajl</tt>, or
       #   <tt>:active_support</tt>. Setting one of those special values
-      #   will require the corresponding library to be available. The
-      #   default is <tt>:json</tt>, which is present in the standard
+      #   will require the corresponding library to be available. Note
+      #   that the <tt>:json</tt> library is present in the standard
       #   library in Ruby 1.9, but requires the "json" gem in Ruby 1.8.
-      #   If the specified parser is not available, then decode will not
+      #   If a parser is not specified, then the decode method will not
       #   accept a String or IO object; it will require a Hash.
       
       def initialize(opts_={})
         @geo_factory = opts_[:geo_factory] || ::RGeo::Cartesian.preferred_factory
         @entity_factory = opts_[:entity_factory] || EntityFactory.instance
-        @json_parser = opts_[:json_parser] || :json
+        @json_parser = opts_[:json_parser]
         case @json_parser
         when :json
-          begin
-            require 'json'
+          if @@json_available.nil?
+            begin
+              require 'json'
+              @@json_available = true
+            rescue ::LoadError
+              @@json_available = false
+            end
+          end
+          if @@json_available
             @json_parser = ::Proc.new{ |str_| ::JSON.parse(str_) }
-          rescue ::LoadError
+          else
+            raise Errors::RGeoError, "JSON library is not available. You may need to install the 'json' gem."
           end
         when :yajl
-          begin
-            require 'yajl'
+          if @@yajl_available.nil?
+            begin
+              require 'yajl'
+              @@yajl_available = true
+            rescue ::LoadError
+              @@yajl_available = false
+            end
+          end
+          if @@yajl_available
             @json_parser = ::Proc.new{ |str_| ::Yajl::Parser.new.parse(str_) }
-          rescue ::LoadError
+          else
+            raise Errors::RGeoError, "Yajl library is not available. You may need to install the 'yajl' gem."
           end
         when :active_support
-          begin
-            require 'active_support/json'
-            @json_parser = ::Proc.new{ |str_| ::ActiveSupport::JSON.decode(str_) }
-          rescue ::LoadError
+          if @@activesupport_available.nil?
+            begin
+              require 'active_support/json'
+              @@activesupport_available = true
+            rescue ::LoadError
+              @@activesupport_available = false
+            end
           end
-        when ::Proc
+          if @@activesupport_available
+            @json_parser = ::Proc.new{ |str_| ::ActiveSupport::JSON.decode(str_) }
+          else
+            raise Errors::RGeoError, "ActiveSupport::JSON library is not available. You may need to install the 'activesupport' gem."
+          end
+        when ::Proc, nil
           # Leave as is
         else
           raise ::ArgumentError, "Unrecognzied json_parser: #{@json_parser.inspect}"
@@ -110,6 +139,12 @@ module RGeo
       # Encode the given object as GeoJSON. The object may be one of the
       # geometry objects specified in RGeo::Features, or an appropriate
       # GeoJSON wrapper entity supported by this coder's entity factory.
+      # 
+      # This method returns a JSON object (i.e. a hash). In order to
+      # generate a string suitable for transmitting to a service, you
+      # will need to JSON-encode it. This is usually accomplished by
+      # calling <tt>to_json</tt> on the hash object, if you have the
+      # appropriate JSON library installed.
       
       def encode(object_)
         if @entity_factory.is_feature_collection?(object_)

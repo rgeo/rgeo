@@ -131,6 +131,7 @@ module RGeo
   autoload(:Geos, 'rgeo/geos')
   autoload(:ImplHelpers, 'rgeo/impl_helpers')
   autoload(:WKRep, 'rgeo/wkrep')
+  autoload(:Shapefile, 'rgeo/shapefile')
   
 end
 

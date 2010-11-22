@@ -101,6 +101,16 @@ module RGeo
       end
       
       
+      # Return a new FactoryGenerator that calls the given delegate, but
+      # modifies the configuration passed to it. You can provide defaults
+      # for configuration values not explicitly specified, and you can
+      # force certain values to override the given configuration.
+      
+      def self.decorate(delegate_, default_config_={}, force_config_={})
+        ::Proc.new{ |c_| delegate_.call(default_config_.merge(c_).merge(force_config_)) }
+      end
+      
+      
     end
     
     

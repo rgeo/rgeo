@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# A container file for one-off tests
+# Shapefile processing for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,31 +34,27 @@
 ;
 
 
-require 'test/unit'
+# Parent file
 require 'rgeo'
 
 
 module RGeo
-  module Tests  # :nodoc:
-    
-    class TestOneOff < ::Test::Unit::TestCase  # :nodoc:
-      
-      
-      def setup
-        @mercator_factory = ::RGeo::Geography.simple_mercator
-        @spherical_factory = ::RGeo::Geography.simple_spherical(:support_z_coordinate => true)
-        @geos_factory = ::RGeo::Geos.factory(:srid => 4326, :support_z_coordinate => true)
-        @cartesian_factory = ::RGeo::Cartesian.simple_factory(:srid => 1, :support_z_coordinate => true)
-        @entity_factory = ::RGeo::GeoJSON::EntityFactory.instance
-      end
-      
-      
-      def test_dummy
-        RGeo::Shapefile
-      end
-      
-      
-    end
-    
+  
+  
+  # This module contains an implementation of ESRI Shapefiles.
+  # Use the Shapefile::Reader class to read a shapefile, extracting
+  # geometry and attribute data from it.
+  # RGeo does not yet have support for writing shapefiles.
+  
+  module Shapefile
   end
+  
+  
 end
+
+
+# Dependency files
+require 'rgeo/features'
+
+# Implementation files
+require 'rgeo/shapefile/reader'

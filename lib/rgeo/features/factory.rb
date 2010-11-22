@@ -90,12 +90,12 @@ module RGeo
       # 
       # <tt>:z_coordinate</tt>::
       #   Supports a "z" coordinate. When an implementation supports
-      #   z_coordinate, the Factory#epoint and Point#z methods are
-      #   available.
+      #   this capability, geometries know about Z coordinates, and the
+      #   Point#z method is available.
       # <tt>:m_coordinate</tt>::
-      #   Supports a "m" coordinate. When an implementation supports
-      #   m_coordinate, the Factory#epoint and Point#m methods are
-      #   available.
+      #   Supports an "m" coordinate. When an implementation supports
+      #   this capability, geometries know about M coordinates, and the
+      #   Point#m method is available.
       
       def has_capability?(name_)
         nil
