@@ -168,6 +168,7 @@ file "#{::RAKEFILE::DOC_DIRECTORY}/index.html" => ::RAKEFILE::ALL_RDOC_FILES do
   args_ << '--main' << ::RAKEFILE::MAIN_RDOC_FILE
   args_ << '--title' << ::RAKEFILE::RDOC_TITLE
   args_ << '-f' << 'darkfish'
+  args_ << '--verbose' if ::ENV['VERBOSE']
   require 'rdoc'
   require 'rdoc/rdoc'
   require 'rdoc/generator/darkfish'

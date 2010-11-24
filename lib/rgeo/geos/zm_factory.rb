@@ -61,7 +61,7 @@ module RGeo
       end
       
       
-      def initialize(opts_={})
+      def initialize(opts_={})  # :nodoc:
         @zfactory = Factory.create(:support_z_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid])
         @mfactory = Factory.create(:support_m_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid])
       end

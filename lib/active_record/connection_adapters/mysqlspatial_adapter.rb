@@ -38,12 +38,14 @@ require 'rgeo/active_record/mysql_common'
 require 'active_record/connection_adapters/mysql_adapter'
 
 
-module ActiveRecord  # :nodoc:
+module ActiveRecord
   
-  class Base  # :nodoc:
+  class Base
     
     
-    def self.mysqlspatial_connection(config_)  # :nodoc:
+    # Create a mysqlspatial connection adapter
+    
+    def self.mysqlspatial_connection(config_)
       unless defined?(::Mysql)
         begin
           require 'mysql'
@@ -67,12 +69,12 @@ module ActiveRecord  # :nodoc:
   end
   
   
-  module ConnectionAdapters
+  module ConnectionAdapters  # :nodoc:
     
-    class MysqlSpatialAdapter < MysqlAdapter
+    class MysqlSpatialAdapter < MysqlAdapter  # :nodoc:
       
       
-      class SpatialColumn < ConnectionAdapters::MysqlColumn
+      class SpatialColumn < ConnectionAdapters::MysqlColumn  # :nodoc:
         
         include ::RGeo::ActiveRecord::MysqlCommon::ColumnMethods
         

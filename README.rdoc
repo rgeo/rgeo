@@ -5,7 +5,7 @@ RGeo is a spatial data library for Ruby.
 It provides an implementation of the Open Geospatial Consortium's Simple
 Features Specification, used by most standard spatial/geographic data
 storage systems such as PostGIS. It also provides a suite of useful tools
-for writing location-based applications using Ruby-based frameworks such
+for writing location-aware applications using Ruby-based frameworks such
 as Ruby On Rails.
 
 IMPORTANT: RGeo is currently under development, and we consider it to be
@@ -16,10 +16,10 @@ use of RGeo in production.
 
 === Summary
 
-RGeo is a core component for writing location-based applications in the
+RGeo is a core component for writing location-aware applications in the
 Ruby programming language. It provides the basic tools for modeling
-location data and communicating with geolocation-aware storage systems
-and location-based services.
+location data and communicating with location-aware storage systems
+and services.
 
 Use RGeo to:
 
@@ -35,8 +35,7 @@ Use RGeo to:
   location-based web services such as SimpleGeo.
 * Read legacy GIS data from ESRI shapefiles.
 * Extend Ruby On Rails to handle location data in a web application.
-* Write spatial applications following the latest open standards from
-  the Open Geospatial Consortium.
+* Follow the latest standards from the Open Geospatial Consortium.
 
 === Requirements
 
@@ -44,7 +43,7 @@ RGeo has the following prerequisites:
 
 * Ruby 1.8.7 or later. Ruby 1.9.2 or later preferred.
   Rubinius and JRuby are not yet supported.
-* GEOS 3.2 or later highly recommended. Some functions will not be
+* GEOS 3.2 or later is highly recommended. Some functions will not be
   available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
   http://geos.osgeo.org/
@@ -52,7 +51,7 @@ RGeo has the following prerequisites:
   install the "json" gem. Ruby 1.9 has JSON support in its standard
   library and does not require the gem.
 * If you are using the shapefile reader, you should install the "dbf"
-  gem version 1.5.2 or later for access to shape attributes.
+  gem version 1.5.2 or later, which is required to read the attributes.
 * The ActiveRecord adapters for MySQL Spatial, PostGIS, and SpatiaLite
   require ActiveRecord 3.0.3 or later, Arel 2.0 or later, and the
   corresponding database driver gems (e.g. "mysql" or "mysql2").
@@ -78,27 +77,21 @@ the switches interpreted by the gem command. For example:
 
  gem install rgeo -- --with-geos-dir=/path/to/my/geos/installation
 
-=== Known issues
-
-* Some planned and documented functionality on the SimpleCartesian and
-  SimpleSpherical data implementations is not yet implemented.
-
 === To-do items
 
-This is our planned feature roadmap.
+This is our planned feature roadmap, in rough priority order.
 
-* SpatiaLite and PostGIS adapters for ActiveRecord. (We already have an
-  adapter for MySQL Spatial.)
-* Support for bbox and crs elements of GeoJSON.
-* Support for writing shapefiles. (Reading is now implemented.)
 * Projection subsystem, and support for arbitrary projections in the
   geography module, utilizing proj4.
-* Geography implementation utilizing ellipsoidal geometry, probably
-  utilizing geographiclib.
-* Integration with other third-party formats and services, potentially
-  including SimpleGeo, GeoRSS, KML.
-* JRuby support via JTS integration.
+* SpatiaLite and PostGIS adapters for ActiveRecord. (We already have an
+  adapter for MySQL Spatial.)
+* Integration with certain third-party services such as SimpleGeo.
+* Support for bbox and crs elements of GeoJSON.
+* Ellipsoidal geography implementation, probably utilizing geographiclib.
 * Rubinius support for GEOS integration.
+* JRuby support via JTS integration.
+* Support for writing shapefiles. (Reading is already implemented.)
+* Read and write other formats such as GeoRSS and KML.
 
 === Development and support
 

@@ -42,10 +42,10 @@ require 'rgeo/active_record/common'
 
 module RGeo
   
-  module ActiveRecord
+  module ActiveRecord  # :nodoc:
     
     
-    module MysqlCommon
+    module MysqlCommon  # :nodoc:
       
       
       module AdapterMethods  # :nodoc:

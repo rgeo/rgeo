@@ -6,7 +6,7 @@
 * The simple Cartesian point implementation included a bit more leakage from the Geography implementations (pole equivalence, lat/lon methods). Fixed.
 * Under certain circumstances, collections and polygons using GEOS could lose their Z or M coordinates. Fixed.
 * There were some cases when implementations based on ImplHelpers were pulling in the wrong methods. Fixed.
-* Taking the envelope of an empty GEOS collection yielded an illegal object that caused a crash. Fixed. It now yields an empty collection.
+* Taking the envelope of an empty GEOS collection yielded an illegal object that could cause a crash. Fixed. It now yields an empty collection.
 * Taking the boundary of an empty GEOS collection yielded nil. Fixed. It now yields an empty collection.
 
 === 0.1.18 / 2010-11-22

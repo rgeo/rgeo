@@ -39,6 +39,9 @@ module RGeo
   module Cartesian
     
     
+    # This provides includes some spatial analysis algorithms supporting
+    # Cartesian data.
+    
     module Analysis
       
       class << self

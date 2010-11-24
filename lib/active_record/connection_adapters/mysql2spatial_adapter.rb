@@ -38,12 +38,14 @@ require 'rgeo/active_record/mysql_common'
 require 'active_record/connection_adapters/mysql2_adapter'
 
 
-module ActiveRecord  # :nodoc:
+module ActiveRecord
   
-  class Base  # :nodoc:
+  class Base
     
     
-    def self.mysql2spatial_connection(config_)  # :nodoc:
+    # Create a mysql2spatial connection adapter
+    
+    def self.mysql2spatial_connection(config_)
       config_[:username] = 'root' if config_[:username].nil?
       if ::Mysql2::Client.const_defined?(:FOUND_ROWS)
         config_[:flags] = ::Mysql2::Client::FOUND_ROWS
@@ -57,12 +59,12 @@ module ActiveRecord  # :nodoc:
   end
   
   
-  module ConnectionAdapters
+  module ConnectionAdapters  # :nodoc:
     
-    class Mysql2SpatialAdapter < Mysql2Adapter
+    class Mysql2SpatialAdapter < Mysql2Adapter  # :nodoc:
       
       
-      class SpatialColumn < ConnectionAdapters::Mysql2Column
+      class SpatialColumn < ConnectionAdapters::Mysql2Column  # :nodoc:
         
         include ::RGeo::ActiveRecord::MysqlCommon::ColumnMethods
         

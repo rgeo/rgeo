@@ -48,7 +48,7 @@ module RGeo
       
       
       def envelope
-        BoundingBox.new(factory).enclose(self).to_geometry
+        BoundingBox.new(factory).add(self).to_geometry
       end
       
       

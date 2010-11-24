@@ -75,7 +75,7 @@ module RGeo
       end
       
       
-      def inspect
+      def inspect  # :nodoc:
         "#<#{self.class}:0x#{object_id.to_s(16)} srid=#{_srid} bufres=#{_buffer_resolution} flags=#{_flags}>"
       end
       

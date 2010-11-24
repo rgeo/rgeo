@@ -37,11 +37,38 @@
 require 'active_record'
 
 
+# RGeo extensions to ActiveRecord are installed when one of the spatial
+# connection adapters is needed. These modifications require ActiveRecord
+# 3.0.3 or later.
+
 module ActiveRecord
+  
+  
+  # RGeo extends ActiveRecord::Base to include the following new class
+  # attributes. These attributes are inherited by subclasses, and can
+  # be overridden in subclasses.
+  # 
+  # === ActiveRecord::Base::rgeo_factory_generator
+  # 
+  # The value of this attribute is a RGeo::Features::FactoryGenerator
+  # that is used to generate the proper factory when loading geometry
+  # objects from the database. For example, if the data being loaded
+  # has M but not Z coordinates, and an embedded SRID, then this
+  # FactoryGenerator is called with the appropriate configuration to
+  # obtain a factory with those properties. This factory is the one
+  # associated with the actual geometry properties of the ActiveRecord
+  # object.
+  # 
+  # === ActiveRecord::Base::rgeo_default_factory
+  # 
+  # The default factory used to load RGeo geometry objects from the
+  # database. This is used when there is no rgeo_factory_generator.
   
   class Base
     
+    
     self.attribute_types_cached_by_default << :geometry
+    
     
     class_attribute :rgeo_default_factory, :instance_writer => false
     self.rgeo_default_factory = nil
@@ -49,12 +76,18 @@ module ActiveRecord
     class_attribute :rgeo_factory_generator, :instance_writer => false
     self.rgeo_factory_generator = nil
     
+    
+    # This is a convenient way to set the rgeo_factory_generator by
+    # passing a block.
+    
     def self.to_generate_rgeo_factory(&block_)
       self.rgeo_factory_generator = block_
     end
     
+    
     class << self
       
+      # :stopdoc:
       alias_method :columns_without_rgeo_modification, :columns
       def columns
         unless defined?(@columns) && @columns
@@ -64,9 +97,11 @@ module ActiveRecord
         end
         @columns
       end
+      # :startdoc:
       
     end
     
   end
+  
   
 end
