@@ -121,12 +121,11 @@ static void destroy_globals_func(RGeo_Globals* data)
 }
 
 
-// Mark function for globals data. This marks the default factory held
-// by the globals so it doesn't get collected.
+// Mark function for globals data. This should mark any globals that
+// need to be held through garbage collection (none at the moment.)
 
 static void mark_globals_func(RGeo_Globals* data)
 {
-  rb_gc_mark(data->default_factory);
 }
 
 
@@ -225,7 +224,6 @@ RGeo_Globals* rgeo_init_geos_factory()
   VALUE rgeo_module = rb_define_module("RGeo");
   globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
   globals->features_module = rb_define_module_under(rgeo_module, "Features");
-  globals->default_factory = Qnil;
   
   // Add C methods to the factory.
   VALUE geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));
@@ -240,9 +238,6 @@ RGeo_Globals* rgeo_init_geos_factory()
   // to it later. Each factory instance will reference it internally.
   VALUE wrapped_globals = Data_Wrap_Struct(rb_cObject, mark_globals_func, destroy_globals_func, globals);
   rb_define_const(geos_factory_class, "INTERNAL_CGLOBALS", wrapped_globals);
-  
-  // Default factory used internally.
-  globals->default_factory = rb_funcall(geos_factory_class, rb_intern("create"), 0);
   
   return globals;
 }
@@ -336,12 +331,12 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
 }
 
 
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(RGeo_Globals* globals, VALUE obj, VALUE type, VALUE* klasses)
+GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses)
 {
   if (klasses) {
     *klasses = Qnil;
   }
-  VALUE object = rb_funcall(globals->features_module, rb_intern("cast"), 5, obj, globals->default_factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
+  VALUE object = rb_funcall(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("cast"), 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
   GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
     geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;

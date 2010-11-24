@@ -50,6 +50,8 @@ module RGeo
         def setup
           @factory = ::RGeo::Geos.factory
           @zfactory = ::RGeo::Geos.factory(:support_z_coordinate => true)
+          @mfactory = ::RGeo::Geos.factory(:support_m_coordinate => true)
+          @zmfactory = ::RGeo::Geos.factory(:support_z_coordinate => true, :support_m_coordinate => true)
         end
         
         

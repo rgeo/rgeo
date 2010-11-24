@@ -115,21 +115,6 @@ module RGeo
       end
       
       
-      # Cast this geometry to the given type (which must be one of the
-      # type modules in the Features module) and return the resulting
-      # object. Returns nil if the cast fails because the types are not
-      # compatible or the object does not satisfy the assertions for the
-      # new type.
-      # 
-      # Generally, this is only useful for casting general classes to
-      # subclasses; e.g. a GeometryCollection to a MultiPoint, or a
-      # LineString to a LinearRing.
-      
-      def cast(type_)
-        raise Errors::MethodUnimplemented
-      end
-      
-      
       # Returns true if this geometric object is objectively equivalent
       # to the given object.
       

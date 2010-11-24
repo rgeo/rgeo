@@ -84,7 +84,7 @@ module RGeo
         
         
         def test_point_with_ewkb_zm
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(:default_factory => factory_, :support_ewkb => true)
           obj_ = parser_.parse_hex('00c00000013ff0000000000000400000000000000040080000000000004010000000000000')
           assert_equal(::RGeo::Features::Point, obj_.geometry_type)
@@ -114,7 +114,7 @@ module RGeo
         
         
         def test_point_with_wkb12_zm
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(:default_factory => factory_, :support_wkb12 => true)
           obj_ = parser_.parse_hex('0000000bb93ff0000000000000400000000000000040080000000000004010000000000000')
           assert_equal(::RGeo::Features::Point, obj_.geometry_type)

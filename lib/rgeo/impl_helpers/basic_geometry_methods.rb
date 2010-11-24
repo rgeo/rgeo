@@ -67,11 +67,6 @@ module RGeo
       end
       
       
-      def cast(type_)
-        type_ == geometry_type ? self : nil
-      end
-      
-      
       def as_text
         WKRep::WKTGenerator.new.generate(self)
       end

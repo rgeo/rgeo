@@ -42,12 +42,12 @@ module RGeo
       
       
       # Creates and returns a cartesian factory of the preferred
-      # implementation.
+      # Cartesian implementation.
       # 
       # The actual implementation returned depends on which ruby
       # interpreter is running and what libraries are available.
       # RGeo will try to provide a fully-functional and performant
-      # implementation if possible. If not, the simple cartesian
+      # implementation if possible. If not, the simple Cartesian
       # implementation will be returned.
       # 
       # The given options are passed to the factory's constructor.
@@ -64,8 +64,25 @@ module RGeo
       alias_method :factory, :preferred_factory
       
       
-      # Returns a factory for the simple cartesian implementation.
-      # This implementation is always available.
+      # Returns a factory for the simple Cartesian implementation. This
+      # implementation provides all SFS 1.1 types, and also allows Z and
+      # M coordinates. It does not depend on external libraries, and is
+      # thus always available, but it does not implement many of the more
+      # advanced geometric operations. These limitations are:
+      # 
+      # * Relational operators such as Features::Geometry#intersects? are
+      #   not implemented for most types.
+      # * Relational constructors such as Features::Geometry#union are
+      #   not implemented for most types.
+      # * Buffer and convex hull calculations are not implemented for most
+      #   types. Boundaries are available except for GeometryCollection.
+      # * Length calculations are available, but areas are not. Distances
+      #   are available only between points.
+      # * Equality and simplicity evaluation are implemented for some but
+      #   not all types.
+      # * Assertions for polygons and multipolygons are not implemented.
+      # 
+      # Unimplemented operations will return nil if invoked.
       # 
       # Options include:
       # 

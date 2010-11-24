@@ -144,7 +144,7 @@ module RGeo
         end
         
         
-        def convex_hull()
+        def convex_hull
           factory.unproject(projection.convex_hull)
         end
         

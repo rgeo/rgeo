@@ -37,9 +37,9 @@
 require 'active_record'
 
 
-module ActiveRecord  # :nodoc:
+module ActiveRecord
   
-  class Base  # :nodoc:
+  class Base
     
     self.attribute_types_cached_by_default << :geometry
     

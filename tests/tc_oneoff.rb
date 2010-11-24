@@ -54,7 +54,6 @@ module RGeo
       
       
       def test_dummy
-        RGeo::Shapefile
       end
       
       

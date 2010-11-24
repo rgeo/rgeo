@@ -46,8 +46,8 @@ module RGeo
         
         include ::RGeo::Features::Point
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicPointMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         
         
         def _validate_geometry
@@ -75,6 +75,33 @@ module RGeo
         end
         
         
+        def equals?(rhs_)
+          return false unless rhs_.is_a?(self.class) && rhs_.factory == self.factory
+          case rhs_
+          when Features::Point
+            if @y == 90
+              rhs_.y == 90
+            elsif @y == -90
+              rhs_.y == -90
+            else
+              rhs_.x == @x && rhs_.y == @y
+            end
+          when Features::LineString
+            rhs_.num_points > 0 && rhs_.points.all?{ |elem_| equals?(elem_) }
+          when Features::GeometryCollection
+            rhs_.num_geometries > 0 && rhs_.all?{ |elem_| equals?(elem_) }
+          else
+            false
+          end
+        end
+        
+        
+        alias_method :longitude, :x
+        alias_method :lon, :x
+        alias_method :latitude, :y
+        alias_method :lat, :y
+        
+        
       end
       
       
@@ -83,8 +110,8 @@ module RGeo
         
         include ::RGeo::Features::LineString
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::Geography::SimpleSpherical::LineStringMethods
         
         
@@ -96,10 +123,10 @@ module RGeo
         
         include ::RGeo::Features::Line
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicLineStringMethods
-        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
         include ::RGeo::ImplHelpers::BasicLineMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
         
         
       end
@@ -110,10 +137,10 @@ module RGeo
         
         include ::RGeo::Features::Line
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicLineStringMethods
-        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
         include ::RGeo::ImplHelpers::BasicLinearRingMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
+        include ::RGeo::Geography::SimpleSpherical::LineStringMethods
         
         
       end
@@ -124,8 +151,8 @@ module RGeo
         
         include ::RGeo::Features::Polygon
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicPolygonMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         
         
       end
@@ -136,8 +163,8 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         
         
       end
@@ -148,9 +175,9 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
         include ::RGeo::ImplHelpers::BasicMultiPointMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         
         
       end
@@ -161,9 +188,9 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
         include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         
         
       end
@@ -174,9 +201,9 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
         include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
+        include ::RGeo::Geography::SimpleSpherical::GeometryMethods
         
         
       end

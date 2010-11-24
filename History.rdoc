@@ -1,3 +1,14 @@
+=== 0.1.19 / 2010-11-23
+
+* The GEOS implementation now supports ZM (4-dimensional data), via a wrapper since the underlying GEOS library doesn't support 4d data natively.
+* Added a BoundingBox tool to the Cartesian module.
+* Fleshed out a few more methods of SimpleCartesian and SimpleSpherical.
+* The simple Cartesian point implementation included a bit more leakage from the Geography implementations (pole equivalence, lat/lon methods). Fixed.
+* Under certain circumstances, collections and polygons using GEOS could lose their Z or M coordinates. Fixed.
+* There were some cases when implementations based on ImplHelpers were pulling in the wrong methods. Fixed.
+* Taking the envelope of an empty GEOS collection yielded an illegal object that caused a crash. Fixed. It now yields an empty collection.
+* Taking the boundary of an empty GEOS collection yielded nil. Fixed. It now yields an empty collection.
+
 === 0.1.18 / 2010-11-22
 
 * API CHANGE: GeoJSON defaults to no JSON parser rather than to the JSON library. GeoJSON also fails better when attempting to use a JSON parser that isn't installed.

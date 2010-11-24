@@ -101,6 +101,15 @@ module RGeo
       end
       
       
+      def boundary
+        array_ = []
+        if !is_empty? && !is_closed?
+          array_ << @points.first << @points.last
+        end
+        factory.multi_point([array_])
+      end
+      
+      
       def start_point
         @points.first
       end
@@ -112,7 +121,7 @@ module RGeo
       
       
       def is_closed?
-        if @is_closed.nil?
+        unless defined?(@is_closed)
           @is_closed = @points.size > 2 && @points.first == @points.last
         end
         @is_closed

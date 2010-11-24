@@ -46,8 +46,8 @@ module RGeo
         
         include ::RGeo::Features::Point
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::ImplHelpers::BasicPointMethods
+        include ::RGeo::Geography::SimpleMercator::GeometryMethods
         
         
         def _validate_geometry
@@ -70,15 +70,28 @@ module RGeo
         end
         
         
+        def canonical_x
+          x_ = @x % 360.0
+          x_ -= 360.0 if x_ >= 180.0
+          x_
+        end
+        alias_method :canonical_longitude, :canonical_x
+        alias_method :canonical_lon, :canonical_x
+        
+        
         def canonical_point
           if @x >= -180.0 && @x < 180.0
             self
           else
-            x_ = @x % 360.0
-            x_ -= 360.0 if x_ >= 180.0
-            PointImpl.new(@factory, x_, @y)
+            PointImpl.new(@factory, canonical_x, @y)
           end
         end
+        
+        
+        alias_method :longitude, :x
+        alias_method :lon, :x
+        alias_method :latitude, :y
+        alias_method :lat, :y
         
         
       end
@@ -89,10 +102,10 @@ module RGeo
         
         include ::RGeo::Features::LineString
         include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::ImplHelpers::BasicLineStringMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::CurveMethods
-        include ::RGeo::ImplHelpers::BasicLineStringMethods
         include ::RGeo::Geography::SimpleMercator::LineStringMethods
         
         
@@ -109,12 +122,12 @@ module RGeo
         
         include ::RGeo::Features::Line
         include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::ImplHelpers::BasicLinearRingMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::CurveMethods
-        include ::RGeo::ImplHelpers::BasicLineStringMethods
         include ::RGeo::Geography::SimpleMercator::LineStringMethods
-        include ::RGeo::ImplHelpers::BasicLinearRingMethods
         
         
         def _make_projection(projection_factory_)  # :nodoc:
@@ -130,12 +143,12 @@ module RGeo
         
         include ::RGeo::Features::Line
         include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::ImplHelpers::BasicLineMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::CurveMethods
-        include ::RGeo::ImplHelpers::BasicLineStringMethods
         include ::RGeo::Geography::SimpleMercator::LineStringMethods
-        include ::RGeo::ImplHelpers::BasicLineMethods
         
         
         def _make_projection(projection_factory_)  # :nodoc:
@@ -151,10 +164,10 @@ module RGeo
         
         include ::RGeo::Features::Polygon
         include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::ImplHelpers::BasicPolygonMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NSurfaceMethods
         include ::RGeo::Geography::SimpleMercator::SurfaceMethods
-        include ::RGeo::ImplHelpers::BasicPolygonMethods
         
         
         def _validate_geometry
@@ -179,8 +192,8 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
         
         
@@ -197,10 +210,10 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
-        include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
         include ::RGeo::ImplHelpers::BasicMultiPointMethods
+        include ::RGeo::Geography::SimpleMercator::GeometryMethods
+        include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
         
         
         def _make_projection(projection_factory_)  # :nodoc:
@@ -216,11 +229,11 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
-        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
-        include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
         
         
         def _make_projection(projection_factory_)  # :nodoc:
@@ -236,11 +249,11 @@ module RGeo
         
         include ::RGeo::Features::GeometryCollection
         include ::RGeo::ImplHelpers::BasicGeometryMethods
+        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NSurfaceMethods
-        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
-        include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
         
         
         def _validate_geometry

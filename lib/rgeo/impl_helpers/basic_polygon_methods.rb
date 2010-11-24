@@ -103,6 +103,16 @@ module RGeo
       end
       
       
+      def boundary
+        array_ = []
+        unless @exterior_ring.is_empty?
+          array_ << @exterior_ring
+        end
+        array_.concat(@interior_rings)
+        factory.multi_line_string(array_)
+      end
+      
+      
     end
     
     

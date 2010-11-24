@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# GEOS factory implementation
+# GEOS zm factory implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -39,10 +39,9 @@ module RGeo
   module Geos
     
     
-    # This the GEOS implementation of ::RGeo::Features::Factory.
+    # A factory for Geos that handles both Z and M.
     
-    class Factory
-      
+    class ZMFactory
       
       include Features::Factory::Instance
       
@@ -52,46 +51,26 @@ module RGeo
         
         # Create a new factory. Returns nil if the GEOS implementation is
         # not supported.
-        # 
-        # See ::RGeo::Geos::factory for a list of supported options.
         
         def create(opts_={})
-          return nil unless respond_to?(:_create)
-          flags_ = 0
-          flags_ |= 1 if opts_[:lenient_multi_polygon_assertions]
-          flags_ |= 2 if opts_[:support_z_coordinate]
-          flags_ |= 4 if opts_[:support_m_coordinate]
-          if flags_ & 6 == 6
-            raise Errors::UnsupportedCapability, "GEOS cannot support both Z and M coordinates at the same time."
-          end
-          buffer_resolution_ = opts_[:buffer_resolution].to_i
-          buffer_resolution_ = 1 if buffer_resolution_ < 1
-          result_ = _create(flags_, opts_[:srid].to_i, buffer_resolution_)
-          result_
+          return nil unless Geos.supported?
+          new(opts_)
         end
-        alias_method :new, :create
         
         
       end
       
       
-      def inspect
-        "#<#{self.class}:0x#{object_id.to_s(16)} srid=#{_srid} bufres=#{_buffer_resolution} flags=#{_flags}>"
+      def initialize(opts_={})
+        @zfactory = Factory.create(:support_z_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid])
+        @mfactory = Factory.create(:support_m_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid])
       end
-      
-      
-      # Factory equivalence test.
-      
-      def eql?(rhs_)
-        rhs_.is_a?(Factory) && rhs_.srid == _srid && rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags
-      end
-      alias_method :==, :eql?
       
       
       # Returns the SRID of geometries created by this factory.
       
       def srid
-        _srid
+        @zfactory._srid
       end
       
       
@@ -99,27 +78,47 @@ module RGeo
       # created by this factory
       
       def buffer_resolution
-        _buffer_resolution
+        @zfactory._buffer_resolution
       end
       
       
       # Returns true if this factory is lenient with MultiPolygon assertions
       
       def lenient_multi_polygon_assertions?
-        _flags & 0x1 != 0
+        @zfactory.lenient_multi_polygon_assertions?
       end
+      
+      
+      # Returns the z-only factory corresponding to this factory.
+      
+      def z_factory
+        @zfactory
+      end
+      
+      
+      # Returns the m-only factory corresponding to this factory.
+      
+      def m_factory
+        @mfactory
+      end
+      
+      
+      # Factory equivalence test.
+      
+      def eql?(rhs_)
+        rhs_.is_a?(ZMFactory) && rhs_.z_factory == @zfactory
+      end
+      alias_method :==, :eql?
       
       
       # See ::RGeo::Features::Factory#has_capability?
       
       def has_capability?(name_)
         case name_
-        when :z_coordinate
-          _flags & 0x2 != 0
-        when :m_coordinate
-          _flags & 0x4 != 0
+        when :z_coordinate, :m_coordinate
+          true
         else
-          nil
+          @zfactory.has_capability?(name_)
         end
       end
       
@@ -127,88 +126,77 @@ module RGeo
       # See ::RGeo::Features::Factory#parse_wkt
       
       def parse_wkt(str_)
-        _parse_wkt_impl(str_)
+        WKRep::WKTParser.new(:default_factory => self).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#parse_wkb
       
       def parse_wkb(str_)
-        _parse_wkb_impl(str_)
+        WKRep::WKBParser.new(:default_factory => self).parse(str_)
       end
       
       
       # See ::RGeo::Features::Factory#point
       
-      def point(x_, y_, *extra_)
-        if extra_.length > (_flags & 6 == 0 ? 0 : 1)
-          nil
-        else
-          PointImpl.create(self, x_, y_, extra_[0].to_f) rescue nil
-        end
+      def point(x_, y_, z_=0, m_=0)
+        ZMPointImpl.create(self, @zfactory.point(x_, y_, z_), @mfactory.point(x_, y_, m_))
       end
       
       
       # See ::RGeo::Features::Factory#line_string
       
       def line_string(points_)
-        points_ = points_.to_a unless points_.kind_of?(::Array)
-        LineStringImpl.create(self, points_) rescue nil
+        ZMLineStringImpl.create(self, @zfactory.line_string(points_), @mfactory.line_string(points_))
       end
       
       
       # See ::RGeo::Features::Factory#line
       
       def line(start_, end_)
-        LineImpl.create(self, start_, end_) rescue nil
+        ZMLineStringImpl.create(self, @zfactory.line(start_, end_), @mfactory.line(start_, end_))
       end
       
       
       # See ::RGeo::Features::Factory#linear_ring
       
       def linear_ring(points_)
-        points_ = points_.to_a unless points_.kind_of?(::Array)
-        LinearRingImpl.create(self, points_) rescue nil
+        ZMLineStringImpl.create(self, @zfactory.linear_ring(points_), @mfactory.linear_ring(points_))
       end
       
       
       # See ::RGeo::Features::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
-        inner_rings_ = inner_rings_.to_a unless inner_rings_.kind_of?(::Array)
-        PolygonImpl.create(self, outer_ring_, inner_rings_) rescue nil
+        ZMPolygonImpl.create(self, @zfactory.polygon(outer_ring_, inner_rings_), @mfactory.polygon(outer_ring_, inner_rings_))
       end
       
       
       # See ::RGeo::Features::Factory#collection
       
       def collection(elems_)
-        elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        GeometryCollectionImpl.create(self, elems_) rescue nil
+        ZMGeometryCollectionImpl.create(self, @zfactory.collection(elems_), @mfactory.collection(elems_))
       end
       
       
       # See ::RGeo::Features::Factory#multi_point
       
       def multi_point(elems_)
-        elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        MultiPointImpl.create(self, elems_) rescue nil
+        ZMGeometryCollectionImpl.create(self, @zfactory.multi_point(elems_), @mfactory.multi_point(elems_))
       end
       
       
       # See ::RGeo::Features::Factory#multi_line_string
       
       def multi_line_string(elems_)
-        elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        MultiLineStringImpl.create(self, elems_) rescue nil
+        ZMMultiLineStringImpl.create(self, @zfactory.multi_line_string(elems_), @mfactory.multi_line_string(elems_))
       end
       
       
       # See ::RGeo::Features::Factory#multi_polygon
       
       def multi_polygon(elems_)
-        elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        MultiPolygonImpl.create(self, elems_) rescue nil
+        ZMMultiPolygonImpl.create(self, @zfactory.multi_polygon(elems_), @mfactory.multi_polygon(elems_))
       end
       
       
@@ -221,30 +209,24 @@ module RGeo
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
         case original_
-        when GeometryImpl
-          # Optimization if we're just changing factories, but the
-          # factories are zm-compatible.
-          if original_.factory != self && ntype_ == type_ &&
-              original_.factory._flags & 0x6 == _flags & 0x6
-          then
-            result_ = original_.dup
-            result_._set_factory(self)
-            return result_
+        when ZMGeometryImpl
+          # Optimization if we're just changing factories, but to
+          # another ZM factory.
+          if original_.factory != self && ntype_ == type_
+            zresult_ = original_.z_geometry.dup
+            zresult_._set_factory(@zfactory)
+            mresult_ = original_.m_geometry.dup
+            mresult_._set_factory(@mfactory)
+            return original_.class.create(self, zresult_, mresult_)
           end
           # LineString conversion optimization.
           if (original_.factory != self || ntype_ != type_) &&
-              original_.factory._flags & 0x6 == _flags & 0x6 &&
-              type_.subtype_of?(Features::LineString) && ntype_.subtype_of?(Features::LineString)
+              type_.subtype_of?(Features::LineString) && ntype_.subtype_of?(Features:LineString)
           then
-            return IMPL_CLASSES[ntype_]._copy_from(self, original_)
-          end
-        when ZMGeometryImpl
-          # Optimization for just removing a coordinate from an otherwise
-          # compatible factory
-          if _flags & 0x6 == 0x2 && self == original_.factory.z_factory
-            return Features.cast(original_.z_geometry, ntype_, flags_)
-          elsif _flags & 0x6 == 0x4 && self == original_.factory.m_factory
-            return Features.cast(original_.m_geometry, ntype_, flags_)
+            klass_ = Factory::IMPL_CLASSES[ntype_]
+            zresult_ = klass_._copy_from(@zfactory, original_.z_geometry)
+            mresult_ = klass_._copy_from(@mfactory, original_.m_geometry)
+            return ZMLineStringImpl.create(self, zresult_, mresult_)
           end
         end
         false

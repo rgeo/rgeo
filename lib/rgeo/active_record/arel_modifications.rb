@@ -37,6 +37,8 @@
 require 'arel'
 
 
+# :stopdoc:
+
 module Arel
   
   module Attributes
@@ -71,3 +73,5 @@ module Arel
   end
   
 end
+
+# :startdoc:

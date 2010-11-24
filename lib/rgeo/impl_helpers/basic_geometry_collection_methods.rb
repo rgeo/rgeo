@@ -135,6 +135,28 @@ module RGeo
       end
       
       
+      def _add_boundary(hash_, point_)  # :nodoc:
+        hval_ = [point_.x, point_.y].hash
+        (hash_[hval_] ||= [point_, 0])[1] += 1
+      end
+      
+      
+      def boundary
+        hash_ = {}
+        @elements.each do |line_|
+          if !line_.is_empty? && !line_.is_closed?
+            _add_boundary(hash_, line_.start_point)
+            _add_boundary(hash_, line_.end_point)
+          end
+        end
+        array_ = []
+        hash_.each do |hval_, data_|
+          array_ << data_[0] if data_[1] % 2 == 1
+        end
+        factory.multi_point([array_])
+      end
+      
+      
     end
     
     
@@ -156,6 +178,11 @@ module RGeo
       
       def geometry_type
         Features::MultiPoint
+      end
+      
+      
+      def boundary
+        factory.collection([])
       end
       
       
@@ -185,6 +212,18 @@ module RGeo
       
       def area
         @elements.inject(0.0){ |sum_, obj_| sum_ + obj_.area }
+      end
+      
+      
+      def boundary
+        array_ = []
+        @elements.each do |poly_|
+          unless poly_.is_empty?
+            array_ << poly_.exterior_ring
+          end
+          array_.concat(poly_.interior_rings)
+        end
+        factory.multi_line_string(array_)
       end
       
       

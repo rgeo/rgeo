@@ -59,6 +59,7 @@ module RGeo
         undef_method :test_geometrically_equal
         undef_method :test_empty_equal
         undef_method :test_not_equal
+        undef_method :test_empty_collection_boundary
         
         
       end

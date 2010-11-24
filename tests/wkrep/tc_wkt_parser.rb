@@ -159,7 +159,7 @@ module RGeo
         
         
         def test_point_wkt12_m_with_factory_zm
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_wkt12 => true)
           obj_ = parser_.parse('POINT M(1 2 3)')
           assert_equal(::RGeo::Features::Point, obj_.geometry_type)
@@ -178,7 +178,7 @@ module RGeo
         
         
         def test_point_wkt12_zm
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_wkt12 => true)
           obj_ = parser_.parse('POINT ZM(1 2 3 4)')
           assert_equal(::RGeo::Features::Point, obj_.geometry_type)
@@ -188,7 +188,7 @@ module RGeo
         
         
         def test_point_wkt12_zm_not_enough_coords
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_wkt12 => true)
           assert_raise(::RGeo::Errors::ParseError) do
             obj_ = parser_.parse('POINT ZM(1 2 3)')
@@ -290,7 +290,7 @@ module RGeo
         
         
         def test_linestring_wkt12_m
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_wkt12 => true)
           obj_ = parser_.parse('LINESTRING M(1 2 3,5 6 7)')
           assert_equal(::RGeo::Features::LineString, obj_.geometry_type)
@@ -464,7 +464,7 @@ module RGeo
         
         
         def test_collection_wkt12_type_mismatch
-          factory_ = ::RGeo::Cartesian.simple_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(:default_factory => factory_, :support_wkt12 => true)
           assert_raise(::RGeo::Errors::ParseError) do
             obj_ = parser_.parse('GEOMETRYCOLLECTION Z(POINT Z(-1 -2 0),LINESTRING M(1 2 0, 3 4 0, 5 6 0))')

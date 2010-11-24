@@ -50,6 +50,26 @@ module RGeo
     end
     
     
+    class Factory
+      
+      
+      # :stopdoc:
+      IMPL_CLASSES = {
+        Features::Point => PointImpl,
+        Features::LineString => LineStringImpl,
+        Features::LinearRing => LinearRingImpl,
+        Features::Line => LineImpl,
+        Features::GeometryCollection => GeometryCollectionImpl,
+        Features::MultiPoint => MultiPointImpl,
+        Features::MultiLineString => MultiLineStringImpl,
+        Features::MultiPolygon => MultiPolygonImpl,
+      }
+      # :startdoc:
+      
+      
+    end
+    
+    
   end
   
 end

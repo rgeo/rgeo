@@ -50,6 +50,8 @@ module RGeo
         def setup
           @factory = ::RGeo::Geography.simple_spherical
           @zfactory = ::RGeo::Geography.simple_spherical(:support_z_coordinate => true)
+          @mfactory = ::RGeo::Geography.simple_spherical(:support_m_coordinate => true)
+          @zmfactory = ::RGeo::Geography.simple_spherical(:support_z_coordinate => true, :support_m_coordinate => true)
         end
         
         
@@ -85,7 +87,6 @@ module RGeo
         undef_method :test_within
         undef_method :test_contains
         undef_method :test_overlaps
-        undef_method :test_convex_hull
         undef_method :test_intersection
         undef_method :test_union
         undef_method :test_difference

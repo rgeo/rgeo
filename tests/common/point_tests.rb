@@ -272,7 +272,7 @@ module RGeo
         end
         
         
-        def test_3d_creation
+        def test_3dz_creation
           point_ = @zfactory.point(11, 12, 13)
           assert_equal(11, point_.x)
           assert_equal(12, point_.y)
@@ -281,6 +281,32 @@ module RGeo
           assert_equal(21, point2_.x)
           assert_equal(22, point2_.y)
           assert_equal(0, point2_.z)
+        end
+        
+        
+        def test_3dm_creation
+          point_ = @mfactory.point(11, 12, 13)
+          assert_equal(11, point_.x)
+          assert_equal(12, point_.y)
+          assert_equal(13, point_.m)
+          point2_ = @mfactory.point(21, 22)
+          assert_equal(21, point2_.x)
+          assert_equal(22, point2_.y)
+          assert_equal(0, point2_.m)
+        end
+        
+        
+        def test_4d_creation
+          point_ = @zmfactory.point(11, 12, 13, 14)
+          assert_equal(11, point_.x)
+          assert_equal(12, point_.y)
+          assert_equal(13, point_.z)
+          assert_equal(14, point_.m)
+          point2_ = @zmfactory.point(21, 22)
+          assert_equal(21, point2_.x)
+          assert_equal(22, point2_.y)
+          assert_equal(0, point2_.z)
+          assert_equal(0, point2_.m)
         end
         
         

@@ -55,12 +55,19 @@ module RGeo
       # factory is a GEOS factory.
       
       def is_geos?(object_)
-        supported? ? Factory === object_ || GeometryImpl === object_ : false
+        supported? && (Factory === object_ || GeometryImpl === object_ || ZMFactory === object_ || ZMGeometryImpl === object_)
       end
       
       
       # Returns a factory for the GEOS implementation.
       # Returns nil if the GEOS implementation is not supported.
+      # 
+      # Note that GEOS does not natively support 4-dimensional data
+      # (i.e. both z and m values). However, RGeo's GEOS wrapper does
+      # provide a 4-dimensional factory that utilizes an extra native
+      # GEOS object to handle the extra coordinate. Hence, a factory
+      # configured with both Z and M support will work, but will be
+      # slower than a 2-dimensional or 3-dimensional factory.
       # 
       # Options include:
       # 
@@ -83,17 +90,19 @@ module RGeo
       #   Default is 0.
       # <tt>:support_z_coordinate</tt>::
       #   Support <tt>z_coordinate</tt>. Default is false.
-      #   Note that GEOS factories cannot support both
-      #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
-      #   most support one or the other.
       # <tt>:support_m_coordinate</tt>::
       #   Support <tt>m_coordinate</tt>. Default is false.
-      #   Note that GEOS factories cannot support both
-      #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
-      #   most support one or the other.
       
       def factory(opts_={})
-        supported? ? Factory.create(opts_) : nil
+        if supported?
+          if opts_[:support_z_coordinate] && opts_[:support_m_coordinate]
+            ZMFactory.new(opts_)
+          else
+            Factory.create(opts_)
+          end
+        else
+          nil
+        end
       end
       
       

@@ -44,8 +44,8 @@ module RGeo
       
       include ::RGeo::Features::Point
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicPointMethods
+      include ::RGeo::Cartesian::GeometryMethods
       
       
       def distance(rhs_)
@@ -69,8 +69,8 @@ module RGeo
       
       include ::RGeo::Features::LineString
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicLineStringMethods
+      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::Cartesian::LineStringMethods
       
       
@@ -82,10 +82,10 @@ module RGeo
       
       include ::RGeo::Features::Line
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicLineStringMethods
-      include ::RGeo::Cartesian::LineStringMethods
       include ::RGeo::ImplHelpers::BasicLineMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::Cartesian::LineStringMethods
       
       
     end
@@ -96,10 +96,10 @@ module RGeo
       
       include ::RGeo::Features::Line
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicLineStringMethods
-      include ::RGeo::Cartesian::LineStringMethods
       include ::RGeo::ImplHelpers::BasicLinearRingMethods
+      include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::Cartesian::LineStringMethods
       
       
     end
@@ -110,8 +110,8 @@ module RGeo
       
       include ::RGeo::Features::Polygon
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicPolygonMethods
+      include ::RGeo::Cartesian::GeometryMethods
       
       
     end
@@ -122,8 +122,8 @@ module RGeo
       
       include ::RGeo::Features::GeometryCollection
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+      include ::RGeo::Cartesian::GeometryMethods
       
       
     end
@@ -134,9 +134,9 @@ module RGeo
       
       include ::RGeo::Features::GeometryCollection
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelpers::BasicMultiPointMethods
+      include ::RGeo::Cartesian::GeometryMethods
       
       
     end
@@ -147,9 +147,9 @@ module RGeo
       
       include ::RGeo::Features::GeometryCollection
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
+      include ::RGeo::Cartesian::GeometryMethods
       
       
     end
@@ -160,9 +160,9 @@ module RGeo
       
       include ::RGeo::Features::GeometryCollection
       include ::RGeo::ImplHelpers::BasicGeometryMethods
-      include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
+      include ::RGeo::Cartesian::GeometryMethods
       
       
     end

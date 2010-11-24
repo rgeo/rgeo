@@ -215,6 +215,22 @@ module RGeo
         end
         
         
+        def test_empty_collection_envelope
+          empty_ = @factory.collection([])
+          envelope_ = empty_.envelope
+          assert_equal(Features::GeometryCollection, envelope_.geometry_type)
+          assert_equal(0, envelope_.num_geometries)
+        end
+        
+        
+        def test_empty_collection_boundary
+          empty_ = @factory.collection([])
+          boundary_ = empty_.boundary
+          assert_equal(Features::GeometryCollection, boundary_.geometry_type)
+          assert_equal(0, boundary_.num_geometries)
+        end
+        
+        
       end
       
     end

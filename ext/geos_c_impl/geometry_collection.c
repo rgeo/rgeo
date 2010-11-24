@@ -80,7 +80,7 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
       break;
     }
     for (i=0; i<len; ++i) {
-      GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(RGEO_GLOBALS_FROM_FACTORY(factory), rb_ary_entry(array, i), cast_type, &klass);
+      GEOSGeometry* geom = rgeo_convert_to_detached_geos_geometry(rb_ary_entry(array, i), factory, cast_type, &klass);
       if (!geom) {
         break;
       }

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple spherical geometry collection implementation
+# Tests for the GEOS point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,30 +37,45 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/geometry_collection_tests.rb', ::File.dirname(__FILE__))
-
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleSpherical  # :nodoc:
+    module Geos
       
-      class TestGeometryCollection < ::Test::Unit::TestCase  # :nodoc:
+      class TestZMFactory < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          @factory = ::RGeo::Geography.simple_spherical
+        def setup
+          @factory = ::RGeo::Geos.factory(:support_z_coordinate => true, :support_m_coordinate => true, :srid => 1000, :buffer_resolution => 2)
         end
         
         
-        include ::RGeo::Tests::Common::GeometryCollectionTests
+        def test_factory_parts
+          assert_equal(1000, @factory.srid)
+          assert_equal(1000, @factory.z_factory.srid)
+          assert_equal(1000, @factory.m_factory.srid)
+          assert_equal(2, @factory.buffer_resolution)
+          assert_equal(2, @factory.z_factory.buffer_resolution)
+          assert_equal(2, @factory.m_factory.buffer_resolution)
+          assert(@factory.has_capability?(:z_coordinate))
+          assert(@factory.has_capability?(:m_coordinate))
+          assert(@factory.z_factory.has_capability?(:z_coordinate))
+          assert(!@factory.z_factory.has_capability?(:m_coordinate))
+          assert(!@factory.m_factory.has_capability?(:z_coordinate))
+          assert(@factory.m_factory.has_capability?(:m_coordinate))
+        end
         
         
-        undef_method :test_fully_equal
-        undef_method :test_geometrically_equal
-        undef_method :test_empty_equal
-        undef_method :test_not_equal
-        undef_method :test_empty_collection_envelope
-        undef_method :test_empty_collection_boundary
+        def test_4d_point
+          point_ = @factory.point(1, 2, 3, 4)
+          assert_equal(Features::Point, point_.geometry_type)
+          assert_equal(3, point_.z)
+          assert_equal(4, point_.m)
+          assert_equal(3, point_.z_geometry.z)
+          assert_nil(point_.z_geometry.m)
+          assert_nil(point_.m_geometry.z)
+          assert_equal(4, point_.m_geometry.m)
+        end
         
         
       end

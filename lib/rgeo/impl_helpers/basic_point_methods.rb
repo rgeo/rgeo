@@ -119,13 +119,7 @@ module RGeo
         return false unless rhs_.is_a?(self.class) && rhs_.factory == self.factory
         case rhs_
         when Features::Point
-          if @y == 90
-            rhs_.y == 90
-          elsif @y == -90
-            rhs_.y == -90
-          else
-            rhs_.x == @x && rhs_.y == @y
-          end
+          rhs_.x == @x && rhs_.y == @y
         when Features::LineString
           rhs_.num_points > 0 && rhs_.points.all?{ |elem_| equals?(elem_) }
         when Features::GeometryCollection
@@ -134,12 +128,6 @@ module RGeo
           false
         end
       end
-      
-      
-      alias_method :longitude, :x
-      alias_method :lon, :x
-      alias_method :latitude, :y
-      alias_method :lat, :y
       
       
     end

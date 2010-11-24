@@ -106,6 +106,7 @@ module RAKEFILE
     s_.add_development_dependency('mysql', '>= 2.8.1')
     s_.add_development_dependency('mysql2', '>= 0.6.2')
     s_.add_development_dependency('json', '>= 1.4.6')
+    s_.add_development_dependency('dbf', '>= 1.5.2')
   end
   
 end

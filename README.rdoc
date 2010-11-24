@@ -52,7 +52,7 @@ RGeo has the following prerequisites:
   install the "json" gem. Ruby 1.9 has JSON support in its standard
   library and does not require the gem.
 * If you are using the shapefile reader, you should install the "dbf"
-  gem for access to shape attributes.
+  gem version 1.5.2 or later for access to shape attributes.
 * The ActiveRecord adapters for MySQL Spatial, PostGIS, and SpatiaLite
   require ActiveRecord 3.0.3 or later, Arel 2.0 or later, and the
   corresponding database driver gems (e.g. "mysql" or "mysql2").
@@ -82,16 +82,10 @@ the switches interpreted by the gem command. For example:
 
 * Some planned and documented functionality on the SimpleCartesian and
   SimpleSpherical data implementations is not yet implemented.
-* Reading of shapefile attributes is dependent on the "dbf" gem.
-  Unfortunately, the current version of dbf, 1.5.0, has a hard dependency
-  on ActiveSupport 3.0.1, which renders it incompatible with the
-  ActiveRecord adapters, which require at least ActiveRecord 3.0.3
-  (not to mention also rendering it incompatible with Rails 3.0.3...)
-  I have filed a bug report with dbf to try to get this resolved.
 
 === To-do items
 
-This is our potential feature roadmap.
+This is our planned feature roadmap.
 
 * SpatiaLite and PostGIS adapters for ActiveRecord. (We already have an
   adapter for MySQL Spatial.)
@@ -128,8 +122,8 @@ projects can be found on OSGeo's web site (http://www.osgeo.org/).
 
 The ActiveRecord adapters owe some debt to the spatial_adapter plugin
 (http://github.com/fragility/spatial_adapter). We made a few different
-design decisions for RGeo, but studying the spatial_adapter source gave us
-a head start on our implementation.
+design decisions for RGeo, but studying the spatial_adapter source gave
+us a head start on our implementation.
 
 Although we don't use shapelib (http://shapelib.maptools.org/) to read
 ESRI shapefiles, we did borrow a bunch of their test cases.

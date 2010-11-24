@@ -161,7 +161,18 @@ static VALUE method_geometry_envelope(VALUE self)
   VALUE result = Qnil;
   const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSEnvelope_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), Qnil);
+    GEOSGeometry* envelope = GEOSEnvelope_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    // GEOS returns an "empty" point for an empty collection's envelope.
+    // We don't allow that type, so we replace it with an empty collection.
+    if (!envelope ||
+        GEOSGeomTypeId_r(RGEO_CONTEXT_FROM_GEOMETRY(self), envelope) == GEOS_POINT &&
+        GEOSGetNumCoordinates_r(RGEO_CONTEXT_FROM_GEOMETRY(self), envelope) == 0) {
+      if (envelope) {
+        GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_GEOMETRY(self), envelope);
+      }
+      envelope = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_GEOMETRY(self), GEOS_GEOMETRYCOLLECTION, NULL, 0);
+    }
+    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), envelope, Qnil);
   }
   return result;
 }
@@ -172,7 +183,13 @@ static VALUE method_geometry_boundary(VALUE self)
   VALUE result = Qnil;
   const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSBoundary_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), Qnil);
+    GEOSGeometry* boundary = GEOSBoundary_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    // GEOS returns NULL for the boundary of an empty collection.
+    // Replace that with an empty collection.
+    if (!boundary) {
+      boundary = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_GEOMETRY(self), GEOS_GEOMETRYCOLLECTION, NULL, 0);
+    }
+    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), boundary, Qnil);
   }
   return result;
 }

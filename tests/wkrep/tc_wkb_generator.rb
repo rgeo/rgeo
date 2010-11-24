@@ -46,10 +46,10 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Cartesian.simple_factory(:srid => 1000)
-          @factoryz = ::RGeo::Cartesian.simple_factory(:srid => 1000, :support_z_coordinate => true)
-          @factorym = ::RGeo::Cartesian.simple_factory(:srid => 1000, :support_m_coordinate => true)
-          @factoryzm = ::RGeo::Cartesian.simple_factory(:srid => 1000, :support_z_coordinate => true, :support_m_coordinate => true)
+          @factory = ::RGeo::Cartesian.preferred_factory(:srid => 1000)
+          @factoryz = ::RGeo::Cartesian.preferred_factory(:srid => 1000, :support_z_coordinate => true)
+          @factorym = ::RGeo::Cartesian.preferred_factory(:srid => 1000, :support_m_coordinate => true)
+          @factoryzm = ::RGeo::Cartesian.preferred_factory(:srid => 1000, :support_z_coordinate => true, :support_m_coordinate => true)
         end
         
         

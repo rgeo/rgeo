@@ -50,6 +50,8 @@ module RGeo
         def setup
           @factory = ::RGeo::Cartesian.simple_factory(:srid => 1)
           @zfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :support_z_coordinate => true)
+          @mfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :support_m_coordinate => true)
+          @zmfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :support_z_coordinate => true, :support_m_coordinate => true)
         end
         
         
@@ -76,7 +78,6 @@ module RGeo
         undef_method :test_within
         undef_method :test_contains
         undef_method :test_overlaps
-        undef_method :test_convex_hull
         undef_method :test_intersection
         undef_method :test_union
         undef_method :test_difference
