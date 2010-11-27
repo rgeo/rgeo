@@ -50,7 +50,7 @@ module ActiveRecord
   # 
   # === ActiveRecord::Base::rgeo_factory_generator
   # 
-  # The value of this attribute is a RGeo::Features::FactoryGenerator
+  # The value of this attribute is a RGeo::Feature::FactoryGenerator
   # that is used to generate the proper factory when loading geometry
   # objects from the database. For example, if the data being loaded
   # has M but not Z coordinates, and an embedded SRID, then this

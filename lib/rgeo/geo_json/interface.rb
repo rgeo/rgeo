@@ -43,7 +43,7 @@ module RGeo
       
       # High-level convenience routine for encoding an object as GeoJSON.
       # Pass the object, which may one of the geometry objects specified
-      # in RGeo::Features, or an appropriate GeoJSON wrapper entity such
+      # in RGeo::Feature, or an appropriate GeoJSON wrapper entity such
       # as RGeo::GeoJSON::Feature or RGeo::GeoJSON::FeatureCollection.
       # 
       # The only option supported is <tt>:entity_factory</tt>, which lets
@@ -91,7 +91,7 @@ module RGeo
       
       # Creates and returns a coder object of type RGeo::GeoJSON::Coder
       # that encapsulates encoding and decoding settings (principally the
-      # RGeo::Features::Factory and the RGeo::GeoJSON::EntityFactory to be
+      # RGeo::Feature::Factory and the RGeo::GeoJSON::EntityFactory to be
       # used).
       # 
       # The geo factory is a required argument. Other options include:

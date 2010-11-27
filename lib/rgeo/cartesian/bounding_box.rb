@@ -212,7 +212,7 @@ module RGeo
         when BoundingBox
           add(geometry_.min_point)
           add(geometry_.max_point)
-        when Features::Geometry
+        when Feature::Geometry
           if geometry_.factory == @factory
             _add_geometry(geometry_)
           else
@@ -264,7 +264,7 @@ module RGeo
       #   have M. Default is false.
       
       def contains?(rhs_, opts_={})
-        if Features::Geometry === rhs_
+        if Feature::Geometry === rhs_
           contains?(BoundingBox.new(@factory).add(rhs_))
         elsif rhs_.empty?
           true
@@ -284,19 +284,19 @@ module RGeo
       
       def _add_geometry(geometry_)  # :nodoc:
         case geometry_
-        when Features::Point
+        when Feature::Point
           _add_point(geometry_)
-        when Features::LineString
+        when Feature::LineString
           geometry_.points.each{ |p_| _add_point(p_) }
-        when Features::Polygon
+        when Feature::Polygon
           geometry_.exterior_ring.points.each{ |p_| _add_point(p_) }
-        when Features::MultiPoint
+        when Feature::MultiPoint
           geometry_.each{ |p_| _add_point(p_) }
-        when Features::MultiLineString
+        when Feature::MultiLineString
           geometry_.each{ |line_| line_.points.each{ |p_| _add_point(p_) } }
-        when Features::MultiPolygon
+        when Feature::MultiPolygon
           geometry_.each{ |poly_| poly_.exterior_ring.points.each{ |p_| _add_point(p_) } }
-        when Features::GeometryCollection
+        when Feature::GeometryCollection
           geometry_.each{ |g_| _add_geometry(g_) }
         end
       end

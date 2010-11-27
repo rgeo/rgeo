@@ -61,7 +61,7 @@ module RGeo
     #   srid and dimension settings in the input. The factory generator
     #   should understand the configuration options <tt>:srid</tt>,
     #   <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
-    #   See RGeo::Features::FactoryGenerator for more information.
+    #   See RGeo::Feature::FactoryGenerator for more information.
     #   If no generator is provided, the <tt>:default_factory</tt> is
     #   used.
     # <tt>:support_ewkb</tt>::
@@ -174,7 +174,7 @@ module RGeo
           unless @ignore_extra_bytes
             bytes_ = _bytes_remaining
             if bytes_ > 0
-              raise Errors::ParseError, "Found #{bytes_} extra bytes at the end of the stream."
+              raise Error::ParseError, "Found #{bytes_} extra bytes at the end of the stream."
             end
           end
         ensure
@@ -203,16 +203,16 @@ module RGeo
         end
         if contained_
           if contained_ != true && contained_ != type_code_
-            raise Errors::ParseError, "Enclosed type=#{type_code_} is different from container constraint #{contained_}"
+            raise Error::ParseError, "Enclosed type=#{type_code_} is different from container constraint #{contained_}"
           end
           if has_z_ != @cur_has_z
-            raise Errors::ParseError, "Enclosed hasZ=#{has_z_} is different from toplevel hasZ=#{@cur_has_z}"
+            raise Error::ParseError, "Enclosed hasZ=#{has_z_} is different from toplevel hasZ=#{@cur_has_z}"
           end
           if has_m_ != @cur_has_m
-            raise Errors::ParseError, "Enclosed hasM=#{has_m_} is different from toplevel hasM=#{@cur_has_m}"
+            raise Error::ParseError, "Enclosed hasM=#{has_m_} is different from toplevel hasM=#{@cur_has_m}"
           end
           if srid_ && srid_ != @cur_srid
-            raise Errors::ParseError, "Enclosed SRID #{srid_} is different from toplevel srid #{@cur_srid || '(unspecified)'}"
+            raise Error::ParseError, "Enclosed SRID #{srid_} is different from toplevel srid #{@cur_srid || '(unspecified)'}"
           end
         else
           @cur_has_z = has_z_
@@ -223,10 +223,10 @@ module RGeo
             @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => has_z_, :support_m_coordinate => has_m_)
           end
           if @cur_has_z && !@cur_factory.has_capability?(:z_coordinate)
-            raise Errors::ParseError, "Data has Z coordinates but the factory doesn't have z_coordinate capability"
+            raise Error::ParseError, "Data has Z coordinates but the factory doesn't have z_coordinate capability"
           end
           if @cur_has_m && !@cur_factory.has_capability?(:m_coordinate)
-            raise Errors::ParseError, "Data has M coordinates but the factory doesn't have m_coordinate capability"
+            raise Error::ParseError, "Data has M coordinates but the factory doesn't have m_coordinate capability"
           end
         end
         case type_code_
@@ -248,7 +248,7 @@ module RGeo
         when 7
           @cur_factory.collection((1.._get_integer(little_endian_)).map{ _parse_object(true) })
         else
-          raise Errors::ParseError, "Unknown type value: #{type_code_}."
+          raise Error::ParseError, "Unknown type value: #{type_code_}."
         end
       end
       
@@ -279,7 +279,7 @@ module RGeo
       
       def _get_byte  # :nodoc:
         if @_pos + 1 > @_len
-          raise Errors::ParseError, "Not enough bytes left to fulfill 1 byte"
+          raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
         end
         str_ = @_data[@_pos, 1]
         @_pos += 1
@@ -289,7 +289,7 @@ module RGeo
       
       def _get_integer(little_endian_)  # :nodoc:
         if @_pos + 4 > @_len
-          raise Errors::ParseError, "Not enough bytes left to fulfill 1 integer"
+          raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
         end
         str_ = @_data[@_pos, 4]
         @_pos += 4
@@ -300,7 +300,7 @@ module RGeo
       def _get_doubles(little_endian_, count_)  # :nodoc:
         len_ = 8 * count_
         if @_pos + len_ > @_len
-          raise Errors::ParseError, "Not enough bytes left to fulfill #{count_} doubles"
+          raise Error::ParseError, "Not enough bytes left to fulfill #{count_} doubles"
         end
         str_ = @_data[@_pos, len_]
         @_pos += len_

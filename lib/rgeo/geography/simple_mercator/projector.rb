@@ -64,27 +64,27 @@ module RGeo
         
         def unproject(geometry_)
           case geometry_
-          when Features::Point
-            dpr_ = ::RGeo::ImplHelpers::Math::DEGREES_PER_RADIAN
+          when Feature::Point
+            dpr_ = ::RGeo::ImplHelper::Math::DEGREES_PER_RADIAN
             radius_ = EQUATORIAL_RADIUS
             @geography_factory.point(geometry_.x / radius_ * dpr_,
               (2.0 * ::Math.atan(::Math.exp(geometry_.y / radius_)) - ::Math::PI / 2.0) * dpr_)
-          when Features::Line
+          when Feature::Line
             @geography_factory.line(unproject(geometry_.start_point), unproject(geometry_.end_point))
-          when Features::LinearRing
+          when Feature::LinearRing
             @geography_factory.linear_ring(geometry_.points.map{ |p_| unproject(p_) })
-          when Features::LineString
+          when Feature::LineString
             @geography_factory.line_string(geometry_.points.map{ |p_| unproject(p_) })
-          when Features::Polygon
+          when Feature::Polygon
             @geography_factory.polygon(unproject(geometry_.exterior_ring),
                                       geometry_.interior_rings.map{ |p_| unproject(p_) })
-          when Features::MultiPoint
+          when Feature::MultiPoint
             @geography_factory.multi_point(geometry_.map{ |p_| unproject(p_) })
-          when Features::MultiLineString
+          when Feature::MultiLineString
             @geography_factory.multi_line_string(geometry_.map{ |p_| unproject(p_) })
-          when Features::MultiPolygon
+          when Feature::MultiPolygon
             @geography_factory.multi_polygon(geometry_.map{ |p_| unproject(p_) })
-          when Features::GeometryCollection
+          when Feature::GeometryCollection
             @geography_factory.collection(geometry_.map{ |p_| unproject(p_) })
           else
             nil

@@ -58,12 +58,12 @@ module Arel
     
     class Dot
       alias :visit_Arel_Attributes_Geometry :visit_Arel_Attribute
-      alias :visit_RGeo_Features_Geometry :visit_String
+      alias :visit_RGeo_Feature_Geometry :visit_String
     end
     
     class ToSql
       alias :visit_Arel_Attributes_Geometry :visit_Arel_Attributes_Attribute
-      alias :visit_RGeo_Features_Geometry :visit_String
+      alias :visit_RGeo_Feature_Geometry :visit_String
     end
     
     VISITORS['postgis'] = ::Arel::Visitors::PostgreSQL

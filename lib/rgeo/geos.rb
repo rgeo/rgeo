@@ -66,7 +66,7 @@ end
 
 
 # Dependency files
-require 'rgeo/features'
+require 'rgeo/feature'
 
 # Implementation files
 require 'rgeo/geos/factory'

@@ -223,7 +223,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   RGeo_Globals* globals = ALLOC(RGeo_Globals);
   VALUE rgeo_module = rb_define_module("RGeo");
   globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
-  globals->features_module = rb_define_module_under(rgeo_module, "Features");
+  globals->features_module = rb_define_module_under(rgeo_module, "Feature");
   
   // Add C methods to the factory.
   VALUE geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));

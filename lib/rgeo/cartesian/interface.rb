@@ -70,9 +70,9 @@ module RGeo
       # thus always available, but it does not implement many of the more
       # advanced geometric operations. These limitations are:
       # 
-      # * Relational operators such as Features::Geometry#intersects? are
+      # * Relational operators such as Feature::Geometry#intersects? are
       #   not implemented for most types.
-      # * Relational constructors such as Features::Geometry#union are
+      # * Relational constructors such as Feature::Geometry#union are
       #   not implemented for most types.
       # * Buffer and convex hull calculations are not implemented for most
       #   types. Boundaries are available except for GeometryCollection.

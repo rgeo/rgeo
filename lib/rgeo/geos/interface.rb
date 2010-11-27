@@ -75,7 +75,7 @@ module RGeo
       #   If set to true, assertion checking on MultiPolygon is disabled.
       #   This may speed up creation of MultiPolygon objects, at the
       #   expense of not doing the proper checking for OGC MultiPolygon
-      #   compliance. See RGeo::Features::MultiPolygon for details on
+      #   compliance. See RGeo::Feature::MultiPolygon for details on
       #   the MultiPolygon assertions. Default is false.
       # <tt>:buffer_resolution</tt>::
       #   The resolution of buffers around geometries created by this

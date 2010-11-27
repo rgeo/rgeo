@@ -82,7 +82,8 @@ module RAKEFILE
   CLEAN_PATTERNS = [DOC_DIRECTORY, PKG_DIRECTORY, 'tmp', 'ext/**/Makefile*', 'ext/**/*.{o,class,log,dSYM}', "**/*.#{DLEXT}", '**/*.rbc', '**/*.jar']
   
   EXT_INFO = {
-    'geos_c_impl' => 'lib/rgeo/geos/geos_c_impl'
+    'geos_c_impl' => 'lib/rgeo/geos/geos_c_impl',
+    'proj4_c_impl' => 'lib/rgeo/coord_sys/proj4_c_impl',
   }
   
   GEMSPEC = ::Gem::Specification.new do |s_|

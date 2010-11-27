@@ -163,7 +163,7 @@ module RGeo
       #   srid and dimension settings in the input. The factory generator
       #   should understand the configuration options
       #   <tt>:support_z_coordinate</tt> and <tt>:support_m_coordinate</tt>.
-      #   See RGeo::Features::FactoryGenerator for more information.
+      #   See RGeo::Feature::FactoryGenerator for more information.
       #   If no generator is provided, the <tt>:default_factory</tt> is
       #   used.
       # <tt>:srid</tt>::
@@ -611,7 +611,7 @@ module RGeo
         unless @assume_inner_follows_outer
           geos_factory_ = Geos.factory
           unless geos_factory_
-            raise Errors::RGeoError, "GEOS is not available, but is required for correct interpretation of polygons in shapefiles."
+            raise Error::RGeoError, "GEOS is not available, but is required for correct interpretation of polygons in shapefiles."
           end
         end
         
@@ -763,7 +763,7 @@ module RGeo
         unless @assume_inner_follows_outer
           geos_factory_ = Geos.factory
           unless geos_factory_
-            raise Errors::RGeoError, "GEOS is not available, but is required for correct interpretation of polygons in shapefiles."
+            raise Error::RGeoError, "GEOS is not available, but is required for correct interpretation of polygons in shapefiles."
           end
         end
         

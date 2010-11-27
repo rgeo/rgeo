@@ -44,9 +44,9 @@ module RGeo
       class PointImpl  # :nodoc:
         
         
-        include ::RGeo::Features::Point
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicPointMethods
+        include ::RGeo::Feature::Point
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicPointMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         
         
@@ -58,7 +58,7 @@ module RGeo
         
         
         def _make_projection(projection_factory_)  # :nodoc:
-          rpd_ = ::RGeo::ImplHelpers::Math::RADIANS_PER_DEGREE
+          rpd_ = ::RGeo::ImplHelper::Math::RADIANS_PER_DEGREE
           mpr_ = EQUATORIAL_RADIUS
           projection_factory_.point(@x * rpd_ * mpr_,
             ::Math.log(::Math.tan(::Math::PI / 4.0 + @y * rpd_ / 2.0)) * mpr_)
@@ -66,7 +66,7 @@ module RGeo
         
         
         def scaling_factor
-          1.0 / ::Math.cos(::RGeo::ImplHelpers::Math::RADIANS_PER_DEGREE * @y)
+          1.0 / ::Math.cos(::RGeo::ImplHelper::Math::RADIANS_PER_DEGREE * @y)
         end
         
         
@@ -100,9 +100,9 @@ module RGeo
       class LineStringImpl  # :nodoc:
         
         
-        include ::RGeo::Features::LineString
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicLineStringMethods
+        include ::RGeo::Feature::LineString
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicLineStringMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::CurveMethods
@@ -120,10 +120,10 @@ module RGeo
       class LinearRingImpl  # :nodoc:
         
         
-        include ::RGeo::Features::Line
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicLineStringMethods
-        include ::RGeo::ImplHelpers::BasicLinearRingMethods
+        include ::RGeo::Feature::Line
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicLineStringMethods
+        include ::RGeo::ImplHelper::BasicLinearRingMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::CurveMethods
@@ -141,10 +141,10 @@ module RGeo
       class LineImpl  # :nodoc:
         
         
-        include ::RGeo::Features::Line
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicLineStringMethods
-        include ::RGeo::ImplHelpers::BasicLineMethods
+        include ::RGeo::Feature::Line
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicLineStringMethods
+        include ::RGeo::ImplHelper::BasicLineMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::CurveMethods
@@ -162,9 +162,9 @@ module RGeo
       class PolygonImpl  # :nodoc:
         
         
-        include ::RGeo::Features::Polygon
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicPolygonMethods
+        include ::RGeo::Feature::Polygon
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicPolygonMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NSurfaceMethods
         include ::RGeo::Geography::SimpleMercator::SurfaceMethods
@@ -173,7 +173,7 @@ module RGeo
         def _validate_geometry
           super
           unless projection
-            raise ::RGeo::Errors::InvalidGeometry, 'Polygon failed assertions'
+            raise ::RGeo::Error::InvalidGeometry, 'Polygon failed assertions'
           end
         end
         
@@ -190,9 +190,9 @@ module RGeo
       class GeometryCollectionImpl  # :nodoc:
         
         
-        include ::RGeo::Features::GeometryCollection
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
+        include ::RGeo::Feature::GeometryCollection
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
         
@@ -208,10 +208,10 @@ module RGeo
       class MultiPointImpl  # :nodoc:
         
         
-        include ::RGeo::Features::GeometryCollection
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
-        include ::RGeo::ImplHelpers::BasicMultiPointMethods
+        include ::RGeo::Feature::GeometryCollection
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelper::BasicMultiPointMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
         
@@ -227,10 +227,10 @@ module RGeo
       class MultiLineStringImpl  # :nodoc:
         
         
-        include ::RGeo::Features::GeometryCollection
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
-        include ::RGeo::ImplHelpers::BasicMultiLineStringMethods
+        include ::RGeo::Feature::GeometryCollection
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelper::BasicMultiLineStringMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NCurveMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
@@ -247,10 +247,10 @@ module RGeo
       class MultiPolygonImpl  # :nodoc:
         
         
-        include ::RGeo::Features::GeometryCollection
-        include ::RGeo::ImplHelpers::BasicGeometryMethods
-        include ::RGeo::ImplHelpers::BasicGeometryCollectionMethods
-        include ::RGeo::ImplHelpers::BasicMultiPolygonMethods
+        include ::RGeo::Feature::GeometryCollection
+        include ::RGeo::ImplHelper::BasicGeometryMethods
+        include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
+        include ::RGeo::ImplHelper::BasicMultiPolygonMethods
         include ::RGeo::Geography::SimpleMercator::GeometryMethods
         include ::RGeo::Geography::SimpleMercator::NSurfaceMethods
         include ::RGeo::Geography::SimpleMercator::GeometryCollectionMethods
@@ -259,7 +259,7 @@ module RGeo
         def _validate_geometry
           super
           unless projection
-            raise ::RGeo::Errors::InvalidGeometry, 'MultiPolygon failed assertions'
+            raise ::RGeo::Error::InvalidGeometry, 'MultiPolygon failed assertions'
           end
         end
         

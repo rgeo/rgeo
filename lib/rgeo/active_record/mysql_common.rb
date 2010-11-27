@@ -34,7 +34,7 @@
 ;
 
 
-require 'rgeo/features'
+require 'rgeo/feature'
 require 'rgeo/cartesian'
 require 'rgeo/wkrep'
 require 'rgeo/active_record/common'
@@ -52,7 +52,7 @@ module RGeo
         
         
         def quote(value_, column_=nil)
-          if ::RGeo::Features::Geometry.check_type(value_)
+          if ::RGeo::Feature::Geometry.check_type(value_)
             "GeomFromWKB(0x#{::RGeo::WKRep::WKBGenerator.new(:hex_format => true).generate(value_)},#{value_.srid})"
           else
             super
@@ -104,7 +104,7 @@ module RGeo
         
         
         def klass
-          type == :geometry ? ::RGeo::Features::Geometry : super
+          type == :geometry ? ::RGeo::Feature::Geometry : super
         end
         
         
@@ -122,14 +122,14 @@ module RGeo
         
         def extract_geometric_type(sql_type_)
           case sql_type_
-          when /^geometry$/i then ::RGeo::Features::Geometry
-          when /^point$/i then ::RGeo::Features::Point
-          when /^linestring$/i then ::RGeo::Features::LineString
-          when /^polygon$/i then ::RGeo::Features::Polygon
-          when /^geometrycollection$/i then ::RGeo::Features::GeometryCollection
-          when /^multipoint$/i then ::RGeo::Features::MultiPoint
-          when /^multilinestring$/i then ::RGeo::Features::MultiLineString
-          when /^multipolygon$/i then ::RGeo::Features::MultiPolygon
+          when /^geometry$/i then ::RGeo::Feature::Geometry
+          when /^point$/i then ::RGeo::Feature::Point
+          when /^linestring$/i then ::RGeo::Feature::LineString
+          when /^polygon$/i then ::RGeo::Feature::Polygon
+          when /^geometrycollection$/i then ::RGeo::Feature::GeometryCollection
+          when /^multipoint$/i then ::RGeo::Feature::MultiPoint
+          when /^multilinestring$/i then ::RGeo::Feature::MultiLineString
+          when /^multipolygon$/i then ::RGeo::Feature::MultiPolygon
           else nil
           end
         end
@@ -142,7 +142,7 @@ module RGeo
         
         def self.string_to_geometry(str_, ar_class_)
           case str_
-          when ::RGeo::Features::Geometry
+          when ::RGeo::Feature::Geometry
             str_
           when ::String
             marker_ = str_[4,1]

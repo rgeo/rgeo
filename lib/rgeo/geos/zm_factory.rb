@@ -43,7 +43,7 @@ module RGeo
     
     class ZMFactory
       
-      include Features::Factory::Instance
+      include Feature::Factory::Instance
       
       
       class << self
@@ -111,7 +111,7 @@ module RGeo
       alias_method :==, :eql?
       
       
-      # See ::RGeo::Features::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#has_capability?
       
       def has_capability?(name_)
         case name_
@@ -123,84 +123,84 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkt
+      # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
         WKRep::WKTParser.new(:default_factory => self).parse(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkb
+      # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
         WKRep::WKBParser.new(:default_factory => self).parse(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#point
+      # See ::RGeo::Feature::Factory#point
       
       def point(x_, y_, z_=0, m_=0)
         ZMPointImpl.create(self, @zfactory.point(x_, y_, z_), @mfactory.point(x_, y_, m_))
       end
       
       
-      # See ::RGeo::Features::Factory#line_string
+      # See ::RGeo::Feature::Factory#line_string
       
       def line_string(points_)
         ZMLineStringImpl.create(self, @zfactory.line_string(points_), @mfactory.line_string(points_))
       end
       
       
-      # See ::RGeo::Features::Factory#line
+      # See ::RGeo::Feature::Factory#line
       
       def line(start_, end_)
         ZMLineStringImpl.create(self, @zfactory.line(start_, end_), @mfactory.line(start_, end_))
       end
       
       
-      # See ::RGeo::Features::Factory#linear_ring
+      # See ::RGeo::Feature::Factory#linear_ring
       
       def linear_ring(points_)
         ZMLineStringImpl.create(self, @zfactory.linear_ring(points_), @mfactory.linear_ring(points_))
       end
       
       
-      # See ::RGeo::Features::Factory#polygon
+      # See ::RGeo::Feature::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
         ZMPolygonImpl.create(self, @zfactory.polygon(outer_ring_, inner_rings_), @mfactory.polygon(outer_ring_, inner_rings_))
       end
       
       
-      # See ::RGeo::Features::Factory#collection
+      # See ::RGeo::Feature::Factory#collection
       
       def collection(elems_)
         ZMGeometryCollectionImpl.create(self, @zfactory.collection(elems_), @mfactory.collection(elems_))
       end
       
       
-      # See ::RGeo::Features::Factory#multi_point
+      # See ::RGeo::Feature::Factory#multi_point
       
       def multi_point(elems_)
         ZMGeometryCollectionImpl.create(self, @zfactory.multi_point(elems_), @mfactory.multi_point(elems_))
       end
       
       
-      # See ::RGeo::Features::Factory#multi_line_string
+      # See ::RGeo::Feature::Factory#multi_line_string
       
       def multi_line_string(elems_)
         ZMMultiLineStringImpl.create(self, @zfactory.multi_line_string(elems_), @mfactory.multi_line_string(elems_))
       end
       
       
-      # See ::RGeo::Features::Factory#multi_polygon
+      # See ::RGeo::Feature::Factory#multi_polygon
       
       def multi_polygon(elems_)
         ZMMultiPolygonImpl.create(self, @zfactory.multi_polygon(elems_), @mfactory.multi_polygon(elems_))
       end
       
       
-      # See ::RGeo::Features::Factory#override_cast
+      # See ::RGeo::Feature::Factory#override_cast
       
       def override_cast(original_, ntype_, flags_)
         return nil unless Geos.supported?
@@ -221,7 +221,7 @@ module RGeo
           end
           # LineString conversion optimization.
           if (original_.factory != self || ntype_ != type_) &&
-              type_.subtype_of?(Features::LineString) && ntype_.subtype_of?(Features:LineString)
+              type_.subtype_of?(Feature::LineString) && ntype_.subtype_of?(Feature::LineString)
           then
             klass_ = Factory::IMPL_CLASSES[ntype_]
             zresult_ = klass_._copy_from(@zfactory, original_.z_geometry)

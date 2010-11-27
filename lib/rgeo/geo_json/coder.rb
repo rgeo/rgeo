@@ -40,7 +40,7 @@ module RGeo
     
     
     # This object encapsulates encoding and decoding settings (principally
-    # the RGeo::Features::Factory and the RGeo::GeoJSON::EntityFactory to
+    # the RGeo::Feature::Factory and the RGeo::GeoJSON::EntityFactory to
     # be used) so that you can encode and decode without specifying those
     # settings every time.
     
@@ -95,7 +95,7 @@ module RGeo
           if @@json_available
             @json_parser = ::Proc.new{ |str_| ::JSON.parse(str_) }
           else
-            raise Errors::RGeoError, "JSON library is not available. You may need to install the 'json' gem."
+            raise Error::RGeoError, "JSON library is not available. You may need to install the 'json' gem."
           end
         when :yajl
           if @@yajl_available.nil?
@@ -109,7 +109,7 @@ module RGeo
           if @@yajl_available
             @json_parser = ::Proc.new{ |str_| ::Yajl::Parser.new.parse(str_) }
           else
-            raise Errors::RGeoError, "Yajl library is not available. You may need to install the 'yajl' gem."
+            raise Error::RGeoError, "Yajl library is not available. You may need to install the 'yajl' gem."
           end
         when :active_support
           if @@activesupport_available.nil?
@@ -123,7 +123,7 @@ module RGeo
           if @@activesupport_available
             @json_parser = ::Proc.new{ |str_| ::ActiveSupport::JSON.decode(str_) }
           else
-            raise Errors::RGeoError, "ActiveSupport::JSON library is not available. You may need to install the 'activesupport' gem."
+            raise Error::RGeoError, "ActiveSupport::JSON library is not available. You may need to install the 'activesupport' gem."
           end
         when ::Proc, nil
           # Leave as is
@@ -137,7 +137,7 @@ module RGeo
       
       
       # Encode the given object as GeoJSON. The object may be one of the
-      # geometry objects specified in RGeo::Features, or an appropriate
+      # geometry objects specified in RGeo::Feature, or an appropriate
       # GeoJSON wrapper entity supported by this coder's entity factory.
       # 
       # This method returns a JSON object (i.e. a hash). In order to
@@ -193,7 +193,7 @@ module RGeo
       end
       
       
-      # Returns the RGeo::Features::Factory used to generate geometry objects.
+      # Returns the RGeo::Feature::Factory used to generate geometry objects.
       
       def geo_factory
         @geo_factory
@@ -237,37 +237,37 @@ module RGeo
           end
         end
         case object_
-        when Features::Point
+        when ::RGeo::Feature::Point
           {
             'type' => 'Point',
             'coordinates' => point_encoder_.call(object_),
           }
-        when Features::LineString
+        when ::RGeo::Feature::LineString
           {
             'type' => 'LineString',
             'coordinates' => object_.points.map(&point_encoder_),
           }
-        when Features::Polygon
+        when ::RGeo::Feature::Polygon
           {
             'type' => 'Polygon',
             'coordinates' => [object_.exterior_ring.points.map(&point_encoder_)] + object_.interior_rings.map{ |r_| r_.points.map(&point_encoder_) }
           }
-        when Features::MultiPoint
+        when ::RGeo::Feature::MultiPoint
           {
             'type' => 'MultiPoint',
             'coordinates' => object_.map(&point_encoder_),
           }
-        when Features::MultiLineString
+        when ::RGeo::Feature::MultiLineString
           {
             'type' => 'MultiLineString',
             'coordinates' => object_.map{ |ls_| ls_.points.map(&point_encoder_) },
           }
-        when Features::MultiPolygon
+        when ::RGeo::Feature::MultiPolygon
           {
             'type' => 'MultiPolygon',
             'coordinates' => object_.map{ |poly_| [poly_.exterior_ring.points.map(&point_encoder_)] + poly_.interior_rings.map{ |r_| r_.points.map(&point_encoder_) } },
           }
-        when Features::GeometryCollection
+        when ::RGeo::Feature::GeometryCollection
           {
             'type' => 'GeometryCollection',
             'geometries' => object_.map{ |geom_| _encode_geometry(geom_, point_encoder_) },

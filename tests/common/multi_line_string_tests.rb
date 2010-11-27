@@ -61,8 +61,8 @@ module RGeo
         def test_creation_simple
           geom_ = @factory.multi_line_string([@linestring1, @linestring2])
           assert_not_nil(geom_)
-          assert(::RGeo::Features::MultiLineString === geom_)
-          assert_equal(::RGeo::Features::MultiLineString, geom_.geometry_type)
+          assert(::RGeo::Feature::MultiLineString === geom_)
+          assert_equal(::RGeo::Feature::MultiLineString, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
           assert(@linestring1.eql?(geom_[0]))
           assert(@linestring2.eql?(geom_[1]))
@@ -72,8 +72,8 @@ module RGeo
         def test_creation_empty
           geom_ = @factory.multi_line_string([])
           assert_not_nil(geom_)
-          assert(::RGeo::Features::MultiLineString === geom_)
-          assert_equal(::RGeo::Features::MultiLineString, geom_.geometry_type)
+          assert(::RGeo::Feature::MultiLineString === geom_)
+          assert_equal(::RGeo::Feature::MultiLineString, geom_.geometry_type)
           assert_equal(0, geom_.num_geometries)
           assert_equal([], geom_.to_a)
         end
@@ -82,8 +82,8 @@ module RGeo
         def test_creation_save_types
           geom_ = @factory.multi_line_string([@linestring1, @linearring1, @line1])
           assert_not_nil(geom_)
-          assert(::RGeo::Features::MultiLineString === geom_)
-          assert_equal(::RGeo::Features::MultiLineString, geom_.geometry_type)
+          assert(::RGeo::Feature::MultiLineString === geom_)
+          assert_equal(::RGeo::Feature::MultiLineString, geom_.geometry_type)
           assert_equal(3, geom_.num_geometries)
           assert(geom_[1].eql?(@linearring1))
           assert(geom_[2].eql?(@line1))
@@ -95,7 +95,7 @@ module RGeo
           mls2_ = @factory.multi_line_string([@linearring1])
           geom_ = @factory.multi_line_string([@linestring1, @linestring2, mls1_, mls2_])
           assert_not_nil(geom_)
-          assert_equal(::RGeo::Features::MultiLineString, geom_.geometry_type)
+          assert_equal(::RGeo::Feature::MultiLineString, geom_.geometry_type)
           assert_equal(4, geom_.num_geometries)
           assert(@linestring1.eql?(geom_[0]))
           assert(@linestring2.eql?(geom_[1]))
@@ -137,7 +137,7 @@ module RGeo
         
         def test_wkt_creation_empty
           parsed_geom_ = @factory.parse_wkt('MULTILINESTRING EMPTY')
-          assert_equal(::RGeo::Features::MultiLineString, parsed_geom_.geometry_type)
+          assert_equal(::RGeo::Feature::MultiLineString, parsed_geom_.geometry_type)
           assert_equal(0, parsed_geom_.num_geometries)
           assert_equal([], parsed_geom_.to_a)
         end
@@ -147,7 +147,7 @@ module RGeo
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
           geom2_ = geom1_.clone
           assert(geom1_.eql?(geom2_))
-          assert_equal(::RGeo::Features::MultiLineString, geom2_.geometry_type)
+          assert_equal(::RGeo::Feature::MultiLineString, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
           assert(@linestring1.eql?(geom2_[0]))
           assert(@linestring2.eql?(geom2_[1]))
@@ -156,17 +156,17 @@ module RGeo
         
         def test_type_check
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
-          assert(::RGeo::Features::Geometry.check_type(geom1_))
-          assert(!::RGeo::Features::LineString.check_type(geom1_))
-          assert(::RGeo::Features::GeometryCollection.check_type(geom1_))
-          assert(!::RGeo::Features::MultiPoint.check_type(geom1_))
-          assert(::RGeo::Features::MultiLineString.check_type(geom1_))
+          assert(::RGeo::Feature::Geometry.check_type(geom1_))
+          assert(!::RGeo::Feature::LineString.check_type(geom1_))
+          assert(::RGeo::Feature::GeometryCollection.check_type(geom1_))
+          assert(!::RGeo::Feature::MultiPoint.check_type(geom1_))
+          assert(::RGeo::Feature::MultiLineString.check_type(geom1_))
           geom2_ = @factory.multi_line_string([])
-          assert(::RGeo::Features::Geometry.check_type(geom2_))
-          assert(!::RGeo::Features::LineString.check_type(geom2_))
-          assert(::RGeo::Features::GeometryCollection.check_type(geom2_))
-          assert(!::RGeo::Features::MultiPoint.check_type(geom2_))
-          assert(::RGeo::Features::MultiLineString.check_type(geom2_))
+          assert(::RGeo::Feature::Geometry.check_type(geom2_))
+          assert(!::RGeo::Feature::LineString.check_type(geom2_))
+          assert(::RGeo::Feature::GeometryCollection.check_type(geom2_))
+          assert(!::RGeo::Feature::MultiPoint.check_type(geom2_))
+          assert(::RGeo::Feature::MultiLineString.check_type(geom2_))
         end
         
         

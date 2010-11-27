@@ -130,14 +130,14 @@ module RGeo
             assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
             rec_ = file_.next
             assert_equal(0, rec_.index)
-            assert_equal(::RGeo::Features::Point, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::Point, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.x)
             assert_equal(2, rec_.geometry.y)
             assert_equal(3, rec_.geometry.z) if has_z_
             assert_equal(4, rec_.geometry.m) if has_m_
             rec_ = file_.next
             assert_equal(1, rec_.index)
-            assert_equal(::RGeo::Features::Point, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::Point, rec_.geometry.geometry_type)
             assert_equal(10, rec_.geometry.x)
             assert_equal(20, rec_.geometry.y)
             assert_equal(30, rec_.geometry.z) if has_z_
@@ -169,7 +169,7 @@ module RGeo
             assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
             assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPoint, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPoint, rec_.geometry.geometry_type)
             assert_equal(4, rec_.geometry.num_geometries)
             assert_equal(1.15, rec_.geometry[0].x)
             assert_equal(2.25, rec_.geometry[0].y)
@@ -180,10 +180,10 @@ module RGeo
             assert_equal(6.35, rec_.geometry[3].z) if has_z_
             assert_equal(7.45, rec_.geometry[3].m) if has_m_
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPoint, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPoint, rec_.geometry.geometry_type)
             assert_equal(4, rec_.geometry.num_geometries)
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPoint, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPoint, rec_.geometry.geometry_type)
             assert_equal(4, rec_.geometry.num_geometries)
             assert_equal(21.15, rec_.geometry[0].x)
             assert_equal(22.25, rec_.geometry[0].y)
@@ -220,7 +220,7 @@ module RGeo
             assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
             assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiLineString, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiLineString, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(5, rec_.geometry[0].num_points)
             assert_equal(1, rec_.geometry[0].point_n(0).x)
@@ -240,10 +240,10 @@ module RGeo
             assert_equal(7.35, rec_.geometry[0].point_n(4).z) if has_z_
             assert_equal(8.45, rec_.geometry[0].point_n(4).m) if has_m_
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiLineString, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiLineString, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiLineString, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiLineString, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(5, rec_.geometry[0].num_points)
             assert_equal(1, rec_.geometry[0].point_n(0).x)
@@ -263,7 +263,7 @@ module RGeo
             assert_equal(27.35, rec_.geometry[0].point_n(4).z) if has_z_
             assert_equal(28.45, rec_.geometry[0].point_n(4).m) if has_m_
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiLineString, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiLineString, rec_.geometry.geometry_type)
             assert_equal(3, rec_.geometry.num_geometries)
             assert_equal(5, rec_.geometry[0].num_points)
             assert_equal(0, rec_.geometry[0].point_n(0).x)
@@ -330,7 +330,7 @@ module RGeo
             assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
             assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPolygon, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPolygon, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(0, rec_.geometry[0].num_interior_rings)
             assert_equal(5, rec_.geometry[0].exterior_ring.num_points)
@@ -351,10 +351,10 @@ module RGeo
             assert_equal(7.35, rec_.geometry[0].exterior_ring.point_n(4).z) if has_z_
             assert_equal(8.45, rec_.geometry[0].exterior_ring.point_n(4).m) if has_m_
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPolygon, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPolygon, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPolygon, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPolygon, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(0, rec_.geometry[0].num_interior_rings)
             assert_equal(5, rec_.geometry[0].exterior_ring.num_points)
@@ -375,7 +375,7 @@ module RGeo
             assert_equal(27.35, rec_.geometry[0].exterior_ring.point_n(4).z) if has_z_
             assert_equal(28.45, rec_.geometry[0].exterior_ring.point_n(4).m) if has_m_
             rec_ = file_.next
-            assert_equal(::RGeo::Features::MultiPolygon, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::MultiPolygon, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(2, rec_.geometry[0].num_interior_rings)
             assert_equal(5, rec_.geometry[0].exterior_ring.num_points)
@@ -446,7 +446,7 @@ module RGeo
             # disabled this test:
             # assert_equal(false, file_.factory.has_capability?(:m_coordinate))
             rec_ = file_.next
-            assert_equal(::RGeo::Features::GeometryCollection, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::GeometryCollection, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(0, rec_.geometry[0].num_interior_rings)
             assert_equal(5, rec_.geometry[0].exterior_ring.num_points)
@@ -463,10 +463,10 @@ module RGeo
             assert_equal(1, rec_.geometry[0].exterior_ring.point_n(4).y)
             assert_equal(7.35, rec_.geometry[0].exterior_ring.point_n(4).z)
             rec_ = file_.next
-            assert_equal(::RGeo::Features::GeometryCollection, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::GeometryCollection, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             rec_ = file_.next
-            assert_equal(::RGeo::Features::GeometryCollection, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::GeometryCollection, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(0, rec_.geometry[0].num_interior_rings)
             assert_equal(5, rec_.geometry[0].exterior_ring.num_points)
@@ -483,7 +483,7 @@ module RGeo
             assert_equal(7, rec_.geometry[0].exterior_ring.point_n(4).y)
             assert_equal(27.35, rec_.geometry[0].exterior_ring.point_n(4).z)
             rec_ = file_.next
-            assert_equal(::RGeo::Features::GeometryCollection, rec_.geometry.geometry_type)
+            assert_equal(::RGeo::Feature::GeometryCollection, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
             assert_equal(2, rec_.geometry[0].num_interior_rings)
             assert_equal(5, rec_.geometry[0].exterior_ring.num_points)

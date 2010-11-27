@@ -70,7 +70,7 @@ end
 
 
 # Dependency files
-require 'rgeo/features'
+require 'rgeo/feature'
 
 # Implementation files
 require 'rgeo/wkrep/wkt_parser'

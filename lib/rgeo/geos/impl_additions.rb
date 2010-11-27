@@ -23,8 +23,7 @@
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 # ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -41,7 +40,7 @@ module RGeo
     
     class GeometryImpl  # :nodoc:
       
-      include ::RGeo::Features::Type::Instance
+      include ::RGeo::Feature::Type::Instance
       
       def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
@@ -55,14 +54,14 @@ module RGeo
       
       # :stopdoc:
       IMPL_CLASSES = {
-        Features::Point => PointImpl,
-        Features::LineString => LineStringImpl,
-        Features::LinearRing => LinearRingImpl,
-        Features::Line => LineImpl,
-        Features::GeometryCollection => GeometryCollectionImpl,
-        Features::MultiPoint => MultiPointImpl,
-        Features::MultiLineString => MultiLineStringImpl,
-        Features::MultiPolygon => MultiPolygonImpl,
+        Feature::Point => PointImpl,
+        Feature::LineString => LineStringImpl,
+        Feature::LinearRing => LinearRingImpl,
+        Feature::Line => LineImpl,
+        Feature::GeometryCollection => GeometryCollectionImpl,
+        Feature::MultiPoint => MultiPointImpl,
+        Feature::MultiLineString => MultiLineStringImpl,
+        Feature::MultiPolygon => MultiPolygonImpl,
       }
       # :startdoc:
       

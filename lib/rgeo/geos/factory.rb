@@ -39,12 +39,12 @@ module RGeo
   module Geos
     
     
-    # This the GEOS implementation of ::RGeo::Features::Factory.
+    # This the GEOS implementation of ::RGeo::Feature::Factory.
     
     class Factory
       
       
-      include Features::Factory::Instance
+      include Feature::Factory::Instance
       
       
       class << self
@@ -62,11 +62,16 @@ module RGeo
           flags_ |= 2 if opts_[:support_z_coordinate]
           flags_ |= 4 if opts_[:support_m_coordinate]
           if flags_ & 6 == 6
-            raise Errors::UnsupportedCapability, "GEOS cannot support both Z and M coordinates at the same time."
+            raise Error::UnsupportedCapability, "GEOS cannot support both Z and M coordinates at the same time."
           end
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1
+          proj4_ = opts_[:proj4]
+          if proj4_.kind_of?(::String)
+            proj4_ = CoordSys::Proj4.create(proj4_)
+          end
           result_ = _create(flags_, opts_[:srid].to_i, buffer_resolution_)
+          result_.instance_variable_set(:@proj4, proj4_)
           result_
         end
         alias_method :new, :create
@@ -110,7 +115,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#has_capability?
       
       def has_capability?(name_)
         case name_
@@ -118,27 +123,29 @@ module RGeo
           _flags & 0x2 != 0
         when :m_coordinate
           _flags & 0x4 != 0
+        when :proj4
+          !@proj4.nil?
         else
           nil
         end
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkt
+      # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
         _parse_wkt_impl(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkb
+      # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
         _parse_wkb_impl(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#point
+      # See ::RGeo::Feature::Factory#point
       
       def point(x_, y_, *extra_)
         if extra_.length > (_flags & 6 == 0 ? 0 : 1)
@@ -149,7 +156,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#line_string
+      # See ::RGeo::Feature::Factory#line_string
       
       def line_string(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
@@ -157,14 +164,14 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#line
+      # See ::RGeo::Feature::Factory#line
       
       def line(start_, end_)
         LineImpl.create(self, start_, end_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#linear_ring
+      # See ::RGeo::Feature::Factory#linear_ring
       
       def linear_ring(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
@@ -172,7 +179,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#polygon
+      # See ::RGeo::Feature::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
         inner_rings_ = inner_rings_.to_a unless inner_rings_.kind_of?(::Array)
@@ -180,7 +187,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#collection
+      # See ::RGeo::Feature::Factory#collection
       
       def collection(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
@@ -188,7 +195,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#multi_point
+      # See ::RGeo::Feature::Factory#multi_point
       
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
@@ -196,7 +203,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#multi_line_string
+      # See ::RGeo::Feature::Factory#multi_line_string
       
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
@@ -204,7 +211,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#multi_polygon
+      # See ::RGeo::Feature::Factory#multi_polygon
       
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
@@ -212,7 +219,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#override_cast
+      # See ::RGeo::Feature::Factory#override_cast
       
       def override_cast(original_, ntype_, flags_)
         return nil unless Geos.supported?
@@ -234,7 +241,7 @@ module RGeo
           # LineString conversion optimization.
           if (original_.factory != self || ntype_ != type_) &&
               original_.factory._flags & 0x6 == _flags & 0x6 &&
-              type_.subtype_of?(Features::LineString) && ntype_.subtype_of?(Features::LineString)
+              type_.subtype_of?(Feature::LineString) && ntype_.subtype_of?(Feature::LineString)
           then
             return IMPL_CLASSES[ntype_]._copy_from(self, original_)
           end
@@ -242,12 +249,19 @@ module RGeo
           # Optimization for just removing a coordinate from an otherwise
           # compatible factory
           if _flags & 0x6 == 0x2 && self == original_.factory.z_factory
-            return Features.cast(original_.z_geometry, ntype_, flags_)
+            return Feature.cast(original_.z_geometry, ntype_, flags_)
           elsif _flags & 0x6 == 0x4 && self == original_.factory.m_factory
-            return Features.cast(original_.m_geometry, ntype_, flags_)
+            return Feature.cast(original_.m_geometry, ntype_, flags_)
           end
         end
         false
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#proj4
+      
+      def proj4
+        @proj4
       end
       
       

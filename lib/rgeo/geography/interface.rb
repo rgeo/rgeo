@@ -54,9 +54,9 @@ module RGeo
       # This implementation does not implement many of the more advanced
       # geometric operations. In particular:
       # 
-      # * Relational operators such as Features::Geometry#intersects? are
+      # * Relational operators such as Feature::Geometry#intersects? are
       #   not implemented for most types.
-      # * Relational constructors such as Features::Geometry#union are
+      # * Relational constructors such as Feature::Geometry#union are
       #   not implemented for most types.
       # * Buffer, convex hull, and envelope calculations are not
       #   implemented for most types. Boundaries are available except for
@@ -100,7 +100,7 @@ module RGeo
       #   If set to true, assertion checking on MultiPolygon is disabled.
       #   This may speed up creation of MultiPolygon objects, at the
       #   expense of not doing the proper checking for OGC MultiPolygon
-      #   compliance. See RGeo::Features::MultiPolygon for details on
+      #   compliance. See RGeo::Feature::MultiPolygon for details on
       #   the MultiPolygon assertions. Default is false.
       # <tt>:buffer_resolution</tt>::
       #   The resolution of buffers around geometries created by this
@@ -182,7 +182,7 @@ module RGeo
       #   If set to true, assertion checking on MultiPolygon is disabled.
       #   This may speed up creation of MultiPolygon objects, at the
       #   expense of not doing the proper checking for OGC MultiPolygon
-      #   compliance. See RGeo::Features::MultiPolygon for details on
+      #   compliance. See RGeo::Feature::MultiPolygon for details on
       #   the MultiPolygon assertions. Default is false.
       # <tt>:buffer_resolution</tt>::
       #   The resolution of buffers around geometries created by this

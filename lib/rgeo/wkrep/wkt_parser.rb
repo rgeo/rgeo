@@ -64,7 +64,7 @@ module RGeo
     #   srid and dimension settings in the input. The factory generator
     #   should understand the configuration options <tt>:srid</tt>,
     #   <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
-    #   See RGeo::Features::FactoryGenerator for more information.
+    #   See RGeo::Feature::FactoryGenerator for more information.
     #   If no generator is provided, the <tt>:default_factory</tt> is
     #   used.
     # <tt>:support_ewkt</tt>::
@@ -192,7 +192,7 @@ module RGeo
           _start_scanner(str_)
           obj_ = _parse_type_tag(false)
           if @cur_token && !@ignore_extra_tokens
-            raise Errors::ParseError, "Extra tokens beginning with #{@cur_token.inspect}."
+            raise Error::ParseError, "Extra tokens beginning with #{@cur_token.inspect}."
           end
         ensure
           _clean_scanner
@@ -203,10 +203,10 @@ module RGeo
       
       def _check_factory_support  # :nodoc:
         if @cur_expect_z && !@cur_factory_support_z
-          raise Errors::ParseError, "Geometry calls for Z coordinate but factory doesn't support it."
+          raise Error::ParseError, "Geometry calls for Z coordinate but factory doesn't support it."
         end
         if @cur_expect_m && !@cur_factory_support_m
-          raise Errors::ParseError, "Geometry calls for M coordinate but factory doesn't support it."
+          raise Error::ParseError, "Geometry calls for M coordinate but factory doesn't support it."
         end
       end
       
@@ -245,13 +245,13 @@ module RGeo
           if @cur_expect_z.nil?
             @cur_expect_z = expect_z_
           elsif expect_z_ != @cur_expect_z
-            raise Errors::ParseError, "Surrounding collection has Z but contained geometry doesn't."
+            raise Error::ParseError, "Surrounding collection has Z but contained geometry doesn't."
           end
           expect_m_ = zm_[-1,1] == 'm' ? true : false
           if @cur_expect_m.nil?
             @cur_expect_m = expect_m_
           else expect_m_ != @cur_expect_m
-            raise Errors::ParseError, "Surrounding collection has M but contained geometry doesn't."
+            raise Error::ParseError, "Surrounding collection has M but contained geometry doesn't."
           end
           if creating_expectation_
             if @cur_factory
@@ -277,7 +277,7 @@ module RGeo
         when 'multipolygon'
           _parse_multi_polygon
         else
-          raise Errors::ParseError, "Unknown type tag: #{type_.inspect}."
+          raise Error::ParseError, "Unknown type tag: #{type_.inspect}."
         end
       end
       
@@ -301,7 +301,7 @@ module RGeo
           @cur_expect_m = num_extras_ > 0 && (!@cur_factory || @cur_factory_support_m) ? true : false
           num_extras_ -= 1 if @cur_expect_m
           if num_extras_ > 0
-            raise Errors::ParseError, "Found #{extra_.size+2} coordinates, which is too many for this factory."
+            raise Error::ParseError, "Found #{extra_.size+2} coordinates, which is too many for this factory."
           end
           _ensure_factory
         else
@@ -461,7 +461,7 @@ module RGeo
       
       def _expect_token_type(type_)  # :nodoc:
         unless type_ === @cur_token
-          raise Errors::ParseError, "#{type_.inspect} expected but #{@cur_token.inspect} found."
+          raise Error::ParseError, "#{type_.inspect} expected but #{@cur_token.inspect} found."
         end
       end
       
@@ -481,7 +481,7 @@ module RGeo
           when ']',')'
             @cur_token = :end
           else
-            raise Errors::ParseError, "Bad token: #{token_.inspect}"
+            raise Error::ParseError, "Bad token: #{token_.inspect}"
           end
         else
           @cur_token = nil

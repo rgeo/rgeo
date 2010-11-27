@@ -200,7 +200,7 @@ module RGeo
       
       
       # Returns the southwest corner of the rectangle in _unprojected_
-      # (lat/lng) space, as a Features::Point object.
+      # (lat/lng) space, as a Feature::Point object.
       
       def sw_point
         @sw ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_min))
@@ -208,7 +208,7 @@ module RGeo
       
       
       # Returns the southeast corner of the rectangle in _unprojected_
-      # (lat/lng) space, as a Features::Point object.
+      # (lat/lng) space, as a Feature::Point object.
       
       def se_point
         @se ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_min))
@@ -216,7 +216,7 @@ module RGeo
       
       
       # Returns the northwest corner of the rectangle in _unprojected_
-      # (lat/lng) space, as a Features::Point object.
+      # (lat/lng) space, as a Feature::Point object.
       
       def nw_point
         @nw ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_max))
@@ -224,7 +224,7 @@ module RGeo
       
       
       # Returns the northeast corner of the rectangle in _unprojected_
-      # (lat/lng) space, as a Features::Point object.
+      # (lat/lng) space, as a Feature::Point object.
       
       def ne_point
         @ne ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_max))
@@ -232,7 +232,7 @@ module RGeo
       
       
       # Returns the center of the rectangle in _unprojected_
-      # (lat/lng) space, as a Features::Point object.
+      # (lat/lng) space, as a Feature::Point object.
       
       def center_point
         @center ||= @factory.unproject(@factory.projection_factory.point(*center_xy))
@@ -240,7 +240,7 @@ module RGeo
       
       
       # Returns a random point the rectangle in _unprojected_
-      # (lat/lng) space, as a Features::Point object.
+      # (lat/lng) space, as a Feature::Point object.
       
       def random_point
         y_ = @y_min + (@y_max - @y_min) * rand
@@ -256,7 +256,7 @@ module RGeo
       
       
       # Returns true if the rectangle contains the given point, which
-      # must be a Features::Point in _unprojected_ (lat/lng) space.
+      # must be a Feature::Point in _unprojected_ (lat/lng) space.
       
       def contains_point?(point_)
         projection_ = @factory.project(point_)

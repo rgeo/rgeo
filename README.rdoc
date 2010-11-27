@@ -47,6 +47,10 @@ RGeo has the following prerequisites:
   available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
   http://geos.osgeo.org/
+* Proj 4.7.0 or later is also recommended. This is needed if you want
+  to translate coordinates between geographic projections. It also may
+  be available via your operating system's package manager, or from
+  http://trac.osgeo.org/proj/
 * If you are using the GeoJSON tools under Ruby 1.8.7, you should
   install the "json" gem. Ruby 1.9 has JSON support in its standard
   library and does not require the gem.
@@ -81,8 +85,6 @@ the switches interpreted by the gem command. For example:
 
 This is our planned feature roadmap, in rough priority order.
 
-* Projection subsystem, and support for arbitrary projections in the
-  geography module, utilizing proj4.
 * SpatiaLite and PostGIS adapters for ActiveRecord. (We already have an
   adapter for MySQL Spatial.)
 * Integration with certain third-party services such as SimpleGeo.

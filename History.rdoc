@@ -1,3 +1,10 @@
+=== 0.1.20 / 2010-11-30
+
+* API CHANGE: Renamed RGeo::Features to RGeo::Feature, RGeo::Errors to RGeo::Error, and RGeo::ImplHelpers to RGeo::ImplHelper. The old pluralized names are aliased to the new names for now for backward compatibility, though they are deprecated and probably will be removed by 1.0.
+* Added RGeo::CoordSys::Proj4 representing a proj4 coordinate system. It uses the proj4 library.
+* Added Factory#proj4 as an optional method indicated by the :proj4 capability.
+* You can now cause casting to transform between projections by specifying the :project parameter.
+
 === 0.1.19 / 2010-11-23
 
 * The GEOS implementation now supports ZM (4-dimensional data), via a wrapper since the underlying GEOS library doesn't support 4d data natively.

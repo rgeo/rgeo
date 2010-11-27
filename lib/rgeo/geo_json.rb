@@ -52,7 +52,7 @@ end
 
 
 # Dependency files
-require 'rgeo/features'
+require 'rgeo/feature'
 
 # Implementation files
 require 'rgeo/geo_json/entities'

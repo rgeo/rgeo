@@ -85,7 +85,7 @@ module RGeo
         def latlon
           lat_rad_ = ::Math.asin(@z)
           lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
-          rpd_ = ::RGeo::ImplHelpers::Math::RADIANS_PER_DEGREE
+          rpd_ = ::RGeo::ImplHelper::Math::RADIANS_PER_DEGREE
           [lat_rad_ / rpd_, lon_rad_ / rpd_]
         end
         
@@ -120,7 +120,7 @@ module RGeo
         
         
         def self.from_latlon(lat_, lon_)
-          rpd_ = ::RGeo::ImplHelpers::Math::RADIANS_PER_DEGREE
+          rpd_ = ::RGeo::ImplHelper::Math::RADIANS_PER_DEGREE
           lat_rad_ = rpd_ * lat_
           lon_rad_ = rpd_ * lon_
           z_ = ::Math.sin(lat_rad_)

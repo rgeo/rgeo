@@ -68,7 +68,7 @@ module RGeo
         
         def test_4d_point
           point_ = @factory.point(1, 2, 3, 4)
-          assert_equal(Features::Point, point_.geometry_type)
+          assert_equal(Feature::Point, point_.geometry_type)
           assert_equal(3, point_.z)
           assert_equal(4, point_.m)
           assert_equal(3, point_.z_geometry.z)

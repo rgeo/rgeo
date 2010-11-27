@@ -54,15 +54,14 @@ module RGeo
 end
 
 
-# Dependency source files.
-paths_ = [
-  'features',
-  'wkrep',
-  'impl_helpers',
-  'geography/simple_spherical/calculations',
-  'geography/simple_spherical/feature_methods',
-  'geography/simple_spherical/feature_classes',
-  'geography/factory',
-  'geography/projected_window',
-]
-paths_.each{ |path_| require "rgeo/#{path_}" }
+# Dependency files
+require 'rgeo/feature'
+require 'rgeo/wkrep'
+require 'rgeo/impl_helper'
+
+# Implementation files
+require 'rgeo/geography/simple_spherical/calculations'
+require 'rgeo/geography/simple_spherical/feature_methods'
+require 'rgeo/geography/simple_spherical/feature_classes'
+require 'rgeo/geography/factory'
+require 'rgeo/geography/projected_window'

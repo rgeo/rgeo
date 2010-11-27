@@ -38,11 +38,12 @@
 require 'rgeo'
 
 # Implementation files
-require 'rgeo/errors'
-require 'rgeo/features'
-require 'rgeo/impl_helpers'
+require 'rgeo/error'
+require 'rgeo/feature'
+require 'rgeo/impl_helper'
 require 'rgeo/wkrep'
 require 'rgeo/geos'
 require 'rgeo/cartesian'
 require 'rgeo/geography/all'
 require 'rgeo/geo_json'
+require 'rgeo/shapefile'

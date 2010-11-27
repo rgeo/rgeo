@@ -44,7 +44,7 @@ module RGeo
     
     class Factory
       
-      include Features::Factory::Instance
+      include Feature::Factory::Instance
       
       
       # Create a new simple cartesian factory.
@@ -55,6 +55,10 @@ module RGeo
         @srid = opts_[:srid].to_i
         @support_z = opts_[:support_z_coordinate] ? true : false
         @support_m = opts_[:support_m_coordinate] ? true : false
+        @proj4 = opts_[:proj4]
+        if @proj4.kind_of?(::String)
+          @proj4 = CoordSys::Proj4.create(@proj4)
+        end
       end
       
       
@@ -73,7 +77,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#has_capability?
       
       def has_capability?(name_)
         case name_
@@ -81,86 +85,95 @@ module RGeo
           @support_z
         when :m_coordinate
           @support_m
+        when :proj4
+          !@proj4.nil?
         else
           nil
         end
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkt
+      # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
         WKRep::WKTParser.new(:default_factory => self).parse(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkb
+      # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
         WKRep::WKBParser.new(:default_factory => self).parse(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#point
+      # See ::RGeo::Feature::Factory#point
       
       def point(x_, y_, *extra_)
         PointImpl.new(self, x_, y_, *extra_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#line_string
+      # See ::RGeo::Feature::Factory#line_string
       
       def line_string(points_)
         LineStringImpl.new(self, points_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#line
+      # See ::RGeo::Feature::Factory#line
       
       def line(start_, end_)
         LineImpl.new(self, start_, end_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#linear_ring
+      # See ::RGeo::Feature::Factory#linear_ring
       
       def linear_ring(points_)
         LinearRingImpl.new(self, points_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#polygon
+      # See ::RGeo::Feature::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
         PolygonImpl.new(self, outer_ring_, inner_rings_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#collection
+      # See ::RGeo::Feature::Factory#collection
       
       def collection(elems_)
         GeometryCollectionImpl.new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#multi_point
+      # See ::RGeo::Feature::Factory#multi_point
       
       def multi_point(elems_)
         MultiPointImpl.new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#multi_line_string
+      # See ::RGeo::Feature::Factory#multi_line_string
       
       def multi_line_string(elems_)
         MultiLineStringImpl.new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#multi_polygon
+      # See ::RGeo::Feature::Factory#multi_polygon
       
       def multi_polygon(elems_)
         MultiPolygonImpl.new(self, elems_) rescue nil
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#proj4
+      
+      def proj4
+        @proj4
       end
       
       

@@ -45,7 +45,7 @@ module RGeo
     
     class Factory
       
-      include Features::Factory::Instance
+      include Feature::Factory::Instance
       
       
       def initialize(namespace_, opts_={})  # :nodoc:
@@ -88,13 +88,13 @@ module RGeo
       # Projects the given geometry into the projected coordinate space,
       # and returns the projected geometry.
       # Returns nil if this factory does not support a projection.
-      # Raises Errors::InvalidGeometry if the given geometry is not of
+      # Raises Error::InvalidGeometry if the given geometry is not of
       # this factory.
       
       def project(geometry_)
         return nil unless @projector
         unless geometry_.factory == self
-          raise Errors::InvalidGeometry, 'Wrong geometry type'
+          raise Error::InvalidGeometry, 'Wrong geometry type'
         end
         @projector.project(geometry_)
       end
@@ -102,12 +102,12 @@ module RGeo
       
       # Reverse-projects the given geometry from the projected coordinate
       # space into lat-long space.
-      # Raises Errors::InvalidGeometry if the given geometry is not of
+      # Raises Error::InvalidGeometry if the given geometry is not of
       # the projection defined by this factory.
       
       def unproject(geometry_)
         unless @projector && @projector.projection_factory == geometry_.factory
-          raise Errors::InvalidGeometry, 'You can unproject only features that are in the projected coordinate space.'
+          raise Error::InvalidGeometry, 'You can unproject only features that are in the projected coordinate space.'
         end
         @projector.unproject(geometry_)
       end
@@ -132,7 +132,7 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#has_capability?
       
       def has_capability?(name_)
         case name_
@@ -146,77 +146,77 @@ module RGeo
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkt
+      # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
         WKRep::WKTParser.new(:default_factory => self).parse(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#parse_wkb
+      # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
         WKRep::WKBParser.new(:default_factory => self).parse(str_)
       end
       
       
-      # See ::RGeo::Features::Factory#point
+      # See ::RGeo::Feature::Factory#point
       
       def point(x_, y_, *extra_)
         @namespace.const_get(:PointImpl).new(self, x_, y_, *extra_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#line_string
+      # See ::RGeo::Feature::Factory#line_string
       
       def line_string(points_)
         @namespace.const_get(:LineStringImpl).new(self, points_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#line
+      # See ::RGeo::Feature::Factory#line
       
       def line(start_, end_)
         @namespace.const_get(:LineImpl).new(self, start_, end_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#linear_ring
+      # See ::RGeo::Feature::Factory#linear_ring
       
       def linear_ring(points_)
         @namespace.const_get(:LinearRingImpl).new(self, points_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#polygon
+      # See ::RGeo::Feature::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
         @namespace.const_get(:PolygonImpl).new(self, outer_ring_, inner_rings_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#collection
+      # See ::RGeo::Feature::Factory#collection
       
       def collection(elems_)
         @namespace.const_get(:GeometryCollectionImpl).new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#multi_point
+      # See ::RGeo::Feature::Factory#multi_point
       
       def multi_point(elems_)
         @namespace.const_get(:MultiPointImpl).new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#multi_line_string
+      # See ::RGeo::Feature::Factory#multi_line_string
       
       def multi_line_string(elems_)
         @namespace.const_get(:MultiLineStringImpl).new(self, elems_) rescue nil
       end
       
       
-      # See ::RGeo::Features::Factory#multi_polygon
+      # See ::RGeo::Feature::Factory#multi_polygon
       
       def multi_polygon(elems_)
         @namespace.const_get(:MultiPolygonImpl).new(self, elems_) rescue nil

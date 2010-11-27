@@ -41,7 +41,7 @@ module RGeo
     
     class ZMGeometryImpl  # :nodoc:
       
-      include Features::Type::Instance
+      include Feature::Type::Instance
       
       
       def initialize(factory_, zgeometry_, mgeometry_)
@@ -406,15 +406,15 @@ module RGeo
     class ZMGeometryImpl  # :nodoc:
       
       TYPE_KLASSES = {
-        Features::Point => ZMPointImpl,
-        Features::LineString => ZMLineStringImpl,
-        Features::Line => ZMLineStringImpl,
-        Features::LinearRing => ZMLineStringImpl,
-        Features::Polygon => ZMPolygonImpl,
-        Features::GeometryCollection => ZMGeometryCollectionImpl,
-        Features::MultiPoint => ZMGeometryCollectionImpl,
-        Features::MultiLineString => ZMMultiLineStringImpl,
-        Features::MultiPolygon => ZMMultiPolygonImpl,
+        Feature::Point => ZMPointImpl,
+        Feature::LineString => ZMLineStringImpl,
+        Feature::Line => ZMLineStringImpl,
+        Feature::LinearRing => ZMLineStringImpl,
+        Feature::Polygon => ZMPolygonImpl,
+        Feature::GeometryCollection => ZMGeometryCollectionImpl,
+        Feature::MultiPoint => ZMGeometryCollectionImpl,
+        Feature::MultiLineString => ZMMultiLineStringImpl,
+        Feature::MultiPolygon => ZMMultiPolygonImpl,
       }
       
       

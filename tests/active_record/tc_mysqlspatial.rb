@@ -111,7 +111,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
             klass_.connection.create_table(:spatial_test) do |t_|
               t_.column 'latlon', :geometry
             end
-            assert_equal(::RGeo::Features::Geometry, klass_.columns.last.geometric_type)
+            assert_equal(::RGeo::Feature::Geometry, klass_.columns.last.geometric_type)
             assert(klass_.cached_attributes.include?('latlon'))
           end
           
@@ -121,7 +121,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
             klass_.connection.create_table(:spatial_test) do |t_|
               t_.column 'latlon', :point
             end
-            assert_equal(::RGeo::Features::Point, klass_.columns.last.geometric_type)
+            assert_equal(::RGeo::Feature::Point, klass_.columns.last.geometric_type)
             assert(klass_.cached_attributes.include?('latlon'))
           end
           

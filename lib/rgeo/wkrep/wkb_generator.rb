@@ -76,15 +76,15 @@ module RGeo
       
       # :stopdoc:
       TYPE_CODES = {
-        Features::Point => 1,
-        Features::LineString => 2,
-        Features::LinearRing => 2,
-        Features::Line => 2,
-        Features::Polygon => 3,
-        Features::MultiPoint => 4,
-        Features::MultiLineString => 5,
-        Features::MultiPolygon => 6,
-        Features::GeometryCollection => 7,
+        Feature::Point => 1,
+        Feature::LineString => 2,
+        Feature::LinearRing => 2,
+        Feature::Line => 2,
+        Feature::Polygon => 3,
+        Feature::MultiPoint => 4,
+        Feature::MultiLineString => 5,
+        Feature::MultiPolygon => 6,
+        Feature::GeometryCollection => 7,
       }
       # :startdoc:
       
@@ -170,7 +170,7 @@ module RGeo
         type_ = obj_.geometry_type
         type_code_ = TYPE_CODES[type_]
         unless type_code_
-          raise Errors::ParseError, "Unrecognized Geometry Type: #{type_}"
+          raise Error::ParseError, "Unrecognized Geometry Type: #{type_}"
         end
         emit_srid_ = false
         if @type_format == :ewkb
@@ -186,11 +186,11 @@ module RGeo
         end
         _emit_integer(type_code_)
         _emit_integer(obj_.srid) if emit_srid_
-        if type_ == Features::Point
+        if type_ == Feature::Point
           _emit_doubles(_point_coords(obj_))
-        elsif type_.subtype_of?(Features::LineString)
+        elsif type_.subtype_of?(Feature::LineString)
           _emit_line_string_coords(obj_)
-        elsif type_ == Features::Polygon
+        elsif type_ == Feature::Polygon
           exterior_ring_ = obj_.exterior_ring
           if exterior_ring_.is_empty?
             _emit_integer(0)
@@ -199,16 +199,16 @@ module RGeo
             _emit_line_string_coords(exterior_ring_)
             obj_.interior_rings.each{ |r_| _emit_line_string_coords(r_) }
           end
-        elsif type_ == Features::GeometryCollection
+        elsif type_ == Feature::GeometryCollection
           _emit_integer(obj_.num_geometries)
           obj_.each{ |g_| _generate_feature(g_) }
-        elsif type_ == Features::MultiPoint
+        elsif type_ == Feature::MultiPoint
           _emit_integer(obj_.num_geometries)
           obj_.each{ |g_| _generate_feature(g_) }
-        elsif type_ == Features::MultiLineString
+        elsif type_ == Feature::MultiLineString
           _emit_integer(obj_.num_geometries)
           obj_.each{ |g_| _generate_feature(g_) }
-        elsif type_ == Features::MultiPolygon
+        elsif type_ == Feature::MultiPolygon
           _emit_integer(obj_.num_geometries)
           obj_.each{ |g_| _generate_feature(g_) }
         end

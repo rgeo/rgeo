@@ -55,9 +55,9 @@ end
 
 
 # Dependency files.
-require 'rgeo/features'
+require 'rgeo/feature'
 require 'rgeo/wkrep'
-require 'rgeo/impl_helpers'
+require 'rgeo/impl_helper'
 
 # Implementation files.
 require 'rgeo/cartesian/calculations'
