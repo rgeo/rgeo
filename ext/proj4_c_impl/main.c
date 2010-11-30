@@ -168,6 +168,17 @@ static VALUE method_proj4_is_geographic(VALUE self)
 }
 
 
+static VALUE method_proj4_is_geocentric(VALUE self)
+{
+  VALUE result = Qnil;
+  projPJ pj = RGEO_PROJ4_DATA_PTR(self)->pj;
+  if (pj) {
+    result = pj_is_geocent(pj) ? Qtrue : Qfalse;
+  }
+  return result;
+}
+
+
 static VALUE method_proj4_is_valid(VALUE self)
 {
   return RGEO_PROJ4_DATA_PTR(self)->pj ? Qtrue : Qfalse;
@@ -225,8 +236,9 @@ static void rgeo_init_proj4()
   rb_define_method(proj4_class, "_canonical_str", method_proj4_canonical_str, 0);
   rb_define_method(proj4_class, "_valid?", method_proj4_is_valid, 0);
   rb_define_method(proj4_class, "_geographic?", method_proj4_is_geographic, 0);
+  rb_define_method(proj4_class, "_geocentric?", method_proj4_is_geocentric, 0);
   rb_define_method(proj4_class, "_get_geographic", method_proj4_get_geographic, 0);
-  rb_define_module_function(proj4_class, "transform_coords", cmethod_proj4_transform, 5);
+  rb_define_module_function(proj4_class, "_transform_coords", cmethod_proj4_transform, 5);
 }
 
 

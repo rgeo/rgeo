@@ -39,6 +39,17 @@ module RGeo
   module CoordSys
     
     
+    # This is a Ruby wrapper around a Proj4 coordinate system.
+    # It represents a single geographic coordinate system, which may be
+    # a flat projection, a geocentric (3-dimensional) coordinate system,
+    # or a geographic (latitude-longitude) coordinate system.
+    # 
+    # Generally, these are used to define the projection for a
+    # Feature::Factory. You can then convert between coordinate systems
+    # by casting geometries between such factories using the :project
+    # option. You may also use this object directly to perform low-level
+    # coordinate transformations.
+    
     class Proj4
       
       
@@ -57,30 +68,72 @@ module RGeo
       end
       
       
+      # Returns true if this Proj4 is equivalent to the given Proj4.
+      # 
+      # Note: this tests for equivalence by comparing only the hash
+      # definitions of the Proj4 objects, and returning true if those
+      # definitions are equivalent. In some cases, this may still return
+      # false even if the actual coordinate systems are identical, since
+      # there are sometimes multiple ways to express a given coordinate
+      # system.
+      
       def eql?(rhs_)
-        rhs_.is_a?(Proj4) && rhs_._canonical_str == _canonical_str
+        rhs_.is_a?(Proj4) && rhs_._canonical_hash == canonical_hash
       end
       
+      
+      # Returns the "canonical" string definition for this coordinate
+      # system, as reported by Proj4. This may be slightly different
+      # from the definition used to construct this object.
       
       def canonical_str
         _canonical_str
       end
       
       
+      # Returns the "canonical" hash definition for this coordinate
+      # system, as reported by Proj4. This may be slightly different
+      # from the definition used to construct this object.
+      
+      def canonical_hash
+        hash_ = {}
+        _canonical_str.strip.split(/\s+/).each do |elem_|
+          if elem_ =~ /^\+(\w+)(=(\S+))?$/
+            hash_[$1] = $3
+          end
+        end
+        hash_
+      end
+      
+      
+      # Returns the string definition originally used to construct this
+      # object. Returns nil if this object wasn't created by a string
+      # definition; i.e. if it was created using get_geographic.
+      
       def original_str
         _original_str
       end
       
       
-      def valid?
-        _valid?
-      end
-      
+      # Returns true if this Proj4 object is a geographic (lat-long)
+      # coordinate system.
       
       def geographic?
         _geographic?
       end
       
+      
+      # Returns true if this Proj4 object is a geocentric (3dz)
+      # coordinate system.
+      
+      def geocentric?
+        _geocentric?
+      end
+      
+      
+      # Get the geographic (unprojected lat-long) coordinate system
+      # corresponding to this coordinate system; i.e. the one that uses
+      # the same ellipsoid and datum.
       
       def get_geographic
         _get_geographic
@@ -90,15 +143,53 @@ module RGeo
       class << self
         
         
+        # Returns true if Proj4 is supported in this installation.
+        # If this returns false, the other methods such as create
+        # will not work.
+        
         def supported?
           respond_to?(:_create)
         end
         
         
-        def create(str_)
-          supported? ? _create(str_) : nil
+        # Create a new Proj4 object, given a definition, which may be
+        # either a string or a hash. Returns nil if the given definition
+        # is invalid or Proj4 is not supported.
+        
+        def create(defn_)
+          result_ = nil
+          if supported?
+            if defn_.kind_of?(::Hash)
+              defn_ = defn_.map{ |k_, v_| v_ ? "+#{k_}=#{v_}" : "+#{k_}" }.join(' ')
+            end
+            result_ = _create(defn_)
+            result_ = nil unless result_._valid?
+          end
+          result_
         end
-        alias_method :new, :create
+        
+        
+        # Create a new Proj4 object, given a definition, which may be
+        # either a string or a hash. Raises Error::UnsupportedCapability
+        # if the given definition is invalid or Proj4 is not supported.
+        
+        def new(defn_)
+          result_ = create(defn_)
+          unless result_
+            raise Error::UnsupportedCapability, "Proj4 not supported in this installation"
+          end
+          result_
+        end
+        
+        
+        # Low-level coordinate transform method.
+        # Transforms the given coordinate (x, y, [z]) from one proj4
+        # coordinate system to another. Returns an array with either two
+        # or three elements.
+        
+        def transform_coords(from_proj_, to_proj_, x_, y_, z_=nil)
+          _transform_coords(from_proj_, to_proj_, x_, y_, z_)
+        end
         
         
         # Low-level geometry transform method.
@@ -137,8 +228,8 @@ module RGeo
           from_has_m_ = from_factory_.has_capability?(:m_coordinate)
           to_has_z_ = to_factory_.has_capability?(:z_coordinate)
           to_has_m_ = to_factory_.has_capability?(:m_coordinate)
-          coords_ = transform_coords(from_proj_, to_proj_, from_point_.x, from_point_.y,
-                                     from_has_z_ ? from_point_.z : nil)
+          coords_ = _transform_coords(from_proj_, to_proj_, from_point_.x, from_point_.y,
+                                      from_has_z_ ? from_point_.z : nil)
           extras_ = []
           extras_ << coords_[2].to_f if to_has_z_
           extras_ << from_has_m_ ? from_point_.m : 0.0 if to_has_m_?

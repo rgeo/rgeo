@@ -49,15 +49,11 @@ module RGeo
     class RGeoError < ::RuntimeError
     end
     
-    # The method is unimplemented
-    class MethodUnimplemented < RGeoError
-    end
-    
     # The specified geometry is invalid
     class InvalidGeometry < RGeoError
     end
     
-    # The specified capability is not supported
+    # The specified capability is not supported or not implemented
     class UnsupportedCapability < RGeoError
     end
     

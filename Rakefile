@@ -73,8 +73,8 @@ module RAKEFILE
   MAIN_RDOC_FILE = 'README.rdoc'
   RDOC_TITLE = "RGeo #{PRODUCT_VERSION} Documentation"
   
-  TESTCASE_FILES = ::Dir.glob('tests/**/tc_*.rb')
-  ALL_TEST_FILES = ::Dir.glob('tests/**/*.{rb,txt,shp,shx,dbf}')
+  TESTCASE_FILES = ::Dir.glob('test/**/tc_*.rb')
+  ALL_TEST_FILES = ::Dir.glob('test/**/*.{rb,txt,shp,shx,dbf}')
   
   DOC_DIRECTORY = 'doc'
   PKG_DIRECTORY = 'pkg'
@@ -201,7 +201,7 @@ end
 task :test => :build_ext do
   $:.unshift(::File.expand_path('lib', ::File.dirname(__FILE__)))
   if ::ENV['TESTCASE']
-    test_files_ = ::Dir.glob("tests/#{::ENV['TESTCASE']}.rb")
+    test_files_ = ::Dir.glob("test/#{::ENV['TESTCASE']}.rb")
   else
     test_files_ = ::RAKEFILE::TESTCASE_FILES
   end

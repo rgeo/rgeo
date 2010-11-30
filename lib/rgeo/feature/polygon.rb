@@ -94,7 +94,7 @@ module RGeo
       # Returns an object that supports the LinearRing interface.
       
       def exterior_ring
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Polygon#exterior_ring not defined."
       end
       
       
@@ -107,7 +107,7 @@ module RGeo
       # Returns an integer.
       
       def num_interior_rings
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Polygon#num_interior_rings not defined."
       end
       
       
@@ -121,7 +121,7 @@ module RGeo
       # if the given n is out of range.
       
       def interior_ring_n(n_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Polygon#interior_ring_n not defined."
       end
       
       
@@ -129,7 +129,7 @@ module RGeo
       # that support the LinearRing interface.
       
       def interior_rings
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Polygon#interior_rings not defined."
       end
       
       

@@ -75,8 +75,8 @@ module RGeo
     #   POINT(0 0) and a MULTIPOINT(0 0) are spatially equivalent, as are
     #   LINESTRING(0 0, 10 10) and
     #   GEOMETRYCOLLECTION(POINT(0 0), LINESTRING(0 0, 10 10, 0 0)).
-    #   As a general rule, objects must have factories that are eql? in
-    #   order to be spatially equivalent.
+    #   As a general rule, objects must have factories that are
+    #   Factory#eql? in order to be spatially equivalent.
     # Objective equivalence::
     #   Objective equivalence is a stronger form of equivalence, indicating
     #   that the two objects are the same representation, but may be
@@ -111,7 +111,7 @@ module RGeo
       # operations on them.)
       
       def factory
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#factory not defined."
       end
       
       
@@ -119,7 +119,7 @@ module RGeo
       # to the given object.
       
       def eql?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#eql? not defined."
       end
       
       
@@ -135,7 +135,7 @@ module RGeo
       # point geometries, 1 for curves, and 2 for surfaces.
       
       def dimension
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#dimension not defined."
       end
       
       
@@ -153,7 +153,7 @@ module RGeo
       # call the +type_name+ method of the returned module.
       
       def geometry_type
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#geometry_type not defined."
       end
       
       
@@ -169,7 +169,7 @@ module RGeo
       # stored in either the same or some other datastore.
       
       def srid
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#srid not defined."
       end
       
       
@@ -184,7 +184,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def envelope
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#envelope not defined."
       end
       
       
@@ -198,7 +198,7 @@ module RGeo
       # Returns an ASCII string.
       
       def as_text
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#as_text not defined."
       end
       
       
@@ -212,7 +212,7 @@ module RGeo
       # Returns a binary string.
       
       def as_binary
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#as_binary not defined."
       end
       
       
@@ -228,7 +228,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_empty?
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#is_empty? not defined."
       end
       
       
@@ -246,7 +246,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_simple?
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#is_simple? not defined."
       end
       
       
@@ -262,7 +262,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def boundary
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#boundary not defined."
       end
       
       
@@ -277,7 +277,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def equals?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#equals? not defined."
       end
       
       
@@ -292,7 +292,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def disjoint?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#disjoint? not defined."
       end
       
       
@@ -307,7 +307,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def intersects?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#intersects? not defined."
       end
       
       
@@ -322,7 +322,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def touches?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#touches? not defined."
       end
       
       
@@ -337,7 +337,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def crosses?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#crosses? not defined."
       end
       
       
@@ -352,7 +352,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def within?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#within? not defined."
       end
       
       
@@ -367,7 +367,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def contains?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#contains? not defined."
       end
       
       
@@ -382,7 +382,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def overlaps?(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#overlaps? not defined."
       end
       
       
@@ -404,7 +404,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def relate(another_geometry_, intersection_pattern_matrix_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#relate not defined."
       end
       
       
@@ -419,7 +419,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def distance(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#distance not defined."
       end
       
       
@@ -435,7 +435,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def buffer(distance_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#buffer not defined."
       end
       
       
@@ -448,8 +448,8 @@ module RGeo
       # 
       # Returns an object that supports the Geometry interface.
       
-      def convex_hull()
-        raise Error::MethodUnimplemented
+      def convex_hull
+        raise Error::UnsupportedCapability, "Method Geometry#convex_hull not defined."
       end
       
       
@@ -463,7 +463,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def intersection(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#intersection not defined."
       end
       
       
@@ -477,7 +477,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def union(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#union not defined."
       end
       
       
@@ -491,7 +491,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def difference(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#difference not defined."
       end
       
       
@@ -505,7 +505,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def sym_difference(another_geometry_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method Geometry#sym_difference not defined."
       end
       
       

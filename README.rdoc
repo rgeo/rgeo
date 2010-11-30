@@ -55,7 +55,7 @@ RGeo has the following prerequisites:
   install the "json" gem. Ruby 1.9 has JSON support in its standard
   library and does not require the gem.
 * If you are using the shapefile reader, you should install the "dbf"
-  gem version 1.5.2 or later, which is required to read the attributes.
+  gem, version 1.5.2 or later, which is required to read the attributes.
 * The ActiveRecord adapters for MySQL Spatial, PostGIS, and SpatiaLite
   require ActiveRecord 3.0.3 or later, Arel 2.0 or later, and the
   corresponding database driver gems (e.g. "mysql" or "mysql2").
@@ -81,6 +81,18 @@ the switches interpreted by the gem command. For example:
 
  gem install rgeo -- --with-geos-dir=/path/to/my/geos/installation
 
+Similarly, the gem installation looks for the Proj.4 library in the
+following locations by default:
+
+* /usr/local
+* /usr/local/proj
+* /usr/local/proj4
+* /opt/local
+* /usr
+
+If Proj4 is installed in a different location, you must provide its
+installation prefix directory using the "--with-proj-dir" option.
+
 === To-do items
 
 This is our planned feature roadmap, in rough priority order.
@@ -90,7 +102,7 @@ This is our planned feature roadmap, in rough priority order.
 * Integration with certain third-party services such as SimpleGeo.
 * Support for bbox and crs elements of GeoJSON.
 * Ellipsoidal geography implementation, probably utilizing geographiclib.
-* Rubinius support for GEOS integration.
+* Rubinius support for C library integration.
 * JRuby support via JTS integration.
 * Support for writing shapefiles. (Reading is already implemented.)
 * Read and write other formats such as GeoRSS and KML.
@@ -111,9 +123,11 @@ RGeo is written by Daniel Azuma (http://www.daniel-azuma.com/).
 
 Development of RGeo is sponsored by GeoPage, Inc. (http://www.geopage.com/).
 
-RGeo links with the Open Source Geospatial Foundation's GEOS library to
-handle most Cartesian geometric calculations. GEOS and many other OSGeo
-projects can be found on OSGeo's web site (http://www.osgeo.org/).
+RGeo links with the GEOS library to handle most Cartesian geometric
+calculations, and with the Proj4 library to handle projections and
+coordinate transforms. These libraries are maintained by the Open Source
+Geospatial Foundation; these and other OSGeo projects can be found on
+OSGeo's web site (http://www.osgeo.org/).
 
 The ActiveRecord adapters owe some debt to the spatial_adapter plugin
 (http://github.com/fragility/spatial_adapter). We made a few different

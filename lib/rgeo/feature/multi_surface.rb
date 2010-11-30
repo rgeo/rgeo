@@ -77,7 +77,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def area
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method MultiSurface#area not defined."
       end
       
       
@@ -91,7 +91,7 @@ module RGeo
       # Returns an object that supports the Point interface.
       
       def centroid
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method MultiSurface#centroid not defined."
       end
       
       
@@ -104,7 +104,7 @@ module RGeo
       # Returns an object that supports the Point interface.
       
       def point_on_surface
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method MultiSurface#point_on_surface not defined."
       end
       
       

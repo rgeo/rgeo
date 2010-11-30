@@ -47,7 +47,6 @@ module RGeo
         
         def test_create_wgs84
           proj_ = RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
-          assert_equal(true, proj_.valid?)
           assert_equal(true, proj_.geographic?)
           assert_equal('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', proj_.original_str)
           assert_equal(' +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0', proj_.canonical_str)
@@ -58,7 +57,6 @@ module RGeo
           proj_ = RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
           proj2_ = proj_.get_geographic
           assert_nil(proj2_.original_str)
-          assert_equal(true, proj2_.valid?)
           assert_equal(true, proj2_.geographic?)
           coords_ = RGeo::CoordSys::Proj4.transform_coords(proj_, proj2_, 1, 2, 0)
           assert_equal([1, 2, 0], coords_)

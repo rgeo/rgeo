@@ -77,7 +77,7 @@ module RGeo
       # Returns an integer.
       
       def num_geometries
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method GeometryCollection#num_geometries not defined."
       end
       
       
@@ -91,7 +91,7 @@ module RGeo
       # if the given n is out of range.
       
       def geometry_n(n_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method GeometryCollection#geometry_n not defined."
       end
       
       
@@ -117,7 +117,7 @@ module RGeo
       # include the Enumerable mixin.
       
       def each(&block_)
-        raise Error::MethodUnimplemented
+        raise Error::UnsupportedCapability, "Method GeometryCollection#each not defined."
       end
       
       
