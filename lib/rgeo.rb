@@ -45,35 +45,26 @@
 # objects implemented by RGeo. These interfaces closely follow the OGC
 # Simple Features Specifiation (SFS). This module forms the core of RGeo.
 # 
+# The RGeo::CoordSys module contains classes for representing spatial
+# reference systems and coordinate transformations. For example, it
+# includes a wrapper for the Proj4 library, supporting many geographic
+# projections.
+# 
 # The RGeo::Cartesian module provides a basic pure ruby implementation of
 # spatial objects in a Cartesian (flat) coordinate system. It does not
 # implement all the geometric analysis operations in the SFS, but it
 # implements the data structures without requiring an external C library,
 # so it is often sufficient for basic applications.
 # 
-# The RGeo::Geos module is another Cartesian implementation that wraps the
-# GEOS library to provide a full, high-performance implementation of
+# The RGeo::Geos module is another Cartesian implementation that wraps
+# the GEOS library to provide a full, high-performance implementation of
 # Cartesian geometry that includes every operation defined in the SFS. It
 # requires GEOS 3.2 or later.
 # 
 # The RGeo::Geography module contains spatial implementations that
 # operate in latitude-longitude coordinates and are well-suited for
-# geographic location based applications.
-# 
-# One of the geography implementations is RGeo::Geography::SimpleMercator,
-# which uses the same coordinate system and projection as that used by
-# Google and Bing Maps, and is ideally suited for visualization
-# applications based on those technologies.
-# 
-# The RGeo::Geography::SimpleSpherical module provides another geography
-# implementation that does not use a projection, but instead performs
-# geometric operations on a spherical approximation of the globe. This
-# implementation does not provide all the geometric analysis operations
-# in the SFS, but it may be useful for cases when you need more accuracy
-# than a projected implementation would provide.
-# 
-# The RGeo::CoordSys module provides tools for representing and managing
-# coordinate reference systems.
+# geographic location based applications. Geography implementations may
+# also be linked to projections.
 # 
 # The RGeo::WKRep module contains tools for reading and writing spatial
 # data in the OGC Well-Known Text (WKT) and Well-Known Binary (WKB)
@@ -86,7 +77,7 @@
 # 
 # The RGeo::Shapefile module contains tools for reading ESRI shapefiles,
 # an industry standard (if somewhat legacy) file format commonly used for
-# providing geographic data sts.
+# providing geographic data sets.
 # 
 # === Loading the library
 # 
@@ -104,13 +95,12 @@
 # You may also eagerly load individual modules:
 #  require 'rgeo/feature'
 #  require 'rgeo/cartesian'
-#  require 'rgeo/geos'
+#  require 'rgeo/coord_sys'
 #  require 'rgeo/geography'
-#  require 'rgeo/geography/simple_mercator'
-#  require 'rgeo/geography/simple_spherical'
-#  require 'rgeo/wkrep'
+#  require 'rgeo/geos'
 #  require 'rgeo/geo_json'
 #  require 'rgeo/shapefile'
+#  require 'rgeo/wkrep'
 # 
 # === Spatial connection adapters for ActiveRecord
 # 
@@ -139,21 +129,11 @@
 #   An adapter for the PostGIS extension to Postgresql. It is based on
 #   the stock postgres adapter, and requires the pg gem.
 #   <b>(INCOMPLETE)</b>
-# 
-# === Future modules
-# 
-# RGeo is in active development with several additional modules planned
-# for future releases. These include:
-# 
-# * RGeo::JTS, which provides a Cartesian SFS implementation backed by
-#   the JTS library (which can run natively in JRuby.)
-# * RGeo::Geography extensions to provide highly accurate ellipsoidal
-#   geometric calculations, and support arbitrary map projections
-#   via RGeo::Projection.
 
 module RGeo
   
   autoload(:Cartesian, 'rgeo/cartesian')
+  autoload(:CoordSys, 'rgeo/coord_sys')
   autoload(:Error, 'rgeo/error')
   autoload(:Errors, 'rgeo/error')
   autoload(:Feature, 'rgeo/feature')
@@ -162,9 +142,8 @@ module RGeo
   autoload(:Geography, 'rgeo/geography')
   autoload(:Geos, 'rgeo/geos')
   autoload(:ImplHelper, 'rgeo/impl_helper')
-  autoload(:WKRep, 'rgeo/wkrep')
   autoload(:Shapefile, 'rgeo/shapefile')
-  autoload(:CoordSys, 'rgeo/coord_sys')
+  autoload(:WKRep, 'rgeo/wkrep')
   
 end
 

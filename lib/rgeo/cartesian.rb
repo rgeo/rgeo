@@ -56,6 +56,7 @@ end
 
 # Dependency files.
 require 'rgeo/feature'
+require 'rgeo/geos'
 require 'rgeo/wkrep'
 require 'rgeo/impl_helper'
 

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Simple spherical geography implementation for RGeo
+# Tests for the simple mercator multi point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,35 +34,29 @@
 ;
 
 
-require 'rgeo/geography'
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/multi_point_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
-  
-  module Geography
-    
-    
-    # This namespace contains the simple mercator implementation.
-    
-    module SimpleMercator
+  module Tests  # :nodoc:
+    module ProjectedGeography  # :nodoc:
+      
+      class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def create_factory
+          ::RGeo::Geography.projected(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+        end
+        
+        
+        include ::RGeo::Tests::Common::MultiPointTests
+        
+        
+      end
+      
     end
-    
-    
   end
-  
-  
 end
-
-
-# Dependency files
-require 'rgeo/feature'
-require 'rgeo/wkrep'
-require 'rgeo/impl_helper'
-require 'rgeo/cartesian'
-
-# Implementation files
-require 'rgeo/geography/simple_mercator/projector'
-require 'rgeo/geography/simple_mercator/feature_methods'
-require 'rgeo/geography/simple_mercator/feature_classes'
-require 'rgeo/geography/factory'
-require 'rgeo/geography/projected_window'

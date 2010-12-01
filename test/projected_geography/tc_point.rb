@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS factory
+# Tests for the simple mercator point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,50 +37,52 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module ProjectedGeography  # :nodoc:
       
-      class TestFactory < ::Test::Unit::TestCase  # :nodoc:
+      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
         def setup
-          @factory = ::RGeo::Geos.factory(:srid => 4326)
+          @factory = ::RGeo::Geography.projected(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @zfactory = ::RGeo::Geography.projected(:support_z_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @mfactory = ::RGeo::Geography.projected(:support_m_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @zmfactory = ::RGeo::Geography.projected(:support_z_coordinate => true, :support_m_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
         end
         
         
-        def test_srid_preserved_through_factory
-          geom_ = @factory.point(-10, 20)
-          assert_equal(4326, geom_.srid)
-          factory_ = geom_.factory
-          assert_equal(4326, factory_.srid)
-          geom2_ = factory_.point(-20, 25)
-          assert_equal(4326, geom2_.srid)
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_has_projection
+          point_ = @factory.point(21, -22)
+          assert(point_.respond_to?(:projection))
         end
         
         
-        def test_srid_preserved_through_geom_operations
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = @factory.point(-20, 25)
-          geom3_ = geom1_.union(geom2_)
-          assert_equal(4326, geom3_.srid)
-          assert_equal(4326, geom3_.geometry_n(0).srid)
-          assert_equal(4326, geom3_.geometry_n(1).srid)
+        def test_latlon
+          point_ = @factory.point(21, -22)
+          assert_equal(21, point_.longitude)
+          assert_equal(-22, point_.latitude)
         end
         
         
-        def test_srid_preserved_through_geom_functions
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = geom1_.boundary
-          assert_equal(4326, geom2_.srid)
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(4326, point_.srid)
         end
         
         
-        def test_srid_preserved_through_dup
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = geom1_.clone
-          assert_equal(4326, geom2_.srid)
+        def test_distance
+          point1_ = @factory.point(11, 12)
+          point2_ = @factory.point(11, 12)
+          point3_ = @factory.point(13, 12)
+          assert_in_delta(0, point1_.distance(point2_), 0.0001)
+          assert_in_delta(222638, point1_.distance(point3_), 1)
         end
         
         

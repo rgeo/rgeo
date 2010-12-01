@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple mercator multi line string implementation
+# Spherical geometry common methods
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,29 +34,64 @@
 ;
 
 
-require 'test/unit'
-require 'rgeo'
-
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
-
-
 module RGeo
-  module Tests  # :nodoc:
-    module SimpleMercator  # :nodoc:
+  
+  module Geography
+    
+    
+    module SphericalGeometryMethods  # :nodoc:
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
-        
-        
-        def create_factory
-          ::RGeo::Geography.simple_mercator
-        end
-        
-        
-        include ::RGeo::Tests::Common::MultiLineStringTests
-        
-        
+      
+      def srid
+        factory.srid
       end
       
+      
     end
+    
+    
+    module SphericalLineStringMethods  # :nodoc:
+      
+      
+      def _arcs
+        unless @arcs
+          @arcs = (0..num_points-2).map do |i_|
+            SphericalMath::ArcXYZ.new(point_n(i_)._xyz, point_n(i_+1)._xyz)
+          end
+        end
+        @arcs
+      end
+      
+      
+      def is_simple?
+        arcs_ = _arcs
+        len_ = arcs_.length
+        return false if arcs_.any?{ |a_| a_.degenerate? }
+        return true if len_ == 1
+        return arcs_[0].s != arcs_[1].e if len_ == 2
+        arcs_.each_with_index do |arc_, index_|
+          nindex_ = index_ + 1
+          nindex_ = nil if nindex_ == len_
+          return false if nindex_ && arc_.contains_point?(arcs_[nindex_].e)
+          pindex_ = index_ - 1
+          pindex_ = nil if pindex_ < 0
+          return false if pindex_ && arc_.contains_point?(arcs_[pindex_].s)
+          if nindex_
+            oindex_ = nindex_ + 1
+            while oindex_ < len_
+              oarc_ = arcs_[oindex_]
+              return false if !(index_ == 0 && oindex_ == len_-1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
+              oindex_ += 1
+            end
+          end
+        end
+        true
+      end
+      
+      
+    end
+    
+    
   end
+  
 end

@@ -42,7 +42,7 @@ require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleMercator
+    module SimpleMercator  # :nodoc:
       
       class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
@@ -82,7 +82,7 @@ module RGeo
           point2_ = @factory.point(11, 12)
           point3_ = @factory.point(13, 12)
           assert_in_delta(0, point1_.distance(point2_), 0.0001)
-          assert_in_delta(217773, point1_.distance(point3_), 1)
+          assert_in_delta(222638, point1_.distance(point3_), 1)
         end
         
         

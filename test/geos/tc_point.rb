@@ -42,7 +42,7 @@ require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module Geos  # :nodoc:
       
       class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         

@@ -40,7 +40,7 @@ require 'rgeo'
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleMercator
+    module SimpleMercator  # :nodoc:
       
       class TestWindow < ::Test::Unit::TestCase  # :nodoc:
         

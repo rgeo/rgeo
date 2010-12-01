@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple spherical multi line string implementation
+# Tests for the simple spherical geometry collection implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,27 +37,30 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/geometry_collection_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleSpherical  # :nodoc:
+    module SphericalGeography  # :nodoc:
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
+      class TestGeometryCollection < ::Test::Unit::TestCase  # :nodoc:
         
         
         def create_factory
-          @factory = ::RGeo::Geography.simple_spherical
+          @factory = ::RGeo::Geography.spherical
         end
         
         
-        include ::RGeo::Tests::Common::MultiLineStringTests
+        include ::RGeo::Tests::Common::GeometryCollectionTests
         
         
         undef_method :test_fully_equal
         undef_method :test_geometrically_equal
+        undef_method :test_empty_equal
         undef_method :test_not_equal
+        undef_method :test_empty_collection_envelope
+        undef_method :test_empty_collection_boundary
         
         
       end

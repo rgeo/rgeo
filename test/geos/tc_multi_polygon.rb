@@ -42,7 +42,7 @@ require ::File.expand_path('../common/multi_polygon_tests.rb', ::File.dirname(__
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module Geos  # :nodoc:
       
       class TestMultiPolygon < ::Test::Unit::TestCase  # :nodoc:
         

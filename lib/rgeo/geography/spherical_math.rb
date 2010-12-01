@@ -38,15 +38,15 @@ module RGeo
   
   module Geography
     
-    module SimpleSpherical  # :nodoc:
+    module SphericalMath  # :nodoc:
       
       
-      RADIUS = 6371007.2
+      RADIUS = 6378137.0
       
       
-      # Represents a point on the sphere in (x,y,z) coordinates instead
-      # of lat-lon. This form is often faster, more convenient, and more
-      # numerically stable for certain computations.
+      # Represents a point on the unit sphere in (x,y,z) coordinates
+      # instead of lat-lon. This form is often faster, more convenient,
+      # and more numerically stable for certain computations.
       # 
       # The coordinate system is a right-handed system where the z-axis
       # goes through the north pole, the x-axis goes through the prime
@@ -85,7 +85,7 @@ module RGeo
         def latlon
           lat_rad_ = ::Math.asin(@z)
           lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
-          rpd_ = ::RGeo::ImplHelper::Math::RADIANS_PER_DEGREE
+          rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           [lat_rad_ / rpd_, lon_rad_ / rpd_]
         end
         
@@ -120,7 +120,7 @@ module RGeo
         
         
         def self.from_latlon(lat_, lon_)
-          rpd_ = ::RGeo::ImplHelper::Math::RADIANS_PER_DEGREE
+          rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           lat_rad_ = rpd_ * lat_
           lon_rad_ = rpd_ * lon_
           z_ = ::Math.sin(lat_rad_)

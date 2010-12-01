@@ -41,19 +41,46 @@ require 'rgeo'
 module RGeo
   
   
-  # The Geography implementation provides geographic features using
-  # latitude/longitude coordinates measured in degrees.
+  # The Geography implementation actually comprises a suite of
+  # implementations with one common feature: they represent geographic
+  # latitude/longitude coordinates measured in degrees. The "x"
+  # coordinate corresponds to longitude, and the "y" coordinate to
+  # latitude. Thus, coordinates are often expressed in reverse
+  # (i.e. long-lat) order. e.g.
+  # 
+  #  location = geography_factory.point(long, lat)
+  # 
+  # Some geography implementations include a secondary factory that
+  # represents a projection. For these implementations, you can quickly
+  # transform data between lat/long coordinates and the projected
+  # coordinate system, and most calculations are done in the projected
+  # coordinate system. For implementations that do not include this
+  # secondary projection factory, calculations are done on the sphereoid.
+  # See the various class methods of Geography for more information on
+  # the behaviors of the factories they generate.
   
   module Geography
-    
-    autoload(:SimpleSpherical, 'rgeo/geography/simple_spherical')
-    autoload(:SimpleMercator, 'rgeo/geography/simple_mercator')
-    
   end
   
   
 end
 
 
+# Dependency files
+require 'rgeo/feature'
+require 'rgeo/coord_sys'
+require 'rgeo/wkrep'
+require 'rgeo/impl_helper'
+require 'rgeo/cartesian'
+
 # Implementation files.
+require 'rgeo/geography/factory'
+require 'rgeo/geography/projected_window'
 require 'rgeo/geography/interface'
+require 'rgeo/geography/spherical_math'
+require 'rgeo/geography/spherical_feature_methods'
+require 'rgeo/geography/spherical_feature_classes'
+require 'rgeo/geography/proj4_projector'
+require 'rgeo/geography/simple_mercator_projector'
+require 'rgeo/geography/projected_feature_methods'
+require 'rgeo/geography/projected_feature_classes'

@@ -59,12 +59,12 @@ module RGeo
       
       
       def to_s  # :nodoc:
-        _canonical_str
+        canonical_str
       end
       
       
       def hash  # :nodoc:
-        _canonical_str.hash
+        canonical_hash.hash
       end
       
       
@@ -87,7 +87,10 @@ module RGeo
       # from the definition used to construct this object.
       
       def canonical_str
-        _canonical_str
+        unless defined?(@canonical_str)
+          @canonical_str = _canonical_str
+        end
+        @canonical_str
       end
       
       
@@ -96,13 +99,15 @@ module RGeo
       # from the definition used to construct this object.
       
       def canonical_hash
-        hash_ = {}
-        _canonical_str.strip.split(/\s+/).each do |elem_|
-          if elem_ =~ /^\+(\w+)(=(\S+))?$/
-            hash_[$1] = $3
+        unless defined?(@canonical_hash)
+          @canonical_hash = {}
+          canonical_str.strip.split(/\s+/).each do |elem_|
+            if elem_ =~ /^\+(\w+)(=(\S+))?$/
+              @canonical_hash[$1] = $3
+            end
           end
         end
-        hash_
+        @canonical_hash
       end
       
       
@@ -187,8 +192,18 @@ module RGeo
         # coordinate system to another. Returns an array with either two
         # or three elements.
         
-        def transform_coords(from_proj_, to_proj_, x_, y_, z_=nil)
-          _transform_coords(from_proj_, to_proj_, x_, y_, z_)
+        def transform_coords(from_proj_, to_proj_, x_, y_, z_=nil, opts_={})
+          degrees_ = !opts_[:radians]
+          if degrees_ && from_proj_._geographic?
+            x_ *= ImplHelper::Math::RADIANS_PER_DEGREE
+            y_ *= ImplHelper::Math::RADIANS_PER_DEGREE
+          end
+          result_ = _transform_coords(from_proj_, to_proj_, x_, y_, z_)
+          if result_ && degrees_ && to_proj_._geographic?
+            result_[0] *= ImplHelper::Math::DEGREES_PER_RADIAN
+            result_[1] *= ImplHelper::Math::DEGREES_PER_RADIAN
+          end
+          result_
         end
         
         

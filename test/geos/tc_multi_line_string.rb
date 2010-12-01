@@ -42,7 +42,7 @@ require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirnam
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module Geos  # :nodoc:
       
       class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
         

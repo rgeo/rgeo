@@ -48,26 +48,53 @@ module RGeo
       include Feature::Factory::Instance
       
       
-      def initialize(namespace_, opts_={})  # :nodoc:
-        @namespace = namespace_
-        @opts = opts_.dup
-        if @namespace.const_defined?(:Projector)
-          @projector = @namespace.const_get(:Projector).new(self, opts_)
-        else
-          @projector = nil
-        end
+      def initialize(impl_prefix_, opts_={})  # :nodoc:
+        @impl_prefix = impl_prefix_
+        @point_class = Geography.const_get("#{impl_prefix_}PointImpl")
+        @line_string_class = Geography.const_get("#{impl_prefix_}LineStringImpl")
+        @linear_ring_class = Geography.const_get("#{impl_prefix_}LinearRingImpl")
+        @line_class = Geography.const_get("#{impl_prefix_}LineImpl")
+        @polygon_class = Geography.const_get("#{impl_prefix_}PolygonImpl")
+        @geometry_collection_class = Geography.const_get("#{impl_prefix_}GeometryCollectionImpl")
+        @multi_point_class = Geography.const_get("#{impl_prefix_}MultiPointImpl")
+        @multi_line_string_class = Geography.const_get("#{impl_prefix_}MultiLineStringImpl")
+        @multi_polygon_class = Geography.const_get("#{impl_prefix_}MultiPolygonImpl")
         @support_z = opts_[:support_z_coordinate] ? true : false
         @support_m = opts_[:support_m_coordinate] ? true : false
+        @srid = opts_[:srid] || 4326
+        @proj4 = opts_[:proj4]
+        if CoordSys::Proj4.supported?
+          if @proj4.kind_of?(::String) || @proj4.kind_of?(::Hash)
+            @proj4 = CoordSys::Proj4.create(@proj4)
+          end
+        else
+          @proj4 = nil
+        end
+      end
+      
+      
+      def _set_projector(projector_)  # :nodoc:
+        @projector = projector_
       end
       
       
       # Equivalence test.
       
       def eql?(rhs_)
-        rhs_.is_a?(self.class) && @namespace == rhs_.instance_variable_get(:@namespace) &&
-          @opts == rhs_.instance_variable_get(:@opts)
+        rhs_.is_a?(Geography::Factory) &&
+          @impl_prefix == rhs_.instance_variable_get(:@impl_prefix) &&
+          @support_z == rhs_.instance_variable_get(:@support_z) &&
+          @support_m == rhs_.instance_variable_get(:@support_m) &&
+          @proj4 == rhs_.instance_variable_get(:@proj4)
       end
       alias_method :==, :eql?
+      
+      
+      # Returns the srid reported by this factory.
+      
+      def srid
+        @srid
+      end
       
       
       # Returns true if this factory supports a projection.
@@ -128,7 +155,14 @@ module RGeo
       # Returns nil if this factory does not support a projection.
       
       def projection_limits_window
-        @projector ? (@projection_limits_window ||= @projector.limits_window) : nil
+        if @projector
+          unless defined?(@projection_limits_window)
+            @projection_limits_window = @projector.limits_window
+          end
+          @projection_limits_window
+        else
+          nil
+        end
       end
       
       
@@ -140,6 +174,8 @@ module RGeo
           @support_z
         when :m_coordinate
           @support_m
+        when :proj4
+          @proj4 ? true : false
         else
           nil
         end
@@ -163,63 +199,70 @@ module RGeo
       # See ::RGeo::Feature::Factory#point
       
       def point(x_, y_, *extra_)
-        @namespace.const_get(:PointImpl).new(self, x_, y_, *extra_) rescue nil
+        @point_class.new(self, x_, y_, *extra_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#line_string
       
       def line_string(points_)
-        @namespace.const_get(:LineStringImpl).new(self, points_) rescue nil
+        @line_string_class.new(self, points_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#line
       
       def line(start_, end_)
-        @namespace.const_get(:LineImpl).new(self, start_, end_) rescue nil
+        @line_class.new(self, start_, end_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#linear_ring
       
       def linear_ring(points_)
-        @namespace.const_get(:LinearRingImpl).new(self, points_) rescue nil
+        @linear_ring_class.new(self, points_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#polygon
       
       def polygon(outer_ring_, inner_rings_=nil)
-        @namespace.const_get(:PolygonImpl).new(self, outer_ring_, inner_rings_) rescue nil
+        @polygon_class.new(self, outer_ring_, inner_rings_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#collection
       
       def collection(elems_)
-        @namespace.const_get(:GeometryCollectionImpl).new(self, elems_) rescue nil
+        @geometry_collection_class.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#multi_point
       
       def multi_point(elems_)
-        @namespace.const_get(:MultiPointImpl).new(self, elems_) rescue nil
+        @multi_point_class.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#multi_line_string
       
       def multi_line_string(elems_)
-        @namespace.const_get(:MultiLineStringImpl).new(self, elems_) rescue nil
+        @multi_line_string_class.new(self, elems_) rescue nil
       end
       
       
       # See ::RGeo::Feature::Factory#multi_polygon
       
       def multi_polygon(elems_)
-        @namespace.const_get(:MultiPolygonImpl).new(self, elems_) rescue nil
+        @multi_polygon_class.new(self, elems_) rescue nil
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#proj4
+      
+      def proj4
+        @proj4
       end
       
       

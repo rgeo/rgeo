@@ -42,7 +42,7 @@ require ::File.expand_path('../common/geometry_collection_tests.rb', ::File.dirn
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleMercator
+    module SimpleMercator  # :nodoc:
       
       class TestGeometryCollection < ::Test::Unit::TestCase  # :nodoc:
         

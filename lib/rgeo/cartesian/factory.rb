@@ -56,8 +56,12 @@ module RGeo
         @support_z = opts_[:support_z_coordinate] ? true : false
         @support_m = opts_[:support_m_coordinate] ? true : false
         @proj4 = opts_[:proj4]
-        if @proj4.kind_of?(::String)
-          @proj4 = CoordSys::Proj4.create(@proj4)
+        if CoordSys::Proj4.supported?
+          if @proj4.kind_of?(::String) || @proj4.kind_of?(::Hash)
+            @proj4 = CoordSys::Proj4.create(@proj4)
+          end
+        else
+          @proj4 = nil
         end
       end
       

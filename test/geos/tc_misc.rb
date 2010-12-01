@@ -40,7 +40,7 @@ require 'rgeo'
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos
+    module Geos  # :nodoc:
       
       class TestMisc < ::Test::Unit::TestCase  # :nodoc:
         

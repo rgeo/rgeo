@@ -67,8 +67,12 @@ module RGeo
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1
           proj4_ = opts_[:proj4]
-          if proj4_.kind_of?(::String)
-            proj4_ = CoordSys::Proj4.create(proj4_)
+          if CoordSys::Proj4.supported?
+            if proj4_.kind_of?(::String) || proj4_.kind_of?(::Hash)
+              proj4_ = CoordSys::Proj4.create(proj4_)
+            end
+          else
+            proj4_ = nil
           end
           result_ = _create(flags_, opts_[:srid].to_i, buffer_resolution_)
           result_.instance_variable_set(:@proj4, proj4_)

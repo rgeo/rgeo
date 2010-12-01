@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple spherical geometry collection implementation
+# Tests for the simple mercator geometry collection implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -42,25 +42,17 @@ require ::File.expand_path('../common/geometry_collection_tests.rb', ::File.dirn
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleSpherical  # :nodoc:
+    module ProjectedGeography  # :nodoc:
       
       class TestGeometryCollection < ::Test::Unit::TestCase  # :nodoc:
         
         
         def create_factory
-          @factory = ::RGeo::Geography.simple_spherical
+          ::RGeo::Geography.projected(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
         end
         
         
         include ::RGeo::Tests::Common::GeometryCollectionTests
-        
-        
-        undef_method :test_fully_equal
-        undef_method :test_geometrically_equal
-        undef_method :test_empty_equal
-        undef_method :test_not_equal
-        undef_method :test_empty_collection_envelope
-        undef_method :test_empty_collection_boundary
         
         
       end

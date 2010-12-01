@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple mercator multi line string implementation
+# Tests for the simple spherical point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,22 +37,60 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleMercator  # :nodoc:
+    module SphericalGeography  # :nodoc:
       
-      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
+      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          ::RGeo::Geography.simple_mercator
+        def setup
+          @factory = ::RGeo::Geography.spherical
+          @zfactory = ::RGeo::Geography.spherical(:support_z_coordinate => true)
+          @mfactory = ::RGeo::Geography.spherical(:support_m_coordinate => true)
+          @zmfactory = ::RGeo::Geography.spherical(:support_z_coordinate => true, :support_m_coordinate => true)
         end
         
         
-        include ::RGeo::Tests::Common::MultiLineStringTests
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_latlon
+          point_ = @factory.point(21, -22)
+          assert_equal(21, point_.longitude)
+          assert_equal(-22, point_.latitude)
+        end
+        
+        
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(4055, point_.srid)
+        end
+        
+        
+        def test_distance
+          point1_ = @factory.point(0, 10)
+          point2_ = @factory.point(0, 10)
+          point3_ = @factory.point(0, 40)
+          assert_in_delta(0, point1_.distance(point2_), 0.0001)
+          assert_in_delta(::Math::PI / 6.0 * ::RGeo::Geography::SphericalMath::RADIUS, point1_.distance(point3_), 0.0001)
+        end
+        
+        
+        undef_method :test_disjoint
+        undef_method :test_intersects
+        undef_method :test_touches
+        undef_method :test_crosses
+        undef_method :test_within
+        undef_method :test_contains
+        undef_method :test_overlaps
+        undef_method :test_intersection
+        undef_method :test_union
+        undef_method :test_difference
+        undef_method :test_sym_difference
         
         
       end

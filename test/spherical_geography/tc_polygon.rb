@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical geometry common methods
+# Tests for the simple spherical polygon implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,68 +34,34 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
+
+
 module RGeo
-  
-  module Geography
-    
-    module SimpleSpherical  # :nodoc:
+  module Tests  # :nodoc:
+    module SphericalGeography  # :nodoc:
       
-      
-      module GeometryMethods  # :nodoc:
+      class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def srid
-          4326
+        def setup
+          @factory = ::RGeo::Geography.spherical
         end
+        
+        
+        include ::RGeo::Tests::Common::PolygonTests
+        
+        
+        undef_method :test_fully_equal
+        undef_method :test_geometrically_equal_but_ordered_different
+        undef_method :test_geometrically_equal_but_different_directions
         
         
       end
-      
-      
-      module LineStringMethods  # :nodoc:
-        
-        
-        def _arcs
-          unless @arcs
-            @arcs = (0..num_points-2).map do |i_|
-              ArcXYZ.new(point_n(i_)._xyz, point_n(i_+1)._xyz)
-            end
-          end
-          @arcs
-        end
-        
-        
-        def is_simple?
-          arcs_ = _arcs
-          len_ = arcs_.length
-          return false if arcs_.any?{ |a_| a_.degenerate? }
-          return true if len_ == 1
-          return arcs_[0].s != arcs_[1].e if len_ == 2
-          arcs_.each_with_index do |arc_, index_|
-            nindex_ = index_ + 1
-            nindex_ = nil if nindex_ == len_
-            return false if nindex_ && arc_.contains_point?(arcs_[nindex_].e)
-            pindex_ = index_ - 1
-            pindex_ = nil if pindex_ < 0
-            return false if pindex_ && arc_.contains_point?(arcs_[pindex_].s)
-            if nindex_
-              oindex_ = nindex_ + 1
-              while oindex_ < len_
-                oarc_ = arcs_[oindex_]
-                return false if !(index_ == 0 && oindex_ == len_-1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
-                oindex_ += 1
-              end
-            end
-          end
-          true
-        end
-        
-        
-      end
-      
       
     end
-    
   end
-  
 end

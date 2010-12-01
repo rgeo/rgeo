@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple spherical multi point implementation
+# Tests for the simple spherical line string implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,26 +37,29 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_point_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/line_string_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleSpherical  # :nodoc:
+    module SphericalGeography  # :nodoc:
       
-      class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
+      class TestLineString < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          @factory = ::RGeo::Geography.simple_spherical
+        def setup
+          @factory = ::RGeo::Geography.spherical
         end
         
         
-        include ::RGeo::Tests::Common::MultiPointTests
+        include ::RGeo::Tests::Common::LineStringTests
         
         
         undef_method :test_fully_equal
-        undef_method :test_geometrically_equal
+        undef_method :test_geometrically_equal_but_different_type
+        undef_method :test_geometrically_equal_but_different_type2
+        undef_method :test_geometrically_equal_but_different_overlap
+        undef_method :test_empty_equal
         undef_method :test_not_equal
         
         

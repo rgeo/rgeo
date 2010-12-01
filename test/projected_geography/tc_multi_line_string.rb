@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple spherical line string implementation
+# Tests for the simple mercator multi line string implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,30 +37,22 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/line_string_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module SimpleSpherical  # :nodoc:
+    module ProjectedGeography  # :nodoc:
       
-      class TestLineString < ::Test::Unit::TestCase  # :nodoc:
+      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def setup
-          @factory = ::RGeo::Geography.simple_spherical
+        def create_factory
+          ::RGeo::Geography.projected(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
         end
         
         
-        include ::RGeo::Tests::Common::LineStringTests
-        
-        
-        undef_method :test_fully_equal
-        undef_method :test_geometrically_equal_but_different_type
-        undef_method :test_geometrically_equal_but_different_type2
-        undef_method :test_geometrically_equal_but_different_overlap
-        undef_method :test_empty_equal
-        undef_method :test_not_equal
+        include ::RGeo::Tests::Common::MultiLineStringTests
         
         
       end
