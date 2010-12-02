@@ -92,12 +92,31 @@ module ActiveRecord
       def columns
         unless defined?(@columns) && @columns
           columns_without_rgeo_modification.each do |column_|
-            column_.ar_class = self if column_.respond_to?(:ar_class=)
+            column_.set_ar_class(self) if column_.respond_to?(:set_ar_class)
           end
         end
         @columns
       end
       # :startdoc:
+      
+    end
+    
+  end
+  
+  
+  module ConnectionAdapters  # :nodoc:
+    
+    class TableDefinition  # :nodoc:
+      
+      ::RGeo::ActiveRecord::GEOMETRY_TYPES.each do |type_|
+        method_ = <<-END_METHOD
+          def #{type_}(*args_)
+            opts_ = args_.extract_options!
+            args_.each{ |name_| column(name_, '#{type_}', opts_) }
+          end
+        END_METHOD
+        class_eval(method_, __FILE__, __LINE__-5)
+      end
       
     end
     

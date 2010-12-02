@@ -27,6 +27,10 @@ mysql2spatial:
   username: <mysql_user>
   password: <mysql_password>
   host: localhost
+spatialite:
+  adapter: spatialite
+  database: <sqlite3_test_database>
+  libspatialite: /path/to/libspatialite.so
 ####
 
 Note that the tests assume they "own" these databases, and they may

@@ -107,9 +107,7 @@ module ActiveRecord
           if current_index_ != row_[:Key_name]
             next if row_[:Key_name] == 'PRIMARY' # skip the primary key
             current_index_ = row_[:Key_name]
-            new_index_ = ::RGeo::ActiveRecord::MysqlCommon::IndexDefinition.new(row_[:Table], row_[:Key_name], row_[:Non_unique] == 0, [], [])
-            new_index_.spatial = row_[:Index_type] == 'SPATIAL'
-            indexes_ << new_index_
+            indexes_ << ::RGeo::ActiveRecord::Common::IndexDefinition.new(row_[:Table], row_[:Key_name], row_[:Non_unique] == 0, [], [], row_[:Index_type] == 'SPATIAL')
           end
           indexes_.last.columns << row_[:Column_name]
           indexes_.last.lengths << row_[:Sub_part]

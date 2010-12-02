@@ -33,76 +33,29 @@
 # -----------------------------------------------------------------------------
 ;
 
+require 'test/unit'
+require ::File.expand_path('common_setup_methods.rb', ::File.dirname(__FILE__))
 
-if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
-  
-  require 'test/unit'
-  require 'rgeo'
-  require 'yaml'
-  require 'active_record'
-  
-  
-  module RGeo
-    module Tests  # :nodoc:
-      module ActiveRecord  # :nodoc:
-        
-        ALL_DATABASES_CONFIG = ::YAML.load_file(::File.dirname(__FILE__)+'/database.yml')
+
+module RGeo
+  module Tests  # :nodoc:
+    module ActiveRecord  # :nodoc:
+      
+      if TESTS_AVAILABLE
         
         
-        module Classes  # :nodoc:
-          
-          @class_num = 0
-          
-          def self.new_class(config_)
-            klass_ = ::Class.new(::ActiveRecord::Base)
-            @class_num += 1
-            self.const_set("Klass#{@class_num}".to_sym, klass_)
-            klass_.class_eval do
-              establish_connection(config_)
-              set_table_name(:spatial_test)
-            end
-            klass_
-          end
-          
-        end
-        
-        
-        module CommonTestMethods  # :nodoc:
-          
-          def self.included(klass_)
-            database_config_ = ALL_DATABASES_CONFIG[klass_.const_get(:ADAPTER_NAME)]
-            klass_.const_set(:DATABASE_CONFIG, database_config_)
-            klass_.const_set(:DEFAULT_AR_CLASS, Classes.new_class(database_config_))
-          end
+        module CommonMysqlTestMethods  # :nodoc:
           
           
-          def setup
-            @factory = ::RGeo::Cartesian.preferred_factory(:srid => 4326)
-            cleanup_tables
-          end
-          
-          
-          def teardown
-            cleanup_tables
-          end
-          
-          
-          def cleanup_tables
-            klass_ = self.class.const_get(:DEFAULT_AR_CLASS)
-            tables_ = klass_.connection.select_values('SHOW TABLES')
-            tables_.each{ |table_| klass_.connection.drop_table(table_) }
-          end
-          
-          
-          def create_ar_class(opts_={})
-            klass_ = Classes.new_class(self.class.const_get(:DATABASE_CONFIG))
-            case opts_[:content]
+          def populate_ar_class(content_)
+            klass_ = create_ar_class
+            case content_
             when :latlon_point
               klass_.connection.create_table(:spatial_test) do |t_|
                 t_.column 'latlon', :point
               end
             end
-            @ar_class = klass_
+            klass_
           end
           
           
@@ -139,7 +92,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
           
           
           def test_set_and_get_point
-            klass_ = create_ar_class(:content => :latlon_point)
+            klass_ = populate_ar_class(:latlon_point)
             obj_ = klass_.new
             assert_nil(obj_.latlon)
             obj_.latlon = @factory.point(1, 2)
@@ -149,7 +102,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
           
           
           def test_set_and_get_point_from_wkt
-            klass_ = create_ar_class(:content => :latlon_point)
+            klass_ = populate_ar_class(:latlon_point)
             obj_ = klass_.new
             assert_nil(obj_.latlon)
             obj_.latlon = 'SRID=1000;POINT(1 2)'
@@ -159,7 +112,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
           
           
           def test_save_and_load_point
-            klass_ = create_ar_class(:content => :latlon_point)
+            klass_ = populate_ar_class(:latlon_point)
             obj_ = klass_.new
             obj_.latlon = @factory.point(1, 2)
             obj_.save!
@@ -171,7 +124,7 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
           
           
           def test_save_and_load_point_from_wkt
-            klass_ = create_ar_class(:content => :latlon_point)
+            klass_ = populate_ar_class(:latlon_point)
             obj_ = klass_.new
             obj_.latlon = 'SRID=1000;POINT(1 2)'
             obj_.save!
@@ -188,7 +141,8 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
         if ALL_DATABASES_CONFIG.include?('mysqlspatial')
           class TestMysqlSpatial < ::Test::Unit::TestCase  # :nodoc:
             ADAPTER_NAME = 'mysqlspatial'
-            include CommonTestMethods
+            include CommonSetupMethods
+            include CommonMysqlTestMethods
           end
         else
           puts "WARNING: Couldn't find mysqlspatial in database.yml. Skipping those tests."
@@ -199,7 +153,8 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
         if ALL_DATABASES_CONFIG.include?('mysql2spatial')
           class TestMysql2Spatial < ::Test::Unit::TestCase  # :nodoc:
             ADAPTER_NAME = 'mysql2spatial'
-            include CommonTestMethods
+            include CommonSetupMethods
+            include CommonMysqlTestMethods
           end
         else
           puts "WARNING: Couldn't find mysql2spatial in database.yml. Skipping those tests."
@@ -210,10 +165,6 @@ if ::File.exists?(::File.dirname(__FILE__)+'/database.yml')
       end
       
     end
+    
   end
-  
-  
-else
-  puts "WARNING: database.yml not found. Skipping ActiveRecord tests."
-  puts "         See tests/active_record/readme.txt for more info."
 end

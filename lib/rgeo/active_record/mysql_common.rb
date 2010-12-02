@@ -76,13 +76,6 @@ module RGeo
       end
       
       
-      class IndexDefinition < ::ActiveRecord::ConnectionAdapters::IndexDefinition  # :nodoc:
-        
-        attr_accessor :spatial
-        
-      end
-      
-      
       module ColumnMethods  # :nodoc:
         
         
@@ -93,7 +86,10 @@ module RGeo
         end
         
         
-        attr_writer :ar_class
+        def set_ar_class(val_)
+          @ar_class = val_
+        end
+        
         
         attr_reader :geometric_type
         

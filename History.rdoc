@@ -1,3 +1,7 @@
+=== 0.1.21 / 2010-12-02
+
+* First pass implementation of the ActiveRecord adapter for SpatiaLite.
+
 === 0.1.20 / 2010-11-30
 
 * API CHANGE: Methods that raised MethodUnimplemented now raise UnsupportedCapability instead. Removed MethodUnimplemented.

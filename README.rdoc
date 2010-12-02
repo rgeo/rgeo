@@ -16,7 +16,7 @@ use of RGeo in production.
 
 === Summary
 
-RGeo is a core component for writing location-aware applications in the
+RGeo is a key component for writing location-aware applications in the
 Ruby programming language. It provides the basic tools for modeling
 location data and communicating with location-aware storage systems
 and services.
@@ -57,8 +57,8 @@ RGeo has the following prerequisites:
 * If you are using the shapefile reader, you should install the "dbf"
   gem, version 1.5.2 or later, which is required to read the attributes.
 * The ActiveRecord adapters for MySQL Spatial, PostGIS, and SpatiaLite
-  require ActiveRecord 3.0.3 or later, Arel 2.0 or later, and the
-  corresponding database driver gems (e.g. "mysql" or "mysql2").
+  require ActiveRecord 3.0.3 or later, and the corresponding database
+  driver gems (e.g. "mysql" or "mysql2").
 
 === Installation
 
@@ -81,7 +81,7 @@ the switches interpreted by the gem command. For example:
 
  gem install rgeo -- --with-geos-dir=/path/to/my/geos/installation
 
-Similarly, the gem installation looks for the Proj.4 library in the
+Similarly, the gem installation looks for the Proj4 library in the
 following locations by default:
 
 * /usr/local
@@ -97,11 +97,12 @@ installation prefix directory using the "--with-proj-dir" option.
 
 This is our planned feature roadmap, in rough priority order.
 
-* SpatiaLite and PostGIS adapters for ActiveRecord. (We already have an
-  adapter for MySQL Spatial.)
-* Integration with certain third-party services such as SimpleGeo.
+* Flesh out the ActiveRecord adapters for SpatiaLite and PostGIS.
+* Possible Arel extensions for constructing spatial queries.
+* OGC coordinate reference implementations.
 * Support for bbox and crs elements of GeoJSON.
 * Ellipsoidal geography implementation, probably utilizing geographiclib.
+* Integration with certain third-party services such as SimpleGeo.
 * Rubinius support for C library integration.
 * JRuby support via JTS integration.
 * Support for writing shapefiles. (Reading is already implemented.)

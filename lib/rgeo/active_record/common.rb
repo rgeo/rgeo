@@ -34,5 +34,23 @@
 ;
 
 
+module RGeo
+  
+  module ActiveRecord
+    
+    GEOMETRY_TYPES = [:geometry, :point, :line_string, :polygon, :geometry_collection, :multi_line_string, :multi_point, :multi_polygon]
+    
+    module Common  # :nodoc:
+      
+      class IndexDefinition < ::Struct.new(:table, :name, :unique, :columns, :lengths, :spatial)  # :nodoc:
+      end
+      
+    end
+    
+  end
+  
+end
+
+
 require 'rgeo/active_record/arel_modifications'
 require 'rgeo/active_record/base_modifications'

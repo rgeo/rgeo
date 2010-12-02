@@ -97,6 +97,7 @@ module RGeo
         @support_wkt12 = opts_[:support_wkt12] ? true : false
         @strict_wkt11 = @support_ewkt || @support_wkt12 ? false : opts_[:strict_wkt11] ? true : false
         @ignore_extra_tokens = opts_[:ignore_extra_tokens] ? true : false
+        @default_srid = opts_[:default_srid]
       end
       
       
@@ -183,7 +184,7 @@ module RGeo
         end
         @cur_expect_z = nil
         @cur_expect_m = nil
-        @cur_srid = nil
+        @cur_srid = @default_srid
         if @support_ewkt && str_ =~ /^srid=(\d+);/i
           str_ = $'
           @cur_srid = $1.to_i

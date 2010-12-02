@@ -102,7 +102,9 @@ module ActiveRecord
       def columns(table_name_, name_=nil)
         result_ = execute("SHOW FIELDS FROM #{quote_table_name(table_name_)}", :skip_logging)
         columns_ = []
-        result_.each{ |field_| columns_ << SpatialColumn.new(field_[0], field_[4], field_[1], field_[2] == "YES") }
+        result_.each do |field_|
+          columns_ << SpatialColumn.new(field_[0], field_[4], field_[1], field_[2] == "YES")
+        end
         result_.free
         columns_
       end
@@ -116,9 +118,7 @@ module ActiveRecord
           if current_index_ != row_[2]
             next if row_[2] == "PRIMARY" # skip the primary key
             current_index_ = row_[2]
-            new_index_ = ::RGeo::ActiveRecord::MysqlCommon::IndexDefinition.new(row_[0], row_[2], row_[1] == "0", [], [])
-            new_index_.spatial = row_[10] == 'SPATIAL'
-            indexes_ << new_index_
+            indexes_ << ::RGeo::ActiveRecord::Common::IndexDefinition.new(row_[0], row_[2], row_[1] == "0", [], [], row_[10] == 'SPATIAL')
           end
           indexes_.last.columns << row_[4]
           indexes_.last.lengths << row_[7]
