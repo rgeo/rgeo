@@ -6,6 +6,7 @@
 * Removed deprecated pluralized names RGeo::Features and RGeo::Errors.
 * First pass implementation of the ActiveRecord adapters for SpatiaLite and PostGIS.
 * Fixed problems with Proj4 equivalence testing.
+* Several more minor fixes and documentation updates.
 
 === 0.1.20 / 2010-11-30
 

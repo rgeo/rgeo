@@ -79,6 +79,13 @@
 # an industry standard (if somewhat legacy) file format commonly used for
 # providing geographic data sets.
 # 
+# The RGeo::ActiveRecord module contains ActiveRecord connection adapters
+# for handling spatial data with MySQL Spatial, SpatiaLite, and PostGIS.
+# See the RGeo::ActiveRecord rdocs for more information on using these
+# adapters. However, you do not need to access or require this module
+# directly from code. ActiveRecord will load these adapters automatically
+# when they are requested.
+# 
 # === Loading the library
 # 
 # After installing the RGeo gem, you can load the library with:
@@ -102,33 +109,9 @@
 #  require 'rgeo/shapefile'
 #  require 'rgeo/wkrep'
 # 
-# === Spatial connection adapters for ActiveRecord
-# 
-# RGeo also provides ActiveRecord connection adapters for common spatial
-# databases. You can specify and use these connection adapters in the same
-# way you use any other connection adapter, for example by specifying the
-# adapter name in a Rails application's database.yml file. You do not need
-# to require any files to gain access to these adapters. RGeo makes them
-# available to ActiveRecord automatically.
-# 
-# These adapters are:
-# 
-# <tt>mysqlspatial</tt>::
-#   An adapter based on the standard mysql adapter. It extends the stock
-#   adapter to provide support for spatial columns in MySQL, mapping the
-#   values properly to RGeo spatial objects. Like the standard mysql
-#   adapter, this requires the mysql gem (version 2.8 or later).
-# <tt>mysql2spatial</tt>::
-#   An adapter for MySQL spatial based on the mysql2 adapter. It requires
-#   the mysql2 gem (version 0.2.6 or later).
-# <tt>spatialite</tt>::
-#   An adapter for the SpatiaLite extension to Sqlite3. It is based on
-#   the stock sqlite3 adapter, and requires the sqlite3-ruby gem.
-#   <b>(INCOMPLETE)</b>
-# <tt>postgis</tt>::
-#   An adapter for the PostGIS extension to Postgresql. It is based on
-#   the stock postgres adapter, and requires the pg gem.
-#   <b>(INCOMPLETE)</b>
+# You do not need to explicitly require any files for access to the
+# spatial ActiveRecord adapters. ActiveRecord will load them
+# automatically when they are referenced.
 
 module RGeo
   

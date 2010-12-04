@@ -44,15 +44,6 @@ module ActiveRecord
     
     
     # Create a postgis connection adapter.
-    # 
-    # What's done:
-    # * Data type conversion
-    # * Creating tables with geometric columns
-    # * Adding and removing geometric columns on existing tables
-    # * Creating spatial indexes
-    # 
-    # What's not done:
-    # * Getting spatial index info
     
     
     def self.postgis_connection(config_)

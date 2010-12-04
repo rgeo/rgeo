@@ -42,7 +42,7 @@ require 'rgeo/active_record/common'
 
 module RGeo
   
-  module ActiveRecord  # :nodoc:
+  module ActiveRecord
     
     
     module MysqlCommon  # :nodoc:

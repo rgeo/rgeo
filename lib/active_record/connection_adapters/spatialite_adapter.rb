@@ -44,18 +44,6 @@ module ActiveRecord
     
     
     # Create a spatialite connection adapter.
-    # 
-    # What's done:
-    # * Data type conversion
-    # * Creating tables with geometric columns
-    # * Adding geometric columns to existing tables
-    # * Creating and removing spatial indexes
-    # * Getting spatial index info (separate from normal indexes)
-    # 
-    # What's not done:
-    # * Anything that requires alter_table, because the algorithm doesn't
-    #   properly preserve the spatial metadata.
-    # * Removing geometric columns, because it involves alter_table.
     
     
     def self.spatialite_connection(config_)

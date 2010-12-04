@@ -68,6 +68,7 @@ module Arel
     
     VISITORS['postgis'] = ::Arel::Visitors::PostgreSQL
     VISITORS['mysqlspatial'] = ::Arel::Visitors::MySQL
+    VISITORS['mysql2spatial'] = ::Arel::Visitors::MySQL
     VISITORS['spatialite'] = ::Arel::Visitors::SQLite
     
   end
