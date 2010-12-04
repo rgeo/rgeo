@@ -101,6 +101,14 @@ module RGeo
       end
       
       
+      # Return a new FactoryGenerator that always returns the given
+      # factory.
+      
+      def self.single(factory_)
+        ::Proc.new{ |c_| factory_ }
+      end
+      
+      
       # Return a new FactoryGenerator that calls the given delegate, but
       # modifies the configuration passed to it. You can provide defaults
       # for configuration values not explicitly specified, and you can

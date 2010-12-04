@@ -63,8 +63,5 @@ module RGeo
     
   end
   
-  # Deprecated alias
-  Errors = Error
-  
   
 end

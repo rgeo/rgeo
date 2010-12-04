@@ -101,7 +101,7 @@ module RGeo
       #   to 4326, indicating the WGS84 crs, but note that that value
       #   implies an ellipsoidal datum, not a spherical datum.
       
-      def spherical(opts_={})
+      def spherical_factory(opts_={})
         Geography::Factory.new('Spherical', :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate], :proj4 => opts_[:proj4] || '+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs', :srid => opts_[:srid] || 4055)
       end
       
@@ -172,7 +172,7 @@ module RGeo
       #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
       #   most support one or the other.
       
-      def simple_mercator(opts_={})
+      def simple_mercator_factory(opts_={})
         factory_ = Geography::Factory.new('Projected', :proj4 => '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', :srid => 4326, :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
         projector_ = Geography::SimpleMercatorProjector.new(factory_, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
         factory_._set_projector(projector_)
@@ -237,7 +237,7 @@ module RGeo
       # <tt>:support_m_coordinate</tt>::
       #   Support <tt>m_coordinate</tt>. Default is false.
       
-      def projected(opts_={})
+      def projected_factory(opts_={})
         unless CoordSys::Proj4.supported?
           raise Error::UnsupportedCapability, "Proj4 is not supported because the proj4 library was not found at install time."
         end

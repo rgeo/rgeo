@@ -48,8 +48,8 @@ module RGeo
         
         
         def create_factories
-          @factory = ::RGeo::Geography.spherical
-          @lenient_factory = ::RGeo::Geography.spherical(:lenient_multi_polygon_assertions => true)
+          @factory = ::RGeo::Geography.spherical_factory
+          @lenient_factory = ::RGeo::Geography.spherical_factory(:lenient_multi_polygon_assertions => true)
         end
         
         

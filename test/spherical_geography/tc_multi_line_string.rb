@@ -48,7 +48,7 @@ module RGeo
         
         
         def create_factory
-          @factory = ::RGeo::Geography.spherical
+          @factory = ::RGeo::Geography.spherical_factory
         end
         
         

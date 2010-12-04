@@ -88,12 +88,13 @@ module RGeo
           
           def setup
             @factory = ::RGeo::Cartesian.preferred_factory(:srid => 4326)
+            @geographic_factory = ::RGeo::Geography.spherical_factory(:srid => 4326)
             cleanup_tables
           end
           
           
           def teardown
-            # cleanup_tables
+            cleanup_tables
           end
           
           

@@ -173,7 +173,7 @@ module ActiveRecord
       def create_table(table_name_, options_={})
         table_name_ = table_name_.to_s
         table_definition_ = SpatialTableDefinition.new(self)
-        table_definition_.primary_key(options_[:primary_key] || Base.get_primary_key(table_name_.singularize)) unless options_[:id] == false
+        table_definition_.primary_key(options_[:primary_key] || ::ActiveRecord::Base.get_primary_key(table_name_.singularize)) unless options_[:id] == false
         yield table_definition_ if block_given?
         if options_[:force] && table_exists?(table_name_)
           drop_table(table_name_, options_)
@@ -186,7 +186,7 @@ module ActiveRecord
         execute create_sql_
         
         table_definition_.spatial_columns.each do |col_|
-          execute("SELECT AddGeometryColumn('#{quote_string(table_name_)}', '#{quote_string(col_.name)}', #{col_.instance_variable_get(:@srid)}, '#{quote_string(col_.type.to_s)}', 'XY', #{col_.null ? 0 : 1})")
+          execute("SELECT AddGeometryColumn('#{quote_string(table_name_)}', '#{quote_string(col_.name)}', #{col_.srid}, '#{quote_string(col_.type.to_s.gsub('_','').upcase)}', 'XY', #{col_.null ? 0 : 1})")
         end
       end
       
@@ -273,18 +273,37 @@ module ActiveRecord
         
         def initialize(base_)
           super
-          @spatial_columns = []
         end
         
         def column(name_, type_, options_={})
           super
-          if ::RGeo::ActiveRecord::GEOMETRY_TYPES.include?(@columns.last.type.to_sym)
-            col_ = @columns.pop
-            col_.instance_variable_set(:@srid, options_[:srid].to_i)
-            col_.instance_variable_set(:@dimension, options_[:dimension] || 2)
-            @spatial_columns.push(col_)
+          col_ = self[name_]
+          if ::RGeo::ActiveRecord::GEOMETRY_TYPES.include?(col_.type.to_sym)
+            col_.extend(GeometricColumnDefinitionMethods) unless col_.respond_to?(:srid)
+            col_.set_srid(options_[:srid].to_i)
           end
           self
+        end
+        
+        def to_sql
+          @columns.find_all{ |c_| !c_.respond_to?(:srid) }.map{ |c_| c_.to_sql } * ', '
+        end
+        
+        def spatial_columns
+          @columns.find_all{ |c_| c_.respond_to?(:srid) }
+        end
+        
+      end
+      
+      
+      module GeometricColumnDefinitionMethods  # :nodoc:
+        
+        def srid
+          defined?(@srid) ? @srid : 4326
+        end
+        
+        def set_srid(value_)
+          @srid = value_
         end
         
       end
@@ -295,8 +314,8 @@ module ActiveRecord
         
         def initialize(name_, default_, sql_type_=nil, null_=true)
           super(name_, default_, sql_type_, null_)
-          @geometric_type = extract_geometric_type(sql_type_)
-          @ar_class = nil
+          @geometric_type = ::RGeo::ActiveRecord::Common.geometric_type_from_name(sql_type_)
+          @ar_class = ::ActiveRecord::Base
           @srid = 0
         end
         
@@ -314,7 +333,7 @@ module ActiveRecord
         attr_reader :geometric_type
         
         
-        def geometry?
+        def spatial?
           type == :geometry
         end
         
@@ -325,30 +344,16 @@ module ActiveRecord
         
         
         def type_cast(value_)
-          self.geometry? ? SpatialColumn.string_to_geometry(value_, @ar_class, @srid) : super
+          type == :geometry ? SpatialColumn.string_to_geometry(value_, @ar_class, @srid) : super
         end
         
         
         def type_cast_code(var_name_)
-          self.geometry? ? "::ActiveRecord::ConnectionAdapters::SpatiaLiteAdapter::SpatialColumn.string_to_geometry(#{var_name_}, self.class, #{@srid})" : super
+          type == :geometry ? "::ActiveRecord::ConnectionAdapters::SpatiaLiteAdapter::SpatialColumn.string_to_geometry(#{var_name_}, self.class, #{@srid})" : super
         end
         
         
         private
-        
-        def extract_geometric_type(sql_type_)
-          case sql_type_
-          when /^geometry$/i then ::RGeo::Feature::Geometry
-          when /^point$/i then ::RGeo::Feature::Point
-          when /^linestring$/i then ::RGeo::Feature::LineString
-          when /^polygon$/i then ::RGeo::Feature::Polygon
-          when /^geometrycollection$/i then ::RGeo::Feature::GeometryCollection
-          when /^multipoint$/i then ::RGeo::Feature::MultiPoint
-          when /^multilinestring$/i then ::RGeo::Feature::MultiLineString
-          when /^multipolygon$/i then ::RGeo::Feature::MultiPolygon
-          else nil
-          end
-        end
         
         
         def simplified_type(sql_type_)
@@ -364,29 +369,11 @@ module ActiveRecord
             if str_.length == 0
               nil
             else
-              wkt_ = str_[0,1] != "\x00"
-              little_endian_ = wkt_ ? false : str_[1,1] == "\x01"
-              srid_ = wkt_ ? column_srid_ : str_[2,4].unpack(little_endian_ ? 'V' : 'N').first
-              factory_generator_ = nil
-              in_factory_generator_ = ar_class_ ? ar_class_.rgeo_factory_generator : nil
-              default_factory_ = ar_class_ ? ar_class_.rgeo_default_factory : nil
-              if default_factory_ || in_factory_generator_
-                if in_factory_generator_
-                  default_factory_ ||= factory_generator_.call(:srid => srid_)
-                  if wkt_
-                    factory_generator_ = in_factory_generator_
-                  end
-                end
+              factory_generator_ = ar_class_.rgeo_factory_generator
+              if str_[0,1] == "\x00"
+                NativeFormatParser.new(factory_generator_).parse(str_) rescue nil
               else
-                default_factory_ = ::RGeo::Cartesian.preferred_factory(:srid => srid_)
-                if wkt_
-                  factory_generator_ = ::RGeo::Cartesian.method(:preferred_factory)
-                end
-              end
-              if wkt_
-                ::RGeo::WKRep::WKTParser.new(:support_ewkt => true, :default_factory => default_factory_, :factory_generator => factory_generator_, :default_srid => srid_).parse(str_) rescue nil
-              else
-                NativeFormatParser.new(:default_factory => default_factory_).parse(str_) rescue nil
+                ::RGeo::WKRep::WKTParser.new(factory_generator_.call(:srid => column_srid_), :support_ewkt => true).parse(str_)
               end
             end
           else
@@ -401,13 +388,15 @@ module ActiveRecord
       class NativeFormatParser  # :nodoc:
         
         
-        def initialize(opts_={})
-          @factory = opts_[:default_factory] || ::RGeo::Cartesian.preferred_factory
+        def initialize(factory_generator_)
+          @factory_generator = factory_generator_
         end
         
         
         def parse(data_)
           @little_endian = data_[1,1] == "\x01"
+          srid_ = data_[2,4].unpack(@little_endian ? 'V' : 'N').first
+          @cur_factory = @factory_generator.call(:srid => srid_)
           begin
             _start_scanner(data_)
             obj_ = _parse_object(false)
@@ -425,21 +414,21 @@ module ActiveRecord
           case type_code_
           when 1
             coords_ = _get_doubles(2)
-            @factory.point(*coords_)
+            @cur_factory.point(*coords_)
           when 2
             _parse_line_string
           when 3
             interior_rings_ = (1.._get_integer).map{ _parse_line_string }
-            exterior_ring_ = interior_rings_.shift || @factory.linear_ring([])
-            @factory.polygon(exterior_ring_, interior_rings_)
+            exterior_ring_ = interior_rings_.shift || @cur_factory.linear_ring([])
+            @cur_factory.polygon(exterior_ring_, interior_rings_)
           when 4
-            @factory.multi_point((1.._get_integer).map{ _parse_object(1) })
+            @cur_factory.multi_point((1.._get_integer).map{ _parse_object(1) })
           when 5
-            @factory.multi_line_string((1.._get_integer).map{ _parse_object(2) })
+            @cur_factory.multi_line_string((1.._get_integer).map{ _parse_object(2) })
           when 6
-            @factory.multi_polygon((1.._get_integer).map{ _parse_object(3) })
+            @cur_factory.multi_polygon((1.._get_integer).map{ _parse_object(3) })
           when 7
-            @factory.collection((1.._get_integer).map{ _parse_object(true) })
+            @cur_factory.collection((1.._get_integer).map{ _parse_object(true) })
           else
             raise ::RGeo::Error::ParseError, "Unknown type value: #{type_code_}."
           end
@@ -449,7 +438,7 @@ module ActiveRecord
         def _parse_line_string
           count_ = _get_integer
           coords_ = _get_doubles(2 * count_)
-          @factory.line_string((0...count_).map{ |i_| @factory.point(*coords_[2*i_,2]) })
+          @cur_factory.line_string((0...count_).map{ |i_| @cur_factory.point(*coords_[2*i_,2]) })
         end
         
         

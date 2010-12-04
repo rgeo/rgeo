@@ -1,6 +1,11 @@
-=== 0.1.21 / 2010-12-02
+=== 0.1.21 / 2010-12-03
 
-* First pass implementation of the ActiveRecord adapter for SpatiaLite.
+* API CHANGE: Added "_factory" to the end of the Geography toplevel interface methods, for consistency with the rest of the API.
+* API CHANGE: Simplified initializer API for WKTParser and WKBParser.
+* API CHANGE: Removed ActiveRecord::Base.rgeo_default_factory, and provided a reasonable default rgeo_factory_generator.
+* Removed deprecated pluralized names RGeo::Features and RGeo::Errors.
+* First pass implementation of the ActiveRecord adapters for SpatiaLite and PostGIS.
+* Fixed problems with Proj4 equivalence testing.
 
 === 0.1.20 / 2010-11-30
 

@@ -29,8 +29,14 @@ mysql2spatial:
   host: localhost
 spatialite:
   adapter: spatialite
-  database: <sqlite3_test_database>
+  database: /path/to/sqlite3_test_database.db
   libspatialite: /path/to/libspatialite.so
+postgis:
+  adapter: postgis
+  database: <postgres_test_database>
+  username: <postgres_user>
+  password: <postgres_password>
+  host: localhost
 ####
 
 Note that the tests assume they "own" these databases, and they may

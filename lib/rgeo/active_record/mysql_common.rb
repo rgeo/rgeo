@@ -81,8 +81,8 @@ module RGeo
         
         def initialize(name_, default_, sql_type_=nil, null_=true)
           super(name_, default_,sql_type_, null_)
-          @geometric_type = extract_geometric_type(sql_type_)
-          @ar_class = nil
+          @geometric_type = ::RGeo::ActiveRecord::Common.geometric_type_from_name(sql_type_)
+          @ar_class = ::ActiveRecord::Base
         end
         
         
@@ -94,7 +94,7 @@ module RGeo
         attr_reader :geometric_type
         
         
-        def geometry?
+        def spatial?
           type == :geometry
         end
         
@@ -105,31 +105,16 @@ module RGeo
         
         
         def type_cast(value_)
-          self.geometry? ? ColumnMethods.string_to_geometry(value_, @ar_class) : super
+          type == :geometry ? ColumnMethods.string_to_geometry(value_, @ar_class) : super
         end
         
         
         def type_cast_code(var_name_)
-          self.geometry? ? "::RGeo::ActiveRecord::MysqlCommon::ColumnMethods.string_to_geometry(#{var_name_}, self.class)" : super
+          type == :geometry ? "::RGeo::ActiveRecord::MysqlCommon::ColumnMethods.string_to_geometry(#{var_name_}, self.class)" : super
         end
         
         
         private
-        
-        def extract_geometric_type(sql_type_)
-          case sql_type_
-          when /^geometry$/i then ::RGeo::Feature::Geometry
-          when /^point$/i then ::RGeo::Feature::Point
-          when /^linestring$/i then ::RGeo::Feature::LineString
-          when /^polygon$/i then ::RGeo::Feature::Polygon
-          when /^geometrycollection$/i then ::RGeo::Feature::GeometryCollection
-          when /^multipoint$/i then ::RGeo::Feature::MultiPoint
-          when /^multilinestring$/i then ::RGeo::Feature::MultiLineString
-          when /^multipolygon$/i then ::RGeo::Feature::MultiPolygon
-          else nil
-          end
-        end
-        
         
         def simplified_type(sql_type_)
           sql_type_ =~ /geometry|point|linestring|polygon/i ? :geometry : super
@@ -142,29 +127,11 @@ module RGeo
             str_
           when ::String
             marker_ = str_[4,1]
-            little_endian_ = marker_ == "\x01"
-            wkt_ = !little_endian_ && marker_ != "\x00"
-            srid_ = wkt_ ? 0 : str_[0,4].unpack(little_endian_ ? 'V' : 'N').first
-            factory_generator_ = nil
-            in_factory_generator_ = ar_class_ ? ar_class_.rgeo_factory_generator : nil
-            default_factory_ = ar_class_ ? ar_class_.rgeo_default_factory : nil
-            if default_factory_ || in_factory_generator_
-              if in_factory_generator_
-                default_factory_ ||= factory_generator_.call(:srid => srid_)
-                if wkt_
-                  factory_generator_ = in_factory_generator_
-                end
-              end
+            factory_generator_ = ar_class_.rgeo_factory_generator
+            if marker_ == "\x00" || marker_ == "\x01"
+              ::RGeo::WKRep::WKBParser.new(factory_generator_, :default_srid => str_[0,4].unpack(marker_ == "\x01" ? 'V' : 'N').first).parse(str_[4..-1])
             else
-              default_factory_ = ::RGeo::Cartesian.preferred_factory(:srid => srid_)
-              if wkt_
-                factory_generator_ = ::RGeo::Cartesian.method(:preferred_factory)
-              end
-            end
-            if wkt_
-              ::RGeo::WKRep::WKTParser.new(:support_ewkt => true, :default_factory => default_factory_, :factory_generator => factory_generator_).parse(str_)
-            else
-              ::RGeo::WKRep::WKBParser.new(:default_factory => default_factory_).parse(str_[4..-1])
+              ::RGeo::WKRep::WKTParser.new(factory_generator_, :support_ewkt => true).parse(str_)
             end
           else
             nil

@@ -1,25 +1,16 @@
 == RGeo
 
-RGeo is a spatial data library for Ruby.
-
-It provides an implementation of the Open Geospatial Consortium's Simple
-Features Specification, used by most standard spatial/geographic data
-storage systems such as PostGIS. It also provides a suite of useful tools
-for writing location-aware applications using Ruby-based frameworks such
-as Ruby On Rails.
-
-IMPORTANT: RGeo is currently under development, and we consider it to be
-in a "pre-alpha" state. Several features are not yet complete, and there
-are known bugs and holes in the test suite. We also expect the APIs to be
-in flux for a short while longer. Therefore, we do not yet recommend the
-use of RGeo in production.
+RGeo is a geospatial data library for Ruby.
 
 === Summary
 
 RGeo is a key component for writing location-aware applications in the
-Ruby programming language. It provides the basic tools for modeling
-location data and communicating with location-aware storage systems
-and services.
+Ruby programming language. At its core is an implementation of the
+industry standard OGC Simple Features Specification. It then provides
+the basic components for modeling location data and communicating with
+location-aware services and database systems. It also provides a suite
+of useful tools for writing location-aware applications using Ruby-based
+frameworks such as Ruby On Rails.
 
 Use RGeo to:
 
@@ -27,22 +18,31 @@ Use RGeo to:
   and polygons in your Ruby application.
 * Perform standard spatial analysis operations such as finding
   intersections, creating buffers, and computing lengths and areas.
-* Correctly handle spherical geometry, and compute projections for
-  geographic data analysis.
-* Store and retrieve spatial data in industry standard spatial database
+* Correctly handle spherical geometry, and compute geographic projections
+  for map display and data analysis.
+* Store and retrieve data in industry standard spatial database
   systems such as MySQL Spatial, SpatiaLite, and PostGIS.
 * Generate and interpret GeoJSON data for communication with common
   location-based web services such as SimpleGeo.
 * Read legacy GIS data from ESRI shapefiles.
 * Extend Ruby On Rails to handle location data in a web application.
-* Follow the latest standards from the Open Geospatial Consortium.
+* Write to the latest standards from the Open Geospatial Consortium.
+
+IMPORTANT: RGeo is currently under development, and we consider it to be
+in a "pre-alpha" state. Several features are not yet complete, and there
+are known bugs and holes in the test suite. We also expect the APIs to be
+in flux for a short while longer. Therefore, we do not yet recommend the
+use of RGeo in production.
 
 === Requirements
 
-RGeo has the following prerequisites:
+RGeo has the following hard requirements:
 
 * Ruby 1.8.7 or later. Ruby 1.9.2 or later preferred.
   Rubinius and JRuby are not yet supported.
+
+Some features also require the following:
+
 * GEOS 3.2 or later is highly recommended. Some functions will not be
   available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
@@ -55,10 +55,11 @@ RGeo has the following prerequisites:
   install the "json" gem. Ruby 1.9 has JSON support in its standard
   library and does not require the gem.
 * If you are using the shapefile reader, you should install the "dbf"
-  gem, version 1.5.2 or later, which is required to read the attributes.
+  gem, version 1.5.2 or later, which is needed to read the attributes.
 * The ActiveRecord adapters for MySQL Spatial, PostGIS, and SpatiaLite
   require ActiveRecord 3.0.3 or later, and the corresponding database
-  driver gems (e.g. "mysql" or "mysql2").
+  driver gems (e.g. "mysql", "mysql2", "sqlite3-ruby", "pg", etc.).
+  Note that the adapters are NOT compatible with ActiveRecord 2.3.
 
 === Installation
 
@@ -95,11 +96,11 @@ installation prefix directory using the "--with-proj-dir" option.
 
 === To-do items
 
-This is our planned feature roadmap, in rough priority order.
+This is our planned roadmap, in rough priority order.
 
-* Flesh out the ActiveRecord adapters for SpatiaLite and PostGIS.
+* Continued work on the ActiveRecord adapters.
 * Possible Arel extensions for constructing spatial queries.
-* OGC coordinate reference implementations.
+* OGC coordinate system representation.
 * Support for bbox and crs elements of GeoJSON.
 * Ellipsoidal geography implementation, probably utilizing geographiclib.
 * Integration with certain third-party services such as SimpleGeo.
@@ -127,13 +128,13 @@ Development of RGeo is sponsored by GeoPage, Inc. (http://www.geopage.com/).
 RGeo links with the GEOS library to handle most Cartesian geometric
 calculations, and with the Proj4 library to handle projections and
 coordinate transforms. These libraries are maintained by the Open Source
-Geospatial Foundation; these and other OSGeo projects can be found on
-OSGeo's web site (http://www.osgeo.org/).
+Geospatial Foundation; more information is available on OSGeo's web site
+(http://www.osgeo.org/).
 
 The ActiveRecord adapters owe some debt to the spatial_adapter plugin
-(http://github.com/fragility/spatial_adapter). We made a few different
-design decisions for RGeo, but studying the spatial_adapter source gave
-us a head start on our implementation.
+(http://github.com/fragility/spatial_adapter). RGeo's implementation is
+a little different because we made some different design decisions, but
+studying the spatial_adapter source gave us a head start.
 
 Although we don't use shapelib (http://shapelib.maptools.org/) to read
 ESRI shapefiles, we did borrow a bunch of their test cases.

@@ -49,21 +49,15 @@ module RGeo
     # 
     # === Configuration options
     # 
-    # The following options are recognized. These can be passed to the
-    # constructor, or set on the object afterwards.
+    # You must provide each parser with an RGeo::Feature::FactoryGenerator.
+    # It should understand the configuration options <tt>:srid</tt>,
+    # <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
+    # You may also pass a specific RGeo::Feature::Factory, or nil to
+    # specify the default Cartesian FactoryGenerator.
     # 
-    # <tt>:default_factory</tt>::
-    #   The default factory for parsed geometries, used when no factory
-    #   generator is provided. If no default is provided either, the
-    #   default cartesian factory will be used as the default.
-    # <tt>:factory_generator</tt>::
-    #   A factory generator that should return a factory based on the
-    #   srid and dimension settings in the input. The factory generator
-    #   should understand the configuration options <tt>:srid</tt>,
-    #   <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
-    #   See RGeo::Feature::FactoryGenerator for more information.
-    #   If no generator is provided, the <tt>:default_factory</tt> is
-    #   used.
+    # The following additional options are recognized. These can be passed
+    # to the constructor, or set on the object afterwards.
+    # 
     # <tt>:support_ewkb</tt>::
     #   Activate support for PostGIS EWKB type codes, which use high
     #   order bits in the type code to signal the presence of Z, M, and
@@ -76,6 +70,9 @@ module RGeo
     # <tt>:ignore_extra_bytes</tt>::
     #   If true, extra bytes at the end of the data are ignored. If
     #   false (the default), extra bytes will trigger a parse error.
+    # <tt>:default_srid</tt>::
+    #   A SRID to pass to the factory generator if no SRID is present in
+    #   the input. Defaults to nil (i.e. don't specify a SRID).
     
     class WKBParser
       
@@ -83,34 +80,38 @@ module RGeo
       # Create and configure a WKB parser. See the WKBParser
       # documentation for the options that can be passed.
       
-      def initialize(opts_={})
-        @default_factory = opts_[:default_factory] || Cartesian.preferred_factory
-        @factory_generator = opts_[:factory_generator]
+      def initialize(factory_generator_=nil, opts_={})
+        self.factory_generator = factory_generator_
         @support_ewkb = opts_[:support_ewkb] ? true : false
         @support_wkb12 = opts_[:support_wkb12] ? true : false
         @ignore_extra_bytes = opts_[:ignore_extra_bytes] ? true : false
+        @default_srid = opts_[:default_srid]
       end
       
       
-      # Returns the default factory. See WKBParser for details.
-      def default_factory
-        @default_factory
-      end
-      
-      # Sets the default factory. See WKBParser for details.
-      def default_factory=(value_)
-        @default_factory = value_ || Cartesian.preferred_factory
-      end
-      
-      # Returns the factory generator, or nil if there is none.
-      # See WKBParser for details.
+      # Returns the factory generator. See WKBParser for details.
       def factory_generator
         @factory_generator
       end
       
+      # If this parser was given an exact factory, returns it; otherwise
+      # returns nil.
+      def exact_factory
+        @exact_factory
+      end
+      
       # Sets the factory_generator. See WKBParser for details.
       def factory_generator=(value_)
-        @factory_generator = value_
+        if value_.kind_of?(Feature::Factory::Instance)
+          @factory_generator = Feature::FactoryGenerator.single(value_)
+          @exact_factory = value_
+        elsif value_.respond_to?(:call)
+          @factory_generator = value_
+          @exact_factory = nil
+        else
+          @factory_generator = Cartesian.method(:preferred_factory)
+          @exact_factory = nil
+        end
       end
       
       # Sets the factory_generator to the given block.
@@ -167,7 +168,7 @@ module RGeo
         @cur_has_m = nil
         @cur_srid = nil
         @cur_dims = 2
-        @cur_factory = @default_factory
+        @cur_factory = nil
         begin
           _start_scanner(data_)
           obj_ = _parse_object(false)
@@ -189,7 +190,7 @@ module RGeo
         type_code_ = _get_integer(little_endian_)
         has_z_ = false
         has_m_ = false
-        srid_ = nil
+        srid_ = contained_ ? nil : @default_srid
         if @support_ewkb
           has_z_ ||= type_code_ & 0x80000000 != 0
           has_m_ ||= type_code_ & 0x40000000 != 0
@@ -218,10 +219,8 @@ module RGeo
           @cur_has_z = has_z_
           @cur_has_m = has_m_
           @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
-          @cur_srid = srid_.to_i
-          if @factory_generator
-            @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => has_z_, :support_m_coordinate => has_m_)
-          end
+          @cur_srid = srid_
+          @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => has_z_, :support_m_coordinate => has_m_)
           if @cur_has_z && !@cur_factory.has_capability?(:z_coordinate)
             raise Error::ParseError, "Data has Z coordinates but the factory doesn't have z_coordinate capability"
           end

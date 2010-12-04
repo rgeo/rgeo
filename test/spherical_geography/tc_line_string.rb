@@ -48,7 +48,7 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geography.spherical
+          @factory = ::RGeo::Geography.spherical_factory
         end
         
         

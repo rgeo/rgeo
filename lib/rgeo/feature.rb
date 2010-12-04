@@ -68,9 +68,6 @@ module RGeo
   module Feature
   end
   
-  # Deprecated alias
-  Features = Feature
-  
   
 end
 
@@ -95,3 +92,4 @@ require 'rgeo/feature/multi_curve'
 require 'rgeo/feature/multi_line_string'
 require 'rgeo/feature/multi_surface'
 require 'rgeo/feature/multi_polygon'
+require 'rgeo/feature/factory_generator'

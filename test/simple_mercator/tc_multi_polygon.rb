@@ -48,8 +48,8 @@ module RGeo
         
         
         def create_factories
-          @factory = ::RGeo::Geography.simple_mercator
-          @lenient_factory = ::RGeo::Geography.simple_mercator(:lenient_multi_polygon_assertions => true)
+          @factory = ::RGeo::Geography.simple_mercator_factory
+          @lenient_factory = ::RGeo::Geography.simple_mercator_factory(:lenient_multi_polygon_assertions => true)
         end
         
         

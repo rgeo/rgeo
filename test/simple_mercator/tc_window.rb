@@ -46,7 +46,7 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geography.simple_mercator
+          @factory = ::RGeo::Geography.simple_mercator_factory
         end
         
         

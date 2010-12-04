@@ -54,7 +54,7 @@ module RGeo
       
       
       def inspect  # :nodoc:
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{_canonical_str.inspect}>"
+        "#<#{self.class}:0x#{object_id.to_s(16)} #{canonical_str.inspect}>"
       end
       
       
@@ -78,8 +78,9 @@ module RGeo
       # system.
       
       def eql?(rhs_)
-        rhs_.is_a?(Proj4) && rhs_._canonical_hash == canonical_hash
+        rhs_.class == self.class && rhs_.canonical_hash == canonical_hash
       end
+      alias_method :==, :eql?
       
       
       # Returns the "canonical" string definition for this coordinate

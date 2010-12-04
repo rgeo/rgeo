@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the SpatiaLite ActiveRecord adapter
+# Tests for the PostGIS ActiveRecord adapter
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -45,23 +45,12 @@ module RGeo
       if TESTS_AVAILABLE
         
         
-        if ALL_DATABASES_CONFIG.include?('spatialite')
+        if ALL_DATABASES_CONFIG.include?('postgis')
           
-          class TestSpatiaLite < ::Test::Unit::TestCase  # :nodoc:
+          class TestPostGis < ::Test::Unit::TestCase  # :nodoc:
             
             
-            ADAPTER_NAME = 'spatialite'
-            
-            def self.before_open_database(params_)
-              database_ = params_[:config][:database]
-              dir_ = ::File.dirname(database_)
-              ::FileUtils.mkdir_p(dir_) unless dir_ == '.'
-              ::FileUtils.rm_f(database_)
-            end
-            
-            def self.initialize_database(params_)
-              params_[:connection].execute('SELECT InitSpatialMetaData()')
-            end
+            ADAPTER_NAME = 'postgis'
             
             include CommonSetupMethods
             
@@ -73,14 +62,19 @@ module RGeo
                 klass_.connection.create_table(:spatial_test) do |t_|
                   t_.column 'latlon', :point, :srid => 4326
                 end
+              when :latlon_point_geographic
+                klass_.connection.create_table(:spatial_test) do |t_|
+                  t_.column 'latlon', :point, :srid => 4326, :geographic => true
+                end
               end
               klass_
             end
             
             
-            def test_meta_data_present
-              result_ = DEFAULT_AR_CLASS.connection.select_value("SELECT COUNT(*) FROM spatial_ref_sys").to_i
-              assert_not_equal(0, result_)
+            def test_postgis_available
+              connection_ = create_ar_class.connection
+              assert_equal('PostGIS', connection_.adapter_name)
+              assert_not_nil(connection_.postgis_lib_version)
             end
             
             
@@ -90,9 +84,26 @@ module RGeo
                 t_.column 'latlon', :geometry
               end
               assert_equal(1, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
-              assert_equal(::RGeo::Feature::Geometry, klass_.columns.last.geometric_type)
+              col_ = klass_.columns.last
+              assert_equal(::RGeo::Feature::Geometry, col_.geometric_type)
+              assert_equal(false, col_.geographic?)
+              assert_equal(4326, col_.srid)
               assert(klass_.cached_attributes.include?('latlon'))
               klass_.connection.drop_table(:spatial_test)
+              assert_equal(0, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
+            end
+            
+            
+            def test_create_simple_geography
+              klass_ = create_ar_class
+              klass_.connection.create_table(:spatial_test) do |t_|
+                t_.column 'latlon', :geometry, :geographic => true
+              end
+              col_ = klass_.columns.last
+              assert_equal(::RGeo::Feature::Geometry, col_.geometric_type)
+              assert_equal(true, col_.geographic?)
+              assert_equal(4326, col_.srid)
+              assert(klass_.cached_attributes.include?('latlon'))
               assert_equal(0, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
             end
             
@@ -115,7 +126,6 @@ module RGeo
               klass_.connection.change_table(:spatial_test) do |t_|
                 t_.index([:latlon], :spatial => true)
               end
-              assert(klass_.connection.spatial_indexes(:spatial_test).last.spatial)
             end
             
             
@@ -148,6 +158,20 @@ module RGeo
               obj2_ = klass_.find(id_)
               assert_equal(@factory.point(1, 2), obj2_.latlon)
               assert_equal(4326, obj2_.latlon.srid)
+              assert_equal(true, ::RGeo::Geos.is_geos?(obj2_.latlon))
+            end
+            
+            
+            def test_save_and_load_geographic_point
+              klass_ = populate_ar_class(:latlon_point_geographic)
+              obj_ = klass_.new
+              obj_.latlon = @factory.point(1, 2)
+              obj_.save!
+              id_ = obj_.id
+              obj2_ = klass_.find(id_)
+              assert_equal(@geographic_factory.point(1, 2), obj2_.latlon)
+              assert_equal(4326, obj2_.latlon.srid)
+              assert_equal(false, ::RGeo::Geos.is_geos?(obj2_.latlon))
             end
             
             
@@ -163,7 +187,7 @@ module RGeo
             end
             
             
-            def test_add_column
+            def test_add_geometry_column
               klass_ = create_ar_class
               klass_.connection.create_table(:spatial_test) do |t_|
                 t_.column('latlon', :geometry)
@@ -175,17 +199,77 @@ module RGeo
               assert_equal(2, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
               cols_ = klass_.columns
               assert_equal(::RGeo::Feature::Geometry, cols_[-3].geometric_type)
-              assert_equal(-1, cols_[-3].srid)
+              assert_equal(4326, cols_[-3].srid)
               assert_equal(::RGeo::Feature::Point, cols_[-2].geometric_type)
               assert_equal(4326, cols_[-2].srid)
+              assert_equal(false, cols_[-2].geographic?)
               assert_nil(cols_[-1].geometric_type)
+            end
+            
+            
+            def test_add_geography_column
+              klass_ = create_ar_class
+              klass_.connection.create_table(:spatial_test) do |t_|
+                t_.column('latlon', :geometry)
+              end
+              klass_.connection.change_table(:spatial_test) do |t_|
+                t_.column('geom2', :point, :srid => 4326, :geographic => true)
+                t_.column('name', :string)
+              end
+              assert_equal(1, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
+              cols_ = klass_.columns
+              assert_equal(::RGeo::Feature::Geometry, cols_[-3].geometric_type)
+              assert_equal(4326, cols_[-3].srid)
+              assert_equal(::RGeo::Feature::Point, cols_[-2].geometric_type)
+              assert_equal(4326, cols_[-2].srid)
+              assert_equal(true, cols_[-2].geographic?)
+              assert_nil(cols_[-1].geometric_type)
+            end
+            
+            
+            def test_drop_geometry_column
+              klass_ = create_ar_class
+              klass_.connection.create_table(:spatial_test) do |t_|
+                t_.column('latlon', :geometry)
+                t_.column('geom2', :point, :srid => 4326)
+              end
+              klass_.connection.change_table(:spatial_test) do |t_|
+                t_.remove('geom2')
+              end
+              assert_equal(1, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
+              cols_ = klass_.columns
+              assert_equal(::RGeo::Feature::Geometry, cols_[-1].geometric_type)
+              assert_equal('latlon', cols_[-1].name)
+              assert_equal(4326, cols_[-1].srid)
+              assert_equal(false, cols_[-1].geographic?)
+            end
+            
+            
+            def test_drop_geography_column
+              klass_ = create_ar_class
+              klass_.connection.create_table(:spatial_test) do |t_|
+                t_.column('latlon', :geometry)
+                t_.column('geom2', :point, :srid => 4326, :geographic => true)
+                t_.column('geom3', :point, :srid => 4326)
+              end
+              klass_.connection.change_table(:spatial_test) do |t_|
+                t_.remove('geom2')
+              end
+              assert_equal(2, klass_.connection.select_value("SELECT COUNT(*) FROM geometry_columns WHERE f_table_name='spatial_test'").to_i)
+              cols_ = klass_.columns
+              assert_equal(::RGeo::Feature::Point, cols_[-1].geometric_type)
+              assert_equal('geom3', cols_[-1].name)
+              assert_equal(false, cols_[-1].geographic?)
+              assert_equal(::RGeo::Feature::Geometry, cols_[-2].geometric_type)
+              assert_equal('latlon', cols_[-2].name)
+              assert_equal(false, cols_[-2].geographic?)
             end
             
             
           end
           
         else
-          puts "WARNING: Couldn't find spatialite in database.yml. Skipping those tests."
+          puts "WARNING: Couldn't find postgis in database.yml. Skipping those tests."
           puts "         See tests/active_record/readme.txt for more info."
         end
         

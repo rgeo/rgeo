@@ -34,6 +34,11 @@
 ;
 
 
+require 'rgeo/feature'
+require 'rgeo/cartesian'
+require 'rgeo/geography'
+
+
 module RGeo
   
   module ActiveRecord
@@ -43,6 +48,24 @@ module RGeo
     module Common  # :nodoc:
       
       class IndexDefinition < ::Struct.new(:table, :name, :unique, :columns, :lengths, :spatial)  # :nodoc:
+      end
+      
+      class << self
+        
+        def geometric_type_from_name(name_)
+          case name_.downcase
+          when 'geometry' then ::RGeo::Feature::Geometry
+          when 'point' then ::RGeo::Feature::Point
+          when 'linestring' then ::RGeo::Feature::LineString
+          when 'polygon' then ::RGeo::Feature::Polygon
+          when 'geometrycollection' then ::RGeo::Feature::GeometryCollection
+          when 'multipoint' then ::RGeo::Feature::MultiPoint
+          when 'multilinestring' then ::RGeo::Feature::MultiLineString
+          when 'multipolygon' then ::RGeo::Feature::MultiPolygon
+          else nil
+          end
+        end
+        
       end
       
     end

@@ -185,14 +185,14 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
-        WKRep::WKTParser.new(:default_factory => self).parse(str_)
+        WKRep::WKTParser.new(self).parse(str_)
       end
       
       
       # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
-        WKRep::WKBParser.new(:default_factory => self).parse(str_)
+        WKRep::WKBParser.new(self).parse(str_)
       end
       
       

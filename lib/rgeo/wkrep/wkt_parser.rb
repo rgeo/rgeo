@@ -52,21 +52,15 @@ module RGeo
     # 
     # === Configuration options
     # 
-    # The following options are recognized. These can be passed to the
-    # constructor, or set on the object afterwards.
+    # You must provide each parser with an RGeo::Feature::FactoryGenerator.
+    # It should understand the configuration options <tt>:srid</tt>,
+    # <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
+    # You may also pass a specific RGeo::Feature::Factory, or nil to
+    # specify the default Cartesian FactoryGenerator.
     # 
-    # <tt>:default_factory</tt>::
-    #   The default factory for parsed geometries, used when no factory
-    #   generator is provided. If no default is provided either, the
-    #   default cartesian factory will be used as the default.
-    # <tt>:factory_generator</tt>::
-    #   A factory generator that should return a factory based on the
-    #   srid and dimension settings in the input. The factory generator
-    #   should understand the configuration options <tt>:srid</tt>,
-    #   <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
-    #   See RGeo::Feature::FactoryGenerator for more information.
-    #   If no generator is provided, the <tt>:default_factory</tt> is
-    #   used.
+    # The following additional options are recognized. These can be passed
+    # to the constructor, or set on the object afterwards.
+    # 
     # <tt>:support_ewkt</tt>::
     #   Activate support for PostGIS EWKT type tags, which appends an "M"
     #   to tags to indicate the presence of M but not Z, and also
@@ -83,6 +77,9 @@ module RGeo
     # <tt>:ignore_extra_tokens</tt>::
     #   If true, extra tokens at the end of the data are ignored. If
     #   false (the default), extra tokens will trigger a parse error.
+    # <tt>:default_srid</tt>::
+    #   A SRID to pass to the factory generator if no SRID is present in
+    #   the input. Defaults to nil (i.e. don't specify a SRID).
     
     class WKTParser
       
@@ -90,9 +87,8 @@ module RGeo
       # Create and configure a WKT parser. See the WKTParser
       # documentation for the options that can be passed.
       
-      def initialize(opts_={})
-        @default_factory = opts_[:default_factory] || Cartesian.preferred_factory
-        @factory_generator = opts_[:factory_generator]
+      def initialize(factory_generator_=nil, opts_={})
+        self.factory_generator = factory_generator_
         @support_ewkt = opts_[:support_ewkt] ? true : false
         @support_wkt12 = opts_[:support_wkt12] ? true : false
         @strict_wkt11 = @support_ewkt || @support_wkt12 ? false : opts_[:strict_wkt11] ? true : false
@@ -101,31 +97,35 @@ module RGeo
       end
       
       
-      # Returns the default factory. See WKTParser for details.
-      def default_factory
-        @default_factory
-      end
-      
-      # Sets the default factory. See WKTParser for details.
-      def default_factory=(value_)
-        @default_factory = value_ || Cartesian.preferred_factory
-      end
-      
-      # Returns the factory generator, or nil if there is none.
-      # See WKTParser for details.
+      # Returns the factory generator. See WKTParser for details.
       def factory_generator
         @factory_generator
       end
       
+      # If this parser was given an exact factory, returns it; otherwise
+      # returns nil.
+      def exact_factory
+        @exact_factory
+      end
+      
       # Sets the factory_generator. See WKTParser for details.
       def factory_generator=(value_)
-        @factory_generator = value_
+        if value_.kind_of?(Feature::Factory::Instance)
+          @factory_generator = Feature::FactoryGenerator.single(value_)
+          @exact_factory = value_
+        elsif value_.respond_to?(:call)
+          @factory_generator = value_
+          @exact_factory = nil
+        else
+          @factory_generator = Cartesian.method(:preferred_factory)
+          @exact_factory = nil
+        end
       end
       
       # Sets the factory_generator to the given block.
       # See WKTParser for details.
       def to_generate_factory(&block_)
-        @factory_generator = block_
+        self.factory_generator = block_
       end
       
       # Returns true if this parser supports EWKT.
@@ -177,7 +177,7 @@ module RGeo
       
       def parse(str_)
         str_ = str_.downcase
-        @cur_factory = @factory_generator ? nil : @default_factory
+        @cur_factory = @exact_factory
         if @cur_factory
           @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate) ? true : false
           @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate) ? true : false
@@ -214,10 +214,7 @@ module RGeo
       
       def _ensure_factory  # :nodoc:
         unless @cur_factory
-          if @factory_generator
-            @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => @cur_expect_z, :support_m_coordinate => @cur_expect_m)
-          end
-          @cur_factory ||= @default_factory
+          @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => @cur_expect_z, :support_m_coordinate => @cur_expect_m)
           @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate) ? true : false
           @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate) ? true : false
           _check_factory_support unless @cur_expect_z.nil?
@@ -363,7 +360,7 @@ module RGeo
       def _parse_polygon  # :nodoc:
         inner_rings_ = []
         if @cur_token == 'empty'
-          outer_ring_ = @cur_factory.linear_ring([])
+          outer_ring_ = _ensure_factory.linear_ring([])
         else
           _expect_token_type(:begin)
           _next_token

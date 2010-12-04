@@ -48,10 +48,10 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geography.spherical
-          @zfactory = ::RGeo::Geography.spherical(:support_z_coordinate => true)
-          @mfactory = ::RGeo::Geography.spherical(:support_m_coordinate => true)
-          @zmfactory = ::RGeo::Geography.spherical(:support_z_coordinate => true, :support_m_coordinate => true)
+          @factory = ::RGeo::Geography.spherical_factory
+          @zfactory = ::RGeo::Geography.spherical_factory(:support_z_coordinate => true)
+          @mfactory = ::RGeo::Geography.spherical_factory(:support_m_coordinate => true)
+          @zmfactory = ::RGeo::Geography.spherical_factory(:support_z_coordinate => true, :support_m_coordinate => true)
         end
         
         

@@ -58,11 +58,6 @@ module ActiveRecord
   # obtain a factory with those properties. This factory is the one
   # associated with the actual geometry properties of the ActiveRecord
   # object.
-  # 
-  # === ActiveRecord::Base::rgeo_default_factory
-  # 
-  # The default factory used to load RGeo geometry objects from the
-  # database. This is used when there is no rgeo_factory_generator.
   
   class Base
     
@@ -70,11 +65,14 @@ module ActiveRecord
     self.attribute_types_cached_by_default << :geometry
     
     
-    class_attribute :rgeo_default_factory, :instance_writer => false
-    self.rgeo_default_factory = nil
-    
     class_attribute :rgeo_factory_generator, :instance_writer => false
-    self.rgeo_factory_generator = nil
+    self.rgeo_factory_generator = ::Proc.new do |config_|
+      if config_.delete(:geographic)
+        ::RGeo::Geography.spherical_factory(config_)
+      else
+        ::RGeo::Cartesian.preferred_factory(config_)
+      end
+    end
     
     
     # This is a convenient way to set the rgeo_factory_generator by
