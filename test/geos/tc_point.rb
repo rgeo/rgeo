@@ -49,9 +49,9 @@ module RGeo
         
         def setup
           @factory = ::RGeo::Geos.factory
-          @zfactory = ::RGeo::Geos.factory(:support_z_coordinate => true)
-          @mfactory = ::RGeo::Geos.factory(:support_m_coordinate => true)
-          @zmfactory = ::RGeo::Geos.factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          @zfactory = ::RGeo::Geos.factory(:has_z_coordinate => true)
+          @mfactory = ::RGeo::Geos.factory(:has_m_coordinate => true)
+          @zmfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true)
         end
         
         

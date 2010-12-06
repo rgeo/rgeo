@@ -48,10 +48,10 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geography.simple_mercator_factory
-          @zfactory = ::RGeo::Geography.simple_mercator_factory(:support_z_coordinate => true)
-          @mfactory = ::RGeo::Geography.simple_mercator_factory(:support_m_coordinate => true)
-          @zmfactory = ::RGeo::Geography.simple_mercator_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          @factory = ::RGeo::Geographic.simple_mercator_factory
+          @zfactory = ::RGeo::Geographic.simple_mercator_factory(:has_z_coordinate => true)
+          @mfactory = ::RGeo::Geographic.simple_mercator_factory(:has_m_coordinate => true)
+          @zmfactory = ::RGeo::Geographic.simple_mercator_factory(:has_z_coordinate => true, :has_m_coordinate => true)
         end
         
         

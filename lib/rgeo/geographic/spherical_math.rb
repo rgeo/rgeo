@@ -36,7 +36,7 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     module SphericalMath  # :nodoc:
       

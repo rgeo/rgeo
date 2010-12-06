@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Proj4 projection
+# Tests for the simple spherical multi point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,65 +34,34 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/multi_point_tests.rb', ::File.dirname(__FILE__))
+
+
 module RGeo
-  
-  module Geography
-    
-    
-    class Proj4Projector  # :nodoc:
+  module Tests  # :nodoc:
+    module SphericalGeographic  # :nodoc:
       
-      
-      def initialize(geography_factory_, projection_factory_)
-        @geography_factory = geography_factory_
-        @projection_factory = projection_factory_
-      end
-      
-      
-      def project(geometry_)
-        Feature.cast(geometry_, @projection_factory, :project)
-      end
-      
-      
-      def unproject(geometry_)
-        Feature.cast(geometry_, @geography_factory, :project)
-      end
-      
-      
-      def projection_factory
-        @projection_factory
-      end
-      
-      
-      def wraps?
-        false
-      end
-      
-      
-      def limits_window
-        nil
-      end
-      
-      
-      class << self
+      class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_from_existing_factory(geography_factory_, projection_factory_)
-          new(geography_factory_, projection_factory_)
+        def create_factory
+          @factory = ::RGeo::Geographic.spherical_factory
         end
         
         
-        def create_from_proj4(geography_factory_, proj4_, opts_={})
-          projection_factory_ = Cartesian.preferred_factory(:proj4 => proj4_, :srid => opts_[:srid], :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
-          new(geography_factory_, projection_factory_)
-        end
+        include ::RGeo::Tests::Common::MultiPointTests
+        
+        
+        undef_method :test_fully_equal
+        undef_method :test_geometrically_equal
+        undef_method :test_not_equal
         
         
       end
-      
       
     end
-    
-    
   end
-  
 end

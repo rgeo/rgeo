@@ -189,12 +189,12 @@ module RGeo
           else
             if type_ == Point
               proj_ = nproj_ = nil
-              if project_ && factory_.has_capability?(:proj4) && nfactory_.has_capability?(:proj4)
+              if project_
                 proj_ = factory_.proj4
                 nproj_ = nfactory_.proj4
               end
-              hasz_ = factory_.has_capability?(:z_coordinate)
-              nhasz_ = nfactory_.has_capability?(:z_coordinate)
+              hasz_ = factory_.property(:has_z_coordinate)
+              nhasz_ = nfactory_.property(:has_z_coordinate)
               if proj_ && nproj_
                 coords_ = CoordSys::Proj4.transform_coords(proj_, nproj_, obj_.x, obj_.y, hasz_ ? obj_.z : nil)
                 coords_ << (hasz_ ? obj_.z : 0.0) if nhasz_ && coords_.size < 3
@@ -202,7 +202,7 @@ module RGeo
                 coords_ = [obj_.x, obj_.y]
                 coords_ << (hasz_ ? obj_.z : 0.0) if nhasz_
               end
-              coords_ << (factory_.has_capability?(:m_coordinate) ? obj_.m : 0.0) if nfactory_.has_capability?(:m_coordinate)
+              coords_ << (factory_.property(:has_m_coordinate) ? obj_.m : 0.0) if nfactory_.property(:has_m_coordinate)
               nfactory_.point(*coords_)
             elsif type_ == Line
               nfactory_.line(cast(obj_.start_point, nfactory_, opts_), cast(obj_.end_point, nfactory_, opts_))

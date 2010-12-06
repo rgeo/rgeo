@@ -42,13 +42,13 @@ require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__
 
 module RGeo
   module Tests  # :nodoc:
-    module SphericalGeography  # :nodoc:
+    module SphericalGeographic  # :nodoc:
       
       class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
         def setup
-          @factory = ::RGeo::Geography.spherical_factory
+          @factory = ::RGeo::Geographic.spherical_factory
         end
         
         

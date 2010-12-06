@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical geometry common methods
+# Tests for the simple spherical point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,64 +34,67 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
+
+
 module RGeo
-  
-  module Geography
-    
-    
-    module SphericalGeometryMethods  # :nodoc:
+  module Tests  # :nodoc:
+    module SphericalGeographic  # :nodoc:
       
-      
-      def srid
-        factory.srid
+      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def setup
+          @factory = ::RGeo::Geographic.spherical_factory
+          @zfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true)
+          @mfactory = ::RGeo::Geographic.spherical_factory(:has_m_coordinate => true)
+          @zmfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true, :has_m_coordinate => true)
+        end
+        
+        
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_latlon
+          point_ = @factory.point(21, -22)
+          assert_equal(21, point_.longitude)
+          assert_equal(-22, point_.latitude)
+        end
+        
+        
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(4055, point_.srid)
+        end
+        
+        
+        def test_distance
+          point1_ = @factory.point(0, 10)
+          point2_ = @factory.point(0, 10)
+          point3_ = @factory.point(0, 40)
+          assert_in_delta(0, point1_.distance(point2_), 0.0001)
+          assert_in_delta(::Math::PI / 6.0 * ::RGeo::Geographic::SphericalMath::RADIUS, point1_.distance(point3_), 0.0001)
+        end
+        
+        
+        undef_method :test_disjoint
+        undef_method :test_intersects
+        undef_method :test_touches
+        undef_method :test_crosses
+        undef_method :test_within
+        undef_method :test_contains
+        undef_method :test_overlaps
+        undef_method :test_intersection
+        undef_method :test_union
+        undef_method :test_difference
+        undef_method :test_sym_difference
+        
+        
       end
-      
       
     end
-    
-    
-    module SphericalLineStringMethods  # :nodoc:
-      
-      
-      def _arcs
-        unless @arcs
-          @arcs = (0..num_points-2).map do |i_|
-            SphericalMath::ArcXYZ.new(point_n(i_)._xyz, point_n(i_+1)._xyz)
-          end
-        end
-        @arcs
-      end
-      
-      
-      def is_simple?
-        arcs_ = _arcs
-        len_ = arcs_.length
-        return false if arcs_.any?{ |a_| a_.degenerate? }
-        return true if len_ == 1
-        return arcs_[0].s != arcs_[1].e if len_ == 2
-        arcs_.each_with_index do |arc_, index_|
-          nindex_ = index_ + 1
-          nindex_ = nil if nindex_ == len_
-          return false if nindex_ && arc_.contains_point?(arcs_[nindex_].e)
-          pindex_ = index_ - 1
-          pindex_ = nil if pindex_ < 0
-          return false if pindex_ && arc_.contains_point?(arcs_[pindex_].s)
-          if nindex_
-            oindex_ = nindex_ + 1
-            while oindex_ < len_
-              oarc_ = arcs_[oindex_]
-              return false if !(index_ == 0 && oindex_ == len_-1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
-              oindex_ += 1
-            end
-          end
-        end
-        true
-      end
-      
-      
-    end
-    
-    
   end
-  
 end

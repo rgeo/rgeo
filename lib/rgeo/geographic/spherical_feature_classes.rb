@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical geography feature classes
+# Spherical geographic feature classes
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,7 +36,7 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     
     class SphericalPointImpl  # :nodoc:

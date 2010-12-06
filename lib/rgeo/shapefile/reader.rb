@@ -162,7 +162,7 @@ module RGeo
       #   A factory generator that should return a factory based on the
       #   srid and dimension settings in the input. The factory generator
       #   should understand the configuration options
-      #   <tt>:support_z_coordinate</tt> and <tt>:support_m_coordinate</tt>.
+      #   <tt>:has_z_coordinate</tt> and <tt>:has_m_coordinate</tt>.
       #   See RGeo::Feature::FactoryGenerator for more information.
       #   If no generator is provided, the <tt>:default_factory</tt> is
       #   used.
@@ -253,17 +253,17 @@ module RGeo
           factory_config_ = {}
           factory_config_[:srid] = opts_[:srid] if opts_[:srid]
           unless @zmin.nil?
-            factory_config_[:support_z_coordinate] = true
+            factory_config_[:has_z_coordinate] = true
           end
           unless @mmin.nil?
-            factory_config_[:support_m_coordinate] = true
+            factory_config_[:has_m_coordinate] = true
           end
           @factory = factory_generator_.call(factory_config_)
         else
           @factory = opts_[:default_factory] || Cartesian.preferred_factory
         end
-        @factory_supports_z = @factory.has_capability?(:z_coordinate)
-        @factory_supports_m = @factory.has_capability?(:m_coordinate)
+        @factory_supports_z = @factory.property(:has_z_coordinate)
+        @factory_supports_m = @factory.property(:has_m_coordinate)
         
         @assume_inner_follows_outer = opts_[:assume_inner_follows_outer]
       end

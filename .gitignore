@@ -1,6 +1,7 @@
 /doc/
 /pkg/
 /tmp/
+/future/
 .#*
 .DS_Store
 *.dSYM

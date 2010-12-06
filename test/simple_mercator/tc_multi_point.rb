@@ -48,7 +48,7 @@ module RGeo
         
         
         def create_factory
-          ::RGeo::Geography.simple_mercator_factory
+          ::RGeo::Geographic.simple_mercator_factory
         end
         
         

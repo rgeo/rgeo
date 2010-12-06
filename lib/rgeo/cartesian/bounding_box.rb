@@ -73,8 +73,8 @@ module RGeo
       
       def initialize(factory_, opts_={})
         @factory = factory_
-        @has_z = !opts_[:ignore_z] && factory_.has_capability?(:z_coordinate) ? true : false
-        @has_m = !opts_[:ignore_m] && factory_.has_capability?(:m_coordinate) ? true : false
+        @has_z = !opts_[:ignore_z] && factory_.property(:has_z_coordinate) ? true : false
+        @has_m = !opts_[:ignore_m] && factory_.property(:has_m_coordinate) ? true : false
         @min_x = @max_x = @min_y = @max_y = @min_z = @max_z = @min_m = @max_m = nil
       end
       

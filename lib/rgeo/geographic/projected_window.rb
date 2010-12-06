@@ -36,19 +36,19 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     
     # This object represents an axis-aligned rectangle in a map projection
     # coordinate system. It is commonly used to specify the viewport for a
     # map visualization, an envelope in a projected coordinate system, or
-    # a spatial constraint. It must be attached to a Geography::Factory
+    # a spatial constraint. It must be attached to a Geographic::Factory
     # that has a projection.
     
     class ProjectedWindow
       
       
-      # Create a new ProjectedWindow given the Geography::Factory, and the
+      # Create a new ProjectedWindow given the Geographic::Factory, and the
       # x and y extents of the rectangle.
       # 
       # The window will be intelligently clamped to the limits imposed by
@@ -110,10 +110,10 @@ module RGeo
       end
       
       
-      # Returns the Geography::Factory associated with this window.
+      # Returns the Geographic::Factory associated with this window.
       # Note that this factory is the overall geography factory, not the
       # projected factory (which can be obtained by calling
-      # Geography::Factory#projection_factory on this factory).
+      # Geographic::Factory#projection_factory on this factory).
       
       def factory
         @factory

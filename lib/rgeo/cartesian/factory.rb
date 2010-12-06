@@ -53,8 +53,8 @@ module RGeo
       
       def initialize(opts_={})
         @srid = opts_[:srid].to_i
-        @support_z = opts_[:support_z_coordinate] ? true : false
-        @support_m = opts_[:support_m_coordinate] ? true : false
+        @has_z = opts_[:has_z_coordinate] ? true : false
+        @has_m = opts_[:has_m_coordinate] ? true : false
         @proj4 = opts_[:proj4]
         if CoordSys::Proj4.supported?
           if @proj4.kind_of?(::String) || @proj4.kind_of?(::Hash)
@@ -69,7 +69,7 @@ module RGeo
       # Equivalence test.
       
       def eql?(rhs_)
-        rhs_.is_a?(self.class) && @srid == rhs_.srid
+        rhs_.is_a?(self.class) && @srid == rhs_.srid && @has_z == rhs_.property(:has_z_coordinate) && @has_m == rhs_.property(:has_m_coordinate)
       end
       alias_method :==, :eql?
       
@@ -81,16 +81,16 @@ module RGeo
       end
       
       
-      # See ::RGeo::Feature::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#property
       
-      def has_capability?(name_)
+      def property(name_)
         case name_
-        when :z_coordinate
-          @support_z
-        when :m_coordinate
-          @support_m
-        when :proj4
-          !@proj4.nil?
+        when :has_z_coordinate
+          @has_z
+        when :has_m_coordinate
+          @has_m
+        when :is_cartesian
+          true
         else
           nil
         end
@@ -178,6 +178,13 @@ module RGeo
       
       def proj4
         @proj4
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#coord_sys
+      
+      def coord_sys
+        nil
       end
       
       

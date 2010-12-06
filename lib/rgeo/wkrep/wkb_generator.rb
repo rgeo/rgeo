@@ -152,8 +152,8 @@ module RGeo
       def generate(obj_)
         factory_ = obj_.factory
         if @type_format == :ewkb || @type_format == :wkb12
-          @cur_has_z = factory_.has_capability?(:z_coordinate)
-          @cur_has_m = factory_.has_capability?(:m_coordinate)
+          @cur_has_z = factory_.property(:has_z_coordinate)
+          @cur_has_m = factory_.property(:has_m_coordinate)
         else
           @cur_has_z = nil
           @cur_has_m = nil

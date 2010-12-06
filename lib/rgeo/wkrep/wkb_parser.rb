@@ -51,7 +51,7 @@ module RGeo
     # 
     # You must provide each parser with an RGeo::Feature::FactoryGenerator.
     # It should understand the configuration options <tt>:srid</tt>,
-    # <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
+    # <tt>:has_z_coordinate</tt>, and <tt>:has_m_coordinate</tt>.
     # You may also pass a specific RGeo::Feature::Factory, or nil to
     # specify the default Cartesian FactoryGenerator.
     # 
@@ -220,11 +220,11 @@ module RGeo
           @cur_has_m = has_m_
           @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
           @cur_srid = srid_
-          @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => has_z_, :support_m_coordinate => has_m_)
-          if @cur_has_z && !@cur_factory.has_capability?(:z_coordinate)
+          @cur_factory = @factory_generator.call(:srid => @cur_srid, :has_z_coordinate => has_z_, :has_m_coordinate => has_m_)
+          if @cur_has_z && !@cur_factory.property(:has_z_coordinate)
             raise Error::ParseError, "Data has Z coordinates but the factory doesn't have z_coordinate capability"
           end
-          if @cur_has_m && !@cur_factory.has_capability?(:m_coordinate)
+          if @cur_has_m && !@cur_factory.property(:has_m_coordinate)
             raise Error::ParseError, "Data has M coordinates but the factory doesn't have m_coordinate capability"
           end
         end

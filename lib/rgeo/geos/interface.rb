@@ -88,14 +88,14 @@ module RGeo
       # <tt>:srid</tt>::
       #   Set the SRID returned by geometries created by this factory.
       #   Default is 0.
-      # <tt>:support_z_coordinate</tt>::
+      # <tt>:has_z_coordinate</tt>::
       #   Support <tt>z_coordinate</tt>. Default is false.
-      # <tt>:support_m_coordinate</tt>::
+      # <tt>:has_m_coordinate</tt>::
       #   Support <tt>m_coordinate</tt>. Default is false.
       
       def factory(opts_={})
         if supported?
-          if opts_[:support_z_coordinate] && opts_[:support_m_coordinate]
+          if opts_[:has_z_coordinate] && opts_[:has_m_coordinate]
             ZMFactory.new(opts_)
           else
             Factory.create(opts_)

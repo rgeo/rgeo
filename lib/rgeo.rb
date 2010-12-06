@@ -61,9 +61,9 @@
 # Cartesian geometry that includes every operation defined in the SFS. It
 # requires GEOS 3.2 or later.
 # 
-# The RGeo::Geography module contains spatial implementations that
+# The RGeo::Geographic module contains spatial implementations that
 # operate in latitude-longitude coordinates and are well-suited for
-# geographic location based applications. Geography implementations may
+# geographic location based applications. Geographic implementations may
 # also be linked to projections.
 # 
 # The RGeo::WKRep module contains tools for reading and writing spatial
@@ -103,7 +103,7 @@
 #  require 'rgeo/feature'
 #  require 'rgeo/cartesian'
 #  require 'rgeo/coord_sys'
-#  require 'rgeo/geography'
+#  require 'rgeo/geographic'
 #  require 'rgeo/geos'
 #  require 'rgeo/geo_json'
 #  require 'rgeo/shapefile'
@@ -120,7 +120,7 @@ module RGeo
   autoload(:Error, 'rgeo/error')
   autoload(:Feature, 'rgeo/feature')
   autoload(:GeoJSON, 'rgeo/geo_json')
-  autoload(:Geography, 'rgeo/geography')
+  autoload(:Geographic, 'rgeo/geographic')
   autoload(:Geos, 'rgeo/geos')
   autoload(:ImplHelper, 'rgeo/impl_helper')
   autoload(:Shapefile, 'rgeo/shapefile')

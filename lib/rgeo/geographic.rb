@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple mercator polygon implementation
+# Geographic data for RGeo
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,29 +34,53 @@
 ;
 
 
-require 'test/unit'
+# Parent file
 require 'rgeo'
-
-require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
-  module Tests  # :nodoc:
-    module ProjectedGeography  # :nodoc:
-      
-      class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
-        
-        
-        def setup
-          @factory = ::RGeo::Geography.projected_factory(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
-        end
-        
-        
-        include ::RGeo::Tests::Common::PolygonTests
-        
-        
-      end
-      
-    end
+  
+  
+  # The Geographic implementation actually comprises a suite of
+  # implementations with one common feature: they represent geographic
+  # latitude/longitude coordinates measured in degrees. The "x"
+  # coordinate corresponds to longitude, and the "y" coordinate to
+  # latitude. Thus, coordinates are often expressed in reverse
+  # (i.e. long-lat) order. e.g.
+  # 
+  #  location = geographic_factory.point(long, lat)
+  # 
+  # Some geographic implementations include a secondary factory that
+  # represents a projection. For these implementations, you can quickly
+  # transform data between lat/long coordinates and the projected
+  # coordinate system, and most calculations are done in the projected
+  # coordinate system. For implementations that do not include this
+  # secondary projection factory, calculations are done on the sphereoid.
+  # See the various class methods of Geographic for more information on
+  # the behaviors of the factories they generate.
+  
+  module Geographic
   end
+  
+  
 end
+
+
+# Dependency files
+require 'rgeo/feature'
+require 'rgeo/coord_sys'
+require 'rgeo/wkrep'
+require 'rgeo/impl_helper'
+require 'rgeo/cartesian'
+
+# Implementation files.
+require 'rgeo/geographic/factory'
+require 'rgeo/geographic/projected_window'
+require 'rgeo/geographic/interface'
+require 'rgeo/geographic/spherical_math'
+require 'rgeo/geographic/spherical_feature_methods'
+require 'rgeo/geographic/spherical_feature_classes'
+require 'rgeo/geographic/proj4_projector'
+require 'rgeo/geographic/simple_mercator_projector'
+require 'rgeo/geographic/projected_feature_methods'
+require 'rgeo/geographic/projected_feature_classes'

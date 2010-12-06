@@ -46,9 +46,9 @@ module RGeo
       
       def setup
         @geo_factory = ::RGeo::Cartesian.simple_factory(:srid => 4326)
-        @geo_factory_z = ::RGeo::Cartesian.simple_factory(:srid => 4326, :support_z_coordinate => true)
-        @geo_factory_m = ::RGeo::Cartesian.simple_factory(:srid => 4326, :support_m_coordinate => true)
-        @geo_factory_zm = ::RGeo::Cartesian.simple_factory(:srid => 4326, :support_z_coordinate => true, :support_m_coordinate => true)
+        @geo_factory_z = ::RGeo::Cartesian.simple_factory(:srid => 4326, :has_z_coordinate => true)
+        @geo_factory_m = ::RGeo::Cartesian.simple_factory(:srid => 4326, :has_m_coordinate => true)
+        @geo_factory_zm = ::RGeo::Cartesian.simple_factory(:srid => 4326, :has_z_coordinate => true, :has_m_coordinate => true)
         @entity_factory = ::RGeo::GeoJSON::EntityFactory.instance
       end
       

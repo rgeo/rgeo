@@ -62,8 +62,8 @@ module RGeo
       
       
       def initialize(opts_={})  # :nodoc:
-        @zfactory = Factory.create(:support_z_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid])
-        @mfactory = Factory.create(:support_m_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid])
+        @zfactory = Factory.create(:has_z_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid], :proj4 => opts_[:proj4])
+        @mfactory = Factory.create(:has_m_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid], :proj4 => opts_[:proj4])
       end
       
       
@@ -111,14 +111,14 @@ module RGeo
       alias_method :==, :eql?
       
       
-      # See ::RGeo::Feature::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#property
       
-      def has_capability?(name_)
+      def property(name_)
         case name_
-        when :z_coordinate, :m_coordinate
+        when :has_z_coordinate, :has_m_coordinate, :is_cartesian
           true
         else
-          @zfactory.has_capability?(name_)
+          nil
         end
       end
       
@@ -197,6 +197,20 @@ module RGeo
       
       def multi_polygon(elems_)
         ZMMultiPolygonImpl.create(self, @zfactory.multi_polygon(elems_), @mfactory.multi_polygon(elems_))
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#proj4
+      
+      def proj4
+        @zfactory.proj4
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#coord_sys
+      
+      def coord_sys
+        @zfactory.coord_sys
       end
       
       

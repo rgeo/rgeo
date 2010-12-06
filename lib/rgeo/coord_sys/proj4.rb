@@ -240,10 +240,10 @@ module RGeo
         
         def _transform_point(from_proj_, from_point_, to_proj_, to_factory_)  # :nodoc:
           from_factory_ = from_point_.factory
-          from_has_z_ = from_factory_.has_capability?(:z_coordinate)
-          from_has_m_ = from_factory_.has_capability?(:m_coordinate)
-          to_has_z_ = to_factory_.has_capability?(:z_coordinate)
-          to_has_m_ = to_factory_.has_capability?(:m_coordinate)
+          from_has_z_ = from_factory_.property(:has_z_coordinate)
+          from_has_m_ = from_factory_.property(:has_m_coordinate)
+          to_has_z_ = to_factory_.property(:has_z_coordinate)
+          to_has_m_ = to_factory_.property(:has_m_coordinate)
           coords_ = _transform_coords(from_proj_, to_proj_, from_point_.x, from_point_.y,
                                       from_has_z_ ? from_point_.z : nil)
           extras_ = []

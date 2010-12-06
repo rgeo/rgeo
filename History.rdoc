@@ -1,3 +1,12 @@
+=== 0.1.22 / 2010-12-05
+
+* API CHANGE: Renamed Geography module to Geographic.
+* API CHANGE: Renamed Factory#has_capability? to Factory#property to generalize the API.
+* API CHANGE: Factory#proj4 and Factory#coord_sys are now required methods.
+* The ZM Geos factory didn't properly handle proj4. Fixed.
+* The proj4-based projected geographic factory now extracts the cooresponding geographic coordinate system from the projection, rather than always using WGS84.
+* Initial draft of Spatial Programming paper.
+
 === 0.1.21 / 2010-12-03
 
 * API CHANGE: Added "_factory" to the end of the Geography toplevel interface methods, for consistency with the rest of the API.

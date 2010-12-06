@@ -68,7 +68,7 @@ module ActiveRecord
     class_attribute :rgeo_factory_generator, :instance_writer => false
     self.rgeo_factory_generator = ::Proc.new do |config_|
       if config_.delete(:geographic)
-        ::RGeo::Geography.spherical_factory(config_)
+        ::RGeo::Geographic.spherical_factory(config_)
       else
         ::RGeo::Cartesian.preferred_factory(config_)
       end

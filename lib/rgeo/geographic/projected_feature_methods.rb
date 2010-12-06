@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Mercator geography common method definitions
+# Projected geographic common method definitions
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,7 +36,7 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     
     module ProjectedGeometryMethods  # :nodoc:

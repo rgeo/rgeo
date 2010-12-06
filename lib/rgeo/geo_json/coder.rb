@@ -131,8 +131,8 @@ module RGeo
           raise ::ArgumentError, "Unrecognzied json_parser: #{@json_parser.inspect}"
         end
         @num_coordinates = 2
-        @num_coordinates += 1 if @geo_factory.has_capability?(:z_coordinate)
-        @num_coordinates += 1 if @geo_factory.has_capability?(:m_coordinate)
+        @num_coordinates += 1 if @geo_factory.property(:has_z_coordinate)
+        @num_coordinates += 1 if @geo_factory.property(:has_m_coordinate)
       end
       
       
@@ -222,14 +222,14 @@ module RGeo
       
       def _encode_geometry(object_, point_encoder_=nil)  # :nodoc:
         unless point_encoder_
-          if object_.factory.has_capability?(:z_coordinate)
-            if object_.factory.has_capability?(:m_coordinate)
+          if object_.factory.property(:has_z_coordinate)
+            if object_.factory.property(:has_m_coordinate)
               point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y, p_.z, p_.m] }
             else
               point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y, p_.z] }
             end
           else
-            if object_.factory.has_capability?(:m_coordinate)
+            if object_.factory.property(:has_m_coordinate)
               point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y, p_.m] }
             else
               point_encoder_ = ::Proc.new{ |p_| [p_.x, p_.y] }

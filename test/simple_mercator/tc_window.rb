@@ -46,7 +46,7 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geography.simple_mercator_factory
+          @factory = ::RGeo::Geographic.simple_mercator_factory
         end
         
         
@@ -80,34 +80,34 @@ module RGeo
         
         
         def test_center_point
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(-160, -30), @factory.point(170, 30))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(-160, -30), @factory.point(170, 30))
           assert_close_enough(@factory.point(5, 0), window1_.center_point)
-          window2_ = Geography::ProjectedWindow.for_corners(@factory.point(160, -30), @factory.point(-170, 30))
+          window2_ = Geographic::ProjectedWindow.for_corners(@factory.point(160, -30), @factory.point(-170, 30))
           assert_close_enough(@factory.point(175, 0), window2_.center_point)
         end
         
         
         def test_crosses_seam
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(-170, 30), @factory.point(170, 40))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(-170, 30), @factory.point(170, 40))
           assert(!window1_.crosses_seam?)
-          window2_ = Geography::ProjectedWindow.for_corners(@factory.point(170, 30), @factory.point(-170, 40))
+          window2_ = Geographic::ProjectedWindow.for_corners(@factory.point(170, 30), @factory.point(-170, 40))
           assert(window2_.crosses_seam?)
         end
         
         
         def test_degenerate
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(-20, 30), @factory.point(-10, 40))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(-20, 30), @factory.point(-10, 40))
           assert(!window1_.degenerate?)
-          window2_ = Geography::ProjectedWindow.for_corners(@factory.point(-20, 30), @factory.point(-20, 40))
+          window2_ = Geographic::ProjectedWindow.for_corners(@factory.point(-20, 30), @factory.point(-20, 40))
           assert(window2_.degenerate?)
-          window3_ = Geography::ProjectedWindow.for_corners(@factory.point(-20, 30), @factory.point(-10, 30))
+          window3_ = Geographic::ProjectedWindow.for_corners(@factory.point(-20, 30), @factory.point(-10, 30))
           assert(window3_.degenerate?)
         end
         
         
         def test_contains_point
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(-170, 30), @factory.point(-160, 40))
-          window2_ = Geography::ProjectedWindow.for_corners(@factory.point(170, 30), @factory.point(-170, 40))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(-170, 30), @factory.point(-160, 40))
+          window2_ = Geographic::ProjectedWindow.for_corners(@factory.point(170, 30), @factory.point(-170, 40))
           point1_ = @factory.point(-169, 32)
           point2_ = @factory.point(-171, 32)
           point3_ = @factory.point(-169, 29)
@@ -124,43 +124,43 @@ module RGeo
         
         
         def test_noseam_contains_window
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(10, 10), @factory.point(30, 30))
-          assert(window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(25, 25))))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(10, 10), @factory.point(30, 30))
+          assert(window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(25, 25))))
           
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(5, 15), @factory.point(25, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(35, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(0, 15), @factory.point(5, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(35, 15), @factory.point(40, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(5, 15), @factory.point(35, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(5, 15), @factory.point(25, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(35, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(0, 15), @factory.point(5, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(35, 15), @factory.point(40, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(5, 15), @factory.point(35, 25))))
           
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 5), @factory.point(25, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(25, 35))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 0), @factory.point(25, 5))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 35), @factory.point(25, 40))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(15, 5), @factory.point(25, 35))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 5), @factory.point(25, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(25, 35))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 0), @factory.point(25, 5))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 35), @factory.point(25, 40))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(15, 5), @factory.point(25, 35))))
           
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(170, 35), @factory.point(-170, 40))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(170, 35), @factory.point(-170, 40))))
         end
         
         
         def test_seam_contains_window
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(160, 10), @factory.point(-160, 30))
-          assert(window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(175, 15), @factory.point(-175, 25))))
-          assert(window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(170, 15), @factory.point(175, 25))))
-          assert(window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(-175, 15), @factory.point(-170, 25))))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(160, 10), @factory.point(-160, 30))
+          assert(window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(175, 15), @factory.point(-175, 25))))
+          assert(window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(170, 15), @factory.point(175, 25))))
+          assert(window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(-175, 15), @factory.point(-170, 25))))
           
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(170, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(-170, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(-170, 15), @factory.point(-150, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(170, 15), @factory.point(-150, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(170, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(-170, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(-170, 15), @factory.point(-150, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(170, 15), @factory.point(-150, 25))))
           
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(-150, 15), @factory.point(150, 25))))
-          assert(!window1_.contains_window?(Geography::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(-150, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(-150, 15), @factory.point(150, 25))))
+          assert(!window1_.contains_window?(Geographic::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(-150, 25))))
         end
         
         
         def test_scaled_by
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(20, -20), @factory.point(50, 40))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(20, -20), @factory.point(50, 40))
           window1s_ = window1_.scaled_by(2, 1.5)
           assert(window1s_.contains_point?(@factory.point(10, -25)))
           assert(window1s_.contains_point?(@factory.point(60, 45)))
@@ -170,7 +170,7 @@ module RGeo
         
         
         def test_scaled_by_across_seam
-          window1_ = Geography::ProjectedWindow.for_corners(@factory.point(170, -20), @factory.point(-160, 40))
+          window1_ = Geographic::ProjectedWindow.for_corners(@factory.point(170, -20), @factory.point(-160, 40))
           window1s_ = window1_.scaled_by(2, 1.5)
           assert(window1s_.contains_point?(@factory.point(160, -25)))
           assert(window1s_.contains_point?(@factory.point(-150, 45)))
@@ -180,7 +180,7 @@ module RGeo
         
         
         def test_surrounding_point
-          window1_ = Geography::ProjectedWindow.surrounding_point(@factory.point(20, -20), 1)
+          window1_ = Geographic::ProjectedWindow.surrounding_point(@factory.point(20, -20), 1)
           assert(window1_.contains_point?(@factory.point(20, -20)))
           assert(!window1_.contains_point?(@factory.point(20, -21)))
           assert(!window1_.contains_point?(@factory.point(19, -20)))
@@ -188,7 +188,7 @@ module RGeo
         
         
         def test_bounding_1_point
-          window1_ = Geography::ProjectedWindow.bounding_points([@factory.point(20, -20)]).with_margin(1)
+          window1_ = Geographic::ProjectedWindow.bounding_points([@factory.point(20, -20)]).with_margin(1)
           assert(window1_.contains_point?(@factory.point(20, -20)))
           assert(!window1_.contains_point?(@factory.point(20, -21)))
           assert(!window1_.contains_point?(@factory.point(19, -20)))
@@ -196,7 +196,7 @@ module RGeo
         
         
         def test_bounding_2_points
-          window1_ = Geography::ProjectedWindow.bounding_points([@factory.point(10, 10), @factory.point(30, 30)])
+          window1_ = Geographic::ProjectedWindow.bounding_points([@factory.point(10, 10), @factory.point(30, 30)])
           assert(window1_.contains_point?(@factory.point(20, 20)))
           assert(!window1_.contains_point?(@factory.point(5, 20)))
           assert(!window1_.contains_point?(@factory.point(20, 35)))
@@ -204,7 +204,7 @@ module RGeo
         
         
         def test_bounding_2_points_across_seam
-          window1_ = Geography::ProjectedWindow.bounding_points([@factory.point(-170, 10), @factory.point(170, 30)])
+          window1_ = Geographic::ProjectedWindow.bounding_points([@factory.point(-170, 10), @factory.point(170, 30)])
           assert(window1_.contains_point?(@factory.point(-174, 20)))
           assert(!window1_.contains_point?(@factory.point(-160, 20)))
           assert(!window1_.contains_point?(@factory.point(160, 20)))

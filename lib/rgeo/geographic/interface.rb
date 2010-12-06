@@ -36,7 +36,7 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     class << self
       
@@ -82,10 +82,10 @@ module RGeo
       # You may use the following options when creating a spherical
       # factory:
       # 
-      # <tt>:support_z_coordinate</tt>::
-      #   Support <tt>z_coordinate</tt>. Default is false.
-      # <tt>:support_m_coordinate</tt>::
-      #   Support <tt>m_coordinate</tt>. Default is false.
+      # <tt>:has_z_coordinate</tt>::
+      #   Support a Z coordinate. Default is false.
+      # <tt>:has_m_coordinate</tt>::
+      #   Support an M coordinate. Default is false.
       # <tt>:proj4</tt>::
       #   Provide the coordinate system in Proj4 format. You may pass
       #   either an RGeo::CoordSys::Proj4 object, or a string or hash
@@ -102,7 +102,7 @@ module RGeo
       #   implies an ellipsoidal datum, not a spherical datum.
       
       def spherical_factory(opts_={})
-        Geography::Factory.new('Spherical', :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate], :proj4 => opts_[:proj4] || '+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs', :srid => opts_[:srid] || 4055)
+        Geographic::Factory.new('Spherical', :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate], :proj4 => opts_[:proj4] || '+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs', :srid => opts_[:srid] || 4055)
       end
       
       
@@ -161,20 +161,14 @@ module RGeo
       #   4-sided polygon. A resolution of 2 would cause that buffer
       #   to be approximated by an 8-sided polygon. The exact behavior
       #   for different kinds of buffers is defined by GEOS.
-      # <tt>:support_z_coordinate</tt>::
-      #   Support <tt>z_coordinate</tt>. Default is false.
-      #   Note that simple_mercator factories cannot support both
-      #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
-      #   most support one or the other.
-      # <tt>:support_m_coordinate</tt>::
-      #   Support <tt>m_coordinate</tt>. Default is false.
-      #   Note that simple_mercator factories cannot support both
-      #   <tt>z_coordinate</tt> and <tt>m_coordinate</tt>. They may at
-      #   most support one or the other.
+      # <tt>:has_z_coordinate</tt>::
+      #   Support a Z coordinate. Default is false.
+      # <tt>:has_m_coordinate</tt>::
+      #   Support an M coordinate. Default is false.
       
       def simple_mercator_factory(opts_={})
-        factory_ = Geography::Factory.new('Projected', :proj4 => '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', :srid => 4326, :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
-        projector_ = Geography::SimpleMercatorProjector.new(factory_, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
+        factory_ = Geographic::Factory.new('Projected', :proj4 => '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', :srid => 4326, :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+        projector_ = Geographic::SimpleMercatorProjector.new(factory_, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
         factory_._set_projector(projector_)
         factory_
       end
@@ -188,7 +182,7 @@ module RGeo
       # calculations report results in the projected units.
       # 
       # This implementation is intended for advanced GIS applications
-      # requiring intimate control over the projection being used.
+      # requiring greater control over the projection being used.
       # 
       # === Options
       # 
@@ -203,7 +197,7 @@ module RGeo
       # 
       # <tt>:projection_factory</tt>::
       #   Specify an existing Cartesian factory to use for the projection.
-      #   This factory must support the <tt>:proj4</tt> capability.
+      #   This factory must have a non-nil Proj4.
       # 
       # Note that in this case, the geography factory's z-coordinate and
       # m-coordinate availability will be set to match the projection's
@@ -232,21 +226,41 @@ module RGeo
       #   4-sided polygon. A resolution of 2 would cause that buffer
       #   to be approximated by an 8-sided polygon. The exact behavior
       #   for different kinds of buffers is defined by GEOS.
-      # <tt>:support_z_coordinate</tt>::
-      #   Support <tt>z_coordinate</tt>. Default is false.
-      # <tt>:support_m_coordinate</tt>::
-      #   Support <tt>m_coordinate</tt>. Default is false.
+      # <tt>:has_z_coordinate</tt>::
+      #   Support a Z coordinate. Default is false.
+      # <tt>:has_m_coordinate</tt>::
+      #   Support an M coordinate. Default is false.
+      # 
+      # Normally, this geographic factory's actual proj4 projection is
+      # derived from the projection's proj4, by extracting the
+      # corresponding geographic coordinate system from the projected
+      # coordinate system. However, you can override this and provide
+      # your own geographic coordinate system by setting the
+      # <tt>:proj4</tt> option.
       
       def projected_factory(opts_={})
         unless CoordSys::Proj4.supported?
           raise Error::UnsupportedCapability, "Proj4 is not supported because the proj4 library was not found at install time."
         end
         if (projection_factory_ = opts_[:projection_factory])
-          factory_ = Geography::Factory.new('Projected', :proj4 => opts_[:proj4] || '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', :srid => opts_[:srid] || 4326, :support_z_coordinate => projection_factory_.has_capability?(:z_coordinate), :support_m_coordinate => projection_factory_.has_capability?(:m_coordinate))
-          projector_ = Geography::Proj4Projector.create_from_existing_factory(factory_, projection_factory_)
-        elsif opts_[:projection_proj4]
-          factory_ = Geography::Factory.new('Projected', :proj4 => opts_[:proj4] || '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', :srid => opts_[:srid] || 4326, :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
-          projector_ = Geography::Proj4Projector.create_from_proj4(factory_, opts_[:projection_proj4], :srid => opts_[:projection_srid], :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
+          projection_proj4_ = projection_factory_.proj4
+          unless projection_proj4_
+            raise ::ArgumentError, 'The :projection_factory does not have a proj4.'
+          end
+          proj4_ = opts_[:proj4] || projection_proj4_.get_geographic || '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+          factory_ = Geographic::Factory.new('Projected', :proj4 => proj4_, :srid => opts_[:srid] || 4326, :has_z_coordinate => projection_factory_.property(:has_z_coordinate), :has_m_coordinate => projection_factory_.property(:has_m_coordinate))
+          projector_ = Geographic::Proj4Projector.create_from_existing_factory(factory_, projection_factory_)
+        elsif (projection_proj4_ = opts_[:projection_proj4])
+          if projection_proj4_.kind_of?(::String) || projection_proj4_.kind_of?(::Hash)
+            actual_projection_proj4_ = CoordSys::Proj4.create(projection_proj4_)
+            unless actual_projection_proj4_
+              raise ::ArgumentError, "Bad proj4 syntax: #{projection_proj4_.inspect}"
+            end
+            projection_proj4_ = actual_projection_proj4_
+          end
+          proj4_ = opts_[:proj4] || projection_proj4_.get_geographic || '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+          factory_ = Geographic::Factory.new('Projected', :proj4 => proj4_, :srid => opts_[:srid] || 4326, :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+          projector_ = Geographic::Proj4Projector.create_from_proj4(factory_, opts_[:projection_proj4], :srid => opts_[:projection_srid], :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
         else
           raise ::ArgumentError, 'You must provide either :projection_proj4 or :projection_factory.'
         end

@@ -88,7 +88,7 @@ module RGeo
           
           def setup
             @factory = ::RGeo::Cartesian.preferred_factory(:srid => 4326)
-            @geographic_factory = ::RGeo::Geography.spherical_factory(:srid => 4326)
+            @geographic_factory = ::RGeo::Geographic.spherical_factory(:srid => 4326)
             cleanup_tables
           end
           

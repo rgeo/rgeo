@@ -36,7 +36,7 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     
     class SimpleMercatorProjector  # :nodoc:
@@ -46,7 +46,7 @@ module RGeo
       
       def initialize(geography_factory_, opts_={})
         @geography_factory = geography_factory_
-        @projection_factory = Cartesian.preferred_factory(:srid => 3857, :proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :support_z_coordinate => opts_[:support_z_coordinate], :support_m_coordinate => opts_[:support_m_coordinate])
+        @projection_factory = Cartesian.preferred_factory(:srid => 3857, :proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
       end
       
       

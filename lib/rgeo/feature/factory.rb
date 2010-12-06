@@ -72,35 +72,42 @@ module RGeo
       end
       
       
-      # Determine support for the given capability, identified by a
-      # symbolic name. This method may be used to test this factory, and
-      # any features created by it, to determine whether they support
-      # certain capabilities or operations. Most queries return a boolean
-      # value, though some may return other values to indicate different
-      # levels of support. Generally speaking, if a query returns a false
-      # or nil value, support for that capability is not guaranteed, and
-      # calls related to that function may fail or raise exceptions.
+      # Returns meta-information about this factory, by key. This
+      # information may involve support for optional functionality,
+      # properties of the coordinate system, or other characteristics.
       # 
-      # Each capability must have a symbolic name. Names that have no
-      # periods are considered well-known names and are reserved for use
-      # by RGeo. If you want to define your own capabilities, use a name
-      # that is namespaced, such as <tt>:'mycompany.mycapability'</tt>.
+      # Each property has a symbolic name. Names that have no periods are
+      # considered well-known names and are reserved for use by RGeo. If
+      # you want to define your own capabilities, use a name that is
+      # namespaced with periods, such as <tt>:'mycompany.myprop'</tt>.
       # 
-      # Currently defined standard capabilities are:
+      # Property values are dependent on the individual property.
+      # Generally, properties that involve testing for functionality
+      # should return true if the functionality is support, or false or
+      # nil if not. A property value could also invlove different values
+      # indicating different levels of support. In any case, the factory
+      # should return nil for property names it does not recognize. This
+      # value is considered the "default" or "no value" value.
       # 
-      # <tt>:z_coordinate</tt>::
-      #   Supports a "z" coordinate. When an implementation supports
-      #   this capability, geometries know about Z coordinates, and the
-      #   Point#z method is available.
-      # <tt>:m_coordinate</tt>::
-      #   Supports an "m" coordinate. When an implementation supports
-      #   this capability, geometries know about M coordinates, and the
-      #   Point#m method is available.
-      # <tt>:proj4</tt>::
-      #   Has a proj4-defined projection. When an implementation supports
-      #   this capability, the Factory#proj4 method is available.
+      # Currently defined well-known properties are:
+      # 
+      # <tt>:has_z_coordinate</tt>::
+      #   Set to true if geometries created by this factory include a Z
+      #   coordinate, and the Point#z method is available.
+      # <tt>:has_m_coordinate</tt>::
+      #   Set to true if geometries created by this factory include a M
+      #   coordinate, and the Point#z method is available.
+      # <tt>:is_cartesian</tt>::
+      #   Set to true if this Factory guarantees that it operates in
+      #   Cartesian geometry. If false or nil, no such guarantee is made,
+      #   though it is possible the geometries may still be Cartesian.
+      # <tt>:is_geographic</tt>::
+      #   Set to true if this Factory's coordinate system is meant to be
+      #   interpreted as x=longitude and y=latitude. If false or nil, no
+      #   information is present about whether the coordinate system is
+      #   meant to be so interpreted.
       
-      def has_capability?(name_)
+      def property(name_)
         nil
       end
       
@@ -135,7 +142,7 @@ module RGeo
       
       # Create a feature of type LineString.
       # The given points argument should be an Enumerable of Point
-      # objects, or objects that can be casted to Point.
+      # objects, or objects that can be cast to Point.
       
       def line_string(points_)
         nil
@@ -144,7 +151,7 @@ module RGeo
       
       # Create a feature of type Line.
       # The given point arguments should be Point objects, or objects
-      # that can be casted to Point.
+      # that can be cast to Point.
       
       def line(start_, end_)
         nil
@@ -153,7 +160,7 @@ module RGeo
       
       # Create a feature of type LinearRing.
       # The given points argument should be an Enumerable of Point
-      # objects, or objects that can be casted to Point.
+      # objects, or objects that can be cast to Point.
       # If the first and last points are not equal, the ring is
       # automatically closed by appending the first point to the end of the
       # string.
@@ -165,7 +172,7 @@ module RGeo
       
       # Create a feature of type Polygon.
       # The outer_ring should be a LinearRing, or an object that can be
-      # casted to LinearRing.
+      # cast to LinearRing.
       # The inner_rings should be a possibly empty Enumerable of
       # LinearRing (or objects that can be casted to LinearRing).
       # You may also pass nil to indicate no inner rings.
@@ -185,7 +192,7 @@ module RGeo
       
       # Create a feature of type MultiPoint.
       # The elems should be an Enumerable of Point objects, or objects
-      # that can be casted to Point.
+      # that can be cast to Point.
       # Returns nil if any of the contained geometries is not a Point,
       # which would break the MultiPoint contract.
       
@@ -196,7 +203,7 @@ module RGeo
       
       # Create a feature of type MultiLineString.
       # The elems should be an Enumerable of objects that are or can be
-      # casted to LineString or any of its subclasses.
+      # cast to LineString or any of its subclasses.
       # Returns nil if any of the contained geometries is not a
       # LineString, which would break the MultiLineString contract.
       
@@ -207,13 +214,35 @@ module RGeo
       
       # Create a feature of type MultiPolygon.
       # The elems should be an Enumerable of objects that are or can be
-      # casted to Polygon or any of its subclasses.
+      # cast to Polygon or any of its subclasses.
       # Returns nil if any of the contained geometries is not a Polygon,
       # which would break the MultiPolygon contract.
       # Also returns nil if any of the other assertions for MultiPolygon
-      # are not met-- e.g. if any of the polygons overlap.
+      # are not met, e.g. if any of the polygons overlap.
       
       def multi_polygon(elems_)
+        nil
+      end
+      
+      
+      # Returns a RGeo::CoordSys::Proj4 representing the projection for
+      # the coordinate system of features created by this factory, or nil
+      # if there is no such proj4 projection.
+      
+      def proj4
+        nil
+      end
+      
+      
+      # Returns the coordinate system specification for the features
+      # created by this factory, or nil if there is no such coordinate
+      # system.
+      # 
+      # NOTE: This is a required method of the factory interface, but the
+      # coordinate system objects themselves are not yet available, so
+      # implementations should just return nil for now.
+      
+      def coord_sys
         nil
       end
       
@@ -237,11 +266,14 @@ module RGeo
       #   of the current type
       # <tt>:force_new</tt>::
       #   indicates whether to force the creation of a new object even if
-      #   the original is already of the desired factory and type.
+      #   the original is already of the desired factory and type
+      # <tt>:project</tt>::
+      #   indicates whether to project the coordinates from the source to
+      #   the destination proj4 coordinate system, if available
       # 
       # It should return either a casted result object, false, or nil.
       # A nil return value indicates that casting should be forced to
-      # fail (and ::RGeo::Feature::cast will return nil).
+      # fail (and RGeo::Feature::cast will return nil).
       # A false return value indicates that this method declines to
       # override the casting algorithm, and RGeo should use its default
       # algorithm to cast the object. Therefore, by default, you should
@@ -249,19 +281,6 @@ module RGeo
       
       def override_cast(original_, type_, flags_)
         false
-      end
-      
-      
-      # This is an optional method that returns a RGeo::CoordSys::Proj4
-      # representing the projection for the coordinate system of features
-      # created by this factory, or nil if there is no such proj4
-      # projection.
-      # 
-      # If a factory supports this method, it should indicate this by
-      # returning true for the <tt>:proj4</tt> capability.
-      
-      def proj4
-        nil
       end
       
       

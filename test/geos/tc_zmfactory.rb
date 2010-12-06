@@ -46,7 +46,7 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geos.factory(:support_z_coordinate => true, :support_m_coordinate => true, :srid => 1000, :buffer_resolution => 2)
+          @factory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true, :srid => 1000, :buffer_resolution => 2)
         end
         
         
@@ -57,12 +57,12 @@ module RGeo
           assert_equal(2, @factory.buffer_resolution)
           assert_equal(2, @factory.z_factory.buffer_resolution)
           assert_equal(2, @factory.m_factory.buffer_resolution)
-          assert(@factory.has_capability?(:z_coordinate))
-          assert(@factory.has_capability?(:m_coordinate))
-          assert(@factory.z_factory.has_capability?(:z_coordinate))
-          assert(!@factory.z_factory.has_capability?(:m_coordinate))
-          assert(!@factory.m_factory.has_capability?(:z_coordinate))
-          assert(@factory.m_factory.has_capability?(:m_coordinate))
+          assert(@factory.property(:has_z_coordinate))
+          assert(@factory.property(:has_m_coordinate))
+          assert(@factory.z_factory.property(:has_z_coordinate))
+          assert(!@factory.z_factory.property(:has_m_coordinate))
+          assert(!@factory.m_factory.property(:has_z_coordinate))
+          assert(@factory.m_factory.property(:has_m_coordinate))
         end
         
         

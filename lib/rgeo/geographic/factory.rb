@@ -36,11 +36,11 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     
     # This class implements the various factories for geography features.
-    # See methods of the RGeo::Geography module for the API for creating
+    # See methods of the RGeo::Geographic module for the API for creating
     # geography factories.
     
     class Factory
@@ -50,17 +50,17 @@ module RGeo
       
       def initialize(impl_prefix_, opts_={})  # :nodoc:
         @impl_prefix = impl_prefix_
-        @point_class = Geography.const_get("#{impl_prefix_}PointImpl")
-        @line_string_class = Geography.const_get("#{impl_prefix_}LineStringImpl")
-        @linear_ring_class = Geography.const_get("#{impl_prefix_}LinearRingImpl")
-        @line_class = Geography.const_get("#{impl_prefix_}LineImpl")
-        @polygon_class = Geography.const_get("#{impl_prefix_}PolygonImpl")
-        @geometry_collection_class = Geography.const_get("#{impl_prefix_}GeometryCollectionImpl")
-        @multi_point_class = Geography.const_get("#{impl_prefix_}MultiPointImpl")
-        @multi_line_string_class = Geography.const_get("#{impl_prefix_}MultiLineStringImpl")
-        @multi_polygon_class = Geography.const_get("#{impl_prefix_}MultiPolygonImpl")
-        @support_z = opts_[:support_z_coordinate] ? true : false
-        @support_m = opts_[:support_m_coordinate] ? true : false
+        @point_class = Geographic.const_get("#{impl_prefix_}PointImpl")
+        @line_string_class = Geographic.const_get("#{impl_prefix_}LineStringImpl")
+        @linear_ring_class = Geographic.const_get("#{impl_prefix_}LinearRingImpl")
+        @line_class = Geographic.const_get("#{impl_prefix_}LineImpl")
+        @polygon_class = Geographic.const_get("#{impl_prefix_}PolygonImpl")
+        @geometry_collection_class = Geographic.const_get("#{impl_prefix_}GeometryCollectionImpl")
+        @multi_point_class = Geographic.const_get("#{impl_prefix_}MultiPointImpl")
+        @multi_line_string_class = Geographic.const_get("#{impl_prefix_}MultiLineStringImpl")
+        @multi_polygon_class = Geographic.const_get("#{impl_prefix_}MultiPolygonImpl")
+        @support_z = opts_[:has_z_coordinate] ? true : false
+        @support_m = opts_[:has_m_coordinate] ? true : false
         @srid = opts_[:srid] || 4326
         @proj4 = opts_[:proj4]
         if CoordSys::Proj4.supported?
@@ -81,7 +81,7 @@ module RGeo
       # Equivalence test.
       
       def eql?(rhs_)
-        rhs_.is_a?(Geography::Factory) &&
+        rhs_.is_a?(Geographic::Factory) &&
           @impl_prefix == rhs_.instance_variable_get(:@impl_prefix) &&
           @support_z == rhs_.instance_variable_get(:@support_z) &&
           @support_m == rhs_.instance_variable_get(:@support_m) &&
@@ -166,16 +166,16 @@ module RGeo
       end
       
       
-      # See ::RGeo::Feature::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#property
       
-      def has_capability?(name_)
+      def property(name_)
         case name_
-        when :z_coordinate
+        when :has_z_coordinate
           @support_z
-        when :m_coordinate
+        when :has_m_coordinate
           @support_m
-        when :proj4
-          @proj4 ? true : false
+        when :is_geographic
+          true
         else
           nil
         end
@@ -263,6 +263,13 @@ module RGeo
       
       def proj4
         @proj4
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#coord_sys
+      
+      def coord_sys
+        nil
       end
       
       

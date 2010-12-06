@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Mercator geography feature classes
+# Projtected geographic feature classes
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -36,7 +36,7 @@
 
 module RGeo
   
-  module Geography
+  module Geographic
     
     
     class ProjectedPointImpl  # :nodoc:

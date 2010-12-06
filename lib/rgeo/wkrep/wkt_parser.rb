@@ -54,7 +54,7 @@ module RGeo
     # 
     # You must provide each parser with an RGeo::Feature::FactoryGenerator.
     # It should understand the configuration options <tt>:srid</tt>,
-    # <tt>:support_z_coordinate</tt>, and <tt>:support_m_coordinate</tt>.
+    # <tt>:has_z_coordinate</tt>, and <tt>:has_m_coordinate</tt>.
     # You may also pass a specific RGeo::Feature::Factory, or nil to
     # specify the default Cartesian FactoryGenerator.
     # 
@@ -179,8 +179,8 @@ module RGeo
         str_ = str_.downcase
         @cur_factory = @exact_factory
         if @cur_factory
-          @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate) ? true : false
-          @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate) ? true : false
+          @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
+          @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
         end
         @cur_expect_z = nil
         @cur_expect_m = nil
@@ -214,9 +214,9 @@ module RGeo
       
       def _ensure_factory  # :nodoc:
         unless @cur_factory
-          @cur_factory = @factory_generator.call(:srid => @cur_srid, :support_z_coordinate => @cur_expect_z, :support_m_coordinate => @cur_expect_m)
-          @cur_factory_support_z = @cur_factory.has_capability?(:z_coordinate) ? true : false
-          @cur_factory_support_m = @cur_factory.has_capability?(:m_coordinate) ? true : false
+          @cur_factory = @factory_generator.call(:srid => @cur_srid, :has_z_coordinate => @cur_expect_z, :has_m_coordinate => @cur_expect_m)
+          @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
+          @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
           _check_factory_support unless @cur_expect_z.nil?
         end
         @cur_factory
@@ -464,7 +464,7 @@ module RGeo
       end
       
       
-      def _next_token(expect_=nil)  # :nodoc:
+      def _next_token  # :nodoc:
         if @_scanner.scan_until(/\(|\)|\[|\]|,|[^\s\(\)\[\],]+/)
           token_ = @_scanner.matched
           case token_

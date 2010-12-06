@@ -89,10 +89,10 @@ module RGeo
       # <tt>:srid</tt>::
       #   The SRID for the factory and objects it creates.
       #   Default is usually 0.
-      # <tt>:support_z_coordinate</tt>::
+      # <tt>:has_z_coordinate</tt>::
       #   Support the <tt>z_coordinate</tt> capability.
       #   Default is usually false.
-      # <tt>:support_m_coordinate</tt>::
+      # <tt>:has_m_coordinate</tt>::
       #   Support the <tt>m_coordinate</tt> capability.
       #   Default is usually false.
       

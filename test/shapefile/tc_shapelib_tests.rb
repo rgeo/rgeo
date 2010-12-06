@@ -126,8 +126,8 @@ module RGeo
           _open_shapefile(filename_) do |file_|
             assert_equal(has_z_ ? 11 : has_m_ ? 21 : 1, file_.shape_type_code)
             assert_equal(2, file_.num_records)
-            assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
-            assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
+            assert_equal(has_z_, file_.factory.property(:has_z_coordinate))
+            assert_equal(has_m_, file_.factory.property(:has_m_coordinate))
             rec_ = file_.next
             assert_equal(0, rec_.index)
             assert_equal(::RGeo::Feature::Point, rec_.geometry.geometry_type)
@@ -166,8 +166,8 @@ module RGeo
           _open_shapefile(filename_) do |file_|
             assert_equal(has_z_ ? 18 : has_m_ ? 28 : 8, file_.shape_type_code)
             assert_equal(3, file_.num_records)
-            assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
-            assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
+            assert_equal(has_z_, file_.factory.property(:has_z_coordinate))
+            assert_equal(has_m_, file_.factory.property(:has_m_coordinate))
             rec_ = file_.next
             assert_equal(::RGeo::Feature::MultiPoint, rec_.geometry.geometry_type)
             assert_equal(4, rec_.geometry.num_geometries)
@@ -217,8 +217,8 @@ module RGeo
           _open_shapefile(filename_) do |file_|
             assert_equal(has_z_ ? 13 : has_m_ ? 23 : 3, file_.shape_type_code)
             assert_equal(4, file_.num_records)
-            assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
-            assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
+            assert_equal(has_z_, file_.factory.property(:has_z_coordinate))
+            assert_equal(has_m_, file_.factory.property(:has_m_coordinate))
             rec_ = file_.next
             assert_equal(::RGeo::Feature::MultiLineString, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
@@ -327,8 +327,8 @@ module RGeo
           _open_shapefile(filename_) do |file_|
             assert_equal(has_z_ ? 15 : has_m_ ? 25 : 5, file_.shape_type_code)
             assert_equal(4, file_.num_records)
-            assert_equal(has_z_, file_.factory.has_capability?(:z_coordinate))
-            assert_equal(has_m_, file_.factory.has_capability?(:m_coordinate))
+            assert_equal(has_z_, file_.factory.property(:has_z_coordinate))
+            assert_equal(has_m_, file_.factory.property(:has_m_coordinate))
             rec_ = file_.next
             assert_equal(::RGeo::Feature::MultiPolygon, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)
@@ -440,11 +440,11 @@ module RGeo
           _open_shapefile('test13') do |file_|
             assert_equal(31, file_.shape_type_code)
             assert_equal(4, file_.num_records)
-            assert_equal(true, file_.factory.has_capability?(:z_coordinate))
+            assert_equal(true, file_.factory.property(:has_z_coordinate))
             # I believe shapefile's test13 incorrectly includes bounding
             # box data for m, since there is no actual m data. So I 
             # disabled this test:
-            # assert_equal(false, file_.factory.has_capability?(:m_coordinate))
+            # assert_equal(false, file_.factory.property(:has_m_coordinate))
             rec_ = file_.next
             assert_equal(::RGeo::Feature::GeometryCollection, rec_.geometry.geometry_type)
             assert_equal(1, rec_.geometry.num_geometries)

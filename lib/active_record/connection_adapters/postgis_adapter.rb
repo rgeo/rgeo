@@ -398,7 +398,7 @@ module ActiveRecord
             if str_.length == 0
               nil
             else
-              factory_ = ar_class_.rgeo_factory_generator.call(:srid => srid_, :support_z_coordinate => has_z_, :support_m_coordinate => has_m_, :geographic => geographic_)
+              factory_ = ar_class_.rgeo_factory_generator.call(:srid => srid_, :has_z_coordinate => has_z_, :has_m_coordinate => has_m_, :geographic => geographic_)
               marker_ = str_[0,1]
               if marker_ == "\x00" || marker_ == "\x01"
                 ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true).parse(str_) rescue nil

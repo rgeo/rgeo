@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the simple mercator line string implementation
+# Proj4 projection
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,29 +34,65 @@
 ;
 
 
-require 'test/unit'
-require 'rgeo'
-
-require ::File.expand_path('../common/line_string_tests.rb', ::File.dirname(__FILE__))
-
-
 module RGeo
-  module Tests  # :nodoc:
-    module ProjectedGeography  # :nodoc:
+  
+  module Geographic
+    
+    
+    class Proj4Projector  # :nodoc:
       
-      class TestLineString < ::Test::Unit::TestCase  # :nodoc:
+      
+      def initialize(geography_factory_, projection_factory_)
+        @geography_factory = geography_factory_
+        @projection_factory = projection_factory_
+      end
+      
+      
+      def project(geometry_)
+        Feature.cast(geometry_, @projection_factory, :project)
+      end
+      
+      
+      def unproject(geometry_)
+        Feature.cast(geometry_, @geography_factory, :project)
+      end
+      
+      
+      def projection_factory
+        @projection_factory
+      end
+      
+      
+      def wraps?
+        false
+      end
+      
+      
+      def limits_window
+        nil
+      end
+      
+      
+      class << self
         
         
-        def setup
-          @factory = ::RGeo::Geography.projected_factory(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+        def create_from_existing_factory(geography_factory_, projection_factory_)
+          new(geography_factory_, projection_factory_)
         end
         
         
-        include ::RGeo::Tests::Common::LineStringTests
+        def create_from_proj4(geography_factory_, proj4_, opts_={})
+          projection_factory_ = Cartesian.preferred_factory(:proj4 => proj4_, :srid => opts_[:srid], :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+          new(geography_factory_, projection_factory_)
+        end
         
         
       end
       
+      
     end
+    
+    
   end
+  
 end

@@ -42,16 +42,16 @@ require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 
 module RGeo
   module Tests  # :nodoc:
-    module ProjectedGeography  # :nodoc:
+    module ProjectedGeographic  # :nodoc:
       
       class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
         def setup
-          @factory = ::RGeo::Geography.projected_factory(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
-          @zfactory = ::RGeo::Geography.projected_factory(:support_z_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
-          @mfactory = ::RGeo::Geography.projected_factory(:support_m_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
-          @zmfactory = ::RGeo::Geography.projected_factory(:support_z_coordinate => true, :support_m_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @factory = ::RGeo::Geographic.projected_factory(:projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @zfactory = ::RGeo::Geographic.projected_factory(:has_z_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @mfactory = ::RGeo::Geographic.projected_factory(:has_m_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
+          @zmfactory = ::RGeo::Geographic.projected_factory(:has_z_coordinate => true, :has_m_coordinate => true, :projection_proj4 => '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs', :projection_srid => 3857)
         end
         
         

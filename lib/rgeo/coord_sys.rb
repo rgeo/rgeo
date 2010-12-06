@@ -41,7 +41,14 @@ require 'rgeo'
 module RGeo
   
   
-  # Coordinate reference systems.
+  # This module provides data structures and tools related to coordinate
+  # systems and coordinate transforms.
+  # 
+  # Currently, the Proj4 class provides a wrapper around the proj4
+  # library, which specifies geographic and projected coordinate systems
+  # and performs transformations. In the future, this module will also
+  # contain an implementation of the OGC coordinate transformation
+  # specification.
   
   module CoordSys
   end

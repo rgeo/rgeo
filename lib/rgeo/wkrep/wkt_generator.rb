@@ -145,8 +145,8 @@ module RGeo
           @cur_support_z = nil
           @cur_support_m = nil
         else
-          @cur_support_z = factory_.has_capability?(:z_coordinate)
-          @cur_support_m = factory_.has_capability?(:m_coordinate)
+          @cur_support_z = factory_.property(:has_z_coordinate)
+          @cur_support_m = factory_.property(:has_m_coordinate)
         end
         str_ = _generate_feature(obj_, true)
         if @convert_case == :upper

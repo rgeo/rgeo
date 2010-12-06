@@ -46,8 +46,8 @@ module RGeo
         _set_factory(factory_)
         @x = x_.to_f
         @y = y_.to_f
-        @z = factory_.has_capability?(:z_coordinate) ? extra_.shift.to_f : nil
-        @m = factory_.has_capability?(:m_coordinate) ? extra_.shift.to_f : nil
+        @z = factory_.property(:has_z_coordinate) ? extra_.shift.to_f : nil
+        @m = factory_.property(:has_m_coordinate) ? extra_.shift.to_f : nil
         if extra_.size > 0
           raise ::ArgumentError, "Too many arguments for point initializer"
         end

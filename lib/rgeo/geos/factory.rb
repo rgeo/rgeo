@@ -59,8 +59,8 @@ module RGeo
           return nil unless respond_to?(:_create)
           flags_ = 0
           flags_ |= 1 if opts_[:lenient_multi_polygon_assertions]
-          flags_ |= 2 if opts_[:support_z_coordinate]
-          flags_ |= 4 if opts_[:support_m_coordinate]
+          flags_ |= 2 if opts_[:has_z_coordinate]
+          flags_ |= 4 if opts_[:has_m_coordinate]
           if flags_ & 6 == 6
             raise Error::UnsupportedCapability, "GEOS cannot support both Z and M coordinates at the same time."
           end
@@ -119,16 +119,16 @@ module RGeo
       end
       
       
-      # See ::RGeo::Feature::Factory#has_capability?
+      # See ::RGeo::Feature::Factory#property
       
-      def has_capability?(name_)
+      def property(name_)
         case name_
-        when :z_coordinate
+        when :has_z_coordinate
           _flags & 0x2 != 0
-        when :m_coordinate
+        when :has_m_coordinate
           _flags & 0x4 != 0
-        when :proj4
-          !@proj4.nil?
+        when :is_cartesian
+          true
         else
           nil
         end
@@ -223,6 +223,20 @@ module RGeo
       end
       
       
+      # See ::RGeo::Feature::Factory#proj4
+      
+      def proj4
+        @proj4
+      end
+      
+      
+      # See ::RGeo::Feature::Factory#coord_sys
+      
+      def coord_sys
+        nil
+      end
+      
+      
       # See ::RGeo::Feature::Factory#override_cast
       
       def override_cast(original_, ntype_, flags_)
@@ -259,13 +273,6 @@ module RGeo
           end
         end
         false
-      end
-      
-      
-      # See ::RGeo::Feature::Factory#proj4
-      
-      def proj4
-        @proj4
       end
       
       

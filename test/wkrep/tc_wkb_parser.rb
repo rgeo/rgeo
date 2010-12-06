@@ -64,7 +64,7 @@ module RGeo
         
         
         def test_point_with_ewkb_z
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           obj_ = parser_.parse_hex('00800000013ff000000000000040000000000000004008000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -74,7 +74,7 @@ module RGeo
         
         
         def test_point_with_ewkb_m
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           obj_ = parser_.parse_hex('00400000013ff000000000000040000000000000004008000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -84,7 +84,7 @@ module RGeo
         
         
         def test_point_with_ewkb_zm
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           obj_ = parser_.parse_hex('00c00000013ff0000000000000400000000000000040080000000000004010000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -94,7 +94,7 @@ module RGeo
         
         
         def test_point_with_wkb12_z
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
           obj_ = parser_.parse_hex('00000003e93ff000000000000040000000000000004008000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -104,7 +104,7 @@ module RGeo
         
         
         def test_point_with_wkb12_m
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
           obj_ = parser_.parse_hex('00000007d13ff000000000000040000000000000004008000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -114,7 +114,7 @@ module RGeo
         
         
         def test_point_with_wkb12_zm
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :support_m_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
           obj_ = parser_.parse_hex('0000000bb93ff0000000000000400000000000000040080000000000004010000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -124,7 +124,7 @@ module RGeo
         
         
         def test_point_with_wkb12_z_without_wkb12_support
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_)
           assert_raise(::RGeo::Error::ParseError) do
             obj_ = parser_.parse_hex('00000003e93ff000000000000040000000000000004008000000000000')
@@ -133,7 +133,7 @@ module RGeo
         
         
         def test_point_with_wkb12_z_without_enough_data
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
           assert_raise(::RGeo::Error::ParseError) do
             obj_ = parser_.parse_hex('00000003e93ff00000000000004000000000000000')
@@ -142,10 +142,10 @@ module RGeo
         
         
         def test_point_with_ewkb_z_and_srid
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           parser_.to_generate_factory do |config_|
-            ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :srid => config_[:srid])
+            ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :srid => config_[:srid])
           end
           obj_ = parser_.parse_hex('00a0000001000003e83ff000000000000040000000000000004008000000000000')
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
@@ -166,7 +166,7 @@ module RGeo
         
         
         def test_linestring_with_ewkb_z
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           obj_ = parser_.parse_hex('0080000002000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000')
           assert_equal(::RGeo::Feature::LineString, obj_.geometry_type)
@@ -177,10 +177,10 @@ module RGeo
         
         
         def test_linestring_with_ewkb_z_and_srid
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           parser_.to_generate_factory do |config_|
-            ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true, :srid => config_[:srid])
+            ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :srid => config_[:srid])
           end
           obj_ = parser_.parse_hex('00a0000002000003e8000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000')
           assert_equal(::RGeo::Feature::LineString, obj_.geometry_type)
@@ -192,7 +192,7 @@ module RGeo
         
         
         def test_linestring_with_wkb12_z
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
           obj_ = parser_.parse_hex('00000003ea000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000')
           assert_equal(::RGeo::Feature::LineString, obj_.geometry_type)
@@ -249,7 +249,7 @@ module RGeo
         
         
         def test_multipoint_with_ewkb_z
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           obj_ = parser_.parse_hex('00800000040000000200800000013ff0000000000000400000000000000040140000000000000080000001400800000000000040100000000000004018000000000000')
           assert_equal(::RGeo::Feature::MultiPoint, obj_.geometry_type)
@@ -263,7 +263,7 @@ module RGeo
         
         
         def test_multipoint_ewkb_with_mixed_z
-          factory_ = ::RGeo::Cartesian.preferred_factory(:support_z_coordinate => true)
+          factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           assert_raise(::RGeo::Error::ParseError) do
             obj_ = parser_.parse_hex('00800000040000000200800000013ff000000000000040000000000000004014000000000000000000000140080000000000004010000000000000')

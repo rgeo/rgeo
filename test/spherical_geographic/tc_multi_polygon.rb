@@ -42,14 +42,14 @@ require ::File.expand_path('../common/multi_polygon_tests.rb', ::File.dirname(__
 
 module RGeo
   module Tests  # :nodoc:
-    module SphericalGeography  # :nodoc:
+    module SphericalGeographic  # :nodoc:
       
       class TestMultiPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
         def create_factories
-          @factory = ::RGeo::Geography.spherical_factory
-          @lenient_factory = ::RGeo::Geography.spherical_factory(:lenient_multi_polygon_assertions => true)
+          @factory = ::RGeo::Geographic.spherical_factory
+          @lenient_factory = ::RGeo::Geographic.spherical_factory(:lenient_multi_polygon_assertions => true)
         end
         
         

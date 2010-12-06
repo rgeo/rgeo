@@ -99,9 +99,9 @@ installation prefix directory using the "--with-proj-dir" option.
 
 This is our planned roadmap, in rough priority order.
 
+* OGC coordinate system representation.
 * Continued work on the ActiveRecord adapters.
 * Possible Arel extensions for constructing spatial queries.
-* OGC coordinate system representation.
 * Support for bbox and crs elements of GeoJSON.
 * Ellipsoidal geography implementation, probably utilizing geographiclib.
 * Integration with certain third-party services such as SimpleGeo.
