@@ -1,7 +1,7 @@
 = An Introduction to Spatial Programming With RGeo
 
 * by Daniel Azuma
-* version 0.1 (4 Dec 2010)
+* version 0.1 (5 Dec 2010)
 
 == Introduction
 
@@ -54,7 +54,7 @@ In this document, we will use {RGeo}[http://github.com/dazuma/rgeo], a new spati
 
 == 2. Spatial Data Types
 
-=== The Simple Features Specification
+=== 2.1. The Simple Features Specification
 
 The Open Geospatial Consortium (OGC) defines and publishes a {standard}[http://www.opengeospatial.org/standards/sfa] entitled "Geographic information -- Simple feature access", which defines, among other things, a set of spatial data types and operations that can be done on them. This standard, which we will refer to as the Simple Features Specification (SFS), defines the core interfaces used by most spatial applications and databases. Although more recent versions are now available, most current implementations, including \RGeo, follow version 1.1 of the SFS, and this is the specification we will cover here.
 
@@ -62,17 +62,17 @@ A "feature" in the SFS is a geometric object in 2 or 3 dimensional space. These 
 
 We will quickly cover the types of geometric objects supported, and then discuss how to use \RGeo to create and manipulate spatial data as Ruby objects.
 
-=== Coordinates
+=== 2.2. Coordinates
 
 Geometric objects generally exist in a two-dimensional domain (such as a plane or a globe) identified by X and Y coordinates. These coordinates could be screen coordinates, as on a map displayed on a computer screen, they could be longitude/latitude coordinates, where X represents longitude and Y represents latitude, or they could be in a different coordinate system altogether.
 
 Strictly speaking, version 1.1 of the SFS supports only two dimensions. However, many implementations can represent up to four coordinates, including an optional Z and M coordinate. Z, when present, is generally used for a third dimension of location; for example, it could represent altitude, a distance above or below the surface of the earth. M, when present, is used to represent a "measure", a scalar value that could change across an object. The measure could, for example, represent temperature, population density, or some other function of location. Most current implementations, though they can represent and store Z and M, will not actually perform any analysis with those coordinates; they act merely as additional data fields.
 
-=== Point
+=== 2.3. Point
 
 An SFS "Point" is a single 0-dimensional point in space. Points are typically used in location applications to represent a single location, displayed as a map marker. You can retrieve the coordinates X and Y (and optionally Z and M) from a point object.
 
-=== LineString
+=== 2.4. LineString
 
 An SFS "LineString" is a set of one or more connected line segments representing a single continuous, piecewise linear path. It could, for example, represent the path of a single street, the full driving directions from one point to another, or the path of a waterway. It is defined by connecting a series of points together with line segments, and you can retrieve those points from the LineString object.
 
@@ -80,35 +80,35 @@ LineString itself has two subclases, Line and LinearRing. Line is restricted to 
 
 (LineString is actually a subclass of the more general abstract class "Curve", which need not be piecewise linear. However, Curve is not by itself instantiable, and the current SFS version does not actually specify another type of Curve that is not a LineString.)
 
-=== Polygon
+=== 2.5. Polygon
 
 An SFS "Polygon" is a connected region of two-dimensional space. Its outer boundary is defined as a LinearRing, so it can have any number of straight "sides". Polygons can also optionally contain "holes", represented by inner boundaries which are also LinearRings. You can retrieve the outer and inner boundaries from a Polygon object as LinearRing objects. Polygons are ideal for representing single plots of land such as property boundaries, or larger regions of the earth's surface such as city, state, or national boundaries, time zones, lakes, and so forth.
 
 (Polygon is also a subclass of a more general abstract class, this one called "Surface". In general, the boundaries of a Surface need not be piecewise linear. However, Surface is not by itself instantiable, and the current SFS version does not actually specify another type of Surface other than Polygon.)
 
-=== MultiPoint
+=== 2.6. MultiPoint
 
 An SFS "MultiPoint" is a collection of zero or more Point objects. You might, for example, represent the locations of all your favorite restaurants as a MultiPoint.
 
-=== MultiLineString
+=== 2.7. MultiLineString
 
 An SFS "MultiLineString" is a collection of zero or more LineString objects. It might be used, for example, to represent all the currently "congested" sections of a city's freeways during rush hour. It could even, in principle, represent the entire street map of a city, though such a data structure might be too large to be practical.
 
 (MultiLineString is a subclass of the non-instantiable abstract class MultiCurve.)
 
-=== MultiPolygon
+=== 2.8. MultiPolygon
 
 An SFS "MultiPolygon" is a collection of zero or more Polygon objects. It also has a few additional restrictions, notably that the constituent polygons must all be disjoint and cannot overlap. MultiPolygons are used to represent a region which could have multiple unconnected parts.
 
 (MultiPolygon is a subclass of the non-instantiable abstract class MultiSurface.)
 
-=== Geometry and GeometryCollection
+=== 2.9. Geometry and GeometryCollection
 
 The various geometric data types described above are arranged in a class hierarchy. The base class of this hierarchy is Geometry. The MultiPoint, MultiLineString, and MultiPolygon types (or more precisely, MultiPoint, MultiCurve, and MultiSurface) are subclasses of a more general data type called GeometryCollection. GeometryCollection can also be instantiated by itself. It represents a general collection of other geometry objects, each of which can be any type.
 
 For complete details on the geometry class hierarchy, download the actual {Simple Features Specification}[http://www.opengeospatial.org/standards/sfa]. I recommend downloading version 1.1, because the newer versions (1.2 and later) describe additional types that are not commonly available in implementations. That additional information may be confusing.
 
-=== \RGeo Geometry Factories
+=== 2.10. \RGeo Geometry Factories
 
 The data types we have covered here are actually merely interface specifications. \RGeo actually provides several different implementations of these data types, for different use cases. For example, the RGeo::Geos implementation is \RGeo's main implementation which provides all these data types and all the operations defined by the SFS. However, that implementation requires a third-party C library, GEOS, to be installed. In cases where that library is not available, \RGeo provides an alternative, the Simple Cartesian implementation, which is a pure Ruby implementation that provides every data type but does not implement some of the more advanced geometric operations. \RGeo also provides further implementations that are designed specifically to work with geographic (longitude/latitude) coordinates, and different projections and ways of performing calculations on the earth's surface. These different implementations are described in more detail in the section on Coordinate Systems and Projections.
 
@@ -141,7 +141,7 @@ In addition to representing geometric data, the SFS interfaces define a suite of
 
 These operations cover a wide range of functionality, and some involve difficult problems of computational geometry, especially over a non-flat coordinate system such as geographic coordinates. \RGeo provides a complete implementation for flat Cartesian coordinates that utilizes the {GEOS}[http://trac.osgeo.org/geos/] library internally. However, some of \RGeo's other implementations provide only a subset of these operations. If you use the PostGIS database, you will find a similar situation. The "geometry" data types actually use GEOS internally to perform geometric computations, and pretty much all functions are available. However, the "geography" data type, which operates on a curved coordinate system, only implements a handful of the defined functions.
 
-=== Basic Properties
+=== 3.1. Basic Properties
 
 Most geometry types have a "degenerate" form representing no geometry. For example, a GeometryCollection may contain no items, or a LineString may contain no points. This state is indicated by the <tt>Geometry#is_empty?</tt> method. In \RGeo, any geometry type except Point may be empty.
 
@@ -149,7 +149,7 @@ A second common property of geometry objects is "simplicity", which basically me
 
 All geometry objects also contain a "spatial reference ID", returned by the <tt>Geometry#srid</tt> method. This is an external ID reference indicating the "spatial reference system", or coordinate system in use by the geometry. See the section on Coordinate Systems and Projections for further discussion.
 
-=== Equality and Comparisons
+=== 3.2. Equality and Comparisons
 
 The SFS specifies a suite of comparison operations that test geometric objects for such relational predicates as equality, overlap, containment, and so forth. In \RGeo, these operations are implemented by methods that return booleans. e.g.
 
@@ -185,7 +185,7 @@ Similarly, \RGeo's equality checking comes in several forms: geometric equality,
  p1.equals?(p2)  # => false
  p1.equals?(p1)  # => true
 
-=== Combinations
+=== 3.3. Combinations
 
 The SFS also provides several operations that take two geometries and yield a third. For example, you can calculate the intersection, union, or difference between two geometries. In addition to the methods specified by the SFS interfaces, \RGeo provides operators for some of these calculations.
 
@@ -193,15 +193,15 @@ The SFS also provides several operations that take two geometries and yield a th
  # or
  mp = point1 + point2
 
-=== Boundaries, Envelopes, etc.
+=== 3.4. Boundaries, Envelopes, etc.
 
 Methods exist to compute the boundary of an object, the envelope (i.e. the bounding box), and the convex hull. In addition, there is a "buffer" method that attempts to return a polygon approximating the area within a given distance from the object.
 
-=== Size and Distance
+=== 3.5. Size and Distance
 
 Several size and distance calculations are available. You can compute the distance between two geometric objects, the length of a LineString, or the area of a Polygon. Note that there will be some cases when these computations don't make much sense due to the coordinate system.
 
-=== Serialization
+=== 3.6. Serialization
 
 The SFS defines two serialization schemes for geometric objects, known as the WKT (well-known text) and WKB (well-known binary) formats. The WKT is often used for textual display and transmission of a geometric object, while the WKB is sometimes used as an internal data format by spatial databases. Geometric objects in \RGeo define the <tt>as_text</tt> and <tt>as_binary</tt> methods to serialize the object into a data string, while \RGeo factories provide <tt>parse_wkt</tt> and <tt>parse_wkb</tt> methods to reconstruct geometric objects from their serialized form.
 
@@ -213,7 +213,7 @@ So far, we have discussed geometric data and operations mostly without reference
 
 Generally, the spatial technologies we're discussing are used to represent location, objects on the eart's surface. In this section, we'll cover the coordinate systems that you'll use for geolocation, as well as the issues you'll face.
 
-=== The World is Not Flat
+=== 4.1. The World is Not Flat
 
 First off, most of us agree that the earth is not flat, but shaped as something resembling a slightly flattened ball. This immediately results in a whole host of complications when dealing with geometric objects on the earth's surface. Distance can't quite be computed accurately using the familiar formulas you learned in high school geometry. Lines that start off parallel will eventually cross. And if you try to display things on a flat computer monitor, you will end up with various kinds of distortion.
 
@@ -221,7 +221,7 @@ Let's take a simple example. Suppose we have a simple LineString with two points
 
 The answer is, it depends on the coordinate system you're using.
 
-=== Geographic Coordinates And Projections
+=== 4.2. Geographic Coordinates And Projections
 
 GIS systems typically represent locations in one of three different types of coordinate systems: geocentric coordinates, geographic coordinates, and projected coordinates. Geocentric coordinate systems typically locate the origin of a three-dimensional Cartesian coordinate system at the center of the earth. They are not commonly used in an application-level interface, but are often a convenient coordinate system for running geometric analysis algorithms. Geographic coordinates use the familiar latitude and longitude measurements, and sometimes also include altitude. These coordinates use a curved surface, either a sphere or an ellipsoid, as the domain, and perform geometric calculations on that non-flat domain. Projected coordinates involve transforming the curved domain of the earth's surface onto a flat domain such as a map display. Projected coordinates, then, are actually X-Y coordinates on the map itself: for example, pixel coordinates.
 
@@ -235,7 +235,7 @@ Some database systems behave similarly. PostGIS, for example, provides separate 
 
 Does this matter in your application? The answer is, it depends: on what kind of data you have, how it will be analyzed or displayed, and how much accuracy you need. For a simple application that displays point locations or small-scale paths and areas on a Google map, you can probably safely ignore the issue. It would probably be easiest to simply use \RGeo's non-projected spherical factory, and the "geography" type if you are using PostGIS. The Google maps system automatically transforms your latitude-longitude coordinates into projected map coordinates when it displays markers and polygons. Just remember the Vancouver to Frankfurt problem: if you display a line or polygon that is very large, the straight sides as displayed on the Google map may not be straight on the actual curved earth, and a LineString represented as a non-projected geographic object should not appear straight on the map. For better accuracy or more sophisticated applications, you will need to pay explicit attention to projections.
 
-=== Geodetic and Projection Parameters
+=== 4.3. Geodetic and Projection Parameters
 
 This subsection covers some more advanced topics that most developers may not need to deal with directly, but I believe it is important to have at least a conceptual understanding of them.
 
@@ -257,7 +257,7 @@ Which coordinate system should you use? The simple answer is WGS84. This is the 
 
 What about Google and Bing maps? They use a combination of two coordinate systems with a projection. The API inputs take latitude and longitude in the WGS84 coordinate system. However, the maps themselves are Mercator projections (with a modification to make computations easier), and so the map implementations transform the coordinates internally. Again, Morten Nielsen provides a more {detailed description}[http://www.sharpgis.net/post/2007/07/27/The-Microsoft-Live-Maps-and-Google-Maps-projection.aspx].
 
-=== Using Proj4
+=== 4.4. Using Proj4
 
 Under most circumstances, when you're working with geographic data, you can probably use either the spherical factory (if you just want to deal with points on the sphere) or the simple mercator factory (if you want to deal with objects as they would appear on Google or Bing maps). However, if you need to work with arbitrary projections, there exists a software library that understands coordinate systems and handles the math involved. {Proj}[http://trac.osgeo.org/proj/] is a C library that defines a syntax for specifying coordinate systems based on the above parameters, and an implementation for transforming coordinates from one coordinate system to another. Its syntax has become a de facto standard.
 
@@ -275,7 +275,7 @@ Under most circumstances, when you're working with geographic data, you can prob
  # The coordinates are in "meters" at the equator.
  point.projection.as_text   # => "POINT (-13614373.724017357 6008996.432357133)"
 
-=== Spatial Reference Systems and the EPSG Dataset
+=== 4.5. Spatial Reference Systems and the EPSG Dataset
 
 The OGC also defines a syntax for specifying coordinate systems, the {Coordinate Transformation Services Specification[http://www.opengeospatial.org/standards/ct]. This specification defines both an object model and a well-known text representation for coordinate systems and transformations. \RGeo does not yet implement this specification, but it is on the radar.
 
@@ -289,7 +289,7 @@ Now that we have a basic understanding of geospatial data, we'll turn to the que
 
 As we have seen, there exist a variety of ways to serialize geometric objects, notably the OGC "well-known text" and "well-known binary" formats. The simplest way to store such objects in a database, then, is to simply serialize the object into a blob. However, this would not allow us to include conditions relating to the object itself in a query. Typical location-based applications may need to run queries such as "give me all the locations within one mile of this lat-long." This kind of capability is the domain of spatial databases.
 
-=== Spatial Queries and Indexes
+=== 5.1. Spatial Queries and Indexes
 
 The OGC defines a {specification}[http://www.opengeospatial.org/standards/sfs], related to the SFS, describing SQL extensions for a spatial database. This specification includes a table for spatial reference systems (that is, coordinate systems) which can contain OGC and Proj4 representations, and a table of metadata for geometry columns which stores such information as type, dimension, and srid restrictions. It also defines a suite of SQL functions that you can call in a query. For example, in a compliant database, to find all rows in "mytable" where the geometry-valued column "geom" contains data within 5 units of the coordinates (10, 20), you might be able to run a query similar to:
 
@@ -301,7 +301,7 @@ Spatial indexes are somewhat more complex than typical database indexes. A typic
 
 Spatial databases will handle the problem of indexing spatial data in different ways, but most are variants on an indexing algorithm known as an R-tree. I won't go into the details of how an R-tree works. For the interested, I recommend the text {"Spatial Databases With Application To GIS"}[http://www.amazon.com/dp/1558605886], which covers a wide variety of issues related to basic spatial database implementation. For our purposes, just note that for large datasets, it is necessary to index the geometry columns, and that the index creation process may be different from that of normal scalar columns. The next sections provide some information specific to some of the common spatial databases.
 
-=== MySQL Spatial
+=== 5.2. MySQL Spatial
 
 {MySQL}[http://mysql.com/] maintains its dual reputation as probably the easiest of the open source relational databases to manage, and as tending to miss some features and standards compliance. Recent versions of MySQL have spatial column support baked in, and they are extremely easy to use: just create a column of type GEOMETRY, or POINT, or LINESTRING, or any of the OGC types. You can also create spatial indexes simply by adding the SPATIAL modifier to CREATE INDEX. Note, however, that as of MySQL 5.1, only MyISAM tables support spatial indexes. If you're using Innodb, you can add spatial columns but you can't index them.
 
@@ -314,7 +314,7 @@ What MySQL lacks is support for most of the advanced spatial geometry functions 
 
 In general, if you're using MySQL for the rest of your application, and you just need to add some simple geometric data, it's very easy to use MySQL spatial. Just make sure your table uses the MyISAM engine if you need to index the geometry.
 
-=== SpatiaLite
+=== 5.3. SpatiaLite
 
 {SpatiaLite}[http://www.gaia-gis.it/spatialite/] is an add-on library for the popular database {Sqlite}[http://www.sqlite.org/]. It is close to a fully compliant implementation of the OGC SQL specification, but as a result it is more difficult to manage than MySQL.
 
@@ -332,7 +332,7 @@ Spatial indexes themselves are implemented using SpatiaLite's Rtree extension, a
 
 SpatiaLite's internal format is a binary format loosely based on the WKB, but extended to include the SRID, as well as some internal bounding rectangle data to speed up calculations. Like MySQL, SpatiaLite provides functions to convert this data to and from WKB and WKT. I'm not completely clear on this, but it does not seem that SpatiaLite supports Z and M coordinates.
 
-=== PostGIS
+=== 5.4. PostGIS
 
 As {PostgreSQL}[http://www.postgresql.org/] is the most complete (and complex) open-source relational database, so the {PostGIS}[http://www.postgis.org/] add-on library is also the most complete and complex of the spatial databases I discuss here. It is a highly compliant implementation of the OGC SQL specification, including all the needed functions and tables. It also supports spatial indexes using PostgreSQL's GiST (generalized search tree) index implementation.
 
@@ -344,7 +344,7 @@ Like SpatiaLite, PostGIS is compiled and installed as a separate add-on library 
 
 PostGIS uses as its internal format a variant on WKB known as EWKB. This variant provides support for Z and M coordinates as well as embedded SRID values. PostGIS also defines an corresponding EWKT format adding Z and M support and SRIDs to WKT, and provides conversion functions. The EWKB and EWKT variants are common enough that they are supported by \RGeo's WKB and WKT parsers.
 
-=== \RGeo ActiveRecord Integration
+=== 5.5. \RGeo ActiveRecord Integration
 
 \RGeo provides extra support for web applications built on Ruby On Rails or similar frameworks, and that use the ActiveRecord library, in the form of a suite of ActiveRecord connection adapters for the various spatial databases we have covered. These connection adapters subclass the stock connection adapters for the databases, and add support for the \RGeo geometric data types. You can create spatial columns and indexes using extensions to the ActiveRecord schema definition functions, and the appropriate fields on your ActiveRecord objects will appear as \RGeo spatial data objects.
 
@@ -359,13 +359,13 @@ These are the names of these connection adapters:
 
 When writing a location-aware application, you will often need to interact with external sources of data and external location-based services. \RGeo provides several tools to facilitate this data transfer.
 
-=== Shapefiles and Spatial Data Sets
+=== 6.1. Shapefiles and Spatial Data Sets
 
 {ESRI}[http://www.esri.com/] is one of the oldest and most well-known GIS corporations, developing a suite of applications including the venerable {ArcGIS}[http://www.esri.com/software/arcgis/index.html]. ESRI also created the Shapefile, a geospatial data file format that has become a de facto standard despite its legacy and somewhat awkward characteristics. Today, many of the widely-available geospatial data sets are distributed as shapefiles.
 
 The shapefile format is specified in an ESRI {whitepaper}[http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf]. It typically comprises three files: a geometric data file "*.shp" containing the actual geometric data, a corresponding index file "*.shx" providing offsets into the .shp file to support random access, and a corresponding file "*.dbf" in dBASE format that stores arbitrary attributes for the shape records. Many GIS systems can read and/or write shapefiles. SpatiaLite can treat a shapefile as an external "virtual table". \RGeo provides a module, RGeo::Shapefile, that can read shapefiles and represent their contents as geometric data objects.
 
-=== GeoJSON and Location-Based Services
+=== 6.2. GeoJSON and Location-Based Services
 
 Location is becoming a common feature of web services as well. An emerging standard in the encoding of geographic data in a web service is {GeoJSON}[http://www.geojson.org/], an object format based on JSON. GeoJSON can encode any of the OGR geometry types, and includes facilities to attach attributes, bounding boxes, and coordinate system specifications. {SimpleGeo}[http://www.simplegeo.com/] is one of several high-profile location based APIs now using GeoJSON. \RGeo also provides a RGeo::GeoJSON module that can read and write this format.
 
@@ -379,4 +379,4 @@ At the time of this writing, a number of open source tools and libraries are sta
 
 == History
 
-* Version 0.1 / 6 Dec 2010: Initial draft.
+* Version 0.1 / 5 Dec 2010: Initial draft.
