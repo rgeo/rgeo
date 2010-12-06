@@ -1,5 +1,7 @@
 === 0.1.22 / 2010-12-05
 
+This should be the last pre-alpha development version. The next version planned is the 0.2 alpha release.
+
 * API CHANGE: Renamed Geography module to Geographic.
 * API CHANGE: Renamed Factory#has_capability? to Factory#property to generalize the API.
 * API CHANGE: Factory#proj4 and Factory#coord_sys are now required methods.

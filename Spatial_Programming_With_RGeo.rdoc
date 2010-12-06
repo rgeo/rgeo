@@ -344,9 +344,9 @@ Like SpatiaLite, PostGIS is compiled and installed as a separate add-on library 
 
 PostGIS uses as its internal format a variant on WKB known as EWKB. This variant provides support for Z and M coordinates as well as embedded SRID values. PostGIS also defines an corresponding EWKT format adding Z and M support and SRIDs to WKT, and provides conversion functions. The EWKB and EWKT variants are common enough that they are supported by \RGeo's WKB and WKT parsers.
 
-=== 5.5. \RGeo ActiveRecord Integration
+=== 5.5. \RGeo \ActiveRecord Integration
 
-\RGeo provides extra support for web applications built on Ruby On Rails or similar frameworks, and that use the ActiveRecord library, in the form of a suite of ActiveRecord connection adapters for the various spatial databases we have covered. These connection adapters subclass the stock connection adapters for the databases, and add support for the \RGeo geometric data types. You can create spatial columns and indexes using extensions to the ActiveRecord schema definition functions, and the appropriate fields on your ActiveRecord objects will appear as \RGeo spatial data objects.
+\RGeo provides extra support for web applications built on Ruby On Rails or similar frameworks, and that use the \ActiveRecord library, in the form of a suite of \ActiveRecord connection adapters for the various spatial databases we have covered. These connection adapters subclass the stock connection adapters for the databases, and add support for the \RGeo geometric data types. You can create spatial columns and indexes using extensions to the \ActiveRecord schema definition functions, and the appropriate fields on your \ActiveRecord objects will appear as \RGeo spatial data objects.
 
 These are the names of these connection adapters:
 
