@@ -34,10 +34,6 @@
 ;
 
 
-# Parent file
-require 'rgeo'
-
-
 module RGeo
   
   
@@ -68,9 +64,6 @@ module RGeo
   
 end
 
-
-# Dependency files
-require 'rgeo/feature'
 
 # Implementation files
 require 'rgeo/wkrep/wkt_parser'

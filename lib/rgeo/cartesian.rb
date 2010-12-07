@@ -34,10 +34,6 @@
 ;
 
 
-# Parent file
-require 'rgeo'
-
-
 module RGeo
   
   
@@ -53,12 +49,6 @@ module RGeo
   
 end
 
-
-# Dependency files.
-require 'rgeo/feature'
-require 'rgeo/geos'
-require 'rgeo/wkrep'
-require 'rgeo/impl_helper'
 
 # Implementation files.
 require 'rgeo/cartesian/calculations'

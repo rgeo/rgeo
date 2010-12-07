@@ -34,10 +34,6 @@
 ;
 
 
-# Parent file
-require 'rgeo'
-
-
 module RGeo
   
   
@@ -71,9 +67,6 @@ module RGeo
   
 end
 
-
-# Dependency files
-require 'rgeo/error'
 
 # Implementation files
 require 'rgeo/feature/factory'

@@ -143,7 +143,9 @@ module RGeo
       # Returns true if this factory supports a projection and the
       # projection wraps its x (easting) direction. For example, a
       # Mercator projection wraps, but a local projection that is valid
-      # only for a small area does not wrap.
+      # only for a small area does not wrap. Returns nil if this factory
+      # does not support or a projection, or if it is not known whether
+      # or not it wraps.
       
       def projection_wraps?
         @projector ? @projector.wraps? : nil
@@ -152,7 +154,8 @@ module RGeo
       
       # Returns a ProjectedWindow specifying the limits of the domain of
       # the projection space.
-      # Returns nil if this factory does not support a projection.
+      # Returns nil if this factory does not support a projection, or the
+      # projection limits are not known.
       
       def projection_limits_window
         if @projector

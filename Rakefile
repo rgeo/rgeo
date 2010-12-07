@@ -89,7 +89,7 @@ module RAKEFILE
   GEMSPEC = ::Gem::Specification.new do |s_|
     s_.name = PRODUCT_NAME
     s_.summary = "RGeo is a spatial data library for Ruby."
-    s_.description = "RGeo is a spatial data library for Ruby. It provides an implementation of the Open Geospatial Consortium's Simple Features Specification, used by most standard spatial/geographic data storage systems such as PostGIS. It also provides a suite of useful tools for writing location-based applications using Ruby-based frameworks such as Ruby On Rails."
+    s_.description = "RGeo is a spatial data library for Ruby. It provides an implementation of the Open Geospatial Consortium's Simple Features Specification, used by most standard spatial/geographic data storage systems such as PostGIS. A number of add-on modules are also available to help with writing location-based applications using Ruby-based frameworks such as Ruby On Rails."
     s_.version = "#{PRODUCT_VERSION}"
     s_.author = 'Daniel Azuma'
     s_.email = 'dazuma@gmail.com'
@@ -102,12 +102,6 @@ module RAKEFILE
     s_.test_files = TESTCASE_FILES
     s_.platform = ::Gem::Platform::RUBY
     s_.extensions = ::Dir.glob('ext/**/extconf.rb')
-    s_.add_development_dependency('activerecord', '>= 3.0.3')
-    s_.add_development_dependency('arel', '>= 2.0.3')
-    s_.add_development_dependency('mysql', '>= 2.8.1')
-    s_.add_development_dependency('mysql2', '>= 0.6.2')
-    s_.add_development_dependency('json', '>= 1.4.6')
-    s_.add_development_dependency('dbf', '>= 1.5.2')
   end
   
 end

@@ -1,7 +1,7 @@
 = An Introduction to Spatial Programming With RGeo
 
 * by Daniel Azuma
-* version 0.1 (5 Dec 2010)
+* version 0.2 (7 Dec 2010)
 
 == Introduction
 
@@ -42,15 +42,17 @@ Most major relational databases now support spatial extensions. The {MySQL}[http
 
 A variety of data services have also appeared. Geocoding, the process approximating a latitude/longitude coordinate from a street address, is now offered by most major mapping service vendors such as {Google}[http://code.google.com/apis/maps/documentation/geocoding/], {Microsoft}[http://www.microsoft.com/maps/developers/], and {Yahoo}[http://developer.yahoo.com/geo/placefinder/]. Place databases with geocoded business and major location listings are now also available from a variety of vendors. {SimpleGeo}[http://www.simplegeo.com/] is a relatively new service for cloud-based storage and querying of custom location data.
 
-Integrating these existing services in a web application is often a challenge, but a few integration libraries and frameworks do exist. {GeoDjango}[http://geodjango.org/] is an add-on for the Python-based Django web framework for building location-based applications. {RGeo}[http://github.com/dazuma/rgeo] is a newer library for Ruby that can perform the same function for Ruby on Rails.
+Integrating these existing services in a web application is often a challenge, but a few integration libraries and frameworks do exist. {GeoDjango}[http://geodjango.org/] is an add-on for the Python-based Django web framework for building location-based applications. {RGeo}[http://github.com/dazuma/rgeo] is a suite of libraries for Ruby that can perform the same function for Ruby on Rails.
 
 Perhaps most important of all, however, are the organizations that have appeared to support the development of geospatial standards and software. The {Open Geospatial Consortium}[http://www.opengeospatial.org/] (OGC) is an international consortium of companies, government agencies, and other organizations that develop open standards and open interfaces for geospatial software systems to promote interoperability. Most of the specific concepts, data types, and operations in this document were developed by the OGC. The {Open Source Geospatial Foundation}[http://www.osgeo.org/] develops and supports a variety of open source geospatial software, including PostGIS, GEOS, Proj, and others we will cover in this document. The {OGP Geomatics Committee}[http://www.epsg.org/] (formerly EPSG, the European Petroleum Survey Group) is part of an industry association maintaining the de facto standard EPSG geodetic data set, a set of coordinate systems and transformations used internationally to describe global position. These and other organizations form the backbone of geospatial technology, and most spatial applications will interact at least indirectly with their services.
 
 === 1.3. Ruby Libraries and \RGeo
 
-Ruby developers have had access to a fair number of spatial tools, primarily integration libraries for external services. {Geokit}[http://geokit.rubyforge.org/] provides a common interface for querying geocoding services, and a basic \ActiveRecord extension for spatial queries. {YM4R}[http://ym4r.rubyforge.org/] provides a simple interface for integrating the Google and Yahoo map visualization tools in a Ruby application. Finally, {GeoRuby}[http://georuby.rubyforge.org/] provides classes for basic spatial data types such as points, lines, and polygons, and the add-on library {spatial_adapter}[http://github.com/fragility/spatial_adapter] introduces a hack into a few of the popular \ActiveRecord database adapters to support spatial columns in the database.
+Ruby developers have had access to a fair number of spatial tools, primarily integration libraries for external services. {Geokit}[http://geokit.rubyforge.org/] provides a common interface for querying geocoding services, and a basic ActiveRecord extension for spatial queries. {YM4R}[http://ym4r.rubyforge.org/] provides a simple interface for integrating the Google and Yahoo map visualization tools in a Ruby application. Finally, {GeoRuby}[http://georuby.rubyforge.org/] provides classes for basic spatial data types such as points, lines, and polygons, and the add-on library {spatial_adapter}[http://github.com/fragility/spatial_adapter] hacks a few of the popular ActiveRecord database adapters to support spatial columns in the database.
 
 In this document, we will use {RGeo}[http://github.com/dazuma/rgeo], a new spatial data library for Ruby that provides a complete and robust implementation of the standard OGC spatial data types and operations. It covers some of the same functionality as GeoRuby and spatial_adapter. However, where GeoRuby implements only a minimal subset of the OGC feature interfaces, \RGeo supports the entire specification, as well as providing many features and extensions not available with the older libraries.
+
+\RGeo comprises several libraries, distributed as gems: a core library, and a suite of optional add-on modules. The core library, distributed as the *rgeo* gem, includes the spatial data implementation itself. Currently available add-on modules include <b>rgeo-geojson</b>, which reads and writes the {GeoJSON}[http://www.geojson.org/] format, and <b>rgeo-shapefile</b>, which reads ESRI shapefiles. A number of ActiveRecord adapters also utilize \RGeo to communicate with spatial databases; these include *mysqlspatial*, *mysql2spatial*, *spatialite*, and *postgis*.
 
 == 2. Spatial Data Types
 
@@ -195,7 +197,7 @@ The SFS also provides several operations that take two geometries and yield a th
 
 === 3.4. Boundaries, Envelopes, etc.
 
-Methods exist to compute the boundary of an object, the envelope (i.e. the bounding box), and the convex hull. In addition, there is a "buffer" method that attempts to return a polygon approximating the area within a given distance from the object.
+Methods exist to compute the boundary of an object, the envelope (i.e. the bounding box), and the convex hull. In addition, there is a "buffer" method that attempts to return a polygon approximating the area within a given distance from the object. Note that, because the SFS does not yet define any geometric types with curved edges, most buffers will be polygonal approximations.
 
 === 3.5. Size and Distance
 
@@ -205,7 +207,7 @@ Several size and distance calculations are available. You can compute the distan
 
 The SFS defines two serialization schemes for geometric objects, known as the WKT (well-known text) and WKB (well-known binary) formats. The WKT is often used for textual display and transmission of a geometric object, while the WKB is sometimes used as an internal data format by spatial databases. Geometric objects in \RGeo define the <tt>as_text</tt> and <tt>as_binary</tt> methods to serialize the object into a data string, while \RGeo factories provide <tt>parse_wkt</tt> and <tt>parse_wkb</tt> methods to reconstruct geometric objects from their serialized form.
 
-Note that there are several key shortcomings in the WKT and WKB formats as strictly defined by the SFS. In particular, neither format has official support for Z or M coordinates, and neither provides a way to specify the coordinate system (i.e. spatial reference ID) in which the object is represented. Because of this, variants of these formats have been developed. The most important to know are probably the EWKT and EWKB (or "extended" well-known formats) used by the PostGIS database, which supports Z and M as well as SRID. More recent versions of the SFS also have defined extensions to handle Z and M coordinates, but do not embed an SRID. \RGeo supports parsing and generating these formats through the RGeo::WKRep module.
+Note that there are several key shortcomings in the WKT and WKB formats as strictly defined by the SFS. In particular, neither format has official support for Z or M coordinates, and neither provides a way to specify the coordinate system (i.e. spatial reference ID) in which the object is represented. Because of this, variants of these formats have been developed. The most important to know are probably the EWKT and EWKB (or "extended" well-known formats) used by the PostGIS database, which supports Z and M as well as SRID. More recent versions of the SFS also have defined extensions to handle Z and M coordinates, but do not embed an SRID. \RGeo supports parsing and generating these variants through the RGeo::WKRep module.
 
 == 4. Coordinate Systems and Projections
 
@@ -227,9 +229,9 @@ GIS systems typically represent locations in one of three different types of coo
 
 In our Vancouver to Frankfurt example, the path of a "straight" line is defined by the type of coordinate system being used. A geocentric coordinate system operates in 3-d space, and so the LineString will actually go through the interior of the earth. A straight line in a geographic coordinate system (latitudes and longitudes) is typically defined as a geodesic, the shortest path between two points on the earth's surface. This path will take the line near Reykjavik. In a projected coordinate system, a straight line is defined as a straight line on the projection-- that is, a straight line drawn on the flat map. Google and Bing maps use a Mercator projection, in which lines of latitude are straight horizontal lines, so the LineString will follow the 50 degrees latitude line, passing through Newfoundland.
 
-It is important to note that the actual *shape* of the geometry is different depending on the coordinate system. If you "project" the geodesic (the straight Line in geographic coordinates) into a Mercator-projected Google map, the line will be curved. Therefore, the coordinate system is an integral part of the geometric object. If you get your coordinate systems mixed up, you may get incorrect results when you run a query or a geometric analysis. Morten Nielsen gives an example in {this post}[http://www.sharpgis.net/post/2009/02/06/Why-EPSG4326-is-usually-the-wrong-e2809cprojectione2809d.aspx].
+It is important to note that the actual _shape_ of the geometry is different depending on the coordinate system. If you "project" the geodesic (the straight Line in geographic coordinates) into a Mercator-projected Google map, the line will be curved. Therefore, the coordinate system is an integral part of the geometric object. If you get your coordinate systems mixed up, you may get incorrect results when you run a query or a geometric analysis. Morten Nielsen gives an example in {this post}[http://www.sharpgis.net/post/2009/02/06/Why-EPSG4326-is-usually-the-wrong-e2809cprojectione2809d.aspx].
 
-\RGeo provides access to different coordinate systems via its factories, as we saw earlier. If you are implementing geolocation, you will typically use one of the geographic factories which represent coordinates as latitude and longitude. Note, however, that \RGeo provides both projected and non-projected geographic factories. Projected factories are tied to a particular projection, representing coordinates as latitude and longitude, but doing calculations in the projection. If you use the simple mercator factory, a projected factory, the line between Vancouver and Frankfurt will follow the 50 degree latitude line, and so it will intersect a polygon representing Newfoundland. Non-projected factories perform calculations on a curved earth. Using the spherical factory, a non-projected factory that assumes the earth is a sphere, the line between Vancouver and Frankfurt will intersect a polygon representing Greenland. (In the future, \RGeo should also provide an ellipsoidal factory that performs the more complex calculations needed to model the earth as a *flattened* sphere. This feature is not available yet.)
+\RGeo provides access to different coordinate systems via its factories, as we saw earlier. If you are implementing geolocation, you will typically use one of the geographic factories which represent coordinates as latitude and longitude. Note, however, that \RGeo provides both projected and non-projected geographic factories. Projected factories are tied to a particular projection, representing coordinates as latitude and longitude, but doing calculations in the projection. If you use the simple mercator factory, a projected factory, the line between Vancouver and Frankfurt will follow the 50 degree latitude line, and so it will intersect a polygon representing Newfoundland. Non-projected factories perform calculations on a curved earth. Using the spherical factory, a non-projected factory that assumes the earth is a sphere, the line between Vancouver and Frankfurt will intersect a polygon representing Greenland. (In the future, \RGeo should also provide an ellipsoidal factory that performs the more complex calculations needed to model the earth as a _flattened_ sphere. This feature is not available yet.)
 
 Some database systems behave similarly. PostGIS, for example, provides separate "geometry" and "geography" types. The former assumes a flat domain: it will behave similarly to \RGeo's simple mercator factory for a horizontal line (though for an oblique line, it will behave differently since the vertical axis is nonuniform in the Mercator projection.) The PostGIS "geography" type, however, operates on a curved earth, similar to \RGeo's spherical factory.
 
@@ -253,7 +255,7 @@ The WGS84 vertical datum is a bumpy ellipsoid representing nominal sea level for
 
 A geographic coordinate system is generally defined by a datum and a prime meridian. A projected coordinate system starts from a geographic coordinate system and includes additional parameters specific to the projection.
 
-Which coordinate system should you use? The simple answer is WGS84. This is the same worldwide geographic coordinate system that GPS uses, as do most maps, geocoding services, and so forth. Only in certain locale-specific cases might a different coordinate system be in use. However, remember that WGS84 is a geographic coordinate system, not a projected coordinate system. It does not make sense to say that your map uses WGS84, because chances are your map is a flat map, not an ellipsoidal map.
+Which coordinate system should you use for location data? The simple answer is WGS84. This is the same worldwide geographic coordinate system that GPS uses, as do most maps, geocoding services, and so forth. Only in certain locale-specific cases might a different coordinate system be in common use. However, remember that WGS84 is a geographic coordinate system, not a projected coordinate system. It does not make sense to say that your map uses WGS84, because chances are your map is a flat map, not a map wrapped around an ellipsoidal shape.
 
 What about Google and Bing maps? They use a combination of two coordinate systems with a projection. The API inputs take latitude and longitude in the WGS84 coordinate system. However, the maps themselves are Mercator projections (with a modification to make computations easier), and so the map implementations transform the coordinates internally. Again, Morten Nielsen provides a more {detailed description}[http://www.sharpgis.net/post/2007/07/27/The-Microsoft-Live-Maps-and-Google-Maps-projection.aspx].
 
@@ -277,7 +279,7 @@ Under most circumstances, when you're working with geographic data, you can prob
 
 === 4.5. Spatial Reference Systems and the EPSG Dataset
 
-The OGC also defines a syntax for specifying coordinate systems, the {Coordinate Transformation Services Specification[http://www.opengeospatial.org/standards/ct]. This specification defines both an object model and a well-known text representation for coordinate systems and transformations. \RGeo does not yet implement this specification, but it is on the radar.
+The OGC also defines a syntax for specifying coordinate systems, the {Coordinate Transformation Services Specification[http://www.opengeospatial.org/standards/ct]. This specification defines both an object model and a well-known text representation for coordinate systems and transformations. \RGeo does not yet implement this specification, but it is on the to-do list.
 
 Finally, there also exists a de facto standard database of coordinate systems and related parameters, published by EPSG (now the OGP Geomatics Committee). This is a set of coordinate systems, each tagged with a well-known ID number, including geographic and projected systems. You can browse this database, including both OGC and Proj4 representations, at http://www.spatialreference.org/. This database is also included as a table in many popular spatial databases including PostGIS and SpatiaLite. Typically, the EPSG number is used as the SRID identifying the coordinate system for geometric objects stored in the database.
 
@@ -303,12 +305,12 @@ Spatial databases will handle the problem of indexing spatial data in different 
 
 === 5.2. MySQL Spatial
 
-{MySQL}[http://mysql.com/] maintains its dual reputation as probably the easiest of the open source relational databases to manage, and as tending to miss some features and standards compliance. Recent versions of MySQL have spatial column support baked in, and they are extremely easy to use: just create a column of type GEOMETRY, or POINT, or LINESTRING, or any of the OGC types. You can also create spatial indexes simply by adding the SPATIAL modifier to CREATE INDEX. Note, however, that as of MySQL 5.1, only MyISAM tables support spatial indexes. If you're using Innodb, you can add spatial columns but you can't index them.
+{MySQL}[http://mysql.com/] maintains its dual reputation as probably the easiest of the open source relational databases to manage, but as tending to miss some features and standards compliance. Recent versions of MySQL have spatial column support baked in, and they are extremely easy to use: just create a column of type GEOMETRY, or POINT, or LINESTRING, or any of the OGC types. You can also create spatial indexes simply by adding the SPATIAL modifier to CREATE INDEX. Note, however, that as of MySQL 5.1, only MyISAM tables support spatial indexes. If you're using Innodb, you can add spatial columns but you can't index them.
 
  CREATE TABLE mytable(id INT NOT NULL PRIMARY KEY, latlon POINT) ENGINE=MyISAM;
  CREATE SPATIAL INDEX idx_latlon ON mytable(latlon);
 
-MySQL represents data internally using WKB slightly modified with 4 extra bytes at the beginning to store an object's SRID. You can interpret this data directly, or use provided functions to convert to and from WKB and WKT.
+MySQL represents data internally using a variant of WKB which has been slightly modified with 4 extra bytes at the beginning to store an object's SRID. You can interpret this data directly, or use provided functions to convert to and from WKB and WKT.
 
 What MySQL lacks is support for most of the advanced spatial geometry functions such as the relational operators (e.g. ST_Intersects(), ST_Contains(), etc.), so you will not be able to perform complex geometric calculations using the database engine. You'll have to just load the data into your application and use \RGeo to perform those calculations. It also does not provide the OGC-specified geometry columns or spatial reference system tables. Because the former is not present, you will not be able to specify restrictions on your geometries beyond the type: you will not be able to restrict the SRID for a column, and columns will not be able to support Z and M coordinates. Because the latter is not present, MySQL cannot perform coordinate system transformations itself, nor provide you with the standard EPSG dataset for your own use.
 
@@ -344,16 +346,16 @@ Like SpatiaLite, PostGIS is compiled and installed as a separate add-on library 
 
 PostGIS uses as its internal format a variant on WKB known as EWKB. This variant provides support for Z and M coordinates as well as embedded SRID values. PostGIS also defines an corresponding EWKT format adding Z and M support and SRIDs to WKT, and provides conversion functions. The EWKB and EWKT variants are common enough that they are supported by \RGeo's WKB and WKT parsers.
 
-=== 5.5. \RGeo \ActiveRecord Integration
+=== 5.5. \RGeo ActiveRecord Integration
 
-\RGeo provides extra support for web applications built on Ruby On Rails or similar frameworks, and that use the \ActiveRecord library, in the form of a suite of \ActiveRecord connection adapters for the various spatial databases we have covered. These connection adapters subclass the stock connection adapters for the databases, and add support for the \RGeo geometric data types. You can create spatial columns and indexes using extensions to the \ActiveRecord schema definition functions, and the appropriate fields on your \ActiveRecord objects will appear as \RGeo spatial data objects.
+\RGeo provides extra support for web applications built on Ruby On Rails or similar frameworks, and that use the ActiveRecord library, in the form of a suite of ActiveRecord connection adapters for the various spatial databases we have covered. These connection adapters subclass the stock connection adapters for the databases, and add support for the \RGeo geometric data types. You can create spatial columns and indexes using extensions to the ActiveRecord schema definition functions, and the appropriate fields on your ActiveRecord objects will appear as \RGeo spatial data objects.
 
-These are the names of these connection adapters:
+\RGeo's spatial ActiveRecord adapters are provided in separate gems, named according to the recommended convention. These are the names of these connection adapters:
 
-* *mysqlspatial*: subclasses the mysql adapter and adds support for spatial types
-* *mysql2spatial*: subclasses the mysql2 adapter and adds support for spatial types
-* *spatialite*: subclasses the sqlite3 adapter and adds support for the SpatiaLite extension
-* *postgis*: subclasses the postgresql adapter and adds support for the PostGIS extension
+* *mysqlspatial*: Subclasses the mysql adapter and adds support for MySQL's spatial types. Available as the <b>activerecord-mysqlspatial-adapter</b> gem.
+* *mysql2spatial*: Subclasses the mysql2 adapter and adds support for MySQL's spatial types. Available as the <b>activerecord-mysql2spatial-adapter</b> gem.
+* *spatialite*: Subclasses the sqlite3 adapter and adds support for the SpatiaLite extension. Available as the <b>activerecord-spatialite-adapter</b> gem.
+* *postgis*: Subclasses the postgresql adapter and adds support for the PostGIS extension. Available as the <b>activerecord-postgis-adapter</b> gem.
 
 == 6. Location Service Integration
 
@@ -363,13 +365,13 @@ When writing a location-aware application, you will often need to interact with 
 
 {ESRI}[http://www.esri.com/] is one of the oldest and most well-known GIS corporations, developing a suite of applications including the venerable {ArcGIS}[http://www.esri.com/software/arcgis/index.html]. ESRI also created the Shapefile, a geospatial data file format that has become a de facto standard despite its legacy and somewhat awkward characteristics. Today, many of the widely-available geospatial data sets are distributed as shapefiles.
 
-The shapefile format is specified in an ESRI {whitepaper}[http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf]. It typically comprises three files: a geometric data file "*.shp" containing the actual geometric data, a corresponding index file "*.shx" providing offsets into the .shp file to support random access, and a corresponding file "*.dbf" in dBASE format that stores arbitrary attributes for the shape records. Many GIS systems can read and/or write shapefiles. SpatiaLite can treat a shapefile as an external "virtual table". \RGeo provides a module, RGeo::Shapefile, that can read shapefiles and represent their contents as geometric data objects.
+The shapefile format is specified in an ESRI {whitepaper}[http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf]. It typically comprises three files: a geometric data file "*.shp" containing the actual geometric data, a corresponding index file "*.shx" providing offsets into the .shp file to support random access, and a corresponding file "*.dbf" in dBASE format that stores arbitrary attributes for the shape records. Many GIS systems can read and/or write shapefiles. SpatiaLite can treat a shapefile as an external "virtual table". An optional \RGeo module, RGeo::Shapefile (distributed as the gem <b>rgeo-shapefile</b>) can read shapefiles and represent their contents as \RGeo's geometric data types.
 
 === 6.2. GeoJSON and Location-Based Services
 
-Location is becoming a common feature of web services as well. An emerging standard in the encoding of geographic data in a web service is {GeoJSON}[http://www.geojson.org/], an object format based on JSON. GeoJSON can encode any of the OGR geometry types, and includes facilities to attach attributes, bounding boxes, and coordinate system specifications. {SimpleGeo}[http://www.simplegeo.com/] is one of several high-profile location based APIs now using GeoJSON. \RGeo also provides a RGeo::GeoJSON module that can read and write this format.
+Location is becoming a common feature of web services as well. An emerging standard in the encoding of geographic data in a web service is {GeoJSON}[http://www.geojson.org/], an object format based on JSON. GeoJSON can encode any of the OGR geometry types, and includes facilities to attach attributes, bounding boxes, and coordinate system specifications. {SimpleGeo}[http://www.simplegeo.com/] is one of several high-profile location based APIs now using GeoJSON. \RGeo also provides an optional module RGeo::GeoJSON (distrubted as the gem <b>rgeo-geojson</b>) that can read and write this format.
 
-Other common formats that may be used by web services include {GeoRSS}[http://www.georss.org/], an extension to RSS and Atom for geotagging RSS feed entries, and {KML}[http://www.opengeospatial.org/standards/kml], an XML-based markup language for geographic information originally developed by Google and recently adopted as an OGC standard.
+Other common formats that may be used by web services include {GeoRSS}[http://www.georss.org/], an extension to RSS and Atom for geotagging RSS feed entries, and {KML}[http://www.opengeospatial.org/standards/kml], an XML-based markup language for geographic information originally developed by Google and recently adopted as an OGC standard. The GeoRuby library provides rudimentary support for these formats. \RGeo does not yet, but appropriate optional modules are on the to-do list.
 
 == 7. Conclusion
 
@@ -380,3 +382,4 @@ At the time of this writing, a number of open source tools and libraries are sta
 == History
 
 * Version 0.1 / 5 Dec 2010: Initial draft.
+* Version 0.2 / 7 Dec 2010: Minor updates, and updates for the \RGeo 0.2 alpha release.

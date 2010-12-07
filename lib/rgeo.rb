@@ -37,95 +37,88 @@
 # RGeo is a spatial data library for Ruby. It focuses on the storage and
 # manipulation of spatial data types such as points, lines, and polygons.
 # 
-# === RGeo Modules
+# RGeo comprises a number of modules. The "rgeo" gem provides a suite of
+# standard modules. Additional optional modules are provided by separate
+# gems with names of the form "<tt>rgeo-*</tt>".
 # 
-# RGeo comprises a number of modules.
+# === Standard modules
 # 
-# The RGeo::Feature module contains interface specifications for spatial
-# objects implemented by RGeo. These interfaces closely follow the OGC
-# Simple Features Specifiation (SFS). This module forms the core of RGeo.
+# These are the standard modules provided by the "rgeo" gem.
 # 
-# The RGeo::CoordSys module contains classes for representing spatial
-# reference systems and coordinate transformations. For example, it
-# includes a wrapper for the Proj4 library, supporting many geographic
-# projections.
+# * RGeo::Feature contains interface specifications for spatial
+#   objects implemented by RGeo. These interfaces closely follow the OGC
+#   Simple Features Specifiation (SFS). This module forms the core of RGeo.
 # 
-# The RGeo::Cartesian module provides a basic pure ruby implementation of
-# spatial objects in a Cartesian (flat) coordinate system. It does not
-# implement all the geometric analysis operations in the SFS, but it
-# implements the data structures without requiring an external C library,
-# so it is often sufficient for basic applications.
+# * RGeo::CoordSys contains classes for representing spatial
+#   reference systems and coordinate transformations. For example, it
+#   includes a wrapper for the Proj4 library, supporting many geographic
+#   projections.
 # 
-# The RGeo::Geos module is another Cartesian implementation that wraps
-# the GEOS library to provide a full, high-performance implementation of
-# Cartesian geometry that includes every operation defined in the SFS. It
-# requires GEOS 3.2 or later.
+# * RGeo::Cartesian is a gateway for geometric data implementations
+#   that operate in Caresian (flat) coordinate systems. It also provides a
+#   basic pure ruby Cartesian implementation. This implementation does not
+#   cover all the geometric analysis operations defined by the SFS, but it
+#   does not require an external C library and is often sufficient for
+#   basic applications.
 # 
-# The RGeo::Geographic module contains spatial implementations that
-# operate in latitude-longitude coordinates and are well-suited for
-# geographic location based applications. Geographic implementations may
-# also be linked to projections.
+# * RGeo::Geos is another Cartesian implementation that wraps the
+#   GEOS library to provide a full, high-performance implementation of
+#   Cartesian geometry that includes every operation defined in the SFS.
+#   It requires GEOS 3.2 or later.
 # 
-# The RGeo::WKRep module contains tools for reading and writing spatial
-# data in the OGC Well-Known Text (WKT) and Well-Known Binary (WKB)
-# representations. It also supports common variants such as the PostGIS
-# EWKT and EWKB representations.
+# * RGeo::Geographic contains spatial implementations that operate
+#   in latitude-longitude coordinates and are well-suited for geographic
+#   location based applications. Geographic spatial objects may also be
+#   linked to projections.
 # 
-# The RGeo::GeoJSON module contains tools for GeoJSON serialization of
-# spatial objects. These tools work with any of the spatial object
-# implementations.
+# * RGeo::WKRep contains tools for reading and writing spatial
+#   data in the OGC Well-Known Text (WKT) and Well-Known Binary (WKB)
+#   representations. It also supports common variants such as the PostGIS
+#   EWKT and EWKB representations.
 # 
-# The RGeo::Shapefile module contains tools for reading ESRI shapefiles,
-# an industry standard (if somewhat legacy) file format commonly used for
-# providing geographic data sets.
+# === Optional Modules
 # 
-# The RGeo::ActiveRecord module contains ActiveRecord connection adapters
-# for handling spatial data with MySQL Spatial, SpatiaLite, and PostGIS.
-# See the RGeo::ActiveRecord rdocs for more information on using these
-# adapters. However, you do not need to access or require this module
-# directly from code. ActiveRecord will load these adapters automatically
-# when they are requested.
+# Here is a partial list of optional modules available as separate gems.
 # 
-# === Loading the library
+# * <b>rgeo-geojson</b> provides the RGeo::GeoJSON module, containing
+#   tools for GeoJSON encoding and decoding of spatial objects.
 # 
-# After installing the RGeo gem, you can load the library with:
-#  require 'rgeo'
+# * <b>rgeo-shapefile</b> provides the RGeo::Shapefile module, containing
+#   tools for reading ESRI shapefiles.
 # 
-# This will "lazy-load" the modules as they are referenced or needed
-# (using autoload).
+# * <b>rgeo-activerecord</b> provides the RGeo::ActiveRecord module,
+#   containing some ActiveRecord extensions for spatial databases, and a
+#   set of common tools for ActiveRecord spatial database adapters.
 # 
-# If, for performance reasons, or because you want to run RGeo in a
-# multithreaded environment, you wish to eagerly load RGeo, you may do so
-# with:
-#  require 'rgeo/all'
+# Several ActiveRecord adapters use RGeo. These include:
 # 
-# You may also eagerly load individual modules:
-#  require 'rgeo/feature'
-#  require 'rgeo/cartesian'
-#  require 'rgeo/coord_sys'
-#  require 'rgeo/geographic'
-#  require 'rgeo/geos'
-#  require 'rgeo/geo_json'
-#  require 'rgeo/shapefile'
-#  require 'rgeo/wkrep'
+# * <b>mysqlspatial</b>, an adapter for MySQL spatial extensions based on
+#   the mysql adapter. Available as the activerecord-mysqlspatial-adapter
+#   gem.
 # 
-# You do not need to explicitly require any files for access to the
-# spatial ActiveRecord adapters. ActiveRecord will load them
-# automatically when they are referenced.
+# * <b>mysql2spatial</b>, an adapter for MySQL spatial extensions based on
+#   the mysql2 adapter. Available as the activerecord-mysql2spatial-adapter
+#   gem.
+# 
+# * <b>spatialite</b>, an adapter for the SpatiaLite extension to the
+#   Sqlite3 database, and based on the sqlite3 adapter. Available as the
+#   activerecord-spatialite-adapter gem.
+# 
+# * <b>postgis</b>, an adapter for the PostGIS extension to the PostgreSQL
+#   database, and based on the postgresql adapter. Available as the
+#   activerecord-postgis-adapter gem.
 
 module RGeo
-  
-  autoload(:Cartesian, 'rgeo/cartesian')
-  autoload(:CoordSys, 'rgeo/coord_sys')
-  autoload(:Error, 'rgeo/error')
-  autoload(:Feature, 'rgeo/feature')
-  autoload(:GeoJSON, 'rgeo/geo_json')
-  autoload(:Geographic, 'rgeo/geographic')
-  autoload(:Geos, 'rgeo/geos')
-  autoload(:ImplHelper, 'rgeo/impl_helper')
-  autoload(:Shapefile, 'rgeo/shapefile')
-  autoload(:WKRep, 'rgeo/wkrep')
-  
 end
 
+
+# Core modules
 require 'rgeo/version'
+require 'rgeo/error'
+require 'rgeo/feature'
+require 'rgeo/coord_sys'
+require 'rgeo/impl_helper'
+require 'rgeo/wkrep'
+require 'rgeo/geos'
+require 'rgeo/cartesian'
+require 'rgeo/geographic'

@@ -71,4 +71,4 @@ unless found_proj_
   puts "**** WARNING: Unable to find Proj headers or Proj version is too old."
   puts "**** Compiling without Proj support."
 end
-create_makefile('coord_sys/proj4_c_impl')
+create_makefile('rgeo/coord_sys/proj4_c_impl')

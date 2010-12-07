@@ -34,10 +34,6 @@
 ;
 
 
-# Parent file
-require 'rgeo'
-
-
 module RGeo
   
   
@@ -47,9 +43,6 @@ module RGeo
   
 end
 
-
-# Dependency files
-require 'rgeo/feature'
 
 # Implementation files
 require 'rgeo/impl_helper/math'

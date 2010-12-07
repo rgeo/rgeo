@@ -1,3 +1,32 @@
+=== 0.2.0 / 2010-12-07
+
+This is the first public alpha version of RGeo. With this version, we are soft-locking the API interfaces. They are still subject to possible change, but only if considered necessary.
+
+With this alpha version, RGeo has been split into a core library and a set of optional modules. The following modules remain in the core "rgeo" gem:
+* RGeo::Feature
+* RGeo::CoordSys
+* RGeo::Geos
+* RGeo::Cartesian
+* RGeo::Geographic
+* RGeo::WKRep
+
+The following modules have been spun off into separate gems:
+* RGeo::GeoJSON has been spun off into the "rgeo-geojson" gem.
+* RGeo::Shapefile has been spun off into the "rgeo-shapefile" gem.
+* RGeo::ActiveRecord has been spun off into the "rgeo-activerecord" gem.
+
+The ActiveRecord adapters have been spun off into gems according to the recommended ActiveRecord naming scheme:
+* The <b>mysqlspatial</b> adapter is now in the gem "activerecord-mysqlspatial-adapter".
+* The <b>mysql2spatial</b> adapter is now in the gem "activerecord-mysql2spatial-adapter".
+* The <b>spatialite</b> adapter is now in the gem "activerecord-spatialite-adapter".
+* The <b>postgis</b> adapter is now in the gem "activerecord-postgis-adapter".
+
+Any additional modules will likely similarly be distributed as separate gems.
+
+Other changes in this version:
+
+* Proj4 wasn't building into the right location. Fixed.
+
 === 0.1.22 / 2010-12-05
 
 This should be the last pre-alpha development version. The next version planned is the 0.2 alpha release.

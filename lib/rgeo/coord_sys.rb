@@ -34,10 +34,6 @@
 ;
 
 
-# Parent file
-require 'rgeo'
-
-
 module RGeo
   
   
@@ -56,9 +52,6 @@ module RGeo
   
 end
 
-
-# Dependency files
-require 'rgeo/feature'
 
 # Implementation files
 require 'rgeo/coord_sys/proj4_c_impl'
