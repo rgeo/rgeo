@@ -1,6 +1,6 @@
 === 0.2.0 / 2010-12-07
 
-This is the first public alpha version of RGeo. With this version, we are soft-locking the API interfaces. They are still subject to possible change, but only if considered necessary.
+This is the first public alpha version of RGeo. With this version, we are soft-locking the API interfaces and will try to retain backwards incompatibility. Incompatible API changes will still be possible, but only if considered necessary.
 
 With this alpha version, RGeo has been split into a core library and a set of optional modules. The following modules remain in the core "rgeo" gem:
 * RGeo::Feature
@@ -21,11 +21,11 @@ The ActiveRecord adapters have been spun off into gems according to the recommen
 * The <b>spatialite</b> adapter is now in the gem "activerecord-spatialite-adapter".
 * The <b>postgis</b> adapter is now in the gem "activerecord-postgis-adapter".
 
-Any additional modules will likely similarly be distributed as separate gems.
+Any additional modules likely will be distributed similarly as separate gems.
 
 Other changes in this version:
-
-* Proj4 wasn't building into the right location. Fixed.
+* Proj4 integration wasn't building into the right location on a gem install. Fixed.
+* Minor updates to the Spatial Programming paper.
 
 === 0.1.22 / 2010-12-05
 

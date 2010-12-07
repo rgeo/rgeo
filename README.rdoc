@@ -10,8 +10,7 @@ industry standard OGC Simple Features Specification, which provides data
 representations of geometric objects such as points, lines, and polygons,
 along with a set of geometric analysis operations. This makes it ideal
 for modeling geolocation data. It also supports a suite of optional add-on
-modules that provide various services for writing location-aware
-applications.
+modules that provide various geolocation-related services.
 
 Use the core *rgeo* gem to:
 
@@ -24,23 +23,30 @@ Use the core *rgeo* gem to:
 * Read and write location data in the WKT and WKB representations used by
   spatial databases.
 
-Use RGeo's optional modules to:
+Several optional modules are currently available:
 
-* Extend ActiveRecord to handle spatial data in MySQL Spatial, SpatiaLite,
-  and PostGIS using RGeo's spatial ActiveRecord adapters.
 * Generate and interpret GeoJSON data for communication with common
   location-based web services such as SimpleGeo, using the
   <b>rgeo-geojson</b> gem.
 * Read GIS datasets from ESRI shapefiles using the <b>rgeo-shapefile</b>
   gem.
+* Extend ActiveRecord to handle spatial data in MySQL Spatial, SpatiaLite,
+  and PostGIS using RGeo's spatial ActiveRecord adapters. These are
+  available via the gems:
+  * <b>activerecord-mysqlspatial-adapter</b>
+  * <b>activerecord-mysql2spatial-adapter</b>
+  * <b>activerecord-spatialite-adapter</b>
+  * <b>activerecord-postgis-adapter</b>
 * and more to come...
 
 === Requirements
 
-RGeo has the following hard requirements:
+RGeo has the following requirements:
 
 * Ruby 1.8.7 or later. Ruby 1.9.2 or later preferred.
   Rubinius and JRuby are not yet supported.
+* The build system assumes a unix-like environment. Windows builds may be
+  possible, but not likely "out of the box".
 
 Some features also require the following:
 
@@ -48,9 +54,9 @@ Some features also require the following:
   available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
   http://geos.osgeo.org
-* Proj 4.7 or later is also recommended. This is needed if you want to
-  translate coordinates between geographic projections. It also may be
-  available via your operating system's package manager, or from
+* Proj 4.7 or later is also recommended. This library is needed if you
+  want to translate coordinates between geographic projections. It also
+  may be available via your operating system's package manager, or from
   http://trac.osgeo.org/proj
 
 === Installation
@@ -59,8 +65,8 @@ Install RGeo as a gem:
 
  gem install rgeo
 
-Note: By default, the gem installation looks for the required GEOS
-library in the following locations:
+Note: By default, the gem installation looks for the GEOS library in the
+following locations:
 
 * /usr/local
 * /usr/local/geos
@@ -86,11 +92,31 @@ following locations by default:
 If Proj4 is installed in a different location, you must provide its
 installation prefix directory using the "--with-proj-dir" option.
 
+=== To-do list
+
+The RGeo suite of tools is evolving rapidly. The current to-do list for
+the core library includes:
+
+* Implementation of the OGC coordinate system spec.
+* Integration with spatial reference system databases.
+* Ellipsoidal geography implementation, probably utilizing geographiclib.
+* Rubinius and JRuby support.
+* Windows build support.
+
+Each of the current add-on modules also has its own feature roadmap, and
+we are planning on introducing more add-on modules, including:
+
+* GeoRSS and KML format support.
+* Integration with the SimpleGeo API.
+* Possibly additional ActiveRecord adapters.
+
 === Development and support
 
 Documentation is available at http://virtuoso.rubyforge.org/rgeo/README_rdoc.html
 
 Source code is hosted on Github at http://github.com/dazuma/rgeo
+
+Contributions are welcome. Fork the project on Github.
 
 Report bugs on Github issues at http://github.org/dazuma/rgeo/issues
 
