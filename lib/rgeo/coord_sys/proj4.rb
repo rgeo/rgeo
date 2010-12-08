@@ -176,13 +176,13 @@ module RGeo
         
         
         # Create a new Proj4 object, given a definition, which may be
-        # either a string or a hash. Raises Error::UnsupportedCapability
+        # either a string or a hash. Raises Error::UnsupportedOperation
         # if the given definition is invalid or Proj4 is not supported.
         
         def new(defn_)
           result_ = create(defn_)
           unless result_
-            raise Error::UnsupportedCapability, "Proj4 not supported in this installation"
+            raise Error::UnsupportedOperation, "Proj4 not supported in this installation"
           end
           result_
         end

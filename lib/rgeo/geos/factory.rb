@@ -62,7 +62,7 @@ module RGeo
           flags_ |= 2 if opts_[:has_z_coordinate]
           flags_ |= 4 if opts_[:has_m_coordinate]
           if flags_ & 6 == 6
-            raise Error::UnsupportedCapability, "GEOS cannot support both Z and M coordinates at the same time."
+            raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1

@@ -49,8 +49,8 @@ module RGeo
     class InvalidGeometry < RGeoError
     end
     
-    # The specified capability is not supported or not implemented
-    class UnsupportedCapability < RGeoError
+    # The specified operation is not supported or not implemented
+    class UnsupportedOperation < RGeoError
     end
     
     # Parsing failed

@@ -111,7 +111,7 @@ module RGeo
       # operations on them.)
       
       def factory
-        raise Error::UnsupportedCapability, "Method Geometry#factory not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#factory not defined."
       end
       
       
@@ -119,7 +119,7 @@ module RGeo
       # to the given object.
       
       def eql?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#eql? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#eql? not defined."
       end
       
       
@@ -135,7 +135,7 @@ module RGeo
       # point geometries, 1 for curves, and 2 for surfaces.
       
       def dimension
-        raise Error::UnsupportedCapability, "Method Geometry#dimension not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#dimension not defined."
       end
       
       
@@ -153,7 +153,7 @@ module RGeo
       # call the +type_name+ method of the returned module.
       
       def geometry_type
-        raise Error::UnsupportedCapability, "Method Geometry#geometry_type not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#geometry_type not defined."
       end
       
       
@@ -169,7 +169,7 @@ module RGeo
       # stored in either the same or some other datastore.
       
       def srid
-        raise Error::UnsupportedCapability, "Method Geometry#srid not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#srid not defined."
       end
       
       
@@ -184,7 +184,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def envelope
-        raise Error::UnsupportedCapability, "Method Geometry#envelope not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#envelope not defined."
       end
       
       
@@ -198,7 +198,7 @@ module RGeo
       # Returns an ASCII string.
       
       def as_text
-        raise Error::UnsupportedCapability, "Method Geometry#as_text not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#as_text not defined."
       end
       
       
@@ -212,7 +212,7 @@ module RGeo
       # Returns a binary string.
       
       def as_binary
-        raise Error::UnsupportedCapability, "Method Geometry#as_binary not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#as_binary not defined."
       end
       
       
@@ -228,7 +228,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_empty?
-        raise Error::UnsupportedCapability, "Method Geometry#is_empty? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#is_empty? not defined."
       end
       
       
@@ -246,7 +246,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_simple?
-        raise Error::UnsupportedCapability, "Method Geometry#is_simple? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#is_simple? not defined."
       end
       
       
@@ -262,7 +262,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def boundary
-        raise Error::UnsupportedCapability, "Method Geometry#boundary not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#boundary not defined."
       end
       
       
@@ -275,9 +275,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def equals?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#equals? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#equals? not defined."
       end
       
       
@@ -290,9 +295,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def disjoint?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#disjoint? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#disjoint? not defined."
       end
       
       
@@ -305,9 +315,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def intersects?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#intersects? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#intersects? not defined."
       end
       
       
@@ -320,9 +335,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def touches?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#touches? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#touches? not defined."
       end
       
       
@@ -335,9 +355,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def crosses?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#crosses? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#crosses? not defined."
       end
       
       
@@ -350,9 +375,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def within?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#within? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#within? not defined."
       end
       
       
@@ -365,9 +395,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def contains?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#contains? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#contains? not defined."
       end
       
       
@@ -380,9 +415,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def overlaps?(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#overlaps? not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#overlaps? not defined."
       end
       
       
@@ -402,9 +442,14 @@ module RGeo
       # 
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # of different factories is undefined.
       
       def relate(another_geometry_, intersection_pattern_matrix_)
-        raise Error::UnsupportedCapability, "Method Geometry#relate not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#relate not defined."
       end
       
       
@@ -417,9 +462,14 @@ module RGeo
       # === Notes
       # 
       # Returns a floating-point scalar value.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of measuring the
+      # distance between objects of different factories is undefined.
       
       def distance(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#distance not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#distance not defined."
       end
       
       
@@ -435,7 +485,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def buffer(distance_)
-        raise Error::UnsupportedCapability, "Method Geometry#buffer not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#buffer not defined."
       end
       
       
@@ -449,7 +499,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
       
       def convex_hull
-        raise Error::UnsupportedCapability, "Method Geometry#convex_hull not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#convex_hull not defined."
       end
       
       
@@ -461,9 +511,14 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the Geometry interface.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of performing
+      # operations on objects of different factories is undefined.
       
       def intersection(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#intersection not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#intersection not defined."
       end
       
       
@@ -475,9 +530,14 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the Geometry interface.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of performing
+      # operations on objects of different factories is undefined.
       
       def union(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#union not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#union not defined."
       end
       
       
@@ -489,9 +549,14 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the Geometry interface.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of performing
+      # operations on objects of different factories is undefined.
       
       def difference(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#difference not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#difference not defined."
       end
       
       
@@ -503,9 +568,14 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the Geometry interface.
+      # 
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of performing
+      # operations on objects of different factories is undefined.
       
       def sym_difference(another_geometry_)
-        raise Error::UnsupportedCapability, "Method Geometry#sym_difference not defined."
+        raise Error::UnsupportedOperation, "Method Geometry#sym_difference not defined."
       end
       
       

@@ -240,7 +240,7 @@ module RGeo
       
       def projected_factory(opts_={})
         unless CoordSys::Proj4.supported?
-          raise Error::UnsupportedCapability, "Proj4 is not supported because the proj4 library was not found at install time."
+          raise Error::UnsupportedOperation, "Proj4 is not supported because the proj4 library was not found at install time."
         end
         if (projection_factory_ = opts_[:projection_factory])
           projection_proj4_ = projection_factory_.proj4

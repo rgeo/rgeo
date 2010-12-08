@@ -222,10 +222,10 @@ module RGeo
           @cur_srid = srid_
           @cur_factory = @factory_generator.call(:srid => @cur_srid, :has_z_coordinate => has_z_, :has_m_coordinate => has_m_)
           if @cur_has_z && !@cur_factory.property(:has_z_coordinate)
-            raise Error::ParseError, "Data has Z coordinates but the factory doesn't have z_coordinate capability"
+            raise Error::ParseError, "Data has Z coordinates but the factory doesn't have Z coordinates"
           end
           if @cur_has_m && !@cur_factory.property(:has_m_coordinate)
-            raise Error::ParseError, "Data has M coordinates but the factory doesn't have m_coordinate capability"
+            raise Error::ParseError, "Data has M coordinates but the factory doesn't have M coordinates"
           end
         end
         case type_code_

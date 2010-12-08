@@ -83,7 +83,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def area
-        raise Error::UnsupportedCapability, "Method Surface#area not defined."
+        raise Error::UnsupportedOperation, "Method Surface#area not defined."
       end
       
       
@@ -97,7 +97,7 @@ module RGeo
       # Returns an object that supports the Point interface.
       
       def centroid
-        raise Error::UnsupportedCapability, "Method Surface#centroid not defined."
+        raise Error::UnsupportedOperation, "Method Surface#centroid not defined."
       end
       
       
@@ -110,7 +110,7 @@ module RGeo
       # Returns an object that supports the Point interface.
       
       def point_on_surface
-        raise Error::UnsupportedCapability, "Method Surface#point_on_surface not defined."
+        raise Error::UnsupportedOperation, "Method Surface#point_on_surface not defined."
       end
       
       

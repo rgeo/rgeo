@@ -53,7 +53,7 @@ Some features also require the following:
 * GEOS 3.2 or later is highly recommended. Some functions will not be
   available without it. This C/C++ library may be available via your
   operating system's package manager, or you can download it from
-  http://geos.osgeo.org
+  http://trac.osgeo.org/geos
 * Proj 4.7 or later is also recommended. This library is needed if you
   want to translate coordinates between geographic projections. It also
   may be available via your operating system's package manager, or from
@@ -108,7 +108,7 @@ we are planning on introducing more add-on modules, including:
 
 * GeoRSS and KML format support.
 * Integration with the SimpleGeo API.
-* Possibly additional ActiveRecord adapters.
+* Possible additional ActiveRecord adapters.
 
 === Development and support
 
@@ -128,11 +128,11 @@ RGeo is written by Daniel Azuma (http://www.daniel-azuma.com).
 
 Development of RGeo is sponsored by GeoPage, Inc. (http://www.geopage.com).
 
-RGeo links with the GEOS library to handle most Cartesian geometric
-calculations, and with the Proj4 library to handle projections and
-coordinate transformations. These libraries are maintained by the Open
-Source Geospatial Foundation; more information is available on OSGeo's
-web site (http://www.osgeo.org).
+RGeo calls the GEOS library to handle most Cartesian geometric
+calculations, and the Proj4 library to handle projections and coordinate
+transformations. These libraries are maintained by the Open Source
+Geospatial Foundation; more information is available on OSGeo's web site
+(http://www.osgeo.org).
 
 === License
 

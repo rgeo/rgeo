@@ -78,7 +78,7 @@ module RGeo
       # 
       # Each property has a symbolic name. Names that have no periods are
       # considered well-known names and are reserved for use by RGeo. If
-      # you want to define your own capabilities, use a name that is
+      # you want to define your own properties, use a name that is
       # namespaced with periods, such as <tt>:'mycompany.myprop'</tt>.
       # 
       # Property values are dependent on the individual property.
@@ -131,9 +131,9 @@ module RGeo
       # Create a feature of type Point.
       # The x and y parameters should be Float values.
       # 
-      # The extra parameters should be the Z and/or M coordinates, if the
-      # capabilities are supported. If both Z and M capabilities are
-      # supported, Z should be passed first.
+      # The extra parameters should be the Z and/or M coordinates, if
+      # supported. If both Z and M coordinates are supported, Z should
+      # be passed first.
       
       def point(x_, y_, *extra_)
         nil
@@ -143,6 +143,11 @@ module RGeo
       # Create a feature of type LineString.
       # The given points argument should be an Enumerable of Point
       # objects, or objects that can be cast to Point.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def line_string(points_)
         nil
@@ -152,6 +157,11 @@ module RGeo
       # Create a feature of type Line.
       # The given point arguments should be Point objects, or objects
       # that can be cast to Point.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def line(start_, end_)
         nil
@@ -164,6 +174,11 @@ module RGeo
       # If the first and last points are not equal, the ring is
       # automatically closed by appending the first point to the end of the
       # string.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def linear_ring(points_)
         nil
@@ -176,6 +191,11 @@ module RGeo
       # The inner_rings should be a possibly empty Enumerable of
       # LinearRing (or objects that can be casted to LinearRing).
       # You may also pass nil to indicate no inner rings.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def polygon(outer_ring_, inner_rings_=nil)
         nil
@@ -184,6 +204,11 @@ module RGeo
       
       # Create a feature of type GeometryCollection.
       # The elems should be an Enumerable of Geometry objects.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def collection(elems_)
         nil
@@ -195,6 +220,11 @@ module RGeo
       # that can be cast to Point.
       # Returns nil if any of the contained geometries is not a Point,
       # which would break the MultiPoint contract.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def multi_point(elems_)
         nil
@@ -206,6 +236,11 @@ module RGeo
       # cast to LineString or any of its subclasses.
       # Returns nil if any of the contained geometries is not a
       # LineString, which would break the MultiLineString contract.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def multi_line_string(elems_)
         nil
@@ -219,6 +254,11 @@ module RGeo
       # which would break the MultiPolygon contract.
       # Also returns nil if any of the other assertions for MultiPolygon
       # are not met, e.g. if any of the polygons overlap.
+      # 
+      # Although implementations are free to attempt to handle input
+      # objects that are not of this factory, strictly speaking, the
+      # result of building geometries from objects of the wrong factory
+      # is undefined.
       
       def multi_polygon(elems_)
         nil
@@ -239,7 +279,7 @@ module RGeo
       # system.
       # 
       # NOTE: This is a required method of the factory interface, but the
-      # coordinate system objects themselves are not yet available, so
+      # coordinate system classes themselves are not yet available, so
       # implementations should just return nil for now.
       
       def coord_sys

@@ -88,7 +88,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def length
-        raise Error::UnsupportedCapability, "Method Curve#length not defined."
+        raise Error::UnsupportedOperation, "Method Curve#length not defined."
       end
       
       
@@ -101,7 +101,7 @@ module RGeo
       # Returns an object that supports the Point interface.
       
       def start_point
-        raise Error::UnsupportedCapability, "Method Curve#start_point not defined."
+        raise Error::UnsupportedOperation, "Method Curve#start_point not defined."
       end
       
       
@@ -114,7 +114,7 @@ module RGeo
       # Returns an object that supports the Point interface.
       
       def end_point
-        raise Error::UnsupportedCapability, "Method Curve#end_point not defined."
+        raise Error::UnsupportedOperation, "Method Curve#end_point not defined."
       end
       
       
@@ -128,7 +128,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_closed?
-        raise Error::UnsupportedCapability, "Method Curve#is_closed? not defined."
+        raise Error::UnsupportedOperation, "Method Curve#is_closed? not defined."
       end
       
       
@@ -144,7 +144,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_ring?
-        raise Error::UnsupportedCapability, "Method Curve#is_ring? not defined."
+        raise Error::UnsupportedOperation, "Method Curve#is_ring? not defined."
       end
       
       

@@ -68,7 +68,7 @@ module RGeo
       # Returns an integer.
       
       def num_points
-        raise Error::UnsupportedCapability, "Method LineString#num_points not defined."
+        raise Error::UnsupportedOperation, "Method LineString#num_points not defined."
       end
       
       
@@ -82,7 +82,7 @@ module RGeo
       # if the given n is out of range.
       
       def point_n(n_)
-        raise Error::UnsupportedCapability, "Method LineString#point_n not defined."
+        raise Error::UnsupportedOperation, "Method LineString#point_n not defined."
       end
       
       
@@ -90,7 +90,7 @@ module RGeo
       # support the Point interface.
       
       def points
-        raise Error::UnsupportedCapability, "Method LineString#points not defined."
+        raise Error::UnsupportedOperation, "Method LineString#points not defined."
       end
       
       

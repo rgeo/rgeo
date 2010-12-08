@@ -86,7 +86,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def length
-        raise Error::UnsupportedCapability, "Method MultiCurve#length not defined."
+        raise Error::UnsupportedOperation, "Method MultiCurve#length not defined."
       end
       
       
@@ -101,7 +101,7 @@ module RGeo
       # specification, which stipulates an integer return value.
       
       def is_closed?
-        raise Error::UnsupportedCapability, "Method MultiCurve#is_closed? not defined."
+        raise Error::UnsupportedOperation, "Method MultiCurve#is_closed? not defined."
       end
       
       

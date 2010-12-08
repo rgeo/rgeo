@@ -73,7 +73,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def x
-        raise Error::UnsupportedCapability, "Method Point#x not defined."
+        raise Error::UnsupportedOperation, "Method Point#x not defined."
       end
       
       
@@ -86,7 +86,7 @@ module RGeo
       # Returns a floating-point scalar value.
       
       def y
-        raise Error::UnsupportedCapability, "Method Point#y not defined."
+        raise Error::UnsupportedOperation, "Method Point#y not defined."
       end
       
       
@@ -94,10 +94,10 @@ module RGeo
       # scalar value.
       # 
       # This method may not be available if the point's factory does
-      # not support the <tt>z_coordinate</tt> capability.
+      # not support Z coordinates.
       
       def z
-        raise Error::UnsupportedCapability, "Method Point#z not defined."
+        raise Error::UnsupportedOperation, "Method Point#z not defined."
       end
       
       
@@ -105,10 +105,10 @@ module RGeo
       # scalar value.
       # 
       # This method may not be available if the point's factory does
-      # not support the <tt>m_coordinate</tt> capability.
+      # not support M coordinates.
       
       def m
-        raise Error::UnsupportedCapability, "Method Point#m not defined."
+        raise Error::UnsupportedOperation, "Method Point#m not defined."
       end
       
       
