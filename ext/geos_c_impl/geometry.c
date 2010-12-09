@@ -106,13 +106,13 @@ static int compute_dimension(GEOSContextHandle_t context, const GEOSGeometry* ge
 
 static VALUE method_geometry_initialized_p(VALUE self)
 {
-  return RGEO_GET_GEOS_GEOMETRY(self) ? Qtrue : Qfalse;
+  return RGEO_GEOMETRY_DATA_PTR(self)->geom ? Qtrue : Qfalse;
 }
 
 
 static VALUE method_geometry_factory(VALUE self)
 {
-  return RGEO_FACTORY_FROM_GEOMETRY(self);
+  return RGEO_GEOMETRY_DATA_PTR(self)->factory;
 }
 
 
@@ -126,9 +126,10 @@ static VALUE method_geometry_set_factory(VALUE self, VALUE factory)
 static VALUE method_geometry_dimension(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = INT2NUM(compute_dimension(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom));
+    result = INT2NUM(compute_dimension(self_data->geos_context, self_geom));
   }
   return result;
 }
@@ -137,9 +138,10 @@ static VALUE method_geometry_dimension(VALUE self)
 static VALUE method_geometry_geometry_type(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->features_module, rb_intern("Geometry"));
+    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_geometry;
   }
   return result;
 }
@@ -148,9 +150,10 @@ static VALUE method_geometry_geometry_type(VALUE self)
 static VALUE method_geometry_srid(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = INT2NUM(GEOSGetSRID_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom));
+    result = INT2NUM(GEOSGetSRID_r(self_data->geos_context, self_geom));
   }
   return result;
 }
@@ -159,20 +162,22 @@ static VALUE method_geometry_srid(VALUE self)
 static VALUE method_geometry_envelope(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    GEOSGeometry* envelope = GEOSEnvelope_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    GEOSContextHandle_t geos_context = self_data->geos_context;
+    GEOSGeometry* envelope = GEOSEnvelope_r(geos_context, self_geom);
     // GEOS returns an "empty" point for an empty collection's envelope.
     // We don't allow that type, so we replace it with an empty collection.
     if (!envelope ||
-        GEOSGeomTypeId_r(RGEO_CONTEXT_FROM_GEOMETRY(self), envelope) == GEOS_POINT &&
-        GEOSGetNumCoordinates_r(RGEO_CONTEXT_FROM_GEOMETRY(self), envelope) == 0) {
+        GEOSGeomTypeId_r(geos_context, envelope) == GEOS_POINT &&
+        GEOSGetNumCoordinates_r(geos_context, envelope) == 0) {
       if (envelope) {
-        GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_GEOMETRY(self), envelope);
+        GEOSGeom_destroy_r(geos_context, envelope);
       }
-      envelope = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_GEOMETRY(self), GEOS_GEOMETRYCOLLECTION, NULL, 0);
+      envelope = GEOSGeom_createCollection_r(geos_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
     }
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), envelope, Qnil);
+    result = rgeo_wrap_geos_geometry(self_data->factory, envelope, Qnil);
   }
   return result;
 }
@@ -181,15 +186,17 @@ static VALUE method_geometry_envelope(VALUE self)
 static VALUE method_geometry_boundary(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    GEOSGeometry* boundary = GEOSBoundary_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    GEOSContextHandle_t geos_context = self_data->geos_context;
+    GEOSGeometry* boundary = GEOSBoundary_r(geos_context, self_geom);
     // GEOS returns NULL for the boundary of an empty collection.
     // Replace that with an empty collection.
     if (!boundary) {
-      boundary = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_GEOMETRY(self), GEOS_GEOMETRYCOLLECTION, NULL, 0);
+      boundary = GEOSGeom_createCollection_r(geos_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
     }
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), boundary, Qnil);
+    result = rgeo_wrap_geos_geometry(self_data->factory, boundary, Qnil);
   }
   return result;
 }
@@ -198,17 +205,20 @@ static VALUE method_geometry_boundary(VALUE self)
 static VALUE method_geometry_as_text(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    GEOSWKTWriter* wkt_writer = RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->wkt_writer;
+    RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
+    GEOSWKTWriter* wkt_writer = factory_data->wkt_writer;
+    GEOSContextHandle_t geos_context = self_data->geos_context;
     if (!wkt_writer) {
-      wkt_writer = GEOSWKTWriter_create_r(RGEO_CONTEXT_FROM_GEOMETRY(self));
-      RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->wkt_writer = wkt_writer;
+      wkt_writer = GEOSWKTWriter_create_r(geos_context);
+      factory_data->wkt_writer = wkt_writer;
     }
-    char* str = GEOSWKTWriter_write_r(RGEO_CONTEXT_FROM_GEOMETRY(self), wkt_writer, self_geom);
+    char* str = GEOSWKTWriter_write_r(geos_context, wkt_writer, self_geom);
     if (str) {
       result = rb_str_new2(str);
-      GEOSFree_r(RGEO_CONTEXT_FROM_GEOMETRY(self), str);
+      GEOSFree_r(geos_context, str);
     }
   }
   return result;
@@ -218,18 +228,21 @@ static VALUE method_geometry_as_text(VALUE self)
 static VALUE method_geometry_as_binary(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    GEOSWKBWriter* wkb_writer = RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->wkb_writer;
+    RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
+    GEOSWKBWriter* wkb_writer = factory_data->wkb_writer;
+    GEOSContextHandle_t geos_context = self_data->geos_context;
     if (!wkb_writer) {
-      wkb_writer = GEOSWKBWriter_create_r(RGEO_CONTEXT_FROM_GEOMETRY(self));
-      RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->wkb_writer = wkb_writer;
+      wkb_writer = GEOSWKBWriter_create_r(geos_context);
+      factory_data->wkb_writer = wkb_writer;
     }
     size_t size;
-    char* str = (char*)GEOSWKBWriter_write_r(RGEO_CONTEXT_FROM_GEOMETRY(self), wkb_writer, self_geom, &size);
+    char* str = (char*)GEOSWKBWriter_write_r(geos_context, wkb_writer, self_geom, &size);
     if (str) {
       result = rb_str_new(str, size);
-      GEOSFree_r(RGEO_CONTEXT_FROM_GEOMETRY(self), str);
+      GEOSFree_r(geos_context, str);
     }
   }
   return result;
@@ -239,9 +252,10 @@ static VALUE method_geometry_as_binary(VALUE self)
 static VALUE method_geometry_is_empty(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    char val = GEOSisEmpty_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    char val = GEOSisEmpty_r(self_data->geos_context, self_geom);
     if (val == 0) {
       result = Qfalse;
     }
@@ -256,9 +270,10 @@ static VALUE method_geometry_is_empty(VALUE self)
 static VALUE method_geometry_is_simple(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    char val = GEOSisSimple_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    char val = GEOSisSimple_r(self_data->geos_context, self_geom);
     if (val == 0) {
       result = Qfalse;
     }
@@ -273,18 +288,20 @@ static VALUE method_geometry_is_simple(VALUE self)
 static VALUE method_geometry_equals(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_get_geos_geometry_safe(rhs);
     if (rhs_geom) {
+      GEOSContextHandle_t self_context = self_data->geos_context;
       // GEOS has a bug where empty geometries are not spatially equal
       // to each other. Work around this case first.
-      if (GEOSisEmpty_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom) == 1 &&
-          GEOSisEmpty_r(RGEO_CONTEXT_FROM_GEOMETRY(rhs), rhs_geom) == 1) {
+      if (GEOSisEmpty_r(self_context, self_geom) == 1 &&
+          GEOSisEmpty_r(RGEO_GEOMETRY_DATA_PTR(rhs)->geos_context, rhs_geom) == 1) {
         result = Qtrue;
       }
       else {
-        char val = GEOSEquals_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+        char val = GEOSEquals_r(self_context, self_geom, rhs_geom);
         if (val == 0) {
           result = Qfalse;
         }
@@ -308,11 +325,12 @@ static VALUE method_geometry_eql(VALUE self, VALUE rhs)
 static VALUE method_geometry_disjoint(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSDisjoint_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSDisjoint_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -328,11 +346,12 @@ static VALUE method_geometry_disjoint(VALUE self, VALUE rhs)
 static VALUE method_geometry_intersects(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSIntersects_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSIntersects_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -348,11 +367,12 @@ static VALUE method_geometry_intersects(VALUE self, VALUE rhs)
 static VALUE method_geometry_touches(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSTouches_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSTouches_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -368,11 +388,12 @@ static VALUE method_geometry_touches(VALUE self, VALUE rhs)
 static VALUE method_geometry_crosses(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSCrosses_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSCrosses_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -388,11 +409,12 @@ static VALUE method_geometry_crosses(VALUE self, VALUE rhs)
 static VALUE method_geometry_within(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSWithin_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSWithin_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -408,11 +430,12 @@ static VALUE method_geometry_within(VALUE self, VALUE rhs)
 static VALUE method_geometry_contains(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSContains_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSContains_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -428,11 +451,12 @@ static VALUE method_geometry_contains(VALUE self, VALUE rhs)
 static VALUE method_geometry_overlaps(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSOverlaps_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom);
+      char val = GEOSOverlaps_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -448,11 +472,12 @@ static VALUE method_geometry_overlaps(VALUE self, VALUE rhs)
 static VALUE method_geometry_relate(VALUE self, VALUE rhs, VALUE pattern)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom, StringValuePtr(pattern));
+      char val = GEOSRelatePattern_r(self_data->geos_context, self_geom, rhs_geom, StringValuePtr(pattern));
       if (val == 0) {
         result = Qfalse;
       }
@@ -468,12 +493,13 @@ static VALUE method_geometry_relate(VALUE self, VALUE rhs, VALUE pattern)
 static VALUE method_geometry_distance(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
       double dist;
-      if (GEOSDistance_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom, &dist)) {
+      if (GEOSDistance_r(self_data->geos_context, self_geom, rhs_geom, &dist)) {
         result = rb_float_new(dist);
       }
     }
@@ -485,10 +511,12 @@ static VALUE method_geometry_distance(VALUE self, VALUE rhs)
 static VALUE method_geometry_buffer(VALUE self, VALUE distance)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    int resolution = NUM2INT(RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->buffer_resolution);
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSBuffer_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rb_num2dbl(distance), resolution), Qnil);
+    VALUE factory = self_data->factory;
+    int resolution = NUM2INT(RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution);
+    result = rgeo_wrap_geos_geometry(factory, GEOSBuffer_r(self_data->geos_context, self_geom, rb_num2dbl(distance), resolution), Qnil);
   }
   return result;
 }
@@ -497,9 +525,10 @@ static VALUE method_geometry_buffer(VALUE self, VALUE distance)
 static VALUE method_geometry_convex_hull(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSConvexHull_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), Qnil);
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSConvexHull_r(self_data->geos_context, self_geom), Qnil);
   }
   return result;
 }
@@ -508,11 +537,13 @@ static VALUE method_geometry_convex_hull(VALUE self)
 static VALUE method_geometry_intersection(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    VALUE factory = self_data->factory;
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(factory, rhs, Qnil);
     if (rhs_geom) {
-      result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSIntersection_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom), Qnil);
+      result = rgeo_wrap_geos_geometry(factory, GEOSIntersection_r(self_data->geos_context, self_geom, rhs_geom), Qnil);
     }
   }
   return result;
@@ -522,11 +553,13 @@ static VALUE method_geometry_intersection(VALUE self, VALUE rhs)
 static VALUE method_geometry_union(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    VALUE factory = self_data->factory;
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(factory, rhs, Qnil);
     if (rhs_geom) {
-      result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSUnion_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom), Qnil);
+      result = rgeo_wrap_geos_geometry(factory, GEOSUnion_r(self_data->geos_context, self_geom, rhs_geom), Qnil);
     }
   }
   return result;
@@ -536,11 +569,13 @@ static VALUE method_geometry_union(VALUE self, VALUE rhs)
 static VALUE method_geometry_difference(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    VALUE factory = self_data->factory;
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(factory, rhs, Qnil);
     if (rhs_geom) {
-      result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSDifference_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom), Qnil);
+      result = rgeo_wrap_geos_geometry(factory, GEOSDifference_r(self_data->geos_context, self_geom, rhs_geom), Qnil);
     }
   }
   return result;
@@ -550,11 +585,13 @@ static VALUE method_geometry_difference(VALUE self, VALUE rhs)
 static VALUE method_geometry_sym_difference(VALUE self, VALUE rhs)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), rhs, Qnil);
+    VALUE factory = self_data->factory;
+    const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(factory, rhs, Qnil);
     if (rhs_geom) {
-      result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSSymDifference_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, rhs_geom), Qnil);
+      result = rgeo_wrap_geos_geometry(factory, GEOSSymDifference_r(self_data->geos_context, self_geom, rhs_geom), Qnil);
     }
   }
   return result;
@@ -570,25 +607,28 @@ static VALUE alloc_geometry(VALUE klass)
 static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
 {
   // Clear out any existing value
-  GEOSGeometry* self_geom = RGEO_GEOMETRY_DATA_PTR(self)->geom;
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
-    RGEO_GEOMETRY_DATA_PTR(self)->geom = NULL;
-    RGEO_GEOMETRY_DATA_PTR(self)->geos_context = NULL;
-    RGEO_GEOMETRY_DATA_PTR(self)->factory = Qnil;
-    RGEO_GEOMETRY_DATA_PTR(self)->klasses = Qnil;
+    GEOSGeom_destroy_r(self_data->geos_context, self_geom);
+    self_data->geom = NULL;
+    self_data->geos_context = NULL;
+    self_data->factory = Qnil;
+    self_data->klasses = Qnil;
   }
   
   // Copy value from orig
   const GEOSGeometry* geom = rgeo_get_geos_geometry_safe(orig);
   if (geom) {
-    GEOSGeometry* clone_geom = GEOSGeom_clone_r(RGEO_CONTEXT_FROM_GEOMETRY(orig), geom);
+    RGeo_GeometryData* orig_data = RGEO_GEOMETRY_DATA_PTR(orig);
+    GEOSContextHandle_t orig_context = orig_data->geos_context;
+    GEOSGeometry* clone_geom = GEOSGeom_clone_r(orig_context, geom);
     if (clone_geom) {
-      GEOSSetSRID_r(RGEO_CONTEXT_FROM_GEOMETRY(orig), clone_geom, GEOSGetSRID_r(RGEO_CONTEXT_FROM_GEOMETRY(orig), geom));
-      RGEO_GEOMETRY_DATA_PTR(self)->geom = clone_geom;
-      RGEO_GEOMETRY_DATA_PTR(self)->geos_context = RGEO_CONTEXT_FROM_GEOMETRY(orig);
-      RGEO_GEOMETRY_DATA_PTR(self)->factory = RGEO_FACTORY_FROM_GEOMETRY(orig);
-      RGEO_GEOMETRY_DATA_PTR(self)->klasses = RGEO_KLASSES_FROM_GEOMETRY(orig);
+      GEOSSetSRID_r(orig_context, clone_geom, GEOSGetSRID_r(orig_context, geom));
+      self_data->geom = clone_geom;
+      self_data->geos_context = orig_context;
+      self_data->factory = orig_data->factory;
+      self_data->klasses = orig_data->klasses;
     }
   }
   return self;
@@ -601,6 +641,8 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
 void rgeo_init_geos_geometry(RGeo_Globals* globals)
 {
   VALUE geos_geometry_class = rb_define_class_under(globals->geos_module, "GeometryImpl", rb_cObject);
+  globals->geos_geometry = geos_geometry_class;
+  globals->feature_geometry = rb_const_get_at(globals->feature_module, rb_intern("Geometry"));
   
   rb_define_alloc_func(geos_geometry_class, alloc_geometry);
   rb_define_method(geos_geometry_class, "_set_factory", method_geometry_set_factory, 1);

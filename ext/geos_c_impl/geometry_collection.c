@@ -64,19 +64,21 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
   unsigned int len = (unsigned int)RARRAY_LEN(array);
   GEOSGeometry** geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
   if (geoms) {
+    RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(factory);
+    GEOSContextHandle_t geos_context = factory_data->geos_context;
     VALUE klass;
     unsigned int i,j;
     VALUE klasses = Qnil;
     VALUE cast_type = Qnil;
     switch (type) {
     case GEOS_MULTIPOINT:
-      cast_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("Point"));
+      cast_type = factory_data->globals->feature_point;
       break;
     case GEOS_MULTILINESTRING:
-      cast_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("LineString"));
+      cast_type = factory_data->globals->feature_line_string;
       break;
     case GEOS_MULTIPOLYGON:
-      cast_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("Polygon"));
+      cast_type = factory_data->globals->feature_polygon;
       break;
     }
     for (i=0; i<len; ++i) {
@@ -97,24 +99,24 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
     }
     if (i != len) {
       for (j=0; j<i; ++j) {
-        GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), geoms[j]);
+        GEOSGeom_destroy_r(geos_context, geoms[j]);
       }
     }
     else {
-      GEOSGeometry* collection = GEOSGeom_createCollection_r(RGEO_CONTEXT_FROM_FACTORY(factory), type, geoms, len);
+      GEOSGeometry* collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
       // Due to a limitation of GEOS, the MultiPolygon assertions are not checked.
       // We do that manually here.
-      if (collection && type == GEOS_MULTIPOLYGON && (RGEO_FACTORY_DATA_PTR(factory)->flags & 1) == 0) {
+      if (collection && type == GEOS_MULTIPOLYGON && (factory_data->flags & 1) == 0) {
         char problem = 0;
         for (i=1; i<len; ++i) {
           for (j=0; j<i; ++j) {
             GEOSGeometry* igeom = geoms[i];
             GEOSGeometry* jgeom = geoms[j];
-            problem = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_FACTORY(factory), igeom, jgeom, "2********");
+            problem = GEOSRelatePattern_r(geos_context, igeom, jgeom, "2********");
             if (problem) {
               break;
             }
-            problem = GEOSRelatePattern_r(RGEO_CONTEXT_FROM_FACTORY(factory), igeom, jgeom, "****1****");
+            problem = GEOSRelatePattern_r(geos_context, igeom, jgeom, "****1****");
             if (problem) {
               break;
             }
@@ -124,7 +126,7 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
           }
         }
         if (problem) {
-          GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), collection);
+          GEOSGeom_destroy_r(geos_context, collection);
           collection = NULL;
         }
       }
@@ -151,7 +153,8 @@ static VALUE method_geometry_collection_eql(VALUE self, VALUE rhs)
 {
   VALUE result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
-    result = rgeo_geos_geometry_collections_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs), RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+    RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+    result = rgeo_geos_geometry_collections_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom, RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   }
   return result;
 }
@@ -160,9 +163,9 @@ static VALUE method_geometry_collection_eql(VALUE self, VALUE rhs)
 static VALUE method_geometry_collection_geometry_type(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
-  if (self_geom) {
-    result = rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->features_module, rb_intern("GeometryCollection"));
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  if (self_data->geom) {
+    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_geometry_collection;
   }
   return result;
 }
@@ -171,9 +174,10 @@ static VALUE method_geometry_collection_geometry_type(VALUE self)
 static VALUE method_geometry_collection_num_geometries(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = INT2NUM(GEOSGetNumGeometries_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom));
+    result = INT2NUM(GEOSGetNumGeometries_r(self_data->geos_context, self_geom));
   }
   return result;
 }
@@ -182,12 +186,13 @@ static VALUE method_geometry_collection_num_geometries(VALUE self)
 static VALUE method_geometry_collection_geometry_n(VALUE self, VALUE n)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    VALUE klasses = RGEO_KLASSES_FROM_GEOMETRY(self);
+    VALUE klasses = self_data->klasses;
     int i = NUM2INT(n);
-    const GEOSGeometry* elem_geom = GEOSGetGeometryN_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, i);
-    result = rgeo_wrap_geos_geometry_clone(RGEO_FACTORY_FROM_GEOMETRY(self), elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
+    const GEOSGeometry* elem_geom = GEOSGetGeometryN_r(self_data->geos_context, self_geom, i);
+    result = rgeo_wrap_geos_geometry_clone(self_data->factory, elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
   }
   return result;
 }
@@ -195,16 +200,18 @@ static VALUE method_geometry_collection_geometry_n(VALUE self, VALUE n)
 
 static VALUE method_geometry_collection_each(VALUE self)
 {
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    int len = GEOSGetNumGeometries_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    GEOSContextHandle_t self_context = self_data->geos_context;
+    int len = GEOSGetNumGeometries_r(self_context, self_geom);
     if (len > 0) {
-      VALUE klasses = RGEO_KLASSES_FROM_GEOMETRY(self);
+      VALUE klasses = self_data->klasses;
       int i;
       for (i=0; i<len; ++i) {
         VALUE elem;
-        const GEOSGeometry* elem_geom = GEOSGetGeometryN_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, i);
-        elem = rgeo_wrap_geos_geometry_clone(RGEO_FACTORY_FROM_GEOMETRY(self), elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
+        const GEOSGeometry* elem_geom = GEOSGetGeometryN_r(self_context, self_geom, i);
+        elem = rgeo_wrap_geos_geometry_clone(self_data->factory, elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
         if (!NIL_P(elem)) {
           rb_yield(elem);
         }
@@ -218,9 +225,9 @@ static VALUE method_geometry_collection_each(VALUE self)
 static VALUE method_multi_point_geometry_type(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
-  if (self_geom) {
-    result = rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->features_module, rb_intern("MultiPoint"));
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  if (self_data->geom) {
+    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_multi_point;
   }
   return result;
 }
@@ -229,9 +236,9 @@ static VALUE method_multi_point_geometry_type(VALUE self)
 static VALUE method_multi_line_string_geometry_type(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
-  if (self_geom) {
-    result = rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->features_module, rb_intern("MultiLineString"));
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  if (self_data->geom) {
+    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_multi_line_string;
   }
   return result;
 }
@@ -239,11 +246,12 @@ static VALUE method_multi_line_string_geometry_type(VALUE self)
 
 static VALUE method_multi_line_string_length(VALUE self)
 {
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
   VALUE result = Qnil;
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
     double len;
-    if (GEOSLength_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, &len)) {
+    if (GEOSLength_r(self_data->geos_context, self_geom, &len)) {
       result = rb_float_new(len);
     }
   }
@@ -253,17 +261,19 @@ static VALUE method_multi_line_string_length(VALUE self)
 
 static VALUE method_multi_line_string_is_closed(VALUE self)
 {
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
   VALUE result = Qnil;
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
+    GEOSContextHandle_t self_context = self_data->geos_context;
     result = Qtrue;
-    int len = GEOSGetNumGeometries_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    int len = GEOSGetNumGeometries_r(self_context, self_geom);
     if (len > 0) {
       int i;
       for (i=0; i<len; ++i) {
-        const GEOSGeometry* geom = GEOSGetGeometryN_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, i);
+        const GEOSGeometry* geom = GEOSGetGeometryN_r(self_context, self_geom, i);
         if (geom) {
-          result = rgeo_is_geos_line_string_closed(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+          result = rgeo_is_geos_line_string_closed(self_context, self_geom);
           if (result != Qtrue) {
             break;
           }
@@ -278,9 +288,9 @@ static VALUE method_multi_line_string_is_closed(VALUE self)
 static VALUE method_multi_polygon_geometry_type(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
-  if (self_geom) {
-    result = rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->features_module, rb_intern("MultiPolygon"));
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  if (self_data->geom) {
+    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_multi_polygon;
   }
   return result;
 }
@@ -289,10 +299,11 @@ static VALUE method_multi_polygon_geometry_type(VALUE self)
 static VALUE method_multi_polygon_area(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
     double area;
-    if (GEOSArea_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, &area)) {
+    if (GEOSArea_r(self_data->geos_context, self_geom, &area)) {
       result = rb_float_new(area);
     }
   }
@@ -303,9 +314,10 @@ static VALUE method_multi_polygon_area(VALUE self)
 static VALUE method_multi_polygon_centroid(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSGetCentroid_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), Qnil);
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSGetCentroid_r(self_data->geos_context, self_geom), Qnil);
   }
   return result;
 }
@@ -314,9 +326,10 @@ static VALUE method_multi_polygon_centroid(VALUE self)
 static VALUE method_multi_polygon_point_on_surface(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSPointOnSurface_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), Qnil);
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSPointOnSurface_r(self_data->geos_context, self_geom), Qnil);
   }
   return result;
 }
@@ -352,10 +365,18 @@ static VALUE cmethod_multi_polygon_create(VALUE module, VALUE factory, VALUE arr
 void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
 {
   // Create implementation classes
-  VALUE geos_geometry_collection_class = rb_define_class_under(globals->geos_module, "GeometryCollectionImpl", rb_const_get_at(globals->geos_module, rb_intern("GeometryImpl")));
+  VALUE geos_geometry_collection_class = rb_define_class_under(globals->geos_module, "GeometryCollectionImpl", globals->geos_geometry);
+  globals->geos_geometry_collection = geos_geometry_collection_class;
+  globals->feature_geometry_collection = rb_const_get_at(globals->feature_module, rb_intern("GeometryCollection"));
   VALUE geos_multi_point_class = rb_define_class_under(globals->geos_module, "MultiPointImpl", geos_geometry_collection_class);
+  globals->geos_multi_point = geos_multi_point_class;
+  globals->feature_multi_point = rb_const_get_at(globals->feature_module, rb_intern("MultiPoint"));
   VALUE geos_multi_line_string_class = rb_define_class_under(globals->geos_module, "MultiLineStringImpl", geos_geometry_collection_class);
+  globals->geos_multi_line_string = geos_multi_line_string_class;
+  globals->feature_multi_line_string = rb_const_get_at(globals->feature_module, rb_intern("MultiLineString"));
   VALUE geos_multi_polygon_class = rb_define_class_under(globals->geos_module, "MultiPolygonImpl", geos_geometry_collection_class);
+  globals->geos_multi_polygon = geos_multi_polygon_class;
+  globals->feature_multi_polygon = rb_const_get_at(globals->feature_module, rb_intern("MultiPolygon"));
   
   // Methods for GeometryCollectionImpl
   rb_define_module_function(geos_geometry_collection_class, "create", cmethod_geometry_collection_create, 2);

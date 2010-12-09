@@ -54,7 +54,8 @@ static VALUE method_polygon_eql(VALUE self, VALUE rhs)
 {
   VALUE result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
-    result = rgeo_geos_polygons_eql(RGEO_CONTEXT_FROM_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(self), RGEO_GET_GEOS_GEOMETRY(rhs), RGEO_FACTORY_DATA_FROM_GEOMETRY(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+    RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+    result = rgeo_geos_polygons_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom, RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   }
   return result;
 }
@@ -63,9 +64,9 @@ static VALUE method_polygon_eql(VALUE self, VALUE rhs)
 static VALUE method_polygon_geometry_type(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
-  if (self_geom) {
-    result = rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->features_module, rb_intern("Polygon"));
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  if (self_data->geom) {
+    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_polygon;
   }
   return result;
 }
@@ -74,10 +75,11 @@ static VALUE method_polygon_geometry_type(VALUE self)
 static VALUE method_polygon_area(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
     double area;
-    if (GEOSArea_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, &area)) {
+    if (GEOSArea_r(self_data->geos_context, self_geom, &area)) {
       result = rb_float_new(area);
     }
   }
@@ -88,9 +90,10 @@ static VALUE method_polygon_area(VALUE self)
 static VALUE method_polygon_centroid(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSGetCentroid_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->geos_module, rb_intern("PointImpl")));
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSGetCentroid_r(self_data->geos_context, self_geom), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_point);
   }
   return result;
 }
@@ -99,9 +102,10 @@ static VALUE method_polygon_centroid(VALUE self)
 static VALUE method_polygon_point_on_surface(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSPointOnSurface_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->geos_module, rb_intern("PointImpl")));
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSPointOnSurface_r(self_data->geos_context, self_geom), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_point);
   }
   return result;
 }
@@ -110,9 +114,10 @@ static VALUE method_polygon_point_on_surface(VALUE self)
 static VALUE method_polygon_exterior_ring(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry_clone(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSGetExteriorRing_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom), rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->geos_module, rb_intern("LinearRingImpl")));
+    result = rgeo_wrap_geos_geometry_clone(self_data->factory, GEOSGetExteriorRing_r(self_data->geos_context, self_geom), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring);
   }
   return result;
 }
@@ -121,9 +126,10 @@ static VALUE method_polygon_exterior_ring(VALUE self)
 static VALUE method_polygon_num_interior_rings(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    int num = GEOSGetNumInteriorRings_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    int num = GEOSGetNumInteriorRings_r(self_data->geos_context, self_geom);
     if (num >= 0) {
       result = INT2NUM(num);
     }
@@ -135,9 +141,10 @@ static VALUE method_polygon_num_interior_rings(VALUE self)
 static VALUE method_polygon_interior_ring_n(VALUE self, VALUE n)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry_clone(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSGetInteriorRingN_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, NUM2INT(n)), rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->geos_module, rb_intern("LinearRingImpl")));
+    result = rgeo_wrap_geos_geometry_clone(self_data->factory, GEOSGetInteriorRingN_r(self_data->geos_context, self_geom, NUM2INT(n)), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring);
   }
   return result;
 }
@@ -146,14 +153,18 @@ static VALUE method_polygon_interior_ring_n(VALUE self, VALUE n)
 static VALUE method_polygon_interior_rings(VALUE self)
 {
   VALUE result = Qnil;
-  const GEOSGeometry* self_geom = RGEO_GET_GEOS_GEOMETRY(self);
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    int count = GEOSGetNumInteriorRings_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
+    GEOSContextHandle_t self_context = self_data->geos_context;
+    int count = GEOSGetNumInteriorRings_r(self_context, self_geom);
     if (count >= 0) {
       result = rb_ary_new2(count);
+      VALUE factory = self_data->factory;
+      VALUE linear_ring_class = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring;
       int i;
       for (i=0; i<count; ++i) {
-        rb_ary_store(result, i, rgeo_wrap_geos_geometry_clone(RGEO_FACTORY_FROM_GEOMETRY(self), GEOSGetInteriorRingN_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom, i), rb_const_get_at(RGEO_GLOBALS_FROM_GEOMETRY(self)->geos_module, rb_intern("LinearRingImpl"))));
+        rb_ary_store(result, i, rgeo_wrap_geos_geometry_clone(factory, GEOSGetInteriorRingN_r(self_context, self_geom, i), linear_ring_class));
       }
     }
   }
@@ -164,9 +175,11 @@ static VALUE method_polygon_interior_rings(VALUE self)
 static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE interior_array)
 {
   Check_Type(interior_array, T_ARRAY);
-  VALUE linear_ring_type = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("LinearRing"));
+  RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(factory);
+  VALUE linear_ring_type = factory_data->globals->feature_linear_ring;
   GEOSGeometry* exterior_geom = rgeo_convert_to_detached_geos_geometry(exterior, factory, linear_ring_type, NULL);
   if (exterior_geom) {
+    GEOSContextHandle_t context = factory_data->geos_context;
     unsigned int len = (unsigned int)RARRAY_LEN(interior_array);
     GEOSGeometry** interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
     if (interior_geoms) {
@@ -179,18 +192,18 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
         }
       }
       if (len == actual_len) {
-        GEOSGeometry* polygon = GEOSGeom_createPolygon_r(RGEO_CONTEXT_FROM_FACTORY(factory), exterior_geom, interior_geoms, actual_len);
+        GEOSGeometry* polygon = GEOSGeom_createPolygon_r(context, exterior_geom, interior_geoms, actual_len);
         if (polygon) {
           free(interior_geoms);
-          return rgeo_wrap_geos_geometry(factory, polygon, rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->geos_module, rb_intern("PolygonImpl")));
+          return rgeo_wrap_geos_geometry(factory, polygon, factory_data->globals->geos_polygon);
         }
       }
       for (i=0; i<actual_len; ++i) {
-        GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), interior_geoms[i]);
+        GEOSGeom_destroy_r(context, interior_geoms[i]);
       }
       free(interior_geoms);
     }
-    GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(factory), exterior_geom);
+    GEOSGeom_destroy_r(context, exterior_geom);
   }
   return Qnil;
 }
@@ -198,7 +211,9 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
 
 void rgeo_init_geos_polygon(RGeo_Globals* globals)
 {
-  VALUE geos_polygon_class = rb_define_class_under(globals->geos_module, "PolygonImpl", rb_const_get_at(globals->geos_module, rb_intern("GeometryImpl")));
+  VALUE geos_polygon_class = rb_define_class_under(globals->geos_module, "PolygonImpl", globals->geos_geometry);
+  globals->geos_polygon = geos_polygon_class;
+  globals->feature_polygon = rb_const_get_at(globals->feature_module, rb_intern("Polygon"));
   
   rb_define_module_function(geos_polygon_class, "create", cmethod_create, 3);
   

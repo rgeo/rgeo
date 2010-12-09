@@ -69,19 +69,20 @@ static void message_handler(const char* fmt, ...)
 
 static void destroy_factory_func(RGeo_FactoryData* data)
 {
+  GEOSContextHandle_t context = data->geos_context;
   if (data->wkt_reader) {
-    GEOSWKTReader_destroy_r(data->geos_context, data->wkt_reader);
+    GEOSWKTReader_destroy_r(context, data->wkt_reader);
   }
   if (data->wkb_reader) {
-    GEOSWKBReader_destroy_r(data->geos_context, data->wkb_reader);
+    GEOSWKBReader_destroy_r(context, data->wkb_reader);
   }
   if (data->wkt_writer) {
-    GEOSWKTWriter_destroy_r(data->geos_context, data->wkt_writer);
+    GEOSWKTWriter_destroy_r(context, data->wkt_writer);
   }
   if (data->wkb_writer) {
-    GEOSWKBWriter_destroy_r(data->geos_context, data->wkb_writer);
+    GEOSWKBWriter_destroy_r(context, data->wkb_writer);
   }
-  finishGEOS_r(data->geos_context);
+  finishGEOS_r(context);
   free(data);
 }
 
@@ -153,14 +154,16 @@ static VALUE method_factory_flags(VALUE self)
 static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
 {
   Check_Type(str, T_STRING);
-  GEOSWKTReader* wkt_reader = RGEO_FACTORY_DATA_PTR(self)->wkt_reader;
+  RGeo_FactoryData* self_data = RGEO_FACTORY_DATA_PTR(self);
+  GEOSContextHandle_t self_context = self_data->geos_context;
+  GEOSWKTReader* wkt_reader = self_data->wkt_reader;
   if (!wkt_reader) {
-    wkt_reader = GEOSWKTReader_create_r(RGEO_CONTEXT_FROM_FACTORY(self));
-    RGEO_FACTORY_DATA_PTR(self)->wkt_reader = wkt_reader;
+    wkt_reader = GEOSWKTReader_create_r(self_context);
+    self_data->wkt_reader = wkt_reader;
   }
   VALUE result = Qnil;
   if (wkt_reader) {
-    GEOSGeometry* geom = GEOSWKTReader_read_r(RGEO_CONTEXT_FROM_FACTORY(self), wkt_reader, RSTRING_PTR(str));
+    GEOSGeometry* geom = GEOSWKTReader_read_r(self_context, wkt_reader, RSTRING_PTR(str));
     if (geom) {
       result = rgeo_wrap_geos_geometry(self, geom, Qnil);
     }
@@ -172,14 +175,16 @@ static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
 static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
 {
   Check_Type(str, T_STRING);
-  GEOSWKBReader* wkb_reader = RGEO_FACTORY_DATA_PTR(self)->wkb_reader;
+  RGeo_FactoryData* self_data = RGEO_FACTORY_DATA_PTR(self);
+  GEOSContextHandle_t self_context = self_data->geos_context;
+  GEOSWKBReader* wkb_reader = self_data->wkb_reader;
   if (!wkb_reader) {
-    wkb_reader = GEOSWKBReader_create_r(RGEO_CONTEXT_FROM_FACTORY(self));
-    RGEO_FACTORY_DATA_PTR(self)->wkb_reader = wkb_reader;
+    wkb_reader = GEOSWKBReader_create_r(self_context);
+    self_data->wkb_reader = wkb_reader;
   }
   VALUE result = Qnil;
   if (wkb_reader) {
-    GEOSGeometry* geom = GEOSWKBReader_read_r(RGEO_CONTEXT_FROM_FACTORY(self), wkb_reader, (unsigned char*)RSTRING_PTR(str), (size_t)RSTRING_LEN(str));
+    GEOSGeometry* geom = GEOSWKBReader_read_r(self_context, wkb_reader, (unsigned char*)RSTRING_PTR(str), (size_t)RSTRING_LEN(str));
     if (geom) {
       result = rgeo_wrap_geos_geometry(self, geom, Qnil);
     }
@@ -223,7 +228,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   RGeo_Globals* globals = ALLOC(RGeo_Globals);
   VALUE rgeo_module = rb_define_module("RGeo");
   globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
-  globals->features_module = rb_define_module_under(rgeo_module, "Feature");
+  globals->feature_module = rb_define_module_under(rgeo_module, "Feature");
   
   // Add C methods to the factory.
   VALUE geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));
@@ -250,55 +255,58 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
 {
   VALUE result = Qnil;
   if (geom || !NIL_P(klass)) {
+    RGeo_FactoryData* factory_data = NIL_P(factory) ? NULL : RGEO_FACTORY_DATA_PTR(factory);
+    GEOSContextHandle_t factory_context = factory_data ? factory_data->geos_context : NULL;
     VALUE klasses = Qnil;
     if (TYPE(klass) != T_CLASS) {
-      const char* klass_name = NULL;
+      RGeo_Globals* globals = factory_data->globals;
+      VALUE inferred_klass = Qnil;
       char is_collection = 0;
-      switch (GEOSGeomTypeId_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom)) {
+      switch (GEOSGeomTypeId_r(factory_context, geom)) {
       case GEOS_POINT:
-        klass_name = "PointImpl";
+        inferred_klass = globals->geos_point;
         break;
       case GEOS_LINESTRING:
-        klass_name = "LineStringImpl";
+        inferred_klass = globals->geos_line_string;
         break;
       case GEOS_LINEARRING:
-        klass_name = "LinearRingImpl";
+        inferred_klass = globals->geos_linear_ring;
         break;
       case GEOS_POLYGON:
-        klass_name = "PolygonImpl";
+        inferred_klass = globals->geos_polygon;
         break;
       case GEOS_MULTIPOINT:
-        klass_name = "MultiPointImpl";
+        inferred_klass = globals->geos_multi_point;
         is_collection = 1;
         break;
       case GEOS_MULTILINESTRING:
-        klass_name = "MultiLineStringImpl";
+        inferred_klass = globals->geos_multi_line_string;
         is_collection = 1;
         break;
       case GEOS_MULTIPOLYGON:
-        klass_name = "MultiPolygonImpl";
+        inferred_klass = globals->geos_multi_polygon;
         is_collection = 1;
         break;
       case GEOS_GEOMETRYCOLLECTION:
-        klass_name = "GeometryCollectionImpl";
+        inferred_klass = globals->geos_geometry_collection;
         is_collection = 1;
         break;
       default:
-        klass_name = "GeometryImpl";
+        inferred_klass = globals->geos_geometry;
         break;
       }
       if (TYPE(klass) == T_ARRAY && is_collection) {
         klasses = klass;
       }
-      klass = rb_const_get_at(RGEO_GLOBALS_FROM_FACTORY(factory)->geos_module, rb_intern(klass_name));
+      klass = inferred_klass;
     }
     RGeo_GeometryData* data = ALLOC(RGeo_GeometryData);
     if (data) {
       if (geom) {
-        GEOSSetSRID_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom, RGEO_FACTORY_DATA_PTR(factory)->srid);
+        GEOSSetSRID_r(factory_context, geom, factory_data->srid);
       }
       data->geom = geom;
-      data->geos_context = NIL_P(factory) ? NULL : RGEO_CONTEXT_FROM_FACTORY(factory);
+      data->geos_context = factory_context;
       data->factory = factory;
       data->klasses = klasses;
       result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
@@ -312,7 +320,7 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 {
   VALUE result = Qnil;
   if (geom) {
-    GEOSGeometry* clone_geom = GEOSGeom_clone_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom);
+    GEOSGeometry* clone_geom = GEOSGeom_clone_r(RGEO_FACTORY_DATA_PTR(factory)->geos_context, geom);
     if (clone_geom) {
       result = rgeo_wrap_geos_geometry(factory, clone_geom, klass);
     }
@@ -323,10 +331,16 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 
 const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
 {
-  VALUE object = rb_funcall(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("cast"), 3, obj, factory, type);
+  VALUE object;
+  if (NIL_P(type) && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
+    object = obj;
+  }
+  else {
+    object = rb_funcall(RGEO_FACTORY_DATA_PTR(factory)->globals->feature_module, rb_intern("cast"), 3, obj, factory, type);
+  }
   const GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
-    geom = RGEO_GET_GEOS_GEOMETRY(object);
+    geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;
   }
   return geom;
 }
@@ -337,20 +351,21 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
   if (klasses) {
     *klasses = Qnil;
   }
-  VALUE object = rb_funcall(RGEO_GLOBALS_FROM_FACTORY(factory)->features_module, rb_intern("cast"), 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
+  VALUE object = rb_funcall(RGEO_FACTORY_DATA_PTR(factory)->globals->feature_module, rb_intern("cast"), 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
   GEOSGeometry* geom = NULL;
   if (!NIL_P(object)) {
-    geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;
+    RGeo_GeometryData* object_data = RGEO_GEOMETRY_DATA_PTR(object);
+    geom = object_data->geom;
     if (klasses) {
-      *klasses = RGEO_KLASSES_FROM_GEOMETRY(object);
+      *klasses = object_data->klasses;
       if (NIL_P(*klasses)) {
         *klasses = CLASS_OF(object);
       }
     }
-    RGEO_GEOMETRY_DATA_PTR(object)->geom = NULL;
-    RGEO_GEOMETRY_DATA_PTR(object)->geos_context = NULL;
-    RGEO_GEOMETRY_DATA_PTR(object)->factory = Qnil;
-    RGEO_GEOMETRY_DATA_PTR(object)->klasses = Qnil;
+    object_data->geom = NULL;
+    object_data->geos_context = NULL;
+    object_data->factory = Qnil;
+    object_data->klasses = Qnil;
   }
   return geom;
 }
@@ -364,7 +379,7 @@ char rgeo_is_geos_object(VALUE obj)
 
 const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj)
 {
-  return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? RGEO_GET_GEOS_GEOMETRY(obj) : NULL;
+  return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom) : NULL;
 }
 
 
@@ -442,7 +457,7 @@ VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
     result = Qfalse;
   }
   else {
-    result = rb_funcall(RGEO_FACTORY_FROM_GEOMETRY(obj1), rb_intern("eql?"), 1, RGEO_FACTORY_FROM_GEOMETRY(obj2));
+    result = rb_funcall(RGEO_GEOMETRY_DATA_PTR(obj1)->factory, rb_intern("eql?"), 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
   }
   return result;
 }

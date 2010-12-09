@@ -45,11 +45,33 @@ RGEO_BEGIN_C
 
 
 /*
-  Per-interpreter globals
+  Per-interpreter globals.
+  Most of these are cached references to commonly used classes and modules
+  so we don't have to do a lot of constant lookups.
 */
 typedef struct {
-  VALUE features_module;
+  VALUE feature_module;
+  VALUE feature_geometry;
+  VALUE feature_point;
+  VALUE feature_line_string;
+  VALUE feature_linear_ring;
+  VALUE feature_line;
+  VALUE feature_polygon;
+  VALUE feature_geometry_collection;
+  VALUE feature_multi_point;
+  VALUE feature_multi_line_string;
+  VALUE feature_multi_polygon;
   VALUE geos_module;
+  VALUE geos_geometry;
+  VALUE geos_point;
+  VALUE geos_line_string;
+  VALUE geos_linear_ring;
+  VALUE geos_line;
+  VALUE geos_polygon;
+  VALUE geos_geometry_collection;
+  VALUE geos_multi_point;
+  VALUE geos_multi_line_string;
+  VALUE geos_multi_polygon;
 } RGeo_Globals;
 
 
@@ -112,30 +134,6 @@ typedef struct {
 
 // Returns the RGeo_GeometryData* given a ruby Geometry object
 #define RGEO_GEOMETRY_DATA_PTR(geometry) ((RGeo_GeometryData*)DATA_PTR(geometry))
-
-// Returns a pointer to the globals given a ruby Factory object
-#define RGEO_GLOBALS_FROM_FACTORY(factory) (RGEO_FACTORY_DATA_PTR(factory)->globals)
-
-// Returns the GEOS context handle given a ruby Factory object
-#define RGEO_CONTEXT_FROM_FACTORY(factory) (RGEO_FACTORY_DATA_PTR(factory)->geos_context)
-
-// Returns the ruby Factory object given a ruby Geometry object
-#define RGEO_FACTORY_FROM_GEOMETRY(geometry) (RGEO_GEOMETRY_DATA_PTR(geometry)->factory)
-
-// Returns the klasses object given a ruby Geometry object
-#define RGEO_KLASSES_FROM_GEOMETRY(geometry) (RGEO_GEOMETRY_DATA_PTR(geometry)->klasses)
-
-// Returns the RGeo_FactoryData* given a ruby Geometry object
-#define RGEO_FACTORY_DATA_FROM_GEOMETRY(geometry) RGEO_FACTORY_DATA_PTR(RGEO_FACTORY_FROM_GEOMETRY(geometry))
-
-// Returns the GEOS geometry handle given a ruby Geometry object
-#define RGEO_GET_GEOS_GEOMETRY(geometry) ((const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(geometry)->geom))
-
-// Returns the GEOS context handle given a ruby Geometry object
-#define RGEO_CONTEXT_FROM_GEOMETRY(geometry) (RGEO_GEOMETRY_DATA_PTR(geometry)->geos_context)
-
-// Returns a pointer to the globals given a ruby Geometry object
-#define RGEO_GLOBALS_FROM_GEOMETRY(geometry) RGEO_GLOBALS_FROM_FACTORY(RGEO_FACTORY_FROM_GEOMETRY(geometry))
 
 
 /*

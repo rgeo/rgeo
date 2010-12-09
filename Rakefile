@@ -104,8 +104,8 @@ internal_ext_info_ = ::RAKEFILE::C_EXT_INFO.map do |name_, path_|
     :name => name_,
     :source_dir => "ext/#{name_}",
     :extconf_path => "ext/#{name_}/extconf.rb",
-    :source_glob => "ext/#{name_}/*.[ch]",
-    :obj_glob => "ext/#{name_}/*.[o]",
+    :source_glob => "ext/#{name_}/*.{c,h}",
+    :obj_glob => "ext/#{name_}/*.{o,dSYM}",
     :suffix_makefile_path => "ext/#{name_}/Makefile_#{platform_suffix_}",
     :built_lib_path => "ext/#{name_}/#{name_}.#{dlext_}",
     :staged_lib_path => "ext/#{name_}/#{name_}_#{platform_suffix_}.#{dlext_}",
@@ -145,7 +145,7 @@ internal_ext_info_.each do |info_|
       rm 'Makefile'
     end
     mv info_[:built_lib_path], info_[:staged_lib_path]
-    rm ::Dir.glob(info_[:obj_glob])
+    rm_r ::Dir.glob(info_[:obj_glob])
   end
   file info_[:suffix_makefile_path] => info_[:extconf_path] do
     ::Dir.chdir(info_[:source_dir]) do
