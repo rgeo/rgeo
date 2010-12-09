@@ -1,3 +1,8 @@
+=== 0.2.1 / 2010-12-09
+
+* Now compatible with Rubinius (version 1.1 or later).
+* Now partially compatible with JRuby (1.5 or later). A bunch of tests fail because GEOS and Proj4 are not available, hence there is no projection support and no complete Cartesian implementation. But at least it loads and the basic operations work.
+
 === 0.2.0 / 2010-12-07
 
 This is the first public alpha version of RGeo. With this version, we are soft-locking the API interfaces and will try to retain backwards compatibility from this point. Incompatible API changes may still be done, but only if considered necessary.

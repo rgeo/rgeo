@@ -53,16 +53,18 @@ module RGeo
       
       
       # :stopdoc:
-      IMPL_CLASSES = {
-        Feature::Point => PointImpl,
-        Feature::LineString => LineStringImpl,
-        Feature::LinearRing => LinearRingImpl,
-        Feature::Line => LineImpl,
-        Feature::GeometryCollection => GeometryCollectionImpl,
-        Feature::MultiPoint => MultiPointImpl,
-        Feature::MultiLineString => MultiLineStringImpl,
-        Feature::MultiPolygon => MultiPolygonImpl,
-      }
+      if ::RGeo::Geos.supported?
+        IMPL_CLASSES = {
+          Feature::Point => PointImpl,
+          Feature::LineString => LineStringImpl,
+          Feature::LinearRing => LinearRingImpl,
+          Feature::Line => LineImpl,
+          Feature::GeometryCollection => GeometryCollectionImpl,
+          Feature::MultiPoint => MultiPointImpl,
+          Feature::MultiLineString => MultiLineStringImpl,
+          Feature::MultiPolygon => MultiPolygonImpl,
+        }
+      end
       # :startdoc:
       
       

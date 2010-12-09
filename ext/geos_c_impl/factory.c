@@ -92,7 +92,7 @@ static void destroy_factory_func(RGeo_FactoryData* data)
 static void destroy_geometry_func(RGeo_GeometryData* data)
 {
   if (data->geom) {
-    GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_FACTORY(data->factory), data->geom);
+    GEOSGeom_destroy_r(data->geos_context, data->geom);
   }
   free(data);
 }
@@ -298,6 +298,7 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
         GEOSSetSRID_r(RGEO_CONTEXT_FROM_FACTORY(factory), geom, RGEO_FACTORY_DATA_PTR(factory)->srid);
       }
       data->geom = geom;
+      data->geos_context = NIL_P(factory) ? NULL : RGEO_CONTEXT_FROM_FACTORY(factory);
       data->factory = factory;
       data->klasses = klasses;
       result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
@@ -347,6 +348,7 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
       }
     }
     RGEO_GEOMETRY_DATA_PTR(object)->geom = NULL;
+    RGEO_GEOMETRY_DATA_PTR(object)->geos_context = NULL;
     RGEO_GEOMETRY_DATA_PTR(object)->factory = Qnil;
     RGEO_GEOMETRY_DATA_PTR(object)->klasses = Qnil;
   }

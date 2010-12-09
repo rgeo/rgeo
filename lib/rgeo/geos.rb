@@ -64,7 +64,9 @@ end
 # Implementation files
 require 'rgeo/geos/factory'
 require 'rgeo/geos/interface'
-require 'rgeo/geos/geos_c_impl'
+begin
+  require 'rgeo/geos/geos_c_impl'
+rescue ::LoadError; end
 require 'rgeo/geos/impl_additions'
 require 'rgeo/geos/zm_factory'
 require 'rgeo/geos/zm_impl'

@@ -115,4 +115,4 @@ module RGeo
       
     end
   end
-end
+end if ::RGeo::CoordSys::Proj4.supported?

@@ -320,11 +320,11 @@ module RGeo
         def test_polygon_basic
           factory_ = ::RGeo::Cartesian.preferred_factory
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
-          obj_ = parser_.parse('POLYGON((1 2, 3 4, 5 6, 1 2))')
+          obj_ = parser_.parse('POLYGON((1 2, 3 4, 5 7, 1 2))')
           assert_equal(::RGeo::Feature::Polygon, obj_.geometry_type)
           assert_equal(4, obj_.exterior_ring.num_points)
           assert_equal(1, obj_.exterior_ring.point_n(0).x)
-          assert_equal(6, obj_.exterior_ring.point_n(2).y)
+          assert_equal(7, obj_.exterior_ring.point_n(2).y)
         end
         
         
@@ -394,12 +394,12 @@ module RGeo
         def test_multipolygon_basic
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
-          obj_ = parser_.parse('MULTIPOLYGON(((-1 -2 0, -3 -4 0, -5 -6 0, -1 -2 0)),((0 0 -1, 10 0 -2, 10 10 -3, 0 10 -4, 0 0 -5),(1 1 -6, 2 3 -7, 3 1 -8, 1 1 -9)))')
+          obj_ = parser_.parse('MULTIPOLYGON(((-1 -2 0, -3 -4 0, -5 -7 0, -1 -2 0)),((0 0 -1, 10 0 -2, 10 10 -3, 0 10 -4, 0 0 -5),(1 1 -6, 2 3 -7, 3 1 -8, 1 1 -9)))')
           assert_equal(::RGeo::Feature::MultiPolygon, obj_.geometry_type)
           assert_equal(2, obj_.num_geometries)
           assert_equal(4, obj_[0].exterior_ring.num_points)
           assert_equal(-1, obj_[0].exterior_ring.point_n(0).x)
-          assert_equal(-6, obj_[0].exterior_ring.point_n(2).y)
+          assert_equal(-7, obj_[0].exterior_ring.point_n(2).y)
           assert_equal(5, obj_[1].exterior_ring.num_points)
           assert_equal(0, obj_[1].exterior_ring.point_n(0).x)
           assert_equal(10, obj_[1].exterior_ring.point_n(2).y)

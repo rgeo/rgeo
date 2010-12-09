@@ -39,14 +39,14 @@ Several optional modules are currently available:
   * <b>activerecord-postgis-adapter</b>
 * and more to come...
 
-=== Requirements
+=== Dependencies
 
-RGeo has the following requirements:
+RGeo is known to work with the following Ruby implementations:
 
-* Ruby 1.8.7 or later. Ruby 1.9.2 or later preferred.
-  Rubinius and JRuby are not yet supported.
-* The build system assumes a unix-like environment. Windows builds may be
-  possible, but not likely "out of the box".
+* Standard "MRI" Ruby 1.8.7 or later. (1.9.2 or later preferred.)
+* Rubinius 1.1 or later.
+* Partial support for JRuby 1.5 or later, but a bunch of features are
+  missing because GEOS and Proj are not available from Java.
 
 Some features also require the following:
 
@@ -58,6 +58,9 @@ Some features also require the following:
   want to translate coordinates between geographic projections. It also
   may be available via your operating system's package manager, or from
   http://trac.osgeo.org/proj
+
+Note: The build system assumes a unix-like environment. Windows builds
+may be possible, but not likely "out of the box".
 
 === Installation
 
@@ -100,7 +103,7 @@ the core library includes:
 * Implementation of the OGC coordinate system spec.
 * Integration with spatial reference system databases.
 * Ellipsoidal geography implementation, probably utilizing geographiclib.
-* Rubinius and JRuby support.
+* JRuby support via the JTS library.
 * Windows build support.
 
 Each of the current add-on modules also has its own feature roadmap, and

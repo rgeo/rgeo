@@ -88,4 +88,4 @@ module RGeo
       
     end
   end
-end
+end if ::RGeo::Geos.supported?

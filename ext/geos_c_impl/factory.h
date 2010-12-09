@@ -44,20 +44,22 @@
 RGEO_BEGIN_C
 
 
-// Per-interpreter globals
-
+/*
+  Per-interpreter globals
+*/
 typedef struct {
   VALUE features_module;
   VALUE geos_module;
 } RGeo_Globals;
 
 
-// Wrapped structure for Factory objects.
-// A factory encapsulates the GEOS context, and GEOS serializer settings.
-// It also stores the SRID for all geometries created by this factory,
-// and the resolution for buffers created for this factory's geometries.
-// Finally, it provides easy access to the globals.
-
+/*
+  Wrapped structure for Factory objects.
+  A factory encapsulates the GEOS context, and GEOS serializer settings.
+  It also stores the SRID for all geometries created by this factory,
+  and the resolution for buffers created for this factory's geometries.
+  Finally, it provides easy access to the globals.
+*/
 typedef struct {
   RGeo_Globals* globals;
   GEOSContextHandle_t geos_context;
@@ -76,20 +78,30 @@ typedef struct {
 #define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M 6
 
 
-// Wrapped structure for Geometry objects.
-// Includes a handle to the underlying GEOS geometry itself (which could
-// be null for an uninitialized geometry).
-// It also provides a handle to the factory that created this geometry.
-// The klasses object is used by geometry collections. Its value is
-// generally an array of the ruby classes for the colletion's elements,
-// so that we can reproduce the exact class for those elements in cases
-// where the class cannot be inferred directly from the GEOS type (as
-// in Line objects, which have no GEOS type). Any array element, or the
-// array itself, could be Qnil, indicating fall back to the default
-// inferred from the GEOS type.
-
+/*
+  Wrapped structure for Geometry objects.
+  Includes a handle to the underlying GEOS geometry itself (which could
+  be null for an uninitialized geometry).
+  It also provides a handle to the factory that created this geometry.
+  
+  The klasses object is used by geometry collections. Its value is
+  generally an array of the ruby classes for the colletion's elements,
+  so that we can reproduce the exact class for those elements in cases
+  where the class cannot be inferred directly from the GEOS type (as
+  in Line objects, which have no GEOS type). Any array element, or the
+  array itself, could be Qnil, indicating fall back to the default
+  inferred from the GEOS type.
+  
+  The GEOS context handle is also included here. Ideally, it would be
+  available by following the factory reference and getting it from the
+  factory data. However, one use case is in the destroy_geometry_func
+  in factory.c, and Rubinius 1.1.1 seems to crash when you try to
+  evaluate a DATA_PTR from that function, so we copy the context handle
+  here so the destroy_geometry_func can get to it.
+*/
 typedef struct {
   GEOSGeometry* geom;
+  GEOSContextHandle_t geos_context;
   VALUE factory;
   VALUE klasses;
 } RGeo_GeometryData;
@@ -120,7 +132,7 @@ typedef struct {
 #define RGEO_GET_GEOS_GEOMETRY(geometry) ((const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(geometry)->geom))
 
 // Returns the GEOS context handle given a ruby Geometry object
-#define RGEO_CONTEXT_FROM_GEOMETRY(geometry) RGEO_CONTEXT_FROM_FACTORY(RGEO_FACTORY_FROM_GEOMETRY(geometry))
+#define RGEO_CONTEXT_FROM_GEOMETRY(geometry) (RGEO_GEOMETRY_DATA_PTR(geometry)->geos_context)
 
 // Returns a pointer to the globals given a ruby Geometry object
 #define RGEO_GLOBALS_FROM_GEOMETRY(geometry) RGEO_GLOBALS_FROM_FACTORY(RGEO_FACTORY_FROM_GEOMETRY(geometry))

@@ -54,5 +54,7 @@ end
 
 
 # Implementation files
-require 'rgeo/coord_sys/proj4_c_impl'
+begin
+  require 'rgeo/coord_sys/proj4_c_impl'
+rescue ::LoadError; end
 require 'rgeo/coord_sys/proj4'

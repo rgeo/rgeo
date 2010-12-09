@@ -574,6 +574,7 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
   if (self_geom) {
     GEOSGeom_destroy_r(RGEO_CONTEXT_FROM_GEOMETRY(self), self_geom);
     RGEO_GEOMETRY_DATA_PTR(self)->geom = NULL;
+    RGEO_GEOMETRY_DATA_PTR(self)->geos_context = NULL;
     RGEO_GEOMETRY_DATA_PTR(self)->factory = Qnil;
     RGEO_GEOMETRY_DATA_PTR(self)->klasses = Qnil;
   }
@@ -585,6 +586,7 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
     if (clone_geom) {
       GEOSSetSRID_r(RGEO_CONTEXT_FROM_GEOMETRY(orig), clone_geom, GEOSGetSRID_r(RGEO_CONTEXT_FROM_GEOMETRY(orig), geom));
       RGEO_GEOMETRY_DATA_PTR(self)->geom = clone_geom;
+      RGEO_GEOMETRY_DATA_PTR(self)->geos_context = RGEO_CONTEXT_FROM_GEOMETRY(orig);
       RGEO_GEOMETRY_DATA_PTR(self)->factory = RGEO_FACTORY_FROM_GEOMETRY(orig);
       RGEO_GEOMETRY_DATA_PTR(self)->klasses = RGEO_KLASSES_FROM_GEOMETRY(orig);
     }

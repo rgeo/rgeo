@@ -46,7 +46,7 @@ module RGeo
         
         
         def setup
-          @factory = ::RGeo::Geos.factory
+          @factory = ::RGeo::Cartesian.simple_factory
           @point1 = @factory.point(3, 4)
           @point2 = @factory.point(5, 5)
           @point3 = @factory.point(6, 4)
