@@ -74,8 +74,13 @@ module RGeo
           else
             proj4_ = nil
           end
+          coord_sys_ = opts_[:coord_sys]
+          if coord_sys_.kind_of?(::String)
+            coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_) rescue nil
+          end
           result_ = _create(flags_, opts_[:srid].to_i, buffer_resolution_)
           result_.instance_variable_set(:@proj4, proj4_)
+          result_.instance_variable_set(:@coord_sys, coord_sys_)
           result_
         end
         alias_method :new, :create
@@ -233,7 +238,7 @@ module RGeo
       # See ::RGeo::Feature::Factory#coord_sys
       
       def coord_sys
-        nil
+        @coord_sys
       end
       
       

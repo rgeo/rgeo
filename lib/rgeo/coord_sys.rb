@@ -58,3 +58,6 @@ begin
   require 'rgeo/coord_sys/proj4_c_impl'
 rescue ::LoadError; end
 require 'rgeo/coord_sys/proj4'
+require 'rgeo/coord_sys/cs_classes'
+require 'rgeo/coord_sys/cs_wkt_parser'
+require 'rgeo/coord_sys/cs_factory'
