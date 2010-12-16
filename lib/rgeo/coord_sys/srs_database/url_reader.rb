@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Basic methods used by geometry objects
+# SRS database interface
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,51 +34,56 @@
 ;
 
 
+require 'net/http'
+
+
 module RGeo
   
-  module ImplHelper  # :nodoc:
+  module CoordSys
     
-    
-    module BasicGeometryMethods  # :nodoc:
-      
-      include Feature::Instance
+    module SRSDatabase
       
       
-      def inspect  # :nodoc:
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
-      end
-      
-      def to_s  # :nodoc:
-        as_text
-      end
-      
-      
-      def _validate_geometry  # :nodoc:
-      end
-      
-      
-      def _set_factory(factory_)  # :nodoc:
-        @factory = factory_
-      end
-      
-      
-      def factory
-        @factory
-      end
-      
-      
-      def as_text
-        WKRep::WKTGenerator.new.generate(self)
-      end
-      
-      
-      def as_binary
-        WKRep::WKBGenerator.new.generate(self)
+      class UrlReader
+        
+        
+        def initialize(opts_={})
+          @cache = opts_[:cache] ? {} : nil
+        end
+        
+        
+        def get(ident_)
+          ident_ = ident_.to_s
+          return @cache[ident_] if @cache && @cache.include?(ident_)
+          uri_ = ::URI.parse(ident_)
+          result_ = nil
+          ::Net::HTTP.start(uri_.host, uri_.port) do |http_|
+            request_ = uri_.path
+            request_ = "#{request_}?#{uri_.query}" if uri_.query
+            response_ = http_.request_get(request_)
+            if response_.kind_of?(::Net::HTTPSuccess)
+              response_ = response_.body.strip
+              if response_[0,1] == '+'
+                result_ = Entry.new(ident_, :proj4 => response_)
+              else
+                result_ = Entry.new(ident_, :coord_sys => response_)
+              end
+            end
+          end
+          @cache[ident_] = result_ if @cache
+          result_
+        end
+        
+        
+        def clear_cache
+          @cache.clear if @cache
+        end
+        
+        
       end
       
       
     end
-    
     
   end
   

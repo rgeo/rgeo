@@ -48,6 +48,9 @@ else
      '/usr/local/proj/include',
      '/usr/local/proj4/include',
      '/opt/local/include',
+     '/opt/proj/include',
+     '/opt/proj4/include',
+     '/opt/include',
      ::Config::CONFIG['includedir'],
      '/usr/include',
     ]
@@ -57,6 +60,9 @@ else
      '/usr/local/proj/lib',
      '/usr/local/proj4/lib',
      '/opt/local/lib',
+     '/opt/proj/lib',
+     '/opt/proj4/lib',
+     '/opt/lib',
      ::Config::CONFIG['libdir'],
      '/usr/lib',
     ]

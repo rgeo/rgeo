@@ -39,6 +39,14 @@ module RGeo
   module Feature
     
     
+    # All geometry implementations MUST include this submodule.
+    # This serves as a marker that may be used to test an object for
+    # feature-ness.
+    
+    module Instance
+    end
+    
+    
     # These methods are available as module methods (not instance methods)
     # of the various feature types.
     # For example, you may determine whether a feature object is a
@@ -57,12 +65,8 @@ module RGeo
     module Type
       
       
-      # All geometry implementations MUST include this submodule.
-      # This serves as a marker that may be used to test an object for
-      # feature-ness.
-      
-      module Instance
-      end
+      # Deprecated alias for RGeo::Feature::Instance
+      Instance = Feature::Instance
       
       
       # Returns true if the given object is this type or a subtype
@@ -72,7 +76,7 @@ module RGeo
       # Note that feature objects need not actually include this module.
       
       def check_type(rhs_)
-        rhs_ = rhs_.geometry_type if rhs_.kind_of?(Instance)
+        rhs_ = rhs_.geometry_type if rhs_.kind_of?(Feature::Instance)
         rhs_.kind_of?(Type) && (rhs_ == self || rhs_.include?(self))
       end
       alias_method :===, :check_type

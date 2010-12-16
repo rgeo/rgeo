@@ -38,13 +38,32 @@ module RGeo
   
   module CoordSys
     
+    
+    # This module contains an implementation of the CS (coordinate
+    # systems) package of the OGC Coordinate Transform spec. It contains
+    # classes for representing ellipsoids, datums, coordinate systems,
+    # and other related concepts, as well as a parser for the WKT format
+    # for specifying coordinate systems.
+    # 
+    # Generally, the easiest way to create coordinate system objects is
+    # to use RGeo::CoordSys::CS.create_from_wkt, which parses the WKT
+    # format. This and other methods of the FactoryMethods module are all
+    # available as convenient module functions on the CS module.
+    # 
+    # Almost the entire spec is implemented here. Currently missing are:
+    # 
+    # * XML format is not implemented. We're assuming that WKT is the
+    #   preferred format.
+    # * The PT and CT packages are not implemented.
+    # * FittedCoordinateSystem is not implemented.
+    
     module CS
       
       
       module FactoryMethods
         
         def create_compound_coordinate_system(name_, head_, tail_)
-          CompoundCoordinateSystem.new(name_, head_, tail_)
+          CompoundCoordinateSystem.create(name_, head_, tail_)
         end
         
         def create_ellipsoid(name_, semi_major_axis_, semi_minor_axis_, linear_unit_)
@@ -60,39 +79,39 @@ module RGeo
         end
         
         def create_geographic_coordinate_system(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_)
-          GeographicCoordinateSystem.new(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_)
+          GeographicCoordinateSystem.create(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_)
         end
         
         def create_horizontal_datum(name_, horizontal_datum_type_, ellipsoid_, to_wgs84_)
-          HorizontalDatum.new(name_, horizontal_datum_type_, ellipsoid_, to_wgs84_)
+          HorizontalDatum.create(name_, horizontal_datum_type_, ellipsoid_, to_wgs84_)
         end
         
         def create_local_coordinate_system(name_, datum_, unit_, axes_)
-          LocalCoordinateSystem.new(name_, datum_, unit_, axes_)
+          LocalCoordinateSystem.create(name_, datum_, unit_, axes_)
         end
         
         def create_local_datum(name_, local_datum_type_)
-          LocalDatum.new(name, local_datum_type_)
+          LocalDatum.create(name, local_datum_type_)
         end
         
         def create_prime_meridian(name_, angular_unit_, longitude_)
-          PrimeMeridian.new(name, angular_unit_, longitude_)
+          PrimeMeridian.create(name, angular_unit_, longitude_)
         end
         
         def create_projected_coordinate_system(name_, gcs_, projection_, linear_unit_, axis0_, axis1_)
-          ProjectedCoordinateSystem.new(name_, gcs_, projection_, linear_unit_, axis0_, axis1_)
+          ProjectedCoordinateSystem.create(name_, gcs_, projection_, linear_unit_, axis0_, axis1_)
         end
         
         def create_projection(name_, wkt_projection_class_, parameters_)
-          Projection.new(name_, wkt_projection_class_, parameters_)
+          Projection.create(name_, wkt_projection_class_, parameters_)
         end
         
         def create_vertical_coordinate_system(name_, vertical_datum_, vertical_unit_, axis_)
-          VerticalCoordinateSystem.new(name_, vertical_datum_, vertical_unit_, axis_)
+          VerticalCoordinateSystem.create(name_, vertical_datum_, vertical_unit_, axis_)
         end
         
         def create_vertical_datum(name_, vertical_datum_type_)
-          VerticalDatum.new(name_, vertical_datum_type_)
+          VerticalDatum.create(name_, vertical_datum_type_)
         end
         
       end

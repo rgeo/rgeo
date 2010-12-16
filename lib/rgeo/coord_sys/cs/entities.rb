@@ -103,6 +103,12 @@ module RGeo
           "#{_wkt_typename}#{open_}#{@name.inspect}#{content_}#{authority_}#{close_}"
         end
         
+        class << self
+          
+          private :new
+          
+        end
+        
       end
       
       
@@ -110,7 +116,7 @@ module RGeo
         
         NAMES_BY_VALUE = ['OTHER', 'NORTH', 'SOUTH', 'EAST', 'WEST', 'UP', 'DOWN']
         
-        def initialize(name_, orientation_)
+        def initialize(name_, orientation_)  # :nodoc:
           super(name_)
           if orientation_.kind_of?(::String)
             @orientation = NAMES_BY_VALUE.index(orientation_).to_i
@@ -129,12 +135,20 @@ module RGeo
           [NAMES_BY_VALUE[@orientation]]
         end
         
+        class << self
+          
+          def create(name_, orientation_)
+            new(name_, orientation_)
+          end
+          
+        end
+        
       end
       
       
       class ProjectionParameter < Base
         
-        def initialize(name_, value_)
+        def initialize(name_, value_)  # :nodoc:
           super(name_)
           @value = value_.to_f
         end
@@ -149,12 +163,20 @@ module RGeo
           [@value]
         end
         
+        class << self
+          
+          def create(name_, value_)
+            new(name_, value_)
+          end
+          
+        end
+        
       end
       
       
       class WGS84ConversionInfo < Base
         
-        def initialize(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)
+        def initialize(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)  # :nodoc:
           super('TOWGS84')
           @dx = dx_.to_f
           @dy = dy_.to_f
@@ -175,6 +197,14 @@ module RGeo
         
         def _to_wkt(open_, close_)  # :nodoc:
           "TOWGS84#{open_}#{@dx},#{@dy},#{@dz},#{@ex},#{@ey},#{@ez},#{@ppm}#{close_}"
+        end
+        
+        class << self
+          
+          def create(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)
+            new(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)
+          end
+          
         end
         
       end
@@ -202,7 +232,7 @@ module RGeo
       
       class Unit < Info
         
-        def initialize(name_, conversion_factor_, *optional_)
+        def initialize(name_, conversion_factor_, *optional_)  # :nodoc:
           super(name_, *optional_)
           @conversion_factor = conversion_factor_.to_f
         end
@@ -217,12 +247,28 @@ module RGeo
           [@conversion_factor]
         end
         
+        class << self
+          
+          def create(name_, conversion_factor_, *optional_)
+            new(name_, conversion_factor_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class LinearUnit < Unit
         
         alias_method :meters_per_unit, :conversion_factor
+        
+        class << self
+          
+          def create(name_, meters_per_unit_, *optional_)
+            new(name_, meters_per_unit_, *optional_)
+          end
+          
+        end
         
       end
       
@@ -231,12 +277,20 @@ module RGeo
         
         alias_method :radians_per_unit, :conversion_factor
         
+        class << self
+          
+          def create(name_, radians_per_unit_, *optional_)
+            new(name_, radians_per_unit_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class PrimeMeridian < Info
         
-        def initialize(name_, angular_unit_, longitude_, *optional_)
+        def initialize(name_, angular_unit_, longitude_, *optional_)  # :nodoc:
           super(name_, *optional_)
           @angular_unit = angular_unit_
           @longitude = longitude_.to_f
@@ -253,12 +307,20 @@ module RGeo
           [@longitude]
         end
         
+        class << self
+          
+          def create(name_, angular_unit_, longitude_, *optional_)
+            new(name_, angular_unit_, longitude_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class Ellipsoid < Info
         
-        def initialize(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)
+        def initialize(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)  # :nodoc:
           super(name_, *optional_)
           @semi_major_axis = semi_major_axis_.to_f
           @semi_minor_axis = semi_minor_axis_.to_f
@@ -297,6 +359,14 @@ module RGeo
           new(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, true, linear_unit_, *optional_)
         end
         
+        class << self
+          
+          def create(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)
+            new(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)
+          end
+          
+        end
+        
       end
       
       
@@ -313,6 +383,14 @@ module RGeo
           []
         end
         
+        class << self
+          
+          def create(name_, datum_type_, *optional_)
+            new(name_, datum_type_, *optional_)
+          end
+          
+        end
+        
       end
       
       
@@ -324,6 +402,14 @@ module RGeo
         
         def _wkt_content(open_, close_)  # :nodoc:
           [@datum_type]
+        end
+        
+        class << self
+          
+          def create(name_, datum_type_, *optional_)
+            new(name_, datum_type_, *optional_)
+          end
+          
         end
         
       end
@@ -339,12 +425,20 @@ module RGeo
           [@datum_type]
         end
         
+        class << self
+          
+          def create(name_, datum_type_, *optional_)
+            new(name_, datum_type_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class HorizontalDatum < Datum
         
-        def initialize(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)
+        def initialize(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)  # :nodoc:
           super(name_, datum_type_, *optional_)
           @ellipsoid = ellipsoid_
           @wgs84_parameters = wgs84_parameters_
@@ -363,12 +457,20 @@ module RGeo
           array_
         end
         
+        class << self
+          
+          def create(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)
+            new(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class Projection < Info
         
-        def initialize(name_, class_name_, parameters_, *optional_)
+        def initialize(name_, class_name_, parameters_, *optional_)  # :nodoc:
           super(name_, *optional_)
           @class_name = class_name_.to_s
           @parameters = parameters_ ? parameters_.dup : []
@@ -396,6 +498,14 @@ module RGeo
           []
         end
         
+        class << self
+          
+          def create(name_, class_name_, parameters_, *optional_)
+            new(name_, class_name_, parameters_, *optional_)
+          end
+          
+        end
+        
       end
       
       
@@ -413,7 +523,7 @@ module RGeo
       
       class CompoundCoordinateSystem < CoordinateSystem
         
-        def initialize(name_, head_, tail_, *optional_)
+        def initialize(name_, head_, tail_, *optional_)  # :nodoc:
           super(name_, head_.dimension + tail_.dimension, *optional_)
           @head = head_
           @tail = tail_
@@ -440,12 +550,20 @@ module RGeo
           [@head._to_wkt(open_, close_), @tail._to_wkt(open_, close_)]
         end
         
+        class << self
+          
+          def create(name_, head_, tail_, *optional_)
+            new(name_, head_, tail_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class LocalCoordinateSystem < CoordinateSystem
         
-        def initialize(name_, local_datum_, unit_, axes_, *optional_)
+        def initialize(name_, local_datum_, unit_, axes_, *optional_)  # :nodoc:
           super(name_, axes_.size, *optional_)
           @local_datum = local_datum_
           @unit = unit_
@@ -470,12 +588,20 @@ module RGeo
           [@local_datum._to_wkt(open_, close_), @unit._to_wkt(open_, close_)] + @axes.map{ |ax_| ax_._to_wkt(open_, close_) }
         end
         
+        class << self
+          
+          def create(name_, local_datum_, unit_, axes_, *optional_)
+            new(name_, local_datum_, unit_, axes_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class GeocentricCoordinateSystem < CoordinateSystem
         
-        def initialize(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)
+        def initialize(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)  # :nodoc:
           super(name_, 3, *optional_)
           @horizontal_datum = horizontal_datum_
           @prime_meridian = prime_meridian_
@@ -509,12 +635,20 @@ module RGeo
           arr_
         end
         
+        class << self
+          
+          def create(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)
+            new(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class VerticalCoordinateSystem < CoordinateSystem
         
-        def initialize(name_, vertical_datum_, vertical_unit_, axis_, *optional_)
+        def initialize(name_, vertical_datum_, vertical_unit_, axis_, *optional_)  # :nodoc:
           super(name_, 1, *optional_)
           @vertical_datum = vertical_datum_
           @vertical_unit = vertical_unit_
@@ -542,12 +676,20 @@ module RGeo
           arr_
         end
         
+        class << self
+          
+          def create(name_, vertical_datum_, vertical_unit_, axis_, *optional_)
+            new(name_, vertical_datum_, vertical_unit_, axis_, *optional_)
+          end
+          
+        end
+        
       end
       
       
-      class HorizontalCoordinateSystem < CoordinateSystem  # :nodoc:
+      class HorizontalCoordinateSystem < CoordinateSystem
         
-        def initialize(name_, horizontal_datum_, *optional_)
+        def initialize(name_, horizontal_datum_, *optional_)  # :nodoc:
           super(name_, 2, *optional_)
           @horizontal_datum = horizontal_datum_
         end
@@ -559,7 +701,7 @@ module RGeo
       
       class GeographicCoordinateSystem < HorizontalCoordinateSystem
         
-        def initialize(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)
+        def initialize(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)  # :nodoc:
           super(name_, horizontal_datum_, *optional_)
           @prime_meridian = prime_meridian_
           @angular_unit = angular_unit_
@@ -597,12 +739,20 @@ module RGeo
           arr_
         end
         
+        class << self
+          
+          def create(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)
+            new(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)
+          end
+          
+        end
+        
       end
       
       
       class ProjectedCoordinateSystem < HorizontalCoordinateSystem
         
-        def initialize(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)
+        def initialize(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)  # :nodoc:
           super(name_, geographic_coordinate_system_.horizontal_datum, *optional_)
           @geographic_coordinate_system = geographic_coordinate_system_
           @projection = projection_
@@ -634,6 +784,14 @@ module RGeo
           arr_ << @axis0._to_wkt(open_, close_) if @axis0
           arr_ << @axis1._to_wkt(open_, close_) if @axis1
           arr_
+        end
+        
+        class << self
+          
+          def create(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)
+            new(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)
+          end
+          
         end
         
       end

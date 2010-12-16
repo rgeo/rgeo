@@ -12,4 +12,4 @@
 *.rbc
 Makefile*
 mkmf.log
-/test/active_record/database.yml
+/test/coord_sys/database.yml

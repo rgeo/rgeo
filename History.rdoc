@@ -1,3 +1,12 @@
+=== 0.2.2 / 2010-12-15
+
+The main theme for this release was support for spatial reference system databases. The basic functionality is done and ready for experimentation. However, documentation is still in progress, and we're still working on some ideas to make coordinate system management more seamless by integrating the SRS databases with FactoryGenerator.
+
+* Implemented OGC coordinate system objects, including most of the CS package of the OGC Coordinate Transform spec, and a parser for the WKT.
+* Defined interfaces for spatial reference system database access. Implemented a database based on ActiveRecord and backed by spatial_ref_sys tables; one based on the data files shared by the proj4 library; one based on retrieving data from spatialreference.org, and one based on retrieving data from arbitrary URLs.
+* Renamed RGeo::Feature::Type::Instance marker module to RGeo::Feature::Instance. The old name is aliased for backward compatibility but is deprecated.
+* Added a few more directories to the default lookup path for geos and proj4.
+
 === 0.2.1 / 2010-12-09
 
 * Now compatible with Rubinius (version 1.1 or later).

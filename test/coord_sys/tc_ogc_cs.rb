@@ -46,7 +46,7 @@ module RGeo
         
         
         def test_axis_info_by_value
-          obj_ = ::RGeo::CoordSys::CS::AxisInfo.new('N', ::RGeo::CoordSys::CS::AO_NORTH)
+          obj_ = ::RGeo::CoordSys::CS::AxisInfo.create('N', ::RGeo::CoordSys::CS::AO_NORTH)
           assert_equal('N', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::AO_NORTH, obj_.orientation)
           assert_equal('AXIS["N",NORTH]', obj_.to_wkt)
@@ -54,17 +54,17 @@ module RGeo
         
         
         def test_axis_info_by_name
-          obj_ = ::RGeo::CoordSys::CS::AxisInfo.new('S', 'SOUTH')
+          obj_ = ::RGeo::CoordSys::CS::AxisInfo.create('S', 'SOUTH')
           assert_equal('S', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::AO_SOUTH, obj_.orientation)
           assert_equal('AXIS["S",SOUTH]', obj_.to_wkt)
-          obj2_ = ::RGeo::CoordSys::CS::AxisInfo.new('S', ::RGeo::CoordSys::CS::AO_SOUTH)
+          obj2_ = ::RGeo::CoordSys::CS::AxisInfo.create('S', ::RGeo::CoordSys::CS::AO_SOUTH)
           assert_equal(obj_, obj2_)
         end
         
         
         def test_parameter
-          obj_ = ::RGeo::CoordSys::CS::ProjectionParameter.new('false_easting', 400000)
+          obj_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('false_easting', 400000)
           assert_equal('false_easting', obj_.name)
           assert_equal(400000, obj_.value)
           assert_equal('PARAMETER["false_easting",400000.0]', obj_.to_wkt)
@@ -72,7 +72,7 @@ module RGeo
         
         
         def test_towgs84
-          obj_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.new(1, 2, 3, 4, 5, 6, 7)
+          obj_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.create(1, 2, 3, 4, 5, 6, 7)
           assert_equal(1, obj_.dx)
           assert_equal(2, obj_.dy)
           assert_equal(3, obj_.dz)
@@ -85,7 +85,7 @@ module RGeo
         
         
         def test_unit
-          obj_ = ::RGeo::CoordSys::CS::Unit.new('metre', 1)
+          obj_ = ::RGeo::CoordSys::CS::Unit.create('metre', 1)
           assert_equal('metre', obj_.name)
           assert_equal(1, obj_.conversion_factor)
           assert_nil(obj_.authority)
@@ -94,7 +94,7 @@ module RGeo
         
         
         def test_unit_with_authority
-          obj_ = ::RGeo::CoordSys::CS::Unit.new('metre', 1, 'EPSG', 9001)
+          obj_ = ::RGeo::CoordSys::CS::Unit.create('metre', 1, 'EPSG', 9001)
           assert_equal('metre', obj_.name)
           assert_equal(1, obj_.conversion_factor)
           assert_equal('EPSG', obj_.authority)
@@ -104,22 +104,22 @@ module RGeo
         
         
         def test_linear_unit
-          obj_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1)
+          obj_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           assert_equal(1, obj_.meters_per_unit)
           assert_equal('UNIT["metre",1.0]', obj_.to_wkt)
         end
         
         
         def test_angular_unit
-          obj_ = ::RGeo::CoordSys::CS::AngularUnit.new('radian', 1)
+          obj_ = ::RGeo::CoordSys::CS::AngularUnit.create('radian', 1)
           assert_equal(1, obj_.radians_per_unit)
           assert_equal('UNIT["radian",1.0]', obj_.to_wkt)
         end
         
         
         def test_prime_meridian
-          obj1_ = ::RGeo::CoordSys::CS::AngularUnit.new('radian', 1)
-          obj_ = ::RGeo::CoordSys::CS::PrimeMeridian.new('Greenwich', obj1_, 0, 'EPSG', '8901')
+          obj1_ = ::RGeo::CoordSys::CS::AngularUnit.create('radian', 1)
+          obj_ = ::RGeo::CoordSys::CS::PrimeMeridian.create('Greenwich', obj1_, 0, 'EPSG', '8901')
           assert_equal('Greenwich', obj_.name)
           assert_equal(0, obj_.longitude)
           assert_equal('PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]]', obj_.to_wkt)
@@ -127,7 +127,7 @@ module RGeo
         
         
         def test_create_flattened_sphere
-          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1)
+          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('WGS 84', 6378137, 298.257223563, obj1_, 'EPSG', '7030')
           assert_equal('WGS 84', obj_.name)
           assert_equal(6378137, obj_.semi_major_axis)
@@ -140,7 +140,7 @@ module RGeo
         
         
         def test_create_unflattened_sphere
-          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1)
+          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('Popular Visualisation Sphere', 6378137, 0, obj1_, 'EPSG', '7059')
           assert_equal('Popular Visualisation Sphere', obj_.name)
           assert_equal(6378137, obj_.semi_major_axis)
@@ -153,21 +153,21 @@ module RGeo
         
         
         def test_create_ellipsoid
-          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1)
+          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_ellipsoid('WGS 84', 6378137, 6356752.314245, obj1_, 'EPSG', '7030')
           assert_in_delta(298.257223563, obj_.inverse_flattening, 0.1)
         end
         
         
         def test_create_spherical_ellipsoid
-          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1)
+          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_ellipsoid('Popular Visualisation Sphere', 6378137, 6378137, obj1_, 'EPSG', '7059')
           assert_equal(0, obj_.inverse_flattening)
         end
         
         
         def test_local_datum
-          obj_ = ::RGeo::CoordSys::CS::LocalDatum.new('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN)
+          obj_ = ::RGeo::CoordSys::CS::LocalDatum.create('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN)
           assert_equal('Random Local Datum', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::LD_MIN, obj_.datum_type)
           assert_equal('LOCAL_DATUM["Random Local Datum",10000]', obj_.to_wkt)
@@ -175,7 +175,7 @@ module RGeo
         
         
         def test_vertical_datum
-          obj_ = ::RGeo::CoordSys::CS::VerticalDatum.new('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', '5101')
+          obj_ = ::RGeo::CoordSys::CS::VerticalDatum.create('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', '5101')
           assert_equal('Ordnance Datum Newlyn', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, obj_.datum_type)
           assert_equal('EPSG', obj_.authority)
@@ -185,10 +185,10 @@ module RGeo
         
         
         def test_horizontal_datum
-          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1)
+          obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj2_ = ::RGeo::CoordSys::CS::Ellipsoid.create_ellipsoid('Popular Visualisation Sphere', 6378137, 6378137, obj1_, 'EPSG', '7059')
-          obj3_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.new(0, 0, 0, 0, 0, 0, 0)
-          obj_ = ::RGeo::CoordSys::CS::HorizontalDatum.new('Popular_Visualisation_Datum', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj2_, obj3_, 'EPSG', '6055')
+          obj3_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.create(0, 0, 0, 0, 0, 0, 0)
+          obj_ = ::RGeo::CoordSys::CS::HorizontalDatum.create('Popular_Visualisation_Datum', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj2_, obj3_, 'EPSG', '6055')
           assert_equal('Popular_Visualisation_Datum', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj_.datum_type)
           assert_equal('EPSG', obj_.authority)
@@ -198,7 +198,7 @@ module RGeo
         
         
         def test_projection
-          obj_ = ::RGeo::CoordSys::CS::Projection.new('Transverse_Mercator', 'Transverse_Mercator', [])
+          obj_ = ::RGeo::CoordSys::CS::Projection.create('Transverse_Mercator', 'Transverse_Mercator', [])
           assert_equal('Transverse_Mercator', obj_.name)
           assert_equal('Transverse_Mercator', obj_.class_name)
           assert_equal(0, obj_.num_parameters)
@@ -207,11 +207,11 @@ module RGeo
         
         
         def test_local_coordinate_system
-          obj1_ = ::RGeo::CoordSys::CS::LocalDatum.new('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN)
-          obj2_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1, 'EPSG', 9001)
-          obj3_ = ::RGeo::CoordSys::CS::AxisInfo.new('N', ::RGeo::CoordSys::CS::AO_NORTH)
-          obj4_ = ::RGeo::CoordSys::CS::AxisInfo.new('E', ::RGeo::CoordSys::CS::AO_EAST)
-          obj_ = ::RGeo::CoordSys::CS::LocalCoordinateSystem.new('My CS', obj1_, obj2_, [obj3_, obj4_])
+          obj1_ = ::RGeo::CoordSys::CS::LocalDatum.create('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN)
+          obj2_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1, 'EPSG', 9001)
+          obj3_ = ::RGeo::CoordSys::CS::AxisInfo.create('N', ::RGeo::CoordSys::CS::AO_NORTH)
+          obj4_ = ::RGeo::CoordSys::CS::AxisInfo.create('E', ::RGeo::CoordSys::CS::AO_EAST)
+          obj_ = ::RGeo::CoordSys::CS::LocalCoordinateSystem.create('My CS', obj1_, obj2_, [obj3_, obj4_])
           assert_equal('My CS', obj_.name)
           assert_equal(2, obj_.dimension)
           assert_equal('Random Local Datum', obj_.local_datum.name)
@@ -225,13 +225,13 @@ module RGeo
         
         def test_geocentric_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('WGS 84', 6378137, 298.257223563, nil, 'EPSG', '7030')
-          obj2_ = ::RGeo::CoordSys::CS::HorizontalDatum.new('World Geodetic System 1984', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj1_, nil, 'EPSG', '6326')
-          obj3_ = ::RGeo::CoordSys::CS::PrimeMeridian.new('Greenwich', nil, 0.0, 'EPSG', '8901')
-          obj4_ = ::RGeo::CoordSys::CS::LinearUnit.new('m', 1.0)
-          obj5_ = ::RGeo::CoordSys::CS::AxisInfo.new('Geocentric X', ::RGeo::CoordSys::CS::AO_OTHER)
-          obj6_ = ::RGeo::CoordSys::CS::AxisInfo.new('Geocentric Y', ::RGeo::CoordSys::CS::AO_EAST)
-          obj7_ = ::RGeo::CoordSys::CS::AxisInfo.new('Geocentric Z', ::RGeo::CoordSys::CS::AO_NORTH)
-          obj_ = ::RGeo::CoordSys::CS::GeocentricCoordinateSystem.new('WGS 84 (geocentric)', obj2_, obj3_, obj4_, obj5_, obj6_, obj7_, 'EPSG', 4328)
+          obj2_ = ::RGeo::CoordSys::CS::HorizontalDatum.create('World Geodetic System 1984', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj1_, nil, 'EPSG', '6326')
+          obj3_ = ::RGeo::CoordSys::CS::PrimeMeridian.create('Greenwich', nil, 0.0, 'EPSG', '8901')
+          obj4_ = ::RGeo::CoordSys::CS::LinearUnit.create('m', 1.0)
+          obj5_ = ::RGeo::CoordSys::CS::AxisInfo.create('Geocentric X', ::RGeo::CoordSys::CS::AO_OTHER)
+          obj6_ = ::RGeo::CoordSys::CS::AxisInfo.create('Geocentric Y', ::RGeo::CoordSys::CS::AO_EAST)
+          obj7_ = ::RGeo::CoordSys::CS::AxisInfo.create('Geocentric Z', ::RGeo::CoordSys::CS::AO_NORTH)
+          obj_ = ::RGeo::CoordSys::CS::GeocentricCoordinateSystem.create('WGS 84 (geocentric)', obj2_, obj3_, obj4_, obj5_, obj6_, obj7_, 'EPSG', 4328)
           assert_equal('WGS 84 (geocentric)', obj_.name)
           assert_equal(3, obj_.dimension)
           assert_equal('World Geodetic System 1984', obj_.horizontal_datum.name)
@@ -248,10 +248,10 @@ module RGeo
         
         
         def test_vertical_coordinate_system
-          obj1_ = ::RGeo::CoordSys::CS::VerticalDatum.new('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', 5101)
-          obj2_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1, 'EPSG', 9001)
-          obj3_ = ::RGeo::CoordSys::CS::AxisInfo.new('Up', ::RGeo::CoordSys::CS::AO_UP)
-          obj_ = ::RGeo::CoordSys::CS::VerticalCoordinateSystem.new('Newlyn', obj1_, obj2_, obj3_, 'EPSG', 5701)
+          obj1_ = ::RGeo::CoordSys::CS::VerticalDatum.create('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', 5101)
+          obj2_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1, 'EPSG', 9001)
+          obj3_ = ::RGeo::CoordSys::CS::AxisInfo.create('Up', ::RGeo::CoordSys::CS::AO_UP)
+          obj_ = ::RGeo::CoordSys::CS::VerticalCoordinateSystem.create('Newlyn', obj1_, obj2_, obj3_, 'EPSG', 5701)
           assert_equal('Newlyn', obj_.name)
           assert_equal(1, obj_.dimension)
           assert_equal('Ordnance Datum Newlyn', obj_.vertical_datum.name)
@@ -264,10 +264,10 @@ module RGeo
         
         def test_geographic_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('WGS 84', 6378137, 298.257223563, nil, 'EPSG', '7030')
-          obj2_ = ::RGeo::CoordSys::CS::AngularUnit.new('degree', 0.01745329251994328, 'EPSG', 9122)
-          obj3_ = ::RGeo::CoordSys::CS::HorizontalDatum.new('WGS_1984', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj1_, nil, 'EPSG', '6326')
-          obj4_ = ::RGeo::CoordSys::CS::PrimeMeridian.new('Greenwich', nil, 0, 'EPSG', '8901')
-          obj_ = ::RGeo::CoordSys::CS::GeographicCoordinateSystem.new('WGS 84', obj2_, obj3_, obj4_, nil, nil, 'EPSG', 4326)
+          obj2_ = ::RGeo::CoordSys::CS::AngularUnit.create('degree', 0.01745329251994328, 'EPSG', 9122)
+          obj3_ = ::RGeo::CoordSys::CS::HorizontalDatum.create('WGS_1984', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj1_, nil, 'EPSG', '6326')
+          obj4_ = ::RGeo::CoordSys::CS::PrimeMeridian.create('Greenwich', nil, 0, 'EPSG', '8901')
+          obj_ = ::RGeo::CoordSys::CS::GeographicCoordinateSystem.create('WGS 84', obj2_, obj3_, obj4_, nil, nil, 'EPSG', 4326)
           assert_equal('WGS 84', obj_.name)
           assert_equal(2, obj_.dimension)
           assert_equal('WGS_1984', obj_.horizontal_datum.name)
@@ -283,23 +283,23 @@ module RGeo
         
         def test_projected_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('Airy 1830', 6377563.396, 299.3249646, nil, 'EPSG', '7001')
-          obj2_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.new(375, -111, 431, 0, 0, 0, 0)
-          obj3_ = ::RGeo::CoordSys::CS::AngularUnit.new('DMSH', 0.0174532925199433, 'EPSG', 9108)
-          obj4_ = ::RGeo::CoordSys::CS::HorizontalDatum.new('OSGB_1936', ::RGeo::CoordSys::CS::HD_CLASSIC, obj1_, obj2_, 'EPSG', '6277')
-          obj5_ = ::RGeo::CoordSys::CS::PrimeMeridian.new('Greenwich', nil, 0, 'EPSG', '8901')
-          obj6_ = ::RGeo::CoordSys::CS::AxisInfo.new('Lat', ::RGeo::CoordSys::CS::AO_NORTH)
-          obj7_ = ::RGeo::CoordSys::CS::AxisInfo.new('Long', ::RGeo::CoordSys::CS::AO_EAST)
-          obj8_ = ::RGeo::CoordSys::CS::GeographicCoordinateSystem.new('OSGB 1936', obj3_, obj4_, obj5_, obj6_, obj7_, 'EPSG', 4277)
-          obj9_ = ::RGeo::CoordSys::CS::ProjectionParameter.new('latitude_of_origin', 49)
-          obj10_ = ::RGeo::CoordSys::CS::ProjectionParameter.new('central_meridian', -2)
-          obj11_ = ::RGeo::CoordSys::CS::ProjectionParameter.new('scale_factor', 0.999601272)
-          obj12_ = ::RGeo::CoordSys::CS::ProjectionParameter.new('false_easting', 400000)
-          obj13_ = ::RGeo::CoordSys::CS::ProjectionParameter.new('false_northing', -100000)
-          obj14_ = ::RGeo::CoordSys::CS::Projection.new('Transverse_Mercator', 'Transverse_Mercator', [obj9_, obj10_, obj11_, obj12_, obj13_])
-          obj15_ = ::RGeo::CoordSys::CS::LinearUnit.new('metre', 1, 'EPSG', 9001)
-          obj16_ = ::RGeo::CoordSys::CS::AxisInfo.new('E', ::RGeo::CoordSys::CS::AO_EAST)
-          obj17_ = ::RGeo::CoordSys::CS::AxisInfo.new('N', ::RGeo::CoordSys::CS::AO_NORTH)
-          obj_ = ::RGeo::CoordSys::CS::ProjectedCoordinateSystem.new('OSGB 1936 / British National Grid', obj8_, obj14_, obj15_, obj16_, obj17_, 'EPSG', 27700)
+          obj2_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.create(375, -111, 431, 0, 0, 0, 0)
+          obj3_ = ::RGeo::CoordSys::CS::AngularUnit.create('DMSH', 0.0174532925199433, 'EPSG', 9108)
+          obj4_ = ::RGeo::CoordSys::CS::HorizontalDatum.create('OSGB_1936', ::RGeo::CoordSys::CS::HD_CLASSIC, obj1_, obj2_, 'EPSG', '6277')
+          obj5_ = ::RGeo::CoordSys::CS::PrimeMeridian.create('Greenwich', nil, 0, 'EPSG', '8901')
+          obj6_ = ::RGeo::CoordSys::CS::AxisInfo.create('Lat', ::RGeo::CoordSys::CS::AO_NORTH)
+          obj7_ = ::RGeo::CoordSys::CS::AxisInfo.create('Long', ::RGeo::CoordSys::CS::AO_EAST)
+          obj8_ = ::RGeo::CoordSys::CS::GeographicCoordinateSystem.create('OSGB 1936', obj3_, obj4_, obj5_, obj6_, obj7_, 'EPSG', 4277)
+          obj9_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('latitude_of_origin', 49)
+          obj10_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('central_meridian', -2)
+          obj11_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('scale_factor', 0.999601272)
+          obj12_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('false_easting', 400000)
+          obj13_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('false_northing', -100000)
+          obj14_ = ::RGeo::CoordSys::CS::Projection.create('Transverse_Mercator', 'Transverse_Mercator', [obj9_, obj10_, obj11_, obj12_, obj13_])
+          obj15_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1, 'EPSG', 9001)
+          obj16_ = ::RGeo::CoordSys::CS::AxisInfo.create('E', ::RGeo::CoordSys::CS::AO_EAST)
+          obj17_ = ::RGeo::CoordSys::CS::AxisInfo.create('N', ::RGeo::CoordSys::CS::AO_NORTH)
+          obj_ = ::RGeo::CoordSys::CS::ProjectedCoordinateSystem.create('OSGB 1936 / British National Grid', obj8_, obj14_, obj15_, obj16_, obj17_, 'EPSG', 27700)
           assert_equal('OSGB 1936 / British National Grid', obj_.name)
           assert_equal(2, obj_.dimension)
           assert_equal('OSGB_1936', obj_.horizontal_datum.name)

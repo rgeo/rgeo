@@ -41,7 +41,7 @@ module RGeo
     
     class ZMGeometryImpl  # :nodoc:
       
-      include Feature::Type::Instance
+      include Feature::Instance
       
       
       def initialize(factory_, zgeometry_, mgeometry_)

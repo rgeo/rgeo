@@ -40,7 +40,7 @@ module RGeo
     
     class GeometryImpl  # :nodoc:
       
-      include ::RGeo::Feature::Type::Instance
+      include Feature::Instance
       
       def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"

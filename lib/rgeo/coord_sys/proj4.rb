@@ -168,6 +168,9 @@ module RGeo
             if defn_.kind_of?(::Hash)
               defn_ = defn_.map{ |k_, v_| v_ ? "+#{k_}=#{v_}" : "+#{k_}" }.join(' ')
             end
+            unless defn_ =~ /^\s*\+/
+              defn_ = defn_.sub(/^(\s*)/, '\1+').gsub(/(\s+)([^+\s])/, '\1+\2')
+            end
             result_ = _create(defn_)
             result_ = nil unless result_._valid?
           end

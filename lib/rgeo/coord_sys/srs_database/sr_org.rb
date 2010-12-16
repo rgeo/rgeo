@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Basic methods used by geometry objects
+# SRS database interface
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,51 +34,54 @@
 ;
 
 
+require 'net/http'
+
+
 module RGeo
   
-  module ImplHelper  # :nodoc:
+  module CoordSys
     
-    
-    module BasicGeometryMethods  # :nodoc:
-      
-      include Feature::Instance
+    module SRSDatabase
       
       
-      def inspect  # :nodoc:
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
-      end
-      
-      def to_s  # :nodoc:
-        as_text
-      end
-      
-      
-      def _validate_geometry  # :nodoc:
-      end
-      
-      
-      def _set_factory(factory_)  # :nodoc:
-        @factory = factory_
-      end
-      
-      
-      def factory
-        @factory
-      end
-      
-      
-      def as_text
-        WKRep::WKTGenerator.new.generate(self)
-      end
-      
-      
-      def as_binary
-        WKRep::WKBGenerator.new.generate(self)
+      class SrOrg
+        
+        
+        def initialize(catalog_, opts_={})
+          @catalog = catalog_.to_s.downcase
+          @cache = opts_[:cache] ? {} : nil
+        end
+        
+        
+        attr_reader :catalog
+        
+        
+        def get(ident_)
+          ident_ = ident_.to_s
+          return @cache[ident_] if @cache && @cache.include?(ident_)
+          coord_sys_ = nil
+          proj4_ = nil
+          ::Net::HTTP.start('spatialreference.org') do |http_|
+            response_ = http_.request_get("/ref/#{@catalog}/#{ident_}/ogcwkt/")
+            coord_sys_ = response_.body if response_.kind_of?(::Net::HTTPSuccess)
+            response_ = http_.request_get("/ref/#{@catalog}/#{ident_}/proj4/")
+            proj4_ = response_.body if response_.kind_of?(::Net::HTTPSuccess)
+          end
+          result_ = Entry.new(ident_, :coord_sys => coord_sys_.strip, :proj4 => proj4_.strip)
+          @cache[ident_] = result_ if @cache
+          result_
+        end
+        
+        
+        def clear_cache
+          @cache.clear if @cache
+        end
+        
+        
       end
       
       
     end
-    
     
   end
   

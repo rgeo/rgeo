@@ -47,6 +47,8 @@ else
      '/usr/local/include',
      '/usr/local/geos/include',
      '/opt/local/include',
+     '/opt/geos/include',
+     '/opt/include',
      ::Config::CONFIG['includedir'],
      '/usr/include',
     ]
@@ -55,6 +57,8 @@ else
      '/usr/local/lib',
      '/usr/local/geos/lib',
      '/opt/local/lib',
+     '/opt/geos/lib',
+     '/opt/lib',
      ::Config::CONFIG['libdir'],
      '/usr/lib',
     ]

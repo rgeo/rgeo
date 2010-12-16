@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Basic methods used by geometry objects
+# Tests for OGC CS classes
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,52 +34,37 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+
 module RGeo
-  
-  module ImplHelper  # :nodoc:
-    
-    
-    module BasicGeometryMethods  # :nodoc:
+  module Tests  # :nodoc:
+    module CoordSys  # :nodoc:
       
-      include Feature::Instance
-      
-      
-      def inspect  # :nodoc:
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
+      class TestSrOrg < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def test_epsg_4326
+          db_ = ::RGeo::CoordSys::SRSDatabase::SrOrg.new('epsg')
+          entry_ = db_.get(4326)
+          assert_equal('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', entry_.proj4.original_str)
+          assert_kind_of(::RGeo::CoordSys::CS::GeographicCoordinateSystem, entry_.coord_sys)
+          assert_equal('WGS 84', entry_.name)
+        end
+        
+        
+        def test_epsg_3785
+          db_ = ::RGeo::CoordSys::SRSDatabase::SrOrg.new('epsg')
+          entry_ = db_.get(3785)
+          assert_equal('+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs', entry_.proj4.original_str)
+          assert_kind_of(::RGeo::CoordSys::CS::ProjectedCoordinateSystem, entry_.coord_sys)
+          assert_equal('Popular Visualisation CRS / Mercator', entry_.name)
+        end
+        
+        
       end
-      
-      def to_s  # :nodoc:
-        as_text
-      end
-      
-      
-      def _validate_geometry  # :nodoc:
-      end
-      
-      
-      def _set_factory(factory_)  # :nodoc:
-        @factory = factory_
-      end
-      
-      
-      def factory
-        @factory
-      end
-      
-      
-      def as_text
-        WKRep::WKTGenerator.new.generate(self)
-      end
-      
-      
-      def as_binary
-        WKRep::WKBGenerator.new.generate(self)
-      end
-      
       
     end
-    
-    
   end
-  
 end
