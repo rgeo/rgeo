@@ -41,10 +41,44 @@ module RGeo
     module SRSDatabase
       
       
+      # A spatial reference database implementation backed by coordinate
+      # system files installed as part of the proj4 library. For a given
+      # Proj4Data object, you specify a single file (e.g. the epsg data
+      # file), and you can retrieve records by ID number.
+      
       class Proj4Data
         
         
-        def initialize(path_, opts_={})
+        # Connect to one of the proj4 data files. You should provide the
+        # file name, optionally the installation directory if it is not
+        # in a typical location, and several additional options.
+        # 
+        # These options are recognized:
+        # 
+        # <tt>:dir</tt>::
+        #   The path for the share/proj directory that contains the
+        #   requested data file. By default, the Proj4Data class will
+        #   try a number of directories for you, including
+        #   /usr/local/share/proj, /opt/local/share/proj, /usr/share/proj,
+        #   and a few other variants. However, if you have proj4 installed
+        #   elsewhere, you can provide an explicit directory using this
+        #   option. You may also pass nil as the value, in which case all
+        #   the normal lookup paths will be disabled, and you will have to
+        #   provide the full path as the file name.
+        # <tt>:cache</tt>::
+        #   If set to true, this class caches previously looked up entries
+        #   so subsequent lookups do not have to reread the file. If set
+        #   to <tt>:read_all</tt>, then ALL values in the file are read in
+        #   and cached the first time a lookup is done. If set to
+        #   <tt>:preload</tt>, then ALL values in the file are read in
+        #   immediately when the database is created. Default is false,
+        #   indicating that the file will be reread on every lookup.
+        # <tt>:authority</tt>::
+        #   If set, its value is taken as the authority name for all
+        #   entries. The authority code will be set to the identifier. If
+        #   not set, then the authority fields of entries will be blank.
+        
+        def initialize(filename_, opts_={})
           dir_ = nil
           if opts_.include?(:dir)
             dir_ = opts_[:dir]
@@ -56,12 +90,27 @@ module RGeo
               end
             end
           end
-          @path = dir_ ? "#{dir_}/#{path_}" : path_
-          @cache = opts_[:cache] ? {} : nil
+          @path = dir_ ? "#{dir_}/#{filename_}" : filename_
           @authority = opts_[:authority]
-          @populate_state = @cache && opts_[:read_all] ? 1 : 0
+          if opts_[:cache]
+            @cache = {}
+            case opts_[:cache]
+            when :read_all
+              @populate_state = 1
+            when :preload
+              _search_file(nil)
+              @populate_state = 2
+            else
+              @populate_state = 0
+            end
+          else
+            @cache = nil
+            @populate_state = 0
+          end
         end
         
+        
+        # Retrieve the Entry for the given ID number.
         
         def get(ident_)
           ident_ = ident_.to_s
@@ -69,22 +118,18 @@ module RGeo
           result_ = nil
           if @populate_state == 0
             data_ = _search_file(ident_)
-            unless data_
-              @cache[ident_] = nil if @cache
-              return nil
-            end
-            result_ = Entry.new(ident_, :authority => @authority, :authority_code => @authority ? ident_ : nil, :name => data_[1], :proj4 => data_[2])
+            result_ = Entry.new(ident_, :authority => @authority, :authority_code => @authority ? ident_ : nil, :name => data_[1], :proj4 => data_[2]) if data_
             @cache[ident_] = result_ if @cache
           elsif @populate_state == 1
-            _search_file(nil) do |id_, name_, text_|
-              @cache[id_] = Entry.new(id_, :authority => @authority, :authority_code => @authority ? id_ : nil, :name => name_, :proj4 => text_)
-              result_ = @cache[id_] if id_ == ident_
-            end
+            _search_file(nil)
+            result_ = @cache[ident_]
             @populate_state = 2
           end
           result_
         end
         
+        
+        # Clear the cache if one exists.
         
         def clear_cache
           @cache.clear if @cache
@@ -114,8 +159,8 @@ module RGeo
                 if line_[-2..-1] == '<>'
                   cur_text_ << line_[0..-3].strip
                   cur_text_ = cur_text_.join(' ')
-                  if block_given?
-                    yield(ident_, cur_name_, cur_text_)
+                  if ident_.nil?
+                    @cache[ident_] = Entry.new(ident_, :authority => @authority, :authority_code => @authority ? id_ : nil, :name => cur_name_, :proj4 => cur_text_)
                   end
                   if cur_ident_ == ident_
                     return [ident_, cur_name_, cur_text_]

@@ -70,6 +70,10 @@ module RGeo
         else
           @proj4 = nil
         end
+        @coord_sys = opts_[:coord_sys]
+        if @coord_sys.kind_of?(::String)
+          @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
+        end
       end
       
       
@@ -272,7 +276,7 @@ module RGeo
       # See ::RGeo::Feature::Factory#coord_sys
       
       def coord_sys
-        nil
+        @coord_sys
       end
       
       

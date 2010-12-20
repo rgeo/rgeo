@@ -46,8 +46,8 @@ module RGeo
     # 
     # See the call method for a list of common configuration parameters.
     # Different generators will support different parameters. There is
-    # no mechanism defined to reflect on the capabilities of a factory
-    # generator.
+    # no mechanism defined to reflect on the parameters understood by a
+    # factory generator.
     # 
     # Many of the implementations provide a factory method for creating
     # factories. For example, RGeo::Cartesian::preferred_factory can be
@@ -71,8 +71,8 @@ module RGeo
       # If the generator does not recognize or does not support a given
       # configuration value, the behavior is usually determined by the
       # <tt>:strict</tt> configuration element. If <tt>strict</tt> is
-      # set to true, the generator should fail fast and return nil or
-      # raise an exception. If it is set to false, the generator should
+      # set to true, the generator should fail fast by returning nil or
+      # raising an exception. If it is set to false, the generator should
       # attempt to do the best it can, even if it means returning a
       # factory that does not match the requested configuration.
       # 
@@ -89,6 +89,19 @@ module RGeo
       # <tt>:srid</tt>::
       #   The SRID for the factory and objects it creates.
       #   Default is usually 0.
+      # <tt>:proj4</tt>::
+      #   The coordinate system in Proj4 format, either as a
+      #   CoordSys::Proj4 object or as a string or hash representing the
+      #   proj4 format. This is usually an optional parameter; the default
+      #   is usually nil.
+      # <tt>:coord_sys</tt>::
+      #   The coordinate system in OGC form, either as a subclass of
+      #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
+      #   This is usually an optional parameter; the default is usually
+      #   nil.
+      # <tt>:srs_database</tt>::
+      #   If provided, look up the Proj4 and OGC coordinate systems from
+      #   the given database and SRID.
       # <tt>:has_z_coordinate</tt>::
       #   Support Z coordinates. Default is usually false.
       # <tt>:has_m_coordinate</tt>::

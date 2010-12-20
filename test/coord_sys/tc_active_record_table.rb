@@ -45,10 +45,15 @@ module RGeo
       module ActiveRecordTableTests  # :nodoc:
         
         database_configs_ = ::YAML.load_file(::File.dirname(__FILE__)+'/database.yml') rescue nil
+        if database_configs_
+          begin
+            require 'active_record'
+          rescue ::LoadError
+            database_configs_ = nil
+          end
+        end
         
         if database_configs_
-          
-          require 'active_record'
           
           PostGIS_CONFIG = database_configs_['postgis'] rescue nil
           
@@ -88,7 +93,7 @@ module RGeo
           
         
         else
-          puts "WARNING: Couldn't find database.yml; skipping ActiveRecord tests."
+          puts "WARNING: Couldn't find database.yml or ActiveRecord gem is not present; skipping ActiveRecord tests."
         end
         
       end

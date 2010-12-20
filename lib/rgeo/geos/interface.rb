@@ -88,6 +88,19 @@ module RGeo
       # <tt>:srid</tt>::
       #   Set the SRID returned by geometries created by this factory.
       #   Default is 0.
+      # <tt>:proj4</tt>::
+      #   The coordinate system in Proj4 format, either as a
+      #   CoordSys::Proj4 object or as a string or hash representing the
+      #   proj4 format. Optional.
+      # <tt>:coord_sys</tt>::
+      #   The coordinate system in OGC form, either as a subclass of
+      #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
+      #   Optional.
+      # <tt>:srs_database</tt>::
+      #   Optional. If provided, the value should be an implementation of
+      #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
+      #   provided, they are used to look up the proj4 and coord_sys
+      #   objects from a spatial reference system database.
       # <tt>:has_z_coordinate</tt>::
       #   Support <tt>z_coordinate</tt>. Default is false.
       # <tt>:has_m_coordinate</tt>::
@@ -103,6 +116,19 @@ module RGeo
         else
           nil
         end
+      end
+      
+      
+      # Returns a Feature::FactoryGenerator that creates Geos-backed
+      # factories. The given options are used as the default options.
+      # 
+      # A common case for this is to provide the <tt>:srs_database</tt>
+      # as a default. Then, the factory generator need only be passed
+      # an SRID and it will automatically fetch the appropriate Proj4
+      # and CoordSys objects.
+      
+      def factory_generator(defaults_={})
+        ::Proc.new{ |c_| factory(defaults_.merge(c_)) }
       end
       
       

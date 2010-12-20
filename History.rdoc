@@ -1,3 +1,11 @@
+=== 0.2.3 / 2010-12-19
+
+* The "simpler mercator" geographic type incorrectly reported EPSG 3857 instead of EPSG 3785 for the projection. Dyslexia fixed.
+* Geographic types couldn't have their coord_sys set. Fixed.
+* You can now pass an :srs_database option when creating most factory types. This lets the factory look up its coordinate system using the given SRID.
+* There are now explicit methods you can call to obtain FactoryGenerator objects; you should not need to call <tt>method</tt>.
+* Wrote RDocs for all the CoordSys::CS and CoordSys::SRSDatabase classes.
+
 === 0.2.2 / 2010-12-15
 
 The main theme for this release was support for spatial reference system databases. The basic functionality is done and ready for experimentation. However, documentation is still in progress, and we're still working on some ideas to make coordinate system management more seamless by integrating the SRS databases with FactoryGenerator.

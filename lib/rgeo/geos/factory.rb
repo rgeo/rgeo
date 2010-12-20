@@ -66,6 +66,7 @@ module RGeo
           end
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1
+          srid_ = opts_[:srid]
           proj4_ = opts_[:proj4]
           if CoordSys::Proj4.supported?
             if proj4_.kind_of?(::String) || proj4_.kind_of?(::Hash)
@@ -78,7 +79,15 @@ module RGeo
           if coord_sys_.kind_of?(::String)
             coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_) rescue nil
           end
-          result_ = _create(flags_, opts_[:srid].to_i, buffer_resolution_)
+          if (!proj4_ || !coord_sys_) && srid_ && (db_ = opts_[:srs_database])
+            entry_ = db_.get(srid_.to_i)
+            if entry_
+              proj4_ ||= entry_.proj4
+              coord_sys_ ||= entry_.coord_sys
+            end
+          end
+          srid_ ||= coord_sys_.authority_code if coord_sys_
+          result_ = _create(flags_, srid_.to_i, buffer_resolution_)
           result_.instance_variable_set(:@proj4, proj4_)
           result_.instance_variable_set(:@coord_sys, coord_sys_)
           result_

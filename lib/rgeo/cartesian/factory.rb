@@ -52,7 +52,6 @@ module RGeo
       # See ::RGeo::Cartesian::simple_factory for a list of supported options.
       
       def initialize(opts_={})
-        @srid = opts_[:srid].to_i
         @has_z = opts_[:has_z_coordinate] ? true : false
         @has_m = opts_[:has_m_coordinate] ? true : false
         @proj4 = opts_[:proj4]
@@ -63,10 +62,20 @@ module RGeo
         else
           @proj4 = nil
         end
+        srid_ = opts_[:srid]
         @coord_sys = opts_[:coord_sys]
         if @coord_sys.kind_of?(::String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
         end
+        if (!@proj4 || !@coord_sys) && srid_ && (db_ = opts_[:srs_database])
+          entry_ = db_.get(srid_.to_i)
+          if entry_
+            @proj4 ||= entry_.proj4
+            @coord_sys ||= entry_.coord_sys
+          end
+        end
+        srid_ ||= @coord_sys.authority_code if @coord_sys
+        @srid = srid_.to_i
       end
       
       

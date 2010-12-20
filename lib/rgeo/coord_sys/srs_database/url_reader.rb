@@ -44,13 +44,29 @@ module RGeo
     module SRSDatabase
       
       
+      # A spatial reference database implementation that fetches data from
+      # internet URLs.
+      
       class UrlReader
         
+        
+        # Create a URL-based spatial reference database.
+        # 
+        # Options:
+        # 
+        # <tt>:cache</tt>::
+        #   If set to true, lookup results are cached so if the same URL
+        #   is requested again, the result is served from cache rather
+        #   than issuing another HTTP request. Default is false.
         
         def initialize(opts_={})
           @cache = opts_[:cache] ? {} : nil
         end
         
+        
+        # Retrieve the given URL and return an Entry.
+        # Returns nil if the URL cannot be read as an OGC WKT or Proj4
+        # coordinate system
         
         def get(ident_)
           ident_ = ident_.to_s
@@ -74,6 +90,8 @@ module RGeo
           result_
         end
         
+        
+        # Clear the cache if one is present.
         
         def clear_cache
           @cache.clear if @cache

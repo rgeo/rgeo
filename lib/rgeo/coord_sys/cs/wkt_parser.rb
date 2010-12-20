@@ -225,6 +225,7 @@ module RGeo
         class TypeString < ::String  # :nodoc:
         end
         
+        
         class AuthorityClause  # :nodoc:
           
           def initialize(name_, code_)

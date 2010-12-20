@@ -49,10 +49,13 @@ module RGeo
       # RGeo will try to provide a fully-functional and performant
       # implementation if possible. If not, the simple Cartesian
       # implementation will be returned.
+      # In practice, this means it returns a Geos implementation if
+      # available; otherwise it falls back to the simple implementation.
       # 
       # The given options are passed to the factory's constructor.
       # What options are available depends on the particular
-      # implementation. Unsupported options are ignored.
+      # implementation. See Geos::factory and Cartesian::simple_factory
+      # for details. Unsupported options are ignored.
       
       def preferred_factory(opts_={})
         if ::RGeo::Geos.supported?
@@ -82,13 +85,27 @@ module RGeo
       #   not all types.
       # * Assertions for polygons and multipolygons are not implemented.
       # 
-      # Unimplemented operations will return nil if invoked.
+      # Unimplemented operations may raise Error::UnsupportedOperation
+      # if invoked.
       # 
       # Options include:
       # 
       # <tt>:srid</tt>::
       #   Set the SRID returned by geometries created by this factory.
       #   Default is 0.
+      # <tt>:proj4</tt>::
+      #   The coordinate system in Proj4 format, either as a
+      #   CoordSys::Proj4 object or as a string or hash representing the
+      #   proj4 format. Optional.
+      # <tt>:coord_sys</tt>::
+      #   The coordinate system in OGC form, either as a subclass of
+      #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
+      #   Optional.
+      # <tt>:srs_database</tt>::
+      #   Optional. If provided, the value should be an implementation of
+      #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
+      #   provided, they are used to look up the proj4 and coord_sys
+      #   objects from a spatial reference system database.
       # <tt>:has_z_coordinate</tt>::
       #   Support a Z coordinate. Default is false.
       # <tt>:has_m_coordinate</tt>::
@@ -96,6 +113,33 @@ module RGeo
       
       def simple_factory(opts_={})
         Cartesian::Factory.new(opts_)
+      end
+      
+      
+      # Returns a Feature::FactoryGenerator that creates preferred
+      # factories. The given options are used as the default options.
+      # 
+      # A common case for this is to provide the <tt>:srs_database</tt>
+      # as a default. Then, the factory generator need only be passed
+      # an SRID and it will automatically fetch the appropriate Proj4
+      # and CoordSys objects.
+      
+      def preferred_factory_generator(defaults_={})
+        ::Proc.new{ |c_| preferred_factory(defaults_.merge(c_)) }
+      end
+      alias_method :factory_generator, :preferred_factory_generator
+      
+      
+      # Returns a Feature::FactoryGenerator that creates simple factories.
+      # The given options are used as the default options.
+      # 
+      # A common case for this is to provide the <tt>:srs_database</tt>
+      # as a default. Then, the factory generator need only be passed
+      # an SRID and it will automatically fetch the appropriate Proj4
+      # and CoordSys objects.
+      
+      def simple_factory_generator(defaults_={})
+        ::Proc.new{ |c_| simple_factory(defaults_.merge(c_)) }
       end
       
       

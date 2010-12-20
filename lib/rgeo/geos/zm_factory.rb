@@ -62,8 +62,24 @@ module RGeo
       
       
       def initialize(opts_={})  # :nodoc:
-        @zfactory = Factory.create(:has_z_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid], :proj4 => opts_[:proj4])
-        @mfactory = Factory.create(:has_m_coordinate => true, :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :buffer_resolution => opts_[:buffer_resolution], :srid => opts_[:srid], :proj4 => opts_[:proj4])
+        proj4_ = opts_[:proj4]
+        coord_sys_ = opts_[:coord_sys]
+        srid_ = opts_[:srid]
+        if (!proj4_ || !coord_sys_) && srid_ && (db_ = opts_[:srs_database])
+          entry_ = db_.get(srid_.to_i)
+          if entry_
+            proj4_ ||= entry_.proj4
+            coord_sys_ ||= entry_.coord_sys
+          end
+        end
+        srid_ ||= coord_sys_.authority_code if coord_sys_
+        config_ = {
+          :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+          :buffer_resolution => opts_[:buffer_resolution],
+          :srid => srid_.to_i, :proj4 => proj4_, :coord_sys => coord_sys_,
+        }
+        @zfactory = Factory.create(config_.merge(:has_z_coordinate => true))
+        @mfactory = Factory.create(config_.merge(:has_m_coordinate => true))
       end
       
       
