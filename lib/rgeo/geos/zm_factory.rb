@@ -236,13 +236,16 @@ module RGeo
         return nil unless Geos.supported?
         keep_subtype_ = flags_[:keep_subtype]
         force_new_ = flags_[:force_new]
+        project_ = flags_[:project]
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
         case original_
         when ZMGeometryImpl
           # Optimization if we're just changing factories, but to
           # another ZM factory.
-          if original_.factory != self && ntype_ == type_
+          if original_.factory != self && ntype_ == type_ &&
+              (!project_ || original_.factory.proj4 == @proj4)
+          then
             zresult_ = original_.z_geometry.dup
             zresult_._set_factory(@zfactory)
             mresult_ = original_.m_geometry.dup
@@ -251,6 +254,7 @@ module RGeo
           end
           # LineString conversion optimization.
           if (original_.factory != self || ntype_ != type_) &&
+              (!project_ || original_.factory.proj4 == @proj4) &&
               type_.subtype_of?(Feature::LineString) && ntype_.subtype_of?(Feature::LineString)
           then
             klass_ = Factory::IMPL_CLASSES[ntype_]

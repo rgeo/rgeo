@@ -1,3 +1,10 @@
+=== 0.2.4 / 2010-12-31
+
+* Several bugs were preventing the low-level Proj4 transform functions from working at all. Fixed. (Reported by mRg.)
+* The GEOS factories over-optimized projection casts, sometimes resulting in proj4 transformations not getting applied. Fixed. (Reported by mRg.)
+* Proj4 objects now have a flag to indicate whether geographic coordinate systems should be in radians. The (undocumented) radians option is no longer supported in transform_coords.
+* Disabled the spatialreference.org tests for the time being because the site seems to be offline.
+
 === 0.2.3 / 2010-12-19
 
 * The "simpler mercator" geographic type incorrectly reported EPSG 3857 instead of EPSG 3785 for the projection. Dyslexia fixed.

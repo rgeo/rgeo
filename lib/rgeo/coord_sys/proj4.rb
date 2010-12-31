@@ -78,7 +78,7 @@ module RGeo
       # system.
       
       def eql?(rhs_)
-        rhs_.class == self.class && rhs_.canonical_hash == canonical_hash
+        rhs_.class == self.class && rhs_.canonical_hash == canonical_hash && rhs_._radians? == _radians?
       end
       alias_method :==, :eql?
       
@@ -137,6 +137,14 @@ module RGeo
       end
       
       
+      # Returns true if this Proj4 object uses radians rather than degrees
+      # if it is a geographic coordinate system.
+      
+      def radians?
+        _radians?
+      end
+      
+      
       # Get the geographic (unprojected lat-long) coordinate system
       # corresponding to this coordinate system; i.e. the one that uses
       # the same ellipsoid and datum.
@@ -161,8 +169,21 @@ module RGeo
         # Create a new Proj4 object, given a definition, which may be
         # either a string or a hash. Returns nil if the given definition
         # is invalid or Proj4 is not supported.
+        # 
+        # Recognized options include:
+        # 
+        # <tt>:radians</tt>::
+        #   If set to true, then this proj4 will represent geographic
+        #   (latitude/longitude) coordinates in radians rather than
+        #   degrees. If this is a geographic coordinate system, then its
+        #   units will be in radians. If this is a projected coordinate
+        #   system, then its units will be unchanged, but any geographic
+        #   coordinate system obtained using get_geographic will use
+        #   radians as its units. If this is a geocentric or other type of
+        #   coordinate system, this has no effect. Default is false.
+        #   (That is all coordinates are in degrees by default.)
         
-        def create(defn_)
+        def create(defn_, opts_={})
           result_ = nil
           if supported?
             if defn_.kind_of?(::Hash)
@@ -171,7 +192,7 @@ module RGeo
             unless defn_ =~ /^\s*\+/
               defn_ = defn_.sub(/^(\s*)/, '\1+').gsub(/(\s+)([^+\s])/, '\1+\2')
             end
-            result_ = _create(defn_)
+            result_ = _create(defn_, opts_[:radians])
             result_ = nil unless result_._valid?
           end
           result_
@@ -182,8 +203,8 @@ module RGeo
         # either a string or a hash. Raises Error::UnsupportedOperation
         # if the given definition is invalid or Proj4 is not supported.
         
-        def new(defn_)
-          result_ = create(defn_)
+        def new(defn_, opts_={})
+          result_ = create(defn_, opts_)
           unless result_
             raise Error::UnsupportedOperation, "Proj4 not supported in this installation"
           end
@@ -196,14 +217,13 @@ module RGeo
         # coordinate system to another. Returns an array with either two
         # or three elements.
         
-        def transform_coords(from_proj_, to_proj_, x_, y_, z_=nil, opts_={})
-          degrees_ = !opts_[:radians]
-          if degrees_ && from_proj_._geographic?
+        def transform_coords(from_proj_, to_proj_, x_, y_, z_=nil)
+          if !from_proj_._radians? && from_proj_._geographic?
             x_ *= ImplHelper::Math::RADIANS_PER_DEGREE
             y_ *= ImplHelper::Math::RADIANS_PER_DEGREE
           end
           result_ = _transform_coords(from_proj_, to_proj_, x_, y_, z_)
-          if result_ && degrees_ && to_proj_._geographic?
+          if result_ && !to_proj_._radians? && to_proj_._geographic?
             result_[0] *= ImplHelper::Math::DEGREES_PER_RADIAN
             result_[1] *= ImplHelper::Math::DEGREES_PER_RADIAN
           end
@@ -222,11 +242,11 @@ module RGeo
           when Feature::Point
             _transform_point(from_proj_, from_geometry_, to_proj_, to_factory_)
           when Feature::Line
-            to_factory_.line(from_geometry_.points.map{ |p_| transform(from_proj_, p_, to_proj_, to_factory_) })
+            to_factory_.line(from_geometry_.points.map{ |p_| _transform_point(from_proj_, p_, to_proj_, to_factory_) })
           when Feature::LinearRing
             _transform_linear_ring(from_proj_, from_geometry_, to_proj_, to_factory_)
           when Feature::LineString
-            to_factory_.line_string(from_geometry_.points.map{ |p_| transform(from_proj_, p_, to_proj_, to_factory_) })
+            to_factory_.line_string(from_geometry_.points.map{ |p_| _transform_point(from_proj_, p_, to_proj_, to_factory_) })
           when Feature::Polygon
             _transform_polygon(from_proj_, from_geometry_, to_proj_, to_factory_)
           when Feature::MultiPoint
@@ -247,17 +267,30 @@ module RGeo
           from_has_m_ = from_factory_.property(:has_m_coordinate)
           to_has_z_ = to_factory_.property(:has_z_coordinate)
           to_has_m_ = to_factory_.property(:has_m_coordinate)
-          coords_ = _transform_coords(from_proj_, to_proj_, from_point_.x, from_point_.y,
-                                      from_has_z_ ? from_point_.z : nil)
-          extras_ = []
-          extras_ << coords_[2].to_f if to_has_z_
-          extras_ << from_has_m_ ? from_point_.m : 0.0 if to_has_m_?
-          to_factory_.point(coords_[0], coords_[1], extras_)
+          x_ = from_point_.x
+          y_ = from_point_.y
+          if !from_proj_._radians? && from_proj_._geographic?
+            x_ *= ImplHelper::Math::RADIANS_PER_DEGREE
+            y_ *= ImplHelper::Math::RADIANS_PER_DEGREE
+          end
+          coords_ = _transform_coords(from_proj_, to_proj_, x_, y_, from_has_z_ ? from_point_.z : nil)
+          if coords_
+            if !to_proj_._radians? && to_proj_._geographic?
+              coords_[0] *= ImplHelper::Math::DEGREES_PER_RADIAN
+              coords_[1] *= ImplHelper::Math::DEGREES_PER_RADIAN
+            end
+            extras_ = []
+            extras_ << coords_[2].to_f if to_has_z_
+            extras_ << from_has_m_ ? from_point_.m : 0.0 if to_has_m_
+            to_factory_.point(coords_[0], coords_[1], *extras_)
+          else
+            nil
+          end
         end
         
         
         def _transform_linear_ring(from_proj_, from_ring_, to_proj_, to_factory_)  # :nodoc:
-          to_factory_.linear_ring(from_ring_.points[0..-2].map{ |p_| transform(from_proj_, p_, to_proj_, to_factory_) })
+          to_factory_.linear_ring(from_ring_.points[0..-2].map{ |p_| _transform_point(from_proj_, p_, to_proj_, to_factory_) })
         end
         
         

@@ -106,7 +106,7 @@ module RGeo
       # Factory equivalence test.
       
       def eql?(rhs_)
-        rhs_.is_a?(Factory) && rhs_.srid == _srid && rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags
+        rhs_.is_a?(Factory) && rhs_.srid == _srid && rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags && rhs_.proj4 == @proj4
       end
       alias_method :==, :eql?
       
@@ -257,14 +257,16 @@ module RGeo
         return nil unless Geos.supported?
         keep_subtype_ = flags_[:keep_subtype]
         force_new_ = flags_[:force_new]
+        project_ = flags_[:project]
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
         case original_
         when GeometryImpl
           # Optimization if we're just changing factories, but the
-          # factories are zm-compatible.
+          # factories are zm-compatible and proj4-compatible.
           if original_.factory != self && ntype_ == type_ &&
-              original_.factory._flags & 0x6 == _flags & 0x6
+              original_.factory._flags & 0x6 == _flags & 0x6 &&
+              (!project_ || original_.factory.proj4 == @proj4)
           then
             result_ = original_.dup
             result_._set_factory(self)
@@ -273,6 +275,7 @@ module RGeo
           # LineString conversion optimization.
           if (original_.factory != self || ntype_ != type_) &&
               original_.factory._flags & 0x6 == _flags & 0x6 &&
+              (!project_ || original_.factory.proj4 == @proj4) &&
               type_.subtype_of?(Feature::LineString) && ntype_.subtype_of?(Feature::LineString)
           then
             return IMPL_CLASSES[ntype_]._copy_from(self, original_)

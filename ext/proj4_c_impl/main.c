@@ -67,6 +67,7 @@ RGEO_BEGIN_C
 typedef struct {
   projPJ pj;
   VALUE original_str;
+  char uses_radians;
 } RGeo_Proj4Data;
 
 
@@ -99,6 +100,7 @@ static VALUE alloc_proj4(VALUE klass)
   if (data) {
     data->pj = NULL;
     data->original_str = Qnil;
+    data->uses_radians = 0;
     result = Data_Wrap_Struct(klass, mark_proj4_func, destroy_proj4_func, data);
   }
   return result;
@@ -108,16 +110,19 @@ static VALUE alloc_proj4(VALUE klass)
 static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
 {
   // Clear out any existing value
-  projPJ pj = RGEO_PROJ4_DATA_PTR(self)->pj;
+  RGeo_Proj4Data* self_data = RGEO_PROJ4_DATA_PTR(self);
+  projPJ pj = self_data->pj;
   if (pj) {
     pj_free(pj);
-    RGEO_PROJ4_DATA_PTR(self)->pj = NULL;
-    RGEO_PROJ4_DATA_PTR(self)->original_str = Qnil;
+    self_data->pj = NULL;
+    self_data->original_str = Qnil;
   }
   
   // Copy value from orig
-  RGEO_PROJ4_DATA_PTR(self)->pj = RGEO_PROJ4_DATA_PTR(orig)->pj;
-  RGEO_PROJ4_DATA_PTR(self)->original_str = RGEO_PROJ4_DATA_PTR(orig)->original_str;
+  RGeo_Proj4Data* orig_data = RGEO_PROJ4_DATA_PTR(orig);
+  self_data->pj = orig_data->pj;
+  self_data->original_str = orig_data->original_str;
+  self_data->uses_radians = orig_data->uses_radians;
   
   return self;
 }
@@ -126,11 +131,13 @@ static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
 static VALUE method_proj4_get_geographic(VALUE self)
 {
   VALUE result = Qnil;
-  RGeo_Proj4Data* data = ALLOC(RGeo_Proj4Data);
-  if (data) {
-    data->pj = pj_latlong_from_proj(RGEO_PROJ4_DATA_PTR(self)->pj);
-    data->original_str = Qnil;
-    result = Data_Wrap_Struct(CLASS_OF(self), mark_proj4_func, destroy_proj4_func, data);
+  RGeo_Proj4Data* new_data = ALLOC(RGeo_Proj4Data);
+  if (new_data) {
+    RGeo_Proj4Data* self_data = RGEO_PROJ4_DATA_PTR(self);
+    new_data->pj = pj_latlong_from_proj(self_data->pj);
+    new_data->original_str = Qnil;
+    new_data->uses_radians = self_data->uses_radians;
+    result = Data_Wrap_Struct(CLASS_OF(self), mark_proj4_func, destroy_proj4_func, new_data);
   }
   return result;
 }
@@ -139,6 +146,12 @@ static VALUE method_proj4_get_geographic(VALUE self)
 static VALUE method_proj4_original_str(VALUE self)
 {
   return RGEO_PROJ4_DATA_PTR(self)->original_str;
+}
+
+
+static VALUE method_proj4_uses_radians(VALUE self)
+{
+  return RGEO_PROJ4_DATA_PTR(self)->uses_radians ? Qtrue : Qfalse;
 }
 
 
@@ -211,7 +224,7 @@ static VALUE cmethod_proj4_transform(VALUE method, VALUE from, VALUE to, VALUE x
 }
 
 
-static VALUE cmethod_proj4_create(VALUE klass, VALUE str)
+static VALUE cmethod_proj4_create(VALUE klass, VALUE str, VALUE uses_radians)
 {
   VALUE result = Qnil;
   Check_Type(str, T_STRING);
@@ -219,6 +232,7 @@ static VALUE cmethod_proj4_create(VALUE klass, VALUE str)
   if (data) {
     data->pj = pj_init_plus(RSTRING_PTR(str));
     data->original_str = str;
+    data->uses_radians = RTEST(uses_radians) ? 1 : 0;
     result = Data_Wrap_Struct(klass, mark_proj4_func, destroy_proj4_func, data);
   }
   return result;
@@ -230,13 +244,14 @@ static void rgeo_init_proj4()
   VALUE rgeo_module = rb_define_module("RGeo");
   VALUE coordsys_module = rb_define_module_under(rgeo_module, "CoordSys");
   VALUE proj4_class = rb_define_class_under(coordsys_module, "Proj4", rb_cObject);
-  rb_define_module_function(proj4_class, "_create", cmethod_proj4_create, 1);
+  rb_define_module_function(proj4_class, "_create", cmethod_proj4_create, 2);
   rb_define_method(proj4_class, "initialize_copy", method_proj4_initialize_copy, 1);
   rb_define_method(proj4_class, "_original_str", method_proj4_original_str, 0);
   rb_define_method(proj4_class, "_canonical_str", method_proj4_canonical_str, 0);
   rb_define_method(proj4_class, "_valid?", method_proj4_is_valid, 0);
   rb_define_method(proj4_class, "_geographic?", method_proj4_is_geographic, 0);
   rb_define_method(proj4_class, "_geocentric?", method_proj4_is_geocentric, 0);
+  rb_define_method(proj4_class, "_radians?", method_proj4_uses_radians, 0);
   rb_define_method(proj4_class, "_get_geographic", method_proj4_get_geographic, 0);
   rb_define_module_function(proj4_class, "_transform_coords", cmethod_proj4_transform, 5);
 }
