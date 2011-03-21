@@ -1,3 +1,8 @@
+=== 0.2.5 / 2011-03-21
+
+* Line segment intersection tests in the simple cartesian implementations were failing for a few cases involving collinear segments. Fixed. (Reported by Dimitry Solovyov.)
+* Argument hash RDocs should be more readable.
+
 === 0.2.4 / 2010-12-31
 
 * Several bugs were preventing the low-level Proj4 transform functions from working at all. Fixed. (Reported by mRg.)

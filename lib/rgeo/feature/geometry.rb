@@ -68,27 +68,26 @@ module RGeo
     # 
     # The Geometry model defines three forms of equivalence.
     # 
-    # Spatial equivalence::
-    #   Spatial equivalence is the weakest form of equivalence, indicating
-    #   that the two objects represent the same region of space, but may
-    #   be different representations of that region. For example, a
+    # * <b>Spatial equivalence</b> is the weakest form of equivalence,
+    #   indicating that the objects represent the same region of space,
+    #   but may be different representations of that region. For example,
     #   POINT(0 0) and a MULTIPOINT(0 0) are spatially equivalent, as are
     #   LINESTRING(0 0, 10 10) and
     #   GEOMETRYCOLLECTION(POINT(0 0), LINESTRING(0 0, 10 10, 0 0)).
     #   As a general rule, objects must have factories that are
     #   Factory#eql? in order to be spatially equivalent.
-    # Objective equivalence::
-    #   Objective equivalence is a stronger form of equivalence, indicating
-    #   that the two objects are the same representation, but may be
-    #   different objects. All objectively equivalent objects are spatially
-    #   equivalent, but not all spatially equivalent objects are
+    # 
+    # * <b>Objective equivalence</b> is a stronger form of equivalence, 
+    #   indicating that the objects are the same representation, but may
+    #   be different objects. All objectively equivalent objects are
+    #   spatially equivalent, but not all spatially equivalent objects are
     #   objectively equivalent. For example, none of the examples in the
     #   spatial equivalence section above are objectively equivalent.
     #   However, two separate objects that both represent POINT(1 2) are
     #   objectively equivalent as well as spatially equivalent.
-    # Objective identity::
-    #   Objective identity is the strongest form, indicating that the two
-    #   references refer to the same object. Of course, all pairs of
+    # 
+    # * <b>Objective identity</b> is the strongest form, indicating that
+    #   the references refer to the same object. Of course, all pairs of
     #   references with the same objective identity are both objectively
     #   equivalent and spatially equivalent.
     # 

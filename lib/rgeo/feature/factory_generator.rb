@@ -80,31 +80,31 @@ module RGeo
       # recommendation only. There is no hard requirement for any
       # particular factory generator to support them.
       # 
-      # <tt>:strict</tt>::
+      # [<tt>:strict</tt>]
       #   If true, return nil or raise an exception if any configuration
       #   was not recognized or not supportable. Otherwise, if false,
       #   the generator should attempt to do its best to return some
       #   viable factory, even if it does not strictly match the
       #   requested configuration. Default is usually false.
-      # <tt>:srid</tt>::
+      # [<tt>:srid</tt>]
       #   The SRID for the factory and objects it creates.
       #   Default is usually 0.
-      # <tt>:proj4</tt>::
+      # [<tt>:proj4</tt>]
       #   The coordinate system in Proj4 format, either as a
       #   CoordSys::Proj4 object or as a string or hash representing the
       #   proj4 format. This is usually an optional parameter; the default
       #   is usually nil.
-      # <tt>:coord_sys</tt>::
+      # [<tt>:coord_sys</tt>]
       #   The coordinate system in OGC form, either as a subclass of
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
       #   This is usually an optional parameter; the default is usually
       #   nil.
-      # <tt>:srs_database</tt>::
+      # [<tt>:srs_database</tt>]
       #   If provided, look up the Proj4 and OGC coordinate systems from
       #   the given database and SRID.
-      # <tt>:has_z_coordinate</tt>::
+      # [<tt>:has_z_coordinate</tt>]
       #   Support Z coordinates. Default is usually false.
-      # <tt>:has_m_coordinate</tt>::
+      # [<tt>:has_m_coordinate</tt>]
       #   Support M coordinates. Default is usually false.
       
       def call(config_={})

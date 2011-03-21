@@ -91,17 +91,17 @@ module RGeo
       # 
       # Currently defined well-known properties are:
       # 
-      # <tt>:has_z_coordinate</tt>::
+      # [<tt>:has_z_coordinate</tt>]
       #   Set to true if geometries created by this factory include a Z
       #   coordinate, and the Point#z method is available.
-      # <tt>:has_m_coordinate</tt>::
+      # [<tt>:has_m_coordinate</tt>]
       #   Set to true if geometries created by this factory include a M
       #   coordinate, and the Point#z method is available.
-      # <tt>:is_cartesian</tt>::
+      # [<tt>:is_cartesian</tt>]
       #   Set to true if this Factory guarantees that it operates in
       #   Cartesian geometry. If false or nil, no such guarantee is made,
       #   though it is possible the geometries may still be Cartesian.
-      # <tt>:is_geographic</tt>::
+      # [<tt>:is_geographic</tt>]
       #   Set to true if this Factory's coordinate system is meant to be
       #   interpreted as x=longitude and y=latitude. If false or nil, no
       #   information is present about whether the coordinate system is
@@ -301,13 +301,13 @@ module RGeo
       # (which again may or may not already be the type of the original
       # object), and a hash of additional flags. These flags are:
       # 
-      # <tt>:keep_subtype</tt>::
+      # [<tt>:keep_subtype</tt>]
       #   indicates whether to keep the subtype if casting to a supertype
       #   of the current type
-      # <tt>:force_new</tt>::
+      # [<tt>:force_new</tt>]
       #   indicates whether to force the creation of a new object even if
       #   the original is already of the desired factory and type
-      # <tt>:project</tt>::
+      # [<tt>:project</tt>]
       #   indicates whether to project the coordinates from the source to
       #   the destination proj4 coordinate system, if available
       # 

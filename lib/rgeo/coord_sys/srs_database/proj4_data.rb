@@ -55,7 +55,7 @@ module RGeo
         # 
         # These options are recognized:
         # 
-        # <tt>:dir</tt>::
+        # [<tt>:dir</tt>]
         #   The path for the share/proj directory that contains the
         #   requested data file. By default, the Proj4Data class will
         #   try a number of directories for you, including
@@ -65,7 +65,7 @@ module RGeo
         #   option. You may also pass nil as the value, in which case all
         #   the normal lookup paths will be disabled, and you will have to
         #   provide the full path as the file name.
-        # <tt>:cache</tt>::
+        # [<tt>:cache</tt>]
         #   If set to true, this class caches previously looked up entries
         #   so subsequent lookups do not have to reread the file. If set
         #   to <tt>:read_all</tt>, then ALL values in the file are read in
@@ -73,7 +73,7 @@ module RGeo
         #   <tt>:preload</tt>, then ALL values in the file are read in
         #   immediately when the database is created. Default is false,
         #   indicating that the file will be reread on every lookup.
-        # <tt>:authority</tt>::
+        # [<tt>:authority</tt>]
         #   If set, its value is taken as the authority name for all
         #   entries. The authority code will be set to the identifier. If
         #   not set, then the authority fields of entries will be blank.

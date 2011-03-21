@@ -92,18 +92,18 @@ module RGeo
         # 
         # Some attribute inputs have special behaviors:
         # 
-        # <tt>:coord_sys</tt>::
+        # [<tt>:coord_sys</tt>]
         #   You can pass a CS coordinate system object, or a string in
         #   WKT format.
-        # <tt>:proj4</tt>::
+        # [<tt>:proj4</tt>]
         #   You can pass a Proj4 object, or a proj4-format string.
-        # <tt>:name</tt>::
+        # [<tt>:name</tt>]
         #   If the name is not provided directly, it is taken from the
         #   coord_sys.
-        # <tt>:authority</tt>::
+        # [<tt>:authority</tt>]
         #   If the authority name is not provided directly, it is taken
         #   from the coord_sys.
-        # <tt>:authority_code</tt>::
+        # [<tt>:authority_code</tt>]
         #   If the authority code is not provided directly, it is taken
         #   from the coord_sys.
         

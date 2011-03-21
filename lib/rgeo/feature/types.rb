@@ -110,20 +110,20 @@ module RGeo
       # Parameters may be provided as a hash, or as separate arguments.
       # Hash keys are as follows:
       # 
-      # <tt>:factory</tt>::
+      # [<tt>:factory</tt>]
       #   Set the factory to the given factory. If this argument is not
       #   given, the original object's factory is kept.
-      # <tt>:type</tt>::
+      # [<tt>:type</tt>]
       #   Cast to the given type, which must be a module in the
       #   RGeo::Feature namespace. If this argument is not given, the
       #   result keeps the same type as the original.
-      # <tt>:project</tt>::
+      # [<tt>:project</tt>]
       #   If this is set to true, and both the original and new factories
       #   support proj4 projections, then the cast will also cause the
       #   coordinates to be transformed between those two projections.
       #   If set to false, the coordinates are not modified. Default is
       #   false.
-      # <tt>:keep_subtype</tt>::
+      # [<tt>:keep_subtype</tt>]
       #   Value must be a boolean indicating whether to keep the subtype
       #   of the original. If set to false, casting to a particular type
       #   always casts strictly to that type, even if the old type is a
@@ -133,7 +133,7 @@ module RGeo
       #   LinearRing is already a more specific subtype. If you set this
       #   value to true, the casted object will remain a LinearRing.
       #   Default is false.
-      # <tt>:force_new</tt>::
+      # [<tt>:force_new</tt>]
       #   Always return a newly-created object, even if neither the type
       #   nor factory is modified. Normally, if this is set to false, and
       #   a cast is not set to modify either the factory or type, the

@@ -53,7 +53,7 @@ module RGeo
     # The following options are recognized. These can be passed to the
     # constructor, or set on the object afterwards.
     # 
-    # <tt>:type_format</tt>::
+    # [<tt>:type_format</tt>]
     #   The format for type codes. Possible values are <tt>:wkb11</tt>,
     #   indicating SFS 1.1 WKB (i.e. no Z or M values); <tt>:ewkb</tt>,
     #   indicating the PostGIS EWKB extensions (i.e. Z and M presence
@@ -61,13 +61,13 @@ module RGeo
     #   embedded SRID); or <tt>:wkb12</tt> (indicating SFS 1.2 WKB
     #   (i.e. Z and M presence flagged by adding 1000 and/or 2000 to
     #   the type code.) Default is <tt>:wkb11</tt>.
-    # <tt>:emit_ewkb_srid</tt>::
+    # [<tt>:emit_ewkb_srid</tt>]
     #   If true, embed the SRID in the toplevel geometry. Available only
     #   if <tt>:type_format</tt> is <tt>:ewkb</tt>. Default is false.
-    # <tt>:hex_format</tt>::
+    # [<tt>:hex_format</tt>]
     #   If true, output a hex string instead of a byte string.
     #   Default is false.
-    # <tt>:little_endian</tt>::
+    # [<tt>:little_endian</tt>]
     #   If true, output little endian (NDR) byte order. If false, output
     #   big endian (XDR), or network byte order. Default is false.
     

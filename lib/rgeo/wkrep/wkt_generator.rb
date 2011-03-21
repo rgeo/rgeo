@@ -52,7 +52,7 @@ module RGeo
     # The following options are recognized. These can be passed to the
     # constructor, or set on the object afterwards.
     # 
-    # <tt>:tag_format</tt>::
+    # [<tt>:tag_format</tt>]
     #   The format for tags. Possible values are <tt>:wkt11</tt>,
     #   indicating SFS 1.1 WKT (i.e. no Z or M markers in the tags) but
     #   with Z and/or M values added in if they are present;
@@ -63,13 +63,13 @@ module RGeo
     #   Z is present); or <tt>:wkt12</tt>, indicating SFS 1.2 WKT
     #   tags that indicate the presence of Z and M in a separate token.
     #   Default is <tt>:wkt11</tt>.
-    # <tt>:emit_ewkt_srid</tt>::
+    # [<tt>:emit_ewkt_srid</tt>]
     #   If true, embed the SRID of the toplevel geometry. Available only
     #   if <tt>:type_format</tt> is <tt>:ewkt</tt>. Default is false.
-    # <tt>:square_brackets</tt>::
+    # [<tt>:square_brackets</tt>]
     #   If true, uses square brackets rather than parentheses.
     #   Default is false.
-    # <tt>:convert_case</tt>::
+    # [<tt>:convert_case</tt>]
     #   Possible values are <tt>:upper</tt>, which changes all letters
     #   in the output to ALL CAPS; <tt>:lower</tt>, which changes all
     #   letters to lower case; or nil, indicating no case changes from

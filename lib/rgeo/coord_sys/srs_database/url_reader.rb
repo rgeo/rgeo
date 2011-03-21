@@ -54,7 +54,7 @@ module RGeo
         # 
         # Options:
         # 
-        # <tt>:cache</tt>::
+        # [<tt>:cache</tt>]
         #   If set to true, lookup results are cached so if the same URL
         #   is requested again, the result is served from cache rather
         #   than issuing another HTTP request. Default is false.

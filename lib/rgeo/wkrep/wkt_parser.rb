@@ -61,23 +61,23 @@ module RGeo
     # The following additional options are recognized. These can be passed
     # to the constructor, or set on the object afterwards.
     # 
-    # <tt>:support_ewkt</tt>::
+    # [<tt>:support_ewkt</tt>]
     #   Activate support for PostGIS EWKT type tags, which appends an "M"
     #   to tags to indicate the presence of M but not Z, and also
     #   recognizes the SRID prefix. Default is false.
-    # <tt>:support_wkt12</tt>::
+    # [<tt>:support_wkt12</tt>]
     #   Activate support for SFS 1.2 extensions to the type codes, which
     #   use a "M", "Z", or "ZM" token to signal the presence of Z and M
     #   values in the data. SFS 1.2 types such as triangle, tin, and
     #   polyhedralsurface are NOT yet supported. Default is false.
-    # <tt>:strict_wkt11</tt>::
+    # [<tt>:strict_wkt11</tt>]
     #   If true, parsing will proceed in SFS 1.1 strict mode, which
     #   disallows any values other than X or Y. This has no effect if
     #   support_ewkt or support_wkt12 are active. Default is false.
-    # <tt>:ignore_extra_tokens</tt>::
+    # [<tt>:ignore_extra_tokens</tt>]
     #   If true, extra tokens at the end of the data are ignored. If
     #   false (the default), extra tokens will trigger a parse error.
-    # <tt>:default_srid</tt>::
+    # [<tt>:default_srid</tt>]
     #   A SRID to pass to the factory generator if no SRID is present in
     #   the input. Defaults to nil (i.e. don't specify a SRID).
     

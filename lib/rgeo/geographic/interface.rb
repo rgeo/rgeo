@@ -82,11 +82,11 @@ module RGeo
       # You may use the following options when creating a spherical
       # factory:
       # 
-      # <tt>:has_z_coordinate</tt>::
+      # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
-      # <tt>:has_m_coordinate</tt>::
+      # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
-      # <tt>:proj4</tt>::
+      # [<tt>:proj4</tt>]
       #   Provide the coordinate system in Proj4 format. You may pass
       #   either an RGeo::CoordSys::Proj4 object, or a string or hash
       #   containing the Proj4 parameters. This coordinate system must be
@@ -94,18 +94,18 @@ module RGeo
       #   "popular visualization CRS" (EPSG 4055), represented by
       #   "<tt>+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs</tt>".
       #   Has no effect if Proj4 is not available.
-      # <tt>:coord_sys</tt>::
+      # [<tt>:coord_sys</tt>]
       #   Provide a coordinate system in OGC format, either as an object
       #   (one of the CoordSys::CS classes) or as a string in WKT format.
       #   This coordinate system must be a GeographicCoordinateSystem.
       #   The default is the "popular visualization CRS" (EPSG 4055).
-      # <tt>:srid</tt>::
+      # [<tt>:srid</tt>]
       #   The SRID that should be returned by features from this factory.
       #   Default is 4055, indicating EPSG 4055, the "popular
       #   visualization crs". You may alternatively wish to set the srid
       #   to 4326, indicating the WGS84 crs, but note that that value
       #   implies an ellipsoidal datum, not a spherical datum.
-      # <tt>:srs_database</tt>::
+      # [<tt>:srs_database</tt>]
       #   Optional. If provided, the value should be an implementation of
       #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
@@ -168,9 +168,9 @@ module RGeo
       # You may use the following options when creating a simple_mercator
       # factory:
       # 
-      # <tt>:has_z_coordinate</tt>::
+      # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
-      # <tt>:has_m_coordinate</tt>::
+      # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
       # 
       # You may also provide options understood by the underlying
@@ -220,24 +220,24 @@ module RGeo
       # Following are detailed descriptions of the various options you can
       # pass to this method.
       # 
-      # <tt>:projection_factory</tt>::
+      # [<tt>:projection_factory</tt>]
       #   Specify an existing Cartesian factory to use for the projection.
       #   This factory must have a non-nil Proj4. If this is provided, any
       #   <tt>:projection_proj4</tt>, <tt>:projection_coord_sys</tt>, and
       #   <tt>:projection_srid</tt> are ignored.
-      # <tt>:projection_proj4</tt>::
+      # [<tt>:projection_proj4</tt>]
       #   Specify a Proj4 projection to use to construct the projection
       #   factory. This may be specified as a CoordSys::Proj4 object, or
       #   as a Proj4 string or hash representation.
-      # <tt>:projection_coord_sys</tt>::
+      # [<tt>:projection_coord_sys</tt>]
       #   Specify a OGC coordinate system for the projection. This may be
       #   specified as an RGeo::CoordSys::CS::GeographicCoordinateSystem
       #   object, or as a String in OGC WKT format. Optional.
-      # <tt>:projection_srid</tt>::
+      # [<tt>:projection_srid</tt>]
       #   The SRID value to use for the projection factory. Defaults to
       #   the given projection coordinate system's authority code, or to
       #   0 if no projection coordinate system is known.
-      # <tt>:proj4</tt>::
+      # [<tt>:proj4</tt>]
       #   A proj4 projection for the geographic (lat-lon) factory. You may
       #   pass either an RGeo::CoordSys::Proj4 object, or a string or hash
       #   containing the Proj4 parameters. This coordinate system must be
@@ -246,7 +246,7 @@ module RGeo
       #   Generally, you should leave it at the default unless you want
       #   the geographic coordinate system to be based on a different
       #   horizontal datum than the projection.
-      # <tt>:coord_sys</tt>::
+      # [<tt>:coord_sys</tt>]
       #   An OGC coordinate system for the geographic (lat-lon) factory,
       #   which may be an RGeo::CoordSys::CS::GeographicCoordinateSystem
       #   object or a string in OGC WKT format. It defaults to the
@@ -254,21 +254,21 @@ module RGeo
       #   Generally, you should leave it at the default unless you want
       #   the geographic coordinate system to be based on a different
       #   horizontal datum than the projection.
-      # <tt>:srid</tt>::
+      # [<tt>:srid</tt>]
       #   The SRID value to use for the main geographic factory. Defaults
       #   to the given geographic coordinate system's authority code, or
       #   to 0 if no geographic coordinate system is known.
-      # <tt>:srs_database</tt>::
+      # [<tt>:srs_database</tt>]
       #   Optional. If provided, the value should be an implementation of
       #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
       #   objects from a spatial reference system database.
-      # <tt>:has_z_coordinate</tt>::
+      # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
       #   Note: this is ignored if a <tt>:projection_factory</tt> is
       #   provided; in that case, the geographic factory's z-coordinate
       #   availability will match the projection factory's setting.
-      # <tt>:has_m_coordinate</tt>::
+      # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
       #   Note: this is ignored if a <tt>:projection_factory</tt> is
       #   provided; in that case, the geographic factory's m-coordinate

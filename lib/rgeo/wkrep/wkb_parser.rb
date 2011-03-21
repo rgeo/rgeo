@@ -58,19 +58,19 @@ module RGeo
     # The following additional options are recognized. These can be passed
     # to the constructor, or set on the object afterwards.
     # 
-    # <tt>:support_ewkb</tt>::
+    # [<tt>:support_ewkb</tt>]
     #   Activate support for PostGIS EWKB type codes, which use high
     #   order bits in the type code to signal the presence of Z, M, and
     #   SRID values in the data. Default is false.
-    # <tt>:support_wkb12</tt>::
+    # [<tt>:support_wkb12</tt>]
     #   Activate support for SFS 1.2 extensions to the type codes, which
     #   use values greater than 1000 to signal the presence of Z and M
     #   values in the data. SFS 1.2 types such as triangle, tin, and
     #   polyhedralsurface are NOT yet supported. Default is false.
-    # <tt>:ignore_extra_bytes</tt>::
+    # [<tt>:ignore_extra_bytes</tt>]
     #   If true, extra bytes at the end of the data are ignored. If
     #   false (the default), extra bytes will trigger a parse error.
-    # <tt>:default_srid</tt>::
+    # [<tt>:default_srid</tt>]
     #   A SRID to pass to the factory generator if no SRID is present in
     #   the input. Defaults to nil (i.e. don't specify a SRID).
     

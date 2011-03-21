@@ -55,57 +55,57 @@ module RGeo
         # 
         # Options include:
         # 
-        # <tt>:ar_class</tt>::
+        # [<tt>:ar_class</tt>]
         #   An ActiveRecord class to use. You may provide this if you
         #   already have an ActiveRecord class that accesses the table.
         #   If not provided, an ActiveRecord class will be generated
         #   for you, using the <tt>:ar_base_class</tt>,
         #   <tt>:database_config</tt>, and <tt>:table_name</tt> options.
-        # <tt>:ar_base_class</tt>::
+        # [<tt>:ar_base_class</tt>]
         #   Specify an ActiveRecord base class to use when generating an
         #   ActiveRecord class. Default is ::ActiveRecord::Base. You may
         #   want to use this if you have a base class already that
         #   specifies an existing database connection and/or other
         #   class-scope options.
-        # <tt>:database_config</tt>::
+        # [<tt>:database_config</tt>]
         #   If provided, <tt>establish_connection</tt> will be called on
         #   the generated ActiveRecord class, with the given value.
-        # <tt>:table_name</tt>::
+        # [<tt>:table_name</tt>]
         #   The table name for the new ActiveRecord class. Defaults to
         #   the value <tt>spatial_ref_sys</tt>, which is the OGC-specified
         #   name for this table.
-        # <tt>:srid_column</tt>::
+        # [<tt>:srid_column</tt>]
         #   The name of the SRID column. Defaults to "srid", which is the
         #   OGC-specified name for this column.
-        # <tt>:auth_name_column</tt>::
+        # [<tt>:auth_name_column</tt>]
         #   The name of the authority name column. On an OGC-compliant
         #   database, this column should be named "auth_name". However,
         #   the default is set to nil; you should set this option
         #   explicitly if you want to read the authority name.
-        # <tt>:auth_srid_column</tt>::
+        # [<tt>:auth_srid_column</tt>]
         #   The name of the authority srid column. On an OGC-compliant
         #   database, this column should be named "auth_srid". However,
         #   the default is set to nil; you should set this option
         #   explicitly if you want to read the authority's srid.
-        # <tt>:name_column</tt>::
+        # [<tt>:name_column</tt>]
         #   The name of the coordinate system name column. This column is
         #   not part of the OGC spec, but it is included in some spatial
         #   database implementations. Default is nil.
-        # <tt>:description_column</tt>::
+        # [<tt>:description_column</tt>]
         #   The name of the coordinate system description column. This
         #   column is not part of the OGC spec, but may be included in
         #   some spatial database implementations. Default is nil.
-        # <tt>:srtext_column</tt>::
+        # [<tt>:srtext_column</tt>]
         #   The name of the spatial reference WKT column. On an
         #   OGC-compliant database, this column should be named "srtext".
         #   However, not all databases include this column, so the default
         #   is set to nil; you should set this option explicitly if you
         #   want to read the OGC coordinate system specification.
-        # <tt>:proj4text_column</tt>::
+        # [<tt>:proj4text_column</tt>]
         #   The name of the Proj4 format projection spec column. This
         #   column is not part of the OGC spec, but may be included in
         #   some spatial database implementations. Default is nil.
-        # <tt>:cache</tt>::
+        # [<tt>:cache</tt>]
         #   If set to true, entries are cached when first retrieved, so
         #   subsequent requests do not have to make a database round trip.
         #   Default is false.

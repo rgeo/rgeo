@@ -172,7 +172,7 @@ module RGeo
         # 
         # Recognized options include:
         # 
-        # <tt>:radians</tt>::
+        # [<tt>:radians</tt>]
         #   If set to true, then this proj4 will represent geographic
         #   (latitude/longitude) coordinates in radians rather than
         #   degrees. If this is a geographic coordinate system, then its

@@ -90,25 +90,25 @@ module RGeo
       # 
       # Options include:
       # 
-      # <tt>:srid</tt>::
+      # [<tt>:srid</tt>]
       #   Set the SRID returned by geometries created by this factory.
       #   Default is 0.
-      # <tt>:proj4</tt>::
+      # [<tt>:proj4</tt>]
       #   The coordinate system in Proj4 format, either as a
       #   CoordSys::Proj4 object or as a string or hash representing the
       #   proj4 format. Optional.
-      # <tt>:coord_sys</tt>::
+      # [<tt>:coord_sys</tt>]
       #   The coordinate system in OGC form, either as a subclass of
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
       #   Optional.
-      # <tt>:srs_database</tt>::
+      # [<tt>:srs_database</tt>]
       #   Optional. If provided, the value should be an implementation of
       #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
       #   objects from a spatial reference system database.
-      # <tt>:has_z_coordinate</tt>::
+      # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
-      # <tt>:has_m_coordinate</tt>::
+      # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
       
       def simple_factory(opts_={})

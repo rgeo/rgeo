@@ -54,10 +54,13 @@ module RGeo
           @point5 = @factory.point(-1, 2)
           @point6 = @factory.point(-1, 1)
           @point7 = @factory.point(5, 4)
+          @point8 = @factory.point(1, 3)
           @horiz_seg = ::RGeo::Cartesian::Segment.new(@point1, @point3)
           @vert_seg = ::RGeo::Cartesian::Segment.new(@point4, @point1)
           @short_rising_seg = ::RGeo::Cartesian::Segment.new(@point1, @point2)
           @long_rising_seg = ::RGeo::Cartesian::Segment.new(@point5, @point2)
+          @collinear_rising_seg = ::RGeo::Cartesian::Segment.new(@point5, @point8)
+          @touching_collinear_rising_seg = ::RGeo::Cartesian::Segment.new(@point1, @point8)
           @parallel_rising_seg = ::RGeo::Cartesian::Segment.new(@point6, @point7)
           @steep_rising_seg = ::RGeo::Cartesian::Segment.new(@point6, @point4)
           @degenerate_seg = ::RGeo::Cartesian::Segment.new(@point5, @point5)
@@ -114,6 +117,10 @@ module RGeo
         def test_segment_intersects_parallel
           assert(@long_rising_seg.intersects_segment?(@long_rising_seg))
           assert(!@long_rising_seg.intersects_segment?(@parallel_rising_seg))
+          assert(!@short_rising_seg.intersects_segment?(@collinear_rising_seg))
+          assert(@touching_collinear_rising_seg.intersects_segment?(@short_rising_seg))
+          assert(@touching_collinear_rising_seg.intersects_segment?(@long_rising_seg))
+          assert(@long_rising_seg.intersects_segment?(@touching_collinear_rising_seg))
         end
         
         

@@ -202,7 +202,7 @@ module RGeo
         
         # Computes the WKT representation. Options include:
         # 
-        # <tt>:standard_brackets</tt>::
+        # [<tt>:standard_brackets</tt>]
         #   If set to true, outputs parentheses rather than square
         #   brackets. Default is false.
         

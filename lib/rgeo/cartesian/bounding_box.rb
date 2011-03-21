@@ -64,10 +64,10 @@ module RGeo
       # 
       # Options include:
       # 
-      # <tt>:ignore_z</tt>::
+      # [<tt>:ignore_z</tt>]
       #   If true, ignore z coordinates even if the factory supports them.
       #   Default is false.
-      # <tt>:ignore_m</tt>::
+      # [<tt>:ignore_m</tt>]
       #   If true, ignore m coordinates even if the factory supports them.
       #   Default is false.
       

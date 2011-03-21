@@ -46,7 +46,13 @@ module RGeo
       
       def initialize(geography_factory_, opts_={})
         @geography_factory = geography_factory_
-        @projection_factory = Cartesian.preferred_factory(:srid => 3785, :proj4 => SimpleMercatorProjector._proj4_3785, :coord_sys => SimpleMercatorProjector._coordsys_3785, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+        @projection_factory = Cartesian.preferred_factory(:srid => 3785,
+          :proj4 => SimpleMercatorProjector._proj4_3785,
+          :coord_sys => SimpleMercatorProjector._coordsys_3785,
+          :buffer_resolution => opts_[:buffer_resolution],
+          :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+          :has_z_coordinate => opts_[:has_z_coordinate],
+          :has_m_coordinate => opts_[:has_m_coordinate])
       end
       
       
@@ -100,7 +106,7 @@ module RGeo
           @geography_factory.line_string(geometry_.points.map{ |p_| unproject(p_) })
         when Feature::Polygon
           @geography_factory.polygon(unproject(geometry_.exterior_ring),
-                                    geometry_.interior_rings.map{ |p_| unproject(p_) })
+            geometry_.interior_rings.map{ |p_| unproject(p_) })
         when Feature::MultiPoint
           @geography_factory.multi_point(geometry_.map{ |p_| unproject(p_) })
         when Feature::MultiLineString
@@ -121,7 +127,9 @@ module RGeo
       
       
       def limits_window
-        @limits_window ||= ProjectedWindow.new(@geography_factory, -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789, :is_limits => true)
+        @limits_window ||= ProjectedWindow.new(@geography_factory,
+          -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789,
+          :is_limits => true)
       end
       
       
