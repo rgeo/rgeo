@@ -113,7 +113,7 @@ module RGeo
         dx2_ = seg_.dx
         dy2_ = seg_.dy
         denom_ = @dx*dy2_ - @dy*dx2_
-        return side(s2_) == 0 if denom_ == 0
+        return contains_point?(s2_) if denom_ == 0
         t_ = (dy2_ * (sx2_ - @sx) + dx2_ * (@sy - sy2_)) / denom_
         return false if t_ < 0.0 || t_ > 1.0
         t2_ = (@dy * (sx2_ - @sx) + @dx * (@sy - sy2_)) / denom_
