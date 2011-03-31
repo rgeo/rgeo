@@ -101,7 +101,8 @@ module RGeo
       
       def eql?(obj_)  # :nodoc:
         return false unless obj_.kind_of?(ProjectedWindow)
-        @factory == obj_.factory && @x_min == obj_.x_min && @x_max == obj_.x_max && @y_min = obj_.y_min && @y_max = obj_.y_max
+        @factory == obj_.factory && @x_min == obj_.x_min && @x_max == obj_.x_max &&
+          @y_min = obj_.y_min && @y_max = obj_.y_max
       end
       alias_method :==, :eql?
       
@@ -359,7 +360,8 @@ module RGeo
       def with_margin(x_margin_, y_margin_=nil)
         y_margin_ ||= x_margin_
         if x_margin_ != 0.0 || y_margin_ != 0.0
-          ProjectedWindow.new(@factory, @x_min - x_margin_, @y_min - y_margin_, @x_max + x_margin_, @y_max + y_margin_)
+          ProjectedWindow.new(@factory, @x_min - x_margin_, @y_min - y_margin_,
+            @x_max + x_margin_, @y_max + y_margin_)
         else
           self
         end
@@ -393,7 +395,7 @@ module RGeo
           factory_ = point_.factory
           projection_ = factory_.project(point_)
           ProjectedWindow.new(factory_, projection_.x - x_margin_, projection_.y - y_margin_,
-                              projection_.x + x_margin_, projection_.y + y_margin_)
+            projection_.x + x_margin_, projection_.y + y_margin_)
         end
         
         

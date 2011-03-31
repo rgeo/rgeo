@@ -70,14 +70,7 @@ Install RGeo as a gem:
  gem install rgeo
 
 Note: By default, the gem installation looks for the GEOS library in the
-following locations:
-
-* /usr/local
-* /usr/local/geos
-* /opt/local
-* /opt/geos
-* /opt
-* /usr
+following locations: <tt>/usr/local</tt>, <tt>/usr/local/geos</tt>, <tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
 
 If GEOS has been installed in a different location, you must provide its
 installation prefix directory using the "--with-geos-dir" option. This
@@ -87,16 +80,7 @@ the switches interpreted by the gem command. For example:
  gem install rgeo -- --with-geos-dir=/path/to/my/geos/installation
 
 Similarly, the gem installation looks for the Proj4 library in the
-following locations by default:
-
-* /usr/local
-* /usr/local/proj
-* /usr/local/proj4
-* /opt/local
-* /opt/proj
-* /opt/proj4
-* /opt
-* /usr
+following locations by default: <tt>/usr/local</tt>, <tt>/usr/local/proj</tt>, <tt>/usr/local/proj4</tt>, <tt>/opt/local</tt>, <tt>/opt/proj</tt>, <tt>/opt/proj4</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
 
 If Proj4 is installed in a different location, you must provide its
 installation prefix directory using the "--with-proj-dir" option.
@@ -143,7 +127,7 @@ Geospatial Foundation; more information is available on OSGeo's web site
 
 === License
 
-Copyright 2010 Daniel Azuma
+Copyright 2011 Daniel Azuma
 
 All rights reserved.
 

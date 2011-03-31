@@ -69,6 +69,8 @@ module RGeo
             r_ = ::Math.sqrt(x_*x_ + y_*y_)
             if r_ > 0.0
               segs_ << x_/r_ << y_/r_
+            else
+              size_ -= 1
             end
           end
           segs_ << segs_[0] << segs_[1]

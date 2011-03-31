@@ -123,7 +123,12 @@ module RGeo
           end
         end
         srid_ ||= coord_sys_.authority_code if coord_sys_
-        Geographic::Factory.new('Spherical', :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate], :proj4 => proj4_ || _proj4_4055, :coord_sys => coord_sys_ || _coordsys_4055, :srid => (srid_ || 4055).to_i)
+        Geographic::Factory.new('Spherical',
+          :has_z_coordinate => opts_[:has_z_coordinate],
+          :has_m_coordinate => opts_[:has_m_coordinate],
+          :proj4 => proj4_ || _proj4_4055,
+          :coord_sys => coord_sys_ || _coordsys_4055,
+          :srid => (srid_ || 4055).to_i)
       end
       
       
@@ -181,8 +186,17 @@ module RGeo
       # more details.
       
       def simple_mercator_factory(opts_={})
-        factory_ = Geographic::Factory.new('Projected', :proj4 => _proj4_4326, :coord_sys => _coordsys_4326, :srid => 4326, :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
-        projector_ = Geographic::SimpleMercatorProjector.new(factory_, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+        factory_ = Geographic::Factory.new('Projected',
+          :proj4 => _proj4_4326,
+          :coord_sys => _coordsys_4326,
+          :srid => 4326,
+          :has_z_coordinate => opts_[:has_z_coordinate],
+          :has_m_coordinate => opts_[:has_m_coordinate])
+        projector_ = Geographic::SimpleMercatorProjector.new(factory_,
+          :buffer_resolution => opts_[:buffer_resolution],
+          :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+          :has_z_coordinate => opts_[:has_z_coordinate],
+          :has_m_coordinate => opts_[:has_m_coordinate])
         factory_._set_projector(projector_)
         factory_
       end
@@ -314,8 +328,14 @@ module RGeo
           srid_ ||= coord_sys_.authority_code if coord_sys_
           srid_ ||= 4326
           # Now we should have all the coordinate system info.
-          factory_ = Geographic::Factory.new('Projected', :proj4 => proj4_, :coord_sys => coord_sys_, :srid => srid_.to_i, :has_z_coordinate => projection_factory_.property(:has_z_coordinate), :has_m_coordinate => projection_factory_.property(:has_m_coordinate))
-          projector_ = Geographic::Proj4Projector.create_from_existing_factory(factory_, projection_factory_)
+          factory_ = Geographic::Factory.new('Projected',
+            :proj4 => proj4_,
+            :coord_sys => coord_sys_,
+            :srid => srid_.to_i,
+            :has_z_coordinate => projection_factory_.property(:has_z_coordinate),
+            :has_m_coordinate => projection_factory_.property(:has_m_coordinate))
+          projector_ = Geographic::Proj4Projector.create_from_existing_factory(factory_,
+            projection_factory_)
         else
           # Determine projection coordinate system. First check the parameters.
           projection_proj4_ = opts_[:projection_proj4]
@@ -363,8 +383,20 @@ module RGeo
           srid_ ||= coord_sys_.authority_code if coord_sys_
           srid_ ||= 4326
           # Now we should have all the coordinate system info.
-          factory_ = Geographic::Factory.new('Projected', :proj4 => proj4_, :coord_sys => coord_sys_, :srid => srid_.to_i, :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
-          projector_ = Geographic::Proj4Projector.create_from_proj4(factory_, projection_proj4_, :srid => projection_srid_, :coord_sys => projection_coord_sys_, :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+          factory_ = Geographic::Factory.new('Projected',
+            :proj4 => proj4_,
+            :coord_sys => coord_sys_,
+            :srid => srid_.to_i,
+            :has_z_coordinate => opts_[:has_z_coordinate],
+            :has_m_coordinate => opts_[:has_m_coordinate])
+          projector_ = Geographic::Proj4Projector.create_from_proj4(factory_,
+            projection_proj4_,
+            :srid => projection_srid_,
+            :coord_sys => projection_coord_sys_,
+            :buffer_resolution => opts_[:buffer_resolution],
+            :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+            :has_z_coordinate => opts_[:has_z_coordinate],
+            :has_m_coordinate => opts_[:has_m_coordinate])
         end
         factory_._set_projector(projector_)
         factory_
