@@ -53,6 +53,8 @@ module RGeo
           assert_equal(2, line1_.num_points)
           assert_equal(point1_, line1_.point_n(0))
           assert_equal(point2_, line1_.point_n(1))
+          assert_nil(line1_.point_n(-1))
+          assert_nil(line1_.point_n(2))
           assert_equal(point1_, line1_.start_point)
           assert_equal(point2_, line1_.end_point)
         end

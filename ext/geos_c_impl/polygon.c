@@ -144,7 +144,16 @@ static VALUE method_polygon_interior_ring_n(VALUE self, VALUE n)
   RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
   const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry_clone(self_data->factory, GEOSGetInteriorRingN_r(self_data->geos_context, self_geom, NUM2INT(n)), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring);
+    int i = NUM2INT(n);
+    if (i >= 0) {
+      GEOSContextHandle_t self_context = self_data->geos_context;
+      int num = GEOSGetNumInteriorRings_r(self_context, self_geom);
+      if (i < num) {
+        result = rgeo_wrap_geos_geometry_clone(self_data->factory,
+          GEOSGetInteriorRingN_r(self_context, self_geom, i),
+          RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring);
+      }
+    }
   }
   return result;
 }

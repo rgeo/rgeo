@@ -70,6 +70,11 @@ module RGeo
       
       
       def geometry_n(n_)
+        n_ < 0 ? nil : @elements[n_]
+      end
+      
+      
+      def [](n_)
         @elements[n_]
       end
       

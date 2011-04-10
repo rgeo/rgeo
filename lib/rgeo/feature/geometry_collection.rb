@@ -88,7 +88,9 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the Geometry interface, or nil
-      # if the given n is out of range.
+      # if the given N is out of range. N is zero-based.
+      # Also note that this method is different from GeometryCollection#[]
+      # in that it does not support negative indexes.
       
       def geometry_n(n_)
         raise Error::UnsupportedOperation, "Method GeometryCollection#geometry_n not defined."
@@ -102,10 +104,18 @@ module RGeo
       end
       
       
-      # Alias of the geometry_n method.
+      # Returns the Nth geometry in this GeometryCollection, or nil if the
+      # given N is out of range. N is zero-based.
+      # 
+      # This behaves slightly different from GeometryCollection#geometry_n.
+      # GeometryCollection#geometry_n accepts only nonnegative indexes,
+      # as specified by the SFS. However, GeometryCollection#[] also accepts
+      # negative indexes counting backwards from the end of the collection,
+      # the same way Ruby's array indexing works. Hence, geometry_n(-1)
+      # returns nil, where [-1] returns the last element of the collection.
       
       def [](n_)
-        geometry_n(n_)
+        raise Error::UnsupportedOperation, "Method GeometryCollection#[] not defined."
       end
       
       

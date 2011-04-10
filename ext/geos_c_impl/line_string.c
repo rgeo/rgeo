@@ -150,7 +150,6 @@ static VALUE method_line_string_point_n(VALUE self, VALUE n)
         unsigned int size;
         if (GEOSCoordSeq_getSize_r(self_context, coord_seq, &size)) {
           if (i < size) {
-            unsigned int dims;
             result = get_point_from_coordseq(self, coord_seq, i, has_z);
           }
         }

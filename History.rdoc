@@ -1,3 +1,8 @@
+=== 0.2.7 / 2011-04-09
+
+* POSSIBLE INCOMPATIBLE CHANGE: GeometryCollection#geometry_n, Polygon#interior_ring_n, and LineString#point_n, in some implementations, allowed negative indexes (which counted backwards from the end of the collection as per Ruby arrays.) This was against the SFS interface, and so the behavior has been removed. However, GeometryCollection#[], because it is supposed to model Ruby arrays, now explicitly DOES allow negative indexes. This means GeometryCollection#[] is no longer exactly the same as GeometryCollection#geometry_n. These clarifications have also been made in the RDoc.
+* The GEOS implementations of GeometryCollection#geometry_n and Polygon#interior_ring_n segfaulted when given an index out of bounds. Bounds Check Fail fixed. (Reported by sharpone74.)
+
 === 0.2.6 / 2011-03-31
 
 * Ring direction analysis crashed if any of the line segments were zero length. Fixed. (Reported by spara.)

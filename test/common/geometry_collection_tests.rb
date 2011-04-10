@@ -77,6 +77,14 @@ module RGeo
         end
         
         
+        def test_bounds_check
+          geom_ = @factory.collection([@point1, @line1])
+          assert_nil(geom_.geometry_n(200))
+          assert_nil(geom_.geometry_n(-1))
+          assert(@line1.eql?(geom_[-1]))
+        end
+        
+        
         def test_creation_save_klass
           geom_ = @factory.collection([@point1, @line3])
           assert_not_nil(geom_)

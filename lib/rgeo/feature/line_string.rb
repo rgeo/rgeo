@@ -79,7 +79,8 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the Point interface, or nil
-      # if the given n is out of range.
+      # if the given N is out of range. N is zero-based.
+      # Does not support negative indexes.
       
       def point_n(n_)
         raise Error::UnsupportedOperation, "Method LineString#point_n not defined."

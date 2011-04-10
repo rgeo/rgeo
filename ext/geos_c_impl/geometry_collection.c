@@ -183,7 +183,7 @@ static VALUE method_geometry_collection_num_geometries(VALUE self)
 }
 
 
-static VALUE method_geometry_collection_geometry_n(VALUE self, VALUE n)
+static VALUE impl_geometry_n(VALUE self, VALUE n, char allow_negatives)
 {
   VALUE result = Qnil;
   RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -191,10 +191,32 @@ static VALUE method_geometry_collection_geometry_n(VALUE self, VALUE n)
   if (self_geom) {
     VALUE klasses = self_data->klasses;
     int i = NUM2INT(n);
-    const GEOSGeometry* elem_geom = GEOSGetGeometryN_r(self_data->geos_context, self_geom, i);
-    result = rgeo_wrap_geos_geometry_clone(self_data->factory, elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
+    if (allow_negatives || i >= 0) {
+      GEOSContextHandle_t self_context = self_data->geos_context;
+      int len = GEOSGetNumGeometries_r(self_context, self_geom);
+      if (i < 0) {
+        i += len;
+      }
+      if (i >= 0 && i < len) {
+        result = rgeo_wrap_geos_geometry_clone(self_data->factory,
+          GEOSGetGeometryN_r(self_context, self_geom, i),
+          NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
+      }
+    }
   }
   return result;
+}
+
+
+static VALUE method_geometry_collection_geometry_n(VALUE self, VALUE n)
+{
+  impl_geometry_n(self, n, 0);
+}
+
+
+static VALUE method_geometry_collection_brackets(VALUE self, VALUE n)
+{
+  impl_geometry_n(self, n, 1);
 }
 
 
@@ -386,7 +408,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_geometry_collection_class, "num_geometries", method_geometry_collection_num_geometries, 0);
   rb_define_method(geos_geometry_collection_class, "size", method_geometry_collection_num_geometries, 0);
   rb_define_method(geos_geometry_collection_class, "geometry_n", method_geometry_collection_geometry_n, 1);
-  rb_define_method(geos_geometry_collection_class, "[]", method_geometry_collection_geometry_n, 1);
+  rb_define_method(geos_geometry_collection_class, "[]", method_geometry_collection_brackets, 1);
   rb_define_method(geos_geometry_collection_class, "each", method_geometry_collection_each, 0);
   
   // Methods for MultiPointImpl

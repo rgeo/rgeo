@@ -77,7 +77,7 @@ module RGeo
       
       
       def point_n(n_)
-        @points[n_]
+        n_ < 0 ? nil : @points[n_]
       end
       
       

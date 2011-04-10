@@ -55,6 +55,8 @@ module RGeo
           assert_equal(::RGeo::Feature::Polygon, polygon_.geometry_type)
           assert(exterior_.eql?(polygon_.exterior_ring))
           assert_equal(0, polygon_.num_interior_rings)
+          assert_nil(polygon_.interior_ring_n(0))
+          assert_nil(polygon_.interior_ring_n(-1))
         end
         
         
@@ -75,6 +77,8 @@ module RGeo
           assert(exterior_.eql?(polygon_.exterior_ring))
           assert_equal(1, polygon_.num_interior_rings)
           assert(interior_.eql?(polygon_.interior_ring_n(0)))
+          assert_nil(polygon_.interior_ring_n(1))
+          assert_nil(polygon_.interior_ring_n(-1))
         end
         
         

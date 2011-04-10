@@ -70,17 +70,20 @@ Install RGeo as a gem:
  gem install rgeo
 
 Note: By default, the gem installation looks for the GEOS library in the
-following locations: <tt>/usr/local</tt>, <tt>/usr/local/geos</tt>, <tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
+following locations: <tt>/usr/local</tt>, <tt>/usr/local/geos</tt>,
+<tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
 
 If GEOS has been installed in a different location, you must provide its
 installation prefix directory using the "--with-geos-dir" option. This
-option must be preceded by "--" to separate it, as a build switch, from
-the switches interpreted by the gem command. For example:
+option must be preceded by "<tt>--</tt>" to separate it, as a build
+switch, from the switches interpreted by the gem command. For example:
 
  gem install rgeo -- --with-geos-dir=/path/to/my/geos/installation
 
 Similarly, the gem installation looks for the Proj4 library in the
-following locations by default: <tt>/usr/local</tt>, <tt>/usr/local/proj</tt>, <tt>/usr/local/proj4</tt>, <tt>/opt/local</tt>, <tt>/opt/proj</tt>, <tt>/opt/proj4</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
+following locations by default: <tt>/usr/local</tt>,
+<tt>/usr/local/proj</tt>, <tt>/usr/local/proj4</tt>, <tt>/opt/local</tt>,
+<tt>/opt/proj</tt>, <tt>/opt/proj4</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
 
 If Proj4 is installed in a different location, you must provide its
 installation prefix directory using the "--with-proj-dir" option.

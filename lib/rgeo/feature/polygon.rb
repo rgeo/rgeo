@@ -118,7 +118,8 @@ module RGeo
       # === Notes
       # 
       # Returns an object that supports the LinearRing interface, or nil
-      # if the given n is out of range.
+      # if the given N is out of range. N is zero-based.
+      # Does not support negative indexes.
       
       def interior_ring_n(n_)
         raise Error::UnsupportedOperation, "Method Polygon#interior_ring_n not defined."
