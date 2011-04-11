@@ -1,3 +1,7 @@
+=== 0.2.8 / 2011-04-11
+
+* A .gemspec file is now available for gem building and bundler git integration.
+
 === 0.2.7 / 2011-04-09
 
 * POSSIBLE INCOMPATIBLE CHANGE: GeometryCollection#geometry_n, Polygon#interior_ring_n, and LineString#point_n, in some implementations, allowed negative indexes (which counted backwards from the end of the collection as per Ruby arrays.) This was against the SFS interface, and so the behavior has been removed. However, GeometryCollection#[], because it is supposed to model Ruby arrays, now explicitly DOES allow negative indexes. This means GeometryCollection#[] is no longer exactly the same as GeometryCollection#geometry_n. These clarifications have also been made in the RDoc.
