@@ -45,9 +45,18 @@ module RGeo
       class TestWKBParser < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def test_point_2d_xdr
+        def test_point_2d_xdr_hex
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('00000000013ff00000000000004000000000000000')
+          assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
+          assert_equal(1, obj_.x)
+          assert_equal(2, obj_.y)
+        end
+        
+        
+        def test_point_2d_xdr_binary
+          parser_ = ::RGeo::WKRep::WKBParser.new
+          obj_ = parser_.parse(['00000000013ff00000000000004000000000000000'].pack('H*'))
           assert_equal(::RGeo::Feature::Point, obj_.geometry_type)
           assert_equal(1, obj_.x)
           assert_equal(2, obj_.y)

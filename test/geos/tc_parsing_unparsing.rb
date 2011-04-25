@@ -45,11 +45,6 @@ module RGeo
       class TestParsingUnparsing < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def setup
-          @factory = ::RGeo::Geos.factory
-        end
-        
-        
         def test_wkt_generator_default_floating_point
           # Bug report GH-4
           factory_ = ::RGeo::Geos.factory
@@ -69,6 +64,12 @@ module RGeo
           factory_ = ::RGeo::Geos.factory(:wkt_generator => :geos)
           point_ = factory_.point(1, 1)
           assert_equal('POINT (1.0000000000000000 1.0000000000000000)', point_.as_text)
+        end
+        
+        
+        def test_wkt_parser_default_with_non_geosable_input
+          factory_ = ::RGeo::Geos.factory
+          assert_not_nil(factory_.parse_wkt('Point (1 1)'))
         end
         
         

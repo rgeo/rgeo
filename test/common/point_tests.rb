@@ -62,7 +62,7 @@ module RGeo
         
         
         def test_wkt_creation
-          point1_ = @factory.parse_wkt('POINT(21 -22)')
+          point1_ = @factory.parse_wkt('Point (21 -22)')
           assert_equal(21, point1_.x)
           assert_equal(-22, point1_.y)
         end
@@ -103,6 +103,12 @@ module RGeo
         def test_envelope
           point_ = @factory.point(11, 12)
           assert_close_enough(point_, point_.envelope)
+        end
+        
+        
+        def test_as_text
+          point_ = @factory.point(11, 12)
+          assert_equal('POINT (11.0 12.0)', point_.as_text)
         end
         
         
