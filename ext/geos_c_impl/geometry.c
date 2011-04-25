@@ -209,16 +209,22 @@ static VALUE method_geometry_as_text(VALUE self)
   const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
     RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
-    GEOSWKTWriter* wkt_writer = factory_data->wkt_writer;
-    GEOSContextHandle_t geos_context = self_data->geos_context;
-    if (!wkt_writer) {
-      wkt_writer = GEOSWKTWriter_create_r(geos_context);
-      factory_data->wkt_writer = wkt_writer;
+    VALUE wkt_generator = factory_data->wkrep_wkt_generator;
+    if (!NIL_P(wkt_generator)) {
+      result = rb_funcall(wkt_generator, rb_intern("generate"), 1, self);
     }
-    char* str = GEOSWKTWriter_write_r(geos_context, wkt_writer, self_geom);
-    if (str) {
-      result = rb_str_new2(str);
-      GEOSFree_r(geos_context, str);
+    else {
+      GEOSWKTWriter* wkt_writer = factory_data->wkt_writer;
+      GEOSContextHandle_t geos_context = self_data->geos_context;
+      if (!wkt_writer) {
+        wkt_writer = GEOSWKTWriter_create_r(geos_context);
+        factory_data->wkt_writer = wkt_writer;
+      }
+      char* str = GEOSWKTWriter_write_r(geos_context, wkt_writer, self_geom);
+      if (str) {
+        result = rb_str_new2(str);
+        GEOSFree_r(geos_context, str);
+      }
     }
   }
   return result;
@@ -232,17 +238,23 @@ static VALUE method_geometry_as_binary(VALUE self)
   const GEOSGeometry* self_geom = self_data->geom;
   if (self_geom) {
     RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
-    GEOSWKBWriter* wkb_writer = factory_data->wkb_writer;
-    GEOSContextHandle_t geos_context = self_data->geos_context;
-    if (!wkb_writer) {
-      wkb_writer = GEOSWKBWriter_create_r(geos_context);
-      factory_data->wkb_writer = wkb_writer;
+    VALUE wkb_generator = factory_data->wkrep_wkb_generator;
+    if (!NIL_P(wkb_generator)) {
+      result = rb_funcall(wkb_generator, rb_intern("generate"), 1, self);
     }
-    size_t size;
-    char* str = (char*)GEOSWKBWriter_write_r(geos_context, wkb_writer, self_geom, &size);
-    if (str) {
-      result = rb_str_new(str, size);
-      GEOSFree_r(geos_context, str);
+    else {
+      GEOSWKBWriter* wkb_writer = factory_data->wkb_writer;
+      GEOSContextHandle_t geos_context = self_data->geos_context;
+      if (!wkb_writer) {
+        wkb_writer = GEOSWKBWriter_create_r(geos_context);
+        factory_data->wkb_writer = wkb_writer;
+      }
+      size_t size;
+      char* str = (char*)GEOSWKBWriter_write_r(geos_context, wkb_writer, self_geom, &size);
+      if (str) {
+        result = rb_str_new(str, size);
+        GEOSFree_r(geos_context, str);
+      }
     }
   }
   return result;

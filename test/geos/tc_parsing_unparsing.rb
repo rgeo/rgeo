@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# GEOS implementation additions written in Ruby
+# Tests for the GEOS point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -23,7 +23,8 @@
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 # ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -33,44 +34,46 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+
 module RGeo
-  
-  module Geos
-    
-    
-    class GeometryImpl  # :nodoc:
+  module Tests  # :nodoc:
+    module Geos  # :nodoc:
       
-      include Feature::Instance
-      
-      def inspect
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
+      class TestParsingUnparsing < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def setup
+          @factory = ::RGeo::Geos.factory
+        end
+        
+        
+        def test_wkt_generator_default_floating_point
+          # Bug report GH-4
+          factory_ = ::RGeo::Geos.factory
+          point_ = factory_.point(111.99, -40.37)
+          assert_equal('POINT (111.99 -40.37)', point_.as_text)
+        end
+        
+        
+        def test_wkt_generator_downcase
+          factory_ = ::RGeo::Geos.factory(:wkt_generator => {:convert_case => :lower})
+          point_ = factory_.point(1, 1)
+          assert_equal('point (1.0 1.0)', point_.as_text)
+        end
+        
+        
+        def test_wkt_generator_geos
+          factory_ = ::RGeo::Geos.factory(:wkt_generator => :geos)
+          point_ = factory_.point(1, 1)
+          assert_equal('POINT (1.0000000000000000 1.0000000000000000)', point_.as_text)
+        end
+        
+        
       end
       
     end
-    
-    
-    class Factory
-      
-      
-      # :stopdoc:
-      if ::RGeo::Geos.supported?
-        IMPL_CLASSES = {
-          Feature::Point => PointImpl,
-          Feature::LineString => LineStringImpl,
-          Feature::LinearRing => LinearRingImpl,
-          Feature::Line => LineImpl,
-          Feature::GeometryCollection => GeometryCollectionImpl,
-          Feature::MultiPoint => MultiPointImpl,
-          Feature::MultiLineString => MultiLineStringImpl,
-          Feature::MultiPolygon => MultiPolygonImpl,
-        }.freeze
-      end
-      # :startdoc:
-      
-      
-    end
-    
-    
   end
-  
-end
+end if ::RGeo::Geos.supported?

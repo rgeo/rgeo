@@ -82,7 +82,14 @@ module RGeo
         
         
         def create_from_proj4(geography_factory_, proj4_, opts_={})
-          projection_factory_ = Cartesian.preferred_factory(:proj4 => proj4_, :coord_sys => opts_[:coord_sys], :srid => opts_[:srid], :buffer_resolution => opts_[:buffer_resolution], :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions], :has_z_coordinate => opts_[:has_z_coordinate], :has_m_coordinate => opts_[:has_m_coordinate])
+          projection_factory_ = Cartesian.preferred_factory(:proj4 => proj4_,
+            :coord_sys => opts_[:coord_sys], :srid => opts_[:srid],
+            :buffer_resolution => opts_[:buffer_resolution],
+            :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+            :has_z_coordinate => opts_[:has_z_coordinate],
+            :has_m_coordinate => opts_[:has_m_coordinate],
+            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
+            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
           new(geography_factory_, projection_factory_)
         end
         

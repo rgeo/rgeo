@@ -68,12 +68,12 @@ module RGeo
       
       
       def as_text
-        WKRep::WKTGenerator.new.generate(self)
+        @factory.instance_variable_get(:@wkt_generator).generate(self)
       end
       
       
       def as_binary
-        WKRep::WKBGenerator.new.generate(self)
+        @factory.instance_variable_get(:@wkb_generator).generate(self)
       end
       
       

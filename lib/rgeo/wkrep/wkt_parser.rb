@@ -88,7 +88,16 @@ module RGeo
       # documentation for the options that can be passed.
       
       def initialize(factory_generator_=nil, opts_={})
-        self.factory_generator = factory_generator_
+        if factory_generator_.kind_of?(Feature::Factory::Instance)
+          @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
+          @exact_factory = factory_generator_
+        elsif factory_generator_.respond_to?(:call)
+          @factory_generator = factory_generator_
+          @exact_factory = nil
+        else
+          @factory_generator = Cartesian.method(:preferred_factory)
+          @exact_factory = nil
+        end
         @support_ewkt = opts_[:support_ewkt] ? true : false
         @support_wkt12 = opts_[:support_wkt12] ? true : false
         @strict_wkt11 = @support_ewkt || @support_wkt12 ? false : opts_[:strict_wkt11] ? true : false
@@ -108,35 +117,10 @@ module RGeo
         @exact_factory
       end
       
-      # Sets the factory_generator. See WKTParser for details.
-      def factory_generator=(value_)
-        if value_.kind_of?(Feature::Factory::Instance)
-          @factory_generator = Feature::FactoryGenerator.single(value_)
-          @exact_factory = value_
-        elsif value_.respond_to?(:call)
-          @factory_generator = value_
-          @exact_factory = nil
-        else
-          @factory_generator = Cartesian.method(:preferred_factory)
-          @exact_factory = nil
-        end
-      end
-      
-      # Sets the factory_generator to the given block.
-      # See WKTParser for details.
-      def to_generate_factory(&block_)
-        self.factory_generator = block_
-      end
-      
       # Returns true if this parser supports EWKT.
       # See WKTParser for details.
       def support_ewkt?
         @support_ewkt
-      end
-      
-      # Sets the the support_ewkt flag. See WKTParser for details.
-      def support_ewkt=(value_)
-        @support_ewkt = value_ ? true : false
       end
       
       # Returns true if this parser supports SFS 1.2 extensions.
@@ -145,31 +129,16 @@ module RGeo
         @support_wkt12
       end
       
-      # Sets the the support_wkt12 flag. See WKTParser for details.
-      def support_wkt12=(value_)
-        @support_wkt12 = value_ ? true : false
-      end
-      
       # Returns true if this parser strictly adheres to WKT 1.1.
       # See WKTParser for details.
       def strict_wkt11?
         @strict_wkt11
       end
       
-      # Sets the the strict_wkt11 flag. See WKTParser for details.
-      def strict_wkt11=(value_)
-        @strict_wkt11 = value_ ? true : false
-      end
-      
       # Returns true if this parser ignores extra tokens.
       # See WKTParser for details.
       def ignore_extra_tokens?
         @ignore_extra_tokens
-      end
-      
-      # Sets the the ignore_extra_tokens flag. See WKTParser for details.
-      def ignore_extra_tokens=(value_)
-        @ignore_extra_tokens = value_ ? true : false
       end
       
       

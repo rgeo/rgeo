@@ -245,9 +245,7 @@ module RGeo
         
         
         def test_point_non_ewkt_with_srid
-          factory_ = ::RGeo::Cartesian.preferred_factory
-          parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
-          parser_.factory_generator = ::RGeo::Cartesian.method(:preferred_factory)
+          parser_ = ::RGeo::WKRep::WKTParser.new(::RGeo::Cartesian.method(:preferred_factory))
           assert_raise(::RGeo::Error::ParseError) do
             obj_ = parser_.parse('SRID=1000;POINT(1 2)')
           end

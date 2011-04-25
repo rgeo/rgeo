@@ -313,7 +313,7 @@ module RGeo
       # 
       # It should return either a casted result object, false, or nil.
       # A nil return value indicates that casting should be forced to
-      # fail (and RGeo::Feature::cast will return nil).
+      # fail (and RGeo::Feature.cast will return nil).
       # A false return value indicates that this method declines to
       # override the casting algorithm, and RGeo should use its default
       # algorithm to cast the object. Therefore, by default, you should

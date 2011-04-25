@@ -110,6 +110,25 @@ module RGeo
       #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
       #   objects from a spatial reference system database.
+      # [<tt>:wkt_parser</tt>]
+      #   Configure the parser for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKTParser.
+      # [<tt>:wkb_parser</tt>]
+      #   Configure the parser for WKB. The value is a hash of
+      #   configuration parameters for WKRep::WKBParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKBParser.
+      # [<tt>:wkt_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is <tt>{:convert_case => :upper}</tt>.
+      # [<tt>:wkb_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is the empty hash, indicating the default configuration
+      #   for WKRep::WKBGenerator.
       
       def spherical_factory(opts_={})
         proj4_ = opts_[:proj4]
@@ -177,12 +196,31 @@ module RGeo
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
+      # [<tt>:wkt_parser</tt>]
+      #   Configure the parser for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKTParser.
+      # [<tt>:wkb_parser</tt>]
+      #   Configure the parser for WKB. The value is a hash of
+      #   configuration parameters for WKRep::WKBParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKBParser.
+      # [<tt>:wkt_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is <tt>{:convert_case => :upper}</tt>.
+      # [<tt>:wkb_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is the empty hash, indicating the default configuration
+      #   for WKRep::WKBGenerator.
       # 
       # You may also provide options understood by the underlying
       # projected Cartesian factory. For example, if GEOS is used for the
       # projected factory, you may also set the
       # <tt>:lenient_multi_polygon_assertions</tt> and 
-      # <tt>:buffer_resolution</tt> options. See RGeo::Geos::factory for
+      # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
       
       def simple_mercator_factory(opts_={})
@@ -287,12 +325,31 @@ module RGeo
       #   Note: this is ignored if a <tt>:projection_factory</tt> is
       #   provided; in that case, the geographic factory's m-coordinate
       #   availability will match the projection factory's setting.
+      # [<tt>:wkt_parser</tt>]
+      #   Configure the parser for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKTParser.
+      # [<tt>:wkb_parser</tt>]
+      #   Configure the parser for WKB. The value is a hash of
+      #   configuration parameters for WKRep::WKBParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKBParser.
+      # [<tt>:wkt_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is <tt>{:convert_case => :upper}</tt>.
+      # [<tt>:wkb_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is the empty hash, indicating the default configuration
+      #   for WKRep::WKBGenerator.
       # 
       # If a <tt>:projection_factory</tt> is _not_ provided, you may also
       # provide options for configuring the projected Cartesian factory.
       # For example, if GEOS is used for the projected factory, you may
       # also set the <tt>:lenient_multi_polygon_assertions</tt> and 
-      # <tt>:buffer_resolution</tt> options. See RGeo::Geos::factory for
+      # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
       
       def projected_factory(opts_={})
@@ -333,7 +390,9 @@ module RGeo
             :coord_sys => coord_sys_,
             :srid => srid_.to_i,
             :has_z_coordinate => projection_factory_.property(:has_z_coordinate),
-            :has_m_coordinate => projection_factory_.property(:has_m_coordinate))
+            :has_m_coordinate => projection_factory_.property(:has_m_coordinate),
+            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
+            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
           projector_ = Geographic::Proj4Projector.create_from_existing_factory(factory_,
             projection_factory_)
         else
@@ -388,7 +447,9 @@ module RGeo
             :coord_sys => coord_sys_,
             :srid => srid_.to_i,
             :has_z_coordinate => opts_[:has_z_coordinate],
-            :has_m_coordinate => opts_[:has_m_coordinate])
+            :has_m_coordinate => opts_[:has_m_coordinate],
+            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
+            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
           projector_ = Geographic::Proj4Projector.create_from_proj4(factory_,
             projection_proj4_,
             :srid => projection_srid_,
@@ -396,7 +457,9 @@ module RGeo
             :buffer_resolution => opts_[:buffer_resolution],
             :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
             :has_z_coordinate => opts_[:has_z_coordinate],
-            :has_m_coordinate => opts_[:has_m_coordinate])
+            :has_m_coordinate => opts_[:has_m_coordinate],
+            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
+            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
         end
         factory_._set_projector(projector_)
         factory_

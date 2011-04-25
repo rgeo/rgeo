@@ -85,7 +85,7 @@ module RGeo
         Feature::MultiLineString => 5,
         Feature::MultiPolygon => 6,
         Feature::GeometryCollection => 7,
-      }
+      }.freeze
       # :startdoc:
       
       
@@ -105,20 +105,9 @@ module RGeo
         @type_format
       end
       
-      # Sets the format for type codes. See WKBGenerator for details.
-      def type_format=(value_)
-        @type_format = value_
-      end
-      
       # Returns whether SRID is embedded. See WKBGenerator for details.
       def emit_ewkb_srid?
         @emit_ewkb_srid
-      end
-      
-      # Sets whether SRID is embedded. Available only when the type_format
-      # is <tt>:ewkb</tt>. See WKBGenerator for details.
-      def emit_ewkb_srid=(value_)
-        @emit_ewkb_srid = @type_format == :ewkb && value_
       end
       
       # Returns whether output is converted to hex.
@@ -127,22 +116,10 @@ module RGeo
         @hex_format
       end
       
-      # Sets whether output is converted to hex.
-      # See WKBGenerator for details.
-      def hex_format=(value_)
-        @hex_format = value_ ? true : false
-      end
-      
       # Returns whether output is little-endian (NDR).
       # See WKBGenerator for details.
       def little_endian?
         @little_endian
-      end
-      
-      # Sets whether output is little-endian (NDR).
-      # See WKBGenerator for details.
-      def little_endian=(value_)
-        @little_endian = value_ ? true : false
       end
       
       

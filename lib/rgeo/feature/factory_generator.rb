@@ -50,7 +50,7 @@ module RGeo
     # factory generator.
     # 
     # Many of the implementations provide a factory method for creating
-    # factories. For example, RGeo::Cartesian::preferred_factory can be
+    # factories. For example, RGeo::Cartesian.preferred_factory can be
     # called to create a factory using the preferred Cartesian
     # implementation. Thus, to get a corresponding factory generator,
     # you can use the <tt>method</tt> method. e.g.

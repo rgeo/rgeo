@@ -74,6 +74,35 @@ module RGeo
         if @coord_sys.kind_of?(::String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
         end
+        
+        wkt_generator_ = opts_[:wkt_generator]
+        case wkt_generator_
+        when ::Hash
+          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator_)
+        else
+          @wkt_generator = WKRep::WKTGenerator.new(:convert_case => :upper)
+        end
+        wkb_generator_ = opts_[:wkb_generator]
+        case wkb_generator_
+        when ::Hash
+          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator_)
+        else
+          @wkb_generator = WKRep::WKBGenerator.new
+        end
+        wkt_parser_ = opts_[:wkt_parser]
+        case wkt_parser_
+        when ::Hash
+          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser_)
+        else
+          @wkt_parser = WKRep::WKTParser.new(self)
+        end
+        wkb_parser_ = opts_[:wkb_parser]
+        case wkb_parser_
+        when ::Hash
+          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser_)
+        else
+          @wkb_parser = WKRep::WKBParser.new(self)
+        end
       end
       
       
@@ -192,14 +221,14 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
-        WKRep::WKTParser.new(self).parse(str_)
+        @wkt_parser.parse(str_)
       end
       
       
       # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
-        WKRep::WKBParser.new(self).parse(str_)
+        @wkb_parser.parse(str_)
       end
       
       

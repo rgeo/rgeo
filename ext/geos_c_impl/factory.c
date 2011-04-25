@@ -99,6 +99,20 @@ static void destroy_geometry_func(RGeo_GeometryData* data)
 }
 
 
+// Mark function for factory data. This marks the wkt and wkb generator
+// handles so they don't get collected.
+
+static void mark_factory_func(RGeo_FactoryData* data)
+{
+  if (!NIL_P(data->wkrep_wkt_generator)) {
+    rb_gc_mark(data->wkrep_wkt_generator);
+  }
+  if (!NIL_P(data->wkrep_wkb_generator)) {
+    rb_gc_mark(data->wkrep_wkb_generator);
+  }
+}
+
+
 // Mark function for geometry data. This marks the factory and klasses
 // held by the geometry so those don't get collected.
 
@@ -193,7 +207,8 @@ static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
 }
 
 
-static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE buffer_resolution)
+static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE buffer_resolution,
+  VALUE wkt_generator, VALUE wkb_generator)
 {
   VALUE result = Qnil;
   RGeo_FactoryData* data = ALLOC(RGeo_FactoryData);
@@ -210,7 +225,9 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       data->wkb_reader = NULL;
       data->wkt_writer = NULL;
       data->wkb_writer = NULL;
-      result = Data_Wrap_Struct(klass, NULL, destroy_factory_func, data);
+      data->wkrep_wkt_generator = wkt_generator;
+      data->wkrep_wkb_generator = wkb_generator;
+      result = Data_Wrap_Struct(klass, mark_factory_func, destroy_factory_func, data);
     }
     else {
       free(data);
@@ -237,7 +254,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_method(geos_factory_class, "_srid", method_factory_srid, 0);
   rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
-  rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 3);
+  rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 5);
   
   // Wrap the globals in a Ruby object and store it off so we have access
   // to it later. Each factory instance will reference it internally.

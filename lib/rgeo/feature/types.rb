@@ -146,9 +146,9 @@ module RGeo
       # values to true. You can even combine separate arguments and hash
       # arguments. For example, the following three calls are equivalent:
       # 
-      #  Feature.cast(geom, :type => Feature::Point, :project => true)
-      #  Feature.cast(geom, Feature::Point, :project => true)
-      #  Feature.cast(geom, Feature::Point, :project)
+      #  RGeo::Feature.cast(geom, :type => RGeo::Feature::Point, :project => true)
+      #  RGeo::Feature.cast(geom, RGeo::Feature::Point, :project => true)
+      #  RGeo::Feature.cast(geom, RGeo::Feature::Point, :project)
       # 
       # RGeo provides a default casting algorithm. Individual feature
       # implementation factories may override this and customize the

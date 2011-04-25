@@ -51,7 +51,7 @@ module RGeo
   # therefore not documented.
   # 
   # To use the Geos implementation, first obtain a factory using the
-  # ::RGeo::Geos::factory method. You may then call any of the standard
+  # ::RGeo::Geos.factory method. You may then call any of the standard
   # factory methods on the resulting object.
   
   module Geos

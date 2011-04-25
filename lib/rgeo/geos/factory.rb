@@ -53,10 +53,13 @@ module RGeo
         # Create a new factory. Returns nil if the GEOS implementation is
         # not supported.
         # 
-        # See ::RGeo::Geos::factory for a list of supported options.
+        # See ::RGeo::Geos.factory for a list of supported options.
         
         def create(opts_={})
+          # Make sure GEOS is available
           return nil unless respond_to?(:_create)
+          
+          # Get flags to pass to the C extension
           flags_ = 0
           flags_ |= 1 if opts_[:lenient_multi_polygon_assertions]
           flags_ |= 2 if opts_[:has_z_coordinate]
@@ -64,8 +67,32 @@ module RGeo
           if flags_ & 6 == 6
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
+          
+          # Buffer resolution
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1
+          
+          # Interpret the generator options
+          wkt_generator_ = opts_[:wkt_generator]
+          case wkt_generator_
+          when :geos
+            wkt_generator_ = nil
+          when ::Hash
+            wkt_generator_ = WKRep::WKTGenerator.new(wkt_generator_)
+          else
+            wkt_generator_ = WKRep::WKTGenerator.new(:convert_case => :upper)
+          end
+          wkb_generator_ = opts_[:wkb_generator]
+          case wkb_generator_
+          when :geos
+            wkb_generator_ = nil
+          when ::Hash
+            wkb_generator_ = WKRep::WKBGenerator.new(wkb_generator_)
+          else
+            wkb_generator_ = WKRep::WKBGenerator.new
+          end
+          
+          # Coordinate system (srid, proj4, and coord_sys)
           srid_ = opts_[:srid]
           proj4_ = opts_[:proj4]
           if CoordSys::Proj4.supported?
@@ -87,9 +114,39 @@ module RGeo
             end
           end
           srid_ ||= coord_sys_.authority_code if coord_sys_
-          result_ = _create(flags_, srid_.to_i, buffer_resolution_)
+          
+          # Create the factory and set instance variables
+          result_ = _create(flags_, srid_.to_i, buffer_resolution_, wkt_generator_, wkb_generator_)
+          
+          # Interpret parser options
+          wkt_parser_ = opts_[:wkt_parser]
+          case wkt_parser_
+          when :geos
+            wkt_parser_ = nil
+          when ::Hash
+            wkt_parser_ = WKRep::WKTParser.new(result_, wkt_parser_)
+          else
+            wkt_parser_ = WKRep::WKTParser.new(result_)
+          end
+          wkb_parser_ = opts_[:wkb_parser]
+          case wkb_parser_
+          when :geos
+            wkb_parser_ = nil
+          when ::Hash
+            wkb_parser_ = WKRep::WKBParser.new(result_, wkb_parser_)
+          else
+            wkb_parser_ = WKRep::WKBParser.new(result_)
+          end
+          
+          # Set instance variables
           result_.instance_variable_set(:@proj4, proj4_)
           result_.instance_variable_set(:@coord_sys, coord_sys_)
+          result_.instance_variable_set(:@wkt_parser, wkt_parser_)
+          result_.instance_variable_set(:@wkb_parser, wkb_parser_)
+          result_.instance_variable_set(:@wkt_generator, wkt_generator_)
+          result_.instance_variable_set(:@wkb_generator, wkb_generator_)
+          
+          # Return the result
           result_
         end
         alias_method :new, :create
@@ -152,14 +209,22 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
       
       def parse_wkt(str_)
-        _parse_wkt_impl(str_)
+        if @wkt_parser
+          @wkt_parser.parse(str_)
+        else
+          _parse_wkt_impl(str_)
+        end
       end
       
       
       # See ::RGeo::Feature::Factory#parse_wkb
       
       def parse_wkb(str_)
-        _parse_wkb_impl(str_)
+        if @wkb_parser
+          @wkb_parser.parse(str_)
+        else
+          _parse_wkb_impl(str_)
+        end
       end
       
       

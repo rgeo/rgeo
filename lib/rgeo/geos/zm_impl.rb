@@ -101,12 +101,12 @@ module RGeo
       
       
       def as_text
-        WKRep::WKTGenerator.new.generate(self)
+        @factory.instance_variable_get(:@wkt_generator).generate(self)
       end
       
       
       def as_binary
-        WKRep::WKBGenerator.new.generate(self)
+        @factory.instance_variable_get(:@wkb_generator).generate(self)
       end
       
       
@@ -415,7 +415,7 @@ module RGeo
         Feature::MultiPoint => ZMGeometryCollectionImpl,
         Feature::MultiLineString => ZMMultiLineStringImpl,
         Feature::MultiPolygon => ZMMultiPolygonImpl,
-      }
+      }.freeze
       
       
       def self.create(factory_, zgeometry_, mgeometry_)

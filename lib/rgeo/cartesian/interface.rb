@@ -54,8 +54,9 @@ module RGeo
       # 
       # The given options are passed to the factory's constructor.
       # What options are available depends on the particular
-      # implementation. See Geos::factory and Cartesian::simple_factory
-      # for details. Unsupported options are ignored.
+      # implementation. See RGeo::Geos.factory and
+      # RGeo::Cartesian.simple_factory for details. Unsupported options
+      # are ignored.
       
       def preferred_factory(opts_={})
         if ::RGeo::Geos.supported?
@@ -110,6 +111,25 @@ module RGeo
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
+      # [<tt>:wkt_parser</tt>]
+      #   Configure the parser for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKTParser.
+      # [<tt>:wkb_parser</tt>]
+      #   Configure the parser for WKB. The value is a hash of
+      #   configuration parameters for WKRep::WKBParser.new. Default is
+      #   the empty hash, indicating the default configuration for
+      #   WKRep::WKBParser.
+      # [<tt>:wkt_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is <tt>{:convert_case => :upper}</tt>.
+      # [<tt>:wkb_generator</tt>]
+      #   Configure the generator for WKT. The value is a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new.
+      #   Default is the empty hash, indicating the default configuration
+      #   for WKRep::WKBGenerator.
       
       def simple_factory(opts_={})
         Cartesian::Factory.new(opts_)

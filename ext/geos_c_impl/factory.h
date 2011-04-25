@@ -89,6 +89,8 @@ typedef struct {
   GEOSWKBReader* wkb_reader;
   GEOSWKTWriter* wkt_writer;
   GEOSWKBWriter* wkb_writer;
+  VALUE wkrep_wkt_generator;
+  VALUE wkrep_wkb_generator;
   int flags;
   int srid;
   int buffer_resolution;

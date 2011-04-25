@@ -105,6 +105,37 @@ module RGeo
       #   Support <tt>z_coordinate</tt>. Default is false.
       # [<tt>:has_m_coordinate</tt>]
       #   Support <tt>m_coordinate</tt>. Default is false.
+      # [<tt>:wkt_parser</tt>]
+      #   Configure the parser for WKT. You may either pass a hash of
+      #   configuration parameters for WKRep::WKTParser.new, or the
+      #   special value <tt>:geos</tt>, indicating to use the native
+      #   GEOS parser. Default is the empty hash, indicating the default
+      #   configuration for WKRep::WKTParser.
+      #   Note that the special <tt>:geos</tt> value is not supported for
+      #   ZM factories, since GEOS currently can't handle ZM natively.
+      # [<tt>:wkb_parser</tt>]
+      #   Configure the parser for WKB. You may either pass a hash of
+      #   configuration parameters for WKRep::WKBParser.new, or the
+      #   special value <tt>:geos</tt>, indicating to use the native
+      #   GEOS parser. Default is the empty hash, indicating the default
+      #   configuration for WKRep::WKBParser.
+      #   Note that the special <tt>:geos</tt> value is not supported for
+      #   ZM factories, since GEOS currently can't handle ZM natively.
+      # [<tt>:wkt_generator</tt>]
+      #   Configure the generator for WKT. You may either pass a hash of
+      #   configuration parameters for WKRep::WKTGenerator.new, or the
+      #   special value <tt>:geos</tt>, indicating to use the native
+      #   GEOS generator. Default is <tt>{:convert_case => :upper}</tt>.
+      #   Note that the special <tt>:geos</tt> value is not supported for
+      #   ZM factories, since GEOS currently can't handle ZM natively.
+      # [<tt>:wkb_generator</tt>]
+      #   Configure the generator for WKB. You may either pass a hash of
+      #   configuration parameters for WKRep::WKBGenerator.new, or the
+      #   special value <tt>:geos</tt>, indicating to use the native
+      #   GEOS generator. Default is the empty hash, indicating the
+      #   default configuration for WKRep::WKBGenerator.
+      #   Note that the special <tt>:geos</tt> value is not supported for
+      #   ZM factories, since GEOS currently can't handle ZM natively.
       
       def factory(opts_={})
         if supported?

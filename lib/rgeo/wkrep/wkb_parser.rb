@@ -81,7 +81,16 @@ module RGeo
       # documentation for the options that can be passed.
       
       def initialize(factory_generator_=nil, opts_={})
-        self.factory_generator = factory_generator_
+        if factory_generator_.kind_of?(Feature::Factory::Instance)
+          @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
+          @exact_factory = factory_generator_
+        elsif factory_generator_.respond_to?(:call)
+          @factory_generator = factory_generator_
+          @exact_factory = nil
+        else
+          @factory_generator = Cartesian.method(:preferred_factory)
+          @exact_factory = nil
+        end
         @support_ewkb = opts_[:support_ewkb] ? true : false
         @support_wkb12 = opts_[:support_wkb12] ? true : false
         @ignore_extra_bytes = opts_[:ignore_extra_bytes] ? true : false
@@ -100,35 +109,10 @@ module RGeo
         @exact_factory
       end
       
-      # Sets the factory_generator. See WKBParser for details.
-      def factory_generator=(value_)
-        if value_.kind_of?(Feature::Factory::Instance)
-          @factory_generator = Feature::FactoryGenerator.single(value_)
-          @exact_factory = value_
-        elsif value_.respond_to?(:call)
-          @factory_generator = value_
-          @exact_factory = nil
-        else
-          @factory_generator = Cartesian.method(:preferred_factory)
-          @exact_factory = nil
-        end
-      end
-      
-      # Sets the factory_generator to the given block.
-      # See WKBParser for details.
-      def to_generate_factory(&block_)
-        @factory_generator = block_
-      end
-      
       # Returns true if this parser supports EWKB.
       # See WKBParser for details.
       def support_ewkb?
         @support_ewkb
-      end
-      
-      # Sets the the support_ewkb flag. See WKBParser for details.
-      def support_ewkb=(value_)
-        @support_ewkb = value_ ? true : false
       end
       
       # Returns true if this parser supports SFS 1.2 extensions.
@@ -137,33 +121,29 @@ module RGeo
         @support_wkb12
       end
       
-      # Sets the the support_wkb12 flag. See WKBParser for details.
-      def support_wkb12=(value_)
-        @support_wkb12 = value_ ? true : false
-      end
-      
       # Returns true if this parser ignores extra bytes.
       # See WKBParser for details.
       def ignore_extra_bytes?
         @ignore_extra_bytes
       end
       
-      # Sets the the ignore_extra_bytes flag. See WKBParser for details.
-      def ignore_extra_bytes=(value_)
-        @ignore_extra_bytes = value_ ? true : false
+      # Returns true if this parser can auto-detect hex.
+      # See WKBParser for details.
+      def auto_detect_hex?
+        @auto_detect_hex
       end
       
       
-      # Parse the given hex string, and return a geometry object.
-      
-      def parse_hex(str_)
-        parse([str_].pack('H*'))
-      end
-      
-      
-      # Parse the given binary data, and return a geometry object.
+      # Parse the given binary data or hexadecimal string, and return a
+      # geometry object.
+      # 
+      # The #parse_hex method is a synonym, present for historical
+      # reasons but deprecated. Use #parse instead.
       
       def parse(data_)
+        if data_[0,1] =~ /[0-9a-fA-F]/
+          data_ = [data_].pack('H*')
+        end
         @cur_has_z = nil
         @cur_has_m = nil
         @cur_srid = nil
@@ -183,10 +163,19 @@ module RGeo
         end
         obj_
       end
+      alias_method :parse_hex, :parse
       
       
       def _parse_object(contained_)  # :nodoc:
-        little_endian_ = _get_byte == 1
+        endian_value_ = _get_byte
+        case endian_value_
+        when 0
+          little_endian_ = false
+        when 1
+          little_endian_ = true
+        else
+          raise Error::ParseError, "Bad endian byte value: #{endian_value_}"
+        end
         type_code_ = _get_integer(little_endian_)
         has_z_ = false
         has_m_ = false
