@@ -50,13 +50,6 @@ module RGeo
         end
         
         
-        def test_uninitialized
-          geom_ = ::RGeo::Geos::GeometryImpl.new
-          assert_equal(false, geom_.initialized?)
-          assert_nil(geom_.geometry_type)
-        end
-        
-        
         def test_empty_geometries_equal
           geom1_ = @factory.collection([])
           geom2_ = @factory.line_string([])

@@ -45,6 +45,17 @@ module RGeo
       class TestOgcCs < ::Test::Unit::TestCase  # :nodoc:
         
         
+        # Handle differences in floating-point output.
+        
+        def _lenient_regex_for(str_)
+          ::Regexp.new(str_.gsub(/(\d)\.(\d{10,})/) do |m_|
+            before_ = $1
+            after_ = $2[0,10]
+            "#{before_}.#{after_}\\d*"
+          end.gsub(/(\.|\[|\]|\(|\)|\$|\^|\||\+)/){ |m_| "\\#{$1}"})
+        end
+        
+        
         def test_axis_info_by_value
           obj_ = ::RGeo::CoordSys::CS::AxisInfo.create('N', ::RGeo::CoordSys::CS::AO_NORTH)
           assert_equal('N', obj_.name)
@@ -277,7 +288,7 @@ module RGeo
           assert_nil(obj_.get_axis(1))
           assert_equal('degree', obj_.get_units(0).name)
           assert_equal('degree', obj_.get_units(1).name)
-          assert_equal('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137.0,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]', obj_.to_wkt)
+          assert_match(_lenient_regex_for('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137.0,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'), obj_.to_wkt)
         end
         
         
@@ -345,7 +356,7 @@ module RGeo
           assert_kind_of(::RGeo::CoordSys::CS::ProjectedCoordinateSystem, obj_.head)
           assert_kind_of(::RGeo::CoordSys::CS::VerticalCoordinateSystem, obj_.tail)
           assert_equal(3, obj_.dimension)
-          assert_equal(input_, obj_.to_wkt)
+          assert_match(_lenient_regex_for(input_), obj_.to_wkt)
         end
         
         
