@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# GEOS implementation additions written in Ruby
+# Tests for the GEOS factory
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -23,7 +23,8 @@
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 # ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -33,44 +34,58 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+
 module RGeo
-  
-  module Geos
-    
-    
-    class GeometryImpl  # :nodoc:
+  module Tests  # :nodoc:
+    module GeosFFI  # :nodoc:
       
-      include Feature::Instance
-      
-      def inspect
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
+      class TestFactory < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def setup
+          @factory = ::RGeo::Geos.factory(:srid => 4326, :native_interface => :ffi)
+        end
+        
+        
+        def test_srid_preserved_through_factory
+          geom_ = @factory.point(-10, 20)
+          assert_equal(4326, geom_.srid)
+          factory_ = geom_.factory
+          assert_equal(4326, factory_.srid)
+          geom2_ = factory_.point(-20, 25)
+          assert_equal(4326, geom2_.srid)
+        end
+        
+        
+        def test_srid_preserved_through_geom_operations
+          geom1_ = @factory.point(-10, 20)
+          geom2_ = @factory.point(-20, 25)
+          geom3_ = geom1_.union(geom2_)
+          assert_equal(4326, geom3_.srid)
+          assert_equal(4326, geom3_.geometry_n(0).srid)
+          assert_equal(4326, geom3_.geometry_n(1).srid)
+        end
+        
+        
+        def test_srid_preserved_through_geom_functions
+          geom1_ = @factory.point(-10, 20)
+          geom2_ = geom1_.boundary
+          assert_equal(4326, geom2_.srid)
+        end
+        
+        
+        def test_srid_preserved_through_dup
+          geom1_ = @factory.point(-10, 20)
+          geom2_ = geom1_.clone
+          assert_equal(4326, geom2_.srid)
+        end
+        
+        
       end
       
     end
-    
-    
-    class Factory
-      
-      
-      # :stopdoc:
-      if defined?(::RGeo::Geos::PointImpl)
-        IMPL_CLASSES = {
-          Feature::Point => PointImpl,
-          Feature::LineString => LineStringImpl,
-          Feature::LinearRing => LinearRingImpl,
-          Feature::Line => LineImpl,
-          Feature::GeometryCollection => GeometryCollectionImpl,
-          Feature::MultiPoint => MultiPointImpl,
-          Feature::MultiLineString => MultiLineStringImpl,
-          Feature::MultiPolygon => MultiPolygonImpl,
-        }.freeze
-      end
-      # :startdoc:
-      
-      
-    end
-    
-    
   end
-  
-end
+end if ::RGeo::Geos.ffi_supported?

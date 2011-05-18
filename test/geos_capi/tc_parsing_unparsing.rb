@@ -40,7 +40,7 @@ require 'rgeo'
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosCAPI  # :nodoc:
       
       class TestParsingUnparsing < ::Test::Unit::TestCase  # :nodoc:
         
@@ -77,4 +77,4 @@ module RGeo
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.capi_supported?

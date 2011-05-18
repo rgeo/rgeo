@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS line string implementation
+# Tests for the GEOS multi line string implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,26 +37,26 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/line_string_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/multi_line_string_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosFFI  # :nodoc:
       
-      class TestLineString < ::Test::Unit::TestCase  # :nodoc:
+      class TestMultiLineString < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def setup
-          @factory = ::RGeo::Geos.factory
+        def create_factory
+          ::RGeo::Geos.factory(:native_interface => :ffi)
         end
         
         
-        include ::RGeo::Tests::Common::LineStringTests
+        include ::RGeo::Tests::Common::MultiLineStringTests
         
         
       end
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.ffi_supported?

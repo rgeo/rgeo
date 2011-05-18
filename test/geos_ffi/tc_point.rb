@@ -37,44 +37,46 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosFFI  # :nodoc:
       
-      class TestZMFactory < ::Test::Unit::TestCase  # :nodoc:
+      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
         def setup
-          @factory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true, :srid => 1000, :buffer_resolution => 2)
+          @factory = ::RGeo::Geos.factory(:native_interface => :ffi)
+          @zfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :native_interface => :ffi)
+          @mfactory = ::RGeo::Geos.factory(:has_m_coordinate => true, :native_interface => :ffi)
+          @zmfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true,
+            :native_interface => :ffi)
         end
         
         
-        def test_factory_parts
-          assert_equal(1000, @factory.srid)
-          assert_equal(1000, @factory.z_factory.srid)
-          assert_equal(1000, @factory.m_factory.srid)
-          assert_equal(2, @factory.buffer_resolution)
-          assert_equal(2, @factory.z_factory.buffer_resolution)
-          assert_equal(2, @factory.m_factory.buffer_resolution)
-          assert(@factory.property(:has_z_coordinate))
-          assert(@factory.property(:has_m_coordinate))
-          assert(@factory.z_factory.property(:has_z_coordinate))
-          assert(!@factory.z_factory.property(:has_m_coordinate))
-          assert(!@factory.m_factory.property(:has_z_coordinate))
-          assert(@factory.m_factory.property(:has_m_coordinate))
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_has_no_projection
+          point_ = @factory.point(21, -22)
+          assert(!point_.respond_to?(:projection))
         end
         
         
-        def test_4d_point
-          point_ = @factory.point(1, 2, 3, 4)
-          assert_equal(Feature::Point, point_.geometry_type)
-          assert_equal(3, point_.z)
-          assert_equal(4, point_.m)
-          assert_equal(3, point_.z_geometry.z)
-          assert_nil(point_.z_geometry.m)
-          assert_nil(point_.m_geometry.z)
-          assert_equal(4, point_.m_geometry.m)
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(0, point_.srid)
+        end
+        
+        
+        def test_distance
+          point1_ = @factory.point(11, 12)
+          point2_ = @factory.point(11, 12)
+          point3_ = @factory.point(13, 12)
+          assert_equal(0, point1_.distance(point2_))
+          assert_equal(2, point1_.distance(point3_))
         end
         
         
@@ -82,4 +84,4 @@ module RGeo
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.ffi_supported?

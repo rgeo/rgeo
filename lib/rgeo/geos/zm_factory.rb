@@ -80,8 +80,14 @@ module RGeo
           :wkb_generator => opts_[:wkb_generator], :wkb_parser => opts_[:wkb_parser],
           :srid => srid_.to_i, :proj4 => proj4_, :coord_sys => coord_sys_,
         }
-        @zfactory = Factory.create(config_.merge(:has_z_coordinate => true))
-        @mfactory = Factory.create(config_.merge(:has_m_coordinate => true))
+        native_interface_ = opts_[:native_interface] || Geos.preferred_native_interface
+        if native_interface_ == :ffi
+          @zfactory = FFIFactory.new(config_.merge(:has_z_coordinate => true))
+          @mfactory = FFIFactory.new(config_.merge(:has_m_coordinate => true))
+        else
+          @zfactory = Factory.create(config_.merge(:has_z_coordinate => true))
+          @mfactory = Factory.create(config_.merge(:has_m_coordinate => true))
+        end
         
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
@@ -117,7 +123,7 @@ module RGeo
       # Returns the SRID of geometries created by this factory.
       
       def srid
-        @zfactory._srid
+        @zfactory.srid
       end
       
       
@@ -125,7 +131,7 @@ module RGeo
       # created by this factory
       
       def buffer_resolution
-        @zfactory._buffer_resolution
+        @zfactory.buffer_resolution
       end
       
       

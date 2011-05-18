@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# GEOS wrapper for RGeo
+# Tests for the GEOS point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -34,55 +34,53 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+
 module RGeo
-  
-  
-  # The Geos module provides general tools for creating and manipulating
-  # a GEOS-backed implementation of the SFS. This is a full implementation
-  # of the SFS using a Cartesian coordinate system. It uses the GEOS C++
-  # library to perform most operations, and hence is available only if
-  # GEOS version 3.2 or later is installed and accessible when the rgeo
-  # gem is installed. RGeo feature calls are translated into appropriate
-  # GEOS calls and directed to the library's C api. RGeo also corrects a
-  # few cases of missing or non-standard behavior in GEOS.
-  # 
-  # This module also provides a namespace for the implementation classes
-  # themselves; however, those classes are meant to be opaque and are
-  # therefore not documented.
-  # 
-  # To use the Geos implementation, first obtain a factory using the
-  # ::RGeo::Geos.factory method. You may then call any of the standard
-  # factory methods on the resulting object.
-  
-  module Geos
+  module Tests  # :nodoc:
+    module GeosFFI  # :nodoc:
+      
+      class TestZMFactory < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def setup
+          @factory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true,
+            :srid => 1000, :buffer_resolution => 2, :native_interface => :ffi)
+        end
+        
+        
+        def test_factory_parts
+          assert_equal(1000, @factory.srid)
+          assert_equal(1000, @factory.z_factory.srid)
+          assert_equal(1000, @factory.m_factory.srid)
+          assert_equal(2, @factory.buffer_resolution)
+          assert_equal(2, @factory.z_factory.buffer_resolution)
+          assert_equal(2, @factory.m_factory.buffer_resolution)
+          assert(@factory.property(:has_z_coordinate))
+          assert(@factory.property(:has_m_coordinate))
+          assert(@factory.z_factory.property(:has_z_coordinate))
+          assert(!@factory.z_factory.property(:has_m_coordinate))
+          assert(!@factory.m_factory.property(:has_z_coordinate))
+          assert(@factory.m_factory.property(:has_m_coordinate))
+        end
+        
+        
+        def test_4d_point
+          point_ = @factory.point(1, 2, 3, 4)
+          assert_equal(Feature::Point, point_.geometry_type)
+          assert_equal(3, point_.z)
+          assert_equal(4, point_.m)
+          assert_equal(3, point_.z_geometry.z)
+          assert_nil(point_.z_geometry.m)
+          assert_nil(point_.m_geometry.z)
+          assert_equal(4, point_.m_geometry.m)
+        end
+        
+        
+      end
+      
+    end
   end
-  
-  
-end
-
-
-# Implementation files
-require 'rgeo/geos/factory'
-require 'rgeo/geos/interface'
-begin
-  require 'rgeo/geos/geos_c_impl'
-rescue ::LoadError; end
-require 'rgeo/geos/impl_additions'
-require 'rgeo/geos/ffi_factory'
-require 'rgeo/geos/ffi_classes'
-require 'rgeo/geos/zm_factory'
-require 'rgeo/geos/zm_impl'
-
-# Determine native interface support.
-begin
-  require 'ffi-geos'
-  ::RGeo::Geos::FFI_SUPPORTED = true
-rescue ::LoadError
-  ::RGeo::Geos::FFI_SUPPORTED = false
-end
-::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos::Factory.respond_to?(:_create) ? true : false
-if ::RGeo::Geos::CAPI_SUPPORTED
-  ::RGeo::Geos.preferred_native_interface = :capi
-elsif ::RGeo::Geos::FFI_SUPPORTED
-  ::RGeo::Geos.preferred_native_interface = :ffi
-end
+end if ::RGeo::Geos.ffi_supported?

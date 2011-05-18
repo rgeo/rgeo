@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS multi point implementation
+# Tests for the GEOS point implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,26 +37,50 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_point_tests.rb', ::File.dirname(__FILE__))
+require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosCAPI  # :nodoc:
       
-      class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
+      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factory
-          ::RGeo::Geos.factory
+        def setup
+          @factory = ::RGeo::Geos.factory
+          @zfactory = ::RGeo::Geos.factory(:has_z_coordinate => true)
+          @mfactory = ::RGeo::Geos.factory(:has_m_coordinate => true)
+          @zmfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true)
         end
         
         
-        include ::RGeo::Tests::Common::MultiPointTests
+        include ::RGeo::Tests::Common::PointTests
+        
+        
+        def test_has_no_projection
+          point_ = @factory.point(21, -22)
+          assert(!point_.respond_to?(:projection))
+        end
+        
+        
+        def test_srid
+          point_ = @factory.point(11, 12)
+          assert_equal(0, point_.srid)
+        end
+        
+        
+        def test_distance
+          point1_ = @factory.point(11, 12)
+          point2_ = @factory.point(11, 12)
+          point3_ = @factory.point(13, 12)
+          assert_equal(0, point1_.distance(point2_))
+          assert_equal(2, point1_.distance(point3_))
+        end
         
         
       end
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.capi_supported?

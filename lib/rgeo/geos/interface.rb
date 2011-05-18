@@ -38,16 +38,48 @@ module RGeo
   
   module Geos
     
-    @supported = nil
-    
     class << self
       
       
-      # Returns true if GEOS implementation is supported.
-      # If this returns false, GEOS features are not available.
+      # Returns true if CAPI GEOS implementation is supported.
+      
+      def capi_supported?
+        CAPI_SUPPORTED
+      end
+      
+      
+      # Returns true if FFI GEOS implementation is supported.
+      
+      def ffi_supported?
+        FFI_SUPPORTED
+      end
+      
+      
+      # Returns true if any GEOS implementation is supported.
+      # If this returns false, GEOS features are not available at all.
       
       def supported?
-        @supported.nil? ? (@supported = Factory.respond_to?(:_create)) : @supported
+        FFI_SUPPORTED || CAPI_SUPPORTED
+      end
+      
+      
+      # Returns true if the given feature is a CAPI GEOS feature, or if
+      # the given factory is a native GEOS factory.
+      
+      def is_capi_geos?(object_)
+        Factory === object_ || GeometryImpl === object_ ||
+          ZMFactory === object_ && Factory === object_.z_factory ||
+          ZMGeometryImpl === object_ && GeometryImpl === object_.z_geometry
+      end
+      
+      
+      # Returns true if the given feature is an FFI GEOS feature, or if
+      # the given factory is an FFI GEOS factory.
+      
+      def is_ffi_geos?(object_)
+        FFIFactory === object_ || FFIGeometryImpl === object_ ||
+          ZMFactory === object_ && FFIFactory === object_.z_factory ||
+          ZMGeometryImpl === object_ && FFIGeometryImpl === object_.z_geometry
       end
       
       
@@ -55,8 +87,23 @@ module RGeo
       # factory is a GEOS factory.
       
       def is_geos?(object_)
-        supported? && (Factory === object_ || GeometryImpl === object_ || ZMFactory === object_ || ZMGeometryImpl === object_)
+        Factory === object_ || GeometryImpl === object_ ||
+          FFIFactory === object_ || FFIGeometryImpl === object_ ||
+          ZMFactory === object_ || ZMGeometryImpl === object_
       end
+      
+      
+      # The preferred native interface. This is the native interface
+      # used by default when a factory is created.
+      # Supported values are <tt>:capi</tt> and <tt>:ffi</tt>.
+      # 
+      # This is set automatically when RGeo loads, to <tt>:capi</tt>
+      # if the CAPI interface is available, otheriwse to <tt>:ffi</tt>
+      # if FFI is available, otherwise to nil if no GEOS interface is
+      # available. You can override this setting if you want to prefer
+      # FFI over CAPI.
+      
+      attr_accessor :preferred_native_interface
       
       
       # Returns a factory for the GEOS implementation.
@@ -71,12 +118,17 @@ module RGeo
       # 
       # Options include:
       # 
-      # [<tt>:lenient_multi_polygon_assertions</tt>]
+      # [<tt>:native_interface</tt>]
+      #   Specifies which native interface to use. Possible values are
+      #   <tt>:capi</tt> and <tt>:ffi</tt>. The default is the value
+      #   of the preferred_native_interface.
+      # [<tt>:uses_lenient_multi_polygon_assertions</tt>]
       #   If set to true, assertion checking on MultiPolygon is disabled.
       #   This may speed up creation of MultiPolygon objects, at the
       #   expense of not doing the proper checking for OGC MultiPolygon
       #   compliance. See RGeo::Feature::MultiPolygon for details on
-      #   the MultiPolygon assertions. Default is false.
+      #   the MultiPolygon assertions. Default is false. Also called
+      #   <tt>:lenient_multi_polygon_assertions</tt>.
       # [<tt>:buffer_resolution</tt>]
       #   The resolution of buffers around geometries created by this
       #   factory. This controls the number of line segments used to
@@ -139,8 +191,11 @@ module RGeo
       
       def factory(opts_={})
         if supported?
+          native_interface_ = opts_[:native_interface] || Geos.preferred_native_interface
           if opts_[:has_z_coordinate] && opts_[:has_m_coordinate]
             ZMFactory.new(opts_)
+          elsif native_interface_ == :ffi
+            FFIFactory.new(opts_)
           else
             Factory.create(opts_)
           end

@@ -233,9 +233,7 @@ module RGeo
         
         def test_empty_collection_boundary
           empty_ = @factory.collection([])
-          boundary_ = empty_.boundary
-          assert_equal(Feature::GeometryCollection, boundary_.geometry_type)
-          assert_equal(0, boundary_.num_geometries)
+          assert_nil(empty_.boundary)
         end
         
         

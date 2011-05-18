@@ -61,7 +61,7 @@ module RGeo
           
           # Get flags to pass to the C extension
           flags_ = 0
-          flags_ |= 1 if opts_[:lenient_multi_polygon_assertions]
+          flags_ |= 1 if opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
           flags_ |= 2 if opts_[:has_z_coordinate]
           flags_ |= 4 if opts_[:has_m_coordinate]
           if flags_ & 6 == 6
@@ -200,6 +200,10 @@ module RGeo
           _flags & 0x4 != 0
         when :is_cartesian
           true
+        when :uses_lenient_multi_polygon_assertions
+          _flags & 0x1 != 0
+        when :buffer_resolution
+          _buffer_resolution
         else
           nil
         end

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS point implementation
+# Tests for miscellaneous GEOS stuff
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,45 +37,31 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
-
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosCAPI  # :nodoc:
       
-      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
+      class TestMisc < ::Test::Unit::TestCase  # :nodoc:
         
         
         def setup
-          @factory = ::RGeo::Geos.factory
-          @zfactory = ::RGeo::Geos.factory(:has_z_coordinate => true)
-          @mfactory = ::RGeo::Geos.factory(:has_m_coordinate => true)
-          @zmfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true)
+          @factory = ::RGeo::Geos.factory(:srid => 4326)
         end
         
         
-        include ::RGeo::Tests::Common::PointTests
-        
-        
-        def test_has_no_projection
-          point_ = @factory.point(21, -22)
-          assert(!point_.respond_to?(:projection))
+        def test_uninitialized
+          geom_ = ::RGeo::Geos::GeometryImpl.new
+          assert_equal(false, geom_.initialized?)
+          assert_nil(geom_.geometry_type)
         end
         
         
-        def test_srid
-          point_ = @factory.point(11, 12)
-          assert_equal(0, point_.srid)
-        end
-        
-        
-        def test_distance
-          point1_ = @factory.point(11, 12)
-          point2_ = @factory.point(11, 12)
-          point3_ = @factory.point(13, 12)
-          assert_equal(0, point1_.distance(point2_))
-          assert_equal(2, point1_.distance(point3_))
+        def test_empty_geometries_equal
+          geom1_ = @factory.collection([])
+          geom2_ = @factory.line_string([])
+          assert(!geom1_.eql?(geom2_))
+          assert(geom1_.equals?(geom2_))
         end
         
         
@@ -83,4 +69,8 @@ module RGeo
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.capi_supported?
+
+unless ::RGeo::Geos.capi_supported?
+  puts "WARNING: GEOS CAPI support not available. Related tests skipped."
+end

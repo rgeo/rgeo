@@ -191,12 +191,9 @@ static VALUE method_geometry_boundary(VALUE self)
   if (self_geom) {
     GEOSContextHandle_t geos_context = self_data->geos_context;
     GEOSGeometry* boundary = GEOSBoundary_r(geos_context, self_geom);
-    // GEOS returns NULL for the boundary of an empty collection.
-    // Replace that with an empty collection.
-    if (!boundary) {
-      boundary = GEOSGeom_createCollection_r(geos_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
+    if (boundary) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, boundary, Qnil);
     }
-    result = rgeo_wrap_geos_geometry(self_data->factory, boundary, Qnil);
   }
   return result;
 }

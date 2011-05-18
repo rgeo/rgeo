@@ -1,3 +1,12 @@
+=== 0.3.0 / 2011-05-18
+
+RailsConf Edition
+
+* GEOS implementation now supports native GEOS integration via ffi-geos in addition to RGeo's built-in C integration. This should enable us to provide the GEOS implementation on JRuby. This is experimental at the moment since ffi-geos is still in early beta.
+* Taking the boundary of a GEOS GeometryCollection now returns nil. It used to return an empty GeometryCollection, regardless of the contents of the original collection. GeometryCollection subclasses like MultiPoint, however, do have proper boundaries.
+* Renamed the lenient_multi_polygon_assertions GEOS factory parameter to uses_lenient_multi_polygon_assertions. The older name will continue to work.
+* The GEOS buffer_resolution and uses_lenient_multi_polygon_assertions options are now exposed via properties.
+
 === 0.2.9 / 2011-04-25
 
 * INCOMPATIBLE CHANGE: mutator methods for the configurations of the WKRep parsers and generators have been removed. Create a new parser/generator if you need to change behavior.

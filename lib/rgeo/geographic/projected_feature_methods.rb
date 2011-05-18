@@ -71,7 +71,8 @@ module RGeo
       
       
       def boundary
-        factory.unproject(projection.boundary)
+        boundary_ = projection.boundary
+        boundary_ ? factory.unproject(boundary_) : nil
       end
       
       

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# GEOS implementation additions written in Ruby
+# Tests for the GEOS polygon implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -23,7 +23,8 @@
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 # ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
 # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -33,44 +34,53 @@
 ;
 
 
+require 'test/unit'
+require 'rgeo'
+
+require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
+
+
 module RGeo
-  
-  module Geos
-    
-    
-    class GeometryImpl  # :nodoc:
+  module Tests  # :nodoc:
+    module GeosCAPI  # :nodoc:
       
-      include Feature::Instance
-      
-      def inspect
-        "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
+      class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
+        
+        
+        def setup
+          @factory = ::RGeo::Geos.factory
+        end
+        
+        
+        include ::RGeo::Tests::Common::PolygonTests
+        
+        
+        def test_intersection
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 2)
+          point3_ = @factory.point(2, 2)
+          point4_ = @factory.point(2, 0)
+          poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_]))
+          poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point4_]))
+          poly3_ = poly1_.intersection(poly2_)
+          assert_equal(poly2_, poly3_)
+        end
+        
+        
+        def test_union
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 2)
+          point3_ = @factory.point(2, 2)
+          point4_ = @factory.point(2, 0)
+          poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_]))
+          poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point4_]))
+          poly3_ = poly1_.union(poly2_)
+          assert_equal(poly1_, poly3_)
+        end
+        
+        
       end
       
     end
-    
-    
-    class Factory
-      
-      
-      # :stopdoc:
-      if defined?(::RGeo::Geos::PointImpl)
-        IMPL_CLASSES = {
-          Feature::Point => PointImpl,
-          Feature::LineString => LineStringImpl,
-          Feature::LinearRing => LinearRingImpl,
-          Feature::Line => LineImpl,
-          Feature::GeometryCollection => GeometryCollectionImpl,
-          Feature::MultiPoint => MultiPointImpl,
-          Feature::MultiLineString => MultiLineStringImpl,
-          Feature::MultiPolygon => MultiPolygonImpl,
-        }.freeze
-      end
-      # :startdoc:
-      
-      
-    end
-    
-    
   end
-  
-end
+end if ::RGeo::Geos.capi_supported?

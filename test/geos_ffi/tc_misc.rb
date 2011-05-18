@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for the GEOS multi polygon implementation
+# Tests for miscellaneous GEOS stuff
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,27 +37,40 @@
 require 'test/unit'
 require 'rgeo'
 
-require ::File.expand_path('../common/multi_polygon_tests.rb', ::File.dirname(__FILE__))
-
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosFFI  # :nodoc:
       
-      class TestMultiPolygon < ::Test::Unit::TestCase  # :nodoc:
+      class TestMisc < ::Test::Unit::TestCase  # :nodoc:
         
         
-        def create_factories
-          @factory = ::RGeo::Geos.factory
-          @lenient_factory = ::RGeo::Geos.factory(:lenient_multi_polygon_assertions => true)
+        def setup
+          @factory = ::RGeo::Geos.factory(:srid => 4326, :native_interface => :ffi)
         end
         
         
-        include ::RGeo::Tests::Common::MultiPolygonTests
+        def test_uninitialized
+          geom_ = ::RGeo::Geos::GeometryImpl.new
+          assert_equal(false, geom_.initialized?)
+          assert_nil(geom_.geometry_type)
+        end
+        
+        
+        def test_empty_geometries_equal
+          geom1_ = @factory.collection([])
+          geom2_ = @factory.line_string([])
+          assert(!geom1_.eql?(geom2_))
+          assert(geom1_.equals?(geom2_))
+        end
         
         
       end
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.ffi_supported?
+
+unless ::RGeo::Geos.ffi_supported?
+  puts "WARNING: FFI-GEOS support not available. Related tests skipped."
+end

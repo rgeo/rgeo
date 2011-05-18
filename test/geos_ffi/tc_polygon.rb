@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Tests for miscellaneous GEOS stuff
+# Tests for the GEOS polygon implementation
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -37,31 +37,45 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
-    module Geos  # :nodoc:
+    module GeosFFI  # :nodoc:
       
-      class TestMisc < ::Test::Unit::TestCase  # :nodoc:
+      class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
         
         
         def setup
-          @factory = ::RGeo::Geos.factory(:srid => 4326)
+          @factory = ::RGeo::Geos.factory(:native_interface => :ffi)
         end
         
         
-        def test_uninitialized
-          geom_ = ::RGeo::Geos::GeometryImpl.new
-          assert_equal(false, geom_.initialized?)
-          assert_nil(geom_.geometry_type)
+        include ::RGeo::Tests::Common::PolygonTests
+        
+        
+        def test_intersection
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 2)
+          point3_ = @factory.point(2, 2)
+          point4_ = @factory.point(2, 0)
+          poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_]))
+          poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point4_]))
+          poly3_ = poly1_.intersection(poly2_)
+          assert_equal(poly2_, poly3_)
         end
         
         
-        def test_empty_geometries_equal
-          geom1_ = @factory.collection([])
-          geom2_ = @factory.line_string([])
-          assert(!geom1_.eql?(geom2_))
-          assert(geom1_.equals?(geom2_))
+        def test_union
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 2)
+          point3_ = @factory.point(2, 2)
+          point4_ = @factory.point(2, 0)
+          poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_]))
+          poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point4_]))
+          poly3_ = poly1_.union(poly2_)
+          assert_equal(poly1_, poly3_)
         end
         
         
@@ -69,4 +83,4 @@ module RGeo
       
     end
   end
-end if ::RGeo::Geos.supported?
+end if ::RGeo::Geos.ffi_supported?
