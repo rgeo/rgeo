@@ -100,6 +100,9 @@ module RGeo
       alias_method :lat, :y
       
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self, true)
+      
+      
     end
     
     
@@ -111,6 +114,9 @@ module RGeo
       include ImplHelper::BasicLineStringMethods
       include SphericalGeometryMethods
       include SphericalLineStringMethods
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self, true)
       
       
     end
@@ -127,6 +133,9 @@ module RGeo
       include SphericalLineStringMethods
       
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self, true)
+      
+      
     end
     
     
@@ -141,6 +150,9 @@ module RGeo
       include SphericalLineStringMethods
       
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self, true)
+      
+      
     end
     
     
@@ -151,6 +163,9 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPolygonMethods
       include SphericalGeometryMethods
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self, true)
       
       
     end
@@ -165,17 +180,23 @@ module RGeo
       include SphericalGeometryMethods
       
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self, true)
+      
+      
     end
     
     
     class SphericalMultiPointImpl  # :nodoc:
       
       
-      include Feature::GeometryCollection
+      include Feature::MultiPoint
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPointMethods
       include SphericalGeometryMethods
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self, true)
       
       
     end
@@ -184,11 +205,14 @@ module RGeo
     class SphericalMultiLineStringImpl  # :nodoc:
       
       
-      include Feature::GeometryCollection
+      include Feature::MultiLineString
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiLineStringMethods
       include SphericalGeometryMethods
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
       
       
     end
@@ -197,11 +221,14 @@ module RGeo
     class SphericalMultiPolygonImpl  # :nodoc:
       
       
-      include Feature::GeometryCollection
+      include Feature::MultiPolygon
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPolygonMethods
       include SphericalGeometryMethods
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self, true)
       
       
     end

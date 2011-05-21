@@ -53,9 +53,8 @@ module RGeo
     
     module MultiLineString
       
-      extend Type
-      
       include MultiCurve
+      extend Type
       
       
     end

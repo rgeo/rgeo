@@ -74,9 +74,8 @@ module RGeo
     
     module Curve
       
-      extend Type
-      
       include Geometry
+      extend Type
       
       
       # === SFS 1.1 Description

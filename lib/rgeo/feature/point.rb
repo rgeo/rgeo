@@ -59,9 +59,8 @@ module RGeo
     
     module Point
       
-      extend Type
-      
       include Geometry
+      extend Type
       
       
       # === SFS 1.1 Description

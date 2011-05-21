@@ -62,9 +62,9 @@ module RGeo
     
     module GeometryCollection
       
+      include Geometry
       extend Type
       
-      include Geometry
       include ::Enumerable
       
       

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical geometry common methods
+# Cartesian common methods
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -49,6 +49,25 @@ module RGeo
       
       def envelope
         BoundingBox.new(factory).add(self).to_geometry
+      end
+      
+      
+    end
+    
+    
+    module PointMethods  # :nodoc:
+      
+      
+      def distance(rhs_)
+        rhs_ = ::RGeo::Feature.cast(rhs_, @factory)
+        case rhs_
+        when PointImpl
+          dx_ = @x - rhs_.x
+          dy_ = @y - rhs_.y
+          ::Math.sqrt(dx_ * dx_ + dy_ * dy_)
+        else
+          super
+        end
       end
       
       

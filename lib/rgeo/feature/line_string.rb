@@ -54,9 +54,8 @@ module RGeo
     
     module LineString
       
-      extend Type
-      
       include Curve
+      extend Type
       
       
       # === SFS 1.1 Description

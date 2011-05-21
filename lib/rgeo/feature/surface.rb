@@ -68,9 +68,8 @@ module RGeo
     
     module Surface
       
-      extend Type
-      
       include Geometry
+      extend Type
       
       
       # === SFS 1.1 Description

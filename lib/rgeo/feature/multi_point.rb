@@ -60,9 +60,8 @@ module RGeo
     
     module MultiPoint
       
-      extend Type
-      
       include GeometryCollection
+      extend Type
       
       
     end

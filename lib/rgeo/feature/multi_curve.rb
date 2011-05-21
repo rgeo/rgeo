@@ -71,9 +71,8 @@ module RGeo
     
     module MultiCurve
       
-      extend Type
-      
       include GeometryCollection
+      extend Type
       
       
       # === SFS 1.1 Description

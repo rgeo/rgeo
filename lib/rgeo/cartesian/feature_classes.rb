@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # 
-# Spherical geography feature classes
+# Cartesian feature classes
 # 
 # -----------------------------------------------------------------------------
 # Copyright 2010 Daniel Azuma
@@ -46,19 +46,9 @@ module RGeo
       include ::RGeo::ImplHelper::BasicGeometryMethods
       include ::RGeo::ImplHelper::BasicPointMethods
       include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::Cartesian::PointMethods
       
-      
-      def distance(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, @factory)
-        case rhs_
-        when PointImpl
-          dx_ = @x - rhs_.x
-          dy_ = @y - rhs_.y
-          ::Math.sqrt(dx_ * dx_ + dy_ * dy_)
-        else
-          super
-        end
-      end
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self, true)
       
       
     end
@@ -72,6 +62,8 @@ module RGeo
       include ::RGeo::ImplHelper::BasicLineStringMethods
       include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::Cartesian::LineStringMethods
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self, true)
       
       
     end
@@ -87,6 +79,8 @@ module RGeo
       include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::Cartesian::LineStringMethods
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self, true)
+      
       
     end
     
@@ -94,12 +88,14 @@ module RGeo
     class LinearRingImpl  # :nodoc:
       
       
-      include ::RGeo::Feature::Line
+      include ::RGeo::Feature::LinearRing
       include ::RGeo::ImplHelper::BasicGeometryMethods
       include ::RGeo::ImplHelper::BasicLineStringMethods
       include ::RGeo::ImplHelper::BasicLinearRingMethods
       include ::RGeo::Cartesian::GeometryMethods
       include ::RGeo::Cartesian::LineStringMethods
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self, true)
       
       
     end
@@ -113,6 +109,8 @@ module RGeo
       include ::RGeo::ImplHelper::BasicPolygonMethods
       include ::RGeo::Cartesian::GeometryMethods
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self, true)
+      
       
     end
     
@@ -125,6 +123,8 @@ module RGeo
       include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
       include ::RGeo::Cartesian::GeometryMethods
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self, true)
+      
       
     end
     
@@ -132,11 +132,13 @@ module RGeo
     class MultiPointImpl  # :nodoc:
       
       
-      include ::RGeo::Feature::GeometryCollection
+      include ::RGeo::Feature::MultiPoint
       include ::RGeo::ImplHelper::BasicGeometryMethods
       include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelper::BasicMultiPointMethods
       include ::RGeo::Cartesian::GeometryMethods
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self, true)
       
       
     end
@@ -145,11 +147,13 @@ module RGeo
     class MultiLineStringImpl  # :nodoc:
       
       
-      include ::RGeo::Feature::GeometryCollection
+      include ::RGeo::Feature::MultiLineString
       include ::RGeo::ImplHelper::BasicGeometryMethods
       include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelper::BasicMultiLineStringMethods
       include ::RGeo::Cartesian::GeometryMethods
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
       
       
     end
@@ -158,11 +162,13 @@ module RGeo
     class MultiPolygonImpl  # :nodoc:
       
       
-      include ::RGeo::Feature::GeometryCollection
+      include ::RGeo::Feature::MultiPolygon
       include ::RGeo::ImplHelper::BasicGeometryMethods
       include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelper::BasicMultiPolygonMethods
       include ::RGeo::Cartesian::GeometryMethods
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self, true)
       
       
     end

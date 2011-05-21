@@ -1,11 +1,13 @@
-=== 0.3.0 / 2011-05-18
+=== 0.3.0 / 2011-05-23
 
-RailsConf Edition
-
-* GEOS implementation now supports native GEOS integration via ffi-geos in addition to RGeo's built-in C integration. This should enable us to provide the GEOS implementation on JRuby. This is experimental at the moment since ffi-geos is still in early beta.
+* GEOS implementation now supports native GEOS integration via ffi-geos in addition to RGeo's built-in C integration. This is experimental right now, since ffi-geos is still in early beta. Indeed, under JRuby, I'm still seeing intermittent segfaults that may be concurrency-related. Caveat emptor. However, this is an important step towards providing the GEOS implementation on JRuby in the future.
+* It is now possible to add mixins to geometry objects "globally". This was not possible previously because there is no global base class; however, the framework now provides global mixin containers that implementations are expected to include.
+* Added RGeo::Feature::Type.supertype.
 * Taking the boundary of a GEOS GeometryCollection now returns nil. It used to return an empty GeometryCollection, regardless of the contents of the original collection. GeometryCollection subclasses like MultiPoint, however, do have proper boundaries.
 * Renamed the lenient_multi_polygon_assertions GEOS factory parameter to uses_lenient_multi_polygon_assertions. The older name will continue to work.
 * The GEOS buffer_resolution and uses_lenient_multi_polygon_assertions options are now exposed via properties.
+* The RGeo::Feature::Polygon module incorrectly included Enumerable. Fixed.
+* Several of the implementations included some extraneous (nonfunctional) methods due to including the wrong modules. Fixed.
 
 === 0.2.9 / 2011-04-25
 

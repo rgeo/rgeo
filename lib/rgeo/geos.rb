@@ -79,6 +79,8 @@ begin
   ::RGeo::Geos::FFI_SUPPORTED = true
 rescue ::LoadError
   ::RGeo::Geos::FFI_SUPPORTED = false
+rescue
+  ::RGeo::Geos::FFI_SUPPORTED = false
 end
 ::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos::Factory.respond_to?(:_create) ? true : false
 if ::RGeo::Geos::CAPI_SUPPORTED

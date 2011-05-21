@@ -223,6 +223,10 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
   VALUE geos_polygon_class = rb_define_class_under(globals->geos_module, "PolygonImpl", globals->geos_geometry);
   globals->geos_polygon = geos_polygon_class;
   globals->feature_polygon = rb_const_get_at(globals->feature_module, rb_intern("Polygon"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    rb_const_get_at(globals->feature_module, rb_intern("Surface")), geos_polygon_class);
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_polygon, geos_polygon_class);
   
   rb_define_module_function(geos_polygon_class, "create", cmethod_create, 3);
   

@@ -79,10 +79,8 @@ module RGeo
     
     module Polygon
       
-      extend Type
-      
       include Surface
-      include ::Enumerable
+      extend Type
       
       
       # === SFS 1.1 Description

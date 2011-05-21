@@ -94,6 +94,8 @@ module RGeo
       
       include Feature::Instance
       
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Geometry).include_in_class(self)
+      
       
       def initialize(factory_, fg_geom_, klasses_)
         @factory = factory_
@@ -114,10 +116,12 @@ module RGeo
       attr_reader :_klasses  # :nodoc:
       
       
-      def dup
-        self.class.new(@factory, @fg_geom.clone, @_klasses)
+      def initialize_copy(orig_)
+        @factory = orig_.factory
+        @fg_geom = orig_.fg_geom.clone
+        @fg_geom.srid = orig_.fg_geom.srid
+        @_klasses = orig_._klasses
       end
-      alias_method :clone, :dup
       
       
       def srid
@@ -284,7 +288,9 @@ module RGeo
     end
     
     
-    class FFIPointImpl < FFIGeometryImpl
+    class FFIPointImpl < FFIGeometryImpl  # :nodoc:
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self)
       
       
       def x
@@ -329,7 +335,11 @@ module RGeo
     end
     
     
-    class FFILineStringImpl < FFIGeometryImpl
+    class FFILineStringImpl < FFIGeometryImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Curve).include_in_class(self)
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self)
       
       
       def geometry_type
@@ -397,7 +407,10 @@ module RGeo
     end
     
     
-    class FFILinearRingImpl < FFILineStringImpl
+    class FFILinearRingImpl < FFILineStringImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self)
       
       
       def geometry_type
@@ -408,7 +421,10 @@ module RGeo
     end
     
     
-    class FFILineImpl < FFILineStringImpl
+    class FFILineImpl < FFILineStringImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self)
       
       
       def geometry_type
@@ -419,7 +435,11 @@ module RGeo
     end
     
     
-    class FFIPolygonImpl < FFIGeometryImpl
+    class FFIPolygonImpl < FFIGeometryImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Surface).include_in_class(self)
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self)
       
       
       def geometry_type
@@ -488,7 +508,10 @@ module RGeo
     end
     
     
-    class FFIGeometryCollectionImpl < FFIGeometryImpl
+    class FFIGeometryCollectionImpl < FFIGeometryImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self)
       
       
       def geometry_type
@@ -550,7 +573,10 @@ module RGeo
     end
     
     
-    class FFIMultiPointImpl < FFIGeometryCollectionImpl
+    class FFIMultiPointImpl < FFIGeometryCollectionImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self)
       
       
       def geometry_type
@@ -561,7 +587,11 @@ module RGeo
     end
     
     
-    class FFIMultiLineStringImpl < FFIGeometryCollectionImpl
+    class FFIMultiLineStringImpl < FFIGeometryCollectionImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiCurve).include_in_class(self)
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self)
       
       
       def geometry_type
@@ -586,7 +616,11 @@ module RGeo
     end
     
     
-    class FFIMultiPolygonImpl < FFIGeometryCollectionImpl
+    class FFIMultiPolygonImpl < FFIGeometryCollectionImpl  # :nodoc:
+      
+      
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiSurface).include_in_class(self)
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self)
       
       
       def geometry_type

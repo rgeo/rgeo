@@ -447,12 +447,22 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   VALUE geos_line_string_class = rb_define_class_under(globals->geos_module, "LineStringImpl", globals->geos_geometry);
   globals->geos_line_string = geos_line_string_class;
   globals->feature_line_string = rb_const_get_at(globals->feature_module, rb_intern("LineString"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    rb_const_get_at(globals->feature_module, rb_intern("Curve")), geos_line_string_class);
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_line_string, geos_line_string_class);
+  
   VALUE geos_linear_ring_class = rb_define_class_under(globals->geos_module, "LinearRingImpl", geos_line_string_class);
   globals->geos_linear_ring = geos_linear_ring_class;
   globals->feature_linear_ring = rb_const_get_at(globals->feature_module, rb_intern("LinearRing"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_linear_ring, geos_linear_ring_class);
+  
   VALUE geos_line_class = rb_define_class_under(globals->geos_module, "LineImpl", geos_line_string_class);
   globals->geos_line = geos_line_class;
   globals->feature_line = rb_const_get_at(globals->feature_module, rb_intern("Line"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_line, geos_line_class);
   
   rb_define_module_function(geos_line_string_class, "create", cmethod_create_line_string, 2);
   rb_define_module_function(geos_line_string_class, "_copy_from", cmethod_line_string_copy_from, 2);

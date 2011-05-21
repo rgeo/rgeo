@@ -84,9 +84,8 @@ module RGeo
     
     module MultiPolygon
       
-      extend Type
-      
       include MultiSurface
+      extend Type
       
       
     end

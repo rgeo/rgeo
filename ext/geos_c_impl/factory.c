@@ -246,6 +246,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   VALUE rgeo_module = rb_define_module("RGeo");
   globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
   globals->feature_module = rb_define_module_under(rgeo_module, "Feature");
+  globals->global_mixins = rb_const_get_at(rb_const_get_at(globals->feature_module, rb_intern("MixinCollection")), rb_intern("GLOBAL"));
   
   // Add C methods to the factory.
   VALUE geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));

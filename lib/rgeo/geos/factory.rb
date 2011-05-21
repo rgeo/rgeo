@@ -39,7 +39,7 @@ module RGeo
   module Geos
     
     
-    # This the GEOS implementation of ::RGeo::Feature::Factory.
+    # This the GEOS CAPI implementation of ::RGeo::Feature::Factory.
     
     class Factory
       
@@ -50,8 +50,8 @@ module RGeo
       class << self
         
         
-        # Create a new factory. Returns nil if the GEOS implementation is
-        # not supported.
+        # Create a new factory. Returns nil if the GEOS CAPI implementation
+        # is not supported.
         # 
         # See ::RGeo::Geos.factory for a list of supported options.
         
@@ -163,7 +163,9 @@ module RGeo
       # Factory equivalence test.
       
       def eql?(rhs_)
-        rhs_.is_a?(Factory) && rhs_.srid == _srid && rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags && rhs_.proj4 == @proj4
+        rhs_.is_a?(Factory) && rhs_.srid == _srid &&
+          rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
+          rhs_.proj4 == @proj4
       end
       alias_method :==, :eql?
       

@@ -90,10 +90,37 @@ module RGeo
       end
       
       
+      # Returns the supertype of this type. The supertype of Geometry
+      # is nil.
+      
+      def supertype
+        @supertype
+      end
+      
+      
+      # Iterates over the known immediate subtypes of this type.
+      
+      def each_immediate_subtype(&block_)
+        @subtypes.each(&block_) if @subtypes
+      end
+      
+      
       # Returns the OpenGIS type name of this type.
       
       def type_name
         self.name.sub('RGeo::Feature::', '')
+      end
+      
+      
+      def _add_subtype(type_)  # :nodoc:
+        (@subtypes ||= []) << type_
+      end
+      
+      
+      def self.extended(type_)  # :nodoc:
+        supertype_ = type_.included_modules.find{ |m_| m_.kind_of?(self) }
+        type_.instance_variable_set(:@supertype, supertype_)
+        supertype_._add_subtype(type_) if supertype_
       end
       
       

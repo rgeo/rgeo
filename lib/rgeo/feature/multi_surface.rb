@@ -62,9 +62,8 @@ module RGeo
     
     module MultiSurface
       
-      extend Type
-      
       include GeometryCollection
+      extend Type
       
       
       # === SFS 1.1 Description

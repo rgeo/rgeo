@@ -390,15 +390,30 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   VALUE geos_geometry_collection_class = rb_define_class_under(globals->geos_module, "GeometryCollectionImpl", globals->geos_geometry);
   globals->geos_geometry_collection = geos_geometry_collection_class;
   globals->feature_geometry_collection = rb_const_get_at(globals->feature_module, rb_intern("GeometryCollection"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_geometry_collection, geos_geometry_collection_class);
+  
   VALUE geos_multi_point_class = rb_define_class_under(globals->geos_module, "MultiPointImpl", geos_geometry_collection_class);
   globals->geos_multi_point = geos_multi_point_class;
   globals->feature_multi_point = rb_const_get_at(globals->feature_module, rb_intern("MultiPoint"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_multi_point, geos_multi_point_class);
+  
   VALUE geos_multi_line_string_class = rb_define_class_under(globals->geos_module, "MultiLineStringImpl", geos_geometry_collection_class);
   globals->geos_multi_line_string = geos_multi_line_string_class;
   globals->feature_multi_line_string = rb_const_get_at(globals->feature_module, rb_intern("MultiLineString"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    rb_const_get_at(globals->feature_module, rb_intern("MultiCurve")), geos_multi_line_string_class);
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_multi_line_string, geos_multi_line_string_class);
+  
   VALUE geos_multi_polygon_class = rb_define_class_under(globals->geos_module, "MultiPolygonImpl", geos_geometry_collection_class);
   globals->geos_multi_polygon = geos_multi_polygon_class;
   globals->feature_multi_polygon = rb_const_get_at(globals->feature_module, rb_intern("MultiPolygon"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    rb_const_get_at(globals->feature_module, rb_intern("MultiSurface")), geos_multi_polygon_class);
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_multi_polygon, geos_multi_polygon_class);
   
   // Methods for GeometryCollectionImpl
   rb_define_module_function(geos_geometry_collection_class, "create", cmethod_geometry_collection_create, 2);

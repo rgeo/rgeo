@@ -154,6 +154,8 @@ void rgeo_init_geos_point(RGeo_Globals* globals)
   VALUE geos_point_class = rb_define_class_under(globals->geos_module, "PointImpl", globals->geos_geometry);
   globals->geos_point = geos_point_class;
   globals->feature_point = rb_const_get_at(globals->feature_module, rb_intern("Point"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_point, geos_point_class);
   
   rb_define_module_function(geos_point_class, "create", cmethod_create, 4);
   

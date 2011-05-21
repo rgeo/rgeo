@@ -652,6 +652,8 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   VALUE geos_geometry_class = rb_define_class_under(globals->geos_module, "GeometryImpl", rb_cObject);
   globals->geos_geometry = geos_geometry_class;
   globals->feature_geometry = rb_const_get_at(globals->feature_module, rb_intern("Geometry"));
+  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
+    globals->feature_geometry, geos_geometry_class);
   
   rb_define_alloc_func(geos_geometry_class, alloc_geometry);
   rb_define_method(geos_geometry_class, "_set_factory", method_geometry_set_factory, 1);

@@ -53,9 +53,9 @@ module RGeo
     
     module Line
       
-      extend Type
       
       include LineString
+      extend Type
       
       
     end

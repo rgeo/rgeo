@@ -39,13 +39,20 @@ module RGeo
   module Geos
     
     
+    # This the FFI-GEOS implementation of ::RGeo::Feature::Factory.
+    
     class FFIFactory
       
       
       include Feature::Factory::Instance
       
       
-      def initialize(opts_={})  # :nodoc:
+      # Create a new factory. Returns nil if the FFI-GEOS implementation
+      # is not supported.
+      # 
+      # See ::RGeo::Geos.factory for a list of supported options.
+      
+      def initialize(opts_={})
         # Main flags
         @uses_lenient_multi_polygon_assertions = opts_[:lenient_multi_polygon_assertions] ||
           opts_[:uses_lenient_multi_polygon_assertions]
@@ -136,6 +143,13 @@ module RGeo
       end
       
       
+      def inspect  # :nodoc:
+        "#<#{self.class}:0x#{object_id.to_s(16)} srid=#{srid}>"
+      end
+      
+      
+      # Factory equivalence test.
+      
       def eql?(rhs_)
         rhs_.is_a?(self.class) && @srid == rhs_.srid &&
           @has_z == rhs_.property(:has_z_coordinate) &&
@@ -144,7 +158,7 @@ module RGeo
       alias_method :==, :eql?
       
       
-      # Returns the SRID.
+      # Returns the SRID of geometries created by this factory.
       
       def srid
         @srid
