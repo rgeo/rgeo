@@ -1,7 +1,7 @@
 = An Introduction to Spatial Programming With RGeo
 
 * by Daniel Azuma
-* version 0.3 (17 Feb 2011)
+* version 0.4 (23 May 2011)
 
 == Introduction
 
@@ -38,7 +38,7 @@ Fortunately, a number of software libraries and organizations now exist to promo
 
 Visualization tools have advanced considerably in recent years. Mapping services such as {Google Maps}[http://maps.google.com/] and {Bing Maps}[http://www.bing.com/maps/] now have extensive API support for developing mapping applications. An open mapping service, {OpenStreetMap}[http://www.openstreetmap.org/], has also been launched and is gaining momentum. In addition, tools which let you serve your own map data, such as {OpenLayers}[http://openlayers.org/] and {PolyMaps}[http://polymaps.org/], have also appeared.
 
-Most major relational databases now support spatial extensions. The {MySQL}[http://mysql.com/] database provides basic spatial column support out of the box. Third-party add-on libraries exist for {Sqlite3}[http://www.sqlite.org/] and {PostgreSQL}[http://www.postgresql.org/] in the form of {SpatiaLite}[http://www.gaia-gis.it/spatialite/] and {PostGIS}[http://www.postgis.org/], respectively. Commercial databases such as Oracle and Microsoft SQL Server also provide facilities for storing and querying spatial data. Spatial features are also appearing in non-relational data stores. {MongoDB}[http://www.mongodb.org/] recently introduced geospatial indexing, {Solr}[http://lucene.apache.org/solr/] is expected to support spatial queries in the next release of its Lucene-based search engine, and {Sphinx}[http://sphinxsearch.com/] also provides limited spatial search capabilities.
+Most major relational databases now support spatial extensions. The {MySQL}[http://mysql.com/] database provides basic spatial column support out of the box. Third-party add-on libraries exist for {Sqlite3}[http://www.sqlite.org/] and {PostgreSQL}[http://www.postgresql.org/] in the form of {SpatiaLite}[http://www.gaia-gis.it/spatialite/] and {PostGIS}[http://www.postgis.org/], respectively. Commercial databases such as Oracle and Microsoft SQL Server also provide facilities for storing and querying spatial data. Spatial features are also appearing in non-relational data stores. {MongoDB}[http://www.mongodb.org/] recently introduced geospatial indexing, {Solr}[http://lucene.apache.org/solr/] supports spatial queries in the latest release of its Lucene-based search engine, and {Sphinx}[http://sphinxsearch.com/] also provides limited spatial search capabilities.
 
 A variety of data services have also appeared. Geocoding, the process approximating a latitude/longitude coordinate from a street address, is now offered by most major mapping service vendors such as {Google}[http://code.google.com/apis/maps/documentation/geocoding/], {Microsoft}[http://www.microsoft.com/maps/developers/], and {Yahoo}[http://developer.yahoo.com/geo/placefinder/]. Place databases with geocoded business and major location listings are now also available from a variety of vendors. Several services, notably {SimpleGeo}[http://www.simplegeo.com/], have recently appeared for cloud-based storage and querying of custom location data.
 
@@ -48,9 +48,9 @@ Perhaps most important of all, however, are the organizations that have appeared
 
 === 1.3. Ruby Libraries and \RGeo
 
-Ruby developers have had access to a fair number of spatial tools, primarily integration libraries for external services. {Geokit}[http://geokit.rubyforge.org/] provides a common interface for querying geocoding services, and a basic ActiveRecord extension for simple spatial queries. {YM4R}[http://ym4r.rubyforge.org/] provides a simple interface for integrating the Google and Yahoo map visualization tools in a Ruby application. Finally, {GeoRuby}[http://georuby.rubyforge.org/] provides classes for basic spatial data types such as points, lines, and polygons, and the add-on library {spatial_adapter}[http://github.com/fragility/spatial_adapter] hacks a few of the popular ActiveRecord database adapters to support spatial columns in the database.
+Ruby developers have had access to a fair number of spatial tools, primarily integration libraries for external services. {Geokit}[http://geokit.rubyforge.org/] and {Geocoder}[http://www.rubygeocoder.com/] provide a common interfaces for querying geocoding services, and basic ActiveRecord extensions for simple spatial queries. {YM4R}[http://ym4r.rubyforge.org/] provides a simple interface for integrating the Google and Yahoo map visualization tools in a Ruby application. Finally, {GeoRuby}[http://georuby.rubyforge.org/] provides classes for basic spatial data types such as points, lines, and polygons, and the add-on library {spatial_adapter}[http://github.com/fragility/spatial_adapter] hacks a few of the popular ActiveRecord database adapters to support spatial columns in the database.
 
-In this document, we will cover {RGeo}[http://github.com/dazuma/rgeo], a new spatial data library for Ruby that provides a complete and robust implementation of the standard OGC spatial data types and operations. It covers some of the same functionality as GeoRuby and spatial_adapter. However, where GeoRuby implements only a minimal subset of the OGC feature interfaces, \RGeo supports the entire specification, as well as providing many features and extensions not available with the older libraries.
+In this document, we will cover {RGeo}[http://github.com/dazuma/rgeo], a recent spatial data library for Ruby that provides a complete and robust implementation of the standard OGC spatial data types and operations. It covers some of the same functionality as GeoRuby and spatial_adapter. However, where GeoRuby implements only a minimal subset of the OGC feature interfaces, \RGeo supports the entire specification, as well as providing many features and extensions not available with the older libraries.
 
 \RGeo comprises several libraries, distributed as gems: a core library, and a suite of optional add-on modules. The core library, distributed as the {rgeo}[http://github.com/dazuma/rgeo] gem, includes the spatial data implementation itself. Currently available add-on modules include {rgeo-geojson}[http://github.com/dazuma/rgeo-geojson], which reads and writes the {GeoJSON}[http://www.geojson.org/] format, and {rgeo-shapefile}[http://github.com/dazuma/rgeo-shapefile], which reads ESRI shapefiles. A number of ActiveRecord adapters also utilize \RGeo to communicate with spatial databases; these include {mysqlspatial}[http://github.com/dazuma/activerecord-mysqlspatial-adapter], {mysql2spatial}[http://github.com/dazuma/activerecord-mysql2spatial-adapter], {spatialite}[http://github.com/dazuma/activerecord-spatialite-adapter], and {postgis}[http://github.com/dazuma/activerecord-postgis-adapter].
 
@@ -62,7 +62,7 @@ This section will cover the standard types of spatial data used in geospatial ap
 
 The Open Geospatial Consortium (OGC) defines and publishes a specification entitled "{Geographic information -- Simple feature access}[http://www.opengeospatial.org/standards/sfa]", which defines, among other things, a set of spatial data types and operations that can be done on them. This standard, which we will refer to as the Simple Features Specification (SFS), defines the core types and interfaces used by most spatial applications and databases. Although more recent versions of the spec are now available, most current implementations, including \RGeo, follow version 1.1 of the SFS, and this is the specification we will cover here.
 
-A "feature" in the SFS is a geometric object in 2 or 3 dimensional space. These objects can be points, lines, curves, surfaces, and polygons-- in general, most 0, 1, or 2 dimensional objects are supported. Each of these objects is identified by coordinates (X, Y, and sometimes Z), and has an object-oriented interface associated with it, defining a set of operations that can be done. In \RGeo, these interfaces exist as modules in the RGeo::Feature namespace.
+A "feature" in the SFS is a geometric object in 2 or 3 dimensional space. These objects can be points, lines, curves, surfaces, and polygons-- in general, most 0, 1, or 2 dimensional objects are supported. Each of these objects is identified by coordinates (X, Y, and sometimes Z), and has an object-oriented interface associated with it, defining a set of operations that can be performed. In \RGeo, these interfaces exist as modules in the RGeo::Feature namespace.
 
 We will quickly cover the types of geometric objects supported, and then discuss how to use \RGeo to create and manipulate spatial data as Ruby objects.
 
@@ -242,10 +242,10 @@ Several size and distance calculations are available. You can compute the distan
 The SFS defines two serialization schemes for geometric objects, known as the WKT (well-known text) and WKB (well-known binary) formats. The WKT is often used for textual display and transmission of a geometric object, while the WKB is sometimes used as an internal data format by spatial databases. Geometric objects in \RGeo define the <tt>as_text</tt> and <tt>as_binary</tt> methods to serialize the object into a data string, while \RGeo factories provide <tt>parse_wkt</tt> and <tt>parse_wkb</tt> methods to reconstruct geometric objects from their serialized form.
 
  p00 = factory.point(0, 0)
- p00.as_text                     # returns "Point (0.0 0.0)"
+ p00.as_text                     # returns "POINT (0.0 0.0)"
  p10 = factory.point(1, 0)
  line = factory.line(p00, p10)
- line.as_text                    # returns "LineString (0.0 0.0, 1.0 0.0)"
+ line.as_text                    # returns "LINESTRING (0.0 0.0, 1.0 0.0)"
  p = factory.parse_wkt('POINT (3 4)')
  p.x                             # returns 3.0
 
@@ -329,7 +329,7 @@ Under most circumstances, when you're working with geographic data in \RGeo, you
 
 === 4.5. Spatial Reference Systems and the EPSG Dataset
 
-The OGC also defines a syntax for specifying coordinate systems, the {Coordinate Transformation Services Specification}[http://www.opengeospatial.org/standards/ct]. This specification defines both an object model and a well-known text representation for coordinate systems and transformations. \RGeo also provides basic support for this specification; you can attach an OGC coordinate system specification to a factory to indicate the coordinate system. However, if you want \RGeo to automatically convert spatial data between coordinate systems, you must use Proj4 syntax.
+The OGC also defines a syntax for specifying coordinate systems, the {Coordinate Transformation Services Specification}[http://www.opengeospatial.org/standards/ct]. This specification defines both an object model and a well-known text representation for coordinate systems and transformations. \RGeo also provides basic support for this specification; you can attach an OGC coordinate system specification to a factory to indicate the coordinate system. However, if you want \RGeo to convert spatial data between coordinate systems, you must use Proj4 syntax.
 
 Finally, there also exists a <i>de facto</i> standard database of coordinate systems and related parameters, published by EPSG (now the OGP Geomatics Committee). This is a set of coordinate systems, each tagged with a well-known ID number, including geographic and projected systems. You can browse this database, including both OGC and Proj4 representations, at http://www.spatialreference.org/. This database is also included as a table in many popular spatial databases including PostGIS and SpatiaLite. Typically, the EPSG number is used as the SRID identifying the coordinate system for geometric objects stored in the database.
 
@@ -411,6 +411,16 @@ PostGIS uses as its internal format a variant of WKB known as EWKB. This variant
 * *spatialite*: Subclasses the sqlite3 adapter and adds support for the SpatiaLite extension. Available as the <b>activerecord-spatialite-adapter</b> gem.
 * *postgis*: Subclasses the postgresql adapter and adds support for the PostGIS extension. Available as the <b>activerecord-postgis-adapter</b> gem.
 
+=== 5.6. Commercial SQL Databases and Non-SQL Databases
+
+Major commercial relational databases also include various levels of support for the OGC SQL specification. Recent versions of the venerable Oracle database include {Oracle Spatial}[http://www.oracle.com/technetwork/database/options/spatial/index.html], and Microsoft's latest SQL Server also includes {spatial data tools}[http://www.microsoft.com/sqlserver/2008/en/us/spatial-data.aspx]. I have not had a chance to evaluate the spatial tools in these commercial databases, though I have heard them described as "powerful, but moody". \RGeo does not yet have direct ActiveRecord support for Oracle or SQL Server spatial.
+
+Several "NoSQL" databases also provide various degrees of limited support for geospatial data. Because these databases intentionally eschew the SQL standard, there is no OGC-defined standard interface for these databases, and so you will need to study the individual database's documentation to get an idea of the capabilities and API. \RGeo does not yet provide direct integration support for non-relational databases, but in most cases, it should not be too difficult to write glue code yourself.
+
+{MongoDB}[http://www.mongodb.org/] provides limited support for storing and indexing point data. In the current stable release series (1.8.x), you can store a point field as a longitude-latitude pair, and perform basic proximity and bounds searches. It does not support LineString or Polygon data. As far as I can determine, MongoDB uses a simple indexing system based on geo-hashing, which also limits its ability to support non-point data.
+
+{GeoCouch}[http://github.com/couchbase/geocouch] is an addition to {CouchDB}[http://couchdb.apache.org/] that provides an r-tree-based spatial index for point data. I have not studied it much, but it also appears to be limited to point data.
+
 == 6. Location Service Integration
 
 When writing a location-aware application, you will often need to interact with external sources of data and external location-based services. \RGeo provides several tools to facilitate this data transfer.
@@ -438,3 +448,4 @@ At the time of this writing, a number of open source geospatial tools and librar
 * Version 0.1 / 5 Dec 2010: Initial draft
 * Version 0.2 / 7 Dec 2010: More code examples and other minor updates
 * Version 0.3 / 17 Feb 2011: Further minor clarifications and fixes, and coverage of features in newer \RGeo releases
+* Version 0.4 / 23 May 2011: Minor updates to keep up with new releases
