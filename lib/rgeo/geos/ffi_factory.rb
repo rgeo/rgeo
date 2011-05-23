@@ -222,7 +222,7 @@ module RGeo
       end
       
       
-      def wrap_fg_geom(fg_geom_, klass_=nil)
+      def wrap_fg_geom(fg_geom_, klass_=nil)  # :nodoc:
         klasses_ = nil
         unless klass_.kind_of?(::Class)
           is_collection_ = false

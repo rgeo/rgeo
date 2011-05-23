@@ -73,6 +73,8 @@ require 'rgeo/geos/ffi_classes'
 require 'rgeo/geos/zm_factory'
 require 'rgeo/geos/zm_impl'
 
+# :stopdoc:
+
 # Determine native interface support.
 begin
   require 'ffi-geos'
@@ -88,3 +90,5 @@ if ::RGeo::Geos::CAPI_SUPPORTED
 elsif ::RGeo::Geos::FFI_SUPPORTED
   ::RGeo::Geos.preferred_native_interface = :ffi
 end
+
+# :startdoc:

@@ -46,8 +46,8 @@ RGeo is known to work with the following Ruby implementations:
 * Standard "MRI" Ruby 1.8.7 or later. (1.9.2 or later preferred.)
 * Rubinius 1.1 or later.
 * Partial support for JRuby 1.5 or later, but a bunch of features are
-  missing because GEOS and Proj are not available from Java. We plan on
-  integrating with JTS or possibly ffi-geos in the future.
+  missing or not yet stable because GEOS and Proj integration is not
+  yet stable in JRuby. This is high-priority ongoing work.
 
 Some features also require the following:
 
@@ -93,8 +93,8 @@ installation prefix directory using the "--with-proj-dir" option.
 The RGeo suite of tools is evolving rapidly. The current to-do list for
 the core library includes:
 
+* Better JRuby support.
 * Ellipsoidal geography implementation, possibly utilizing geographiclib.
-* JRuby support via the JTS library, or possibly via ffi-geos.
 * Windows build support.
 
 Each of the current add-on modules also has its own feature roadmap, and

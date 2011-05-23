@@ -85,7 +85,10 @@ module RGeo
         end
         
         
+        # The feature type
         attr_reader :type
+        
+        # The MixinCollection owning this data
         attr_reader :collection
         
         

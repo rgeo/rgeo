@@ -147,7 +147,7 @@ end
 clean_files_ = [doc_directory_, pkg_directory_, tmp_directory_] +
   ::Dir.glob('ext/**/Makefile*') +
   ::Dir.glob('ext/**/*.{o,class,log,dSYM}') +
-  ::Dir.glob("**/*.{#{dlext_},rbc,jar}") +
+  ::Dir.glob("**/*.{bundle,so,dll,rbc,jar}") +
   (::RAKEFILE_CONFIG[:extra_clean_files] || [])
 task :clean do  
   clean_files_.each{ |path_| rm_rf path_ }

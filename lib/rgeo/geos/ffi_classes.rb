@@ -381,9 +381,13 @@ module RGeo
       
       
       def points
-        # TODO: optimize this
+        coord_seq_ = @fg_geom.coord_seq
+        has_3d_ = @factory._has_3d
         ::Array.new(@fg_geom.num_points) do |n_|
-          point_n(n_)
+          x_ = coord_seq_.get_x(n_)
+          y_ = coord_seq_.get_y(n_)
+          extra_ = has_3d_ ? [coord_seq_.get_z(n_)] : []
+          @factory.point(x_, y_, *extra_)
         end
       end
       
