@@ -157,6 +157,8 @@ module RGeo
           assert(!point1_.equals?(point3_))
           assert(point1_ != point3_)
           assert(!point1_.eql?(point3_))
+          assert(point1_ != 'hello')
+          assert(!point1_.eql?('hello'))
         end
         
         

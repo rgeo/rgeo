@@ -63,9 +63,10 @@ module RGeo
     #   Z is present); or <tt>:wkt12</tt>, indicating SFS 1.2 WKT
     #   tags that indicate the presence of Z and M in a separate token.
     #   Default is <tt>:wkt11</tt>.
+    #   This option can also be specified as <tt>:type_format</tt>.
     # [<tt>:emit_ewkt_srid</tt>]
     #   If true, embed the SRID of the toplevel geometry. Available only
-    #   if <tt>:type_format</tt> is <tt>:ewkt</tt>. Default is false.
+    #   if <tt>:tag_format</tt> is <tt>:ewkt</tt>. Default is false.
     # [<tt>:square_brackets</tt>]
     #   If true, uses square brackets rather than parentheses.
     #   Default is false.
@@ -83,7 +84,7 @@ module RGeo
       # documentation for the options that can be passed.
       
       def initialize(opts_={})
-        @tag_format = opts_[:tag_format] || :wkt11
+        @tag_format = opts_[:tag_format] || opts_[:type_format] || :wkt11
         @emit_ewkt_srid = opts_[:emit_ewkt_srid] ? true : false if @tag_format == :ewkt
         @square_brackets = opts_[:square_brackets] ? true : false
         @convert_case = opts_[:convert_case]
@@ -94,6 +95,7 @@ module RGeo
       def tag_format
         @tag_format
       end
+      alias_method :type_format, :tag_format
       
       # Returns whether SRID is embedded. See WKTGenerator for details.
       def emit_ewkt_srid?

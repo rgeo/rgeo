@@ -1,3 +1,8 @@
+=== 0.3.1 / 2011-05-24
+
+* Running a == operator comparison between a geometry and a non-geometry caused an exception for some implementations. Fixed. (Reported by Daniel Hackney.)
+* Clarified the specifications for operators on geometry objects.
+
 === 0.3.0 / 2011-05-23
 
 * RGeo can now use GEOS via the ffi-geos gem, in addition to RGeo's built-in C integration. The ffi-geos integration is experimental right now, since ffi-geos is still in early beta. In particular, I do not recommend using it in JRuby yet (as of JRuby 1.6.1), because an apparent JRuby bug (JRUBY-5813) causes intermittent segfaults. However, once the issue is resolved (soon, I hope, since I've already submitted a patch to the JRuby team), we should have GEOS functional on JRuby.

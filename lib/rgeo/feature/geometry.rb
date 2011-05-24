@@ -578,28 +578,41 @@ module RGeo
       end
       
       
-      # Alias of the equals? method.
+      # This operator should behave almost the same as the equals? method.
+      # The difference is that the == operator is required to handle rhs
+      # values that are not geometry objects (returning false in such cases)
+      # in order to fulfil the standard Ruby contract for the == operator,
+      # whereas the equals? method may assume that any rhs is a geometry.
       
       def ==(rhs_)
-        equals?(rhs_)
+        rhs_.kind_of?(::RGeo::Feature::Instance) ? equals?(rhs_) : false
       end
       
       
-      # Alias of the difference method.
+      # If the given rhs is a geometry object, this operator must behave
+      # the same as the difference method. The behavior for other rhs
+      # types is not specified; an implementation may choose to provide
+      # additional capabilities as appropriate.
       
       def -(rhs_)
         difference(rhs_)
       end
       
       
-      # Alias of the union method.
+      # If the given rhs is a geometry object, this operator must behave
+      # the same as the union method. The behavior for other rhs types
+      # is not specified; an implementation may choose to provide
+      # additional capabilities as appropriate.
       
       def +(rhs_)
         union(rhs_)
       end
       
       
-      # Alias of the intersection method.
+      # If the given rhs is a geometry object, this operator must behave
+      # the same as the intersection method. The behavior for other rhs
+      # types is not specified; an implementation may choose to provide
+      # additional capabilities as appropriate.
       
       def *(rhs_)
         intersection(rhs_)
