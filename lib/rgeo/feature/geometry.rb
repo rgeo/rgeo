@@ -581,7 +581,7 @@ module RGeo
       # This operator should behave almost the same as the equals? method.
       # The difference is that the == operator is required to handle rhs
       # values that are not geometry objects (returning false in such cases)
-      # in order to fulfil the standard Ruby contract for the == operator,
+      # in order to fulfill the standard Ruby contract for the == operator,
       # whereas the equals? method may assume that any rhs is a geometry.
       
       def ==(rhs_)

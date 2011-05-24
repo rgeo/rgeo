@@ -93,6 +93,7 @@ installation prefix directory using the "--with-proj-dir" option.
 The RGeo suite of tools is evolving rapidly. The current to-do list for
 the core library includes:
 
+* YAML and Marshal serialization support.
 * Better JRuby support.
 * Ellipsoidal geography implementation, possibly utilizing geographiclib.
 * Windows build support.

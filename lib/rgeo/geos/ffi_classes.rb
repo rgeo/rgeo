@@ -183,10 +183,10 @@ module RGeo
       def equals?(rhs_)
         return false unless rhs_.kind_of?(::RGeo::Feature::Instance)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        # GEOS has a bug where empty geometries are not spatially equal
-        # to each other. Work around this case first.
         if !fg_
           false
+        # GEOS has a bug where empty geometries are not spatially equal
+        # to each other. Work around this case first.
         elsif fg_.empty? && @fg_geom.empty?
           true
         else
