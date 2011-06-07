@@ -1,4 +1,4 @@
-=== 0.3.2 / 2011-06-06
+=== 0.3.2 / 2011-06-??
 
 * GEOS CAPI implementation can now use prepared geometries to speed up certain operations. The GEOS FFI implementation will do the same once I find out how ffi-geos will handle prepared geometries internally.
 * Calling dup on a Proj4 object caused a segfault. Fixed.
