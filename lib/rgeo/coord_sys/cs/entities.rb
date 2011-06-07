@@ -211,6 +211,42 @@ module RGeo
         end
         
         
+        def marshal_dump  # :nodoc:
+          {'wkt' => _to_wkt('[', ']')}
+        end
+        
+        
+        def marshal_load(data_)  # :nodoc:
+          data_ = data_['wkt'] if data_.is_a?(::Hash)
+          temp_ = CS.create_from_wkt(data_)
+          if temp_.class == self.class
+            temp_.instance_variables.each do |iv_|
+              instance_variable_set(iv_, temp_.instance_variable_get(iv_))
+            end
+          else
+            raise ::TypeError, 'Bad Marshal data'
+          end
+        end
+        
+        
+        yaml_as('tag:georails.org,2011:rgeo/coordsys/cs')
+        
+        
+        def self.yaml_new(klass_, tag_, data_)  # :nodoc:
+          data_ = data_['wkt'] if data_.is_a?(::Hash)
+          CS.create_from_wkt(data_)
+        end
+        
+        
+        def to_yaml(opts_={})  # :nodoc:
+          ::YAML.quick_emit(nil, opts_) do |out_|
+            out_.map(taguri, to_yaml_style) do |map_|
+              map_.add('wkt', _to_wkt('[', ']'))
+            end
+          end
+        end
+        
+        
         def _to_wkt(open_, close_)  # :nodoc:
           content_ = _wkt_content(open_, close_).map{ |obj_| ",#{obj_}" }.join
           if defined?(@authority) && @authority

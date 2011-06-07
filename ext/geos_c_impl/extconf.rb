@@ -74,6 +74,8 @@ else
     else
       $libs.gsub!(' -lgeos -lgeos_c', '')
     end
+    have_func('GEOSPreparedContains_r', 'geos_c.h')
+    have_func('GEOSPreparedDisjoint_r', 'geos_c.h')
   end
   unless found_geos_
     puts "**** WARNING: Unable to find GEOS headers or GEOS version is too old."

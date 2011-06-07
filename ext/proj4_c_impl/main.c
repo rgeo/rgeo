@@ -120,9 +120,38 @@ static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
   
   // Copy value from orig
   RGeo_Proj4Data* orig_data = RGEO_PROJ4_DATA_PTR(orig);
-  self_data->pj = orig_data->pj;
+  if (!NIL_P(orig_data->original_str)) {
+    self_data->pj = pj_init_plus(RSTRING_PTR(orig_data->original_str));
+  }
+  else {
+    char* str = pj_get_def(orig_data->pj, 0);
+    self_data->pj = pj_init_plus(str);
+    pj_dalloc(str);
+  }
   self_data->original_str = orig_data->original_str;
   self_data->uses_radians = orig_data->uses_radians;
+  
+  return self;
+}
+
+
+static VALUE method_proj4_set_value(VALUE self, VALUE str, VALUE uses_radians)
+{
+  Check_Type(str, T_STRING);
+  
+  // Clear out any existing value
+  RGeo_Proj4Data* self_data = RGEO_PROJ4_DATA_PTR(self);
+  projPJ pj = self_data->pj;
+  if (pj) {
+    pj_free(pj);
+    self_data->pj = NULL;
+    self_data->original_str = Qnil;
+  }
+  
+  // Set new data
+  self_data->pj = pj_init_plus(RSTRING_PTR(str));
+  self_data->original_str = str;
+  self_data->uses_radians = RTEST(uses_radians) ? 1 : 0;
   
   return self;
 }
@@ -244,8 +273,11 @@ static void rgeo_init_proj4()
   VALUE rgeo_module = rb_define_module("RGeo");
   VALUE coordsys_module = rb_define_module_under(rgeo_module, "CoordSys");
   VALUE proj4_class = rb_define_class_under(coordsys_module, "Proj4", rb_cObject);
+
+  rb_define_alloc_func(proj4_class, alloc_proj4);
   rb_define_module_function(proj4_class, "_create", cmethod_proj4_create, 2);
   rb_define_method(proj4_class, "initialize_copy", method_proj4_initialize_copy, 1);
+  rb_define_method(proj4_class, "_set_value", method_proj4_set_value, 2);
   rb_define_method(proj4_class, "_original_str", method_proj4_original_str, 0);
   rb_define_method(proj4_class, "_canonical_str", method_proj4_canonical_str, 0);
   rb_define_method(proj4_class, "_valid?", method_proj4_is_valid, 0);

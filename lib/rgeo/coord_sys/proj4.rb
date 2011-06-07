@@ -83,6 +83,44 @@ module RGeo
       alias_method :==, :eql?
       
       
+      def marshal_dump  # :nodoc:
+        hash_ = {'rad' => radians?}
+        if (str_ = original_str)
+          hash_['orig'] = str_
+        else
+          hash_['canon'] = canonical_str
+        end
+        hash_
+      end
+      
+      
+      def marshal_load(data_)  # :nodoc:
+        _set_value(data_['orig'] || data_['canon'], data_['rad'])
+      end
+      
+      
+      yaml_as('tag:georails.org,2011:rgeo/coordsys/proj4')
+      
+      
+      def self.yaml_new(klass_, tag_, data_)  # :nodoc:
+        new(data_['orig'] || data_['canon'], :radians => data_['rad'])
+      end
+      
+      
+      def to_yaml(opts_={})  # :nodoc:
+        ::YAML.quick_emit(nil, opts_) do |out_|
+          out_.map(taguri, to_yaml_style) do |map_|
+            map_.add('rad', radians?)
+            if (str_ = original_str)
+              map_.add('orig', str_)
+            else
+              map_.add('canon', canonical_str)
+            end
+          end
+        end
+      end
+      
+      
       # Returns the "canonical" string definition for this coordinate
       # system, as reported by Proj4. This may be slightly different
       # from the definition used to construct this object.
@@ -202,6 +240,19 @@ module RGeo
         # Create a new Proj4 object, given a definition, which may be
         # either a string or a hash. Raises Error::UnsupportedOperation
         # if the given definition is invalid or Proj4 is not supported.
+        # 
+        # Recognized options include:
+        # 
+        # [<tt>:radians</tt>]
+        #   If set to true, then this proj4 will represent geographic
+        #   (latitude/longitude) coordinates in radians rather than
+        #   degrees. If this is a geographic coordinate system, then its
+        #   units will be in radians. If this is a projected coordinate
+        #   system, then its units will be unchanged, but any geographic
+        #   coordinate system obtained using get_geographic will use
+        #   radians as its units. If this is a geocentric or other type of
+        #   coordinate system, this has no effect. Default is false.
+        #   (That is all coordinates are in degrees by default.)
         
         def new(defn_, opts_={})
           result_ = create(defn_, opts_)

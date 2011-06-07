@@ -101,6 +101,28 @@ static int compute_dimension(GEOSContextHandle_t context, const GEOSGeometry* ge
 }
 
 
+// Returns a prepared geometry, honoring the preparation policy.
+
+static const GEOSPreparedGeometry* rgeo_request_prepared_geometry(RGeo_GeometryData* object_data)
+{
+  const GEOSPreparedGeometry* prep = object_data->prep;
+  if (prep == (GEOSPreparedGeometry*)1) {
+    object_data->prep = (GEOSPreparedGeometry*)2;
+    prep = NULL;
+  }
+  else if (prep == (GEOSPreparedGeometry*)2) {
+    if (object_data->geom) {
+      prep = GEOSPrepare(object_data->geom);
+    }
+    else {
+      prep = NULL;
+    }
+    object_data->prep = prep;
+  }
+  return prep;
+}
+
+
 /**** RUBY METHOD DEFINITIONS ****/
 
 
@@ -120,6 +142,26 @@ static VALUE method_geometry_set_factory(VALUE self, VALUE factory)
 {
   RGEO_GEOMETRY_DATA_PTR(self)->factory = factory;
   return factory;
+}
+
+
+static VALUE method_geometry_prepared_p(VALUE self)
+{
+  const GEOSPreparedGeometry* prep = RGEO_GEOMETRY_DATA_PTR(self)->prep;
+  return (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) ? Qtrue : Qfalse;
+}
+
+
+static VALUE method_geometry_prepare(VALUE self)
+{
+  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  if (self_data->geom) {
+    const GEOSPreparedGeometry* prep = self_data->prep;
+    if (!prep || prep == (GEOSPreparedGeometry*)1 || prep == (GEOSPreparedGeometry*)2) {
+      self_data->prep = GEOSPrepare(self_data->geom);
+    }
+  }
+  return self;
 }
 
 
@@ -339,7 +381,14 @@ static VALUE method_geometry_disjoint(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSDisjoint_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedDisjoint_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSDisjoint_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -360,7 +409,14 @@ static VALUE method_geometry_intersects(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSIntersects_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED1
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedIntersects_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSIntersects_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -381,7 +437,14 @@ static VALUE method_geometry_touches(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSTouches_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedTouches_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSTouches_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -402,7 +465,14 @@ static VALUE method_geometry_crosses(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSCrosses_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedCrosses_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSCrosses_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -423,7 +493,14 @@ static VALUE method_geometry_within(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSWithin_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedWithin_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSWithin_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -444,7 +521,14 @@ static VALUE method_geometry_contains(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSContains_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED1
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedContains_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSContains_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -465,7 +549,14 @@ static VALUE method_geometry_overlaps(VALUE self, VALUE rhs)
   if (self_geom) {
     const GEOSGeometry* rhs_geom = rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil);
     if (rhs_geom) {
-      char val = GEOSOverlaps_r(self_data->geos_context, self_geom, rhs_geom);
+      char val;
+#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
+      const GEOSPreparedGeometry* prep = rgeo_request_prepared_geometry(self_data);
+      if (prep)
+        val = GEOSPreparedOverlaps_r(self_data->geos_context, prep, rhs_geom);
+      else
+#endif
+        val = GEOSOverlaps_r(self_data->geos_context, self_geom, rhs_geom);
       if (val == 0) {
         result = Qfalse;
       }
@@ -617,14 +708,18 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
 {
   // Clear out any existing value
   RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  GEOSGeometry* self_geom = self_data->geom;
-  if (self_geom) {
-    GEOSGeom_destroy_r(self_data->geos_context, self_geom);
+  if (self_data->geom) {
+    GEOSGeom_destroy_r(self_data->geos_context, self_data->geom);
     self_data->geom = NULL;
-    self_data->geos_context = NULL;
-    self_data->factory = Qnil;
-    self_data->klasses = Qnil;
   }
+  const GEOSPreparedGeometry* prep = self_data->prep;
+  if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+    GEOSPreparedGeom_destroy_r(self_data->geos_context, prep);
+  }
+  self_data->prep = NULL;
+  self_data->geos_context = NULL;
+  self_data->factory = Qnil;
+  self_data->klasses = Qnil;
   
   // Copy value from orig
   const GEOSGeometry* geom = rgeo_get_geos_geometry_safe(orig);
@@ -633,9 +728,12 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
     GEOSContextHandle_t orig_context = orig_data->geos_context;
     GEOSGeometry* clone_geom = GEOSGeom_clone_r(orig_context, geom);
     if (clone_geom) {
+      RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(orig_data->factory);
       GEOSSetSRID_r(orig_context, clone_geom, GEOSGetSRID_r(orig_context, geom));
       self_data->geom = clone_geom;
       self_data->geos_context = orig_context;
+      self_data->prep = factory_data && (factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC != 0) ?
+        (GEOSPreparedGeometry*)1 : NULL;
       self_data->factory = orig_data->factory;
       self_data->klasses = orig_data->klasses;
     }
@@ -660,6 +758,8 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_class, "initialize_copy", method_geometry_initialize_copy, 1);
   rb_define_method(geos_geometry_class, "initialized?", method_geometry_initialized_p, 0);
   rb_define_method(geos_geometry_class, "factory", method_geometry_factory, 0);
+  rb_define_method(geos_geometry_class, "prepared?", method_geometry_prepared_p, 0);
+  rb_define_method(geos_geometry_class, "prepare!", method_geometry_prepare, 0);
   rb_define_method(geos_geometry_class, "dimension", method_geometry_dimension, 0);
   rb_define_method(geos_geometry_class, "geometry_type", method_geometry_geometry_type, 0);
   rb_define_method(geos_geometry_class, "srid", method_geometry_srid, 0);

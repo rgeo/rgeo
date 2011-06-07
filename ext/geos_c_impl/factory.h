@@ -101,6 +101,7 @@ typedef struct {
 #define RGEO_FACTORYFLAGS_SUPPORTS_Z 2
 #define RGEO_FACTORYFLAGS_SUPPORTS_M 4
 #define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M 6
+#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC 8
 
 
 /*
@@ -125,8 +126,9 @@ typedef struct {
   here so the destroy_geometry_func can get to it.
 */
 typedef struct {
-  GEOSGeometry* geom;
   GEOSContextHandle_t geos_context;
+  GEOSGeometry* geom;
+  const GEOSPreparedGeometry* prep;
   VALUE factory;
   VALUE klasses;
 } RGeo_GeometryData;

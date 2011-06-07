@@ -131,6 +131,51 @@ module RGeo
         end
         
         
+        def test_geocentric
+          obj1_ = RGeo::CoordSys::Proj4.create('+proj=geocent +ellps=WGS84')
+          assert_equal(true, obj1_.geocentric?)
+        end
+        
+        
+        def test_get_geographic
+          projection_ = RGeo::CoordSys::Proj4.create('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs')
+          geographic_ = projection_.get_geographic
+          expected_ = RGeo::CoordSys::Proj4.create('+proj=latlong +a=6378137 +b=6378137 +nadgrids=@null')
+          assert_equal(expected_, geographic_)
+        end
+        
+        
+        def test_marshal_roundtrip
+          obj1_ = RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          dump_ = ::Marshal.dump(obj1_)
+          obj2_ = ::Marshal.load(dump_)
+          assert_equal(obj1_, obj2_)
+        end
+        
+        
+        def test_yaml_roundtrip
+          obj1_ = RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          dump_ = ::YAML.dump(obj1_)
+          obj2_ = ::YAML.load(dump_)
+          assert_equal(obj1_, obj2_)
+        end
+        
+        
+        def test_dup
+          obj1_ = RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          obj2_ = obj1_.dup
+          assert_equal(obj1_, obj2_)
+        end
+        
+        
+        def test_dup_of_get_geographic
+          obj1_ = RGeo::CoordSys::Proj4.create('+proj=latlong +datum=WGS84 +ellps=WGS84')
+          obj2_ = obj1_.get_geographic
+          obj3_ = obj2_.dup
+          assert_equal(obj1_, obj3_)
+        end
+        
+        
       end
       
     end

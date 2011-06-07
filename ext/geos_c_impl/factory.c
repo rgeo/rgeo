@@ -95,6 +95,10 @@ static void destroy_geometry_func(RGeo_GeometryData* data)
   if (data->geom) {
     GEOSGeom_destroy_r(data->geos_context, data->geom);
   }
+  const GEOSPreparedGeometry* prep = data->prep;
+  if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+    GEOSPreparedGeom_destroy_r(data->geos_context, prep);
+  }
   free(data);
 }
 
@@ -323,8 +327,10 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       if (geom) {
         GEOSSetSRID_r(factory_context, geom, factory_data->srid);
       }
-      data->geom = geom;
       data->geos_context = factory_context;
+      data->geom = geom;
+      data->prep = factory_data && (factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC != 0) ?
+        (GEOSPreparedGeometry*)1 : NULL;
       data->factory = factory;
       data->klasses = klasses;
       result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
@@ -380,8 +386,13 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
         *klasses = CLASS_OF(object);
       }
     }
-    object_data->geom = NULL;
+    const GEOSPreparedGeometry* prep = object_data->prep;
+    if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+      GEOSPreparedGeom_destroy_r(object_data->geos_context, prep);
+    }
     object_data->geos_context = NULL;
+    object_data->geom = NULL;
+    object_data->prep = NULL;
     object_data->factory = Qnil;
     object_data->klasses = Qnil;
   }

@@ -41,6 +41,13 @@
 #endif
 #endif
 
+#ifdef HAVE_GEOSPREPAREDCONTAINS_R
+#define RGEO_GEOS_SUPPORTS_PREPARED1
+#endif
+#ifdef HAVE_GEOSPREPAREDDISJOINT_R
+#define RGEO_GEOS_SUPPORTS_PREPARED2
+#endif
+
 #ifdef __cplusplus
 #define RGEO_BEGIN_C extern "C" {
 #define RGEO_END_C }
