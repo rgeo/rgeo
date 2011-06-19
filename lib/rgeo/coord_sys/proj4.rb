@@ -83,41 +83,30 @@ module RGeo
       alias_method :==, :eql?
       
       
-      def marshal_dump  # :nodoc:
-        hash_ = {'rad' => radians?}
-        if (str_ = original_str)
-          hash_['orig'] = str_
-        else
-          hash_['canon'] = canonical_str
-        end
-        hash_
-      end
+      # Marshal support
       
+      def marshal_dump  # :nodoc:
+        {'rad' => radians?, 'str' => original_str || canonical_str}
+      end
       
       def marshal_load(data_)  # :nodoc:
-        _set_value(data_['orig'] || data_['canon'], data_['rad'])
+        _set_value(data_['str'], data_['rad'])
       end
       
       
-      yaml_as('tag:georails.org,2011:rgeo/coordsys/proj4')
+      # Psych support
       
-      
-      def self.yaml_new(klass_, tag_, data_)  # :nodoc:
-        new(data_['orig'] || data_['canon'], :radians => data_['rad'])
-      end
-      
-      
-      def to_yaml(opts_={})  # :nodoc:
-        ::YAML.quick_emit(nil, opts_) do |out_|
-          out_.map(taguri, to_yaml_style) do |map_|
-            map_.add('rad', radians?)
-            if (str_ = original_str)
-              map_.add('orig', str_)
-            else
-              map_.add('canon', canonical_str)
-            end
-          end
+      def init_with(coder_)  # :nodoc:
+        if coder_.type == :scalar
+          _set_value(coder_.scalar, false)
+        else
+          _set_value(coder_['proj4'], coder_['radians'])
         end
+      end
+      
+      def encode_with(coder_)  # :nodoc:
+        coder_['proj4'] = original_str || canonical_str
+        coder_['radians'] = radians?
       end
       
       

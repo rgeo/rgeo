@@ -127,10 +127,14 @@ module RGeo
         @ignore_extra_bytes
       end
       
-      # Returns true if this parser can auto-detect hex.
-      # See WKBParser for details.
-      def auto_detect_hex?
-        @auto_detect_hex
+      
+      def _properties  # :nodoc:
+        {
+          :support_ewkb => @support_ewkb,
+          :support_wkb12 => @support_wkb12,
+          :ignore_extra_bytes => @ignore_extra_bytes,
+          :default_srid => @default_srid,
+        }
       end
       
       

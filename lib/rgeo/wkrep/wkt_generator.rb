@@ -114,6 +114,16 @@ module RGeo
       end
       
       
+      def _properties  # :nodoc:
+        {
+          :tag_format => @tag_format,
+          :emit_ewkt_srid => @emit_ewkt_srid,
+          :square_brackets => @square_brackets,
+          :convert_case => @convert_case,
+        }
+      end
+      
+      
       # Generate and return the WKT format for the given geometry object,
       # according to the current settings.
       

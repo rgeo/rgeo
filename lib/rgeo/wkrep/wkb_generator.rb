@@ -123,6 +123,16 @@ module RGeo
       end
       
       
+      def _properties  # :nodoc:
+        {
+          :type_format => @type_format,
+          :emit_ewkb_srid => @emit_ewkb_srid,
+          :hex_format => @hex_format,
+          :little_endian => @little_endian,
+        }
+      end
+      
+      
       # Generate and return the WKB format for the given geometry object,
       # according to the current settings.
       

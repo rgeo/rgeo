@@ -113,6 +113,7 @@ end
 
 
 # Core modules
+require 'rgeo/yaml'
 require 'rgeo/version'
 require 'rgeo/error'
 require 'rgeo/feature'

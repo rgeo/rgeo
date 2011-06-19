@@ -1,6 +1,7 @@
 === 0.3.2 / 2011-06-??
 
-* GEOS CAPI implementation can now use prepared geometries to speed up certain operations. The GEOS FFI implementation will do the same once I find out how ffi-geos will handle prepared geometries internally.
+* Most objects can now be serialized and deserialized via Marshal or YAML. Supported objects include factories, geometries, OGC coordinate systems, and Proj4 coordinate systems.
+* The GEOS CAPI implementation can now use prepared geometries to speed up certain operations. The GEOS FFI implementation will do the same once I find out how ffi-geos will handle prepared geometries internally.
 * Calling dup on a Proj4 object caused a segfault. Fixed.
 
 === 0.3.1 / 2011-05-24

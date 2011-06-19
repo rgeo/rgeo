@@ -142,6 +142,17 @@ module RGeo
       end
       
       
+      def _properties  # :nodoc:
+        {
+          :support_ewkt => @support_ewkt,
+          :support_wkt12 => @support_wkt12,
+          :strict_wkt11 => @strict_wkt11,
+          :ignore_extra_tokens => @ignore_extra_tokens,
+          :default_srid => @default_srid,
+        }
+      end
+      
+      
       # Parse the given string, and return a geometry object.
       
       def parse(str_)
