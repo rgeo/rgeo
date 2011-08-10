@@ -50,7 +50,7 @@ RAKEFILE_CONFIG = {} unless defined?(::RAKEFILE_CONFIG)
 
 # Platform info
 
-dlext_ = ::Config::CONFIG['DLEXT']
+dlext_ = ::RbConfig::CONFIG['DLEXT']
 
 platform_ =
   case ::RUBY_DESCRIPTION
@@ -184,13 +184,15 @@ end
 
 # Gem release tasks
 
-task :build_gem do
+task :build_other
+
+task :build_gem => :build_other do
   ::Gem::Builder.new(gemspec_).build
   mkdir_p(pkg_directory_)
   mv "#{gemspec_.name}-#{gemspec_.version}.gem", "#{pkg_directory_}/"
 end
 
-task :build_release do
+task :build_release => :build_other do
   ::Gem::Builder.new(release_gemspec_).build
   mkdir_p(pkg_directory_)
   mv "#{release_gemspec_.name}-#{release_gemspec_.version}.gem", "#{pkg_directory_}/"
@@ -205,7 +207,7 @@ end
 
 # Unit test task
 
-task :test => :build_ext do
+task :test => [:build_ext, :build_other] do
   $:.unshift(::File.expand_path('lib', ::File.dirname(__FILE__)))
   if ::ENV['TESTCASE']
     test_files_ = ::Dir.glob("test/#{::ENV['TESTCASE']}.rb")

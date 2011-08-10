@@ -49,6 +49,7 @@ else
      '/opt/local/include',
      '/opt/geos/include',
      '/opt/include',
+     '/Library/Frameworks/GEOS.framework/unix/include',
      ::Config::CONFIG['includedir'],
      '/usr/include',
     ]
@@ -59,6 +60,7 @@ else
      '/opt/local/lib',
      '/opt/geos/lib',
      '/opt/lib',
+     '/Library/Frameworks/GEOS.framework/unix/lib',
      ::Config::CONFIG['libdir'],
      '/usr/lib',
     ]

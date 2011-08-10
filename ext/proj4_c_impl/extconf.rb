@@ -51,6 +51,7 @@ else
      '/opt/proj/include',
      '/opt/proj4/include',
      '/opt/include',
+     '/Library/Frameworks/PROJ.framework/unix/include',
      ::Config::CONFIG['includedir'],
      '/usr/include',
     ]
@@ -63,6 +64,7 @@ else
      '/opt/proj/lib',
      '/opt/proj4/lib',
      '/opt/lib',
+     '/Library/Frameworks/PROJ.framework/unix/lib',
      ::Config::CONFIG['libdir'],
      '/usr/lib',
     ]

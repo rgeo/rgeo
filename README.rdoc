@@ -45,9 +45,9 @@ RGeo is known to work with the following Ruby implementations:
 
 * Standard "MRI" Ruby 1.8.7 or later. (1.9.2 or later preferred.)
 * Rubinius 1.1 or later.
-* Partial support for JRuby 1.5 or later, but a bunch of features are
-  missing or not yet stable because GEOS and Proj integration is not
-  yet stable in JRuby. This is high-priority ongoing work.
+* Partial support for JRuby 1.6.3 or later. The FFI implementation of
+  GEOS is available (ffi-geos gem is required) but CAPI is not.
+  Proj4 support is expected in the future.
 
 Some features also require the following:
 
@@ -71,7 +71,8 @@ Install RGeo as a gem:
 
 Note: By default, the gem installation looks for the GEOS library in the
 following locations: <tt>/usr/local</tt>, <tt>/usr/local/geos</tt>,
-<tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
+<tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>,
+and <tt>/Library/Frameworks/GEOS.framework/unix</tt>.
 
 If GEOS has been installed in a different location, you must provide its
 installation prefix directory using the "--with-geos-dir" option. This
@@ -83,7 +84,8 @@ switch, from the switches interpreted by the gem command. For example:
 Similarly, the gem installation looks for the Proj4 library in the
 following locations by default: <tt>/usr/local</tt>,
 <tt>/usr/local/proj</tt>, <tt>/usr/local/proj4</tt>, <tt>/opt/local</tt>,
-<tt>/opt/proj</tt>, <tt>/opt/proj4</tt>, <tt>/opt</tt>, <tt>/usr</tt>.
+<tt>/opt/proj</tt>, <tt>/opt/proj4</tt>, <tt>/opt</tt>, <tt>/usr</tt>,
+and <tt>/Library/Frameworks/PROJ.framework/unix</tt>.
 
 If Proj4 is installed in a different location, you must provide its
 installation prefix directory using the "--with-proj-dir" option.
@@ -93,7 +95,7 @@ installation prefix directory using the "--with-proj-dir" option.
 The RGeo suite of tools is evolving rapidly. The current to-do list for
 the core library includes:
 
-* YAML and Marshal serialization support.
+* YAML and Marshal serialization support across all major entities.
 * Better JRuby support.
 * Ellipsoidal geography implementation, possibly utilizing geographiclib.
 * Windows build support.
@@ -102,7 +104,7 @@ Each of the current add-on modules also has its own feature roadmap, and
 we are planning on introducing more add-on modules, including:
 
 * GeoRSS and KML format support.
-* Integration with the SimpleGeo API.
+* Integration with third-party APIs.
 * Possible additional ActiveRecord adapters.
 
 === Development and support
@@ -128,6 +130,9 @@ calculations, and the Proj4 library to handle projections and coordinate
 transformations. These libraries are maintained by the Open Source
 Geospatial Foundation; more information is available on OSGeo's web site
 (http://www.osgeo.org).
+
+JRuby support is made possible by the ffi-geos (and upcoming ffi-proj4)
+gems, by J Smith (http://github.com/dark-panda).
 
 === License
 

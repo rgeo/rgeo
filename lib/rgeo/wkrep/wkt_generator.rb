@@ -151,6 +151,7 @@ module RGeo
       
       def _generate_feature(obj_, toplevel_=false)  # :nodoc:
         type_ = obj_.geometry_type
+        type_ = Feature::LineString if type_.subtype_of?(Feature::LineString)
         tag_ = type_.type_name
         if @tag_format == :ewkt
           if @cur_support_m && !@cur_support_z
@@ -172,7 +173,7 @@ module RGeo
         end
         if type_ == Feature::Point
           "#{tag_} #{_generate_point(obj_)}"
-        elsif type_.subtype_of?(Feature::LineString)
+        elsif type_ == Feature::LineString
           "#{tag_} #{_generate_line_string(obj_)}"
         elsif type_ == Feature::Polygon
           "#{tag_} #{_generate_polygon(obj_)}"

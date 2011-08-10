@@ -242,7 +242,9 @@ module RGeo
             if @min_x == @max_x || @min_y == @max_y
               @factory.line(point_min_, point_max_)
             else
-              @factory.polygon(@factory.linear_ring(point_min_, @factory.point(@max_x, @min_y, *extras_), point_max_, @factory.point(@min_x, @max_y, *extras_), point_min_))
+              @factory.polygon(@factory.linear_ring([point_min_,
+                @factory.point(@max_x, @min_y, *extras_), point_max_,
+                @factory.point(@min_x, @max_y, *extras_), point_min_]))
             end
           end
         else
@@ -256,10 +258,10 @@ module RGeo
       # 
       # Supports these options:
       # 
-      # <tt>:ignore_z</tt>
+      # [<tt>:ignore_z</tt>]
       #   Ignore the Z coordinate when testing, even if both objects
       #   have Z. Default is false.
-      # <tt>:ignore_m</tt>
+      # [<tt>:ignore_m</tt>]
       #   Ignore the M coordinate when testing, even if both objects
       #   have M. Default is false.
       
