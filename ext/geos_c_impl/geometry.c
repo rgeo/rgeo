@@ -106,18 +106,26 @@ static int compute_dimension(GEOSContextHandle_t context, const GEOSGeometry* ge
 static const GEOSPreparedGeometry* rgeo_request_prepared_geometry(RGeo_GeometryData* object_data)
 {
   const GEOSPreparedGeometry* prep = object_data->prep;
-  if (prep == (GEOSPreparedGeometry*)1) {
+  if (prep == (const GEOSPreparedGeometry*)1) {
     object_data->prep = (GEOSPreparedGeometry*)2;
     prep = NULL;
   }
-  else if (prep == (GEOSPreparedGeometry*)2) {
+  else if (prep == (const GEOSPreparedGeometry*)2) {
     if (object_data->geom) {
-      prep = GEOSPrepare(object_data->geom);
+      prep = GEOSPrepare_r(object_data->geos_context, object_data->geom);
     }
     else {
       prep = NULL;
     }
-    object_data->prep = prep;
+    if (prep) {
+      object_data->prep = prep;
+    }
+    else {
+      object_data->prep = (const GEOSPreparedGeometry*)3;
+    }
+  }
+  else if (prep == (const GEOSPreparedGeometry*)3) {
+    prep = NULL;
   }
   return prep;
 }
@@ -148,7 +156,9 @@ static VALUE method_geometry_set_factory(VALUE self, VALUE factory)
 static VALUE method_geometry_prepared_p(VALUE self)
 {
   const GEOSPreparedGeometry* prep = RGEO_GEOMETRY_DATA_PTR(self)->prep;
-  return (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) ? Qtrue : Qfalse;
+  return (prep && prep != (const GEOSPreparedGeometry*)1 &&
+    prep != (const GEOSPreparedGeometry*)2 &&
+    prep != (GEOSPreparedGeometry*)3) ? Qtrue : Qfalse;
 }
 
 
@@ -157,8 +167,14 @@ static VALUE method_geometry_prepare(VALUE self)
   RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
     const GEOSPreparedGeometry* prep = self_data->prep;
-    if (!prep || prep == (GEOSPreparedGeometry*)1 || prep == (GEOSPreparedGeometry*)2) {
-      self_data->prep = GEOSPrepare(self_data->geom);
+    if (!prep || prep == (const GEOSPreparedGeometry*)1 || prep == (const GEOSPreparedGeometry*)2) {
+      const GEOSPreparedGeometry* prep = GEOSPrepare_r(self_data->geos_context, self_data->geom);
+      if (prep) {
+        self_data->prep = prep;
+      }
+      else {
+        self_data->prep = (const GEOSPreparedGeometry*)3;
+      }
     }
   }
   return self;

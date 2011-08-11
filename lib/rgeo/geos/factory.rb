@@ -67,6 +67,7 @@ module RGeo
           if flags_ & 6 == 6
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
+          flags_ |= 8 unless opts_[:auto_prepare] == :disabled
           
           # Buffer resolution
           buffer_resolution_ = opts_[:buffer_resolution].to_i
@@ -206,6 +207,8 @@ module RGeo
           _flags & 0x1 != 0
         when :buffer_resolution
           _buffer_resolution
+        when :auto_prepare
+          _flags & 0x8 != 0 ? :simple : :disabled
         else
           nil
         end

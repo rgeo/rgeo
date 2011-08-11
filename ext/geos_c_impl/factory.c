@@ -96,7 +96,9 @@ static void destroy_geometry_func(RGeo_GeometryData* data)
     GEOSGeom_destroy_r(data->geos_context, data->geom);
   }
   const GEOSPreparedGeometry* prep = data->prep;
-  if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+  if (prep && prep != (const GEOSPreparedGeometry*)1 && prep != (const GEOSPreparedGeometry*)2 &&
+    prep != (const GEOSPreparedGeometry*)3)
+  {
     GEOSPreparedGeom_destroy_r(data->geos_context, prep);
   }
   free(data);
@@ -329,7 +331,7 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       data->geos_context = factory_context;
       data->geom = geom;
-      data->prep = factory_data && (factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC != 0) ?
+      data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
         (GEOSPreparedGeometry*)1 : NULL;
       data->factory = factory;
       data->klasses = klasses;

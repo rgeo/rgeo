@@ -1,6 +1,6 @@
-=== 0.3.2 / 2011-08-10
+=== 0.3.2 / 2011-08-11
 
-* Some objects can now be serialized and deserialized via Marshal or YAML. Supported objects include OGC coordinate systems and Proj4 coordinate systems. Factories and geometries will be supported shortly.
+* Some objects can now be serialized and deserialized via Marshal or YAML. Supported objects include OGC coordinate systems, Proj4 coordinate systems, and WKRep parsers/generators. Factories and geometries will be supported shortly.
 * The GEOS CAPI implementation can now use prepared geometries to speed up certain operations. The GEOS FFI implementation will do the same shortly.
 * Calling dup on a Proj4 object caused a segfault. Fixed.
 * Fixed an exception in RGeo::Cartesian::BoundingBox#to_geometry. (Thanks to Travis Dempsey.)

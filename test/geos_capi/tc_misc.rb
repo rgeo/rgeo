@@ -65,6 +65,39 @@ module RGeo
         end
         
         
+        def test_prepare
+          p1_ = @factory.point(1, 2)
+          p2_ = @factory.point(3, 4)
+          p3_ = @factory.point(5, 2)
+          polygon_ = @factory.polygon(@factory.linear_ring([p1_, p2_, p3_, p1_]))
+          assert_equal(false, polygon_.prepared?)
+          polygon_.prepare!
+          assert_equal(true, polygon_.prepared?)
+        end
+        
+        
+        def test_auto_prepare
+          p1_ = @factory.point(1, 2)
+          p2_ = @factory.point(3, 4)
+          p3_ = @factory.point(5, 2)
+          polygon_ = @factory.polygon(@factory.linear_ring([p1_, p2_, p3_, p1_]))
+          assert_equal(false, polygon_.prepared?)
+          polygon_.intersects?(p1_)
+          assert_equal(false, polygon_.prepared?)
+          polygon_.intersects?(p2_)
+          assert_equal(true, polygon_.prepared?)
+          
+          factory_no_auto_prepare_ = ::RGeo::Geos.factory(:srid => 4326, :auto_prepare => :disabled)
+          polygon2_ = factory_no_auto_prepare_.polygon(
+            factory_no_auto_prepare_.linear_ring([p1_, p2_, p3_, p1_]))
+          assert_equal(false, polygon2_.prepared?)
+          polygon2_.intersects?(p1_)
+          assert_equal(false, polygon2_.prepared?)
+          polygon2_.intersects?(p2_)
+          assert_equal(false, polygon2_.prepared?)
+        end
+        
+        
       end
       
     end

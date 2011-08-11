@@ -64,7 +64,7 @@ module RGeo
       
       
       # Returns true if the given feature is a CAPI GEOS feature, or if
-      # the given factory is a native GEOS factory.
+      # the given factory is a CAPI GEOS factory.
       
       def is_capi_geos?(object_)
         Factory === object_ || GeometryImpl === object_ ||
@@ -84,7 +84,7 @@ module RGeo
       
       
       # Returns true if the given feature is a GEOS feature, or if the given
-      # factory is a GEOS factory.
+      # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
       
       def is_geos?(object_)
         Factory === object_ || GeometryImpl === object_ ||
@@ -188,6 +188,15 @@ module RGeo
       #   default configuration for WKRep::WKBGenerator.
       #   Note that the special <tt>:geos</tt> value is not supported for
       #   ZM factories, since GEOS currently can't handle ZM natively.
+      # [<tt>:auto_prepare</tt>]
+      #   Request an auto-prepare strategy. Supported values are
+      #   <tt>:simple</tt> and <tt>:disabled</tt>. The former (which is
+      #   the default) generates a prepared geometry the second time an
+      #   operation that would benefit from it is called. The latter
+      #   never automatically generates a prepared geometry (unless you
+      #   generate on explicitly using the <tt>prepare!</tt> method).
+      #   Currently, prepared geometries are supported under CAPI but
+      #   not FFI.
       
       def factory(opts_={})
         if supported?
