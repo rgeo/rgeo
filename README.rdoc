@@ -39,6 +39,9 @@ Several optional modules are currently available:
   * <b>activerecord-postgis-adapter</b>
 * and more to come...
 
+Need help? Join the rgeo-users google group at:
+http://groups.google.com/group/rgeo-users
+
 === Dependencies
 
 RGeo is known to work with the following Ruby implementations:
@@ -72,7 +75,9 @@ Install RGeo as a gem:
 Note: By default, the gem installation looks for the GEOS library in the
 following locations: <tt>/usr/local</tt>, <tt>/usr/local/geos</tt>,
 <tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>,
-and <tt>/Library/Frameworks/GEOS.framework/unix</tt>.
+and <tt>/Library/Frameworks/GEOS.framework/unix</tt>. In other words,
+MacPorts, Homebrew, the Kyngchaos port, and building from source to
+/usr/local are supported out of the box.
 
 If GEOS has been installed in a different location, you must provide its
 installation prefix directory using the "--with-geos-dir" option. This
@@ -116,6 +121,8 @@ Source code is hosted on Github at http://github.com/dazuma/rgeo
 Contributions are welcome. Fork the project on Github.
 
 Report bugs on Github issues at http://github.org/dazuma/rgeo/issues
+
+Support available on the rgeo-users google group at http://groups.google.com/group/rgeo-users
 
 Contact the author at dazuma at gmail dot com.
 
