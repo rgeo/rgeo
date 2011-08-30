@@ -41,6 +41,7 @@ module RGeo
     
     module BasicPointMethods  # :nodoc:
       
+      attr_reader :extra
       
       def initialize(factory_, x_, y_, *extra_)
         _set_factory(factory_)
@@ -48,9 +49,7 @@ module RGeo
         @y = y_.to_f
         @z = factory_.property(:has_z_coordinate) ? extra_.shift.to_f : nil
         @m = factory_.property(:has_m_coordinate) ? extra_.shift.to_f : nil
-        if extra_.size > 0
-          raise ::ArgumentError, "Too many arguments for point initializer"
-        end
+        @extra = extra_
         _validate_geometry
       end
       
