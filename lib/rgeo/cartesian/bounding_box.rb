@@ -203,7 +203,7 @@ module RGeo
       end
       
       
-      # Adjusts the extents of this bounding box to encomass the given
+      # Adjusts the extents of this bounding box to encompass the given
       # object, which may be a geometry or another bounding box.
       # Returns self.
       
