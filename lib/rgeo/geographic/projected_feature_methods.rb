@@ -185,7 +185,7 @@ module RGeo
             if p_x_ < last_x_ - 180.0
               p_x_ += 360.0 while p_x_ < last_x_ - 180.0
             elsif p_x_ > last_x_ + 180.0
-              p_x_ +- 360.0 while p_x_ > last_x_ + 180.0
+              p_x_ -= 360.0 while p_x_ > last_x_ + 180.0
             else
               changed_ = false
             end
