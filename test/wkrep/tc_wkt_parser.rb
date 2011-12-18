@@ -360,6 +360,19 @@ module RGeo
         end
         
         
+        def test_multipoint_without_parens
+          # This syntax isn't strictly allowed by the spec, but apparently
+          # it does get used occasionally, so we do support parsing it.
+          factory_ = ::RGeo::Cartesian.preferred_factory
+          parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
+          obj_ = parser_.parse('MULTIPOINT(1 2, 0 3)')
+          assert_equal(::RGeo::Feature::MultiPoint, obj_.geometry_type)
+          assert_equal(2, obj_.num_geometries)
+          assert_equal(1, obj_[0].x)
+          assert_equal(3, obj_[1].y)
+        end
+        
+        
         def test_multipoint_empty
           factory_ = ::RGeo::Cartesian.preferred_factory
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_)

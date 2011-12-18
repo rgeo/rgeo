@@ -380,7 +380,13 @@ module RGeo
           _expect_token_type(:begin)
           _next_token
           loop do
-            points_ << _parse_point
+            uses_paren_ = @cur_token == :begin
+            _next_token if uses_paren_
+            points_ << _parse_coords
+            if uses_paren_
+              _expect_token_type(:end)
+              _next_token
+            end
             break if @cur_token == :end
             _expect_token_type(:comma)
             _next_token
