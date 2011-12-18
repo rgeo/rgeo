@@ -57,9 +57,10 @@ module RGeo
     # 
     # Geometry is defined as a module and is provided primarily for the
     # sake of documentation. Implementations need not necessarily include
-    # this module itself. Therefore, you should not depend on the
-    # kind_of? method to check type. Instead, use the provided check_type
-    # class method (or === operator) defined in the Type module.
+    # this module itself. Therefore, you should not depend on the result
+    # of <tt>is_a?(Geometry)</tt> to check type. Instead, use the
+    # provided check_type class method (or === operator) defined in the
+    # Type module.
     # 
     # Some implementations may support higher dimensional objects or
     # coordinate systems, despite the limits of the SFS.

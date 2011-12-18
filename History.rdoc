@@ -1,3 +1,11 @@
+=== 0.3.3 / 2011-12-19
+
+* Recognizes MultiPoint WKTs in which individual points are not contained in parens. This is technically incorrect syntax, but apparently there are examples in the wild so we are now supporting it. (Reported by J Smith.)
+* The Geos CAPI implementation sometimes returned the wrong result from GeometryCollection#geometry_n. Fixed.
+* Fixed a hang when validating certain projected linestrings. (Patch contributed by Toby Rahilly.)
+* Several rdoc updates (including a contribution by Andy Allan).
+* Separated declarations and code in the C extensions to avert warnings on some compilers.
+
 === 0.3.2 / 2011-08-11
 
 * Some objects can now be serialized and deserialized via Marshal or YAML. Supported objects include OGC coordinate systems, Proj4 coordinate systems, and WKRep parsers/generators. Factories and geometries will be supported shortly.

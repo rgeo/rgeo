@@ -194,7 +194,7 @@ module RGeo
       #   the default) generates a prepared geometry the second time an
       #   operation that would benefit from it is called. The latter
       #   never automatically generates a prepared geometry (unless you
-      #   generate on explicitly using the <tt>prepare!</tt> method).
+      #   generate one explicitly using the <tt>prepare!</tt> method).
       #   Currently, prepared geometries are supported under CAPI but
       #   not FFI.
       

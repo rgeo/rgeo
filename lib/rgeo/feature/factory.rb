@@ -55,11 +55,12 @@ module RGeo
     # 
     # Factory is defined as a module and is provided primarily for the
     # sake of documentation. Implementations need not necessarily include
-    # this module itself. Therefore, you should not depend on the
-    # kind_of? method to check type. However, to support testing for
-    # factory-ness, the Factory::Instance submodule is provided. All
-    # factory implementation classes MUST include Factory::Instance, and
-    # you may use it in kind_of?, ===, and case-when constructs.
+    # this module itself. Therefore, you should not depend on the result
+    # of <tt>is_a?(Factory)</tt> to check type. However, to support
+    # testing for factory-ness, the <tt>Factory::Instance</tt> submodule
+    # is provided. All factory implementation classes MUST include
+    # <tt>Factory::Instance</tt>, and you may use it in <tt>is_a?</tt>,
+    # <tt>===</tt>, and case-when constructs.
     
     module Factory
       
@@ -96,7 +97,7 @@ module RGeo
       #   coordinate, and the Point#z method is available.
       # [<tt>:has_m_coordinate</tt>]
       #   Set to true if geometries created by this factory include a M
-      #   coordinate, and the Point#z method is available.
+      #   coordinate, and the Point#m method is available.
       # [<tt>:is_cartesian</tt>]
       #   Set to true if this Factory guarantees that it operates in
       #   Cartesian geometry. If false or nil, no such guarantee is made,
