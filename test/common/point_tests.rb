@@ -318,6 +318,16 @@ module RGeo
         end
         
         
+        def test_creation_with_extra_values
+          point_ = @zmfactory.point(11, 12, 13, 14, 15, 16, 17)
+          assert_equal(11, point_.x)
+          assert_equal(12, point_.y)
+          assert_equal(13, point_.z)
+          assert_equal(14, point_.m)
+          assert_equal([15, 16, 17], point_.extra)
+        end
+        
+        
         def test_wkt_creation_3d
           point2_ = @zfactory.parse_wkt('POINT(11 12 13)')
           assert_equal(11, point2_.x)
