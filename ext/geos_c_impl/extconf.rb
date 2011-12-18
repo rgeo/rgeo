@@ -50,7 +50,7 @@ else
      '/opt/geos/include',
      '/opt/include',
      '/Library/Frameworks/GEOS.framework/unix/include',
-     ::Config::CONFIG['includedir'],
+     ::RbConfig::CONFIG['includedir'],
      '/usr/include',
     ]
   lib_dirs_ =
@@ -61,7 +61,7 @@ else
      '/opt/geos/lib',
      '/opt/lib',
      '/Library/Frameworks/GEOS.framework/unix/lib',
-     ::Config::CONFIG['libdir'],
+     ::RbConfig::CONFIG['libdir'],
      '/usr/lib',
     ]
   header_dirs_.delete_if{ |path_| !::File.directory?(path_) }

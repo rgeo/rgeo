@@ -57,7 +57,9 @@ RGEO_BEGIN_C
 void Init_geos_c_impl()
 {
 #ifdef RGEO_GEOS_SUPPORTED
-  RGeo_Globals* globals = rgeo_init_geos_factory();
+  RGeo_Globals* globals;
+
+  globals = rgeo_init_geos_factory();
   rgeo_init_geos_geometry(globals);
   rgeo_init_geos_point(globals);
   rgeo_init_geos_line_string(globals);

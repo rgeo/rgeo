@@ -95,8 +95,11 @@ static void mark_proj4_func(RGeo_Proj4Data* data)
 
 static VALUE alloc_proj4(VALUE klass)
 {
-  VALUE result = Qnil;
-  RGeo_Proj4Data* data = ALLOC(RGeo_Proj4Data);
+  VALUE result;
+  RGeo_Proj4Data* data;
+
+  result = Qnil;
+  data = ALLOC(RGeo_Proj4Data);
   if (data) {
     data->pj = NULL;
     data->original_str = Qnil;
@@ -109,9 +112,14 @@ static VALUE alloc_proj4(VALUE klass)
 
 static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
 {
+  RGeo_Proj4Data* self_data;
+  projPJ pj;
+  RGeo_Proj4Data* orig_data;
+  char* str;
+
   // Clear out any existing value
-  RGeo_Proj4Data* self_data = RGEO_PROJ4_DATA_PTR(self);
-  projPJ pj = self_data->pj;
+  self_data = RGEO_PROJ4_DATA_PTR(self);
+  pj = self_data->pj;
   if (pj) {
     pj_free(pj);
     self_data->pj = NULL;
@@ -119,12 +127,12 @@ static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
   }
   
   // Copy value from orig
-  RGeo_Proj4Data* orig_data = RGEO_PROJ4_DATA_PTR(orig);
+  orig_data = RGEO_PROJ4_DATA_PTR(orig);
   if (!NIL_P(orig_data->original_str)) {
     self_data->pj = pj_init_plus(RSTRING_PTR(orig_data->original_str));
   }
   else {
-    char* str = pj_get_def(orig_data->pj, 0);
+    str = pj_get_def(orig_data->pj, 0);
     self_data->pj = pj_init_plus(str);
     pj_dalloc(str);
   }
@@ -137,11 +145,14 @@ static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
 
 static VALUE method_proj4_set_value(VALUE self, VALUE str, VALUE uses_radians)
 {
+  RGeo_Proj4Data* self_data;
+  projPJ pj;
+
   Check_Type(str, T_STRING);
   
   // Clear out any existing value
-  RGeo_Proj4Data* self_data = RGEO_PROJ4_DATA_PTR(self);
-  projPJ pj = self_data->pj;
+  self_data = RGEO_PROJ4_DATA_PTR(self);
+  pj = self_data->pj;
   if (pj) {
     pj_free(pj);
     self_data->pj = NULL;
@@ -159,10 +170,14 @@ static VALUE method_proj4_set_value(VALUE self, VALUE str, VALUE uses_radians)
 
 static VALUE method_proj4_get_geographic(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_Proj4Data* new_data = ALLOC(RGeo_Proj4Data);
+  VALUE result;
+  RGeo_Proj4Data* new_data;
+  RGeo_Proj4Data* self_data;
+
+  result = Qnil;
+  new_data = ALLOC(RGeo_Proj4Data);
   if (new_data) {
-    RGeo_Proj4Data* self_data = RGEO_PROJ4_DATA_PTR(self);
+    self_data = RGEO_PROJ4_DATA_PTR(self);
     new_data->pj = pj_latlong_from_proj(self_data->pj);
     new_data->original_str = Qnil;
     new_data->uses_radians = self_data->uses_radians;
@@ -186,10 +201,14 @@ static VALUE method_proj4_uses_radians(VALUE self)
 
 static VALUE method_proj4_canonical_str(VALUE self)
 {
-  VALUE result = Qnil;
-  projPJ pj = RGEO_PROJ4_DATA_PTR(self)->pj;
+  VALUE result;
+  projPJ pj;
+  char* str;
+
+  result = Qnil;
+  pj = RGEO_PROJ4_DATA_PTR(self)->pj;
   if (pj) {
-    char* str = pj_get_def(pj, 0);
+    str = pj_get_def(pj, 0);
     if (str) {
       result = rb_str_new2(str);
       pj_dalloc(str);
@@ -201,8 +220,11 @@ static VALUE method_proj4_canonical_str(VALUE self)
 
 static VALUE method_proj4_is_geographic(VALUE self)
 {
-  VALUE result = Qnil;
-  projPJ pj = RGEO_PROJ4_DATA_PTR(self)->pj;
+  VALUE result;
+  projPJ pj;
+
+  result = Qnil;
+  pj = RGEO_PROJ4_DATA_PTR(self)->pj;
   if (pj) {
     result = pj_is_latlong(pj) ? Qtrue : Qfalse;
   }
@@ -212,8 +234,11 @@ static VALUE method_proj4_is_geographic(VALUE self)
 
 static VALUE method_proj4_is_geocentric(VALUE self)
 {
-  VALUE result = Qnil;
-  projPJ pj = RGEO_PROJ4_DATA_PTR(self)->pj;
+  VALUE result;
+  projPJ pj;
+
+  result = Qnil;
+  pj = RGEO_PROJ4_DATA_PTR(self)->pj;
   if (pj) {
     result = pj_is_geocent(pj) ? Qtrue : Qfalse;
   }
@@ -229,17 +254,23 @@ static VALUE method_proj4_is_valid(VALUE self)
 
 static VALUE cmethod_proj4_transform(VALUE method, VALUE from, VALUE to, VALUE x, VALUE y, VALUE z)
 {
-  VALUE result = Qnil;
-  projPJ from_pj = RGEO_PROJ4_DATA_PTR(from)->pj;
-  projPJ to_pj = RGEO_PROJ4_DATA_PTR(to)->pj;
+  VALUE result;
+  projPJ from_pj;
+  projPJ to_pj;
+  double xval, yval, zval;
+  int err;
+
+  result = Qnil;
+  from_pj = RGEO_PROJ4_DATA_PTR(from)->pj;
+  to_pj = RGEO_PROJ4_DATA_PTR(to)->pj;
   if (from_pj && to_pj) {
-    double xval = rb_num2dbl(x);
-    double yval = rb_num2dbl(y);
-    double zval = 0.0;
+    xval = rb_num2dbl(x);
+    yval = rb_num2dbl(y);
+    zval = 0.0;
     if (!NIL_P(z)) {
       zval = rb_num2dbl(z);
     }
-    int err = pj_transform(from_pj, to_pj, 1, 1, &xval, &yval, NIL_P(z) ? NULL : &zval);
+    err = pj_transform(from_pj, to_pj, 1, 1, &xval, &yval, NIL_P(z) ? NULL : &zval);
     if (!err && xval != HUGE_VAL && yval != HUGE_VAL && (NIL_P(z) || zval != HUGE_VAL)) {
       result = rb_ary_new2(NIL_P(z) ? 2 : 3);
       rb_ary_push(result, rb_float_new(xval));
@@ -255,9 +286,12 @@ static VALUE cmethod_proj4_transform(VALUE method, VALUE from, VALUE to, VALUE x
 
 static VALUE cmethod_proj4_create(VALUE klass, VALUE str, VALUE uses_radians)
 {
-  VALUE result = Qnil;
+  VALUE result;
+  RGeo_Proj4Data* data;
+
+  result = Qnil;
   Check_Type(str, T_STRING);
-  RGeo_Proj4Data* data = ALLOC(RGeo_Proj4Data);
+  data = ALLOC(RGeo_Proj4Data);
   if (data) {
     data->pj = pj_init_plus(RSTRING_PTR(str));
     data->original_str = str;
@@ -270,9 +304,13 @@ static VALUE cmethod_proj4_create(VALUE klass, VALUE str, VALUE uses_radians)
 
 static void rgeo_init_proj4()
 {
-  VALUE rgeo_module = rb_define_module("RGeo");
-  VALUE coordsys_module = rb_define_module_under(rgeo_module, "CoordSys");
-  VALUE proj4_class = rb_define_class_under(coordsys_module, "Proj4", rb_cObject);
+  VALUE rgeo_module;
+  VALUE coordsys_module;
+  VALUE proj4_class;
+
+  rgeo_module = rb_define_module("RGeo");
+  coordsys_module = rb_define_module_under(rgeo_module, "CoordSys");
+  proj4_class = rb_define_class_under(coordsys_module, "Proj4", rb_cObject);
 
   rb_define_alloc_func(proj4_class, alloc_proj4);
   rb_define_module_function(proj4_class, "_create", cmethod_proj4_create, 2);

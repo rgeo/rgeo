@@ -53,8 +53,11 @@ RGEO_BEGIN_C
 
 static VALUE method_line_string_geometry_type(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  VALUE result;
+  RGeo_GeometryData* self_data;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
     result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_line_string;
   }
@@ -64,8 +67,11 @@ static VALUE method_line_string_geometry_type(VALUE self)
 
 static VALUE method_linear_ring_geometry_type(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  VALUE result;
+  RGeo_GeometryData* self_data;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
     result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_linear_ring;
   }
@@ -75,8 +81,11 @@ static VALUE method_linear_ring_geometry_type(VALUE self)
 
 static VALUE method_line_geometry_type(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  VALUE result;
+  RGeo_GeometryData* self_data;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
     result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_line;
   }
@@ -86,11 +95,15 @@ static VALUE method_line_geometry_type(VALUE self)
 
 static VALUE method_line_string_length(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  double len;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
-    double len;
     if (GEOSLength_r(self_data->geos_context, self_geom, &len)) {
       result = rb_float_new(len);
     }
@@ -101,9 +114,13 @@ static VALUE method_line_string_length(VALUE self)
 
 static VALUE method_line_string_num_points(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
     result = INT2NUM(GEOSGetNumCoordinates_r(self_data->geos_context, self_geom));
   }
@@ -113,10 +130,14 @@ static VALUE method_line_string_num_points(VALUE self)
 
 static VALUE get_point_from_coordseq(VALUE self, const GEOSCoordSequence* coord_seq, unsigned int i, char has_z)
 {
-  VALUE result = Qnil;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  GEOSContextHandle_t self_context;
   double x, y, z;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  GEOSContextHandle_t self_context = self_data->geos_context;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_context = self_data->geos_context;
   if (GEOSCoordSeq_getX_r(self_context, coord_seq, i, &x)) {
     if (GEOSCoordSeq_getY_r(self_context, coord_seq, i, &y)) {
       if (has_z) {
@@ -136,18 +157,27 @@ static VALUE get_point_from_coordseq(VALUE self, const GEOSCoordSequence* coord_
 
 static VALUE method_line_string_point_n(VALUE self, VALUE n)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t self_context;
+  const GEOSCoordSequence* coord_seq;
+  char has_z;
+  int si;
+  unsigned int i;
+  unsigned int size;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
-    GEOSContextHandle_t self_context = self_data->geos_context;
-    const GEOSCoordSequence* coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
+    self_context = self_data->geos_context;
+    coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
     if (coord_seq) {
-      char has_z = (char)(RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
-      int si = NUM2INT(n);
+      has_z = (char)(RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+      si = NUM2INT(n);
       if (si >= 0) {
-        unsigned int i = si;
-        unsigned int size;
+        i = si;
         if (GEOSCoordSeq_getSize_r(self_context, coord_seq, &size)) {
           if (i < size) {
             result = get_point_from_coordseq(self, coord_seq, i, has_z);
@@ -162,21 +192,31 @@ static VALUE method_line_string_point_n(VALUE self, VALUE n)
 
 static VALUE method_line_string_points(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t self_context;
+  const GEOSCoordSequence* coord_seq;
+  char has_z;
+  unsigned int size;
+  double x;
+  double y;
+  double z;
+  unsigned int i;
+  VALUE point;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
-    GEOSContextHandle_t self_context = self_data->geos_context;
-    const GEOSCoordSequence* coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
+    self_context = self_data->geos_context;
+    coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
     if (coord_seq) {
-      char has_z = (char)(RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
-      unsigned int size;
+      has_z = (char)(RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
       if (GEOSCoordSeq_getSize_r(self_context, coord_seq, &size)) {
         result = rb_ary_new2(size);
-        double x, y, z;
-        unsigned int i;
         for (i=0; i<size; ++i) {
-          VALUE point = get_point_from_coordseq(self, coord_seq, i, has_z);
+          point = get_point_from_coordseq(self, coord_seq, i, has_z);
           if (!NIL_P(point)) {
             rb_ary_store(result, i, point);
           }
@@ -196,11 +236,16 @@ static VALUE method_line_string_start_point(VALUE self)
 
 static VALUE method_line_string_end_point(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  unsigned int n;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
-    unsigned int n = GEOSGetNumCoordinates_r(self_data->geos_context, self_geom);
+    n = GEOSGetNumCoordinates_r(self_data->geos_context, self_geom);
     if (n > 0) {
       result = method_line_string_point_n(self, INT2NUM(n-1));
     }
@@ -211,9 +256,13 @@ static VALUE method_line_string_end_point(VALUE self)
 
 static VALUE method_line_string_is_closed(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
     result = rgeo_is_geos_line_string_closed(self_data->geos_context, self_geom);
   }
@@ -223,11 +272,16 @@ static VALUE method_line_string_is_closed(VALUE self)
 
 static VALUE method_line_string_is_ring(VALUE self)
 {
-  VALUE result = Qnil;
-  RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  const GEOSGeometry* self_geom = self_data->geom;
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  char val;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
   if (self_geom) {
-    char val = GEOSisRing_r(self_data->geos_context, self_geom);
+    val = GEOSisRing_r(self_data->geos_context, self_geom);
     if (val == 0) {
       result = Qfalse;
     }
@@ -241,9 +295,12 @@ static VALUE method_line_string_is_ring(VALUE self)
 
 static VALUE method_line_string_eql(VALUE self, VALUE rhs)
 {
-  VALUE result = rgeo_geos_klasses_and_factories_eql(self, rhs);
+  VALUE result;
+  RGeo_GeometryData* self_data;
+
+  result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
-    RGeo_GeometryData* self_data = RGEO_GEOMETRY_DATA_PTR(self);
+    self_data = RGEO_GEOMETRY_DATA_PTR(self);
     result = rgeo_geos_coordseqs_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom, RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   }
   return result;
@@ -252,25 +309,37 @@ static VALUE method_line_string_eql(VALUE self, VALUE rhs)
 
 static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char close)
 {
+  RGeo_FactoryData* factory_data;
+  VALUE point_type;
+  unsigned int len;
+  char has_z;
+  unsigned int dims;
+  double* coords;
+  GEOSContextHandle_t context;
+  unsigned int i;
+  char good;
+  const GEOSGeometry* entry_geom;
+  const GEOSCoordSequence* entry_cs;
+  double x;
+  GEOSCoordSequence* coord_seq;
+
   Check_Type(array, T_ARRAY);
-  RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  VALUE point_type = factory_data->globals->feature_point;
-  unsigned int len = (unsigned int)RARRAY_LEN(array);
-  char has_z = (char)(RGEO_FACTORY_DATA_PTR(factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
-  unsigned int dims = has_z ? 3 : 2;
-  double* coords = ALLOC_N(double, len == 0 ? 1 : len * dims);
+  factory_data = RGEO_FACTORY_DATA_PTR(factory);
+  point_type = factory_data->globals->feature_point;
+  len = (unsigned int)RARRAY_LEN(array);
+  has_z = (char)(RGEO_FACTORY_DATA_PTR(factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+  dims = has_z ? 3 : 2;
+  coords = ALLOC_N(double, len == 0 ? 1 : len * dims);
   if (!coords) {
     return NULL;
   }
-  GEOSContextHandle_t context = factory_data->geos_context;
-  unsigned int i;
+  context = factory_data->geos_context;
   for (i=0; i<len; ++i) {
-    char good = 0;
-    const GEOSGeometry* entry_geom = rgeo_convert_to_geos_geometry(factory, rb_ary_entry(array, i), point_type);
+    good = 0;
+    entry_geom = rgeo_convert_to_geos_geometry(factory, rb_ary_entry(array, i), point_type);
     if (entry_geom) {
-      const GEOSCoordSequence* entry_cs = GEOSGeom_getCoordSeq_r(context, entry_geom);
+      entry_cs = GEOSGeom_getCoordSeq_r(context, entry_geom);
       if (entry_cs) {
-        double x;
         if (GEOSCoordSeq_getX_r(context, entry_cs, 0, &x)) {
           coords[i*dims] = x;
           if (GEOSCoordSeq_getY_r(context, entry_cs, 0, &x)) {
@@ -301,7 +370,7 @@ static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char 
   else {
     close = 0;
   }
-  GEOSCoordSequence* coord_seq = GEOSCoordSeq_create_r(context, len + close, 3);
+  coord_seq = GEOSCoordSeq_create_r(context, len + close, 3);
   if (coord_seq) {
     for (i=0; i<len; ++i) {
       GEOSCoordSeq_setX_r(context, coord_seq, i, coords[i*dims]);
@@ -321,11 +390,16 @@ static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char 
 
 static VALUE cmethod_create_line_string(VALUE module, VALUE factory, VALUE array)
 {
-  VALUE result = Qnil;
-  GEOSCoordSequence* coord_seq = coord_seq_from_array(factory, array, 0);
+  VALUE result;
+  GEOSCoordSequence* coord_seq;
+  RGeo_FactoryData* factory_data;
+  GEOSGeometry* geom;
+
+  result = Qnil;
+  coord_seq = coord_seq_from_array(factory, array, 0);
   if (coord_seq) {
-    RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(factory);
-    GEOSGeometry* geom = GEOSGeom_createLineString_r(factory_data->geos_context, coord_seq);
+    factory_data = RGEO_FACTORY_DATA_PTR(factory);
+    geom = GEOSGeom_createLineString_r(factory_data->geos_context, coord_seq);
     if (geom) {
       result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_line_string);
     }
@@ -336,11 +410,16 @@ static VALUE cmethod_create_line_string(VALUE module, VALUE factory, VALUE array
 
 static VALUE cmethod_create_linear_ring(VALUE module, VALUE factory, VALUE array)
 {
-  VALUE result = Qnil;
-  GEOSCoordSequence* coord_seq = coord_seq_from_array(factory, array, 1);
+  VALUE result;
+  GEOSCoordSequence* coord_seq;
+  RGeo_FactoryData* factory_data;
+  GEOSGeometry* geom;
+
+  result = Qnil;
+  coord_seq = coord_seq_from_array(factory, array, 1);
   if (coord_seq) {
-    RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(factory);
-    GEOSGeometry* geom = GEOSGeom_createLinearRing_r(factory_data->geos_context, coord_seq);
+    factory_data = RGEO_FACTORY_DATA_PTR(factory);
+    geom = GEOSGeom_createLinearRing_r(factory_data->geos_context, coord_seq);
     if (geom) {
       result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_linear_ring);
     }
@@ -351,8 +430,11 @@ static VALUE cmethod_create_linear_ring(VALUE module, VALUE factory, VALUE array
 
 static void populate_geom_into_coord_seq(GEOSContextHandle_t context, const GEOSGeometry* geom, GEOSCoordSequence* coord_seq, unsigned int i, char has_z)
 {
-  const GEOSCoordSequence* cs = GEOSGeom_getCoordSeq_r(context, geom);
-  double x = 0;
+  const GEOSCoordSequence* cs;
+  double x;
+
+  cs = GEOSGeom_getCoordSeq_r(context, geom);
+  x = 0;
   if (cs) {
     GEOSCoordSeq_getX_r(context, cs, 0, &x);
   }
@@ -372,21 +454,31 @@ static void populate_geom_into_coord_seq(GEOSContextHandle_t context, const GEOS
 
 static VALUE cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE end)
 {
-  VALUE result = Qnil;
-  RGeo_FactoryData* factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  char has_z = (char)(factory_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
-  VALUE point_type = factory_data->globals->feature_point;
-  GEOSContextHandle_t context = factory_data->geos_context;
+  VALUE result;
+  RGeo_FactoryData* factory_data;
+  char has_z;
+  VALUE point_type;
+  GEOSContextHandle_t context;
+  const GEOSGeometry* start_geom;
+  const GEOSGeometry* end_geom;
+  GEOSCoordSequence* coord_seq;
+  GEOSGeometry* geom;
+
+  result = Qnil;
+  factory_data = RGEO_FACTORY_DATA_PTR(factory);
+  has_z = (char)(factory_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+  point_type = factory_data->globals->feature_point;
+  context = factory_data->geos_context;
   
-  const GEOSGeometry* start_geom = rgeo_convert_to_geos_geometry(factory, start, point_type);
+  start_geom = rgeo_convert_to_geos_geometry(factory, start, point_type);
   if (start_geom) {
-    const GEOSGeometry* end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type);
+    end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type);
     if (end_geom) {
-      GEOSCoordSequence* coord_seq = GEOSCoordSeq_create_r(context, 2, 3);
+      coord_seq = GEOSCoordSeq_create_r(context, 2, 3);
       if (coord_seq) {
         populate_geom_into_coord_seq(context, start_geom, coord_seq, 0, has_z);
         populate_geom_into_coord_seq(context, end_geom, coord_seq, 1, has_z);
-        GEOSGeometry* geom = GEOSGeom_createLineString_r(context, coord_seq);
+        geom = GEOSGeom_createLineString_r(context, coord_seq);
         if (geom) {
           result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_line);
         }
@@ -400,19 +492,26 @@ static VALUE cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE
 
 static VALUE impl_copy_from(VALUE klass, VALUE factory, VALUE original, char subtype)
 {
-  VALUE result = Qnil;
-  const GEOSGeometry* original_geom = RGEO_GEOMETRY_DATA_PTR(original)->geom;
+  VALUE result;
+  const GEOSGeometry* original_geom;
+  GEOSContextHandle_t context;
+  const GEOSCoordSequence* original_coord_seq;
+  GEOSCoordSequence* coord_seq;
+  GEOSGeometry* geom;
+
+  result = Qnil;
+  original_geom = RGEO_GEOMETRY_DATA_PTR(original)->geom;
   if (original_geom) {
-    GEOSContextHandle_t context = RGEO_FACTORY_DATA_PTR(factory)->geos_context;
+    context = RGEO_FACTORY_DATA_PTR(factory)->geos_context;
     if (subtype == 1 && GEOSGetNumCoordinates_r(context, original_geom) != 2) {
       original_geom = NULL;
     }
     if (original_geom) {
-      const GEOSCoordSequence* original_coord_seq = GEOSGeom_getCoordSeq_r(context, original_geom);
+      original_coord_seq = GEOSGeom_getCoordSeq_r(context, original_geom);
       if (original_coord_seq) {
-        GEOSCoordSequence* coord_seq = GEOSCoordSeq_clone_r(context, original_coord_seq);
+        coord_seq = GEOSCoordSeq_clone_r(context, original_coord_seq);
         if (coord_seq) {
-          GEOSGeometry* geom = subtype == 2 ? GEOSGeom_createLinearRing_r(context, coord_seq) : GEOSGeom_createLineString_r(context, coord_seq);
+          geom = subtype == 2 ? GEOSGeom_createLinearRing_r(context, coord_seq) : GEOSGeom_createLineString_r(context, coord_seq);
           if (geom) {
             result = rgeo_wrap_geos_geometry(factory, geom, klass);
           }
@@ -444,7 +543,11 @@ static VALUE cmethod_linear_ring_copy_from(VALUE klass, VALUE factory, VALUE ori
 
 void rgeo_init_geos_line_string(RGeo_Globals* globals)
 {
-  VALUE geos_line_string_class = rb_define_class_under(globals->geos_module, "LineStringImpl", globals->geos_geometry);
+  VALUE geos_line_string_class;
+  VALUE geos_linear_ring_class;
+  VALUE geos_line_class;
+
+  geos_line_string_class = rb_define_class_under(globals->geos_module, "LineStringImpl", globals->geos_geometry);
   globals->geos_line_string = geos_line_string_class;
   globals->feature_line_string = rb_const_get_at(globals->feature_module, rb_intern("LineString"));
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
@@ -452,13 +555,13 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_line_string, geos_line_string_class);
   
-  VALUE geos_linear_ring_class = rb_define_class_under(globals->geos_module, "LinearRingImpl", geos_line_string_class);
+  geos_linear_ring_class = rb_define_class_under(globals->geos_module, "LinearRingImpl", geos_line_string_class);
   globals->geos_linear_ring = geos_linear_ring_class;
   globals->feature_linear_ring = rb_const_get_at(globals->feature_module, rb_intern("LinearRing"));
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_linear_ring, geos_linear_ring_class);
   
-  VALUE geos_line_class = rb_define_class_under(globals->geos_module, "LineImpl", geos_line_string_class);
+  geos_line_class = rb_define_class_under(globals->geos_module, "LineImpl", geos_line_string_class);
   globals->geos_line = geos_line_class;
   globals->feature_line = rb_const_get_at(globals->feature_module, rb_intern("Line"));
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
@@ -489,11 +592,15 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
 
 VALUE rgeo_is_geos_line_string_closed(GEOSContextHandle_t context, const GEOSGeometry* geom)
 {
-  char result = Qnil;
-  unsigned int n = GEOSGetNumCoordinates_r(context, geom);
+  VALUE result;
+  unsigned int n;
+  double x1, x2, y1, y2, z1, z2;
+  const GEOSCoordSequence* coord_seq;
+
+  result = Qnil;
+  n = GEOSGetNumCoordinates_r(context, geom);
   if (n > 0) {
-    double x1, x2, y1, y2, z1, z2;
-    const GEOSCoordSequence* coord_seq = GEOSGeom_getCoordSeq_r(context, geom);
+    coord_seq = GEOSGeom_getCoordSeq_r(context, geom);
     if (GEOSCoordSeq_getX_r(context, coord_seq, 0, &x1)) {
       if (GEOSCoordSeq_getX_r(context, coord_seq, n-1, &x2)) {
         if (x1 == x2) {
