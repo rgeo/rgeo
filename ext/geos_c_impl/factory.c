@@ -1,16 +1,16 @@
 /*
   -----------------------------------------------------------------------------
-  
+
   Factory and utility functions for GEOS wrapper
-  
+
   -----------------------------------------------------------------------------
-  Copyright 2010 Daniel Azuma
-  
+  Copyright 2010-2012 Daniel Azuma
+
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
   * Redistributions in binary form must reproduce the above copyright notice,
@@ -19,7 +19,7 @@
   * Neither the name of the copyright holder, nor the names of any other
     contributors to this software, may be used to endorse or promote products
     derived from this software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -180,7 +180,7 @@ static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
   GEOSWKTReader* wkt_reader;
   VALUE result;
   GEOSGeometry* geom;
-  
+
   Check_Type(str, T_STRING);
   self_data = RGEO_FACTORY_DATA_PTR(self);
   self_context = self_data->geos_context;
@@ -207,7 +207,7 @@ static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
   GEOSWKBReader* wkb_reader;
   VALUE result;
   GEOSGeometry* geom;
-  
+
   Check_Type(str, T_STRING);
   self_data = RGEO_FACTORY_DATA_PTR(self);
   self_context = self_data->geos_context;
@@ -234,7 +234,7 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
   RGeo_FactoryData* data;
   GEOSContextHandle_t context;
   VALUE wrapped_globals;
-  
+
   result = Qnil;
   data = ALLOC(RGeo_FactoryData);
   if (data) {
@@ -277,7 +277,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
   globals->feature_module = rb_define_module_under(rgeo_module, "Feature");
   globals->global_mixins = rb_const_get_at(rb_const_get_at(globals->feature_module, rb_intern("MixinCollection")), rb_intern("GLOBAL"));
-  
+
   // Add C methods to the factory.
   geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
@@ -286,12 +286,12 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
   rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 5);
-  
+
   // Wrap the globals in a Ruby object and store it off so we have access
   // to it later. Each factory instance will reference it internally.
   wrapped_globals = Data_Wrap_Struct(rb_cObject, mark_globals_func, destroy_globals_func, globals);
   rb_define_const(geos_factory_class, "INTERNAL_CGLOBALS", wrapped_globals);
-  
+
   return globals;
 }
 
@@ -533,7 +533,7 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
 VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
 {
   VALUE result;
-  
+
   result = Qnil;
   if (rb_obj_class(obj1) != rb_obj_class(obj2)) {
     result = Qfalse;

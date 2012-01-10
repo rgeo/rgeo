@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Well-known text parser for RGeo
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,29 +38,29 @@ require 'strscan'
 
 
 module RGeo
-  
+
   module WKRep
-    
-    
+
+
     # This class provides the functionality of parsing a geometry from
     # WKT (well-known text) format. You may also customize the parser
     # to recognize PostGIS EWKT extensions to the input, or Simple
     # Features Specification 1.2 extensions for Z and M coordinates.
-    # 
+    #
     # To use this class, create an instance with the desired settings and
     # customizations, and call the parse method.
-    # 
+    #
     # === Configuration options
-    # 
+    #
     # You must provide each parser with an RGeo::Feature::FactoryGenerator.
     # It should understand the configuration options <tt>:srid</tt>,
     # <tt>:has_z_coordinate</tt>, and <tt>:has_m_coordinate</tt>.
     # You may also pass a specific RGeo::Feature::Factory, or nil to
     # specify the default Cartesian FactoryGenerator.
-    # 
+    #
     # The following additional options are recognized. These can be passed
     # to the constructor, or set on the object afterwards.
-    # 
+    #
     # [<tt>:support_ewkt</tt>]
     #   Activate support for PostGIS EWKT type tags, which appends an "M"
     #   to tags to indicate the presence of M but not Z, and also
@@ -80,13 +80,13 @@ module RGeo
     # [<tt>:default_srid</tt>]
     #   A SRID to pass to the factory generator if no SRID is present in
     #   the input. Defaults to nil (i.e. don't specify a SRID).
-    
+
     class WKTParser
-      
-      
+
+
       # Create and configure a WKT parser. See the WKTParser
       # documentation for the options that can be passed.
-      
+
       def initialize(factory_generator_=nil, opts_={})
         if factory_generator_.kind_of?(Feature::Factory::Instance)
           @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
@@ -104,44 +104,44 @@ module RGeo
         @ignore_extra_tokens = opts_[:ignore_extra_tokens] ? true : false
         @default_srid = opts_[:default_srid]
       end
-      
-      
+
+
       # Returns the factory generator. See WKTParser for details.
       def factory_generator
         @factory_generator
       end
-      
+
       # If this parser was given an exact factory, returns it; otherwise
       # returns nil.
       def exact_factory
         @exact_factory
       end
-      
+
       # Returns true if this parser supports EWKT.
       # See WKTParser for details.
       def support_ewkt?
         @support_ewkt
       end
-      
+
       # Returns true if this parser supports SFS 1.2 extensions.
       # See WKTParser for details.
       def support_wkt12?
         @support_wkt12
       end
-      
+
       # Returns true if this parser strictly adheres to WKT 1.1.
       # See WKTParser for details.
       def strict_wkt11?
         @strict_wkt11
       end
-      
+
       # Returns true if this parser ignores extra tokens.
       # See WKTParser for details.
       def ignore_extra_tokens?
         @ignore_extra_tokens
       end
-      
-      
+
+
       def _properties  # :nodoc:
         {
           :support_ewkt => @support_ewkt,
@@ -151,10 +151,10 @@ module RGeo
           :default_srid => @default_srid,
         }
       end
-      
-      
+
+
       # Parse the given string, and return a geometry object.
-      
+
       def parse(str_)
         str_ = str_.downcase
         @cur_factory = @exact_factory
@@ -180,8 +180,8 @@ module RGeo
         end
         obj_
       end
-      
-      
+
+
       def _check_factory_support  # :nodoc:
         if @cur_expect_z && !@cur_factory_support_z
           raise Error::ParseError, "Geometry calls for Z coordinate but factory doesn't support it."
@@ -190,8 +190,8 @@ module RGeo
           raise Error::ParseError, "Geometry calls for M coordinate but factory doesn't support it."
         end
       end
-      
-      
+
+
       def _ensure_factory  # :nodoc:
         unless @cur_factory
           @cur_factory = @factory_generator.call(:srid => @cur_srid, :has_z_coordinate => @cur_expect_z, :has_m_coordinate => @cur_expect_m)
@@ -201,8 +201,8 @@ module RGeo
         end
         @cur_factory
       end
-      
-      
+
+
       def _parse_type_tag(contained_)  # :nodoc:
         _expect_token_type(::String)
         if @support_ewkt && @cur_token =~ /^(.+)(m)$/
@@ -258,8 +258,8 @@ module RGeo
           raise Error::ParseError, "Unknown type tag: #{type_.inspect}."
         end
       end
-      
-      
+
+
       def _parse_coords  # :nodoc:
         _expect_token_type(::Numeric)
         x_ = @cur_token
@@ -304,8 +304,8 @@ module RGeo
         end
         @cur_factory.point(x_, y_, *extra_)
       end
-      
-      
+
+
       def _parse_point(convert_empty_=false)  # :nodoc:
         if convert_empty_ && @cur_token == 'empty'
           point_ = _ensure_factory.multi_point([])
@@ -318,8 +318,8 @@ module RGeo
         _next_token
         point_
       end
-      
-      
+
+
       def _parse_line_string  # :nodoc:
         points_ = []
         if @cur_token != 'empty'
@@ -335,8 +335,8 @@ module RGeo
         _next_token
         _ensure_factory.line_string(points_)
       end
-      
-      
+
+
       def _parse_polygon  # :nodoc:
         inner_rings_ = []
         if @cur_token == 'empty'
@@ -355,8 +355,8 @@ module RGeo
         _next_token
         _ensure_factory.polygon(outer_ring_, inner_rings_)
       end
-      
-      
+
+
       def _parse_geometry_collection  # :nodoc:
         geometries_ = []
         if @cur_token != 'empty'
@@ -372,8 +372,8 @@ module RGeo
         _next_token
         _ensure_factory.collection(geometries_)
       end
-      
-      
+
+
       def _parse_multi_point  # :nodoc:
         points_ = []
         if @cur_token != 'empty'
@@ -395,8 +395,8 @@ module RGeo
         _next_token
         _ensure_factory.multi_point(points_)
       end
-      
-      
+
+
       def _parse_multi_line_string  # :nodoc:
         line_strings_ = []
         if @cur_token != 'empty'
@@ -412,8 +412,8 @@ module RGeo
         _next_token
         _ensure_factory.multi_line_string(line_strings_)
       end
-      
-      
+
+
       def _parse_multi_polygon  # :nodoc:
         polygons_ = []
         if @cur_token != 'empty'
@@ -429,27 +429,27 @@ module RGeo
         _next_token
         _ensure_factory.multi_polygon(polygons_)
       end
-      
-      
+
+
       def _start_scanner(str_)  # :nodoc:
         @_scanner = ::StringScanner.new(str_)
         _next_token
       end
-      
-      
+
+
       def _clean_scanner  # :nodoc:
         @_scanner = nil
         @cur_token = nil
       end
-      
-      
+
+
       def _expect_token_type(type_)  # :nodoc:
         unless type_ === @cur_token
           raise Error::ParseError, "#{type_.inspect} expected but #{@cur_token.inspect} found."
         end
       end
-      
-      
+
+
       def _next_token  # :nodoc:
         if @_scanner.scan_until(/\(|\)|\[|\]|,|[^\s\(\)\[\],]+/)
           token_ = @_scanner.matched
@@ -472,11 +472,11 @@ module RGeo
         end
         @cur_token
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

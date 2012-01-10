@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Geographic data factory implementation
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,22 +35,22 @@
 
 
 module RGeo
-  
+
   module Cartesian
-    
-    
+
+
     # This class implements the factory for the simple cartesian
     # implementation.
-    
+
     class Factory
-      
+
       include Feature::Factory::Instance
-      
-      
+
+
       # Create a new simple cartesian factory.
-      # 
+      #
       # See ::RGeo::Cartesian.simple_factory for a list of supported options.
-      
+
       def initialize(opts_={})
         @has_z = opts_[:has_z_coordinate] ? true : false
         @has_m = opts_[:has_m_coordinate] ? true : false
@@ -76,7 +76,7 @@ module RGeo
         end
         srid_ ||= @coord_sys.authority_code if @coord_sys
         @srid = srid_.to_i
-        
+
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
         when ::Hash
@@ -106,18 +106,18 @@ module RGeo
           @wkb_parser = WKRep::WKBParser.new(self)
         end
       end
-      
-      
+
+
       # Equivalence test.
-      
+
       def eql?(rhs_)
         rhs_.is_a?(self.class) && @srid == rhs_.srid && @has_z == rhs_.property(:has_z_coordinate) && @has_m == rhs_.property(:has_m_coordinate)
       end
       alias_method :==, :eql?
-      
-      
+
+
       # Marshal support
-      
+
       def marshal_dump  # :nodoc:
         hash_ = {
           'hasz' => @has_z,
@@ -132,7 +132,7 @@ module RGeo
         hash_['cs'] = @coord_sys.to_wkt if @coord_sys
         hash_
       end
-      
+
       def marshal_load(data_)  # :nodoc:
         if CoordSys::Proj4.supported? && (proj4_data_ = data_['proj4'])
           proj4_ = CoordSys::Proj4.allocate
@@ -157,10 +157,10 @@ module RGeo
           :coord_sys => coord_sys_,
         })
       end
-      
-      
+
+
       # Psych support
-      
+
       def init_with(coder_)  # :nodoc:
         if (proj4_data_ = coder_['proj4'])
           if proj4_data_.is_a?(::Hash)
@@ -188,7 +188,7 @@ module RGeo
           :coord_sys => coord_sys_,
         })
       end
-      
+
       def encode_with(coder_)  # :nodoc:
         coder_['has_z_coordinate'] = @has_z
         coder_['has_m_coordinate'] = @has_m
@@ -203,17 +203,17 @@ module RGeo
         end
         coder_['coord_sys'] = @coord_sys.to_wkt if @coord_sys
       end
-      
-      
+
+
       # Returns the SRID.
-      
+
       def srid
         @srid
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#property
-      
+
       def property(name_)
         case name_
         when :has_z_coordinate
@@ -226,102 +226,102 @@ module RGeo
           nil
         end
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#parse_wkt
-      
+
       def parse_wkt(str_)
         @wkt_parser.parse(str_)
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#parse_wkb
-      
+
       def parse_wkb(str_)
         @wkb_parser.parse(str_)
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#point
-      
+
       def point(x_, y_, *extra_)
         PointImpl.new(self, x_, y_, *extra_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#line_string
-      
+
       def line_string(points_)
         LineStringImpl.new(self, points_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#line
-      
+
       def line(start_, end_)
         LineImpl.new(self, start_, end_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#linear_ring
-      
+
       def linear_ring(points_)
         LinearRingImpl.new(self, points_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#polygon
-      
+
       def polygon(outer_ring_, inner_rings_=nil)
         PolygonImpl.new(self, outer_ring_, inner_rings_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#collection
-      
+
       def collection(elems_)
         GeometryCollectionImpl.new(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_point
-      
+
       def multi_point(elems_)
         MultiPointImpl.new(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_line_string
-      
+
       def multi_line_string(elems_)
         MultiLineStringImpl.new(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_polygon
-      
+
       def multi_polygon(elems_)
         MultiPolygonImpl.new(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#proj4
-      
+
       def proj4
         @proj4
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#coord_sys
-      
+
       def coord_sys
         @coord_sys
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

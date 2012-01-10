@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # GEOS zm factory implementation
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,32 +35,32 @@
 
 
 module RGeo
-  
+
   module Geos
-    
-    
+
+
     # A factory for Geos that handles both Z and M.
-    
+
     class ZMFactory
-      
+
       include Feature::Factory::Instance
-      
-      
+
+
       class << self
-        
-        
+
+
         # Create a new factory. Returns nil if the GEOS implementation is
         # not supported.
-        
+
         def create(opts_={})
           return nil unless Geos.supported?
           new(opts_)
         end
-        
-        
+
+
       end
-      
-      
+
+
       def initialize(opts_={})  # :nodoc:
         proj4_ = opts_[:proj4]
         coord_sys_ = opts_[:coord_sys]
@@ -88,7 +88,7 @@ module RGeo
           @zfactory = Factory.create(config_.merge(:has_z_coordinate => true))
           @mfactory = Factory.create(config_.merge(:has_m_coordinate => true))
         end
-        
+
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
         when ::Hash
@@ -118,54 +118,54 @@ module RGeo
           @wkb_parser = WKRep::WKBParser.new(self)
         end
       end
-      
-      
+
+
       # Returns the SRID of geometries created by this factory.
-      
+
       def srid
         @zfactory.srid
       end
-      
-      
+
+
       # Returns the resolution used by buffer calculations on geometries
       # created by this factory
-      
+
       def buffer_resolution
         @zfactory.buffer_resolution
       end
-      
-      
+
+
       # Returns true if this factory is lenient with MultiPolygon assertions
-      
+
       def lenient_multi_polygon_assertions?
         @zfactory.lenient_multi_polygon_assertions?
       end
-      
-      
+
+
       # Returns the z-only factory corresponding to this factory.
-      
+
       def z_factory
         @zfactory
       end
-      
-      
+
+
       # Returns the m-only factory corresponding to this factory.
-      
+
       def m_factory
         @mfactory
       end
-      
-      
+
+
       # Factory equivalence test.
-      
+
       def eql?(rhs_)
         rhs_.is_a?(ZMFactory) && rhs_.z_factory == @zfactory
       end
       alias_method :==, :eql?
-      
-      
+
+
       # See ::RGeo::Feature::Factory#property
-      
+
       def property(name_)
         case name_
         when :has_z_coordinate, :has_m_coordinate, :is_cartesian
@@ -174,101 +174,101 @@ module RGeo
           nil
         end
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#parse_wkt
-      
+
       def parse_wkt(str_)
         @wkt_parser.parse(str_)
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#parse_wkb
-      
+
       def parse_wkb(str_)
         @wkb_parser.parse(str_)
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#point
-      
+
       def point(x_, y_, z_=0, m_=0)
         ZMPointImpl.create(self, @zfactory.point(x_, y_, z_), @mfactory.point(x_, y_, m_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#line_string
-      
+
       def line_string(points_)
         ZMLineStringImpl.create(self, @zfactory.line_string(points_), @mfactory.line_string(points_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#line
-      
+
       def line(start_, end_)
         ZMLineStringImpl.create(self, @zfactory.line(start_, end_), @mfactory.line(start_, end_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#linear_ring
-      
+
       def linear_ring(points_)
         ZMLineStringImpl.create(self, @zfactory.linear_ring(points_), @mfactory.linear_ring(points_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#polygon
-      
+
       def polygon(outer_ring_, inner_rings_=nil)
         ZMPolygonImpl.create(self, @zfactory.polygon(outer_ring_, inner_rings_), @mfactory.polygon(outer_ring_, inner_rings_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#collection
-      
+
       def collection(elems_)
         ZMGeometryCollectionImpl.create(self, @zfactory.collection(elems_), @mfactory.collection(elems_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_point
-      
+
       def multi_point(elems_)
         ZMGeometryCollectionImpl.create(self, @zfactory.multi_point(elems_), @mfactory.multi_point(elems_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_line_string
-      
+
       def multi_line_string(elems_)
         ZMMultiLineStringImpl.create(self, @zfactory.multi_line_string(elems_), @mfactory.multi_line_string(elems_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_polygon
-      
+
       def multi_polygon(elems_)
         ZMMultiPolygonImpl.create(self, @zfactory.multi_polygon(elems_), @mfactory.multi_polygon(elems_))
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#proj4
-      
+
       def proj4
         @zfactory.proj4
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#coord_sys
-      
+
       def coord_sys
         @zfactory.coord_sys
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#override_cast
-      
+
       def override_cast(original_, ntype_, flags_)
         return nil unless Geos.supported?
         keep_subtype_ = flags_[:keep_subtype]
@@ -302,11 +302,11 @@ module RGeo
         end
         false
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

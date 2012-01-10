@@ -1,16 +1,16 @@
 /*
   -----------------------------------------------------------------------------
-  
+
   Main initializer for Proj4 wrapper
-  
+
   -----------------------------------------------------------------------------
-  Copyright 2010 Daniel Azuma
-  
+  Copyright 2010-2012 Daniel Azuma
+
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
   * Redistributions in binary form must reproduce the above copyright notice,
@@ -19,7 +19,7 @@
   * Neither the name of the copyright holder, nor the names of any other
     contributors to this software, may be used to endorse or promote products
     derived from this software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -125,7 +125,7 @@ static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
     self_data->pj = NULL;
     self_data->original_str = Qnil;
   }
-  
+
   // Copy value from orig
   orig_data = RGEO_PROJ4_DATA_PTR(orig);
   if (!NIL_P(orig_data->original_str)) {
@@ -138,7 +138,7 @@ static VALUE method_proj4_initialize_copy(VALUE self, VALUE orig)
   }
   self_data->original_str = orig_data->original_str;
   self_data->uses_radians = orig_data->uses_radians;
-  
+
   return self;
 }
 
@@ -149,7 +149,7 @@ static VALUE method_proj4_set_value(VALUE self, VALUE str, VALUE uses_radians)
   projPJ pj;
 
   Check_Type(str, T_STRING);
-  
+
   // Clear out any existing value
   self_data = RGEO_PROJ4_DATA_PTR(self);
   pj = self_data->pj;
@@ -158,12 +158,12 @@ static VALUE method_proj4_set_value(VALUE self, VALUE str, VALUE uses_radians)
     self_data->pj = NULL;
     self_data->original_str = Qnil;
   }
-  
+
   // Set new data
   self_data->pj = pj_init_plus(RSTRING_PTR(str));
   self_data->original_str = str;
   self_data->uses_radians = RTEST(uses_radians) ? 1 : 0;
-  
+
   return self;
 }
 

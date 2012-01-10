@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Feature type management and casting
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,108 +35,108 @@
 
 
 module RGeo
-  
+
   module Feature
-    
-    
+
+
     # All geometry implementations MUST include this submodule.
     # This serves as a marker that may be used to test an object for
     # feature-ness.
-    
+
     module Instance
     end
-    
-    
+
+
     # These methods are available as module methods (not instance methods)
     # of the various feature types.
     # For example, you may determine whether a feature object is a
     # point by calling:
-    # 
+    #
     #   ::RGeo::Feature::Point.check_type(object)
-    # 
+    #
     # A corresponding === operator is provided so you can use the type
     # modules in a case-when clause.
-    # 
+    #
     # You may also use the presence of this module to determine whether
     # a particular object is a feature type:
-    # 
+    #
     #   object.kind_of?(::RGeo::Feature::Type)
-    
+
     module Type
-      
-      
+
+
       # Deprecated alias for RGeo::Feature::Instance
       Instance = Feature::Instance
-      
-      
+
+
       # Returns true if the given object is this type or a subtype
       # thereof, or if it is a feature object whose geometry_type is
       # this type or a subtype thereof.
-      # 
+      #
       # Note that feature objects need not actually include this module.
-      
+
       def check_type(rhs_)
         rhs_ = rhs_.geometry_type if rhs_.kind_of?(Feature::Instance)
         rhs_.kind_of?(Type) && (rhs_ == self || rhs_.include?(self))
       end
       alias_method :===, :check_type
-      
-      
+
+
       # Returns true if this type is the same type or a subtype of the
       # given type.
-      
+
       def subtype_of?(type_)
         self == type_ || self.include?(type_)
       end
-      
-      
+
+
       # Returns the supertype of this type. The supertype of Geometry
       # is nil.
-      
+
       def supertype
         @supertype
       end
-      
-      
+
+
       # Iterates over the known immediate subtypes of this type.
-      
+
       def each_immediate_subtype(&block_)
         @subtypes.each(&block_) if @subtypes
       end
-      
-      
+
+
       # Returns the OpenGIS type name of this type.
-      
+
       def type_name
         self.name.sub('RGeo::Feature::', '')
       end
-      
-      
+
+
       def _add_subtype(type_)  # :nodoc:
         (@subtypes ||= []) << type_
       end
-      
-      
+
+
       def self.extended(type_)  # :nodoc:
         supertype_ = type_.included_modules.find{ |m_| m_.kind_of?(self) }
         type_.instance_variable_set(:@supertype, supertype_)
         supertype_._add_subtype(type_) if supertype_
       end
-      
-      
+
+
     end
-    
-    
+
+
     class << self
-      
-      
+
+
       # Cast the given object according to the given parameters, if
       # possible, and return the resulting object. If the requested cast
       # is not possible, nil is returned.
-      # 
+      #
       # Parameters may be provided as a hash, or as separate arguments.
       # Hash keys are as follows:
-      # 
+      #
       # [<tt>:factory</tt>]
       #   Set the factory to the given factory. If this argument is not
       #   given, the original object's factory is kept.
@@ -172,16 +172,16 @@ module RGeo
       # passed as symbols, and their effect is the same as setting their
       # values to true. You can even combine separate arguments and hash
       # arguments. For example, the following three calls are equivalent:
-      # 
+      #
       #  RGeo::Feature.cast(geom, :type => RGeo::Feature::Point, :project => true)
       #  RGeo::Feature.cast(geom, RGeo::Feature::Point, :project => true)
       #  RGeo::Feature.cast(geom, RGeo::Feature::Point, :project)
-      # 
+      #
       # RGeo provides a default casting algorithm. Individual feature
       # implementation factories may override this and customize the
       # casting behavior by defining the override_cast method. See
       # ::RGeo::Feature::Factory#override_cast for more details.
-      
+
       def cast(obj_, *params_)
         # Interpret params
         factory_ = obj_.factory
@@ -204,13 +204,13 @@ module RGeo
         project_ = opts_[:project]
         nfactory_ = opts_.delete(:factory) || factory_
         ntype_ = opts_.delete(:type) || type_
-        
+
         # Let the factory override
         if nfactory_.respond_to?(:override_cast)
           override_ = nfactory_.override_cast(obj_, ntype_, opts_)
           return override_ unless override_ == false
         end
-        
+
         # Default algorithm
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
         if ntype_ == type_
@@ -322,11 +322,11 @@ module RGeo
           end
         end
       end
-      
-      
+
+
     end
-  
-    
+
+
   end
-  
+
 end

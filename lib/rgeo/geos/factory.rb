@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # GEOS factory implementation
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,30 +35,30 @@
 
 
 module RGeo
-  
+
   module Geos
-    
-    
+
+
     # This the GEOS CAPI implementation of ::RGeo::Feature::Factory.
-    
+
     class Factory
-      
-      
+
+
       include Feature::Factory::Instance
-      
-      
+
+
       class << self
-        
-        
+
+
         # Create a new factory. Returns nil if the GEOS CAPI implementation
         # is not supported.
-        # 
+        #
         # See ::RGeo::Geos.factory for a list of supported options.
-        
+
         def create(opts_={})
           # Make sure GEOS is available
           return nil unless respond_to?(:_create)
-          
+
           # Get flags to pass to the C extension
           flags_ = 0
           flags_ |= 1 if opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
@@ -68,11 +68,11 @@ module RGeo
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
           flags_ |= 8 unless opts_[:auto_prepare] == :disabled
-          
+
           # Buffer resolution
           buffer_resolution_ = opts_[:buffer_resolution].to_i
           buffer_resolution_ = 1 if buffer_resolution_ < 1
-          
+
           # Interpret the generator options
           wkt_generator_ = opts_[:wkt_generator]
           case wkt_generator_
@@ -92,7 +92,7 @@ module RGeo
           else
             wkb_generator_ = WKRep::WKBGenerator.new
           end
-          
+
           # Coordinate system (srid, proj4, and coord_sys)
           srid_ = opts_[:srid]
           proj4_ = opts_[:proj4]
@@ -115,10 +115,10 @@ module RGeo
             end
           end
           srid_ ||= coord_sys_.authority_code if coord_sys_
-          
+
           # Create the factory and set instance variables
           result_ = _create(flags_, srid_.to_i, buffer_resolution_, wkt_generator_, wkb_generator_)
-          
+
           # Interpret parser options
           wkt_parser_ = opts_[:wkt_parser]
           case wkt_parser_
@@ -138,7 +138,7 @@ module RGeo
           else
             wkb_parser_ = WKRep::WKBParser.new(result_)
           end
-          
+
           # Set instance variables
           result_.instance_variable_set(:@proj4, proj4_)
           result_.instance_variable_set(:@coord_sys, coord_sys_)
@@ -146,55 +146,55 @@ module RGeo
           result_.instance_variable_set(:@wkb_parser, wkb_parser_)
           result_.instance_variable_set(:@wkt_generator, wkt_generator_)
           result_.instance_variable_set(:@wkb_generator, wkb_generator_)
-          
+
           # Return the result
           result_
         end
         alias_method :new, :create
-        
-        
+
+
       end
-      
-      
+
+
       def inspect  # :nodoc:
         "#<#{self.class}:0x#{object_id.to_s(16)} srid=#{_srid} bufres=#{_buffer_resolution} flags=#{_flags}>"
       end
-      
-      
+
+
       # Factory equivalence test.
-      
+
       def eql?(rhs_)
         rhs_.is_a?(Factory) && rhs_.srid == _srid &&
           rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
           rhs_.proj4 == @proj4
       end
       alias_method :==, :eql?
-      
-      
+
+
       # Returns the SRID of geometries created by this factory.
-      
+
       def srid
         _srid
       end
-      
-      
+
+
       # Returns the resolution used by buffer calculations on geometries
       # created by this factory
-      
+
       def buffer_resolution
         _buffer_resolution
       end
-      
-      
+
+
       # Returns true if this factory is lenient with MultiPolygon assertions
-      
+
       def lenient_multi_polygon_assertions?
         _flags & 0x1 != 0
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#property
-      
+
       def property(name_)
         case name_
         when :has_z_coordinate
@@ -213,10 +213,10 @@ module RGeo
           nil
         end
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#parse_wkt
-      
+
       def parse_wkt(str_)
         if @wkt_parser
           @wkt_parser.parse(str_)
@@ -224,10 +224,10 @@ module RGeo
           _parse_wkt_impl(str_)
         end
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#parse_wkb
-      
+
       def parse_wkb(str_)
         if @wkb_parser
           @wkb_parser.parse(str_)
@@ -235,10 +235,10 @@ module RGeo
           _parse_wkb_impl(str_)
         end
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#point
-      
+
       def point(x_, y_, *extra_)
         if extra_.length > (_flags & 6 == 0 ? 0 : 1)
           nil
@@ -246,87 +246,87 @@ module RGeo
           PointImpl.create(self, x_, y_, extra_[0].to_f) rescue nil
         end
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#line_string
-      
+
       def line_string(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
         LineStringImpl.create(self, points_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#line
-      
+
       def line(start_, end_)
         LineImpl.create(self, start_, end_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#linear_ring
-      
+
       def linear_ring(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
         LinearRingImpl.create(self, points_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#polygon
-      
+
       def polygon(outer_ring_, inner_rings_=nil)
         inner_rings_ = inner_rings_.to_a unless inner_rings_.kind_of?(::Array)
         PolygonImpl.create(self, outer_ring_, inner_rings_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#collection
-      
+
       def collection(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
         GeometryCollectionImpl.create(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_point
-      
+
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
         MultiPointImpl.create(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_line_string
-      
+
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
         MultiLineStringImpl.create(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#multi_polygon
-      
+
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
         MultiPolygonImpl.create(self, elems_) rescue nil
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#proj4
-      
+
       def proj4
         @proj4
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#coord_sys
-      
+
       def coord_sys
         @coord_sys
       end
-      
-      
+
+
       # See ::RGeo::Feature::Factory#override_cast
-      
+
       def override_cast(original_, ntype_, flags_)
         return nil unless Geos.supported?
         keep_subtype_ = flags_[:keep_subtype]
@@ -365,11 +365,11 @@ module RGeo
         end
         false
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

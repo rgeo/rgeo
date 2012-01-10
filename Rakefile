@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
-# RGeo Rakefile
-# 
+#
+# Generic Gem Rakefile
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,9 +34,11 @@
 ;
 
 
-RAKEFILE_CONFIG = {
-  :product_visible_name => 'RGeo',
-}
+# Load config if present
+
+config_path_ = ::File.expand_path('rakefile_config.rb', ::File.dirname(__FILE__))
+load(config_path_) if ::File.exists?(config_path_)
+RAKEFILE_CONFIG = {} unless defined?(::RAKEFILE_CONFIG)
 
 
 # Gemspec
@@ -45,7 +47,6 @@ require 'rubygems'
 gemspec_ = eval(::File.read(::Dir.glob('*.gemspec').first))
 release_gemspec_ = eval(::File.read(::Dir.glob('*.gemspec').first))
 release_gemspec_.version = gemspec_.version.to_s.sub(/\.build\d+$/, '')
-RAKEFILE_CONFIG = {} unless defined?(::RAKEFILE_CONFIG)
 
 
 # Platform info
@@ -149,7 +150,7 @@ clean_files_ = [doc_directory_, pkg_directory_, tmp_directory_] +
   ::Dir.glob('ext/**/*.{o,class,log,dSYM}') +
   ::Dir.glob("**/*.{bundle,so,dll,rbc,jar}") +
   (::RAKEFILE_CONFIG[:extra_clean_files] || [])
-task :clean do  
+task :clean do
   clean_files_.each{ |path_| rm_rf path_ }
 end
 

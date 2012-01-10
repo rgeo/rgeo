@@ -1,9 +1,9 @@
 # -----------------------------------------------------------------------------
 #
-# RGeo yaml support
+# RGeo Rakefile configuration
 #
 # -----------------------------------------------------------------------------
-# Copyright 2010-2012 Daniel Azuma
+# Copyright 2012 Daniel Azuma
 #
 # All rights reserved.
 #
@@ -33,27 +33,6 @@
 # -----------------------------------------------------------------------------
 ;
 
-
-begin
-  require 'psych'
-rescue ::LoadError
-end
-
-
-module RGeo
-
-
-  # :stopdoc:
-  PSYCH_AVAILABLE = defined?(::Psych)
-  # :startdoc:
-
-
-  # Returns true if YAML serialization and deserialization is supported.
-  # YAML support requires the Psych library/gem.
-
-  def self.yaml_supported?
-    PSYCH_AVAILABLE
-  end
-
-
-end
+RAKEFILE_CONFIG = {
+  :product_visible_name => 'RGeo',
+}

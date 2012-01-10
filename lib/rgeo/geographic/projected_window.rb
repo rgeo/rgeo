@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # A projected window in a geography implementation
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,29 +35,29 @@
 
 
 module RGeo
-  
+
   module Geographic
-    
-    
+
+
     # This object represents an axis-aligned rectangle in a map projection
     # coordinate system. It is commonly used to specify the viewport for a
     # map visualization, an envelope in a projected coordinate system, or
     # a spatial constraint. It must be attached to a Geographic::Factory
     # that has a projection.
-    
+
     class ProjectedWindow
-      
-      
+
+
       # Create a new ProjectedWindow given the Geographic::Factory, and the
       # x and y extents of the rectangle.
-      # 
+      #
       # The window will be intelligently clamped to the limits imposed by
       # the factory. For example, the simple mercator factory limits
       # latitude to approximately +/-85 degrees.
-      # 
+      #
       # Generally, you will not need to call this low-level constructor
       # directly. Instead, use one of the provided class methods.
-      
+
       def initialize(factory_, x_min_, y_min_, x_max_, y_max_, opts_={})
         @factory = factory_
         limits_ = opts_[:is_limits] ? nil : factory_.projection_limits_window
@@ -88,84 +88,84 @@ module RGeo
         @x_max = x_max_
         @y_max = y_max_
       end
-      
-      
+
+
       def to_s  # :nodoc:
         "#<#{self.class}:0x#{object_id.to_s(16)} s=#{@y_min} w=#{@x_min} n=#{@y_max} e=#{@x_max}>"
       end
-      
+
       def inspect  # :nodoc:
         to_s
       end
-      
-      
+
+
       def eql?(obj_)  # :nodoc:
         return false unless obj_.kind_of?(ProjectedWindow)
         @factory == obj_.factory && @x_min == obj_.x_min && @x_max == obj_.x_max &&
           @y_min = obj_.y_min && @y_max = obj_.y_max
       end
       alias_method :==, :eql?
-      
+
       def hash  # :nodoc:
         @factory.hash + @x_min.hash + @x_max.hash + @y_min.hash + @y_max.hash
       end
-      
-      
+
+
       # Returns the Geographic::Factory associated with this window.
       # Note that this factory is the overall geography factory, not the
       # projected factory (which can be obtained by calling
       # Geographic::Factory#projection_factory on this factory).
-      
+
       def factory
         @factory
       end
-      
-      
+
+
       # Returns the lower limit in the x (easting) direction.
-      
+
       def x_min
         @x_min
       end
-      
-      
+
+
       # Returns the upper limit in the x (easting) direction.
-      
+
       def x_max
         @x_max
       end
-      
-      
+
+
       # Returns the lower limit in the y (northing) direction.
-      
+
       def y_min
         @y_min
       end
-      
-      
+
+
       # Returns the upper limit in the y (northing) direction.
-      
+
       def y_max
         @y_max
       end
-      
-      
+
+
       # Returns true if the projection wraps along the x axis, and this
       # rectangle crosses that seam.
-      
+
       def crosses_seam?
         @x_max < @x_min
       end
-      
-      
+
+
       # Returns true if the rectangle has zero area.
-      
+
       def degenerate?
         @x_min == @x_max || @y_min == @y_max
       end
-      
-      
+
+
       # Returns the width of the rectangle.
-      
+
       def x_span
         span_ = @x_max - @x_min
         if span_ < 0
@@ -174,19 +174,19 @@ module RGeo
         span_
       end
       alias_method :width, :x_span
-      
-      
+
+
       # Returns the height of the rectangle.
-      
+
       def y_span
         @y_max - @y_min
       end
       alias_method :height, :x_span
-      
-      
+
+
       # Returns a two-element array containing the x and y coordinates
       # of the center of the rectangle.
-      
+
       def center_xy
         y_ = (@y_min + @y_max) * 0.5
         if @x_min > @x_max
@@ -198,51 +198,51 @@ module RGeo
         end
         [x_, y_]
       end
-      
-      
+
+
       # Returns the southwest corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
-      
+
       def sw_point
         @sw ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_min))
       end
-      
-      
+
+
       # Returns the southeast corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
-      
+
       def se_point
         @se ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_min))
       end
-      
-      
+
+
       # Returns the northwest corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
-      
+
       def nw_point
         @nw ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_max))
       end
-      
-      
+
+
       # Returns the northeast corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
-      
+
       def ne_point
         @ne ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_max))
       end
-      
-      
+
+
       # Returns the center of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
-      
+
       def center_point
         @center ||= @factory.unproject(@factory.projection_factory.point(*center_xy))
       end
-      
-      
+
+
       # Returns a random point the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
-      
+
       def random_point
         y_ = @y_min + (@y_max - @y_min) * rand
         if @x_min > @x_max
@@ -254,11 +254,11 @@ module RGeo
         end
         @factory.unproject(@factory.projection_factory.point(x_, y_))
       end
-      
-      
+
+
       # Returns true if the rectangle contains the given point, which
       # must be a Feature::Point in _unprojected_ (lat/lng) space.
-      
+
       def contains_point?(point_)
         projection_ = @factory.project(point_)
         y_ = projection_.y
@@ -277,11 +277,11 @@ module RGeo
           false
         end
       end
-      
-      
+
+
       # Returns true if the given window is completely contained within
       # this window.
-      
+
       def contains_window?(window_)
         return nil if window_.factory != @factory
         if window_.y_max <= @y_max && window_.y_min >= @y_min
@@ -294,13 +294,13 @@ module RGeo
           false
         end
       end
-      
-      
+
+
       # Returns a new window resulting from scaling this window by the
       # given factors, which must be floating-point values.
       # If y_factor is not explicitly given, it defaults to the same as
       # the x_factor.
-      
+
       def scaled_by(x_factor_, y_factor_=nil)
         y_factor_ ||= x_factor_
         if x_factor_ != 1.0 || y_factor_ != 1.0
@@ -313,14 +313,14 @@ module RGeo
         end
       end
       alias_method :*, :scaled_by
-      
-      
+
+
       # Returns a new window resulting from clamping this window to the
       # given minimum and maximum widths and heights, in the projected
       # coordinate system. The center of the resulting window is the
       # same as the center of this window. Any of the arguments may be
       # given as nil, indicating no constraint.
-      
+
       def clamped_by(min_width_, min_height_, max_width_, max_height_)
         xr_ = x_span
         yr_ = y_span
@@ -350,13 +350,13 @@ module RGeo
           self
         end
       end
-      
-      
+
+
       # Returns a new window resulting from adding the given margin to
       # this window. If y_margin is not given, it defaults to the same
       # value as x_margin. Note that the margins may be negative to
       # indicate shrinking of the window.
-      
+
       def with_margin(x_margin_, y_margin_=nil)
         y_margin_ ||= x_margin_
         if x_margin_ != 0.0 || y_margin_ != 0.0
@@ -366,29 +366,29 @@ module RGeo
           self
         end
       end
-      
-      
+
+
       class << self
-        
-        
+
+
         # Creates a new window whose coordinates are the given points,
         # which must be Feature::Point objects in unprojected (lat/lng)
         # space.
-        
+
         def for_corners(sw_, ne_)
           factory_ = sw_.factory
           psw_ = factory_.project(sw_)
           pne_ = factory_.project(ne_)
           ProjectedWindow.new(factory_, psw_.x, psw_.y, pne_.x, pne_.y)
         end
-        
-        
+
+
         # Creates a new window that surrounds the given point with the
         # given margin. The point must be a Feature::Point object in
         # unprojected (lat/lng) space, while the margins are numbers in
         # projected space. The y_margin may be given as nil, in which
         # case it is set to the same as the x_margin.
-        
+
         def surrounding_point(point_, x_margin_=nil, y_margin_=nil)
           x_margin_ ||= 0.0
           y_margin_ ||= x_margin_
@@ -397,12 +397,12 @@ module RGeo
           ProjectedWindow.new(factory_, projection_.x - x_margin_, projection_.y - y_margin_,
             projection_.x + x_margin_, projection_.y + y_margin_)
         end
-        
-        
+
+
         # Creates a new window that contains all of the given points.
         # which must be Feature::Point objects in unprojected (lat/lng)
         # space.
-        
+
         def bounding_points(points_)
           factory_ = nil
           limits_ = nil
@@ -456,14 +456,14 @@ module RGeo
           end
           ProjectedWindow.new(factory_, x_min_, y_min_, x_max_, y_max_)
         end
-        
-        
+
+
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

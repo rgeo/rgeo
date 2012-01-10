@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # OGC CS wkt parser for RGeo
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,21 +35,21 @@
 
 
 module RGeo
-  
+
   module CoordSys
-    
-    
+
+
     module CS
-      
-      
+
+
       class WKTParser  # :nodoc:
-        
+
         def initialize(str_)
           @scanner = ::StringScanner.new(str_)
           next_token
         end
-        
-        
+
+
         def parse(containing_type_=nil)
           if @cur_token.kind_of?(QuotedString) ||
               @cur_token.kind_of?(::Numeric) ||
@@ -167,21 +167,21 @@ module RGeo
           args_.assert_empty
           obj_
         end
-        
-        
+
+
         def consume_token_type(type_)  # :nodoc:
           expect_token_type(type_)
           tok_ = @cur_token
           next_token
           tok_
         end
-        
+
         def expect_token_type(type_)  # :nodoc:
           unless type_ === @cur_token
             raise Error::ParseError, "#{type_.inspect} expected but #{@cur_token.inspect} found."
           end
         end
-        
+
         def next_token  # :nodoc:
           @scanner.skip(/\s+/)
           case @scanner.peek(1)
@@ -213,43 +213,43 @@ module RGeo
           end
           @cur_token
         end
-        
+
         def cur_token  # :nodoc:
           @cur_token
         end
-        
-        
+
+
         class QuotedString < ::String  # :nodoc:
         end
-        
+
         class TypeString < ::String  # :nodoc:
         end
-        
-        
+
+
         class AuthorityClause  # :nodoc:
-          
+
           def initialize(name_, code_)
             @name = name_
             @code = code_
           end
-          
+
           def to_a
             [@name, @code]
           end
-          
+
         end
-        
-        
+
+
         class ArgumentList  # :nodoc:
-          
+
           def initialize
             @values = []
           end
-          
+
           def <<(value_)
             @values << value_
           end
-          
+
           def assert_empty
             if @values.size > 0
               names_ = @values.map do |val_|
@@ -258,7 +258,7 @@ module RGeo
               raise Error::ParseError, "#{@remaining} unexpected arguments: #{names_.join(', ')}"
             end
           end
-          
+
           def find_first(klass_)
             @values.each_with_index do |val_, index_|
               if val_.kind_of?(klass_)
@@ -268,7 +268,7 @@ module RGeo
             end
             nil
           end
-          
+
           def find_all(klass_)
             results_ = []
             nvalues_ = []
@@ -282,7 +282,7 @@ module RGeo
             @values = nvalues_
             results_
           end
-          
+
           def shift(klass_=nil)
             val_ = @values.shift
             unless val_
@@ -293,16 +293,16 @@ module RGeo
             end
             val_
           end
-          
+
         end
-        
-        
+
+
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

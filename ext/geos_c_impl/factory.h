@@ -1,16 +1,16 @@
 /*
   -----------------------------------------------------------------------------
-  
+
   Factory and utility functions for GEOS wrapper
-  
+
   -----------------------------------------------------------------------------
-  Copyright 2010 Daniel Azuma
-  
+  Copyright 2010-2012 Daniel Azuma
+
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
   * Redistributions in binary form must reproduce the above copyright notice,
@@ -19,7 +19,7 @@
   * Neither the name of the copyright holder, nor the names of any other
     contributors to this software, may be used to endorse or promote products
     derived from this software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -109,7 +109,7 @@ typedef struct {
   Includes a handle to the underlying GEOS geometry itself (which could
   be null for an uninitialized geometry).
   It also provides a handle to the factory that created this geometry.
-  
+
   The klasses object is used by geometry collections. Its value is
   generally an array of the ruby classes for the colletion's elements,
   so that we can reproduce the exact class for those elements in cases
@@ -117,7 +117,7 @@ typedef struct {
   in Line objects, which have no GEOS type). Any array element, or the
   array itself, could be Qnil, indicating fall back to the default
   inferred from the GEOS type.
-  
+
   The GEOS context handle is also included here. Ideally, it would be
   available by following the factory reference and getting it from the
   factory data. However, one use case is in the destroy_geometry_func
@@ -185,7 +185,7 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   disables this auto-cast. The returned GEOS geometry is owned by the
   caller-- that is, if the original ruby object is already of the desired
   factory, the returned GEOS geometry is a clone of the original.
-  
+
   If the klasses parameter is not NULL, its referent is set to the
   klasses saved in the original ruby Geometry object (if any), or else to
   the class of the converted GEOS object. This is so that you can use the

@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Features namespace for RGeo
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,19 +35,19 @@
 
 
 module RGeo
-  
-  
+
+
   # The Feature namespace contains interfaces and general tools for
   # implementations of the Open Geospatial Consortium Simple Features
   # Specification (SFS), version 1.1.0.
-  # 
+  #
   # Each interface is defined as a module, and is provided primarily for
   # the sake of documentation. Implementations do not necessarily include
   # the modules themselves. Therefore, you should not depend on the
   # kind_of? method to check type. Instead, each interface module will
   # provide a check_type class method (and a corresponding === operator
   # to support case-when constructs).
-  # 
+  #
   # In addition, a Factory interface is defined here. A factory is an
   # object that knows how to construct geometry instances for a given
   # implementation. Each implementation's front-end consists of a way to
@@ -55,16 +55,16 @@ module RGeo
   # building the features themselves. Note that, like the geometry
   # modules, the Factory module itself may not actually be included in a
   # factory implementation.
-  # 
+  #
   # Any particular implementation may extend these interfaces to provide
   # implementation-specific features beyond what is stated in the SFS
   # itself. The implementation should separately document any such
   # extensions that it may provide.
-  
+
   module Feature
   end
-  
-  
+
+
 end
 
 

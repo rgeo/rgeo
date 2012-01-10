@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Well-known text generator for RGeo
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,23 +35,23 @@
 
 
 module RGeo
-  
+
   module WKRep
-    
-    
+
+
     # This class provides the functionality of serializing a geometry as
     # WKT (well-known text) format. You may also customize the serializer
     # to generate PostGIS EWKT extensions to the output, or to follow the
     # Simple Features Specification 1.2 extensions for Z and M.
-    # 
+    #
     # To use this class, create an instance with the desired settings and
     # customizations, and call the generate method.
-    # 
+    #
     # === Configuration options
-    # 
+    #
     # The following options are recognized. These can be passed to the
     # constructor, or set on the object afterwards.
-    # 
+    #
     # [<tt>:tag_format</tt>]
     #   The format for tags. Possible values are <tt>:wkt11</tt>,
     #   indicating SFS 1.1 WKT (i.e. no Z or M markers in the tags) but
@@ -76,44 +76,44 @@ module RGeo
     #   letters to lower case; or nil, indicating no case changes from
     #   the default (which is not specified exactly, but is chosen by the
     #   generator to emphasize readability.) Default is nil.
-    
+
     class WKTGenerator
-      
-      
+
+
       # Create and configure a WKT generator. See the WKTGenerator
       # documentation for the options that can be passed.
-      
+
       def initialize(opts_={})
         @tag_format = opts_[:tag_format] || opts_[:type_format] || :wkt11
         @emit_ewkt_srid = opts_[:emit_ewkt_srid] ? true : false if @tag_format == :ewkt
         @square_brackets = opts_[:square_brackets] ? true : false
         @convert_case = opts_[:convert_case]
       end
-      
-      
+
+
       # Returns the format for type tags. See WKTGenerator for details.
       def tag_format
         @tag_format
       end
       alias_method :type_format, :tag_format
-      
+
       # Returns whether SRID is embedded. See WKTGenerator for details.
       def emit_ewkt_srid?
         @emit_ewkt_srid
       end
-      
+
       # Returns whether square brackets rather than parens are output.
       # See WKTGenerator for details.
       def square_brackets?
         @square_brackets
       end
-      
+
       # Returns the case for output. See WKTGenerator for details.
       def convert_case
         @convert_case
       end
-      
-      
+
+
       def _properties  # :nodoc:
         {
           :tag_format => @tag_format,
@@ -122,11 +122,11 @@ module RGeo
           :convert_case => @convert_case,
         }
       end
-      
-      
+
+
       # Generate and return the WKT format for the given geometry object,
       # according to the current settings.
-      
+
       def generate(obj_)
         @begin_bracket = @square_brackets ? '[' : '('
         @end_bracket = @square_brackets ? ']' : ')'
@@ -147,8 +147,8 @@ module RGeo
           str_
         end
       end
-      
-      
+
+
       def _generate_feature(obj_, toplevel_=false)  # :nodoc:
         type_ = obj_.geometry_type
         type_ = Feature::LineString if type_.subtype_of?(Feature::LineString)
@@ -189,21 +189,21 @@ module RGeo
           raise Error::ParseError, "Unrecognized geometry type: #{type_}"
         end
       end
-      
-      
+
+
       def _generate_coords(obj_)  # :nodoc:
         str_ = "#{obj_.x.to_s} #{obj_.y.to_s}"
         str_ << " #{obj_.z.to_s}" if @cur_support_z
         str_ << " #{obj_.m.to_s}" if @cur_support_m
         str_
       end
-      
-      
+
+
       def _generate_point(obj_)  # :nodoc:
         "#{@begin_bracket}#{_generate_coords(obj_)}#{@end_bracket}"
       end
-      
-      
+
+
       def _generate_line_string(obj_)  # :nodoc:
         if obj_.is_empty?
           'EMPTY'
@@ -211,8 +211,8 @@ module RGeo
           "#{@begin_bracket}#{obj_.points.map{ |p_| _generate_coords(p_) }.join(', ')}#{@end_bracket}"
         end
       end
-      
-      
+
+
       def _generate_polygon(obj_)  # :nodoc:
         if obj_.is_empty?
           'EMPTY'
@@ -220,8 +220,8 @@ module RGeo
           "#{@begin_bracket}#{([_generate_line_string(obj_.exterior_ring)] + obj_.interior_rings.map{ |r_| _generate_line_string(r_) }).join(', ')}#{@end_bracket}"
         end
       end
-      
-      
+
+
       def _generate_geometry_collection(obj_)  # :nodoc:
         if obj_.is_empty?
           'EMPTY'
@@ -229,8 +229,8 @@ module RGeo
           "#{@begin_bracket}#{obj_.map{ |f_| _generate_feature(f_) }.join(', ')}#{@end_bracket}"
         end
       end
-      
-      
+
+
       def _generate_multi_point(obj_)  # :nodoc:
         if obj_.is_empty?
           'EMPTY'
@@ -238,8 +238,8 @@ module RGeo
           "#{@begin_bracket}#{obj_.map{ |f_| _generate_point(f_) }.join(', ')}#{@end_bracket}"
         end
       end
-      
-      
+
+
       def _generate_multi_line_string(obj_)  # :nodoc:
         if obj_.is_empty?
           'EMPTY'
@@ -247,8 +247,8 @@ module RGeo
           "#{@begin_bracket}#{obj_.map{ |f_| _generate_line_string(f_) }.join(', ')}#{@end_bracket}"
         end
       end
-      
-      
+
+
       def _generate_multi_polygon(obj_)  # :nodoc:
         if obj_.is_empty?
           'EMPTY'
@@ -256,11 +256,11 @@ module RGeo
           "#{@begin_bracket}#{obj_.map{ |f_| _generate_polygon(f_) }.join(', ')}#{@end_bracket}"
         end
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

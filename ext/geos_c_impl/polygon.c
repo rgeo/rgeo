@@ -1,16 +1,16 @@
 /*
   -----------------------------------------------------------------------------
-  
+
   Polygon methods for GEOS wrapper
-  
+
   -----------------------------------------------------------------------------
-  Copyright 2010 Daniel Azuma
-  
+  Copyright 2010-2012 Daniel Azuma
+
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
   * Redistributions in binary form must reproduce the above copyright notice,
@@ -19,7 +19,7 @@
   * Neither the name of the copyright holder, nor the names of any other
     contributors to this software, may be used to endorse or promote products
     derived from this software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -281,9 +281,9 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
     rb_const_get_at(globals->feature_module, rb_intern("Surface")), geos_polygon_class);
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_polygon, geos_polygon_class);
-  
+
   rb_define_module_function(geos_polygon_class, "create", cmethod_create, 3);
-  
+
   rb_define_method(geos_polygon_class, "eql?", method_polygon_eql, 1);
   rb_define_method(geos_polygon_class, "geometry_type", method_polygon_geometry_type, 0);
   rb_define_method(geos_polygon_class, "area", method_polygon_area, 0);

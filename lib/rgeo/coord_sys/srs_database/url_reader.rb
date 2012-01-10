@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # SRS database interface
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,36 +38,36 @@ require 'net/http'
 
 
 module RGeo
-  
+
   module CoordSys
-    
+
     module SRSDatabase
-      
-      
+
+
       # A spatial reference database implementation that fetches data from
       # internet URLs.
-      
+
       class UrlReader
-        
-        
+
+
         # Create a URL-based spatial reference database.
-        # 
+        #
         # Options:
-        # 
+        #
         # [<tt>:cache</tt>]
         #   If set to true, lookup results are cached so if the same URL
         #   is requested again, the result is served from cache rather
         #   than issuing another HTTP request. Default is false.
-        
+
         def initialize(opts_={})
           @cache = opts_[:cache] ? {} : nil
         end
-        
-        
+
+
         # Retrieve the given URL and return an Entry.
         # Returns nil if the URL cannot be read as an OGC WKT or Proj4
         # coordinate system
-        
+
         def get(ident_)
           ident_ = ident_.to_s
           return @cache[ident_] if @cache && @cache.include?(ident_)
@@ -89,20 +89,20 @@ module RGeo
           @cache[ident_] = result_ if @cache
           result_
         end
-        
-        
+
+
         # Clear the cache if one is present.
-        
+
         def clear_cache
           @cache.clear if @cache
         end
-        
-        
+
+
       end
-      
-      
+
+
     end
-    
+
   end
-  
+
 end

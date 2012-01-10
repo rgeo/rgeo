@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # SRS database interface
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,26 +35,26 @@
 
 
 module RGeo
-  
+
   module CoordSys
-    
+
     module SRSDatabase
-      
-      
+
+
       # A spatial reference database implementation that uses ActiveRecord
       # to access a spatial reference table provided by a spatial database
       # implementation. You can use this class to obtain coordinate system
       # information from your installation of, e.g. PostGIS.
-      
+
       class ActiveRecordTable
-        
+
         @@class_counter = 0
-        
-        
+
+
         # Create a new ActiveRecord-backed database connection.
-        # 
+        #
         # Options include:
-        # 
+        #
         # [<tt>:ar_class</tt>]
         #   An ActiveRecord class to use. You may provide this if you
         #   already have an ActiveRecord class that accesses the table.
@@ -109,7 +109,7 @@ module RGeo
         #   If set to true, entries are cached when first retrieved, so
         #   subsequent requests do not have to make a database round trip.
         #   Default is false.
-        # 
+        #
         # Some option settings may be provided by the ActiveRecord
         # connection adapter, if the ActiveRecord class's connection uses
         # an adapter that is RGeo-savvy. The "postgis" and "spatialite"
@@ -118,7 +118,7 @@ module RGeo
         # the database-provided spatial reference table as defaults.
         # However, you can still override those settings if you want to
         # use a custom table.
-        
+
         def initialize(opts_={})
           @cache = opts_[:cache] ? {} : nil
           @ar_class = opts_[:ar_class]
@@ -148,10 +148,10 @@ module RGeo
           @srtext_column = opts_[:srtext_column]
           @proj4text_column = opts_[:proj4text_column]
         end
-        
-        
+
+
         # Retrieve an Entry given an integer SRID.
-        
+
         def get(ident_)
           ident_ = ident_.to_i
           return @cache[ident_] if @cache && @cache.include?(ident_)
@@ -175,20 +175,20 @@ module RGeo
           @cache[ident_] = result_ if @cache
           result_
         end
-        
-        
+
+
         # Clears the cache if a cache is active.
-        
+
         def clear_cache
           @cache.clear if @cache
         end
-        
-        
+
+
       end
-      
-      
+
+
     end
-    
+
   end
-  
+
 end

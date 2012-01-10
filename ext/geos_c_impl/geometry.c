@@ -1,16 +1,16 @@
 /*
   -----------------------------------------------------------------------------
-  
+
   Geometry base class methods for GEOS wrapper
-  
+
   -----------------------------------------------------------------------------
-  Copyright 2010 Daniel Azuma
-  
+  Copyright 2010-2012 Daniel Azuma
+
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
   * Redistributions in binary form must reproduce the above copyright notice,
@@ -19,7 +19,7 @@
   * Neither the name of the copyright holder, nor the names of any other
     contributors to this software, may be used to endorse or promote products
     derived from this software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -915,7 +915,7 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
   self_data->geos_context = NULL;
   self_data->factory = Qnil;
   self_data->klasses = Qnil;
-  
+
   // Copy value from orig
   geom = rgeo_get_geos_geometry_safe(orig);
   if (geom) {
@@ -949,7 +949,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   globals->feature_geometry = rb_const_get_at(globals->feature_module, rb_intern("Geometry"));
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_geometry, geos_geometry_class);
-  
+
   rb_define_alloc_func(geos_geometry_class, alloc_geometry);
   rb_define_method(geos_geometry_class, "_set_factory", method_geometry_set_factory, 1);
   rb_define_method(geos_geometry_class, "initialize_copy", method_geometry_initialize_copy, 1);

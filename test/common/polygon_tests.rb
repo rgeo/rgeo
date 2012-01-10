@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Common tests for polygon implementations
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,10 +40,10 @@ require 'rgeo'
 module RGeo
   module Tests  # :nodoc:
     module Common  # :nodoc:
-      
+
       module PolygonTests  # :nodoc:
-        
-        
+
+
         def test_creation_simple
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -58,8 +58,8 @@ module RGeo
           assert_nil(polygon_.interior_ring_n(0))
           assert_nil(polygon_.interior_ring_n(-1))
         end
-        
-        
+
+
         def test_creation_one_hole
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 10)
@@ -80,8 +80,8 @@ module RGeo
           assert_nil(polygon_.interior_ring_n(1))
           assert_nil(polygon_.interior_ring_n(-1))
         end
-        
-        
+
+
         def test_fully_equal
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -96,8 +96,8 @@ module RGeo
           assert(poly1_.eql?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
-        
-        
+
+
         def test_geometrically_equal_but_ordered_different
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -109,8 +109,8 @@ module RGeo
           assert(!poly1_.eql?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
-        
-        
+
+
         def test_geometrically_equal_but_different_directions
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -122,8 +122,8 @@ module RGeo
           assert(!poly1_.eql?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
-        
-        
+
+
         def test_wkt_creation_simple
           parsed_poly_ = @factory.parse_wkt('POLYGON((0 0, 0 1, 1 0, 0 0))')
           point1_ = @factory.point(0, 0)
@@ -133,8 +133,8 @@ module RGeo
           built_poly_ = @factory.polygon(exterior_)
           assert(built_poly_.eql?(parsed_poly_))
         end
-        
-        
+
+
         def test_wkt_creation_one_hole
           parsed_poly_ = @factory.parse_wkt('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4))')
           point1_ = @factory.point(0, 0)
@@ -149,8 +149,8 @@ module RGeo
           built_poly_ = @factory.polygon(exterior_, [interior_])
           assert(built_poly_.eql?(parsed_poly_))
         end
-        
-        
+
+
         def test_clone
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -162,8 +162,8 @@ module RGeo
           assert(exterior_.eql?(poly2_.exterior_ring))
           assert_equal(0, poly2_.num_interior_rings)
         end
-        
-        
+
+
         def test_type_check
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -176,8 +176,8 @@ module RGeo
           assert(::RGeo::Feature::Surface.check_type(poly_))
           assert(::RGeo::Feature::Polygon.check_type(poly_))
         end
-        
-        
+
+
         def test_as_text_wkt_round_trip
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -188,8 +188,8 @@ module RGeo
           poly2_ = @factory.parse_wkt(text_)
           assert(poly1_.eql?(poly2_))
         end
-        
-        
+
+
         def test_as_binary_wkb_round_trip
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -200,8 +200,8 @@ module RGeo
           poly2_ = @factory.parse_wkb(binary_)
           assert(poly1_.eql?(poly2_))
         end
-        
-        
+
+
         def test_dimension
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 10)
@@ -215,8 +215,8 @@ module RGeo
           poly_ = @factory.polygon(exterior_, [interior_])
           assert_equal(2, poly_.dimension)
         end
-        
-        
+
+
         def test_is_empty
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -227,10 +227,10 @@ module RGeo
           poly2_ = @factory.polygon(@factory.linear_ring([]))
           assert(poly2_.is_empty?)
         end
-        
-        
+
+
       end
-      
+
     end
   end
 end

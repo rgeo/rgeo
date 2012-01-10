@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Tests for WKT parser
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,10 +41,10 @@ require 'rgeo'
 module RGeo
   module Tests  # :nodoc:
     module WKRep  # :nodoc:
-      
+
       class TestWKBParser < ::Test::Unit::TestCase  # :nodoc:
-        
-        
+
+
         def test_point_2d_xdr_hex
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('00000000013ff00000000000004000000000000000')
@@ -52,8 +52,8 @@ module RGeo
           assert_equal(1, obj_.x)
           assert_equal(2, obj_.y)
         end
-        
-        
+
+
         def test_point_2d_xdr_binary
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse(['00000000013ff00000000000004000000000000000'].pack('H*'))
@@ -61,8 +61,8 @@ module RGeo
           assert_equal(1, obj_.x)
           assert_equal(2, obj_.y)
         end
-        
-        
+
+
         def test_point_2d_ndr
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('0101000000000000000000f03f0000000000000040')
@@ -70,8 +70,8 @@ module RGeo
           assert_equal(1, obj_.x)
           assert_equal(2, obj_.y)
         end
-        
-        
+
+
         def test_point_with_ewkb_z
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
@@ -80,8 +80,8 @@ module RGeo
           assert_equal(3, obj_.z)
           assert_nil(obj_.m)
         end
-        
-        
+
+
         def test_point_with_ewkb_m
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
@@ -90,8 +90,8 @@ module RGeo
           assert_equal(3, obj_.m)
           assert_nil(obj_.z)
         end
-        
-        
+
+
         def test_point_with_ewkb_zm
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
@@ -100,8 +100,8 @@ module RGeo
           assert_equal(3, obj_.z)
           assert_equal(4, obj_.m)
         end
-        
-        
+
+
         def test_point_with_wkb12_z
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
@@ -110,8 +110,8 @@ module RGeo
           assert_equal(3, obj_.z)
           assert_nil(obj_.m)
         end
-        
-        
+
+
         def test_point_with_wkb12_m
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
@@ -120,8 +120,8 @@ module RGeo
           assert_equal(3, obj_.m)
           assert_nil(obj_.z)
         end
-        
-        
+
+
         def test_point_with_wkb12_zm
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
@@ -130,8 +130,8 @@ module RGeo
           assert_equal(3, obj_.z)
           assert_equal(4, obj_.m)
         end
-        
-        
+
+
         def test_point_with_wkb12_z_without_wkb12_support
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_)
@@ -139,8 +139,8 @@ module RGeo
             obj_ = parser_.parse('00000003e93ff000000000000040000000000000004008000000000000')
           end
         end
-        
-        
+
+
         def test_point_with_wkb12_z_without_enough_data
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
@@ -148,8 +148,8 @@ module RGeo
             obj_ = parser_.parse('00000003e93ff00000000000004000000000000000')
           end
         end
-        
-        
+
+
         def test_point_with_ewkb_z_and_srid
           factory_generator_ = ::Proc.new do |config_|
             ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :srid => config_[:srid])
@@ -161,8 +161,8 @@ module RGeo
           assert_nil(obj_.m)
           assert_equal(1000, obj_.srid)
         end
-        
-        
+
+
         def test_linestring_basic
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('0000000002000000033ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000')
@@ -171,8 +171,8 @@ module RGeo
           assert_equal(1, obj_.point_n(0).x)
           assert_equal(6, obj_.point_n(2).y)
         end
-        
-        
+
+
         def test_linestring_with_ewkb_z
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
@@ -182,8 +182,8 @@ module RGeo
           assert_equal(1, obj_.point_n(0).x)
           assert_equal(6, obj_.point_n(1).z)
         end
-        
-        
+
+
         def test_linestring_with_ewkb_z_and_srid
           factory_generator_ = ::Proc.new do |config_|
             ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :srid => config_[:srid])
@@ -196,8 +196,8 @@ module RGeo
           assert_equal(6, obj_.point_n(1).z)
           assert_equal(1000, obj_.srid)
         end
-        
-        
+
+
         def test_linestring_with_wkb12_z
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
@@ -207,16 +207,16 @@ module RGeo
           assert_equal(1, obj_.point_n(0).x)
           assert_equal(6, obj_.point_n(1).z)
         end
-        
-        
+
+
         def test_linestring_empty
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000200000000')
           assert_equal(::RGeo::Feature::LineString, obj_.geometry_type)
           assert_equal(0, obj_.num_points)
         end
-        
-        
+
+
         def test_polygon_basic
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000300000001000000043ff0000000000000400000000000000040080000000000004010000000000000401800000000000040140000000000003ff00000000000004000000000000000')
@@ -225,16 +225,16 @@ module RGeo
           assert_equal(1, obj_.exterior_ring.point_n(0).x)
           assert_equal(5, obj_.exterior_ring.point_n(2).y)
         end
-        
-        
+
+
         def test_polygon_empty
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000300000000')
           assert_equal(::RGeo::Feature::Polygon, obj_.geometry_type)
           assert_equal(0, obj_.exterior_ring.num_points)
         end
-        
-        
+
+
         def test_multipoint_basic
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('00000000040000000200000000013ff00000000000004000000000000000000000000140080000000000004010000000000000')
@@ -243,8 +243,8 @@ module RGeo
           assert_equal(1, obj_[0].x)
           assert_equal(4, obj_[1].y)
         end
-        
-        
+
+
         def test_multipoint_mixed_byte_order
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('0000000004000000020101000000000000000000f03f0000000000000040000000000140080000000000004010000000000000')
@@ -253,8 +253,8 @@ module RGeo
           assert_equal(1, obj_[0].x)
           assert_equal(4, obj_[1].y)
         end
-        
-        
+
+
         def test_multipoint_with_ewkb_z
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
@@ -267,8 +267,8 @@ module RGeo
           assert_equal(6, obj_[1].z)
           assert_nil(obj_[0].m)
         end
-        
-        
+
+
         def test_multipoint_ewkb_with_mixed_z
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
@@ -276,16 +276,16 @@ module RGeo
             obj_ = parser_.parse('00800000040000000200800000013ff000000000000040000000000000004014000000000000000000000140080000000000004010000000000000')
           end
         end
-        
-        
+
+
         def test_multipoint_empty
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000400000000')
           assert_equal(::RGeo::Feature::MultiPoint, obj_.geometry_type)
           assert_equal(0, obj_.num_geometries)
         end
-        
-        
+
+
         def test_multilinestring_basic
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('0000000005000000020000000002000000033ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000000000000200000002bff0000000000000c000000000000000c008000000000000c010000000000000')
@@ -294,24 +294,24 @@ module RGeo
           assert_equal(1, obj_[0].point_n(0).x)
           assert_equal(-4, obj_[1].point_n(1).y)
         end
-        
-        
+
+
         def test_multilinestring_wrong_element_type
           parser_ = ::RGeo::WKRep::WKBParser.new
           assert_raise(::RGeo::Error::ParseError) do
             obj_ = parser_.parse('0000000005000000020000000002000000033ff00000000000004000000000000000400800000000000040100000000000004014000000000000401800000000000000000000013ff00000000000004000000000000000')
           end
         end
-        
-        
+
+
         def test_multilinestring_empty
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000500000000')
           assert_equal(::RGeo::Feature::MultiLineString, obj_.geometry_type)
           assert_equal(0, obj_.num_geometries)
         end
-        
-        
+
+
         def test_multipolygon_basic
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000600000002000000000300000001000000043ff0000000000000400000000000000040080000000000004010000000000000401800000000000040140000000000003ff00000000000004000000000000000000000000300000000')
@@ -322,16 +322,16 @@ module RGeo
           assert_equal(5, obj_[0].exterior_ring.point_n(2).y)
           assert_equal(0, obj_[1].exterior_ring.num_points)
         end
-        
-        
+
+
         def test_multipolygon_empty
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000600000000')
           assert_equal(::RGeo::Feature::MultiPolygon, obj_.geometry_type)
           assert_equal(0, obj_.num_geometries)
         end
-        
-        
+
+
         def test_collection_basic
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('0000000007000000020000000002000000033ff0000000000000400000000000000040080000000000004010000000000000401400000000000040180000000000000000000001bff0000000000000c000000000000000')
@@ -343,18 +343,18 @@ module RGeo
           assert_equal(::RGeo::Feature::Point, obj_[1].geometry_type)
           assert_equal(-1, obj_[1].x)
         end
-        
-        
+
+
         def test_collection_empty
           parser_ = ::RGeo::WKRep::WKBParser.new
           obj_ = parser_.parse('000000000700000000')
           assert_equal(::RGeo::Feature::GeometryCollection, obj_.geometry_type)
           assert_equal(0, obj_.num_geometries)
         end
-        
-        
+
+
       end
-      
+
     end
   end
 end

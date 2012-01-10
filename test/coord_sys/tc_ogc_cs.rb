@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Tests for OGC CS classes
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,12 +41,12 @@ require 'rgeo'
 module RGeo
   module Tests  # :nodoc:
     module CoordSys  # :nodoc:
-      
+
       class TestOgcCs < ::Test::Unit::TestCase  # :nodoc:
-        
-        
+
+
         # Handle differences in floating-point output.
-        
+
         def _lenient_regex_for(str_)
           ::Regexp.new(str_.gsub(/(\d)\.(\d{10,})/) do |m_|
             before_ = $1
@@ -54,16 +54,16 @@ module RGeo
             "#{before_}.#{after_}\\d*"
           end.gsub(/(\.|\[|\]|\(|\)|\$|\^|\||\+)/){ |m_| "\\#{$1}"})
         end
-        
-        
+
+
         def test_axis_info_by_value
           obj_ = ::RGeo::CoordSys::CS::AxisInfo.create('N', ::RGeo::CoordSys::CS::AO_NORTH)
           assert_equal('N', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::AO_NORTH, obj_.orientation)
           assert_equal('AXIS["N",NORTH]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_axis_info_by_name
           obj_ = ::RGeo::CoordSys::CS::AxisInfo.create('S', 'SOUTH')
           assert_equal('S', obj_.name)
@@ -72,16 +72,16 @@ module RGeo
           obj2_ = ::RGeo::CoordSys::CS::AxisInfo.create('S', ::RGeo::CoordSys::CS::AO_SOUTH)
           assert_equal(obj_, obj2_)
         end
-        
-        
+
+
         def test_parameter
           obj_ = ::RGeo::CoordSys::CS::ProjectionParameter.create('false_easting', 400000)
           assert_equal('false_easting', obj_.name)
           assert_equal(400000, obj_.value)
           assert_equal('PARAMETER["false_easting",400000.0]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_towgs84
           obj_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.create(1, 2, 3, 4, 5, 6, 7)
           assert_equal(1, obj_.dx)
@@ -93,8 +93,8 @@ module RGeo
           assert_equal(7, obj_.ppm)
           assert_equal('TOWGS84[1.0,2.0,3.0,4.0,5.0,6.0,7.0]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_unit
           obj_ = ::RGeo::CoordSys::CS::Unit.create('metre', 1)
           assert_equal('metre', obj_.name)
@@ -102,8 +102,8 @@ module RGeo
           assert_nil(obj_.authority)
           assert_equal('UNIT["metre",1.0]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_unit_with_authority
           obj_ = ::RGeo::CoordSys::CS::Unit.create('metre', 1, 'EPSG', 9001)
           assert_equal('metre', obj_.name)
@@ -112,22 +112,22 @@ module RGeo
           assert_equal('9001', obj_.authority_code)
           assert_equal('UNIT["metre",1.0,AUTHORITY["EPSG","9001"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_linear_unit
           obj_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           assert_equal(1, obj_.meters_per_unit)
           assert_equal('UNIT["metre",1.0]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_angular_unit
           obj_ = ::RGeo::CoordSys::CS::AngularUnit.create('radian', 1)
           assert_equal(1, obj_.radians_per_unit)
           assert_equal('UNIT["radian",1.0]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_prime_meridian
           obj1_ = ::RGeo::CoordSys::CS::AngularUnit.create('radian', 1)
           obj_ = ::RGeo::CoordSys::CS::PrimeMeridian.create('Greenwich', obj1_, 0, 'EPSG', '8901')
@@ -135,8 +135,8 @@ module RGeo
           assert_equal(0, obj_.longitude)
           assert_equal('PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_create_flattened_sphere
           obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('WGS 84', 6378137, 298.257223563, obj1_, 'EPSG', '7030')
@@ -148,8 +148,8 @@ module RGeo
           assert_equal('7030', obj_.authority_code)
           assert_equal('SPHEROID["WGS 84",6378137.0,298.257223563,AUTHORITY["EPSG","7030"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_create_unflattened_sphere
           obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('Popular Visualisation Sphere', 6378137, 0, obj1_, 'EPSG', '7059')
@@ -161,30 +161,30 @@ module RGeo
           assert_equal('7059', obj_.authority_code)
           assert_equal('SPHEROID["Popular Visualisation Sphere",6378137.0,0.0,AUTHORITY["EPSG","7059"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_create_ellipsoid
           obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_ellipsoid('WGS 84', 6378137, 6356752.314245, obj1_, 'EPSG', '7030')
           assert_in_delta(298.257223563, obj_.inverse_flattening, 0.1)
         end
-        
-        
+
+
         def test_create_spherical_ellipsoid
           obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj_ = ::RGeo::CoordSys::CS::Ellipsoid.create_ellipsoid('Popular Visualisation Sphere', 6378137, 6378137, obj1_, 'EPSG', '7059')
           assert_equal(0, obj_.inverse_flattening)
         end
-        
-        
+
+
         def test_local_datum
           obj_ = ::RGeo::CoordSys::CS::LocalDatum.create('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN)
           assert_equal('Random Local Datum', obj_.name)
           assert_equal(::RGeo::CoordSys::CS::LD_MIN, obj_.datum_type)
           assert_equal('LOCAL_DATUM["Random Local Datum",10000]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_vertical_datum
           obj_ = ::RGeo::CoordSys::CS::VerticalDatum.create('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', '5101')
           assert_equal('Ordnance Datum Newlyn', obj_.name)
@@ -193,8 +193,8 @@ module RGeo
           assert_equal('5101', obj_.authority_code)
           assert_equal('VERT_DATUM["Ordnance Datum Newlyn",2005,AUTHORITY["EPSG","5101"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_horizontal_datum
           obj1_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1)
           obj2_ = ::RGeo::CoordSys::CS::Ellipsoid.create_ellipsoid('Popular Visualisation Sphere', 6378137, 6378137, obj1_, 'EPSG', '7059')
@@ -206,8 +206,8 @@ module RGeo
           assert_equal('6055', obj_.authority_code)
           assert_equal('DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137.0,0.0,AUTHORITY["EPSG","7059"]],TOWGS84[0.0,0.0,0.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6055"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_projection
           obj_ = ::RGeo::CoordSys::CS::Projection.create('Transverse_Mercator', 'Transverse_Mercator', [])
           assert_equal('Transverse_Mercator', obj_.name)
@@ -215,8 +215,8 @@ module RGeo
           assert_equal(0, obj_.num_parameters)
           assert_equal('PROJECTION["Transverse_Mercator"]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_local_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::LocalDatum.create('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN)
           obj2_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1, 'EPSG', 9001)
@@ -232,8 +232,8 @@ module RGeo
           assert_equal('metre', obj_.get_units(1).name)
           assert_equal('LOCAL_CS["My CS",LOCAL_DATUM["Random Local Datum",10000],UNIT["metre",1.0,AUTHORITY["EPSG","9001"]],AXIS["N",NORTH],AXIS["E",EAST]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_geocentric_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('WGS 84', 6378137, 298.257223563, nil, 'EPSG', '7030')
           obj2_ = ::RGeo::CoordSys::CS::HorizontalDatum.create('World Geodetic System 1984', ::RGeo::CoordSys::CS::HD_GEOCENTRIC, obj1_, nil, 'EPSG', '6326')
@@ -256,8 +256,8 @@ module RGeo
           assert_equal('m', obj_.get_units(2).name)
           assert_equal('GEOCCS["WGS 84 (geocentric)",DATUM["World Geodetic System 1984",SPHEROID["WGS 84",6378137.0,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["m",1.0],AXIS["Geocentric X",OTHER],AXIS["Geocentric Y",EAST],AXIS["Geocentric Z",NORTH],AUTHORITY["EPSG","4328"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_vertical_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::VerticalDatum.create('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', 5101)
           obj2_ = ::RGeo::CoordSys::CS::LinearUnit.create('metre', 1, 'EPSG', 9001)
@@ -271,8 +271,8 @@ module RGeo
           assert_equal('metre', obj_.get_units(0).name)
           assert_equal('VERT_CS["Newlyn",VERT_DATUM["Ordnance Datum Newlyn",2005,AUTHORITY["EPSG","5101"]],UNIT["metre",1.0,AUTHORITY["EPSG","9001"]],AXIS["Up",UP],AUTHORITY["EPSG","5701"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_geographic_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('WGS 84', 6378137, 298.257223563, nil, 'EPSG', '7030')
           obj2_ = ::RGeo::CoordSys::CS::AngularUnit.create('degree', 0.01745329251994328, 'EPSG', 9122)
@@ -290,8 +290,8 @@ module RGeo
           assert_equal('degree', obj_.get_units(1).name)
           assert_match(_lenient_regex_for('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137.0,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]'), obj_.to_wkt)
         end
-        
-        
+
+
         def test_projected_coordinate_system
           obj1_ = ::RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere('Airy 1830', 6377563.396, 299.3249646, nil, 'EPSG', '7001')
           obj2_ = ::RGeo::CoordSys::CS::WGS84ConversionInfo.create(375, -111, 431, 0, 0, 0, 0)
@@ -328,8 +328,8 @@ module RGeo
           assert_equal('metre', obj_.get_units(1).name)
           assert_equal('PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB 1936",DATUM["OSGB_1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],TOWGS84[375.0,-111.0,431.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6277"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["DMSH",0.0174532925199433,AUTHORITY["EPSG","9108"]],AXIS["Lat",NORTH],AXIS["Long",EAST],AUTHORITY["EPSG","4277"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",49.0],PARAMETER["central_meridian",-2.0],PARAMETER["scale_factor",0.999601272],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],UNIT["metre",1.0,AUTHORITY["EPSG","9001"]],AXIS["E",EAST],AXIS["N",NORTH],AUTHORITY["EPSG","27700"]]', obj_.to_wkt)
         end
-        
-        
+
+
         def test_parse_epsg_6055
           input_ = 'DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137.0,0.0,AUTHORITY["EPSG","7059"]],TOWGS84[0.0,0.0,0.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6055"]]'
           obj_ = ::RGeo::CoordSys::CS.create_from_wkt(input_)
@@ -347,8 +347,8 @@ module RGeo
           assert_equal(0, obj_.wgs84_parameters.dx)
           assert_equal(input_, obj_.to_wkt)
         end
-        
-        
+
+
         def test_parse_epsg_7405
           input_ = 'COMPD_CS["OSGB36 / British National Grid + ODN",PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB 1936",DATUM["OSGB 1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],TOWGS84[446.448,-125.157,542.06,0.15,0.247,0.842,-4.2261596151967575],AUTHORITY["EPSG","6277"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.017453292519943295],AXIS["Geodetic latitude",NORTH],AXIS["Geodetic longitude",EAST],AUTHORITY["EPSG","4277"]],PROJECTION["Transverse Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["central_meridian",-2.0],PARAMETER["latitude_of_origin",49.0],PARAMETER["scale_factor",0.9996012717],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],UNIT["m",1.0],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","27700"]],VERT_CS["Newlyn",VERT_DATUM["Ordnance Datum Newlyn",2005,AUTHORITY["EPSG","5101"]],UNIT["m",1.0],AXIS["Gravity-related height",UP],AUTHORITY["EPSG","5701"]],AUTHORITY["EPSG","7405"]]'
           obj_ = ::RGeo::CoordSys::CS.create_from_wkt(input_)
@@ -358,8 +358,8 @@ module RGeo
           assert_equal(3, obj_.dimension)
           assert_match(_lenient_regex_for(input_), obj_.to_wkt)
         end
-        
-        
+
+
         def test_marshal_roundtrip
           input_ = 'COMPD_CS["OSGB36 / British National Grid + ODN",PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB 1936",DATUM["OSGB 1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],TOWGS84[446.448,-125.157,542.06,0.15,0.247,0.842,-4.2261596151967575],AUTHORITY["EPSG","6277"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.017453292519943295],AXIS["Geodetic latitude",NORTH],AXIS["Geodetic longitude",EAST],AUTHORITY["EPSG","4277"]],PROJECTION["Transverse Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["central_meridian",-2.0],PARAMETER["latitude_of_origin",49.0],PARAMETER["scale_factor",0.9996012717],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],UNIT["m",1.0],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","27700"]],VERT_CS["Newlyn",VERT_DATUM["Ordnance Datum Newlyn",2005,AUTHORITY["EPSG","5101"]],UNIT["m",1.0],AXIS["Gravity-related height",UP],AUTHORITY["EPSG","5701"]],AUTHORITY["EPSG","7405"]]'
           obj1_ = ::RGeo::CoordSys::CS.create_from_wkt(input_)
@@ -367,11 +367,11 @@ module RGeo
           obj2_ = ::Marshal.load(dump_)
           assert_equal(obj1_, obj2_)
         end
-        
-        
+
+
         if ::RGeo.yaml_supported?
-          
-          
+
+
           def test_yaml_roundtrip
             input_ = 'COMPD_CS["OSGB36 / British National Grid + ODN",PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB 1936",DATUM["OSGB 1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],TOWGS84[446.448,-125.157,542.06,0.15,0.247,0.842,-4.2261596151967575],AUTHORITY["EPSG","6277"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.017453292519943295],AXIS["Geodetic latitude",NORTH],AXIS["Geodetic longitude",EAST],AUTHORITY["EPSG","4277"]],PROJECTION["Transverse Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["central_meridian",-2.0],PARAMETER["latitude_of_origin",49.0],PARAMETER["scale_factor",0.9996012717],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],UNIT["m",1.0],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","27700"]],VERT_CS["Newlyn",VERT_DATUM["Ordnance Datum Newlyn",2005,AUTHORITY["EPSG","5101"]],UNIT["m",1.0],AXIS["Gravity-related height",UP],AUTHORITY["EPSG","5701"]],AUTHORITY["EPSG","7405"]]'
             obj1_ = ::RGeo::CoordSys::CS.create_from_wkt(input_)
@@ -379,17 +379,17 @@ module RGeo
             obj2_ = ::Psych.load(dump_)
             assert_equal(obj1_, obj2_)
           end
-          
-          
+
+
         else
-          
+
           puts "WARNING: Psych not installed. Skipping YAML tests."
-          
+
         end
-        
-        
+
+
       end
-      
+
     end
   end
 end

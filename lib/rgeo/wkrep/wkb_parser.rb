@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Well-known binary parser for RGeo
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,29 +35,29 @@
 
 
 module RGeo
-  
+
   module WKRep
-    
-    
+
+
     # This class provides the functionality of parsing a geometry from
     # WKB (well-known binary) format. You may also customize the parser
     # to recognize PostGIS EWKB extensions to the input, or Simple
     # Features Specification 1.2 extensions for Z and M coordinates.
-    # 
+    #
     # To use this class, create an instance with the desired settings and
     # customizations, and call the parse method.
-    # 
+    #
     # === Configuration options
-    # 
+    #
     # You must provide each parser with an RGeo::Feature::FactoryGenerator.
     # It should understand the configuration options <tt>:srid</tt>,
     # <tt>:has_z_coordinate</tt>, and <tt>:has_m_coordinate</tt>.
     # You may also pass a specific RGeo::Feature::Factory, or nil to
     # specify the default Cartesian FactoryGenerator.
-    # 
+    #
     # The following additional options are recognized. These can be passed
     # to the constructor, or set on the object afterwards.
-    # 
+    #
     # [<tt>:support_ewkb</tt>]
     #   Activate support for PostGIS EWKB type codes, which use high
     #   order bits in the type code to signal the presence of Z, M, and
@@ -73,13 +73,13 @@ module RGeo
     # [<tt>:default_srid</tt>]
     #   A SRID to pass to the factory generator if no SRID is present in
     #   the input. Defaults to nil (i.e. don't specify a SRID).
-    
+
     class WKBParser
-      
-      
+
+
       # Create and configure a WKB parser. See the WKBParser
       # documentation for the options that can be passed.
-      
+
       def initialize(factory_generator_=nil, opts_={})
         if factory_generator_.kind_of?(Feature::Factory::Instance)
           @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
@@ -96,38 +96,38 @@ module RGeo
         @ignore_extra_bytes = opts_[:ignore_extra_bytes] ? true : false
         @default_srid = opts_[:default_srid]
       end
-      
-      
+
+
       # Returns the factory generator. See WKBParser for details.
       def factory_generator
         @factory_generator
       end
-      
+
       # If this parser was given an exact factory, returns it; otherwise
       # returns nil.
       def exact_factory
         @exact_factory
       end
-      
+
       # Returns true if this parser supports EWKB.
       # See WKBParser for details.
       def support_ewkb?
         @support_ewkb
       end
-      
+
       # Returns true if this parser supports SFS 1.2 extensions.
       # See WKBParser for details.
       def support_wkb12?
         @support_wkb12
       end
-      
+
       # Returns true if this parser ignores extra bytes.
       # See WKBParser for details.
       def ignore_extra_bytes?
         @ignore_extra_bytes
       end
-      
-      
+
+
       def _properties  # :nodoc:
         {
           :support_ewkb => @support_ewkb,
@@ -136,14 +136,14 @@ module RGeo
           :default_srid => @default_srid,
         }
       end
-      
-      
+
+
       # Parse the given binary data or hexadecimal string, and return a
       # geometry object.
-      # 
+      #
       # The #parse_hex method is a synonym, present for historical
       # reasons but deprecated. Use #parse instead.
-      
+
       def parse(data_)
         if data_[0,1] =~ /[0-9a-fA-F]/
           data_ = [data_].pack('H*')
@@ -168,8 +168,8 @@ module RGeo
         obj_
       end
       alias_method :parse_hex, :parse
-      
-      
+
+
       def _parse_object(contained_)  # :nodoc:
         endian_value_ = _get_byte
         case endian_value_
@@ -243,32 +243,32 @@ module RGeo
           raise Error::ParseError, "Unknown type value: #{type_code_}."
         end
       end
-      
-      
+
+
       def _parse_line_string(little_endian_)  # :nodoc:
         count_ = _get_integer(little_endian_)
         coords_ = _get_doubles(little_endian_, @cur_dims * count_)
         @cur_factory.line_string((0...count_).map{ |i_| @cur_factory.point(*coords_[@cur_dims*i_,@cur_dims]) })
       end
-      
-      
+
+
       def _start_scanner(data_)  # :nodoc:
         @_data = data_
         @_len = data_.length
         @_pos = 0
       end
-      
-      
+
+
       def _clean_scanner  # :nodoc:
         @_data = nil
       end
-      
-      
+
+
       def _bytes_remaining  # :nodoc:
         @_len - @_pos
       end
-      
-      
+
+
       def _get_byte  # :nodoc:
         if @_pos + 1 > @_len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
@@ -277,8 +277,8 @@ module RGeo
         @_pos += 1
         str_.unpack("C").first
       end
-      
-      
+
+
       def _get_integer(little_endian_)  # :nodoc:
         if @_pos + 4 > @_len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
@@ -287,8 +287,8 @@ module RGeo
         @_pos += 4
         str_.unpack("#{little_endian_ ? 'V' : 'N'}").first
       end
-      
-      
+
+
       def _get_doubles(little_endian_, count_)  # :nodoc:
         len_ = 8 * count_
         if @_pos + len_ > @_len
@@ -298,11 +298,11 @@ module RGeo
         @_pos += len_
         str_.unpack("#{little_endian_ ? 'E' : 'G'}*")
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

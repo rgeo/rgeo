@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Coordinate systems for RGeo
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,32 +35,32 @@
 
 
 module RGeo
-  
-  
+
+
   # This module provides data structures and tools related to coordinate
   # systems and coordinate transforms. It comprises the following parts:
-  # 
+  #
   # RGeo::CoordSys::Proj4 is a wrapper around the proj4 library, which
   # defines a commonly-used syntax for specifying geographic and projected
   # coordinate systems, and performs coordinate transformations.
-  # 
+  #
   # The RGeo::CoordSys::CS module contains an implementation of the CS
   # (coordinate systems) package of the OGC Coordinate Transform spec.
   # This includes classes for representing ellipsoids, datums, coordinate
   # systems, and other related concepts, as well as a parser for the WKT
   # format for specifying coordinate systems.
-  # 
+  #
   # The RGeo::CoordSys::SRSDatabase module contains tools for accessing
   # spatial reference databases, from which you can look up coordinate
   # system specifications. You can access the <tt>spatial_ref_sys</tt>
   # table provided with OGC-compliant spatial databases such as PostGIS,
   # read the databases provided with the proj4 library, or access URLs
   # such as those provided by spatialreference.org.
-  
+
   module CoordSys
   end
-  
-  
+
+
 end
 
 

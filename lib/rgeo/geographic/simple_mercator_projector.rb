@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Simple mercator projection
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,15 +35,15 @@
 
 
 module RGeo
-  
+
   module Geographic
-    
-    
+
+
     class SimpleMercatorProjector  # :nodoc:
-      
+
       EQUATORIAL_RADIUS = 6378137.0
-      
-      
+
+
       def initialize(geography_factory_, opts_={})
         @geography_factory = geography_factory_
         @projection_factory = Cartesian.preferred_factory(:srid => 3785,
@@ -54,13 +54,13 @@ module RGeo
           :has_z_coordinate => opts_[:has_z_coordinate],
           :has_m_coordinate => opts_[:has_m_coordinate])
       end
-      
-      
+
+
       def projection_factory
         @projection_factory
       end
-      
-      
+
+
       def project(geometry_)
         case geometry_
         when Feature::Point
@@ -89,8 +89,8 @@ module RGeo
           nil
         end
       end
-      
-      
+
+
       def unproject(geometry_)
         case geometry_
         when Feature::Point
@@ -119,39 +119,39 @@ module RGeo
           nil
         end
       end
-      
-      
+
+
       def wraps?
         true
       end
-      
-      
+
+
       def limits_window
         @limits_window ||= ProjectedWindow.new(@geography_factory,
           -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789,
           :is_limits => true)
       end
-      
-      
+
+
       def self._proj4_3785  # :nodoc:
         unless defined?(@proj4_3785)
           @proj4_3785 = CoordSys::Proj4.create('+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
         end
         @proj4_3785
       end
-      
-      
+
+
       def self._coordsys_3785  # :nodoc:
         unless defined?(@coordsys_3785)
           @coordsys_3785 = CoordSys::CS.create_from_wkt('PROJCS["Popular Visualisation CRS / Mercator",GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]],UNIT["metre",1,AUTHORITY["EPSG","9001"]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",0],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],AUTHORITY["EPSG","3785"],AXIS["X",EAST],AXIS["Y",NORTH]]')
         end
         @coordsys_3785
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

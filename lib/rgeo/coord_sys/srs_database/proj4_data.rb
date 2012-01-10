@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # SRS database interface
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,26 +35,26 @@
 
 
 module RGeo
-  
+
   module CoordSys
-    
+
     module SRSDatabase
-      
-      
+
+
       # A spatial reference database implementation backed by coordinate
       # system files installed as part of the proj4 library. For a given
       # Proj4Data object, you specify a single file (e.g. the epsg data
       # file), and you can retrieve records by ID number.
-      
+
       class Proj4Data
-        
-        
+
+
         # Connect to one of the proj4 data files. You should provide the
         # file name, optionally the installation directory if it is not
         # in a typical location, and several additional options.
-        # 
+        #
         # These options are recognized:
-        # 
+        #
         # [<tt>:dir</tt>]
         #   The path for the share/proj directory that contains the
         #   requested data file. By default, the Proj4Data class will
@@ -77,7 +77,7 @@ module RGeo
         #   If set, its value is taken as the authority name for all
         #   entries. The authority code will be set to the identifier. If
         #   not set, then the authority fields of entries will be blank.
-        
+
         def initialize(filename_, opts_={})
           dir_ = nil
           if opts_.include?(:dir)
@@ -108,10 +108,10 @@ module RGeo
             @populate_state = 0
           end
         end
-        
-        
+
+
         # Retrieve the Entry for the given ID number.
-        
+
         def get(ident_)
           ident_ = ident_.to_s
           return @cache[ident_] if @cache && @cache.include?(ident_)
@@ -127,16 +127,16 @@ module RGeo
           end
           result_
         end
-        
-        
+
+
         # Clear the cache if one exists.
-        
+
         def clear_cache
           @cache.clear if @cache
           @populate_state = 1 if @populate_state == 2
         end
-        
-        
+
+
         def _search_file(ident_)  # :nodoc:
           ::File.open(@path) do |file_|
             cur_name_ = nil
@@ -176,13 +176,13 @@ module RGeo
           end
           nil
         end
-        
-        
+
+
       end
-      
-      
+
+
     end
-    
+
   end
-  
+
 end

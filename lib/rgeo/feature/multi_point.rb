@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # MultiPoint feature interface
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,38 +35,38 @@
 
 
 module RGeo
-  
+
   module Feature
-    
-    
+
+
     # == SFS 1.1 Description
-    # 
+    #
     # A MultiPoint is a 0-dimensional GeometryCollection. The elements of
     # a MultiPoint are restricted to Points. The Points are not connected
     # or ordered.
-    # 
+    #
     # A MultiPoint is simple if no two Points in the MultiPoint are equal
     # (have identical coordinate values).
-    # 
+    #
     # The boundary of a MultiPoint is the empty set.
-    # 
+    #
     # == Notes
-    # 
+    #
     # MultiPoint is defined as a module and is provided primarily
     # for the sake of documentation. Implementations need not necessarily
     # include this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
     # class method (or === operator) defined in the Type module.
-    
+
     module MultiPoint
-      
+
       include GeometryCollection
       extend Type
-      
-      
+
+
     end
-  
-    
+
+
   end
-  
+
 end

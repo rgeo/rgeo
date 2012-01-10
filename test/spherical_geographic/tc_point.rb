@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Tests for the simple spherical point implementation
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,34 +43,34 @@ require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
 module RGeo
   module Tests  # :nodoc:
     module SphericalGeographic  # :nodoc:
-      
+
       class TestPoint < ::Test::Unit::TestCase  # :nodoc:
-        
-        
+
+
         def setup
           @factory = ::RGeo::Geographic.spherical_factory
           @zfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true)
           @mfactory = ::RGeo::Geographic.spherical_factory(:has_m_coordinate => true)
           @zmfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true, :has_m_coordinate => true)
         end
-        
-        
+
+
         include ::RGeo::Tests::Common::PointTests
-        
-        
+
+
         def test_latlon
           point_ = @factory.point(21, -22)
           assert_equal(21, point_.longitude)
           assert_equal(-22, point_.latitude)
         end
-        
-        
+
+
         def test_srid
           point_ = @factory.point(11, 12)
           assert_equal(4055, point_.srid)
         end
-        
-        
+
+
         def test_distance
           point1_ = @factory.point(0, 10)
           point2_ = @factory.point(0, 10)
@@ -78,8 +78,8 @@ module RGeo
           assert_in_delta(0, point1_.distance(point2_), 0.0001)
           assert_in_delta(::Math::PI / 6.0 * ::RGeo::Geographic::SphericalMath::RADIUS, point1_.distance(point3_), 0.0001)
         end
-        
-        
+
+
         undef_method :test_disjoint
         undef_method :test_intersects
         undef_method :test_touches
@@ -91,10 +91,10 @@ module RGeo
         undef_method :test_union
         undef_method :test_difference
         undef_method :test_sym_difference
-        
-        
+
+
       end
-      
+
     end
   end
 end

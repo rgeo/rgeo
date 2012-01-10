@@ -1,16 +1,16 @@
 /*
   -----------------------------------------------------------------------------
-  
+
   Line string methods for GEOS wrapper
-  
+
   -----------------------------------------------------------------------------
-  Copyright 2010 Daniel Azuma
-  
+  Copyright 2010-2012 Daniel Azuma
+
   All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-  
+
   * Redistributions of source code must retain the above copyright notice,
     this list of conditions and the following disclaimer.
   * Redistributions in binary form must reproduce the above copyright notice,
@@ -19,7 +19,7 @@
   * Neither the name of the copyright holder, nor the names of any other
     contributors to this software, may be used to endorse or promote products
     derived from this software without specific prior written permission.
-  
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -469,7 +469,7 @@ static VALUE cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE
   has_z = (char)(factory_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   point_type = factory_data->globals->feature_point;
   context = factory_data->geos_context;
-  
+
   start_geom = rgeo_convert_to_geos_geometry(factory, start, point_type);
   if (start_geom) {
     end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type);
@@ -485,7 +485,7 @@ static VALUE cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE
       }
     }
   }
-  
+
   return result;
 }
 
@@ -554,19 +554,19 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
     rb_const_get_at(globals->feature_module, rb_intern("Curve")), geos_line_string_class);
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_line_string, geos_line_string_class);
-  
+
   geos_linear_ring_class = rb_define_class_under(globals->geos_module, "LinearRingImpl", geos_line_string_class);
   globals->geos_linear_ring = geos_linear_ring_class;
   globals->feature_linear_ring = rb_const_get_at(globals->feature_module, rb_intern("LinearRing"));
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_linear_ring, geos_linear_ring_class);
-  
+
   geos_line_class = rb_define_class_under(globals->geos_module, "LineImpl", geos_line_string_class);
   globals->geos_line = geos_line_class;
   globals->feature_line = rb_const_get_at(globals->feature_module, rb_intern("Line"));
   rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
     globals->feature_line, geos_line_class);
-  
+
   rb_define_module_function(geos_line_string_class, "create", cmethod_create_line_string, 2);
   rb_define_module_function(geos_line_string_class, "_copy_from", cmethod_line_string_copy_from, 2);
   rb_define_method(geos_line_string_class, "eql?", method_line_string_eql, 1);
@@ -579,11 +579,11 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_class, "end_point", method_line_string_end_point, 0);
   rb_define_method(geos_line_string_class, "is_closed?", method_line_string_is_closed, 0);
   rb_define_method(geos_line_string_class, "is_ring?", method_line_string_is_ring, 0);
-  
+
   rb_define_module_function(geos_linear_ring_class, "create", cmethod_create_linear_ring, 2);
   rb_define_module_function(geos_linear_ring_class, "_copy_from", cmethod_linear_ring_copy_from, 2);
   rb_define_method(geos_linear_ring_class, "geometry_type", method_linear_ring_geometry_type, 0);
-  
+
   rb_define_module_function(geos_line_class, "create", cmethod_create_line, 3);
   rb_define_module_function(geos_line_class, "_copy_from", cmethod_line_copy_from, 2);
   rb_define_method(geos_line_class, "geometry_type", method_line_geometry_type, 0);

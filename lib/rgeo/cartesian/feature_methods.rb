@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Cartesian common methods
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,29 +35,29 @@
 
 
 module RGeo
-  
+
   module Cartesian
-    
-    
+
+
     module GeometryMethods  # :nodoc:
-      
-      
+
+
       def srid
         factory.srid
       end
-      
-      
+
+
       def envelope
         BoundingBox.new(factory).add(self).to_geometry
       end
-      
-      
+
+
     end
-    
-    
+
+
     module PointMethods  # :nodoc:
-      
-      
+
+
       def distance(rhs_)
         rhs_ = ::RGeo::Feature.cast(rhs_, @factory)
         case rhs_
@@ -69,14 +69,14 @@ module RGeo
           super
         end
       end
-      
-      
+
+
     end
-    
-    
+
+
     module LineStringMethods  # :nodoc:
-      
-      
+
+
       def _segments
         unless @segments
           @segments = (0..num_points-2).map do |i_|
@@ -85,8 +85,8 @@ module RGeo
         end
         @segments
       end
-      
-      
+
+
       def is_simple?
         segs_ = _segments
         len_ = segs_.length
@@ -111,15 +111,15 @@ module RGeo
         end
         true
       end
-      
-      
+
+
       def length
         @segments.inject(0.0){ |sum_, seg_| sum_ + seg_.length }
       end
-      
-      
+
+
     end
-    
+
   end
-  
+
 end

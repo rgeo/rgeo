@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Tests for OGC CS classes
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,10 +41,10 @@ require 'rgeo'
 module RGeo
   module Tests  # :nodoc:
     module CoordSys  # :nodoc:
-      
+
       class TestSrOrg < ::Test::Unit::TestCase  # :nodoc:
-        
-        
+
+
         def test_epsg_4326
           db_ = ::RGeo::CoordSys::SRSDatabase::SrOrg.new('epsg')
           entry_ = db_.get(4326)
@@ -52,8 +52,8 @@ module RGeo
           assert_kind_of(::RGeo::CoordSys::CS::GeographicCoordinateSystem, entry_.coord_sys)
           assert_equal('WGS 84', entry_.name)
         end
-        
-        
+
+
         def test_epsg_3785
           db_ = ::RGeo::CoordSys::SRSDatabase::SrOrg.new('epsg')
           entry_ = db_.get(3785)
@@ -61,10 +61,10 @@ module RGeo
           assert_kind_of(::RGeo::CoordSys::CS::ProjectedCoordinateSystem, entry_.coord_sys)
           assert_equal('Popular Visualisation CRS / Mercator', entry_.name)
         end
-        
-        
+
+
       end if false
-      
+
     end
   end
 end

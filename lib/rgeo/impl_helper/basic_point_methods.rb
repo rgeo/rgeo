@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Common methods for Point features
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,13 +35,13 @@
 
 
 module RGeo
-  
+
   module ImplHelper  # :nodoc:
-    
-    
+
+
     module BasicPointMethods  # :nodoc:
-      
-      
+
+
       def initialize(factory_, x_, y_, *extra_)
         _set_factory(factory_)
         @x = x_.to_f
@@ -53,68 +53,68 @@ module RGeo
         end
         _validate_geometry
       end
-      
-      
+
+
       def x
         @x
       end
-      
-      
+
+
       def y
         @y
       end
-      
-      
+
+
       def z
         @z
       end
-      
-      
+
+
       def m
         @m
       end
-      
-      
+
+
       def eql?(rhs_)
         rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z && @m == rhs_.m
       end
-      
-      
+
+
       def dimension
         0
       end
-      
-      
+
+
       def geometry_type
         Feature::Point
       end
-      
-      
+
+
       def is_empty?
         false
       end
-      
-      
+
+
       def is_simple?
         true
       end
-      
-      
+
+
       def envelope
         self
       end
-      
-      
+
+
       def boundary
         factory.collection([])
       end
-      
-      
+
+
       def convex_hull
         self
       end
-      
-      
+
+
       def equals?(rhs_)
         return false unless rhs_.is_a?(self.class) && rhs_.factory == self.factory
         case rhs_
@@ -128,11 +128,11 @@ module RGeo
           false
         end
       end
-      
-      
+
+
     end
-    
-    
+
+
   end
-  
+
 end

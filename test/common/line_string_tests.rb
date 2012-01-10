@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Common tests for line string implementations
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -40,10 +40,10 @@ require 'rgeo'
 module RGeo
   module Tests  # :nodoc:
     module Common  # :nodoc:
-      
+
       module LineStringTests  # :nodoc:
-        
-        
+
+
         def test_creation_points2
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -58,8 +58,8 @@ module RGeo
           assert_equal(point1_, line1_.start_point)
           assert_equal(point2_, line1_.end_point)
         end
-        
-        
+
+
         def test_creation_points3
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -75,8 +75,8 @@ module RGeo
           assert_equal(point1_, line2_.start_point)
           assert_equal(point3_, line2_.end_point)
         end
-        
-        
+
+
         def test_creation_points2_degenerate
           point1_ = @factory.point(0, 0)
           line3_ = @factory.line_string([point1_, point1_])
@@ -88,8 +88,8 @@ module RGeo
           assert_equal(point1_, line3_.start_point)
           assert_equal(point1_, line3_.end_point)
         end
-        
-        
+
+
         def test_creation_points_empty
           line4_ = @factory.line_string([])
           assert_not_nil(line4_)
@@ -98,8 +98,8 @@ module RGeo
           assert_nil(line4_.start_point)
           assert_nil(line4_.end_point)
         end
-        
-        
+
+
         def test_creation_line_string
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -111,8 +111,8 @@ module RGeo
           assert(!(::RGeo::Feature::Line === line1_))
           assert_equal(::RGeo::Feature::LineString, line1_.geometry_type)
         end
-        
-        
+
+
         def test_creation_linear_ring
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -129,8 +129,8 @@ module RGeo
           assert_equal(4, line2_.num_points)
           assert_equal(::RGeo::Feature::LinearRing, line2_.geometry_type)
         end
-        
-        
+
+
         def test_creation_line
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -139,8 +139,8 @@ module RGeo
           assert(::RGeo::Feature::Line === line1_)
           assert_equal(::RGeo::Feature::Line, line1_.geometry_type)
         end
-        
-        
+
+
         def test_creation_errors
           point1_ = @factory.point(0, 0)
           collection_ = point1_.boundary
@@ -149,8 +149,8 @@ module RGeo
           line2_ = @factory.line_string([point1_, collection_])
           assert_nil(line2_)
         end
-        
-        
+
+
         def test_fully_equal
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -163,8 +163,8 @@ module RGeo
           assert(line1_.eql?(line2_))
           assert(line1_.equals?(line2_))
         end
-        
-        
+
+
         def test_geometrically_equal_but_different_type
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -175,8 +175,8 @@ module RGeo
           assert(!line1_.eql?(line2_))
           assert(line1_.equals?(line2_))
         end
-        
-        
+
+
         def test_geometrically_equal_but_different_type2
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -189,8 +189,8 @@ module RGeo
           assert(!line1_.eql?(line2_))
           assert(line1_.equals?(line2_))
         end
-        
-        
+
+
         def test_geometrically_equal_but_different_overlap
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -203,16 +203,16 @@ module RGeo
           assert(!line1_.eql?(line2_))
           assert(line1_.equals?(line2_))
         end
-        
-        
+
+
         def test_empty_equal
           line1_ = @factory.line_string([])
           line2_ = @factory.line_string([])
           assert(line1_.eql?(line2_))
           assert(line1_.equals?(line2_))
         end
-        
-        
+
+
         def test_not_equal
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -224,8 +224,8 @@ module RGeo
           assert(!line1_.eql?(line2_))
           assert(!line1_.equals?(line2_))
         end
-        
-        
+
+
         def test_wkt_creation
           line1_ = @factory.parse_wkt('LINESTRING(21 22, 11 12)')
           assert_equal(@factory.point(21, 22), line1_.point_n(0))
@@ -238,8 +238,8 @@ module RGeo
           assert_equal(@factory.point(-1, -1), line2_.point_n(3))
           assert_equal(4, line2_.num_points)
         end
-        
-        
+
+
         def test_clone
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -250,8 +250,8 @@ module RGeo
           assert(point1_.eql?(line2_.point_n(0)))
           assert(point2_.eql?(line2_.point_n(1)))
         end
-        
-        
+
+
         def test_type_check
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -263,8 +263,8 @@ module RGeo
           assert(::RGeo::Feature::LineString.check_type(line_))
           assert(!::RGeo::Feature::LinearRing.check_type(line_))
         end
-        
-        
+
+
         def test_as_text_wkt_round_trip
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -273,8 +273,8 @@ module RGeo
           line2_ = @factory.parse_wkt(text_)
           assert(line2_.eql?(line1_))
         end
-        
-        
+
+
         def test_as_binary_wkb_round_trip
           point1_ = @factory.point(-42, 0)
           point2_ = @factory.point(0, 193)
@@ -283,32 +283,32 @@ module RGeo
           line2_ = @factory.parse_wkb(binary_)
           assert(line2_.eql?(line1_))
         end
-        
-        
+
+
         def test_empty_as_text_wkt_round_trip
           line1_ = @factory.line_string([])
           text_ = line1_.as_text
           line2_ = @factory.parse_wkt(text_)
           assert(line2_.is_empty?)
         end
-        
-        
+
+
         def test_empty_as_binary_wkb_round_trip
           line1_ = @factory.line_string([])
           binary_ = line1_.as_binary
           line2_ = @factory.parse_wkb(binary_)
           assert(line2_.is_empty?)
         end
-        
-        
+
+
         def test_dimension
           point1_ = @factory.point(-42, 0)
           point2_ = @factory.point(0, 193)
           line1_ = @factory.line_string([point1_, point2_])
           assert_equal(1, line1_.dimension)
         end
-        
-        
+
+
         def test_is_empty
           point1_ = @factory.point(-42, 0)
           point2_ = @factory.point(0, 193)
@@ -317,10 +317,10 @@ module RGeo
           line2_ = @factory.line_string([])
           assert(line2_.is_empty?)
         end
-        
-        
+
+
       end
-      
+
     end
   end
 end

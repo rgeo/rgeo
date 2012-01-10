@@ -1,15 +1,15 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # Access to geographic data factories
-# 
+#
 # -----------------------------------------------------------------------------
-# Copyright 2010 Daniel Azuma
-# 
+# Copyright 2010-2012 Daniel Azuma
+#
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright notice,
 #   this list of conditions and the following disclaimer.
 # * Redistributions in binary form must reproduce the above copyright notice,
@@ -18,7 +18,7 @@
 # * Neither the name of the copyright holder, nor the names of any other
 #   contributors to this software, may be used to endorse or promote products
 #   derived from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,12 +35,12 @@
 
 
 module RGeo
-  
+
   module Geographic
-    
+
     class << self
-      
-      
+
+
       # Creates and returns a geographic factory that does not include a
       # a projection, and which performs calculations assuming a
       # spherical earth. In other words, geodesics are treated as great
@@ -50,18 +50,18 @@ module RGeo
       # the globe in which good accuracy is desired, but in which it is
       # not deemed necessary to perform the complex ellipsoidal
       # calculations needed for greater precision.
-      # 
+      #
       # The maximum error is about 0.5 percent, for objects and
       # calculations that span a significant percentage of the globe, due
       # to distortion caused by rotational flattening of the earth. For
       # calculations that span a much smaller area, the error can drop to
       # a few meters or less.
-      # 
+      #
       # === Limitations
-      # 
+      #
       # This implementation does not implement some of the more advanced
       # geometric operations. In particular:
-      # 
+      #
       # * Relational operators such as Feature::Geometry#intersects? are
       #   not implemented for most types.
       # * Relational constructors such as Feature::Geometry#union are
@@ -74,14 +74,14 @@ module RGeo
       # * Equality and simplicity evaluation are implemented for some but
       #   not all types.
       # * Assertions for polygons and multipolygons are not implemented.
-      # 
+      #
       # Unimplemented operations will return nil if invoked.
-      # 
+      #
       # === Options
-      # 
+      #
       # You may use the following options when creating a spherical
       # factory:
-      # 
+      #
       # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
@@ -129,7 +129,7 @@ module RGeo
       #   configuration parameters for WKRep::WKTGenerator.new.
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
-      
+
       def spherical_factory(opts_={})
         proj4_ = opts_[:proj4]
         coord_sys_ = opts_[:coord_sys]
@@ -149,28 +149,28 @@ module RGeo
           :coord_sys => coord_sys_ || _coordsys_4055,
           :srid => (srid_ || 4055).to_i)
       end
-      
-      
+
+
       # Creates and returns a geographic factory that is designed for
       # visualization applications that use Google or Bing maps, or any
       # other visualization systems that use the same projection. It
       # includes a projection factory that matches the projection used
       # by those mapping systems.
-      # 
+      #
       # Like all geographic factories, this one creates features using
       # latitude-longitude values. However, calculations such as
       # intersections are done in the projected coordinate system, and
       # size and distance calculations report results in the projected
       # units.
-      # 
+      #
       # The behavior of the simple_mercator factory could also be obtained
       # using a projected_factory with appropriate Proj4 specifications.
       # However, the simple_mercator implementation is done without
       # actually requiring the Proj4 library. The projections are simple
       # enough to be implemented in pure ruby.
-      # 
+      #
       # === About the coordinate system
-      # 
+      #
       # Many popular visualization technologies, such as Google and Bing
       # maps, actually use two coordinate systems. The first is the
       # standard WSG84 lat-long system used by the GPS and represented
@@ -179,19 +179,19 @@ module RGeo
       # Mercator projection based on a "sphericalization" of the WGS84
       # lat-long system. This projection is the basis of the map's screen
       # and tiling coordinates, and has been assigned EPSG 3785.
-      # 
+      #
       # This factory represents both coordinate systems. The main factory
       # produces data in the lat-long system and reports SRID 4326, and
       # the projected factory produces data in the projection and reports
       # SRID 3785. Latitudes are restricted to the range
       # (-85.05112877980659, 85.05112877980659), which conveniently
       # results in a square projected domain.
-      # 
+      #
       # === Options
-      # 
+      #
       # You may use the following options when creating a simple_mercator
       # factory:
-      # 
+      #
       # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
@@ -215,14 +215,14 @@ module RGeo
       #   configuration parameters for WKRep::WKTGenerator.new.
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
-      # 
+      #
       # You may also provide options understood by the underlying
       # projected Cartesian factory. For example, if GEOS is used for the
       # projected factory, you may also set the
-      # <tt>:lenient_multi_polygon_assertions</tt> and 
+      # <tt>:lenient_multi_polygon_assertions</tt> and
       # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
-      
+
       def simple_mercator_factory(opts_={})
         factory_ = Geographic::Factory.new('Projected',
           :proj4 => _proj4_4326,
@@ -238,8 +238,8 @@ module RGeo
         factory_._set_projector(projector_)
         factory_
       end
-      
-      
+
+
       # Creates and returns a geographic factory that includes a
       # projection specified by a Proj4 coordinate system. Like all
       # geographic factories, this one creates features using latitude-
@@ -250,12 +250,12 @@ module RGeo
       # coordinate systems: the main factory representing the geographic
       # lat-long coordinate system, and an auxiliary "projection factory"
       # representing the projected coordinate system.
-      # 
+      #
       # This implementation is intended for advanced GIS applications
       # requiring greater control over the projection being used.
-      # 
+      #
       # === Options
-      # 
+      #
       # When creating a projected implementation, you must provide enough
       # information to construct a Proj4 specification for the projection.
       # Generally, this means you will provide either the projection's
@@ -268,10 +268,10 @@ module RGeo
       # directly via the <tt>:projection_proj4</tt> option, or indirectly
       # by providing both an <tt>:srid</tt> and a <tt>:srs_database</tt>
       # to use to look up the coordinate system.
-      # 
+      #
       # Following are detailed descriptions of the various options you can
       # pass to this method.
-      # 
+      #
       # [<tt>:projection_factory</tt>]
       #   Specify an existing Cartesian factory to use for the projection.
       #   This factory must have a non-nil Proj4. If this is provided, any
@@ -344,14 +344,14 @@ module RGeo
       #   configuration parameters for WKRep::WKTGenerator.new.
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
-      # 
+      #
       # If a <tt>:projection_factory</tt> is _not_ provided, you may also
       # provide options for configuring the projected Cartesian factory.
       # For example, if GEOS is used for the projected factory, you may
-      # also set the <tt>:lenient_multi_polygon_assertions</tt> and 
+      # also set the <tt>:lenient_multi_polygon_assertions</tt> and
       # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
-      
+
       def projected_factory(opts_={})
         unless CoordSys::Proj4.supported?
           raise Error::UnsupportedOperation, "Proj4 is not supported because the proj4 library was not found at install time."
@@ -464,42 +464,42 @@ module RGeo
         factory_._set_projector(projector_)
         factory_
       end
-      
-      
+
+
       def _proj4_4055  # :nodoc:
         unless defined?(@proj4_4055)
           @proj4_4055 = CoordSys::Proj4.create('+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs')
         end
         @proj4_4055
       end
-      
-      
+
+
       def _coordsys_4055  # :nodoc:
         unless defined?(@coordsys_4055)
           @coordsys_4055 = CoordSys::CS.create_from_wkt('GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]]')
         end
         @coordsys_4055
       end
-      
-      
+
+
       def _proj4_4326  # :nodoc:
         unless defined?(@proj4_4326)
           @proj4_4326 = CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
         end
         @proj4_4326
       end
-      
-      
+
+
       def _coordsys_4326  # :nodoc:
         unless defined?(@coordsys_4326)
           @coordsys_4326 = CoordSys::CS.create_from_wkt('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
         end
         @coordsys_4326
       end
-      
-      
+
+
     end
-    
+
   end
-  
+
 end
