@@ -64,6 +64,7 @@ module RGeo
         @_has_3d = @has_z || @has_m
         @buffer_resolution = opts_[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
+        @_auto_prepare = opts_[:auto_prepare] == :disabled ? false : true
 
         # Interpret the generator options
         wkt_generator_ = opts_[:wkt_generator]
@@ -194,6 +195,8 @@ module RGeo
           @buffer_resolution
         when :uses_lenient_multi_polygon_assertions
           @uses_lenient_multi_polygon_assertions
+        when :auto_prepare
+          @_auto_prepare ? :simple : :disabled
         else
           nil
         end
@@ -443,6 +446,7 @@ module RGeo
 
 
       attr_reader :_has_3d  # :nodoc:
+      attr_reader :_auto_prepare  # :nodoc:
 
 
       def _convert_to_fg_geometry(obj_, type_=nil)  # :nodoc:

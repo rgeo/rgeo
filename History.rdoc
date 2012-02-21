@@ -1,3 +1,9 @@
+=== 0.3.4 / 2012-02-21
+
+* The FFI-GEOS implementation now uses prepared geometries.
+* Fixed a segfault that sometimes happened when passing a non-GEOS geometry as an argument to a GEOS function under Ruby 1.8.7. (Reported by Greg Hazel.)
+* A few minor optimizations in the C extension for GEOS.
+
 === 0.3.3 / 2011-12-19
 
 * Recognizes MultiPoint WKTs in which individual points are not contained in parens. This is technically incorrect syntax, but apparently there are examples in the wild so we are now supporting it. (Reported by J Smith.)

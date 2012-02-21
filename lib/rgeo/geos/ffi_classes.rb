@@ -85,7 +85,17 @@ module RGeo
         end
 
 
+        def _init
+          @supports_prepared_level_1 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)
+          @supports_prepared_level_2 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
+        end
+
+        attr_reader :supports_prepared_level_1
+        attr_reader :supports_prepared_level_2
+
+
       end
+
 
     end
 
@@ -100,6 +110,7 @@ module RGeo
       def initialize(factory_, fg_geom_, klasses_)
         @factory = factory_
         @fg_geom = fg_geom_
+        @_fg_prep = factory_._auto_prepare ? 1 : 0
         @_klasses = klasses_
         fg_geom_.srid = factory_.srid
       end
@@ -120,6 +131,7 @@ module RGeo
         @factory = orig_.factory
         @fg_geom = orig_.fg_geom.clone
         @fg_geom.srid = orig_.fg_geom.srid
+        @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = orig_._klasses
       end
 
@@ -136,6 +148,34 @@ module RGeo
 
       def geometry_type
         Feature::Geometry
+      end
+
+
+      def prepared?
+        !@_fg_prep.is_a?(::Integer)
+      end
+
+
+      def prepare!
+        if @_fg_prep.is_a?(::Integer)
+          @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
+        end
+        self
+      end
+
+
+      def _request_prepared  # :nodoc:
+        case @_fg_prep
+        when 0
+          nil
+        when 1
+          @_fg_prep = 2
+          nil
+        when 2
+          @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
+        else
+          @_fg_prep
+        end
       end
 
 
@@ -198,43 +238,78 @@ module RGeo
 
       def disjoint?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.disjoint?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ ? prep_.disjoint?(fg_) : @fg_geom.disjoint?(fg_)
+        else
+          false
+        end
       end
 
 
       def intersects?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.intersects?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_1
+          prep_ ? prep_.intersects?(fg_) : @fg_geom.intersects?(fg_)
+        else
+          false
+        end
       end
 
 
       def touches?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.touches?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ ? prep_.touches?(fg_) : @fg_geom.touches?(fg_)
+        else
+          false
+        end
       end
 
 
       def crosses?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.crosses?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ ? prep_.crosses?(fg_) : @fg_geom.crosses?(fg_)
+        else
+          false
+        end
       end
 
 
       def within?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.within?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ ? prep_.within?(fg_) : @fg_geom.within?(fg_)
+        else
+          false
+        end
       end
 
 
       def contains?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.contains?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_1
+          prep_ ? prep_.contains?(fg_) : @fg_geom.contains?(fg_)
+        else
+          false
+        end
       end
 
 
       def overlaps?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.overlaps?(fg_) : false
+        if fg_
+          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ ? prep_.overlaps?(fg_) : @fg_geom.overlaps?(fg_)
+        else
+          false
+        end
       end
 
 

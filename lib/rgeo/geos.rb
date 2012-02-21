@@ -61,6 +61,8 @@ module RGeo
 end
 
 
+# :stopdoc:
+
 # Implementation files
 require 'rgeo/geos/factory'
 require 'rgeo/geos/interface'
@@ -73,18 +75,21 @@ require 'rgeo/geos/ffi_classes'
 require 'rgeo/geos/zm_factory'
 require 'rgeo/geos/zm_impl'
 
-# :stopdoc:
-
-# Determine native interface support.
+# Determine ffi support.
 begin
   require 'ffi-geos'
   ::RGeo::Geos::FFI_SUPPORTED = true
+  ::RGeo::Geos::FFIUtils._init
 rescue ::LoadError
   ::RGeo::Geos::FFI_SUPPORTED = false
 rescue
   ::RGeo::Geos::FFI_SUPPORTED = false
 end
+
+# Determine capi support.
 ::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos::Factory.respond_to?(:_create) ? true : false
+
+# Determine preferred native interface
 if ::RGeo::Geos::CAPI_SUPPORTED
   ::RGeo::Geos.preferred_native_interface = :capi
 elsif ::RGeo::Geos::FFI_SUPPORTED
