@@ -278,6 +278,12 @@ RGeo_Globals* rgeo_init_geos_factory()
   globals->feature_module = rb_define_module_under(rgeo_module, "Feature");
   globals->global_mixins = rb_const_get_at(rb_const_get_at(globals->feature_module, rb_intern("MixinCollection")), rb_intern("GLOBAL"));
 
+  globals->id_cast = rb_intern("cast");
+  globals->id_eql = rb_intern("eql?");
+  globals->id_generate = rb_intern("generate");
+  globals->sym_force_new = ID2SYM(rb_intern("force_new"));
+  globals->sym_keep_subtype = ID2SYM(rb_intern("keep_subtype"));
+
   // Add C methods to the factory.
   geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
@@ -395,12 +401,14 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
 {
   VALUE object;
   const GEOSGeometry* geom;
+  RGeo_Globals* globals;
 
-  if (NIL_P(type) && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
+  if (NIL_P(type) && TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
     object = obj;
   }
   else {
-    object = rb_funcall(RGEO_FACTORY_DATA_PTR(factory)->globals->feature_module, rb_intern("cast"), 3, obj, factory, type);
+    globals = RGEO_FACTORY_DATA_PTR(factory)->globals;
+    object = rb_funcall(globals->feature_module, globals->id_cast, 3, obj, factory, type);
   }
   geom = NULL;
   if (!NIL_P(object)) {
@@ -416,11 +424,13 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
   GEOSGeometry* geom;
   RGeo_GeometryData* object_data;
   const GEOSPreparedGeometry* prep;
+  RGeo_Globals* globals;
 
   if (klasses) {
     *klasses = Qnil;
   }
-  object = rb_funcall(RGEO_FACTORY_DATA_PTR(factory)->globals->feature_module, rb_intern("cast"), 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
+  globals = RGEO_FACTORY_DATA_PTR(factory)->globals;
+  object = rb_funcall(globals->feature_module, globals->id_cast, 5, obj, factory, type, globals->sym_force_new, globals->sym_keep_subtype);
   geom = NULL;
   if (!NIL_P(object)) {
     object_data = RGEO_GEOMETRY_DATA_PTR(object);
@@ -533,13 +543,15 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
 VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
 {
   VALUE result;
+  VALUE factory;
 
   result = Qnil;
   if (rb_obj_class(obj1) != rb_obj_class(obj2)) {
     result = Qfalse;
   }
   else {
-    result = rb_funcall(RGEO_GEOMETRY_DATA_PTR(obj1)->factory, rb_intern("eql?"), 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
+    factory = RGEO_GEOMETRY_DATA_PTR(obj1)->factory;
+    result = rb_funcall(factory, RGEO_FACTORY_DATA_PTR(factory)->globals->id_eql, 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
   }
   return result;
 }

@@ -46,8 +46,9 @@ RGEO_BEGIN_C
 
 /*
   Per-interpreter globals.
-  Most of these are cached references to commonly used classes and modules
-  so we don't have to do a lot of constant lookups.
+  Most of these are cached references to commonly used classes, modules,
+  and symbols so we don't have to do a lot of constant lookups and calls
+  to rb_intern.
 */
 typedef struct {
   VALUE feature_module;
@@ -73,6 +74,11 @@ typedef struct {
   VALUE geos_multi_point;
   VALUE geos_multi_line_string;
   VALUE geos_multi_polygon;
+  ID id_cast;
+  ID id_eql;
+  ID id_generate;
+  VALUE sym_force_new;
+  VALUE sym_keep_subtype;
 } RGeo_Globals;
 
 

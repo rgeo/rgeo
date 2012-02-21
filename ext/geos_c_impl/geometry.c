@@ -310,7 +310,7 @@ static VALUE method_geometry_as_text(VALUE self)
     factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
     wkt_generator = factory_data->wkrep_wkt_generator;
     if (!NIL_P(wkt_generator)) {
-      result = rb_funcall(wkt_generator, rb_intern("generate"), 1, self);
+      result = rb_funcall(wkt_generator, factory_data->globals->id_generate, 1, self);
     }
     else {
       wkt_writer = factory_data->wkt_writer;
@@ -349,7 +349,7 @@ static VALUE method_geometry_as_binary(VALUE self)
     factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
     wkb_generator = factory_data->wkrep_wkb_generator;
     if (!NIL_P(wkb_generator)) {
-      result = rb_funcall(wkb_generator, rb_intern("generate"), 1, self);
+      result = rb_funcall(wkb_generator, factory_data->globals->id_generate, 1, self);
     }
     else {
       wkb_writer = factory_data->wkb_writer;

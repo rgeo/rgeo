@@ -98,6 +98,17 @@ module RGeo
         end
 
 
+        def test_gh_21
+          # Test for GH-21 (seg fault in rgeo_convert_to_geos_geometry)
+          # This seemed to fail under Ruby 1.8.7 only.
+          f_ = RGeo::Geographic.simple_mercator_factory
+          loc_ = f_.line_string([f_.point(-123, 37), f_.point(-122, 38)])
+          f2_ = f_.projection_factory
+          loc2_ = f2_.line_string([f2_.point(-123, 37), f2_.point(-122, 38)])
+          loc2_.intersection(loc_)
+        end
+
+
       end
 
     end
