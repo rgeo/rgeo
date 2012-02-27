@@ -26,8 +26,7 @@ Use the core *rgeo* gem to:
 Several optional modules are currently available:
 
 * Generate and interpret GeoJSON data for communication with common
-  location-based web services such as SimpleGeo, using the
-  <b>rgeo-geojson</b> gem.
+  location-based web services using the <b>rgeo-geojson</b> gem.
 * Read GIS datasets from ESRI shapefiles using the <b>rgeo-shapefile</b>
   gem.
 * Extend ActiveRecord to handle spatial data in MySQL Spatial, SpatiaLite,
@@ -101,7 +100,8 @@ The RGeo suite of tools is evolving rapidly. The current to-do list for
 the core library includes:
 
 * YAML and Marshal serialization support across all major entities.
-* Better JRuby support.
+* Full JRuby support.
+* Better error handling and reporting.
 * Ellipsoidal geography implementation, possibly utilizing geographiclib.
 * Windows build support.
 
@@ -110,7 +110,7 @@ we are planning on introducing more add-on modules, including:
 
 * GeoRSS and KML format support.
 * Integration with third-party APIs.
-* Possible additional ActiveRecord adapters.
+* Possible additional ActiveRecord adapters (esp. JDBC adapters)
 
 === Development and support
 
