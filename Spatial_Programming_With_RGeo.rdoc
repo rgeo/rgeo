@@ -186,23 +186,23 @@ I do not have space here to describe the different comparison operations in deta
  b = "foo"
  a == b        # => true
  a.eql?(b)     # => true
- a.equals?(b)  # => false  (because they are different objects)
- a.equals?(a)  # => true
+ a.equal?(b)  # => false  (because they are different objects)
+ a.equal?(a)  # => true
 
-In general, Ruby has three forms of equality: value equality (tested by the <tt>==</tt> operator), object equality (tested by the <tt>eql?</tt> method), and object identity (tested by the <tt>equals?</tt> method).
+In general, Ruby has three forms of equality: value equality (tested by the <tt>==</tt> operator), object equality (tested by the <tt>eql?</tt> method), and object identity (tested by the <tt>equal?</tt> method).
 
-Similarly, \RGeo's equality checking comes in several forms: geometric equality, object equality, and object identity. Geometric equality is tested by the SFS method <tt>equal?</tt>, as well as the <tt>==</tt> operator. This type of equality indicates two objects that may be different representations of the same geometry, for example, a LineString and its reverse, or a Point and a MultiPoint that contains only that same point. Object equality, tested by <tt>eql?</tt>, means the same representation but possibly distinct objects. Object identity, tested by <tt>equals?</tt>, represents the same object, as with other Ruby types.
+Similarly, \RGeo's equality checking comes in several forms: geometric equality, representational equality, and object identity. Geometric equality is tested by the SFS method <tt>equals?</tt>, as well as the <tt>==</tt> operator. This type of equality indicates two objects that may be different representations of the same geometry, for example, a LineString and its reverse, or a Point and a MultiPoint that contains only that same point. Representational equality, tested by <tt>eql?</tt>, means the same representation but possibly distinct objects. Object identity, tested by <tt>equal?</tt>, represents the same object, as with other Ruby types.
 
  p1 = factory.point(1, 1)
  p2 = factory.point(1, 1)
  mp = factory.multi_point([p1])
  p1 == p2        # => true
- p1.equal?(mp)   # => true
+ p1.equals?(mp)   # => true
  p1 == mp        # => true
  p1.eql?(mp)     # => false
  p1.eql?(p2)     # => true
- p1.equals?(p2)  # => false
- p1.equals?(p1)  # => true
+ p1.equal?(p2)  # => false
+ p1.equal?(p1)  # => true
 
 === 3.3. Binary Spatial Operations
 

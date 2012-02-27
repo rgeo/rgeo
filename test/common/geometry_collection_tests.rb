@@ -118,10 +118,18 @@ module RGeo
         end
 
 
-        def test_fully_equal
+        def test_required_equivalences
           geom1_ = @factory.collection([@point1, @line1])
           geom2_ = @factory.collection([@point1, @line1])
           assert(geom1_.eql?(geom2_))
+          assert(geom1_ == geom2_)
+        end
+
+
+        def test_fully_equal
+          geom1_ = @factory.collection([@point1, @line1])
+          geom2_ = @factory.collection([@point1, @line1])
+          assert(geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -129,7 +137,7 @@ module RGeo
         def test_geometrically_equal
           geom1_ = @factory.collection([@point2, @line2])
           geom2_ = @factory.collection([@point2, @line1, @line2])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -137,7 +145,7 @@ module RGeo
         def test_empty_equal
           geom1_ = @factory.collection([])
           geom2_ = @factory.collection([])
-          assert(geom1_.eql?(geom2_))
+          assert(geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -145,7 +153,7 @@ module RGeo
         def test_not_equal
           geom1_ = @factory.collection([@point1, @line1])
           geom2_ = @factory.collection([@point2, @line1])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(!geom1_.equals?(geom2_))
         end
 

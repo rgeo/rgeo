@@ -284,6 +284,7 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
 
   rb_define_module_function(geos_polygon_class, "create", cmethod_create, 3);
 
+  rb_define_method(geos_polygon_class, "rep_equals?", method_polygon_eql, 1);
   rb_define_method(geos_polygon_class, "eql?", method_polygon_eql, 1);
   rb_define_method(geos_polygon_class, "geometry_type", method_polygon_geometry_type, 0);
   rb_define_method(geos_polygon_class, "area", method_polygon_area, 0);

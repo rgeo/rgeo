@@ -143,7 +143,7 @@ gems, by J Smith (http://github.com/dark-panda).
 
 === License
 
-Copyright 2010-2011 Daniel Azuma
+Copyright 2010-2012 Daniel Azuma
 
 All rights reserved.
 

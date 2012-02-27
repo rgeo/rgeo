@@ -185,6 +185,7 @@ void rgeo_init_geos_point(RGeo_Globals* globals)
 
   rb_define_module_function(geos_point_class, "create", cmethod_create, 4);
 
+  rb_define_method(geos_point_class, "rep_equals?", method_point_eql, 1);
   rb_define_method(geos_point_class, "eql?", method_point_eql, 1);
   rb_define_method(geos_point_class, "geometry_type", method_point_geometry_type, 0);
   rb_define_method(geos_point_class, "x", method_point_x, 0);

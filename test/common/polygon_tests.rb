@@ -82,7 +82,7 @@ module RGeo
         end
 
 
-        def test_fully_equal
+        def test_required_equivalences
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
           point3_ = @factory.point(1, 0)
@@ -94,6 +94,22 @@ module RGeo
           exterior2_ = @factory.linear_ring([point4_, point5_, point6_, point4_])
           poly2_ = @factory.polygon(exterior2_)
           assert(poly1_.eql?(poly2_))
+          assert(poly1_ == poly2_)
+        end
+
+
+        def test_fully_equal
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          point3_ = @factory.point(1, 0)
+          exterior1_ = @factory.linear_ring([point1_, point2_, point3_, point1_])
+          poly1_ = @factory.polygon(exterior1_)
+          point4_ = @factory.point(0, 0)
+          point5_ = @factory.point(0, 1)
+          point6_ = @factory.point(1, 0)
+          exterior2_ = @factory.linear_ring([point4_, point5_, point6_, point4_])
+          poly2_ = @factory.polygon(exterior2_)
+          assert(poly1_.rep_equals?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
 
@@ -106,7 +122,7 @@ module RGeo
           poly1_ = @factory.polygon(exterior1_)
           exterior2_ = @factory.linear_ring([point2_, point3_, point1_, point2_])
           poly2_ = @factory.polygon(exterior2_)
-          assert(!poly1_.eql?(poly2_))
+          assert(!poly1_.rep_equals?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
 
@@ -119,7 +135,7 @@ module RGeo
           poly1_ = @factory.polygon(exterior1_)
           exterior2_ = @factory.linear_ring([point1_, point3_, point2_, point1_])
           poly2_ = @factory.polygon(exterior2_)
-          assert(!poly1_.eql?(poly2_))
+          assert(!poly1_.rep_equals?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
 

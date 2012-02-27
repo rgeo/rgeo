@@ -1,3 +1,9 @@
+=== 0.3.5 / 2012-02-27
+
+* Reworked the terminology on equivalence levels. The documentation now names the three levels "spatial", "representational", and "objective" equivalence.
+* Some geometry implementations didn't implement the == operator, resulting in various problems, including inability to set ActiveRecord attributes when using an implementation (such as simple_spherical polygons) that doesn't provide spatial equivalence tests. Fixed. The interfaces now specify that all implementations must implement the == operator and the eql? method, and should degrade to stronger forms of equivalence if weaker forms are not available. (Reported by Phil Murray.)
+* Added Geometry#rep_equals? to test representational equivalence without the fallback behavior of Geometry#eql?
+
 === 0.3.4 / 2012-02-21
 
 * The FFI-GEOS implementation now uses prepared geometries.

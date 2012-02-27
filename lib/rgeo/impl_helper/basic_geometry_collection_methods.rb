@@ -55,15 +55,6 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
-        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @elements.size == rhs_.num_geometries
-          rhs_.each_with_index{ |p_, i_| return false unless @elements[i_].eql?(p_) }
-        else
-          false
-        end
-      end
-
-
       def num_geometries
         @elements.size
       end
@@ -103,6 +94,15 @@ module RGeo
 
       def is_empty?
         @elements.size == 0
+      end
+
+
+      def rep_equals?(rhs_)
+        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @elements.size == rhs_.num_geometries
+          rhs_.each_with_index{ |p_, i_| return false unless @elements[i_].rep_equals?(p_) }
+        else
+          false
+        end
       end
 
 

@@ -75,11 +75,6 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
-        rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z && @m == rhs_.m
-      end
-
-
       def dimension
         0
       end
@@ -127,6 +122,11 @@ module RGeo
         else
           false
         end
+      end
+
+
+      def rep_equals?(rhs_)
+        rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z && @m == rhs_.m
       end
 
 

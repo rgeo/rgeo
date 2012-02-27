@@ -164,21 +164,6 @@ module RGeo
       end
 
 
-      def _request_prepared  # :nodoc:
-        case @_fg_prep
-        when 0
-          nil
-        when 1
-          @_fg_prep = 2
-          nil
-        when 2
-          @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
-        else
-          @_fg_prep
-        end
-      end
-
-
       def envelope
         fg_geom_ = @fg_geom.envelope
         # GEOS returns an "empty" point for an empty collection's envelope.
@@ -359,10 +344,30 @@ module RGeo
       end
 
 
+      def eql?(rhs_)
+        rep_equals?(rhs_)
+      end
+
+
       def _detach_fg_geom  # :nodoc:
         fg_ = @fg_geom
         @fg_geom = nil
         fg_
+      end
+
+
+      def _request_prepared  # :nodoc:
+        case @_fg_prep
+        when 0
+          nil
+        when 1
+          @_fg_prep = 2
+          nil
+        when 2
+          @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
+        else
+          @_fg_prep
+        end
       end
 
 
@@ -407,7 +412,7 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
+      def rep_equals?(rhs_)
         rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
           FFIUtils.coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
@@ -483,7 +488,7 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
+      def rep_equals?(rhs_)
         rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
           FFIUtils.coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
@@ -573,15 +578,15 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
+      def rep_equals?(rhs_)
         if rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
-          rhs_.exterior_ring.eql?(self.exterior_ring)
+          rhs_.exterior_ring.rep_equals?(self.exterior_ring)
         then
           sn_ = @fg_geom.num_interior_rings
           rn_ = rhs_.num_interior_rings
           if sn_ == rn_
             sn_.times do |i_|
-              return false unless interior_ring_n(i_).eql?(rhs_.interior_ring_n(i_))
+              return false unless interior_ring_n(i_).rep_equals?(rhs_.interior_ring_n(i_))
             end
             return true
           end
@@ -604,12 +609,12 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
+      def rep_equals?(rhs_)
         if rhs_.class == self.class && rhs_.factory.eql?(@factory)
           size_ = @fg_geom.num_geometries
           if size_ == rhs_.num_geometries
             size_.times do |n_|
-              return false unless geometry_n(n_).eql?(rhs_.geometry_n(n_))
+              return false unless geometry_n(n_).rep_equals?(rhs_.geometry_n(n_))
             end
             return true
           end

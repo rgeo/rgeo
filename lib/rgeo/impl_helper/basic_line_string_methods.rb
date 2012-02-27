@@ -62,15 +62,6 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
-        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @points.size == rhs_.num_points
-          rhs_.points.each_with_index{ |p_, i_| return false unless @points[i_].eql?(p_) }
-        else
-          false
-        end
-      end
-
-
       def num_points
         @points.size
       end
@@ -130,6 +121,15 @@ module RGeo
 
       def is_ring?
         is_closed? && is_simple?
+      end
+
+
+      def rep_equals?(rhs_)
+        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @points.size == rhs_.num_points
+          rhs_.points.each_with_index{ |p_, i_| return false unless @points[i_].rep_equals?(p_) }
+        else
+          false
+        end
       end
 
 

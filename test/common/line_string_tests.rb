@@ -151,7 +151,7 @@ module RGeo
         end
 
 
-        def test_fully_equal
+        def test_required_equivalences
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
           point3_ = @factory.point(1, 0)
@@ -161,6 +161,20 @@ module RGeo
           point6_ = @factory.point(1, 0)
           line2_ = @factory.line_string([point4_, point5_, point6_])
           assert(line1_.eql?(line2_))
+          assert(line1_ == line2_)
+        end
+
+
+        def test_fully_equal
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          point3_ = @factory.point(1, 0)
+          line1_ = @factory.line_string([point1_, point2_, point3_])
+          point4_ = @factory.point(0, 0)
+          point5_ = @factory.point(0, 1)
+          point6_ = @factory.point(1, 0)
+          line2_ = @factory.line_string([point4_, point5_, point6_])
+          assert(line1_.rep_equals?(line2_))
           assert(line1_.equals?(line2_))
         end
 
@@ -172,7 +186,7 @@ module RGeo
           point4_ = @factory.point(0, 0)
           point5_ = @factory.point(0, 1)
           line2_ = @factory.line(point4_, point5_)
-          assert(!line1_.eql?(line2_))
+          assert(!line1_.rep_equals?(line2_))
           assert(line1_.equals?(line2_))
         end
 
@@ -186,7 +200,7 @@ module RGeo
           point5_ = @factory.point(0, 1)
           point6_ = @factory.point(1, 0)
           line2_ = @factory.linear_ring([point4_, point5_, point6_, point4_])
-          assert(!line1_.eql?(line2_))
+          assert(!line1_.rep_equals?(line2_))
           assert(line1_.equals?(line2_))
         end
 
@@ -200,7 +214,7 @@ module RGeo
           point5_ = @factory.point(0, 1)
           point6_ = @factory.point(1, 0)
           line2_ = @factory.line_string([point4_, point5_, point6_, point5_])
-          assert(!line1_.eql?(line2_))
+          assert(!line1_.rep_equals?(line2_))
           assert(line1_.equals?(line2_))
         end
 
@@ -208,7 +222,7 @@ module RGeo
         def test_empty_equal
           line1_ = @factory.line_string([])
           line2_ = @factory.line_string([])
-          assert(line1_.eql?(line2_))
+          assert(line1_.rep_equals?(line2_))
           assert(line1_.equals?(line2_))
         end
 
@@ -221,7 +235,7 @@ module RGeo
           point5_ = @factory.point(0, 1)
           point6_ = @factory.point(1, 0)
           line2_ = @factory.line_string([point4_, point5_, point6_])
-          assert(!line1_.eql?(line2_))
+          assert(!line1_.rep_equals?(line2_))
           assert(!line1_.equals?(line2_))
         end
 

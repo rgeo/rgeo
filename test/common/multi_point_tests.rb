@@ -96,10 +96,18 @@ module RGeo
         end
 
 
-        def test_fully_equal
+        def test_required_equivalences
           geom1_ = @factory.multi_point([@point1, @point2])
           geom2_ = @factory.multi_point([@point1, @point2])
           assert(geom1_.eql?(geom2_))
+          assert(geom1_ == geom2_)
+        end
+
+
+        def test_fully_equal
+          geom1_ = @factory.multi_point([@point1, @point2])
+          geom2_ = @factory.multi_point([@point1, @point2])
+          assert(geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -107,7 +115,7 @@ module RGeo
         def test_geometrically_equal
           geom1_ = @factory.multi_point([@point1, @point4])
           geom2_ = @factory.multi_point([@point1, @point4, @point5])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -115,7 +123,7 @@ module RGeo
         def test_not_equal
           geom1_ = @factory.multi_point([@point1, @point2])
           geom2_ = @factory.multi_point([@point1])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(!geom1_.equals?(geom2_))
         end
 

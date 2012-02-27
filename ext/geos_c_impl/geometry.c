@@ -969,6 +969,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_class, "is_simple?", method_geometry_is_simple, 0);
   rb_define_method(geos_geometry_class, "equals?", method_geometry_equals, 1);
   rb_define_method(geos_geometry_class, "==", method_geometry_equals, 1);
+  rb_define_method(geos_geometry_class, "rep_equals?", method_geometry_eql, 1);
   rb_define_method(geos_geometry_class, "eql?", method_geometry_eql, 1);
   rb_define_method(geos_geometry_class, "disjoint?", method_geometry_disjoint, 1);
   rb_define_method(geos_geometry_class, "intersects?", method_geometry_intersects, 1);

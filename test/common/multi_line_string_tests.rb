@@ -104,10 +104,18 @@ module RGeo
         end
 
 
-        def test_fully_equal
+        def test_required_equivalences
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
           geom2_ = @factory.multi_line_string([@linestring1, @linestring2])
           assert(geom1_.eql?(geom2_))
+          assert(geom1_ == geom2_)
+        end
+
+
+        def test_fully_equal
+          geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
+          geom2_ = @factory.multi_line_string([@linestring1, @linestring2])
+          assert(geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -115,7 +123,7 @@ module RGeo
         def test_geometrically_equal
           geom1_ = @factory.multi_line_string([@linestring1, @linestring2, @linearring1])
           geom2_ = @factory.multi_line_string([@line1, @linearring1])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -123,7 +131,7 @@ module RGeo
         def test_not_equal
           geom1_ = @factory.multi_line_string([@linestring2])
           geom2_ = @factory.multi_line_string([@linearring1])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(!geom1_.equals?(geom2_))
         end
 

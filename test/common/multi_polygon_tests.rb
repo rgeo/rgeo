@@ -111,10 +111,18 @@ module RGeo
         end
 
 
-        def test_equal
+        def test_required_equivalences
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           geom2_ = @factory.multi_polygon([@poly1, @poly2])
           assert(geom1_.eql?(geom2_))
+          assert(geom1_ == geom2_)
+        end
+
+
+        def test_equal
+          geom1_ = @factory.multi_polygon([@poly1, @poly2])
+          geom2_ = @factory.multi_polygon([@poly1, @poly2])
+          assert(geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
 
@@ -122,7 +130,7 @@ module RGeo
         def test_not_equal
           geom1_ = @factory.multi_polygon([@poly1])
           geom2_ = @factory.multi_polygon([@poly2])
-          assert(!geom1_.eql?(geom2_))
+          assert(!geom1_.rep_equals?(geom2_))
           assert(!geom1_.equals?(geom2_))
         end
 

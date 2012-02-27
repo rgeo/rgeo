@@ -78,25 +78,37 @@ module RGeo
     #   As a general rule, objects must have factories that are
     #   Factory#eql? in order to be spatially equivalent.
     #
-    # * <b>Objective equivalence</b> is a stronger form of equivalence,
-    #   indicating that the objects are the same representation, but may
-    #   be different objects. All objectively equivalent objects are
+    # * <b>Representational equivalence</b> is a stronger form, indicating
+    #   that the objects have the same representation, but may be
+    #   different objects. All representationally equivalent objects are
     #   spatially equivalent, but not all spatially equivalent objects are
-    #   objectively equivalent. For example, none of the examples in the
-    #   spatial equivalence section above are objectively equivalent.
-    #   However, two separate objects that both represent POINT(1 2) are
-    #   objectively equivalent as well as spatially equivalent.
+    #   representationally equivalent. For example, none of the examples
+    #   in the spatial equivalence section above are representationally
+    #   equivalent. However, two separate objects that both represent
+    #   POINT(1 2) are representationally equivalent as well as spatially
+    #   equivalent.
     #
-    # * <b>Objective identity</b> is the strongest form, indicating that
-    #   the references refer to the same object. Of course, all pairs of
-    #   references with the same objective identity are both objectively
-    #   equivalent and spatially equivalent.
+    # * <b>Objective equivalence</b> is the strongest form, indicating
+    #   that the references refer to the same object. Of course, all
+    #   pairs of references with the same objective identity are also 
+    #   both representationally and spatially equivalent.
     #
     # Different methods test for different types of equivalence:
     #
     # * <tt>equals?</tt> and <tt>==</tt> test for spatial equivalence.
-    # * <tt>eql?</tt> tests for objective equivalence.
-    # * <tt>equal?</tt> tests for objective identity.
+    # * <tt>rep_equals?</tt> and <tt>eql?</tt> test for representational
+    #   equivalence.
+    # * <tt>equal?</tt> tests for objective equivalence.
+    #
+    # All ruby objects must provide a suitable test for objective
+    # equivalence. Normally, this is simply provided by the Ruby Object
+    # base class. Geometry implementations should normally also provide
+    # tests for representational and spatial equivalence, if possible.
+    # The <tt>==</tt> operator and the <tt>eql?</tt> method are standard
+    # Ruby methods that are often expected to be usable for every object.
+    # Therefore, if an implementation cannot provide a suitable test for
+    # their equivalence types, they must degrade to use a stronger form
+    # of equivalence.
 
     module Geometry
 
@@ -112,14 +124,6 @@ module RGeo
 
       def factory
         raise Error::UnsupportedOperation, "Method Geometry#factory not defined."
-      end
-
-
-      # Returns true if this geometric object is objectively equivalent
-      # to the given object.
-
-      def eql?(another_geometry_)
-        raise Error::UnsupportedOperation, "Method Geometry#eql? not defined."
       end
 
 
@@ -279,7 +283,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def equals?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#equals? not defined."
@@ -299,7 +303,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def disjoint?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#disjoint? not defined."
@@ -319,7 +323,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def intersects?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#intersects? not defined."
@@ -339,7 +343,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def touches?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#touches? not defined."
@@ -359,7 +363,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def crosses?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#crosses? not defined."
@@ -379,7 +383,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def within?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#within? not defined."
@@ -399,7 +403,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def contains?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#contains? not defined."
@@ -419,7 +423,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def overlaps?(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#overlaps? not defined."
@@ -446,7 +450,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of comparing objects
-      # of different factories is undefined.
+      # from different factories is undefined.
 
       def relate(another_geometry_, intersection_pattern_matrix_)
         raise Error::UnsupportedOperation, "Method Geometry#relate not defined."
@@ -466,7 +470,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of measuring the
-      # distance between objects of different factories is undefined.
+      # distance between objects from different factories is undefined.
 
       def distance(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#distance not defined."
@@ -515,7 +519,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of performing
-      # operations on objects of different factories is undefined.
+      # operations on objects from different factories is undefined.
 
       def intersection(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#intersection not defined."
@@ -534,7 +538,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of performing
-      # operations on objects of different factories is undefined.
+      # operations on objects from different factories is undefined.
 
       def union(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#union not defined."
@@ -553,7 +557,7 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of performing
-      # operations on objects of different factories is undefined.
+      # operations on objects from different factories is undefined.
 
       def difference(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#difference not defined."
@@ -572,21 +576,78 @@ module RGeo
       # Although implementations are free to attempt to handle
       # another_geometry values that do not share the same factory as
       # this geometry, strictly speaking, the result of performing
-      # operations on objects of different factories is undefined.
+      # operations on objects from different factories is undefined.
 
       def sym_difference(another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#sym_difference not defined."
       end
 
 
-      # This operator should behave almost the same as the equals? method.
-      # The difference is that the == operator is required to handle rhs
-      # values that are not geometry objects (returning false in such cases)
-      # in order to fulfill the standard Ruby contract for the == operator,
-      # whereas the equals? method may assume that any rhs is a geometry.
+      # Returns true if this geometric object is representationally
+      # equivalent to the given object.
+      #
+      # Although implementations are free to attempt to handle
+      # another_geometry values that do not share the same factory as
+      # this geometry, strictly speaking, the result of comparing objects
+      # from different factories is undefined.
+
+      def rep_equals?(another_geometry_)
+        raise Error::UnsupportedOperation, "Method Geometry#rep_equals? not defined."
+      end
+
+
+      # This method should behave almost the same as the rep_equals?
+      # method, with two key differences.
+      #
+      # First, the <tt>eql?</tt> method is required to handle rhs values
+      # that are not geometry objects (returning false in such cases) in
+      # order to fulfill the standard Ruby contract for the method,
+      # whereas the rep_equals? method may assume that any rhs is a
+      # geometry.
+      #
+      # Second, the <tt>eql?</tt> method should always be defined. That
+      # is, it should never raise Error::UnsupportedOperation. In cases
+      # where the underlying implementation cannot provide a
+      # representational equivalence test, this method must fall back on
+      # objective equivalence.
+
+      def eql?(rhs_)
+        if rhs_.kind_of?(::RGeo::Feature::Instance)
+          begin
+            rep_equals?(rhs_)
+          rescue Error::UnsupportedOperation
+            equal?(rhs_)
+          end
+        else
+          false
+        end
+      end
+
+
+      # This operator should behave almost the same as the equals? method,
+      # with two key differences.
+      #
+      # First, the == operator is required to handle rhs values that are
+      # not geometry objects (returning false in such cases) in order to
+      # fulfill the standard Ruby contract for the == operator, whereas
+      # the equals? method may assume that any rhs is a geometry.
+      #
+      # Second, the == operator should always be defined. That is, it
+      # should never raise Error::UnsupportedOperation. In cases where
+      # the underlying implementation cannot provide a spatial equivalence
+      # test, the == operator must fall back on representational or
+      # objective equivalence.
 
       def ==(rhs_)
-        rhs_.kind_of?(::RGeo::Feature::Instance) ? equals?(rhs_) : false
+        if rhs_.kind_of?(::RGeo::Feature::Instance)
+          begin
+            equals?(rhs_)
+          rescue Error::UnsupportedOperation
+            eql?(rhs_)
+          end
+        else
+          false
+        end
       end
 
 

@@ -75,11 +75,6 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
-        rhs_.is_a?(self.class) && @factory.eql?(rhs_.factory) && @zgeometry.eql?(rhs_.z_geometry) && @mgeometry.eql?(rhs_.m_geometry)
-      end
-
-
       def dimension
         @zgeometry.dimension
       end
@@ -205,7 +200,14 @@ module RGeo
       end
 
 
+      def rep_equals?(rhs_)
+        rhs_.is_a?(self.class) && @factory.eql?(rhs_.factory) && @zgeometry.rep_equals?(rhs_.z_geometry) && @mgeometry.rep_equals?(rhs_.m_geometry)
+      end
+
+
+      alias_method :eql?, :rep_equals?
       alias_method :==, :equals?
+
       alias_method :-, :difference
       alias_method :+, :union
       alias_method :*, :intersection

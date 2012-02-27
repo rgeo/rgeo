@@ -569,6 +569,7 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
 
   rb_define_module_function(geos_line_string_class, "create", cmethod_create_line_string, 2);
   rb_define_module_function(geos_line_string_class, "_copy_from", cmethod_line_string_copy_from, 2);
+  rb_define_method(geos_line_string_class, "rep_equals?", method_line_string_eql, 1);
   rb_define_method(geos_line_string_class, "eql?", method_line_string_eql, 1);
   rb_define_method(geos_line_string_class, "geometry_type", method_line_string_geometry_type, 0);
   rb_define_method(geos_line_string_class, "length", method_line_string_length, 0);

@@ -59,15 +59,6 @@ module RGeo
       end
 
 
-      def eql?(rhs_)
-        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @exterior_ring.eql?(rhs_.exterior_ring) && @interior_rings.size == rhs_.num_interior_rings
-          rhs_.interior_rings.each_with_index{ |r_, i_| return false unless @interior_rings[i_].eql?(r_) }
-        else
-          false
-        end
-      end
-
-
       def exterior_ring
         @exterior_ring
       end
@@ -110,6 +101,15 @@ module RGeo
         end
         array_.concat(@interior_rings)
         factory.multi_line_string(array_)
+      end
+
+
+      def rep_equals?(rhs_)
+        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @exterior_ring.rep_equals?(rhs_.exterior_ring) && @interior_rings.size == rhs_.num_interior_rings
+          rhs_.interior_rings.each_with_index{ |r_, i_| return false unless @interior_rings[i_].rep_equals?(r_) }
+        else
+          false
+        end
       end
 
 

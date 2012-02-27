@@ -492,6 +492,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   // Methods for GeometryCollectionImpl
   rb_define_module_function(geos_geometry_collection_class, "create", cmethod_geometry_collection_create, 2);
   rb_include_module(geos_geometry_collection_class, rb_define_module("Enumerable"));
+  rb_define_method(geos_geometry_collection_class, "rep_equals?", method_geometry_collection_eql, 1);
   rb_define_method(geos_geometry_collection_class, "eql?", method_geometry_collection_eql, 1);
   rb_define_method(geos_geometry_collection_class, "geometry_type", method_geometry_collection_geometry_type, 0);
   rb_define_method(geos_geometry_collection_class, "num_geometries", method_geometry_collection_num_geometries, 0);
