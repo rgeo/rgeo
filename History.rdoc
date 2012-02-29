@@ -1,3 +1,10 @@
+=== 0.3.6 / 2012-??-??
+
+* Geometry#relate? was incorrectly spelled "Geometry#relate" in the Feature::Geometry module and in some (but not all) implementations, leading to various types of method not found errors. Fixed. We'll keep #relate as a deprecated alias for the time being.
+* Pure Ruby factories (simple_spherical, simple_cartesian) now support a :uses_lenient_assertions option, which disables assertion checking on LinearRing, Polygon, and MultiPolygon construction. (Given that those checks can be expensive.)
+* Fixed Rails 3.2 deprecation warning in SRSDatabase::ActiveRecordTable.
+* Fixed an issue with the ActiveRecordTable tests on ActiveRecord 3.2.
+
 === 0.3.5 / 2012-02-27
 
 * Reworked the terminology on equivalence levels. The documentation now names the three levels "spatial", "representational", and "objective" equivalence.

@@ -452,8 +452,15 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def relate(another_geometry_, intersection_pattern_matrix_)
+      def relate?(another_geometry_, intersection_pattern_matrix_)
         raise Error::UnsupportedOperation, "Method Geometry#relate not defined."
+      end
+
+
+      # Deprecated alias of Geometry#relate?
+
+      def relate(another_geometry_, intersection_pattern_matrix_)
+        relate?(another_geometry_, intersection_pattern_matrix_)
       end
 
 

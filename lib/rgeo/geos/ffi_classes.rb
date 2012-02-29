@@ -298,10 +298,11 @@ module RGeo
       end
 
 
-      def relate(rhs_, pattern_)
+      def relate?(rhs_, pattern_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         fg_ ? @fg_geom.relate_pattern(fg_, pattern_) : nil
       end
+      alias_method :relate, :relate?  # DEPRECATED
 
 
       def distance(rhs_)

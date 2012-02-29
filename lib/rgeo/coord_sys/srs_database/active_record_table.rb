@@ -127,8 +127,10 @@ module RGeo
             @ar_class = ::Class.new(ar_base_class_)
             self.class.const_set("Klass#{@@class_counter}", @ar_class)
             @@class_counter += 1
-            @ar_class.class_eval do
-              establish_connection(opts_[:database_config]) if opts_[:database_config]
+            if opts_[:database_config]
+              @ar_class.class_eval do
+                establish_connection(opts_[:database_config])
+              end
             end
           end
           connection_ = @ar_class.connection
@@ -137,7 +139,7 @@ module RGeo
           end
           unless opts_[:ar_class]
             @ar_class.class_eval do
-              set_table_name(opts_[:table_name] || 'spatial_ref_sys')
+              self.table_name = opts_[:table_name] || 'spatial_ref_sys'
             end
           end
           @srid_column = opts_[:srid_column] || 'srid'

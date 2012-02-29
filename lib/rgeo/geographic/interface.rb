@@ -86,6 +86,12 @@ module RGeo
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
+      # [<tt>:uses_lenient_assertions</tt>]
+      #   If set to true, assertion checking is disabled. This includes
+      #   simplicity checking on LinearRing, and validity checks on
+      #   Polygon and MultiPolygon. This may speed up creation of certain
+      #   objects, at the expense of not doing the proper checking for
+      #   OGC compliance. Default is false.
       # [<tt>:proj4</tt>]
       #   Provide the coordinate system in Proj4 format. You may pass
       #   either an RGeo::CoordSys::Proj4 object, or a string or hash

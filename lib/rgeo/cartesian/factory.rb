@@ -76,6 +76,7 @@ module RGeo
         end
         srid_ ||= @coord_sys.authority_code if @coord_sys
         @srid = srid_.to_i
+        @lenient_assertions = opts_[:uses_lenient_assertions] ? true : false
 
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
@@ -127,6 +128,7 @@ module RGeo
           'wkbg' => @wkb_generator._properties,
           'wktp' => @wkt_parser._properties,
           'wkbp' => @wkb_parser._properties,
+          'lena' => @lenient_assertions,
         }
         hash_['proj4'] = @proj4.marshal_dump if @proj4
         hash_['cs'] = @coord_sys.to_wkt if @coord_sys
@@ -153,6 +155,7 @@ module RGeo
           :wkb_generator => data_['wkbg'],
           :wkt_parser => data_['wktp'],
           :wkb_parser => data_['wkbp'],
+          :uses_lenient_assertions => data_['lena'],
           :proj4 => proj4_,
           :coord_sys => coord_sys_,
         })
@@ -184,6 +187,7 @@ module RGeo
           :wkb_generator => data_['wkb_generator'],
           :wkt_parser => data_['wkt_parser'],
           :wkb_parser => data_['wkb_parser'],
+          :uses_lenient_assertions => data_['lenient_assertions'],
           :proj4 => proj4_,
           :coord_sys => coord_sys_,
         })
@@ -193,6 +197,7 @@ module RGeo
         coder_['has_z_coordinate'] = @has_z
         coder_['has_m_coordinate'] = @has_m
         coder_['srid'] = @srid
+        coder_['lenient_assertions'] = @lenient_assertions
         coder_['wkt_generator'] = @wkt_generator._properties
         coder_['wkb_generator'] = @wkb_generator._properties
         coder_['wkt_parser'] = @wkt_parser._properties
@@ -220,6 +225,8 @@ module RGeo
           @has_z
         when :has_m_coordinate
           @has_m
+        when :uses_lenient_assertions
+          @lenient_assertions
         when :is_cartesian
           true
         else

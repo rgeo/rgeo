@@ -160,9 +160,10 @@ module RGeo
       end
 
 
-      def relate(rhs_, pattern_)
-        @zgeometry.relate(rhs_, pattern_)
+      def relate?(rhs_, pattern_)
+        @zgeometry.relate?(rhs_, pattern_)
       end
+      alias_method :relate, :relate?  # DEPRECATED
 
 
       def distance(rhs_)

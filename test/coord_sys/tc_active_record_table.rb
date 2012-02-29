@@ -62,11 +62,10 @@ module RGeo
 
             class TestPostGIS < ::Test::Unit::TestCase  # :nodoc:
 
-              class ARBase < ::ActiveRecord::Base
-                establish_connection(PostGIS_CONFIG)
-              end
-
-              @@db = ::RGeo::CoordSys::SRSDatabase::ActiveRecordTable.new(:ar_base_class => ARBase, :auth_name_column => 'auth_name', :auth_srid_column => 'auth_srid', :srtext_column => 'srtext', :proj4text_column => 'proj4text')
+              @@db = ::RGeo::CoordSys::SRSDatabase::ActiveRecordTable.new(
+                :database_config => PostGIS_CONFIG,
+                :auth_name_column => 'auth_name', :auth_srid_column => 'auth_srid',
+                :srtext_column => 'srtext', :proj4text_column => 'proj4text')
 
 
               def test_4326

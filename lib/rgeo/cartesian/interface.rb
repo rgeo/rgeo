@@ -111,6 +111,12 @@ module RGeo
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
+      # [<tt>:uses_lenient_assertions</tt>]
+      #   If set to true, assertion checking is disabled. This includes
+      #   simplicity checking on LinearRing, and validity checks on
+      #   Polygon and MultiPolygon. This may speed up creation of certain
+      #   objects, at the expense of not doing the proper checking for
+      #   OGC compliance. Default is false.
       # [<tt>:wkt_parser</tt>]
       #   Configure the parser for WKT. The value is a hash of
       #   configuration parameters for WKRep::WKTParser.new. Default is

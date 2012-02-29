@@ -74,6 +74,7 @@ module RGeo
         if @coord_sys.kind_of?(::String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
         end
+        @lenient_assertions = opts_[:uses_lenient_assertions]
 
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
@@ -210,6 +211,8 @@ module RGeo
           @support_z
         when :has_m_coordinate
           @support_m
+        when :uses_lenient_assertions
+          @lenient_assertions
         when :is_geographic
           true
         else
