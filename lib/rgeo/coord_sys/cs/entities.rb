@@ -242,6 +242,10 @@ module RGeo
 
         # Psych support
 
+        def encode_with(coder_)  # :nodoc:
+          coder_['wkt'] = to_wkt
+        end
+
         def init_with(coder_)  # :nodoc:
           temp_ = CS.create_from_wkt(coder_.type == :scalar ? coder_.scalar : coder_['wkt'] )
           if temp_.class == self.class
@@ -251,10 +255,6 @@ module RGeo
           else
             raise ::TypeError, 'Bad YAML data'
           end
-        end
-
-        def encode_with(coder_)  # :nodoc:
-          coder_['wkt'] = to_wkt
         end
 
 

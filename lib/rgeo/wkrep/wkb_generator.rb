@@ -125,10 +125,10 @@ module RGeo
 
       def _properties  # :nodoc:
         {
-          :type_format => @type_format,
-          :emit_ewkb_srid => @emit_ewkb_srid,
-          :hex_format => @hex_format,
-          :little_endian => @little_endian,
+          'type_format' => @type_format.to_s,
+          'emit_ewkb_srid' => @emit_ewkb_srid,
+          'hex_format' => @hex_format,
+          'little_endian' => @little_endian,
         }
       end
 

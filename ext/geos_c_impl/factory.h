@@ -98,6 +98,10 @@ typedef struct {
   GEOSWKBWriter* wkb_writer;
   VALUE wkrep_wkt_generator;
   VALUE wkrep_wkb_generator;
+  VALUE wkrep_wkt_parser;
+  VALUE wkrep_wkb_parser;
+  VALUE proj4_obj;
+  VALUE coord_sys_obj;
   int flags;
   int srid;
   int buffer_resolution;

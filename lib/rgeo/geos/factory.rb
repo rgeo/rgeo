@@ -117,7 +117,8 @@ module RGeo
           srid_ ||= coord_sys_.authority_code if coord_sys_
 
           # Create the factory and set instance variables
-          result_ = _create(flags_, srid_.to_i, buffer_resolution_, wkt_generator_, wkb_generator_)
+          result_ = _create(flags_, srid_.to_i, buffer_resolution_,
+            wkt_generator_, wkb_generator_, proj4_, coord_sys_)
 
           # Interpret parser options
           wkt_parser_ = opts_[:wkt_parser]
@@ -138,14 +139,7 @@ module RGeo
           else
             wkb_parser_ = WKRep::WKBParser.new(result_)
           end
-
-          # Set instance variables
-          result_.instance_variable_set(:@proj4, proj4_)
-          result_.instance_variable_set(:@coord_sys, coord_sys_)
-          result_.instance_variable_set(:@wkt_parser, wkt_parser_)
-          result_.instance_variable_set(:@wkb_parser, wkb_parser_)
-          result_.instance_variable_set(:@wkt_generator, wkt_generator_)
-          result_.instance_variable_set(:@wkb_generator, wkb_generator_)
+          result_._set_wkrep_parsers(wkt_parser_, wkb_parser_)
 
           # Return the result
           result_
@@ -166,9 +160,116 @@ module RGeo
       def eql?(rhs_)
         rhs_.is_a?(Factory) && rhs_.srid == _srid &&
           rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
-          rhs_.proj4 == @proj4
+          rhs_.proj4 == _proj4
       end
       alias_method :==, :eql?
+
+
+      # Marshal support
+
+      def marshal_dump  # :nodoc:
+        hash_ = {
+          'hasz' => (_flags & 0x2 != 0),
+          'hasm' => (_flags & 0x4 != 0),
+          'srid' => _srid,
+          'bufr' => _buffer_resolution,
+          'wktg' => _wkt_generator._properties,
+          'wkbg' => _wkb_generator._properties,
+          'wktp' => _wkt_parser._properties,
+          'wkbp' => _wkb_parser._properties,
+          'lmpa' => (_flags & 0x1 != 0),
+          'apre' => ((_flags & 0x8) >> 3),
+        }
+        if (proj4_ = self._proj4)
+          hash_['proj4'] = proj4_.marshal_dump
+        end
+        if (coord_sys_ = self._coord_sys)
+          hash_['cs'] = coord_sys_.to_wkt
+        end
+        hash_
+      end
+
+      def marshal_load(data_)  # :nodoc:
+        if CoordSys::Proj4.supported? && (proj4_data_ = data_['proj4'])
+          proj4_ = CoordSys::Proj4.allocate
+          proj4_.marshal_load(proj4_data_)
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = data_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
+        else
+          coord_sys_ = nil
+        end
+        initialize_copy(Factory.create(
+          :has_z_coordinate => data_['hasz'],
+          :has_m_coordinate => data_['hasm'],
+          :srid => data_['srid'],
+          :buffer_resolution => data_['bufr'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(data_['wktg']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(data_['wkbg']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
+          :uses_lenient_multi_polygon_assertions => data_['lmpa'],
+          :auto_prepare => (data_['apre'] == 0 ? :disabled : :simple),
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        ))
+      end
+
+
+      # Psych support
+
+      def encode_with(coder_)  # :nodoc:
+        coder_['has_z_coordinate'] = (_flags & 0x2 != 0)
+        coder_['has_m_coordinate'] = (_flags & 0x4 != 0)
+        coder_['srid'] = _srid
+        coder_['buffer_resolution'] = _buffer_resolution
+        coder_['lenient_multi_polygon_assertions'] = (_flags & 0x1 != 0)
+        coder_['wkt_generator'] = _wkt_generator._properties
+        coder_['wkb_generator'] = _wkb_generator._properties
+        coder_['wkt_parser'] = _wkt_parser._properties
+        coder_['wkb_parser'] = _wkb_parser._properties
+        coder_['auto_prepare'] = ((_flags & 0x8) == 0 ? 'disabled' : 'simple')
+        if (proj4_ = self._proj4)
+          str_ = proj4_.original_str || proj4_.canonical_str
+          coder_['proj4'] = proj4_.radians? ? {'proj4' => str_, 'radians' => true} : str_
+        end
+        if (coord_sys_ = self._coord_sys)
+          coder_['coord_sys'] = coord_sys_.to_wkt
+        end
+      end
+
+      def init_with(coder_)  # :nodoc:
+        if (proj4_data_ = coder_['proj4'])
+          if proj4_data_.is_a?(::Hash)
+            proj4_ = CoordSys::Proj4.create(proj4_data_['proj4'], :radians => proj4_data_['radians'])
+          else
+            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
+          end
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = coder_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
+        else
+          coord_sys_ = nil
+        end
+        initialize_copy(Factory.create(
+          :has_z_coordinate => coder_['has_z_coordinate'],
+          :has_m_coordinate => coder_['has_m_coordinate'],
+          :srid => coder_['srid'],
+          :buffer_resolution => coder_['buffer_resolution'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(coder_['wkt_generator']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(coder_['wkb_generator']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
+          :auto_prepare => coder_['auto_prepare'] == 'disabled' ? :disabled : :simple,
+          :uses_lenient_multi_polygon_assertions => coder_['lenient_multi_polygon_assertions'],
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        ))
+      end
 
 
       # Returns the SRID of geometries created by this factory.
@@ -218,8 +319,8 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
-        if @wkt_parser
-          @wkt_parser.parse(str_)
+        if (wkt_parser_ = self._wkt_parser)
+          wkt_parser_.parse(str_)
         else
           _parse_wkt_impl(str_)
         end
@@ -229,8 +330,8 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkb
 
       def parse_wkb(str_)
-        if @wkb_parser
-          @wkb_parser.parse(str_)
+        if (wkb_parser_ = self._wkb_parser)
+          wkb_parser_.parse(str_)
         else
           _parse_wkb_impl(str_)
         end
@@ -314,14 +415,14 @@ module RGeo
       # See ::RGeo::Feature::Factory#proj4
 
       def proj4
-        @proj4
+        _proj4
       end
 
 
       # See ::RGeo::Feature::Factory#coord_sys
 
       def coord_sys
-        @coord_sys
+        _coord_sys
       end
 
 
@@ -340,7 +441,7 @@ module RGeo
           # factories are zm-compatible and proj4-compatible.
           if original_.factory != self && ntype_ == type_ &&
               original_.factory._flags & 0x6 == _flags & 0x6 &&
-              (!project_ || original_.factory.proj4 == @proj4)
+              (!project_ || original_.factory.proj4 == _proj4)
           then
             result_ = original_.dup
             result_._set_factory(self)
@@ -349,7 +450,7 @@ module RGeo
           # LineString conversion optimization.
           if (original_.factory != self || ntype_ != type_) &&
               original_.factory._flags & 0x6 == _flags & 0x6 &&
-              (!project_ || original_.factory.proj4 == @proj4) &&
+              (!project_ || original_.factory.proj4 == _proj4) &&
               type_.subtype_of?(Feature::LineString) && ntype_.subtype_of?(Feature::LineString)
           then
             return IMPL_CLASSES[ntype_]._copy_from(self, original_)

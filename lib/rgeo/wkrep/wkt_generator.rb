@@ -116,10 +116,10 @@ module RGeo
 
       def _properties  # :nodoc:
         {
-          :tag_format => @tag_format,
-          :emit_ewkt_srid => @emit_ewkt_srid,
-          :square_brackets => @square_brackets,
-          :convert_case => @convert_case,
+          'tag_format' => @tag_format.to_s,
+          'emit_ewkt_srid' => @emit_ewkt_srid,
+          'square_brackets' => @square_brackets,
+          'convert_case' => @convert_case ? @convert_case.to_s : nil,
         }
       end
 

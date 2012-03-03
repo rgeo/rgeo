@@ -56,6 +56,12 @@ module RGeo
       end
 
 
+      def _set_factories(geography_factory_, projection_factory_)  # :nodoc:
+        @geography_factory = geography_factory_
+        @projection_factory = projection_factory_
+      end
+
+
       def projection_factory
         @projection_factory
       end

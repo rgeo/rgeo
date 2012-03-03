@@ -45,6 +45,7 @@ end
 
 
 # Implementation files
+require 'rgeo/impl_helper/utils'
 require 'rgeo/impl_helper/math'
 require 'rgeo/impl_helper/basic_geometry_methods'
 require 'rgeo/impl_helper/basic_geometry_collection_methods'

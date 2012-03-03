@@ -42,22 +42,25 @@ require ::File.expand_path('../common/factory_tests.rb', ::File.dirname(__FILE__
 
 module RGeo
   module Tests  # :nodoc:
-    module GeosCAPI  # :nodoc:
+    module SphericalGeographic  # :nodoc:
 
       class TestFactory < ::Test::Unit::TestCase  # :nodoc:
 
 
         def setup
-          @factory = ::RGeo::Geos.factory(:srid => 1000)
-          @srid = 1000
+          @factory = ::RGeo::Geographic.spherical_factory
+          @srid = 4055
         end
 
 
         include ::RGeo::Tests::Common::FactoryTests
 
 
+        undef_method :test_srid_preserved_through_geom_operations
+
+
       end
 
     end
   end
-end if ::RGeo::Geos.capi_supported?
+end

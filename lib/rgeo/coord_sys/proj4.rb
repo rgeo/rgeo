@@ -96,17 +96,17 @@ module RGeo
 
       # Psych support
 
+      def encode_with(coder_)  # :nodoc:
+        coder_['proj4'] = original_str || canonical_str
+        coder_['radians'] = radians?
+      end
+
       def init_with(coder_)  # :nodoc:
         if coder_.type == :scalar
           _set_value(coder_.scalar, false)
         else
           _set_value(coder_['proj4'], coder_['radians'])
         end
-      end
-
-      def encode_with(coder_)  # :nodoc:
-        coder_['proj4'] = original_str || canonical_str
-        coder_['radians'] = radians?
       end
 
 

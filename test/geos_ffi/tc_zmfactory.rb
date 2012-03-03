@@ -37,6 +37,8 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/factory_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
@@ -48,7 +50,11 @@ module RGeo
         def setup
           @factory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true,
             :srid => 1000, :buffer_resolution => 2, :native_interface => :ffi)
+          @srid = 1000
         end
+
+
+        include ::RGeo::Tests::Common::FactoryTests
 
 
         def test_factory_parts

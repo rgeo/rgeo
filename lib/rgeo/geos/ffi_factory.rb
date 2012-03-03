@@ -56,8 +56,8 @@ module RGeo
         # Main flags
         @uses_lenient_multi_polygon_assertions = opts_[:lenient_multi_polygon_assertions] ||
           opts_[:uses_lenient_multi_polygon_assertions]
-        @has_z = opts_[:has_z_coordinate]
-        @has_m = opts_[:has_m_coordinate]
+        @has_z = opts_[:has_z_coordinate] ? true : false
+        @has_m = opts_[:has_m_coordinate] ? true : false
         if @has_z && @has_m
           raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
         end
@@ -157,6 +157,107 @@ module RGeo
           @has_m == rhs_.property(:has_m_coordinate)
       end
       alias_method :==, :eql?
+
+
+      # Marshal support
+
+      def marshal_dump  # :nodoc:
+        hash_ = {
+          'hasz' => @has_z,
+          'hasm' => @has_m,
+          'srid' => @srid,
+          'bufr' => @buffer_resolution,
+          'wktg' => @wkt_generator._properties,
+          'wkbg' => @wkb_generator._properties,
+          'wktp' => @wkt_parser._properties,
+          'wkbp' => @wkb_parser._properties,
+          'lmpa' => @uses_lenient_multi_polygon_assertions,
+          'apre' => @_auto_prepare,
+        }
+        hash_['proj4'] = @proj4.marshal_dump if @proj4
+        hash_['cs'] = @coord_sys.to_wkt if @coord_sys
+        hash_
+      end
+
+      def marshal_load(data_)  # :nodoc:
+        if CoordSys::Proj4.supported? && (proj4_data_ = data_['proj4'])
+          proj4_ = CoordSys::Proj4.allocate
+          proj4_.marshal_load(proj4_data_)
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = data_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
+        else
+          coord_sys_ = nil
+        end
+        initialize(
+          :has_z_coordinate => data_['hasz'],
+          :has_m_coordinate => data_['hasm'],
+          :srid => data_['srid'],
+          :buffer_resolution => data_['bufr'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(data_['wktg']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(data_['wkbg']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
+          :uses_lenient_multi_polygon_assertions => data_['lmpa'],
+          :auto_prepare => (data_['apre'] ? :simple : :disabled),
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        )
+      end
+
+
+      # Psych support
+
+      def encode_with(coder_)  # :nodoc:
+        coder_['has_z_coordinate'] = @has_z
+        coder_['has_m_coordinate'] = @has_m
+        coder_['srid'] = @srid
+        coder_['buffer_resolution'] = @buffer_resolution
+        coder_['lenient_multi_polygon_assertions'] = @uses_lenient_multi_polygon_assertions
+        coder_['wkt_generator'] = @wkt_generator._properties
+        coder_['wkb_generator'] = @wkb_generator._properties
+        coder_['wkt_parser'] = @wkt_parser._properties
+        coder_['wkb_parser'] = @wkb_parser._properties
+        coder_['auto_prepare'] = @_auto_prepare ? 'simple' : 'disabled'
+        if @proj4
+          str_ = @proj4.original_str || @proj4.canonical_str
+          coder_['proj4'] = @proj4.radians? ? {'proj4' => str_, 'radians' => true} : str_
+        end
+        coder_['coord_sys'] = @coord_sys.to_wkt if @coord_sys
+      end
+
+      def init_with(coder_)  # :nodoc:
+        if (proj4_data_ = coder_['proj4'])
+          if proj4_data_.is_a?(::Hash)
+            proj4_ = CoordSys::Proj4.create(proj4_data_['proj4'], :radians => proj4_data_['radians'])
+          else
+            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
+          end
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = coder_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
+        else
+          coord_sys_ = nil
+        end
+        initialize(
+          :has_z_coordinate => coder_['has_z_coordinate'],
+          :has_m_coordinate => coder_['has_m_coordinate'],
+          :srid => coder_['srid'],
+          :buffer_resolution => coder_['buffer_resolution'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(coder_['wkt_generator']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(coder_['wkb_generator']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
+          :auto_prepare => coder_['auto_prepare'] == 'disabled' ? :disabled : :simple,
+          :uses_lenient_multi_polygon_assertions => coder_['lenient_multi_polygon_assertions'],
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        )
+      end
 
 
       # Returns the SRID of geometries created by this factory.

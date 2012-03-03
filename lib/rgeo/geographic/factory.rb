@@ -61,7 +61,7 @@ module RGeo
         @multi_polygon_class = Geographic.const_get("#{impl_prefix_}MultiPolygonImpl")
         @support_z = opts_[:has_z_coordinate] ? true : false
         @support_m = opts_[:has_m_coordinate] ? true : false
-        @srid = opts_[:srid] || 4326
+        @srid = (opts_[:srid] || 4326).to_i
         @proj4 = opts_[:proj4]
         if CoordSys::Proj4.supported?
           if @proj4.kind_of?(::String) || @proj4.kind_of?(::Hash)
@@ -74,7 +74,7 @@ module RGeo
         if @coord_sys.kind_of?(::String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
         end
-        @lenient_assertions = opts_[:uses_lenient_assertions]
+        @lenient_assertions = opts_[:uses_lenient_assertions] ? true : false
 
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
@@ -104,6 +104,7 @@ module RGeo
         else
           @wkb_parser = WKRep::WKBParser.new(self)
         end
+        @projector = nil
       end
 
 
@@ -122,6 +123,125 @@ module RGeo
           @proj4 == rhs_.instance_variable_get(:@proj4)
       end
       alias_method :==, :eql?
+
+
+      # Marshal support
+
+      def marshal_dump  # :nodoc:
+        hash_ = {
+          'pref' => @impl_prefix,
+          'hasz' => @support_z,
+          'hasm' => @support_m,
+          'srid' => @srid,
+          'wktg' => @wkt_generator._properties,
+          'wkbg' => @wkb_generator._properties,
+          'wktp' => @wkt_parser._properties,
+          'wkbp' => @wkb_parser._properties,
+          'lena' => @lenient_assertions,
+        }
+        hash_['proj4'] = @proj4.marshal_dump if @proj4
+        hash_['cs'] = @coord_sys.to_wkt if @coord_sys
+        if @projector
+          hash_['prjc'] = @projector.class.name.sub(/.*::/, '')
+          hash_['prjf'] = @projector.projection_factory
+        end
+        hash_
+      end
+
+      def marshal_load(data_)  # :nodoc:
+        if CoordSys::Proj4.supported? && (proj4_data_ = data_['proj4'])
+          proj4_ = CoordSys::Proj4.allocate
+          proj4_.marshal_load(proj4_data_)
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = data_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
+        else
+          coord_sys_ = nil
+        end
+        initialize(data_['pref'],
+          :has_z_coordinate => data_['hasz'],
+          :has_m_coordinate => data_['hasm'],
+          :srid => data_['srid'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(data_['wktg']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(data_['wkbg']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
+          :uses_lenient_assertions => data_['lena'],
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        )
+        if (projklass_ = data_['prjc']) && (projfactory_ = data_['prjf'])
+          klass_ = ::RGeo::Geographic.const_get(projklass_) rescue nil
+          if klass_
+            projector_ = klass_.allocate
+            projector_._set_factories(self, projfactory_)
+            _set_projector(projector_)
+          end
+        end
+      end
+
+
+      # Psych support
+
+      def encode_with(coder_)  # :nodoc:
+        coder_['impl_prefix'] = @impl_prefix
+        coder_['has_z_coordinate'] = @support_z
+        coder_['has_m_coordinate'] = @support_m
+        coder_['srid'] = @srid
+        coder_['wkt_generator'] = @wkt_generator._properties
+        coder_['wkb_generator'] = @wkb_generator._properties
+        coder_['wkt_parser'] = @wkt_parser._properties
+        coder_['wkb_parser'] = @wkb_parser._properties
+        coder_['lenient_assertions'] = @lenient_assertions
+        if @proj4
+          str_ = @proj4.original_str || @proj4.canonical_str
+          coder_['proj4'] = @proj4.radians? ? {'proj4' => str_, 'radians' => true} : str_
+        end
+        coder_['coord_sys'] = @coord_sys.to_wkt if @coord_sys
+        if @projector
+          coder_['projector_class'] = @projector.class.name.sub(/.*::/, '')
+          coder_['projection_factory'] = @projector.projection_factory
+        end
+      end
+
+      def init_with(coder_)  # :nodoc:
+        if (proj4_data_ = coder_['proj4'])
+          if proj4_data_.is_a?(::Hash)
+            proj4_ = CoordSys::Proj4.create(proj4_data_['proj4'], :radians => proj4_data_['radians'])
+          else
+            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
+          end
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = coder_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
+        else
+          coord_sys_ = nil
+        end
+        initialize(coder_['impl_prefix'],
+          :has_z_coordinate => coder_['has_z_coordinate'],
+          :has_m_coordinate => coder_['has_m_coordinate'],
+          :srid => coder_['srid'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(coder_['wkt_generator']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(coder_['wkb_generator']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
+          :uses_lenient_assertions => coder_['lenient_assertions'],
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        )
+        if (projklass_ = coder_['projector_class']) && (projfactory_ = coder_['projection_factory'])
+          klass_ = ::RGeo::Geographic.const_get(projklass_) rescue nil
+          if klass_
+            projector_ = klass_.allocate
+            projector_._set_factories(self, projfactory_)
+            _set_projector(projector_)
+          end
+        end
+      end
 
 
       # Returns the srid reported by this factory.

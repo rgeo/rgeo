@@ -147,51 +147,22 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize({
+        initialize(
           :has_z_coordinate => data_['hasz'],
           :has_m_coordinate => data_['hasm'],
           :srid => data_['srid'],
-          :wkt_generator => data_['wktg'],
-          :wkb_generator => data_['wkbg'],
-          :wkt_parser => data_['wktp'],
-          :wkb_parser => data_['wkbp'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(data_['wktg']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(data_['wkbg']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
           :uses_lenient_assertions => data_['lena'],
           :proj4 => proj4_,
-          :coord_sys => coord_sys_,
-        })
+          :coord_sys => coord_sys_
+        )
       end
 
 
       # Psych support
-
-      def init_with(coder_)  # :nodoc:
-        if (proj4_data_ = coder_['proj4'])
-          if proj4_data_.is_a?(::Hash)
-            proj4_ = CoordSys::Proj4.create(proj4_data_['proj4'], :radians => proj4_data_['radians'])
-          else
-            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
-          end
-        else
-          proj4_ = nil
-        end
-        if (coord_sys_data_ = data_['cs'])
-          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
-        else
-          coord_sys_ = nil
-        end
-        initialize({
-          :has_z_coordinate => data_['has_z_coordinate'],
-          :has_m_coordinate => data_['has_m_coordinate'],
-          :srid => data_['srid'],
-          :wkt_generator => data_['wkt_generator'],
-          :wkb_generator => data_['wkb_generator'],
-          :wkt_parser => data_['wkt_parser'],
-          :wkb_parser => data_['wkb_parser'],
-          :uses_lenient_assertions => data_['lenient_assertions'],
-          :proj4 => proj4_,
-          :coord_sys => coord_sys_,
-        })
-      end
 
       def encode_with(coder_)  # :nodoc:
         coder_['has_z_coordinate'] = @has_z
@@ -207,6 +178,35 @@ module RGeo
           coder_['proj4'] = @proj4.radians? ? {'proj4' => str_, 'radians' => true} : str_
         end
         coder_['coord_sys'] = @coord_sys.to_wkt if @coord_sys
+      end
+
+      def init_with(coder_)  # :nodoc:
+        if (proj4_data_ = coder_['proj4'])
+          if proj4_data_.is_a?(::Hash)
+            proj4_ = CoordSys::Proj4.create(proj4_data_['proj4'], :radians => proj4_data_['radians'])
+          else
+            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
+          end
+        else
+          proj4_ = nil
+        end
+        if (coord_sys_data_ = coder_['cs'])
+          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
+        else
+          coord_sys_ = nil
+        end
+        initialize(
+          :has_z_coordinate => coder_['has_z_coordinate'],
+          :has_m_coordinate => coder_['has_m_coordinate'],
+          :srid => coder_['srid'],
+          :wkt_generator => ImplHelper::Utils.symbolize_hash(coder_['wkt_generator']),
+          :wkb_generator => ImplHelper::Utils.symbolize_hash(coder_['wkb_generator']),
+          :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
+          :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
+          :uses_lenient_assertions => coder_['lenient_assertions'],
+          :proj4 => proj4_,
+          :coord_sys => coord_sys_
+        )
       end
 
 

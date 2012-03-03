@@ -42,14 +42,14 @@ require ::File.expand_path('../common/factory_tests.rb', ::File.dirname(__FILE__
 
 module RGeo
   module Tests  # :nodoc:
-    module GeosCAPI  # :nodoc:
+    module SimpleMercator  # :nodoc:
 
       class TestFactory < ::Test::Unit::TestCase  # :nodoc:
 
 
         def setup
-          @factory = ::RGeo::Geos.factory(:srid => 1000)
-          @srid = 1000
+          @factory = ::RGeo::Geographic.simple_mercator_factory
+          @srid = 4326
         end
 
 
@@ -60,4 +60,4 @@ module RGeo
 
     end
   end
-end if ::RGeo::Geos.capi_supported?
+end

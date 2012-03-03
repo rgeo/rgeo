@@ -69,7 +69,9 @@ static void message_handler(const char* fmt, ...)
 
 static void destroy_factory_func(RGeo_FactoryData* data)
 {
-  GEOSContextHandle_t context = data->geos_context;
+  GEOSContextHandle_t context;
+
+  context = data->geos_context;
   if (data->wkt_reader) {
     GEOSWKTReader_destroy_r(context, data->wkt_reader);
   }
@@ -117,6 +119,18 @@ static void mark_factory_func(RGeo_FactoryData* data)
   }
   if (!NIL_P(data->wkrep_wkb_generator)) {
     rb_gc_mark(data->wkrep_wkb_generator);
+  }
+  if (!NIL_P(data->wkrep_wkt_parser)) {
+    rb_gc_mark(data->wkrep_wkt_parser);
+  }
+  if (!NIL_P(data->wkrep_wkb_parser)) {
+    rb_gc_mark(data->wkrep_wkb_parser);
+  }
+  if (!NIL_P(data->proj4_obj)) {
+    rb_gc_mark(data->proj4_obj);
+  }
+  if (!NIL_P(data->coord_sys_obj)) {
+    rb_gc_mark(data->coord_sys_obj);
   }
 }
 
@@ -228,7 +242,7 @@ static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
 
 
 static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE buffer_resolution,
-  VALUE wkt_generator, VALUE wkb_generator)
+  VALUE wkt_generator, VALUE wkb_generator, VALUE proj4_obj, VALUE coord_sys_obj)
 {
   VALUE result;
   RGeo_FactoryData* data;
@@ -252,6 +266,10 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       data->wkb_writer = NULL;
       data->wkrep_wkt_generator = wkt_generator;
       data->wkrep_wkb_generator = wkb_generator;
+      data->wkrep_wkt_parser = Qnil;
+      data->wkrep_wkb_parser = Qnil;
+      data->proj4_obj = proj4_obj;
+      data->coord_sys_obj = coord_sys_obj;
       result = Data_Wrap_Struct(klass, mark_factory_func, destroy_factory_func, data);
     }
     else {
@@ -259,6 +277,109 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
     }
   }
   return result;
+}
+
+
+static VALUE alloc_factory(VALUE klass)
+{
+  return cmethod_factory_create(klass, INT2NUM(0), INT2NUM(0), INT2NUM(0), Qnil, Qnil, Qnil, Qnil);
+}
+
+
+static VALUE method_factory_initialize_copy(VALUE self, VALUE orig)
+{
+  RGeo_FactoryData* self_data;
+  RGeo_FactoryData* orig_data;
+  GEOSContextHandle_t context;
+
+  // Clear out existing data
+  self_data = RGEO_FACTORY_DATA_PTR(self);
+  context = self_data->geos_context;
+  if (self_data->wkt_reader) {
+    GEOSWKTReader_destroy_r(context, self_data->wkt_reader);
+    self_data->wkt_reader = NULL;
+  }
+  if (self_data->wkb_reader) {
+    GEOSWKBReader_destroy_r(context, self_data->wkb_reader);
+    self_data->wkb_reader = NULL;
+  }
+  if (self_data->wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, self_data->wkt_writer);
+    self_data->wkt_writer = NULL;
+  }
+  if (self_data->wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, self_data->wkb_writer);
+    self_data->wkb_writer = NULL;
+  }
+  self_data->wkrep_wkt_generator = Qnil;
+  self_data->wkrep_wkb_generator = Qnil;
+  self_data->wkrep_wkt_parser = Qnil;
+  self_data->wkrep_wkb_parser = Qnil;
+  self_data->proj4_obj = Qnil;
+  self_data->coord_sys_obj = Qnil;
+
+  // Copy new data from original object
+  if (TYPE(orig) == T_DATA && RDATA(orig)->dfree == (RUBY_DATA_FUNC)destroy_factory_func) {
+    orig_data = RGEO_FACTORY_DATA_PTR(orig);
+    self_data->flags = orig_data->flags;
+    self_data->srid = orig_data->srid;
+    self_data->buffer_resolution = orig_data->buffer_resolution;
+    self_data->wkrep_wkt_generator = orig_data->wkrep_wkt_generator;
+    self_data->wkrep_wkb_generator = orig_data->wkrep_wkb_generator;
+    self_data->wkrep_wkt_parser = orig_data->wkrep_wkt_parser;
+    self_data->wkrep_wkb_parser = orig_data->wkrep_wkb_parser;
+    self_data->proj4_obj = orig_data->proj4_obj;
+    self_data->coord_sys_obj = orig_data->coord_sys_obj;
+  }
+  return self;
+}
+
+
+static VALUE method_set_wkrep_parsers(VALUE self, VALUE wkt_parser, VALUE wkb_parser)
+{
+  RGeo_FactoryData* self_data;
+
+  self_data = RGEO_FACTORY_DATA_PTR(self);
+  self_data->wkrep_wkt_parser = wkt_parser;
+  self_data->wkrep_wkb_parser = wkb_parser;
+
+  return self;
+}
+
+
+static VALUE method_get_proj4(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->proj4_obj;
+}
+
+
+static VALUE method_get_coord_sys(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->coord_sys_obj;
+}
+
+
+static VALUE method_get_wkt_generator(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkt_generator;
+}
+
+
+static VALUE method_get_wkb_generator(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkb_generator;
+}
+
+
+static VALUE method_get_wkt_parser(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkt_parser;
+}
+
+
+static VALUE method_get_wkb_parser(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkb_parser;
 }
 
 
@@ -286,12 +407,21 @@ RGeo_Globals* rgeo_init_geos_factory()
 
   // Add C methods to the factory.
   geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));
+  rb_define_alloc_func(geos_factory_class, alloc_factory);
+  rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
   rb_define_method(geos_factory_class, "_parse_wkb_impl", method_factory_parse_wkb, 1);
   rb_define_method(geos_factory_class, "_srid", method_factory_srid, 0);
   rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
-  rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 5);
+  rb_define_method(geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
+  rb_define_method(geos_factory_class, "_proj4", method_get_proj4, 0);
+  rb_define_method(geos_factory_class, "_coord_sys", method_get_coord_sys, 0);
+  rb_define_method(geos_factory_class, "_wkt_generator", method_get_wkt_generator, 0);
+  rb_define_method(geos_factory_class, "_wkb_generator", method_get_wkb_generator, 0);
+  rb_define_method(geos_factory_class, "_wkt_parser", method_get_wkt_parser, 0);
+  rb_define_method(geos_factory_class, "_wkb_parser", method_get_wkb_parser, 0);
+  rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 7);
 
   // Wrap the globals in a Ruby object and store it off so we have access
   // to it later. Each factory instance will reference it internally.

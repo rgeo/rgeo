@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Tests for the GEOS factory
+# Math constants and tools
 #
 # -----------------------------------------------------------------------------
 # Copyright 2010-2012 Daniel Azuma
@@ -34,30 +34,34 @@
 ;
 
 
-require 'test/unit'
-require 'rgeo'
-
-require ::File.expand_path('../common/factory_tests.rb', ::File.dirname(__FILE__))
-
-
 module RGeo
-  module Tests  # :nodoc:
-    module GeosCAPI  # :nodoc:
 
-      class TestFactory < ::Test::Unit::TestCase  # :nodoc:
+  module ImplHelper  # :nodoc:
 
+    module Utils  # :nodoc:
 
-        def setup
-          @factory = ::RGeo::Geos.factory(:srid => 1000)
-          @srid = 1000
+      class << self
+
+        def stringize_hash(hash_)
+          nhash_ = {}
+          hash_.each do |k_, v_|
+            nhash_[k_.is_a?(::Symbol) ? k_.to_s : k_] = v_.is_a?(::Symbol) ? v_.to_s : v_
+          end
+          nhash_
         end
 
-
-        include ::RGeo::Tests::Common::FactoryTests
-
+        def symbolize_hash(hash_)
+          nhash_ = {}
+          hash_.each do |k_, v_|
+            nhash_[k_.is_a?(::String) ? k_.to_sym : k_] = v_.is_a?(::String) ? v_.to_sym : v_
+          end
+          nhash_
+        end
 
       end
 
     end
+
   end
-end if ::RGeo::Geos.capi_supported?
+
+end

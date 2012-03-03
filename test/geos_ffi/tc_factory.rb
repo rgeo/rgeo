@@ -37,6 +37,8 @@
 require 'test/unit'
 require 'rgeo'
 
+require ::File.expand_path('../common/factory_tests.rb', ::File.dirname(__FILE__))
+
 
 module RGeo
   module Tests  # :nodoc:
@@ -46,42 +48,12 @@ module RGeo
 
 
         def setup
-          @factory = ::RGeo::Geos.factory(:srid => 4326, :native_interface => :ffi)
+          @factory = ::RGeo::Geos.factory(:srid => 1000, :native_interface => :ffi)
+          @srid = 1000
         end
 
 
-        def test_srid_preserved_through_factory
-          geom_ = @factory.point(-10, 20)
-          assert_equal(4326, geom_.srid)
-          factory_ = geom_.factory
-          assert_equal(4326, factory_.srid)
-          geom2_ = factory_.point(-20, 25)
-          assert_equal(4326, geom2_.srid)
-        end
-
-
-        def test_srid_preserved_through_geom_operations
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = @factory.point(-20, 25)
-          geom3_ = geom1_.union(geom2_)
-          assert_equal(4326, geom3_.srid)
-          assert_equal(4326, geom3_.geometry_n(0).srid)
-          assert_equal(4326, geom3_.geometry_n(1).srid)
-        end
-
-
-        def test_srid_preserved_through_geom_functions
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = geom1_.boundary
-          assert_equal(4326, geom2_.srid)
-        end
-
-
-        def test_srid_preserved_through_dup
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = geom1_.clone
-          assert_equal(4326, geom2_.srid)
-        end
+        include ::RGeo::Tests::Common::FactoryTests
 
 
       end

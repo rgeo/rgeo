@@ -195,8 +195,6 @@ module RGeo
       #   operation that would benefit from it is called. The latter
       #   never automatically generates a prepared geometry (unless you
       #   generate one explicitly using the <tt>prepare!</tt> method).
-      #   Currently, prepared geometries are supported under CAPI but
-      #   not FFI.
 
       def factory(opts_={})
         if supported?

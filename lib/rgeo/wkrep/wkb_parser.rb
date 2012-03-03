@@ -130,10 +130,10 @@ module RGeo
 
       def _properties  # :nodoc:
         {
-          :support_ewkb => @support_ewkb,
-          :support_wkb12 => @support_wkb12,
-          :ignore_extra_bytes => @ignore_extra_bytes,
-          :default_srid => @default_srid,
+          'support_ewkb' => @support_ewkb,
+          'support_wkb12' => @support_wkb12,
+          'ignore_extra_bytes' => @ignore_extra_bytes,
+          'default_srid' => @default_srid,
         }
       end
 
