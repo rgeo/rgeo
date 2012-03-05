@@ -132,7 +132,7 @@ module RGeo
         wkb_parser_ = opts_[:wkb_parser]
         case wkb_parser_
         when :geos
-          @wkb_reader = ::Geos::WktReader.new
+          @wkb_reader = ::Geos::WkbReader.new
           @wkb_parser = nil
         when ::Hash
           @wkb_parser = WKRep::WKBParser.new(self, wkb_parser_)
@@ -308,7 +308,7 @@ module RGeo
 
       def parse_wkt(str_)
         if @wkt_reader
-          @wkt_reader.read(str_)
+          wrap_fg_geom(@wkt_reader.read(str_))
         else
           @wkt_parser.parse(str_)
         end
@@ -319,7 +319,7 @@ module RGeo
 
       def parse_wkb(str_)
         if @wkb_reader
-          @wkb_reader.read(str_)
+          wrap_fg_geom(@wkb_reader.read(str_))
         else
           @wkb_parser.parse(str_)
         end

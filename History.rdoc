@@ -2,6 +2,7 @@
 
 * Geometry#relate? was incorrectly spelled "Geometry#relate" in the Feature::Geometry module and in some (but not all) implementations, leading to various types of method not found errors. Fixed. We'll keep #relate as a deprecated alias for the time being.
 * Cloning a Geos factory caused a segfault. Fixed.
+* Parsing a "well-known" format string using the ffi-geos implementation returned the low-level ffi-geos object rather than the RGeo feature if the generator was set to :geos. Fixed.
 * Pure Ruby factories (simple_spherical, simple_cartesian) now support a :uses_lenient_assertions option, which disables assertion checking on LinearRing, Polygon, and MultiPolygon construction, since those checks can be expensive.
 * Fixed Rails 3.2 deprecation warning in SRSDatabase::ActiveRecordTable.
 * Fixed an issue with the ActiveRecordTable tests on ActiveRecord 3.2.

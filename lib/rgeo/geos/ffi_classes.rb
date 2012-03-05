@@ -96,7 +96,6 @@ module RGeo
 
       end
 
-
     end
 
 
