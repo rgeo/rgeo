@@ -402,6 +402,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   globals->id_cast = rb_intern("cast");
   globals->id_eql = rb_intern("eql?");
   globals->id_generate = rb_intern("generate");
+  globals->id_enum_for = rb_intern("enum_for");
   globals->sym_force_new = ID2SYM(rb_intern("force_new"));
   globals->sym_keep_subtype = ID2SYM(rb_intern("keep_subtype"));
 

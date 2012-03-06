@@ -245,6 +245,31 @@ module RGeo
         end
 
 
+        def test_each_block
+          geom1_ = @factory.collection([@point1, @line1])
+          i_ = 0
+          geom1_.each do |g_|
+            if i_ == 0
+              assert_equal(@point1, g_)
+            else
+              assert_equal(@line1, g_)
+            end
+            i_ += 1
+          end
+        end
+
+
+        def test_each_enumerator
+          geom1_ = @factory.collection([@point1, @line1])
+          enum_ = geom1_.each
+          assert_equal(@point1, enum_.next)
+          assert_equal(@line1, enum_.next)
+          assert_raise(::StopIteration) do
+            enum_.next
+          end
+        end
+
+
       end
 
     end

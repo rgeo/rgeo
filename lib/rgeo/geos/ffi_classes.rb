@@ -651,9 +651,14 @@ module RGeo
 
 
       def each
-        @fg_geom.num_geometries.times do |n_|
-          yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n_),
-            @_klasses ? @_klasses[n_] : nil)
+        if block_given?
+          @fg_geom.num_geometries.times do |n_|
+            yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n_),
+              @_klasses ? @_klasses[n_] : nil)
+          end
+          self
+        else
+          enum_for
         end
       end
 

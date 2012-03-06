@@ -77,6 +77,7 @@ typedef struct {
   ID id_cast;
   ID id_eql;
   ID id_generate;
+  ID id_enum_for;
   VALUE sym_force_new;
   VALUE sym_keep_subtype;
 } RGeo_Globals;

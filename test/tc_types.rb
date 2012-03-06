@@ -75,3 +75,7 @@ module RGeo
 
   end
 end
+
+unless ::RGeo.yaml_supported?
+  puts "WARNING: Psych not installed. Skipping YAML tests."
+end

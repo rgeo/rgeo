@@ -170,18 +170,12 @@ module RGeo
 
         if ::RGeo.yaml_supported?
 
-
           def test_yaml_roundtrip
             obj1_ = ::RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
             dump_ = ::Psych.dump(obj1_)
             obj2_ = ::Psych.load(dump_)
             assert_equal(obj1_, obj2_)
           end
-
-
-        else
-
-          puts "WARNING: Psych not installed. Skipping YAML tests."
 
         end
 
@@ -191,3 +185,7 @@ module RGeo
     end
   end
 end if ::RGeo::CoordSys::Proj4.supported?
+
+unless ::RGeo::CoordSys::Proj4.supported?
+  puts "WARNING: Proj4 support not available. Related tests skipped."
+end

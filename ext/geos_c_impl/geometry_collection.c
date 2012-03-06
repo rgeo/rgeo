@@ -262,22 +262,28 @@ static VALUE method_geometry_collection_each(VALUE self)
   const GEOSGeometry* elem_geom;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  self_geom = self_data->geom;
-  if (self_geom) {
-    GEOSContextHandle_t self_context = self_data->geos_context;
-    len = GEOSGetNumGeometries_r(self_context, self_geom);
-    if (len > 0) {
-      klasses = self_data->klasses;
-      for (i=0; i<len; ++i) {
-        elem_geom = GEOSGetGeometryN_r(self_context, self_geom, i);
-        elem = rgeo_wrap_geos_geometry_clone(self_data->factory, elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
-        if (!NIL_P(elem)) {
-          rb_yield(elem);
+
+  if (rb_block_given_p()) {
+    self_geom = self_data->geom;
+    if (self_geom) {
+      GEOSContextHandle_t self_context = self_data->geos_context;
+      len = GEOSGetNumGeometries_r(self_context, self_geom);
+      if (len > 0) {
+        klasses = self_data->klasses;
+        for (i=0; i<len; ++i) {
+          elem_geom = GEOSGetGeometryN_r(self_context, self_geom, i);
+          elem = rgeo_wrap_geos_geometry_clone(self_data->factory, elem_geom, NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
+          if (!NIL_P(elem)) {
+            rb_yield(elem);
+          }
         }
       }
     }
+    return self;
   }
-  return self;
+  else {
+    return rb_funcall(self, RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->id_enum_for, 0);
+  }
 }
 
 
