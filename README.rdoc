@@ -99,18 +99,20 @@ installation prefix directory using the "--with-proj-dir" option.
 The RGeo suite of tools is evolving rapidly. The current to-do list for
 the core library includes:
 
-* YAML and Marshal serialization support across all major entities.
-* Full JRuby support.
 * Better error handling and reporting.
+* JRuby support for Proj4
 * Ellipsoidal geography implementation, possibly utilizing geographiclib.
 * Windows build support.
+* GDAL integration including coordinate system interpretation.
 
 Each of the current add-on modules also has its own feature roadmap, and
 we are planning on introducing more add-on modules, including:
 
+* Raster support via GDAL.
 * GeoRSS and KML format support.
-* Integration with third-party APIs.
+* Custom spatial indexes.
 * Possible additional ActiveRecord adapters (esp. JDBC adapters)
+* Integration with third-party APIs.
 
 === Development and support
 

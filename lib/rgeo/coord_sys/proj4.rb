@@ -117,6 +117,9 @@ module RGeo
       def canonical_str
         unless defined?(@canonical_str)
           @canonical_str = _canonical_str
+          if @canonical_str.respond_to?(:force_encoding)
+            @canonical_str.force_encoding('US-ASCII')
+          end
         end
         @canonical_str
       end

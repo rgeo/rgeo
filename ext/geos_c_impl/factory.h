@@ -101,6 +101,10 @@ typedef struct {
   VALUE wkrep_wkb_generator;
   VALUE wkrep_wkt_parser;
   VALUE wkrep_wkb_parser;
+  GEOSWKTReader* psych_wkt_reader;
+  GEOSWKBReader* marshal_wkb_reader;
+  GEOSWKTWriter* psych_wkt_writer;
+  GEOSWKBWriter* marshal_wkb_writer;
   VALUE proj4_obj;
   VALUE coord_sys_obj;
   int flags;

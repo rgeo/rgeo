@@ -133,6 +133,12 @@ module RGeo
       end
 
 
+      def _copy_state_from(obj_)  # :nodoc:
+        super
+        @points = obj_.points
+      end
+
+
     end
 
 

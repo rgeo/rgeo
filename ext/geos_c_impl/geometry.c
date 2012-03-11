@@ -937,6 +937,44 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
 }
 
 
+static VALUE method_geometry_steal(VALUE self, VALUE orig)
+{
+  RGeo_GeometryData* self_data;
+  const GEOSPreparedGeometry* prep;
+  const GEOSGeometry* geom;
+  RGeo_GeometryData* orig_data;
+
+  geom = rgeo_get_geos_geometry_safe(orig);
+  if (geom) {
+    // Clear out any existing value
+    self_data = RGEO_GEOMETRY_DATA_PTR(self);
+    if (self_data->geom) {
+      GEOSGeom_destroy_r(self_data->geos_context, self_data->geom);
+    }
+    prep = self_data->prep;
+    if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+      GEOSPreparedGeom_destroy_r(self_data->geos_context, prep);
+    }
+
+    // Steal value from orig
+    orig_data = RGEO_GEOMETRY_DATA_PTR(orig);
+    self_data->geom = orig_data->geom;
+    self_data->prep = orig_data->prep;
+    self_data->geos_context = orig_data->geos_context;
+    self_data->factory = orig_data->factory;
+    self_data->klasses = orig_data->klasses;
+
+    // Clear out orig
+    orig_data->geom = NULL;
+    orig_data->prep = NULL;
+    orig_data->geos_context = NULL;
+    orig_data->factory = Qnil;
+    orig_data->klasses = Qnil;
+  }
+  return self;
+}
+
+
 /**** INITIALIZATION FUNCTION ****/
 
 
@@ -953,6 +991,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_alloc_func(geos_geometry_class, alloc_geometry);
   rb_define_method(geos_geometry_class, "_set_factory", method_geometry_set_factory, 1);
   rb_define_method(geos_geometry_class, "initialize_copy", method_geometry_initialize_copy, 1);
+  rb_define_method(geos_geometry_class, "_steal", method_geometry_steal, 1);
   rb_define_method(geos_geometry_class, "initialized?", method_geometry_initialized_p, 0);
   rb_define_method(geos_geometry_class, "factory", method_geometry_factory, 0);
   rb_define_method(geos_geometry_class, "prepared?", method_geometry_prepared_p, 0);
@@ -962,8 +1001,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_class, "srid", method_geometry_srid, 0);
   rb_define_method(geos_geometry_class, "envelope", method_geometry_envelope, 0);
   rb_define_method(geos_geometry_class, "boundary", method_geometry_boundary, 0);
-  rb_define_method(geos_geometry_class, "as_text", method_geometry_as_text, 0);
-  rb_define_method(geos_geometry_class, "to_s", method_geometry_as_text, 0);
+  rb_define_method(geos_geometry_class, "_as_text", method_geometry_as_text, 0);
   rb_define_method(geos_geometry_class, "as_binary", method_geometry_as_binary, 0);
   rb_define_method(geos_geometry_class, "is_empty?", method_geometry_is_empty, 0);
   rb_define_method(geos_geometry_class, "is_simple?", method_geometry_is_simple, 0);

@@ -432,6 +432,52 @@ module RGeo
       end
 
 
+      def _generate_wkt(obj_)  # :nodoc:
+        @wkt_generator.generate(obj_)
+      end
+
+
+      def _generate_wkb(obj_)  # :nodoc:
+        @wkb_generator.generate(obj_)
+      end
+
+
+      def _marshal_wkb_generator  # :nodoc:
+        unless defined?(@marshal_wkb_generator)
+          @marshal_wkb_generator = ::RGeo::WKRep::WKBGenerator.new(
+            :type_format => :wkb12)
+        end
+        @marshal_wkb_generator
+      end
+
+
+      def _marshal_wkb_parser  # :nodoc:
+        unless defined?(@marshal_wkb_parser)
+          @marshal_wkb_parser = ::RGeo::WKRep::WKBParser.new(self,
+            :support_wkb12 => true)
+        end
+        @marshal_wkb_parser
+      end
+
+
+      def _psych_wkt_generator  # :nodoc:
+        unless defined?(@psych_wkt_generator)
+          @psych_wkt_generator = ::RGeo::WKRep::WKTGenerator.new(
+            :tag_format => :wkt12)
+        end
+        @psych_wkt_generator
+      end
+
+
+      def _psych_wkt_parser  # :nodoc:
+        unless defined?(@psych_wkt_parser)
+          @psych_wkt_parser = ::RGeo::WKRep::WKTParser.new(self,
+            :support_wkt12 => true, :support_ewkt => true)
+        end
+        @psych_wkt_parser
+      end
+
+
     end
 
   end

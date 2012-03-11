@@ -53,7 +53,7 @@ module RGeo
       end
 
 
-      def test_dummy
+      def test_dummy1
       end
 
 

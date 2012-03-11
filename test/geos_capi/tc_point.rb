@@ -79,6 +79,24 @@ module RGeo
         end
 
 
+        if defined?(::Encoding)
+
+          def test_as_text_encoding
+            factory_ = ::RGeo::Geos.factory(:wkt_generator => :geos)
+            point_ = factory_.point(11, 12)
+            assert_equal(::Encoding::US_ASCII, point_.as_text.encoding)
+          end
+
+
+          def test_as_binary_encoding
+            factory_ = ::RGeo::Geos.factory(:wkb_generator => :geos)
+            point_ = factory_.point(11, 12)
+            assert_equal(::Encoding::ASCII_8BIT, point_.as_binary.encoding)
+          end
+
+        end
+
+
       end
 
     end

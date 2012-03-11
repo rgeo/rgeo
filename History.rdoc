@@ -1,3 +1,10 @@
+=== 0.3.7 / 2012-03-??
+
+* Marshal and YAML serialization now fully implemented for geometries.
+* The spatial predicates for objects using the 4D (ZM) Geos factory almost always returned false because they weren't casting correctly. Fixed.
+* Proj#canonical_str and the Geos implementations of Geometry#as_text were returning strings encoded as "ASCII-8BIT", which was causing strange binary output in YAML serialization, among other things. Now fixed. These strings are now encoded as "US-ASCII".
+* YAML serialization for 4D (ZM) Geos factories didn't preserve coordinate systems. Fixed.
+
 === 0.3.6 / 2012-03-06
 
 * Geometry#relate? was incorrectly spelled "Geometry#relate" in the Feature::Geometry module and in some (but not all) implementations, leading to various types of method not found errors. Fixed. We'll keep #relate as a deprecated alias for the time being.

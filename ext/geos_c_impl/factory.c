@@ -84,6 +84,18 @@ static void destroy_factory_func(RGeo_FactoryData* data)
   if (data->wkb_writer) {
     GEOSWKBWriter_destroy_r(context, data->wkb_writer);
   }
+  if (data->psych_wkt_reader) {
+    GEOSWKTReader_destroy_r(context, data->psych_wkt_reader);
+  }
+  if (data->marshal_wkb_reader) {
+    GEOSWKBReader_destroy_r(context, data->marshal_wkb_reader);
+  }
+  if (data->psych_wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, data->psych_wkt_writer);
+  }
+  if (data->marshal_wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, data->marshal_wkb_writer);
+  }
   finishGEOS_r(context);
   free(data);
 }
@@ -241,6 +253,130 @@ static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
 }
 
 
+static VALUE method_factory_read_for_marshal(VALUE self, VALUE str)
+{
+  RGeo_FactoryData* self_data;
+  GEOSContextHandle_t self_context;
+  GEOSWKBReader* wkb_reader;
+  VALUE result;
+  GEOSGeometry* geom;
+
+  Check_Type(str, T_STRING);
+  self_data = RGEO_FACTORY_DATA_PTR(self);
+  self_context = self_data->geos_context;
+  wkb_reader = self_data->marshal_wkb_reader;
+  if (!wkb_reader) {
+    wkb_reader = GEOSWKBReader_create_r(self_context);
+    self_data->marshal_wkb_reader = wkb_reader;
+  }
+  result = Qnil;
+  if (wkb_reader) {
+    geom = GEOSWKBReader_read_r(self_context, wkb_reader, (unsigned char*)RSTRING_PTR(str), (size_t)RSTRING_LEN(str));
+    if (geom) {
+      result = rgeo_wrap_geos_geometry(self, geom, Qnil);
+    }
+  }
+  return result;
+}
+
+
+static VALUE method_factory_read_for_psych(VALUE self, VALUE str)
+{
+  RGeo_FactoryData* self_data;
+  GEOSContextHandle_t self_context;
+  GEOSWKTReader* wkt_reader;
+  VALUE result;
+  GEOSGeometry* geom;
+
+  Check_Type(str, T_STRING);
+  self_data = RGEO_FACTORY_DATA_PTR(self);
+  self_context = self_data->geos_context;
+  wkt_reader = self_data->psych_wkt_reader;
+  if (!wkt_reader) {
+    wkt_reader = GEOSWKTReader_create_r(self_context);
+    self_data->psych_wkt_reader = wkt_reader;
+  }
+  result = Qnil;
+  if (wkt_reader) {
+    geom = GEOSWKTReader_read_r(self_context, wkt_reader, RSTRING_PTR(str));
+    if (geom) {
+      result = rgeo_wrap_geos_geometry(self, geom, Qnil);
+    }
+  }
+  return result;
+}
+
+
+static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
+{
+  RGeo_FactoryData* self_data;
+  GEOSContextHandle_t self_context;
+  GEOSWKBWriter* wkb_writer;
+  const GEOSGeometry* geom;
+  VALUE result;
+  char* str;
+  size_t size;
+
+  self_data = RGEO_FACTORY_DATA_PTR(self);
+  self_context = self_data->geos_context;
+  wkb_writer = self_data->marshal_wkb_writer;
+  if (!wkb_writer) {
+    wkb_writer = GEOSWKBWriter_create_r(self_context);
+    if (self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M) {
+      GEOSWKBWriter_setOutputDimension_r(self_context, wkb_writer, 3);
+    }
+    self_data->marshal_wkb_writer = wkb_writer;
+  }
+  result = Qnil;
+  if (wkb_writer) {
+    geom = rgeo_get_geos_geometry_safe(obj);
+    if (geom) {
+      str = (char*)GEOSWKBWriter_write_r(self_context, wkb_writer, geom, &size);
+      if (str) {
+        result = rb_str_new(str, size);
+        GEOSFree_r(self_context, str);
+      }
+    }
+  }
+  return result;
+}
+
+
+static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
+{
+  RGeo_FactoryData* self_data;
+  GEOSContextHandle_t self_context;
+  GEOSWKTWriter* wkt_writer;
+  const GEOSGeometry* geom;
+  VALUE result;
+  char* str;
+  size_t size;
+
+  self_data = RGEO_FACTORY_DATA_PTR(self);
+  self_context = self_data->geos_context;
+  wkt_writer = self_data->psych_wkt_writer;
+  if (!wkt_writer) {
+    wkt_writer = GEOSWKTWriter_create_r(self_context);
+    if (self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M) {
+      GEOSWKTWriter_setOutputDimension_r(self_context, wkt_writer, 3);
+    }
+    self_data->psych_wkt_writer = wkt_writer;
+  }
+  result = Qnil;
+  if (wkt_writer) {
+    geom = rgeo_get_geos_geometry_safe(obj);
+    if (geom) {
+      str = GEOSWKTWriter_write_r(self_context, wkt_writer, geom);
+      if (str) {
+        result = rb_str_new2(str);
+        GEOSFree_r(self_context, str);
+      }
+    }
+  }
+  return result;
+}
+
+
 static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE buffer_resolution,
   VALUE wkt_generator, VALUE wkb_generator, VALUE proj4_obj, VALUE coord_sys_obj)
 {
@@ -264,6 +400,10 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       data->wkb_reader = NULL;
       data->wkt_writer = NULL;
       data->wkb_writer = NULL;
+      data->psych_wkt_reader = NULL;
+      data->marshal_wkb_reader = NULL;
+      data->psych_wkt_writer = NULL;
+      data->marshal_wkb_writer = NULL;
       data->wkrep_wkt_generator = wkt_generator;
       data->wkrep_wkb_generator = wkb_generator;
       data->wkrep_wkt_parser = Qnil;
@@ -310,6 +450,22 @@ static VALUE method_factory_initialize_copy(VALUE self, VALUE orig)
   if (self_data->wkb_writer) {
     GEOSWKBWriter_destroy_r(context, self_data->wkb_writer);
     self_data->wkb_writer = NULL;
+  }
+  if (self_data->psych_wkt_reader) {
+    GEOSWKTReader_destroy_r(context, self_data->psych_wkt_reader);
+    self_data->psych_wkt_reader = NULL;
+  }
+  if (self_data->marshal_wkb_reader) {
+    GEOSWKBReader_destroy_r(context, self_data->marshal_wkb_reader);
+    self_data->marshal_wkb_reader = NULL;
+  }
+  if (self_data->psych_wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, self_data->psych_wkt_writer);
+    self_data->psych_wkt_writer = NULL;
+  }
+  if (self_data->marshal_wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, self_data->marshal_wkb_writer);
+    self_data->marshal_wkb_writer = NULL;
   }
   self_data->wkrep_wkt_generator = Qnil;
   self_data->wkrep_wkb_generator = Qnil;
@@ -422,6 +578,10 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_method(geos_factory_class, "_wkb_generator", method_get_wkb_generator, 0);
   rb_define_method(geos_factory_class, "_wkt_parser", method_get_wkt_parser, 0);
   rb_define_method(geos_factory_class, "_wkb_parser", method_get_wkb_parser, 0);
+  rb_define_method(geos_factory_class, "_read_for_marshal", method_factory_read_for_marshal, 1);
+  rb_define_method(geos_factory_class, "_write_for_marshal", method_factory_write_for_marshal, 1);
+  rb_define_method(geos_factory_class, "_read_for_psych", method_factory_read_for_psych, 1);
+  rb_define_method(geos_factory_class, "_write_for_psych", method_factory_write_for_psych, 1);
   rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 7);
 
   // Wrap the globals in a Ruby object and store it off so we have access

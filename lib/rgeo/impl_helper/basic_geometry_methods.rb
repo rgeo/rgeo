@@ -68,12 +68,37 @@ module RGeo
 
 
       def as_text
-        @factory.instance_variable_get(:@wkt_generator).generate(self)
+        @factory._generate_wkt(self)
       end
 
 
       def as_binary
-        @factory.instance_variable_get(:@wkb_generator).generate(self)
+        @factory._generate_wkb(self)
+      end
+
+
+      def _copy_state_from(obj_)  # :nodoc:
+        @factory = obj_.factory
+      end
+
+
+      def marshal_dump  # :nodoc:
+        [@factory, @factory._marshal_wkb_generator.generate(self)]
+      end
+
+      def marshal_load(data_)  # :nodoc:
+        obj_ = data_[0]._marshal_wkb_parser.parse(data_[1])
+        _copy_state_from(data_[0]._marshal_wkb_parser.parse(data_[1]))
+      end
+
+
+      def encode_with(coder_)  # :nodoc:
+        coder_['factory'] = @factory
+        coder_['wkt'] = @factory._psych_wkt_generator.generate(self)
+      end
+
+      def init_with(coder_)  # :nodoc:
+        _copy_state_from(coder_['factory']._psych_wkt_parser.parse(coder_['wkt']))
       end
 
 

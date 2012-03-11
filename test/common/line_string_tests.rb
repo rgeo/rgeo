@@ -333,6 +333,30 @@ module RGeo
         end
 
 
+        def test_marshal_roundtrip
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          line1_ = @factory.line_string([point1_, point2_])
+          data_ = ::Marshal.dump(line1_)
+          line2_ = ::Marshal.load(data_)
+          assert_equal(line1_, line2_)
+        end
+
+
+        if ::RGeo.yaml_supported?
+
+          def test_psych_roundtrip
+            point1_ = @factory.point(0, 0)
+            point2_ = @factory.point(0, 1)
+            line1_ = @factory.line_string([point1_, point2_])
+            data_ = ::Psych.dump(line1_)
+            line2_ = ::Psych.load(data_)
+            assert_equal(line1_, line2_)
+          end
+
+        end
+
+
       end
 
     end

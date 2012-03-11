@@ -184,11 +184,13 @@ module RGeo
         coder_['wkb_parser'] = @wkb_parser._properties
         coder_['auto_prepare'] = @zfactory.property(:auto_prepare).to_s
         coder_['native_interface'] = @zfactory.is_a?(FFIFactory) ? 'ffi' : 'capi'
-        if @proj4
-          str_ = @proj4.original_str || @proj4.canonical_str
-          coder_['proj4'] = @proj4.radians? ? {'proj4' => str_, 'radians' => true} : str_
+        if (proj4_ = @zfactory.proj4)
+          str_ = proj4_.original_str || proj4_.canonical_str
+          coder_['proj4'] = proj4_.radians? ? {'proj4' => str_, 'radians' => true} : str_
         end
-        coder_['coord_sys'] = @coord_sys.to_wkt if @coord_sys
+        if (coord_sys_ = @zfactory.coord_sys)
+          coder_['coord_sys'] = coord_sys_.to_wkt
+        end
       end
 
       def init_with(coder_)  # :nodoc:
@@ -405,6 +407,42 @@ module RGeo
           end
         end
         false
+      end
+
+
+      def _marshal_wkb_generator  # :nodoc:
+        unless defined?(@marshal_wkb_generator)
+          @marshal_wkb_generator = ::RGeo::WKRep::WKBGenerator.new(
+            :type_format => :wkb12)
+        end
+        @marshal_wkb_generator
+      end
+
+
+      def _marshal_wkb_parser  # :nodoc:
+        unless defined?(@marshal_wkb_parser)
+          @marshal_wkb_parser = ::RGeo::WKRep::WKBParser.new(self,
+            :support_wkb12 => true)
+        end
+        @marshal_wkb_parser
+      end
+
+
+      def _psych_wkt_generator  # :nodoc:
+        unless defined?(@psych_wkt_generator)
+          @psych_wkt_generator = ::RGeo::WKRep::WKTGenerator.new(
+            :tag_format => :wkt12)
+        end
+        @psych_wkt_generator
+      end
+
+
+      def _psych_wkt_parser  # :nodoc:
+        unless defined?(@psych_wkt_parser)
+          @psych_wkt_parser = ::RGeo::WKRep::WKTParser.new(self,
+            :support_wkt12 => true, :support_ewkt => true)
+        end
+        @psych_wkt_parser
       end
 
 

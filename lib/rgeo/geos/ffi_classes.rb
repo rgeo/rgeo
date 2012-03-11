@@ -120,6 +120,39 @@ module RGeo
       end
 
 
+      # Marshal support
+
+      def marshal_dump  # :nodoc:
+        [@factory, @factory._write_for_marshal(@fg_geom)]
+      end
+
+      def marshal_load(data_)  # :nodoc:
+        @factory = data_[0]
+        @fg_geom = @factory._read_for_marshal(data_[1])
+        @fg_geom.srid = @factory.srid
+        @_fg_prep = @factory._auto_prepare ? 1 : 0
+        @_klasses = nil
+      end
+
+
+      # Psych support
+
+      def encode_with(coder_)  # :nodoc:
+        coder_['factory'] = @factory
+        str_ = @factory._write_for_psych(@fg_geom)
+        str_ = str_.encode('US-ASCII') if str_.respond_to?(:encode)
+        coder_['wkt'] = str_
+      end
+
+      def init_with(coder_)  # :nodoc:
+        @factory = coder_['factory']
+        @fg_geom = @factory._read_for_psych(coder_['wkt'])
+        @fg_geom.srid = @factory.srid
+        @_fg_prep = @factory._auto_prepare ? 1 : 0
+        @_klasses = nil
+      end
+
+
       attr_reader :factory
       attr_reader :fg_geom
 
@@ -184,7 +217,9 @@ module RGeo
 
 
       def as_text
-        @factory._generate_wkt(self)
+        str_ = @factory._generate_wkt(self)
+        str_.force_encoding('US-ASCII') if str_.respond_to?(:force_encoding)
+        str_
       end
       alias_method :to_s, :as_text
 

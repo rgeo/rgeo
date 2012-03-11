@@ -600,6 +600,40 @@ module RGeo
       end
 
 
+      def _write_for_marshal(obj_)  # :nodoc:
+        unless defined?(@marshal_wkb_writer)
+          @marshal_wkb_writer = ::Geos::WkbWriter.new
+          @marshal_wkb_writer.output_dimensions = (@_has_3d ? 3 : 2)
+        end
+        @marshal_wkb_writer.write(obj_)
+      end
+
+
+      def _read_for_marshal(str_)  # :nodoc:
+        unless defined?(@marshal_wkb_reader)
+          @marshal_wkb_reader = ::Geos::WkbReader.new
+        end
+        @marshal_wkb_reader.read(str_)
+      end
+
+
+      def _write_for_psych(obj_)  # :nodoc:
+        unless defined?(@psych_wkt_writer)
+          @psych_wkt_writer = ::Geos::WktWriter.new
+          @psych_wkt_writer.output_dimensions = (@_has_3d ? 3 : 2)
+        end
+        @psych_wkt_writer.write(obj_)
+      end
+
+
+      def _read_for_psych(str_)  # :nodoc:
+        unless defined?(@psych_wkt_reader)
+          @psych_wkt_reader = ::Geos::WktReader.new
+        end
+        @psych_wkt_reader.read(str_)
+      end
+
+
     end
 
 

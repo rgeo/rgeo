@@ -113,6 +113,13 @@ module RGeo
       end
 
 
+      def _copy_state_from(obj_)  # :nodoc:
+        super
+        @exterior_ring = obj_.exterior_ring
+        @interior_rings = obj_.interior_rings
+      end
+
+
     end
 
 
