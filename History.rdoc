@@ -1,4 +1,4 @@
-=== 0.3.7 / 2012-03-??
+=== 0.3.7 / 2012-03-12
 
 * Marshal and YAML serialization now fully implemented for geometries.
 * The spatial predicates for objects using the 4D (ZM) Geos factory almost always returned false because they weren't casting correctly. Fixed.
