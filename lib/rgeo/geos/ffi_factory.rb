@@ -465,7 +465,6 @@ module RGeo
 
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        fg_geoms_ = []
         elems_.map! do |elem_|
           elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::Point,
             :force_new, :keep_subtype)

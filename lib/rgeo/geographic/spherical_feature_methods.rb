@@ -54,7 +54,7 @@ module RGeo
 
 
       def _arcs
-        unless @arcs
+        unless defined?(@arcs)
           @arcs = (0..num_points-2).map do |i_|
             SphericalMath::ArcXYZ.new(point_n(i_)._xyz, point_n(i_+1)._xyz)
           end

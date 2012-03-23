@@ -101,7 +101,7 @@ module RGeo
       # Iterates over the known immediate subtypes of this type.
 
       def each_immediate_subtype(&block_)
-        @subtypes.each(&block_) if @subtypes
+        @subtypes.each(&block_) if defined?(@subtypes) && @subtypes
       end
 
 

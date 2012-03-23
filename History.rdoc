@@ -1,3 +1,8 @@
+=== 0.3.8 / 2012-03-23
+
+* When using the spherical factory, some negative longitudes might get perturbed slightly due to floating point errors. Fixed. (Reported by Pete Deffendol)
+* Fixed a bunch of warnings, and turned on warnings during testing.
+
 === 0.3.7 / 2012-03-12
 
 * Marshal and YAML serialization now fully implemented for geometries.

@@ -431,7 +431,7 @@ module RGeo
       def override_cast(original_, ntype_, flags_)
         return nil unless Geos.supported?
         keep_subtype_ = flags_[:keep_subtype]
-        force_new_ = flags_[:force_new]
+        #force_new_ = flags_[:force_new]
         project_ = flags_[:project]
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)

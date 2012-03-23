@@ -231,7 +231,6 @@ module RGeo
       end
 
       def marshal_load(data_)  # :nodoc:
-        obj_ = data_[0]._marshal_wkb_parser.parse(data_[1])
         _copy_state_from(data_[0]._marshal_wkb_parser.parse(data_[1]))
       end
 

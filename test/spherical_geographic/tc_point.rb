@@ -80,6 +80,15 @@ module RGeo
         end
 
 
+        def test_floating_point_perturbation
+          # A naive way of wrapping longitudes to [-180,180] might cause
+          # perturbation due to floating point errors. Make sure this
+          # doesn't happen.
+          point_ = @factory.point(-98.747534, 38.057583)
+          assert_equal(-98.747534, point_.x)
+        end
+
+
         undef_method :test_disjoint
         undef_method :test_intersects
         undef_method :test_touches

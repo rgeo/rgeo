@@ -136,7 +136,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('00000003e93ff000000000000040000000000000004008000000000000')
+            parser_.parse('00000003e93ff000000000000040000000000000004008000000000000')
           end
         end
 
@@ -145,7 +145,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_wkb12 => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('00000003e93ff00000000000004000000000000000')
+            parser_.parse('00000003e93ff00000000000004000000000000000')
           end
         end
 
@@ -273,7 +273,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKBParser.new(factory_, :support_ewkb => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('00800000040000000200800000013ff000000000000040000000000000004014000000000000000000000140080000000000004010000000000000')
+            parser_.parse('00800000040000000200800000013ff000000000000040000000000000004014000000000000000000000140080000000000004010000000000000')
           end
         end
 
@@ -299,7 +299,7 @@ module RGeo
         def test_multilinestring_wrong_element_type
           parser_ = ::RGeo::WKRep::WKBParser.new
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('0000000005000000020000000002000000033ff00000000000004000000000000000400800000000000040100000000000004014000000000000401800000000000000000000013ff00000000000004000000000000000')
+            parser_.parse('0000000005000000020000000002000000033ff00000000000004000000000000000400800000000000040100000000000004014000000000000401800000000000000000000013ff00000000000004000000000000000')
           end
         end
 

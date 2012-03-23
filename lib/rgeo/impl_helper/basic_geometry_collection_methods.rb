@@ -76,7 +76,7 @@ module RGeo
 
 
       def dimension
-        unless @dimension
+        unless defined?(@dimension)
           @dimension = -1
           @elements.each do |elem_|
             dim_ = elem_.dimension

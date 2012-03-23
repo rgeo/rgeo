@@ -228,7 +228,7 @@ module RGeo
           expect_m_ = zm_[-1,1] == 'm' ? true : false
           if @cur_expect_m.nil?
             @cur_expect_m = expect_m_
-          else expect_m_ != @cur_expect_m
+          elsif expect_m_ != @cur_expect_m
             raise Error::ParseError, "Surrounding collection has M but contained geometry doesn't."
           end
           if creating_expectation_

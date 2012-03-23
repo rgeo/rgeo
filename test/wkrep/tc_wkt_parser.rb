@@ -124,7 +124,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('POINT(1 2 3)')
+            parser_.parse('POINT(1 2 3)')
           end
         end
 
@@ -143,7 +143,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_, :support_wkt12 => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('POINT Z(1 2 3)')
+            parser_.parse('POINT Z(1 2 3)')
           end
         end
 
@@ -172,7 +172,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_, :support_wkt12 => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('POINT M(1 2 3 4)')
+            parser_.parse('POINT M(1 2 3 4)')
           end
         end
 
@@ -191,7 +191,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_, :support_wkt12 => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('POINT ZM(1 2 3)')
+            parser_.parse('POINT ZM(1 2 3)')
           end
         end
 
@@ -230,7 +230,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_, :support_ewkt => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('POINTM(1 2 3 4)')
+            parser_.parse('POINTM(1 2 3 4)')
           end
         end
 
@@ -239,7 +239,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_, :strict_wkt11 => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('POINT(1 2 3)')
+            parser_.parse('POINT(1 2 3)')
           end
         end
 
@@ -247,7 +247,7 @@ module RGeo
         def test_point_non_ewkt_with_srid
           parser_ = ::RGeo::WKRep::WKTParser.new(::RGeo::Cartesian.method(:preferred_factory))
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('SRID=1000;POINT(1 2)')
+            parser_.parse('SRID=1000;POINT(1 2)')
           end
         end
 
@@ -278,7 +278,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('LINESTRING(1 2 3, 4 5,7 8 9)')
+            parser_.parse('LINESTRING(1 2 3, 4 5,7 8 9)')
           end
         end
 
@@ -461,7 +461,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('GEOMETRYCOLLECTION(POINT(-1 -2),LINESTRING(1 2 0, 3 4 0, 5 6 0))')
+            parser_.parse('GEOMETRYCOLLECTION(POINT(-1 -2),LINESTRING(1 2 0, 3 4 0, 5 6 0))')
           end
         end
 
@@ -470,7 +470,7 @@ module RGeo
           factory_ = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true, :has_m_coordinate => true)
           parser_ = ::RGeo::WKRep::WKTParser.new(factory_, :support_wkt12 => true)
           assert_raise(::RGeo::Error::ParseError) do
-            obj_ = parser_.parse('GEOMETRYCOLLECTION Z(POINT Z(-1 -2 0),LINESTRING M(1 2 0, 3 4 0, 5 6 0))')
+            parser_.parse('GEOMETRYCOLLECTION Z(POINT Z(-1 -2 0),LINESTRING M(1 2 0, 3 4 0, 5 6 0))')
           end
         end
 

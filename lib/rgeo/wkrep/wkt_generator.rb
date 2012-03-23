@@ -85,7 +85,8 @@ module RGeo
 
       def initialize(opts_={})
         @tag_format = opts_[:tag_format] || opts_[:type_format] || :wkt11
-        @emit_ewkt_srid = opts_[:emit_ewkt_srid] ? true : false if @tag_format == :ewkt
+        @emit_ewkt_srid = @tag_format == :ewkt ?
+          (opts_[:emit_ewkt_srid] ? true : false) : nil
         @square_brackets = opts_[:square_brackets] ? true : false
         @convert_case = opts_[:convert_case]
       end

@@ -78,7 +78,7 @@ module RGeo
 
 
       def _segments
-        unless @segments
+        unless defined?(@segments)
           @segments = (0..num_points-2).map do |i_|
             Segment.new(point_n(i_), point_n(i_+1))
           end
