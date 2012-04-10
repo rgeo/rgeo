@@ -1,3 +1,10 @@
+=== 0.3.9 / 2012-04-10
+
+* Implemented LineString#length and MultiLineString#length for simple cartesian and simple spherical factories.
+* Added Cartesian::BoundingBox.create_from_points.
+* Fixed an exception when creating adding a geometry to a Cartesian::BoundingBox when a cast is necessary.
+* Added configuration for Travis CI.
+
 === 0.3.8 / 2012-03-23
 
 * When using the spherical factory, some negative longitudes might get perturbed slightly due to floating point errors. Fixed. (Reported by Pete Deffendol)
