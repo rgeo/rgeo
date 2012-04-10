@@ -58,6 +58,7 @@ module RGeo
         undef_method :test_fully_equal
         undef_method :test_geometrically_equal
         undef_method :test_not_equal
+        undef_method :test_length
 
 
       end

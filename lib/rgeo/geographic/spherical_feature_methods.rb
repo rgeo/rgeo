@@ -89,6 +89,22 @@ module RGeo
       end
 
 
+      def length
+        _arcs.inject(0.0){ |sum_, arc_| sum_ + arc_.length } * SphericalMath::RADIUS
+      end
+
+
+    end
+
+
+    module SphericalMultiLineStringMethods
+
+
+      def length
+        inject(0.0){ |sum_, geom_| sum_ + geom_.length }
+      end
+
+
     end
 
 

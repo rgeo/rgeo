@@ -48,9 +48,9 @@ module RGeo
           @factory = create_factory
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(1, 0)
-          point3_ = @factory.point(-4, 2)
-          point4_ = @factory.point(-5, 3)
-          point5_ = @factory.point(-3, 5)
+          point3_ = @factory.point(-4, 2)  # (-4, 2)
+          point4_ = @factory.point(-7, 6)  # (-5, 3)
+          point5_ = @factory.point(5, 11)  # (-3, 5)
           @linestring1 = @factory.line_string([point1_, point2_])
           @linestring2 = @factory.line_string([point3_, point4_, point5_])
           @linearring1 = @factory.linear_ring([point5_, point3_, point4_, point5_])
@@ -137,7 +137,7 @@ module RGeo
 
 
         def test_wkt_creation_simple
-          parsed_geom_ = @factory.parse_wkt('MULTILINESTRING((0 0, 1 0), (-4 2, -5 3, -3 5))')
+          parsed_geom_ = @factory.parse_wkt('MULTILINESTRING((0 0, 1 0), (-4 2, -7 6, 5 11))')
           built_geom_ = @factory.multi_line_string([@linestring1, @linestring2])
           assert(built_geom_.eql?(parsed_geom_))
         end
@@ -207,6 +207,14 @@ module RGeo
           assert(!geom1_.is_empty?)
           geom2_ = @factory.multi_line_string([])
           assert(geom2_.is_empty?)
+        end
+
+
+        def test_length
+          geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
+          assert_equal(19, geom1_.length)
+          geom2_ = @factory.multi_line_string([])
+          assert_equal(0, geom2_.length)
         end
 
 

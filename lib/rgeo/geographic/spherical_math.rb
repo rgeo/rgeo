@@ -196,6 +196,11 @@ module RGeo
         end
 
 
+        def length
+          @s.dist_to_point(@e)
+        end
+
+
       end
 
 

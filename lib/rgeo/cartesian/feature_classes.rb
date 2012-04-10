@@ -152,6 +152,7 @@ module RGeo
       include ::RGeo::ImplHelper::BasicGeometryCollectionMethods
       include ::RGeo::ImplHelper::BasicMultiLineStringMethods
       include ::RGeo::Cartesian::GeometryMethods
+      include ::RGeo::Cartesian::MultiLineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
 

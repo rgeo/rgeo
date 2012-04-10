@@ -212,6 +212,7 @@ module RGeo
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiLineStringMethods
       include SphericalGeometryMethods
+      include SphericalMultiLineStringMethods
 
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)

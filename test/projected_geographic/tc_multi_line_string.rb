@@ -55,6 +55,9 @@ module RGeo
         include ::RGeo::Tests::Common::MultiLineStringTests
 
 
+        undef_method :test_length
+
+
       end
 
     end

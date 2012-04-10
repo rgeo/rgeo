@@ -114,11 +114,23 @@ module RGeo
 
 
       def length
-        @segments.inject(0.0){ |sum_, seg_| sum_ + seg_.length }
+        _segments.inject(0.0){ |sum_, seg_| sum_ + seg_.length }
       end
 
 
     end
+
+
+    module MultiLineStringMethods  # :nodoc:
+
+
+      def length
+        inject(0.0){ |sum_, geom_| sum_ + geom_.length }
+      end
+
+
+    end
+
 
   end
 
