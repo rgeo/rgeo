@@ -54,6 +54,20 @@ module RGeo
     class BoundingBox
 
 
+      # Create a bounding box given two corner points.
+      # The bounding box will be given the factory of the first point.
+      # You may also provide the same options available to
+      # BoundingBox.new.
+
+      def self.create_from_points(point1_, point2_, opts_={})
+        factory_ = point1_.factory
+        box_ = new(factory_, opts_)
+        box_._add_geometry(point1_)
+        box_.add(point2_)
+        box_
+      end
+
+
       # Create a new empty bounding box with the given factory.
       #
       # The factory defines the coordinate system for the bounding box,
@@ -216,7 +230,7 @@ module RGeo
           if geometry_.factory == @factory
             _add_geometry(geometry_)
           else
-            _add_geometry(Factory.cast(geometry_, @factory))
+            _add_geometry(Feature.cast(geometry_, @factory))
           end
         end
         self
