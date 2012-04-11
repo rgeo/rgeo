@@ -1,4 +1,4 @@
-== RGeo
+== RGeo {<img src="https://secure.travis-ci.org/dazuma/rgeo.png" />}[http://travis-ci.org/dazuma/rgeo]
 
 RGeo is a geospatial data library for Ruby.
 

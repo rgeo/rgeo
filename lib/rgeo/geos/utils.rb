@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# FFI-GEOS geometry implementation
+# Various Geos-related internal utilities
 #
 # -----------------------------------------------------------------------------
 # Copyright 2010-2012 Daniel Azuma
