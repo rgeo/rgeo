@@ -1,4 +1,4 @@
-== RGeo {<img src="https://secure.travis-ci.org/dazuma/rgeo.png" />}[http://travis-ci.org/dazuma/rgeo]
+== RGeo
 
 RGeo is a geospatial data library for Ruby.
 
@@ -122,6 +122,8 @@ Source code is hosted on Github at http://github.com/dazuma/rgeo
 
 Contributions are welcome. Fork the project on Github.
 
+Build status: {<img src="https://secure.travis-ci.org/dazuma/rgeo.png" />}[http://travis-ci.org/dazuma/rgeo]
+
 Report bugs on Github issues at http://github.org/dazuma/rgeo/issues
 
 Support available on the rgeo-users google group at http://groups.google.com/group/rgeo-users
@@ -132,7 +134,9 @@ Contact the author at dazuma at gmail dot com.
 
 RGeo is written by Daniel Azuma (http://www.daniel-azuma.com).
 
-Development is supported by Pirq. (http://www.pirq.com).
+Development is supported by Pirq (http://www.pirq.com).
+
+Continuous integration service provided by Travis-CI (http://travis-ci.org).
 
 RGeo calls the GEOS library to handle most Cartesian geometric
 calculations, and the Proj4 library to handle projections and coordinate
