@@ -316,13 +316,32 @@ static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
   VALUE result;
   char* str;
   size_t size;
+  char has_3d;
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+  RGeo_Globals* globals;
+  VALUE wkb_generator;
+#endif
 
   self_data = RGEO_FACTORY_DATA_PTR(self);
   self_context = self_data->geos_context;
+  has_3d = self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+  if (has_3d) {
+    globals = self_data->globals;
+    wkb_generator = globals->marshal_wkb_generator;
+    if (NIL_P(wkb_generator)) {
+      wkb_generator = rb_funcall(
+        rb_const_get_at(globals->geos_module, rb_intern("Utils")),
+        rb_intern("marshal_wkb_generator"), 0);
+      globals->marshal_wkb_generator = wkb_generator;
+    }
+    return rb_funcall(wkb_generator, globals->id_generate, 1, obj);
+  }
+#endif
   wkb_writer = self_data->marshal_wkb_writer;
   if (!wkb_writer) {
     wkb_writer = GEOSWKBWriter_create_r(self_context);
-    if (self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M) {
+    if (has_3d) {
       GEOSWKBWriter_setOutputDimension_r(self_context, wkb_writer, 3);
     }
     self_data->marshal_wkb_writer = wkb_writer;
@@ -351,13 +370,32 @@ static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
   VALUE result;
   char* str;
   size_t size;
+  char has_3d;
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+  RGeo_Globals* globals;
+  VALUE wkt_generator;
+#endif
 
   self_data = RGEO_FACTORY_DATA_PTR(self);
   self_context = self_data->geos_context;
+  has_3d = self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+  if (has_3d) {
+    globals = self_data->globals;
+    wkt_generator = globals->psych_wkt_generator;
+    if (NIL_P(wkt_generator)) {
+      wkt_generator = rb_funcall(
+        rb_const_get_at(globals->geos_module, rb_intern("Utils")),
+        rb_intern("psych_wkt_generator"), 0);
+      globals->psych_wkt_generator = wkt_generator;
+    }
+    return rb_funcall(wkt_generator, globals->id_generate, 1, obj);
+  }
+#endif
   wkt_writer = self_data->psych_wkt_writer;
   if (!wkt_writer) {
     wkt_writer = GEOSWKTWriter_create_r(self_context);
-    if (self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M) {
+    if (has_3d) {
       GEOSWKTWriter_setOutputDimension_r(self_context, wkt_writer, 3);
     }
     self_data->psych_wkt_writer = wkt_writer;
@@ -561,6 +599,11 @@ RGeo_Globals* rgeo_init_geos_factory()
   globals->id_enum_for = rb_intern("enum_for");
   globals->sym_force_new = ID2SYM(rb_intern("force_new"));
   globals->sym_keep_subtype = ID2SYM(rb_intern("keep_subtype"));
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+  globals->psych_wkt_generator = Qnil;
+  globals->marshal_wkb_generator = Qnil;
+#endif
+
 
   // Add C methods to the factory.
   geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));

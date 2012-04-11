@@ -80,6 +80,10 @@ typedef struct {
   ID id_enum_for;
   VALUE sym_force_new;
   VALUE sym_keep_subtype;
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+  VALUE psych_wkt_generator;
+  VALUE marshal_wkb_generator;
+#endif
 } RGeo_Globals;
 
 

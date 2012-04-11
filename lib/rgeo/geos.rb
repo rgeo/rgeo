@@ -64,6 +64,7 @@ end
 # :stopdoc:
 
 # Implementation files
+require 'rgeo/geos/utils'
 require 'rgeo/geos/factory'
 require 'rgeo/geos/interface'
 begin
@@ -79,7 +80,6 @@ require 'rgeo/geos/zm_impl'
 begin
   require 'ffi-geos'
   ::RGeo::Geos::FFI_SUPPORTED = true
-  ::RGeo::Geos::FFIUtils._init
 rescue ::LoadError
   ::RGeo::Geos::FFI_SUPPORTED = false
 rescue
@@ -95,5 +95,8 @@ if ::RGeo::Geos::CAPI_SUPPORTED
 elsif ::RGeo::Geos::FFI_SUPPORTED
   ::RGeo::Geos.preferred_native_interface = :ffi
 end
+
+# Init internal utilities
+::RGeo::Geos::Utils._init
 
 # :startdoc:

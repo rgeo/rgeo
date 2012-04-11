@@ -2,6 +2,7 @@
 
 * Implemented LineString#length and MultiLineString#length for simple cartesian and simple spherical factories.
 * Added Cartesian::BoundingBox.create_from_points.
+* Serialization was broken for some 3d geometries when running libgeos 3.2.x (3.3.x was unaffected). Fixed.
 * Fixed an exception when creating adding a geometry to a Cartesian::BoundingBox when a cast is necessary.
 * Added configuration for Travis CI.
 

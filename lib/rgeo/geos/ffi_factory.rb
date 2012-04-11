@@ -600,11 +600,15 @@ module RGeo
 
 
       def _write_for_marshal(obj_)  # :nodoc:
-        unless defined?(@marshal_wkb_writer)
-          @marshal_wkb_writer = ::Geos::WkbWriter.new
-          @marshal_wkb_writer.output_dimensions = (@_has_3d ? 3 : 2)
+        if Utils.ffi_supports_set_output_dimension || !@_has_3d
+          unless defined?(@marshal_wkb_writer)
+            @marshal_wkb_writer = ::Geos::WkbWriter.new
+            @marshal_wkb_writer.output_dimensions = 3 if @_has_3d
+          end
+          @marshal_wkb_writer.write(obj_)
+        else
+          Utils.marshal_wkb_generator.generate(obj_)
         end
-        @marshal_wkb_writer.write(obj_)
       end
 
 
@@ -617,11 +621,15 @@ module RGeo
 
 
       def _write_for_psych(obj_)  # :nodoc:
-        unless defined?(@psych_wkt_writer)
-          @psych_wkt_writer = ::Geos::WktWriter.new
-          @psych_wkt_writer.output_dimensions = (@_has_3d ? 3 : 2)
+        if Utils.ffi_supports_set_output_dimension || !@_has_3d
+          unless defined?(@psych_wkt_writer)
+            @psych_wkt_writer = ::Geos::WktWriter.new
+            @psych_wkt_writer.output_dimensions = 3 if @_has_3d
+          end
+          @psych_wkt_writer.write(obj_)
+        else
+          Utils.psych_wkt_generator.generate(obj_)
         end
-        @psych_wkt_writer.write(obj_)
       end
 
 

@@ -39,66 +39,6 @@ module RGeo
   module Geos
 
 
-    module FFIUtils  # :nodoc:
-
-      class << self
-
-
-        def coord_seqs_equal?(cs1_, cs2_, check_z_)
-          len1_ = cs1_.length
-          len2_ = cs2_.length
-          if len1_ == len2_
-            (0...len1_).each do |i_|
-              return false unless cs1_.get_x(i_) == cs2_.get_x(i_) &&
-                cs1_.get_y(i_) == cs2_.get_y(i_) &&
-                (!check_z_ || cs1_.get_z(i_) == cs2_.get_z(i_))
-            end
-            true
-          else
-            false
-          end
-        end
-
-
-        def compute_dimension(geom_)
-          result_ = -1
-          case geom_.type_id
-          when ::Geos::GeomTypes::GEOS_POINT
-            result_ = 0
-          when ::Geos::GeomTypes::GEOS_MULTIPOINT
-            result_ = 0 unless geom_.empty?
-          when ::Geos::GeomTypes::GEOS_LINESTRING, ::Geos::GeomTypes::GEOS_LINEARRING
-            result_ = 1
-          when ::Geos::GeomTypes::GEOS_MULTILINESTRING
-            result_ = 1 unless geom_.empty?
-          when ::Geos::GeomTypes::GEOS_POLYGON
-            result_ = 2
-          when ::Geos::GeomTypes::GEOS_MULTIPOLYGON
-            result_ = 2 unless geom_.empty?
-          when ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
-            geom_.each do |g_|
-              dim_ = compute_dimension(g_)
-              result_ = dim_ if result_ < dim_
-            end
-          end
-          result_
-        end
-
-
-        def _init
-          @supports_prepared_level_1 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)
-          @supports_prepared_level_2 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
-        end
-
-        attr_reader :supports_prepared_level_1
-        attr_reader :supports_prepared_level_2
-
-
-      end
-
-    end
-
-
     class FFIGeometryImpl  # :nodoc:
 
       include Feature::Instance
@@ -174,7 +114,7 @@ module RGeo
 
 
       def dimension
-        FFIUtils.compute_dimension(@fg_geom)
+        Utils.ffi_compute_dimension(@fg_geom)
       end
 
 
@@ -258,7 +198,7 @@ module RGeo
       def disjoint?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
           prep_ ? prep_.disjoint?(fg_) : @fg_geom.disjoint?(fg_)
         else
           false
@@ -269,7 +209,7 @@ module RGeo
       def intersects?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_1
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_1
           prep_ ? prep_.intersects?(fg_) : @fg_geom.intersects?(fg_)
         else
           false
@@ -280,7 +220,7 @@ module RGeo
       def touches?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
           prep_ ? prep_.touches?(fg_) : @fg_geom.touches?(fg_)
         else
           false
@@ -291,7 +231,7 @@ module RGeo
       def crosses?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
           prep_ ? prep_.crosses?(fg_) : @fg_geom.crosses?(fg_)
         else
           false
@@ -302,7 +242,7 @@ module RGeo
       def within?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
           prep_ ? prep_.within?(fg_) : @fg_geom.within?(fg_)
         else
           false
@@ -313,7 +253,7 @@ module RGeo
       def contains?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_1
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_1
           prep_ ? prep_.contains?(fg_) : @fg_geom.contains?(fg_)
         else
           false
@@ -324,7 +264,7 @@ module RGeo
       def overlaps?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if fg_
-          prep_ = _request_prepared if FFIUtils.supports_prepared_level_2
+          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
           prep_ ? prep_.overlaps?(fg_) : @fg_geom.overlaps?(fg_)
         else
           false
@@ -449,7 +389,7 @@ module RGeo
 
       def rep_equals?(rhs_)
         rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
-          FFIUtils.coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
+          Utils.ffi_coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
 
 
@@ -525,7 +465,7 @@ module RGeo
 
       def rep_equals?(rhs_)
         rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
-          FFIUtils.coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
+          Utils.ffi_coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
 
 
