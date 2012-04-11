@@ -81,7 +81,9 @@ module RGeo
 
 
         def _assert_close_enough(a_, b_)
-          assert_in_delta(a_, b_, ::Math.sqrt(a_*a_+b_*b_)*0.00000001)
+          delta_ = ::Math.sqrt(a_*a_+b_*b_)*0.00000001
+          delta_ = 0.000000000001 if delta_ < 0.000000000001
+          assert_in_delta(a_, b_, delta_)
         end
 
 

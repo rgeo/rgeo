@@ -63,7 +63,7 @@ module RGeo
       # Marshal support
 
       def marshal_dump  # :nodoc:
-        [@factory, @factory._write_for_marshal(@fg_geom)]
+        [@factory, @factory._write_for_marshal(self)]
       end
 
       def marshal_load(data_)  # :nodoc:
@@ -79,7 +79,7 @@ module RGeo
 
       def encode_with(coder_)  # :nodoc:
         coder_['factory'] = @factory
-        str_ = @factory._write_for_psych(@fg_geom)
+        str_ = @factory._write_for_psych(self)
         str_ = str_.encode('US-ASCII') if str_.respond_to?(:encode)
         coder_['wkt'] = str_
       end
