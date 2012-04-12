@@ -202,6 +202,31 @@ module RGeo
         end
 
 
+        def test_union
+          geom1_ = @factory.multi_point([@point1, @point2])
+          geom2_ = @factory.multi_point([@point1, @point3])
+          geom3_ = @factory.multi_point([@point1, @point2, @point3])
+          assert_equal(geom3_, geom1_.union(geom2_))
+          assert_equal(geom3_, geom1_ + geom2_)
+        end
+
+
+        def test_difference
+          geom1_ = @factory.multi_point([@point1, @point2])
+          geom2_ = @factory.multi_point([@point1, @point3])
+          assert_equal(@point2, geom1_.difference(geom2_))
+          assert_equal(@point2, geom1_ - geom2_)
+        end
+
+
+        def test_intersection
+          geom1_ = @factory.multi_point([@point1, @point2])
+          geom2_ = @factory.multi_point([@point1, @point3])
+          assert_equal(@point1, geom1_.intersection(geom2_))
+          assert_equal(@point1, geom1_ * geom2_)
+        end
+
+
       end
 
     end

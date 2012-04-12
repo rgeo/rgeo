@@ -300,17 +300,23 @@ module RGeo
         fg_ ? @factory.wrap_fg_geom(@fg_geom.intersection(fg_)) : nil
       end
 
+      alias_method :*, :intersection
+
 
       def union(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         fg_ ? @factory.wrap_fg_geom(@fg_geom.union(fg_)) : nil
       end
 
+      alias_method :+, :union
+
 
       def difference(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         fg_ ? @factory.wrap_fg_geom(@fg_geom.difference(fg_)) : nil
       end
+
+      alias_method :-, :difference
 
 
       def sym_difference(rhs_)
