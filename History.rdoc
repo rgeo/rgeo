@@ -1,3 +1,7 @@
+=== 0.3.10 / 2012-04-??
+
+* Implemented subdivision and other analysis features on Cartesian::BoundingBox.
+
 === 0.3.9 / 2012-04-10
 
 * Implemented LineString#length and MultiLineString#length for simple cartesian and simple spherical factories.

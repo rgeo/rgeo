@@ -61,10 +61,18 @@ module RGeo
 
       def self.create_from_points(point1_, point2_, opts_={})
         factory_ = point1_.factory
-        box_ = new(factory_, opts_)
-        box_._add_geometry(point1_)
-        box_.add(point2_)
-        box_
+        new(factory_, opts_)._add_geometry(point1_).add(point2_)
+      end
+
+
+      # Create a bounding box given a geometry to surround.
+      # The bounding box will be given the factory of the geometry.
+      # You may also provide the same options available to
+      # BoundingBox.new.
+
+      def self.create_from_geometry(geom_, opts_={})
+        factory_ = geom_.factory
+        new(factory_, opts_)._add_geometry(geom_)
       end
 
 
@@ -87,9 +95,13 @@ module RGeo
 
       def initialize(factory_, opts_={})
         @factory = factory_
-        @has_z = !opts_[:ignore_z] && factory_.property(:has_z_coordinate) ? true : false
-        @has_m = !opts_[:ignore_m] && factory_.property(:has_m_coordinate) ? true : false
-        @min_x = @max_x = @min_y = @max_y = @min_z = @max_z = @min_m = @max_m = nil
+        if (values_ = opts_[:raw])
+          @has_z, @has_m, @min_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m = values_
+        else
+          @has_z = !opts_[:ignore_z] && factory_.property(:has_z_coordinate) ? true : false
+          @has_m = !opts_[:ignore_m] && factory_.property(:has_m_coordinate) ? true : false
+          @min_x = @max_x = @min_y = @max_y = @min_z = @max_z = @min_m = @max_m = nil
+        end
       end
 
 
@@ -114,6 +126,25 @@ module RGeo
 
       def empty?
         @min_x.nil?
+      end
+
+
+      # Returns true if this bounding box is degenerate. That is,
+      # it is nonempty but contains only a single point because both
+      # the X and Y spans are 0. Infinitesimal boxes are also
+      # always degenerate.
+
+      def infinitesimal?
+        @min_x && @min_x == @max_x && @min_y == @max_y
+      end
+
+
+      # Returns true if this bounding box is degenerate. That is,
+      # it is nonempty but has zero area because either or both
+      # of the X or Y spans are 0.
+
+      def degenerate?
+        @min_x && (@min_x == @max_x || @min_y == @max_y)
       end
 
 
@@ -145,6 +176,20 @@ module RGeo
       end
 
 
+      # Returns the midpoint X, or nil if this bounding box is empty.
+
+      def center_x
+        @max_x ? (@max_x + @min_x) * 0.5 : nil
+      end
+
+
+      # Returns the X span, or 0 if this bounding box is empty.
+
+      def x_span
+        @max_x ? @max_x - @min_x : 0
+      end
+
+
       # Returns the minimum Y, or nil if this bounding box is empty.
 
       def min_y
@@ -156,6 +201,20 @@ module RGeo
 
       def max_y
         @max_y
+      end
+
+
+      # Returns the midpoint Y, or nil if this bounding box is empty.
+
+      def center_y
+        @max_y ? (@max_y + @min_y) * 0.5 : nil
+      end
+
+
+      # Returns the Y span, or 0 if this bounding box is empty.
+
+      def y_span
+        @max_y ? @max_y - @min_y : 0
       end
 
 
@@ -173,6 +232,20 @@ module RGeo
       end
 
 
+      # Returns the midpoint Z, or nil if this bounding box is empty or has no Z.
+
+      def center_z
+        @max_z ? (@max_z + @min_z) * 0.5 : nil
+      end
+
+
+      # Returns the Z span, 0 if this bounding box is empty, or nil if it has no Z.
+
+      def z_span
+        @has_z ? (@max_z ? @max_z - @min_z : 0) : nil
+      end
+
+
       # Returns the minimum M, or nil if this bounding box is empty.
 
       def min_m
@@ -184,6 +257,20 @@ module RGeo
 
       def max_m
         @max_m
+      end
+
+
+      # Returns the midpoint M, or nil if this bounding box is empty or has no M.
+
+      def center_m
+        @max_m ? (@max_m + @min_m) * 0.5 : nil
+      end
+
+
+      # Returns the M span, 0 if this bounding box is empty, or nil if it has no M.
+
+      def m_span
+        @has_m ? (@max_m ? @max_m - @min_m : 0) : nil
       end
 
 
@@ -237,8 +324,10 @@ module RGeo
       end
 
 
-      # Converts this bounding box to an envelope polygon.
-      # Returns the empty collection if this bounding box is empty.
+      # Converts this bounding box to an envelope, which will be the
+      # empty collection (if the bounding box is empty), a point (if the
+      # bounding box is not empty but both spans are 0), a line (if only
+      # one of the two spans is 0) or a polygon (if neither span is 0).
 
       def to_geometry
         if @min_x
@@ -246,14 +335,14 @@ module RGeo
           extras_ << @min_z if @has_z
           extras_ << @min_m if @has_m
           point_min_ = @factory.point(@min_x, @min_y, *extras_)
-          if @min_x == @max_x && @min_y == @max_y
+          if infinitesimal?
             point_min_
           else
             extras_ = []
             extras_ << @max_z if @has_z
             extras_ << @max_m if @has_m
             point_max_ = @factory.point(@max_x, @max_y, *extras_)
-            if @min_x == @max_x || @min_y == @max_y
+            if degenerate?
               @factory.line(point_min_, point_max_)
             else
               @factory.polygon(@factory.linear_ring([point_min_,
@@ -298,6 +387,60 @@ module RGeo
       end
 
 
+      # Returns this bounding box subdivided, as an array of bounding boxes.
+      # If this bounding box is empty, returns the empty array.
+      # If this bounding box is a point, returns a one-element array
+      # containing the current point.
+      # If the x or y span is 0, bisects the line.
+      # Otherwise, generally returns a 4-1 subdivision in the X-Y plane.
+      # Does not subdivide on Z or M.
+      #
+      # [<tt>:bisect_factor</tt>]
+      #   An optional floating point value that should be greater than 1.0.
+      #   If the ratio between the larger span and the smaller span is
+      #   greater than this factor, the bounding box is divided only in
+      #   half instead of fourths.
+
+      def subdivide(opts_={})
+        return [] if empty?
+        if infinitesimal?
+          return [
+            BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+              @min_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m])
+          ]
+        end
+        factor_ = opts_[:bisect_factor]
+        factor_ ||= 1 if degenerate?
+        if factor_
+          if x_span > y_span * factor_
+            return [
+              BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+                @min_x, center_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m]),
+              BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+                center_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m])
+            ]
+          elsif y_span > x_span * factor_
+            return [
+              BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+                @min_x, @max_x, @min_y, center_y, @min_z, @max_z, @min_m, @max_m]),
+              BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+                @min_x, @max_x, center_y, @max_y, @min_z, @max_z, @min_m, @max_m])
+            ]
+          end
+        end
+        [
+          BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+            @min_x, center_x, @min_y, center_y, @min_z, @max_z, @min_m, @max_m]),
+          BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+            center_x, @max_x, @min_y, center_y, @min_z, @max_z, @min_m, @max_m]),
+          BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+            @min_x, center_x, center_y, @max_y, @min_z, @max_z, @min_m, @max_m]),
+          BoundingBox.new(@factory, :raw => [@has_z, @has_m,
+            center_x, @max_x, center_y, @max_y, @min_z, @max_z, @min_m, @max_m])
+        ]
+      end
+
+
       def _add_geometry(geometry_)  # :nodoc:
         case geometry_
         when Feature::Point
@@ -315,6 +458,7 @@ module RGeo
         when Feature::GeometryCollection
           geometry_.each{ |g_| _add_geometry(g_) }
         end
+        self
       end
 
 
