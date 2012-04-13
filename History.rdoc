@@ -1,4 +1,4 @@
-=== 0.3.10 / 2012-04-??
+=== 0.3.10 / 2012-04-12
 
 * Implemented subdivision and other analysis features on Cartesian::BoundingBox.
 * Operators +, -, and * were not implemented in the ffi-geos factory. Fixed.

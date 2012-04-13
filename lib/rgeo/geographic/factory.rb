@@ -273,7 +273,7 @@ module RGeo
       # this factory.
 
       def project(geometry_)
-        return nil unless @projector
+        return nil unless @projector && geometry_
         unless geometry_.factory == self
           raise Error::InvalidGeometry, 'Wrong geometry type'
         end
@@ -287,6 +287,7 @@ module RGeo
       # the projection defined by this factory.
 
       def unproject(geometry_)
+        return nil unless geometry_
         unless @projector && @projector.projection_factory == geometry_.factory
           raise Error::InvalidGeometry, 'You can unproject only features that are in the projected coordinate space.'
         end
