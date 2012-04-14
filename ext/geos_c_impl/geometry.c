@@ -774,8 +774,8 @@ static VALUE method_geometry_buffer(VALUE self, VALUE distance)
   self_geom = self_data->geom;
   if (self_geom) {
     factory = self_data->factory;
-    resolution = NUM2INT(RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution);
-    result = rgeo_wrap_geos_geometry(factory, GEOSBuffer_r(self_data->geos_context, self_geom, rb_num2dbl(distance), resolution), Qnil);
+    result = rgeo_wrap_geos_geometry(factory, GEOSBuffer_r(self_data->geos_context, self_geom,
+      rb_num2dbl(distance), RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution), Qnil);
   }
   return result;
 }

@@ -100,6 +100,7 @@ module RGeo
         undef_method :test_union
         undef_method :test_difference
         undef_method :test_sym_difference
+        undef_method :test_buffer
 
 
       end

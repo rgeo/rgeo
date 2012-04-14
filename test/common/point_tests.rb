@@ -282,6 +282,13 @@ module RGeo
         end
 
 
+        def test_buffer
+          point_ = @factory.point(11, 12)
+          buffer_ = point_.buffer(4)
+          assert_equal(::RGeo::Feature::Polygon, buffer_.geometry_type)
+        end
+
+
         def test_3dz_creation
           point_ = @zfactory.point(11, 12, 13)
           assert_equal(11, point_.x)

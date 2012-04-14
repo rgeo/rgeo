@@ -1,3 +1,7 @@
+=== 0.3.11 / 2012-04-14
+
+* Geometry#buffer crashed in the geos capi factory. Fixed.
+
 === 0.3.10 / 2012-04-12
 
 * Implemented subdivision and other analysis features on Cartesian::BoundingBox.
