@@ -227,6 +227,14 @@ module RGeo
         end
 
 
+        def test_zm
+          factory_ = create_factory(:has_z_coordinate => true, :has_m_coordinate => true)
+          p1_ = factory_.point(1, 2, 3, 4)
+          mp_ = factory_.multi_point([p1_])
+          assert_equal(p1_, mp_[0])
+        end
+
+
       end
 
     end

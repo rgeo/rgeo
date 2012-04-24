@@ -431,7 +431,7 @@ module RGeo
         inner_rings_ = inner_rings_.to_a unless inner_rings_.kind_of?(::Array)
         return nil unless ::RGeo::Feature::LineString.check_type(outer_ring_)
         outer_ring_ = _create_fg_linear_ring(outer_ring_.points)
-        inner_rings_.map! do |r_|
+        inner_rings_ = inner_rings_.map do |r_|
           return nil unless ::RGeo::Feature::LineString.check_type(r_)
           _create_fg_linear_ring(r_.points)
         end
@@ -465,7 +465,7 @@ module RGeo
 
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        elems_.map! do |elem_|
+        elems_ = elems_.map do |elem_|
           elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::Point,
             :force_new, :keep_subtype)
           return nil unless elem_
@@ -483,7 +483,7 @@ module RGeo
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
         klasses_ = []
-        elems_.map! do |elem_|
+        elems_ = elems_.map do |elem_|
           elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::LineString,
             :force_new, :keep_subtype)
           return nil unless elem_
@@ -500,7 +500,7 @@ module RGeo
 
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        elems_.map! do |elem_|
+        elems_ = elems_.map do |elem_|
           elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::Polygon,
             :force_new, :keep_subtype)
           return nil unless elem_

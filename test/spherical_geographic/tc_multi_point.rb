@@ -47,8 +47,8 @@ module RGeo
       class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
 
 
-        def create_factory
-          @factory = ::RGeo::Geographic.spherical_factory
+        def create_factory(opts_={})
+          @factory = ::RGeo::Geographic.spherical_factory(opts_)
         end
 
 

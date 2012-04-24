@@ -47,8 +47,8 @@ module RGeo
       class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
 
 
-        def create_factory
-          ::RGeo::Geos.factory
+        def create_factory(opts_={})
+          ::RGeo::Geos.factory(opts_)
         end
 
 

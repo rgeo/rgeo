@@ -47,8 +47,8 @@ module RGeo
       class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
 
 
-        def create_factory
-          ::RGeo::Geos.factory(:native_interface => :ffi)
+        def create_factory(opts_={})
+          ::RGeo::Geos.factory(opts_.merge(:native_interface => :ffi))
         end
 
 

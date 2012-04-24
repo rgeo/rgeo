@@ -47,8 +47,8 @@ module RGeo
       class TestMultiPoint < ::Test::Unit::TestCase  # :nodoc:
 
 
-        def create_factory
-          @factory = ::RGeo::Cartesian.simple_factory
+        def create_factory(opts_={})
+          @factory = ::RGeo::Cartesian.simple_factory(opts_)
         end
 
 
