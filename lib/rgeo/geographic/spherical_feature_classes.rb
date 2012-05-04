@@ -96,6 +96,26 @@ module RGeo
       end
 
 
+      def buffer(distance_)
+        radius_ = distance_ / SphericalMath::RADIUS
+        radius_ = 1.5 if radius_ > 1.5
+        cos_ = ::Math.cos(radius_)
+        sin_ = ::Math.sin(radius_)
+        point_count_ = factory.property(:buffer_resolution) * 4
+        p0_ = _xyz
+        p1_ = p0_.create_perpendicular
+        p2_ = p1_ % p0_
+        angle_ = ::Math::PI * 2.0 / point_count_
+        points_ = (0...point_count_).map do |i_|
+          r_ = angle_ * i_
+          pi_ = SphericalMath::PointXYZ.weighted_combination(p1_, ::Math.cos(r_), p2_, ::Math.sin(r_))
+          p_ = SphericalMath::PointXYZ.weighted_combination(p0_, cos_, pi_, sin_)
+          factory.point(*p_.lonlat)
+        end
+        factory.polygon(factory.linear_ring(points_))
+      end
+
+
       alias_method :longitude, :x
       alias_method :lon, :x
       alias_method :latitude, :y

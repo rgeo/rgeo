@@ -75,6 +75,8 @@ module RGeo
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
         end
         @lenient_assertions = opts_[:uses_lenient_assertions] ? true : false
+        @buffer_resolution = opts_[:buffer_resolution].to_i
+        @buffer_resolution = 1 if @buffer_resolution < 1
 
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
@@ -138,6 +140,7 @@ module RGeo
           'wktp' => @wkt_parser._properties,
           'wkbp' => @wkb_parser._properties,
           'lena' => @lenient_assertions,
+          'bufr' => @buffer_resolution,
         }
         hash_['proj4'] = @proj4.marshal_dump if @proj4
         hash_['cs'] = @coord_sys.to_wkt if @coord_sys
@@ -169,6 +172,7 @@ module RGeo
           :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
           :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
           :uses_lenient_assertions => data_['lena'],
+          :buffer_resolution => data_['bufr'],
           :proj4 => proj4_,
           :coord_sys => coord_sys_
         )
@@ -195,6 +199,7 @@ module RGeo
         coder_['wkt_parser'] = @wkt_parser._properties
         coder_['wkb_parser'] = @wkb_parser._properties
         coder_['lenient_assertions'] = @lenient_assertions
+        coder_['buffer_resolution'] = @buffer_resolution
         if @proj4
           str_ = @proj4.original_str || @proj4.canonical_str
           coder_['proj4'] = @proj4.radians? ? {'proj4' => str_, 'radians' => true} : str_
@@ -230,6 +235,7 @@ module RGeo
           :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
           :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
           :uses_lenient_assertions => coder_['lenient_assertions'],
+          :buffer_resolution => coder_['buffer_resolution'],
           :proj4 => proj4_,
           :coord_sys => coord_sys_
         )
@@ -334,6 +340,8 @@ module RGeo
           @support_m
         when :uses_lenient_assertions
           @lenient_assertions
+        when :buffer_resolution
+          @buffer_resolution
         when :is_geographic
           true
         else

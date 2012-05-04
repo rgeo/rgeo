@@ -48,7 +48,7 @@ module RGeo
 
 
         def setup
-          @factory = ::RGeo::Geos.factory
+          @factory = ::RGeo::Geos.factory(:buffer_resolution => 8)
           @zfactory = ::RGeo::Geos.factory(:has_z_coordinate => true)
           @mfactory = ::RGeo::Geos.factory(:has_m_coordinate => true)
           @zmfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true)

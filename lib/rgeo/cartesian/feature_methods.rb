@@ -71,6 +71,17 @@ module RGeo
       end
 
 
+      def buffer(distance_)
+        point_count_ = factory.property(:buffer_resolution) * 4
+        angle_ = -::Math::PI * 2.0 / point_count_
+        points_ = (0...point_count_).map do |i_|
+          r_ = angle_ * i_
+          factory.point(@x + distance_ * ::Math.cos(r_), @y + distance_ * ::Math.sin(r_))
+        end
+        factory.polygon(factory.linear_ring(points_))
+      end
+
+
     end
 
 

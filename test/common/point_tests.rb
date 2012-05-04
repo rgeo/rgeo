@@ -286,6 +286,7 @@ module RGeo
           point_ = @factory.point(11, 12)
           buffer_ = point_.buffer(4)
           assert_equal(::RGeo::Feature::Polygon, buffer_.geometry_type)
+          assert_equal(33, buffer_.exterior_ring.num_points)
         end
 
 

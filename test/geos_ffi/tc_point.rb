@@ -48,7 +48,7 @@ module RGeo
 
 
         def setup
-          @factory = ::RGeo::Geos.factory(:native_interface => :ffi)
+          @factory = ::RGeo::Geos.factory(:native_interface => :ffi, :buffer_resolution => 8)
           @zfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :native_interface => :ffi)
           @mfactory = ::RGeo::Geos.factory(:has_m_coordinate => true, :native_interface => :ffi)
           @zmfactory = ::RGeo::Geos.factory(:has_z_coordinate => true, :has_m_coordinate => true,

@@ -1,3 +1,9 @@
+=== 0.3.13 / 2012-05-04
+
+* The spherical factory and the simple cartesian factory now support buffers around points (but not around other types). Accordingly, those factories now take the :buffer_resolution property argument.
+* The :uses_lenient_assertions and parser/generator arguments to RGeo::Geographic.spherical_factory did not have their advertised effect. Fixed.
+* The parser/generator arguments to projected geographic factories did not have their advertised effect. Fixed.
+
 === 0.3.12 / 2012-04-24
 
 * Geos::FFIFactory collection constructors sometimes modified arguments in place, which caused problems for the ZMFactory among other things. Fixed.

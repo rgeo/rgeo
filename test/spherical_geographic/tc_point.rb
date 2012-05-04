@@ -48,7 +48,7 @@ module RGeo
 
 
         def setup
-          @factory = ::RGeo::Geographic.spherical_factory
+          @factory = ::RGeo::Geographic.spherical_factory(:buffer_resolution => 8)
           @zfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true)
           @mfactory = ::RGeo::Geographic.spherical_factory(:has_m_coordinate => true)
           @zmfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true, :has_m_coordinate => true)
@@ -100,7 +100,6 @@ module RGeo
         undef_method :test_union
         undef_method :test_difference
         undef_method :test_sym_difference
-        undef_method :test_buffer
 
 
       end

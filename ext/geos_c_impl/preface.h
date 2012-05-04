@@ -36,7 +36,7 @@
 
 
 #ifdef HAVE_GEOS_C_H
-#ifdef HAVE_INITGEOS_R
+#ifdef HAVE_GEOSSETSRID_R
 #define RGEO_GEOS_SUPPORTED
 #endif
 #endif

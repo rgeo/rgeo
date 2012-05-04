@@ -90,6 +90,14 @@ module RGeo
         end
 
 
+        def lonlat
+          lat_rad_ = ::Math.asin(@z)
+          lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
+          rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
+          [lon_rad_ / rpd_, lat_rad_ / rpd_]
+        end
+
+
         def *(rhs_)
           val_ = @x * rhs_.x + @y * rhs_.y + @z * rhs_.z
           val_ = 1.0 if val_ > 1.0
@@ -119,6 +127,17 @@ module RGeo
         end
 
 
+        # Creates some point that is perpendicular to this point
+
+        def create_perpendicular
+          p1dot_ = self * P1
+          p2dot_ = self * P2
+          p1dot_ = -p1dot_ if p1dot_ < 0
+          p2dot_ = -p2dot_ if p2dot_ < 0
+          p1dot_ < p2dot_ ? (self % P1) : (self % P2)
+        end
+
+
         def self.from_latlon(lat_, lon_)
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           lat_rad_ = rpd_ * lat_
@@ -129,6 +148,15 @@ module RGeo
           y_ = ::Math.sin(lon_rad_) * r_
           new(x_, y_, z_)
         end
+
+
+        def self.weighted_combination(p1_, w1_, p2_, w2_)
+          new(p1_.x * w1_ + p2_.x * w2_, p1_.y * w1_ + p2_.y * w2_, p1_.z * w1_ + p2_.z * w2_)
+        end
+
+
+        P1 = new(1, 0, 0)
+        P2 = new(0, 1, 0)
 
       end
 

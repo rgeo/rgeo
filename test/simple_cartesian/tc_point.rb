@@ -48,7 +48,7 @@ module RGeo
 
 
         def setup
-          @factory = ::RGeo::Cartesian.simple_factory(:srid => 1)
+          @factory = ::RGeo::Cartesian.simple_factory(:srid => 1, :buffer_resolution => 8)
           @zfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :has_z_coordinate => true)
           @mfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :has_m_coordinate => true)
           @zmfactory = ::RGeo::Cartesian.simple_factory(:srid => 1, :has_z_coordinate => true, :has_m_coordinate => true)
@@ -82,7 +82,6 @@ module RGeo
         undef_method :test_union
         undef_method :test_difference
         undef_method :test_sym_difference
-        undef_method :test_buffer
 
 
       end

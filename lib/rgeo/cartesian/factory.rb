@@ -77,6 +77,8 @@ module RGeo
         srid_ ||= @coord_sys.authority_code if @coord_sys
         @srid = srid_.to_i
         @lenient_assertions = opts_[:uses_lenient_assertions] ? true : false
+        @buffer_resolution = opts_[:buffer_resolution].to_i
+        @buffer_resolution = 1 if @buffer_resolution < 1
 
         wkt_generator_ = opts_[:wkt_generator]
         case wkt_generator_
@@ -129,6 +131,7 @@ module RGeo
           'wktp' => @wkt_parser._properties,
           'wkbp' => @wkb_parser._properties,
           'lena' => @lenient_assertions,
+          'bufr' => @buffer_resolution,
         }
         hash_['proj4'] = @proj4.marshal_dump if @proj4
         hash_['cs'] = @coord_sys.to_wkt if @coord_sys
@@ -156,6 +159,7 @@ module RGeo
           :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
           :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
           :uses_lenient_assertions => data_['lena'],
+          :buffer_resolution => data_['bufr'],
           :proj4 => proj4_,
           :coord_sys => coord_sys_
         )
@@ -169,6 +173,7 @@ module RGeo
         coder_['has_m_coordinate'] = @has_m
         coder_['srid'] = @srid
         coder_['lenient_assertions'] = @lenient_assertions
+        coder_['buffer_resolution'] = @buffer_resolution
         coder_['wkt_generator'] = @wkt_generator._properties
         coder_['wkb_generator'] = @wkb_generator._properties
         coder_['wkt_parser'] = @wkt_parser._properties
@@ -204,6 +209,7 @@ module RGeo
           :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
           :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
           :uses_lenient_assertions => coder_['lenient_assertions'],
+          :buffer_resolution => coder_['buffer_resolution'],
           :proj4 => proj4_,
           :coord_sys => coord_sys_
         )
@@ -227,6 +233,8 @@ module RGeo
           @has_m
         when :uses_lenient_assertions
           @lenient_assertions
+        when :buffer_resolution
+          @buffer_resolution
         when :is_cartesian
           true
         else

@@ -92,6 +92,16 @@ module RGeo
       #   Polygon and MultiPolygon. This may speed up creation of certain
       #   objects, at the expense of not doing the proper checking for
       #   OGC compliance. Default is false.
+      # [<tt>:buffer_resolution</tt>]
+      #   The resolution of buffers around geometries created by this
+      #   factory. This controls the number of line segments used to
+      #   approximate curves. The default is 1, which causes, for
+      #   example, the buffer around a point to be approximated by a
+      #   4-sided polygon. A resolution of 2 would cause that buffer
+      #   to be approximated by an 8-sided polygon. The exact behavior
+      #   for different kinds of buffers is not specified precisely,
+      #   but in general the value is taken as the number of segments
+      #   per 90-degree curve.
       # [<tt>:proj4</tt>]
       #   Provide the coordinate system in Proj4 format. You may pass
       #   either an RGeo::CoordSys::Proj4 object, or a string or hash
@@ -153,6 +163,12 @@ module RGeo
           :has_m_coordinate => opts_[:has_m_coordinate],
           :proj4 => proj4_ || _proj4_4055,
           :coord_sys => coord_sys_ || _coordsys_4055,
+          :uses_lenient_assertions => opts_[:uses_lenient_assertions],
+          :buffer_resolution => opts_[:buffer_resolution],
+          :wkt_parser => opts_[:wkt_parser],
+          :wkb_parser => opts_[:wkb_parser],
+          :wkt_generator => opts_[:wkt_generator],
+          :wkb_generator => opts_[:wkb_generator],
           :srid => (srid_ || 4055).to_i)
       end
 
@@ -234,6 +250,10 @@ module RGeo
           :proj4 => _proj4_4326,
           :coord_sys => _coordsys_4326,
           :srid => 4326,
+          :wkt_parser => opts_[:wkt_parser],
+          :wkb_parser => opts_[:wkb_parser],
+          :wkt_generator => opts_[:wkt_generator],
+          :wkb_generator => opts_[:wkb_generator],
           :has_z_coordinate => opts_[:has_z_coordinate],
           :has_m_coordinate => opts_[:has_m_coordinate])
         projector_ = Geographic::SimpleMercatorProjector.new(factory_,
