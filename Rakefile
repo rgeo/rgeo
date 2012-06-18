@@ -175,13 +175,6 @@ file "#{doc_directory_}/index.html" => all_rdoc_files_ do
   ::RDoc::RDoc.new.document(args_ + all_rdoc_files_)
 end
 
-task :publish_rdoc => :build_rdoc do
-  require 'yaml'
-  config_ = ::YAML.load(::File.read(::File.expand_path("~/.rubyforge/user-config.yml")))
-  username_ = config_['username']
-  sh "rsync -av --delete #{doc_directory_}/ #{username_}@rubyforge.org:/var/www/gforge-projects/#{gemspec_.rubyforge_project}/#{gemspec_.name}"
-end
-
 
 # Gem release tasks
 

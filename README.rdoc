@@ -116,7 +116,7 @@ we are planning on introducing more add-on modules, including:
 
 === Development and support
 
-Documentation is available at http://virtuoso.rubyforge.org/rgeo/README_rdoc.html
+Documentation is available at http://dazuma.github.com/rgeo/rdoc
 
 Source code is hosted on Github at http://github.com/dazuma/rgeo
 
