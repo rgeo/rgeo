@@ -1,0 +1,6 @@
+/doc/
+/pkg/
+.DS_Store
+*.rbc
+Gemfile.lock
+/test/coord_sys/database.yml
