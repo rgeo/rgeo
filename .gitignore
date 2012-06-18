@@ -1,6 +1,16 @@
 /doc/
 /pkg/
+/tmp/
+/future/
+.#*
 .DS_Store
+*.dSYM
+*.class
+*.jar
+*.bundle
+*.o
 *.rbc
-Gemfile.lock
+Makefile*
+mkmf.log
 /test/coord_sys/database.yml
+Gemfile.lock
