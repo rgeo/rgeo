@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>module RGeo::Feature::Geometry - RGeo 0.3.13 Documentation</title>
+
+<link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../../index.html">Home</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/rgeo/feature/geometry.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-2A">#*</a>
+    
+    <li><a href="#method-i-2B">#+</a>
+    
+    <li><a href="#method-i-2D">#-</a>
+    
+    <li><a href="#method-i-3D-3D">#==</a>
+    
+    <li><a href="#method-i-as_binary">#as_binary</a>
+    
+    <li><a href="#method-i-as_text">#as_text</a>
+    
+    <li><a href="#method-i-boundary">#boundary</a>
+    
+    <li><a href="#method-i-buffer">#buffer</a>
+    
+    <li><a href="#method-i-contains-3F">#contains?</a>
+    
+    <li><a href="#method-i-convex_hull">#convex_hull</a>
+    
+    <li><a href="#method-i-crosses-3F">#crosses?</a>
+    
+    <li><a href="#method-i-difference">#difference</a>
+    
+    <li><a href="#method-i-dimension">#dimension</a>
+    
+    <li><a href="#method-i-disjoint-3F">#disjoint?</a>
+    
+    <li><a href="#method-i-distance">#distance</a>
+    
+    <li><a href="#method-i-envelope">#envelope</a>
+    
+    <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-equals-3F">#equals?</a>
+    
+    <li><a href="#method-i-factory">#factory</a>
+    
+    <li><a href="#method-i-geometry_type">#geometry_type</a>
+    
+    <li><a href="#method-i-intersection">#intersection</a>
+    
+    <li><a href="#method-i-intersects-3F">#intersects?</a>
+    
+    <li><a href="#method-i-is_empty-3F">#is_empty?</a>
+    
+    <li><a href="#method-i-is_simple-3F">#is_simple?</a>
+    
+    <li><a href="#method-i-overlaps-3F">#overlaps?</a>
+    
+    <li><a href="#method-i-relate">#relate</a>
+    
+    <li><a href="#method-i-relate-3F">#relate?</a>
+    
+    <li><a href="#method-i-rep_equals-3F">#rep_equals?</a>
+    
+    <li><a href="#method-i-srid">#srid</a>
+    
+    <li><a href="#method-i-sym_difference">#sym_difference</a>
+    
+    <li><a href="#method-i-touches-3F">#touches?</a>
+    
+    <li><a href="#method-i-union">#union</a>
+    
+    <li><a href="#method-i-within-3F">#within?</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../../README_rdoc.html">README</a>
+  
+    <li class="file"><a href="../../Spatial_Programming_With_RGeo_rdoc.html">Spatial_Programming_With_RGeo</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../RGeo.html">RGeo</a>
+  
+    <li><a href="../../RGeo/Cartesian.html">RGeo::Cartesian</a>
+  
+    <li><a href="../../RGeo/Cartesian/Analysis.html">RGeo::Cartesian::Analysis</a>
+  
+    <li><a href="../../RGeo/Cartesian/BoundingBox.html">RGeo::Cartesian::BoundingBox</a>
+  
+    <li><a href="../../RGeo/Cartesian/Factory.html">RGeo::Cartesian::Factory</a>
+  
+    <li><a href="../../RGeo/CoordSys.html">RGeo::CoordSys</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS.html">RGeo::CoordSys::CS</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/AngularUnit.html">RGeo::CoordSys::CS::AngularUnit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/AxisInfo.html">RGeo::CoordSys::CS::AxisInfo</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Base.html">RGeo::CoordSys::CS::Base</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CompoundCoordinateSystem.html">RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CoordinateSystem.html">RGeo::CoordSys::CS::CoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CoordinateSystemFactory.html">RGeo::CoordSys::CS::CoordinateSystemFactory</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Datum.html">RGeo::CoordSys::CS::Datum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Ellipsoid.html">RGeo::CoordSys::CS::Ellipsoid</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/GeocentricCoordinateSystem.html">RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/HorizontalCoordinateSystem.html">RGeo::CoordSys::CS::HorizontalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/HorizontalDatum.html">RGeo::CoordSys::CS::HorizontalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Info.html">RGeo::CoordSys::CS::Info</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LinearUnit.html">RGeo::CoordSys::CS::LinearUnit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LocalCoordinateSystem.html">RGeo::CoordSys::CS::LocalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LocalDatum.html">RGeo::CoordSys::CS::LocalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/PrimeMeridian.html">RGeo::CoordSys::CS::PrimeMeridian</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/ProjectedCoordinateSystem.html">RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Projection.html">RGeo::CoordSys::CS::Projection</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/ProjectionParameter.html">RGeo::CoordSys::CS::ProjectionParameter</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Unit.html">RGeo::CoordSys::CS::Unit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/VerticalCoordinateSystem.html">RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/VerticalDatum.html">RGeo::CoordSys::CS::VerticalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/WGS84ConversionInfo.html">RGeo::CoordSys::CS::WGS84ConversionInfo</a>
+  
+    <li><a href="../../RGeo/CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase.html">RGeo::CoordSys::SRSDatabase</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html">RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Entry.html">RGeo::CoordSys::SRSDatabase::Entry</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Interface.html">RGeo::CoordSys::SRSDatabase::Interface</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Proj4Data.html">RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/SrOrg.html">RGeo::CoordSys::SRSDatabase::SrOrg</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/UrlReader.html">RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li><a href="../../RGeo/Error.html">RGeo::Error</a>
+  
+    <li><a href="../../RGeo/Error/InvalidGeometry.html">RGeo::Error::InvalidGeometry</a>
+  
+    <li><a href="../../RGeo/Error/ParseError.html">RGeo::Error::ParseError</a>
+  
+    <li><a href="../../RGeo/Error/RGeoError.html">RGeo::Error::RGeoError</a>
+  
+    <li><a href="../../RGeo/Error/UnsupportedOperation.html">RGeo::Error::UnsupportedOperation</a>
+  
+    <li><a href="../../RGeo/Feature.html">RGeo::Feature</a>
+  
+    <li><a href="../../RGeo/Feature/Curve.html">RGeo::Feature::Curve</a>
+  
+    <li><a href="../../RGeo/Feature/Factory.html">RGeo::Feature::Factory</a>
+  
+    <li><a href="../../RGeo/Feature/Factory/Instance.html">RGeo::Feature::Factory::Instance</a>
+  
+    <li><a href="../../RGeo/Feature/FactoryGenerator.html">RGeo::Feature::FactoryGenerator</a>
+  
+    <li><a href="../../RGeo/Feature/Geometry.html">RGeo::Feature::Geometry</a>
+  
+    <li><a href="../../RGeo/Feature/GeometryCollection.html">RGeo::Feature::GeometryCollection</a>
+  
+    <li><a href="../../RGeo/Feature/Instance.html">RGeo::Feature::Instance</a>
+  
+    <li><a href="../../RGeo/Feature/Line.html">RGeo::Feature::Line</a>
+  
+    <li><a href="../../RGeo/Feature/LineString.html">RGeo::Feature::LineString</a>
+  
+    <li><a href="../../RGeo/Feature/LinearRing.html">RGeo::Feature::LinearRing</a>
+  
+    <li><a href="../../RGeo/Feature/MixinCollection.html">RGeo::Feature::MixinCollection</a>
+  
+    <li><a href="../../RGeo/Feature/MixinCollection/TypeData.html">RGeo::Feature::MixinCollection::TypeData</a>
+  
+    <li><a href="../../RGeo/Feature/MultiCurve.html">RGeo::Feature::MultiCurve</a>
+  
+    <li><a href="../../RGeo/Feature/MultiLineString.html">RGeo::Feature::MultiLineString</a>
+  
+    <li><a href="../../RGeo/Feature/MultiPoint.html">RGeo::Feature::MultiPoint</a>
+  
+    <li><a href="../../RGeo/Feature/MultiPolygon.html">RGeo::Feature::MultiPolygon</a>
+  
+    <li><a href="../../RGeo/Feature/MultiSurface.html">RGeo::Feature::MultiSurface</a>
+  
+    <li><a href="../../RGeo/Feature/Point.html">RGeo::Feature::Point</a>
+  
+    <li><a href="../../RGeo/Feature/Polygon.html">RGeo::Feature::Polygon</a>
+  
+    <li><a href="../../RGeo/Feature/Surface.html">RGeo::Feature::Surface</a>
+  
+    <li><a href="../../RGeo/Feature/Type.html">RGeo::Feature::Type</a>
+  
+    <li><a href="../../RGeo/Geographic.html">RGeo::Geographic</a>
+  
+    <li><a href="../../RGeo/Geographic/Factory.html">RGeo::Geographic::Factory</a>
+  
+    <li><a href="../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
+  
+    <li><a href="../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
+  
+    <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
+  
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+  
+    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+  
+    <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
+  
+    <li><a href="../../RGeo/WKRep.html">RGeo::WKRep</a>
+  
+    <li><a href="../../RGeo/WKRep/WKBGenerator.html">RGeo::WKRep::WKBGenerator</a>
+  
+    <li><a href="../../RGeo/WKRep/WKBParser.html">RGeo::WKRep::WKBParser</a>
+  
+    <li><a href="../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
+  
+    <li><a href="../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
+  
+    <li><a href="../../Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module RGeo::Feature::Geometry</h1>
+
+  <div id="description" class="description">
+    
+<h2 id="label-SFS+1.1+Description">SFS 1.1 Description</h2>
+
+<p><a href="Geometry.html">Geometry</a> is the root class of the hierarchy. <a
+href="Geometry.html">Geometry</a> is an abstract (non-instantiable) class.</p>
+
+<p>The instantiable subclasses of <a href="Geometry.html">Geometry</a> defined
+in this International Standard are restricted to 0, 1 and 2-dimensional
+geometric objects that exist in 2-dimensional coordinate space (R2).</p>
+
+<p>All instantiable <a href="Geometry.html">Geometry</a> classes described in
+this part of ISO 19125 are defined so that valid instances of a <a
+href="Geometry.html">Geometry</a> class are topologically closed, i.e. all
+defined geometries include their boundary.</p>
+
+<h2 id="label-Notes">Notes</h2>
+
+<p><a href="Geometry.html">Geometry</a> is defined as a module and is provided
+primarily for the sake of documentation. Implementations need not
+necessarily include this module itself. Therefore, you should not depend on
+the result of <code>is_a?(Geometry)</code> to check type. Instead, use the
+provided check_type class method (or === operator) defined in the <a
+href="Type.html">Type</a> module.</p>
+
+<p>Some implementations may support higher dimensional objects or coordinate
+systems, despite the limits of the SFS.</p>
+
+<h2 id="label-Forms+of+equivalence">Forms of equivalence</h2>
+
+<p>The <a href="Geometry.html">Geometry</a> model defines three forms of
+equivalence.</p>
+<ul><li>
+<p><strong>Spatial equivalence</strong> is the weakest form of equivalence,
+indicating that the objects represent the same region of space, but may be
+different representations of that region. For example, POINT(0 0) and a
+MULTIPOINT(0 0) are spatially equivalent, as are LINESTRING(0 0, 10 10) and
+GEOMETRYCOLLECTION(POINT(0 0), LINESTRING(0 0, 10 10, 0 0)). As a general
+rule, objects must have factories that are Factory#eql? in order to be
+spatially equivalent.</p>
+</li><li>
+<p><strong>Representational equivalence</strong> is a stronger form,
+indicating that the objects have the same representation, but may be
+different objects. All representationally equivalent objects are spatially
+equivalent, but not all spatially equivalent objects are representationally
+equivalent. For example, none of the examples in the spatial equivalence
+section above are representationally equivalent. However, two separate
+objects that both represent POINT(1 2) are representationally equivalent as
+well as spatially equivalent.</p>
+</li><li>
+<p><strong>Objective equivalence</strong> is the strongest form, indicating
+that the references refer to the same object. Of course, all pairs of
+references with the same objective identity are also  both
+representationally and spatially equivalent.</p>
+</li></ul>
+
+<p>Different methods test for different types of equivalence:</p>
+<ul><li>
+<p><code>equals?</code> and <code>==</code> test for spatial equivalence.</p>
+</li><li>
+<p><code>rep_equals?</code> and <code>eql?</code> test for representational
+equivalence.</p>
+</li><li>
+<p><code>equal?</code> tests for objective equivalence.</p>
+</li></ul>
+
+<p>All ruby objects must provide a suitable test for objective equivalence.
+Normally, this is simply provided by the Ruby <a
+href="../../Object.html">Object</a> base class. <a
+href="Geometry.html">Geometry</a> implementations should normally also
+provide tests for representational and spatial equivalence, if possible.
+The <code>==</code> operator and the <code>eql?</code> method are standard
+Ruby methods that are often expected to be usable for every object.
+Therefore, if an implementation cannot provide a suitable test for their
+equivalence types, they must degrade to use a stronger form of equivalence.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-2A" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">*</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If the given rhs is a geometry object, this operator must behave the same
+as the intersection method. The behavior for other rhs types is not
+specified; an implementation may choose to provide additional capabilities
+as appropriate.</p>
+          
+
+          
+          <div class="method-source-code" id="2A-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 686</span>
+<span class="ruby-keyword">def</span> *(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-identifier">intersection</span>(<span class="ruby-identifier">rhs_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- 2A-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- 2A-method -->
+
+    
+      <div id="method-i-2B" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">+</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If the given rhs is a geometry object, this operator must behave the same
+as the union method. The behavior for other rhs types is not specified; an
+implementation may choose to provide additional capabilities as
+appropriate.</p>
+          
+
+          
+          <div class="method-source-code" id="2B-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 676</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">+</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-identifier">union</span>(<span class="ruby-identifier">rhs_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- 2B-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- 2B-method -->
+
+    
+      <div id="method-i-2D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">-</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If the given rhs is a geometry object, this operator must behave the same
+as the difference method. The behavior for other rhs types is not
+specified; an implementation may choose to provide additional capabilities
+as appropriate.</p>
+          
+
+          
+          <div class="method-source-code" id="2D-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 666</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">-</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-identifier">difference</span>(<span class="ruby-identifier">rhs_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- 2D-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- 2D-method -->
+
+    
+      <div id="method-i-3D-3D" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This operator should behave almost the same as the equals? method, with two
+key differences.</p>
+
+<p>First, the == operator is required to handle rhs values that are not
+geometry objects (returning false in such cases) in order to fulfill the
+standard Ruby contract for the == operator, whereas the equals? method may
+assume that any rhs is a geometry.</p>
+
+<p>Second, the == operator should always be defined. That is, it should never
+raise <a
+href="../Error/UnsupportedOperation.html">Error::UnsupportedOperation</a>.
+In cases where the underlying implementation cannot provide a spatial
+equivalence test, the == operator must fall back on representational or
+objective equivalence.</p>
+          
+
+          
+          <div class="method-source-code" id="3D-3D-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 648</span>
+<span class="ruby-keyword">def</span> <span class="ruby-operator">==</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">RGeo</span><span class="ruby-operator">::</span><span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Instance</span>)
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">equals?</span>(<span class="ruby-identifier">rhs_</span>)
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>
+      <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- 3D-3D-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- 3D-3D-method -->
+
+    
+      <div id="method-i-as_binary" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">as_binary</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-as_binary-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Exports this geometric object to a specific Well-known Binary
+Representation of <a href="Geometry.html">Geometry</a>.</p>
+
+<h3 id="method-i-as_binary-label-Notes">Notes</h3>
+
+<p>Returns a binary string.</p>
+          
+
+          
+          <div class="method-source-code" id="as_binary-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 218</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">as_binary</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#as_binary not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- as_binary-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- as_binary-method -->
+
+    
+      <div id="method-i-as_text" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">as_text</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-as_text-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Exports this geometric object to a specific Well-known Text Representation
+of <a href="Geometry.html">Geometry</a>.</p>
+
+<h3 id="method-i-as_text-label-Notes">Notes</h3>
+
+<p>Returns an ASCII string.</p>
+          
+
+          
+          <div class="method-source-code" id="as_text-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 204</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">as_text</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#as_text not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- as_text-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- as_text-method -->
+
+    
+      <div id="method-i-boundary" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">boundary</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-boundary-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns the closure of the combinatorial boundary of this geometric object.
+Because the result of this function is a closure, and hence topologically
+closed, the resulting boundary can be represented using representational <a
+href="Geometry.html">Geometry</a> primitives.</p>
+
+<h3 id="method-i-boundary-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+          
+
+          
+          <div class="method-source-code" id="boundary-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 268</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">boundary</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#boundary not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- boundary-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- boundary-method -->
+
+    
+      <div id="method-i-buffer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">buffer</span><span
+            class="method-args">(distance_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-buffer-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns a geometric object that represents all Points whose distance from
+this geometric object is less than or equal to distance. Calculations are
+in the spatial reference system of this geometric object.</p>
+
+<h3 id="method-i-buffer-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+          
+
+          
+          <div class="method-source-code" id="buffer-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 498</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">buffer</span>(<span class="ruby-identifier">distance_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#buffer not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- buffer-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- buffer-method -->
+
+    
+      <div id="method-i-contains-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">contains?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-contains-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object “spatially contains”
+another_geometry.</p>
+
+<h3 id="method-i-contains-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="contains-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 408</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">contains?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#contains? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- contains-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- contains-3F-method -->
+
+    
+      <div id="method-i-convex_hull" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">convex_hull</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-convex_hull-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns a geometric object that represents the convex hull of this
+geometric object.</p>
+
+<h3 id="method-i-convex_hull-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+          
+
+          
+          <div class="method-source-code" id="convex_hull-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 512</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">convex_hull</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#convex_hull not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- convex_hull-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- convex_hull-method -->
+
+    
+      <div id="method-i-crosses-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">crosses?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-crosses-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object “spatially crosses” another_geometry.</p>
+
+<h3 id="method-i-crosses-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="crosses-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 368</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">crosses?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#crosses? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- crosses-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- crosses-3F-method -->
+
+    
+      <div id="method-i-difference" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">difference</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-difference-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns a geometric object that represents the <a
+href="Point.html">Point</a> set difference of this geometric object with
+another_geometry.</p>
+
+<h3 id="method-i-difference-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of performing operations on objects from different
+factories is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="difference-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 569</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">difference</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#difference not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- difference-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- difference-method -->
+
+    
+      <div id="method-i-dimension" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dimension</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-dimension-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>The inherent dimension of this geometric object, which must be less than or
+equal to the coordinate dimension. This specification is restricted to
+geometries in 2-dimensional coordinate space.</p>
+
+<h3 id="method-i-dimension-label-Notes">Notes</h3>
+
+<p>Returns an integer. This value is -1 for an empty geometry, 0 for point
+geometries, 1 for curves, and 2 for surfaces.</p>
+          
+
+          
+          <div class="method-source-code" id="dimension-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">dimension</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#dimension not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- dimension-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- dimension-method -->
+
+    
+      <div id="method-i-disjoint-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">disjoint?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-disjoint-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object is “spatially disjoint” from
+another_geometry.</p>
+
+<h3 id="method-i-disjoint-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="disjoint-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 308</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">disjoint?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#disjoint? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- disjoint-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- disjoint-3F-method -->
+
+    
+      <div id="method-i-distance" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">distance</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-distance-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns the shortest distance between any two Points in the two geometric
+objects as calculated in the spatial reference system of this geometric
+object.</p>
+
+<h3 id="method-i-distance-label-Notes">Notes</h3>
+
+<p>Returns a floating-point scalar value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of measuring the distance between objects from
+different factories is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="distance-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 482</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">distance</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#distance not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- distance-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- distance-method -->
+
+    
+      <div id="method-i-envelope" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">envelope</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-envelope-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>The minimum bounding box for this <a href="Geometry.html">Geometry</a>,
+returned as a <a href="Geometry.html">Geometry</a>. The polygon is defined
+by the corner points of the bounding box [(MINX, MINY), (MAXX, MINY),
+(MAXX, MAXY), (MINX, MAXY), (MINX, MINY)].</p>
+
+<h3 id="method-i-envelope-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+          
+
+          
+          <div class="method-source-code" id="envelope-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 190</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">envelope</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#envelope not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- envelope-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- envelope-method -->
+
+    
+      <div id="method-i-eql-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">eql?</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This method should behave almost the same as the rep_equals? method, with
+two key differences.</p>
+
+<p>First, the <code>eql?</code> method is required to handle rhs values that
+are not geometry objects (returning false in such cases) in order to
+fulfill the standard Ruby contract for the method, whereas the rep_equals?
+method may assume that any rhs is a geometry.</p>
+
+<p>Second, the <code>eql?</code> method should always be defined. That is, it
+should never raise <a
+href="../Error/UnsupportedOperation.html">Error::UnsupportedOperation</a>.
+In cases where the underlying implementation cannot provide a
+representational equivalence test, this method must fall back on objective
+equivalence.</p>
+          
+
+          
+          <div class="method-source-code" id="eql-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 621</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">RGeo</span><span class="ruby-operator">::</span><span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Instance</span>)
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">rep_equals?</span>(<span class="ruby-identifier">rhs_</span>)
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>
+      <span class="ruby-identifier">equal?</span>(<span class="ruby-identifier">rhs_</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- eql-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- eql-3F-method -->
+
+    
+      <div id="method-i-equals-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">equals?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-equals-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object is “spatially equal” to
+another_geometry.</p>
+
+<h3 id="method-i-equals-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="equals-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 288</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">equals?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#equals? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- equals-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- equals-3F-method -->
+
+    
+      <div id="method-i-factory" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">factory</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a factory for creating features related to this one. This does not
+necessarily need to be the same factory that created this object, but it
+should create objects that are “compatible” with this one. (i.e. they
+should be in the same spatial reference system by default, and it should be
+possible to perform relational operations on them.)</p>
+          
+
+          
+          <div class="method-source-code" id="factory-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">factory</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#factory not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- factory-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- factory-method -->
+
+    
+      <div id="method-i-geometry_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">geometry_type</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-geometry_type-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns the instantiable subtype of <a href="Geometry.html">Geometry</a> of
+which this geometric object is an instantiable member.</p>
+
+<h3 id="method-i-geometry_type-label-Notes">Notes</h3>
+
+<p>Returns one of the type modules in <a
+href="../Feature.html">RGeo::Feature</a>. e.g. a point object would return
+<a href="Point.html">RGeo::Feature::Point</a>. Note that this is different
+from the SFS specification, which stipulates that the string name of the
+type is returned. To obtain the name string, call the
+<code>type_name</code> method of the returned module.</p>
+          
+
+          
+          <div class="method-source-code" id="geometry_type-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 159</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">geometry_type</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#geometry_type not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- geometry_type-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- geometry_type-method -->
+
+    
+      <div id="method-i-intersection" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">intersection</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-intersection-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns a geometric object that represents the <a
+href="Point.html">Point</a> set intersection of this geometric object with
+another_geometry.</p>
+
+<h3 id="method-i-intersection-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of performing operations on objects from different
+factories is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="intersection-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 531</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">intersection</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#intersection not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- intersection-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- intersection-method -->
+
+    
+      <div id="method-i-intersects-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">intersects?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-intersects-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object “spatially intersects”
+another_geometry.</p>
+
+<h3 id="method-i-intersects-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="intersects-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 328</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">intersects?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#intersects? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- intersects-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- intersects-3F-method -->
+
+    
+      <div id="method-i-is_empty-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_empty?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-is_empty-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object is the empty <a
+href="Geometry.html">Geometry</a>. If true, then this geometric object
+represents the empty point set for the coordinate space.</p>
+
+<h3 id="method-i-is_empty-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+          
+
+          
+          <div class="method-source-code" id="is_empty-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 234</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_empty?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#is_empty? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- is_empty-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- is_empty-3F-method -->
+
+    
+      <div id="method-i-is_simple-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_simple?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-is_simple-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object has no anomalous geometric points,
+such as self intersection or self tangency. The description of each
+instantiable geometric class will include the specific conditions that
+cause an instance of that class to be classified as not simple.</p>
+
+<h3 id="method-i-is_simple-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+          
+
+          
+          <div class="method-source-code" id="is_simple-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 252</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_simple?</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#is_simple? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- is_simple-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- is_simple-3F-method -->
+
+    
+      <div id="method-i-overlaps-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">overlaps?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-overlaps-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object “spatially overlaps”
+another_geometry.</p>
+
+<h3 id="method-i-overlaps-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="overlaps-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 428</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">overlaps?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#overlaps? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- overlaps-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- overlaps-3F-method -->
+
+    
+      <div id="method-i-relate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relate</span><span
+            class="method-args">(another_geometry_, intersection_pattern_matrix_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Deprecated alias of <a href="Geometry.html#method-i-relate-3F">#relate?</a></p>
+          
+
+          
+          <div class="method-source-code" id="relate-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 462</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate</span>(<span class="ruby-identifier">another_geometry_</span>, <span class="ruby-identifier">intersection_pattern_matrix_</span>)
+  <span class="ruby-identifier">relate?</span>(<span class="ruby-identifier">another_geometry_</span>, <span class="ruby-identifier">intersection_pattern_matrix_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- relate-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- relate-method -->
+
+    
+      <div id="method-i-relate-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relate?</span><span
+            class="method-args">(another_geometry_, intersection_pattern_matrix_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-relate-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object is spatially related to
+another_geometry by testing for intersections between the interior,
+boundary and exterior of the two geometric objects as specified by the
+values in the intersection_pattern_matrix.</p>
+
+<h3 id="method-i-relate-3F-label-Notes">Notes</h3>
+
+<p>The intersection_pattern_matrix is provided as a nine-character string in
+row-major order, representing the dimensionalities of the different
+intersections in the DE-9IM. Supported characters include T, F, *, 0, 1,
+and 2.</p>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="relate-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 455</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate?</span>(<span class="ruby-identifier">another_geometry_</span>, <span class="ruby-identifier">intersection_pattern_matrix_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#relate not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- relate-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- relate-3F-method -->
+
+    
+      <div id="method-i-rep_equals-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">rep_equals?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this geometric object is representationally equivalent to
+the given object.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="rep_equals-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 601</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">rep_equals?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#rep_equals? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- rep_equals-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- rep_equals-3F-method -->
+
+    
+      <div id="method-i-srid" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">srid</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-srid-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns the Spatial Reference System ID for this geometric object.</p>
+
+<h3 id="method-i-srid-label-Notes">Notes</h3>
+
+<p>Returns an integer.</p>
+
+<p>This will normally be a foreign key to an index of reference systems stored
+in either the same or some other datastore.</p>
+          
+
+          
+          <div class="method-source-code" id="srid-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 175</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">srid</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#srid not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- srid-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- srid-method -->
+
+    
+      <div id="method-i-sym_difference" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sym_difference</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-sym_difference-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns a geometric object that represents the <a
+href="Point.html">Point</a> set symmetric difference of this geometric
+object with another_geometry.</p>
+
+<h3 id="method-i-sym_difference-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of performing operations on objects from different
+factories is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="sym_difference-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 588</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sym_difference</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#sym_difference not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- sym_difference-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- sym_difference-method -->
+
+    
+      <div id="method-i-touches-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">touches?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-touches-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object “spatially touches” another_geometry.</p>
+
+<h3 id="method-i-touches-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="touches-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 348</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">touches?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#touches? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- touches-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- touches-3F-method -->
+
+    
+      <div id="method-i-union" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">union</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-union-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns a geometric object that represents the <a
+href="Point.html">Point</a> set union of this geometric object with
+another_geometry.</p>
+
+<h3 id="method-i-union-label-Notes">Notes</h3>
+
+<p>Returns an object that supports the <a href="Geometry.html">Geometry</a>
+interface.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of performing operations on objects from different
+factories is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="union-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 550</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">union</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#union not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- union-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- union-method -->
+
+    
+      <div id="method-i-within-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">within?</span><span
+            class="method-args">(another_geometry_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-within-3F-label-SFS+1.1+Description">SFS 1.1 Description</h3>
+
+<p>Returns true if this geometric object is “spatially within”
+another_geometry.</p>
+
+<h3 id="method-i-within-3F-label-Notes">Notes</h3>
+
+<p>Returns a boolean value. Note that this is different from the SFS
+specification, which stipulates an integer return value.</p>
+
+<p>Although implementations are free to attempt to handle another_geometry
+values that do not share the same factory as this geometry, strictly
+speaking, the result of comparing objects from different factories is
+undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="within-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/geometry.rb, line 388</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">within?</span>(<span class="ruby-identifier">another_geometry_</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Geometry#within? not defined.&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- within-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- within-3F-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

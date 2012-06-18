@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class RGeo::CoordSys::CS::CoordinateSystemFactory - RGeo 0.3.13 Documentation</title>
+
+<link type="text/css" media="screen" href="../../../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../../../index.html">Home</a>
+    <a href="../../../table_of_contents.html#classes">Classes</a>
+    <a href="../../../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/rgeo/coord_sys/cs/factories.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="../../../Object.html">Object</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-create_compound_coordinate_system">#create_compound_coordinate_system</a>
+    
+    <li><a href="#method-i-create_ellipsoid">#create_ellipsoid</a>
+    
+    <li><a href="#method-i-create_flattened_sphere">#create_flattened_sphere</a>
+    
+    <li><a href="#method-i-create_from_wkt">#create_from_wkt</a>
+    
+    <li><a href="#method-i-create_geographic_coordinate_system">#create_geographic_coordinate_system</a>
+    
+    <li><a href="#method-i-create_horizontal_datum">#create_horizontal_datum</a>
+    
+    <li><a href="#method-i-create_local_coordinate_system">#create_local_coordinate_system</a>
+    
+    <li><a href="#method-i-create_local_datum">#create_local_datum</a>
+    
+    <li><a href="#method-i-create_prime_meridian">#create_prime_meridian</a>
+    
+    <li><a href="#method-i-create_projected_coordinate_system">#create_projected_coordinate_system</a>
+    
+    <li><a href="#method-i-create_projection">#create_projection</a>
+    
+    <li><a href="#method-i-create_vertical_coordinate_system">#create_vertical_coordinate_system</a>
+    
+    <li><a href="#method-i-create_vertical_datum">#create_vertical_datum</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../../../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../../../README_rdoc.html">README</a>
+  
+    <li class="file"><a href="../../../Spatial_Programming_With_RGeo_rdoc.html">Spatial_Programming_With_RGeo</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../../RGeo.html">RGeo</a>
+  
+    <li><a href="../../../RGeo/Cartesian.html">RGeo::Cartesian</a>
+  
+    <li><a href="../../../RGeo/Cartesian/Analysis.html">RGeo::Cartesian::Analysis</a>
+  
+    <li><a href="../../../RGeo/Cartesian/BoundingBox.html">RGeo::Cartesian::BoundingBox</a>
+  
+    <li><a href="../../../RGeo/Cartesian/Factory.html">RGeo::Cartesian::Factory</a>
+  
+    <li><a href="../../../RGeo/CoordSys.html">RGeo::CoordSys</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS.html">RGeo::CoordSys::CS</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/AngularUnit.html">RGeo::CoordSys::CS::AngularUnit</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/AxisInfo.html">RGeo::CoordSys::CS::AxisInfo</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/Base.html">RGeo::CoordSys::CS::Base</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/CompoundCoordinateSystem.html">RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/CoordinateSystem.html">RGeo::CoordSys::CS::CoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/CoordinateSystemFactory.html">RGeo::CoordSys::CS::CoordinateSystemFactory</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/Datum.html">RGeo::CoordSys::CS::Datum</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/Ellipsoid.html">RGeo::CoordSys::CS::Ellipsoid</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/GeocentricCoordinateSystem.html">RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/HorizontalCoordinateSystem.html">RGeo::CoordSys::CS::HorizontalCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/HorizontalDatum.html">RGeo::CoordSys::CS::HorizontalDatum</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/Info.html">RGeo::CoordSys::CS::Info</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/LinearUnit.html">RGeo::CoordSys::CS::LinearUnit</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/LocalCoordinateSystem.html">RGeo::CoordSys::CS::LocalCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/LocalDatum.html">RGeo::CoordSys::CS::LocalDatum</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/PrimeMeridian.html">RGeo::CoordSys::CS::PrimeMeridian</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/ProjectedCoordinateSystem.html">RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/Projection.html">RGeo::CoordSys::CS::Projection</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/ProjectionParameter.html">RGeo::CoordSys::CS::ProjectionParameter</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/Unit.html">RGeo::CoordSys::CS::Unit</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/VerticalCoordinateSystem.html">RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/VerticalDatum.html">RGeo::CoordSys::CS::VerticalDatum</a>
+  
+    <li><a href="../../../RGeo/CoordSys/CS/WGS84ConversionInfo.html">RGeo::CoordSys::CS::WGS84ConversionInfo</a>
+  
+    <li><a href="../../../RGeo/CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase.html">RGeo::CoordSys::SRSDatabase</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html">RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase/Entry.html">RGeo::CoordSys::SRSDatabase::Entry</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase/Interface.html">RGeo::CoordSys::SRSDatabase::Interface</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase/Proj4Data.html">RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase/SrOrg.html">RGeo::CoordSys::SRSDatabase::SrOrg</a>
+  
+    <li><a href="../../../RGeo/CoordSys/SRSDatabase/UrlReader.html">RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li><a href="../../../RGeo/Error.html">RGeo::Error</a>
+  
+    <li><a href="../../../RGeo/Error/InvalidGeometry.html">RGeo::Error::InvalidGeometry</a>
+  
+    <li><a href="../../../RGeo/Error/ParseError.html">RGeo::Error::ParseError</a>
+  
+    <li><a href="../../../RGeo/Error/RGeoError.html">RGeo::Error::RGeoError</a>
+  
+    <li><a href="../../../RGeo/Error/UnsupportedOperation.html">RGeo::Error::UnsupportedOperation</a>
+  
+    <li><a href="../../../RGeo/Feature.html">RGeo::Feature</a>
+  
+    <li><a href="../../../RGeo/Feature/Curve.html">RGeo::Feature::Curve</a>
+  
+    <li><a href="../../../RGeo/Feature/Factory.html">RGeo::Feature::Factory</a>
+  
+    <li><a href="../../../RGeo/Feature/Factory/Instance.html">RGeo::Feature::Factory::Instance</a>
+  
+    <li><a href="../../../RGeo/Feature/FactoryGenerator.html">RGeo::Feature::FactoryGenerator</a>
+  
+    <li><a href="../../../RGeo/Feature/Geometry.html">RGeo::Feature::Geometry</a>
+  
+    <li><a href="../../../RGeo/Feature/GeometryCollection.html">RGeo::Feature::GeometryCollection</a>
+  
+    <li><a href="../../../RGeo/Feature/Instance.html">RGeo::Feature::Instance</a>
+  
+    <li><a href="../../../RGeo/Feature/Line.html">RGeo::Feature::Line</a>
+  
+    <li><a href="../../../RGeo/Feature/LineString.html">RGeo::Feature::LineString</a>
+  
+    <li><a href="../../../RGeo/Feature/LinearRing.html">RGeo::Feature::LinearRing</a>
+  
+    <li><a href="../../../RGeo/Feature/MixinCollection.html">RGeo::Feature::MixinCollection</a>
+  
+    <li><a href="../../../RGeo/Feature/MixinCollection/TypeData.html">RGeo::Feature::MixinCollection::TypeData</a>
+  
+    <li><a href="../../../RGeo/Feature/MultiCurve.html">RGeo::Feature::MultiCurve</a>
+  
+    <li><a href="../../../RGeo/Feature/MultiLineString.html">RGeo::Feature::MultiLineString</a>
+  
+    <li><a href="../../../RGeo/Feature/MultiPoint.html">RGeo::Feature::MultiPoint</a>
+  
+    <li><a href="../../../RGeo/Feature/MultiPolygon.html">RGeo::Feature::MultiPolygon</a>
+  
+    <li><a href="../../../RGeo/Feature/MultiSurface.html">RGeo::Feature::MultiSurface</a>
+  
+    <li><a href="../../../RGeo/Feature/Point.html">RGeo::Feature::Point</a>
+  
+    <li><a href="../../../RGeo/Feature/Polygon.html">RGeo::Feature::Polygon</a>
+  
+    <li><a href="../../../RGeo/Feature/Surface.html">RGeo::Feature::Surface</a>
+  
+    <li><a href="../../../RGeo/Feature/Type.html">RGeo::Feature::Type</a>
+  
+    <li><a href="../../../RGeo/Geographic.html">RGeo::Geographic</a>
+  
+    <li><a href="../../../RGeo/Geographic/Factory.html">RGeo::Geographic::Factory</a>
+  
+    <li><a href="../../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
+  
+    <li><a href="../../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
+  
+    <li><a href="../../../RGeo/Geos.html">RGeo::Geos</a>
+  
+    <li><a href="../../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+  
+    <li><a href="../../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+  
+    <li><a href="../../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
+  
+    <li><a href="../../../RGeo/WKRep.html">RGeo::WKRep</a>
+  
+    <li><a href="../../../RGeo/WKRep/WKBGenerator.html">RGeo::WKRep::WKBGenerator</a>
+  
+    <li><a href="../../../RGeo/WKRep/WKBParser.html">RGeo::WKRep::WKBParser</a>
+  
+    <li><a href="../../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
+  
+    <li><a href="../../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
+  
+    <li><a href="../../../Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class RGeo::CoordSys::CS::CoordinateSystemFactory</h1>
+
+  <div id="description" class="description">
+    
+<p>A class implementing the CS_CoordinateSystemFactory interface. It provides
+methods for building up complex objects from simpler objects or values.</p>
+
+<p>Note that the methods of CS_CoordinateSystemFactory do not provide
+facilities for setting the authority. If you need to set authority values,
+use the create methods for the object classes themselves.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-create_compound_coordinate_system" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_compound_coordinate_system</span><span
+            class="method-args">(name_, head_, tail_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a
+href="CompoundCoordinateSystem.html">CompoundCoordinateSystem</a> from a
+name, and two constituent coordinate systems.</p>
+          
+
+          
+          <div class="method-source-code" id="create_compound_coordinate_system-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 80</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_compound_coordinate_system</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">head_</span>, <span class="ruby-identifier">tail_</span>)
+  <span class="ruby-constant">CompoundCoordinateSystem</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">head_</span>, <span class="ruby-identifier">tail_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_compound_coordinate_system-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_compound_coordinate_system-method -->
+
+    
+      <div id="method-i-create_ellipsoid" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_ellipsoid</span><span
+            class="method-args">(name_, semi_major_axis_, semi_minor_axis_, linear_unit_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create an <a href="Ellipsoid.html">Ellipsoid</a> from a name, semi-major
+axis, and semi-minor axis. You can also provide a <a
+href="LinearUnit.html">LinearUnit</a>, but this is optional and may be set
+to nil.</p>
+          
+
+          
+          <div class="method-source-code" id="create_ellipsoid-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_ellipsoid</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">semi_minor_axis_</span>, <span class="ruby-identifier">linear_unit_</span>)
+  <span class="ruby-constant">Ellipsoid</span>.<span class="ruby-identifier">create_ellipsoid</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">semi_minor_axis_</span>, <span class="ruby-identifier">linear_unit_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_ellipsoid-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_ellipsoid-method -->
+
+    
+      <div id="method-i-create_flattened_sphere" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_flattened_sphere</span><span
+            class="method-args">(name_, semi_major_axis_, inverse_flattening_, linear_unit_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create an <a href="Ellipsoid.html">Ellipsoid</a> from a name, semi-major
+axis, and an inverse flattening factor. You can also provide a <a
+href="LinearUnit.html">LinearUnit</a>, but this is optional and may be set
+to nil.</p>
+          
+
+          
+          <div class="method-source-code" id="create_flattened_sphere-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_flattened_sphere</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">inverse_flattening_</span>, <span class="ruby-identifier">linear_unit_</span>)
+  <span class="ruby-constant">Ellipsoid</span>.<span class="ruby-identifier">create_flattened_sphere</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">inverse_flattening_</span>, <span class="ruby-identifier">linear_unit_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_flattened_sphere-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_flattened_sphere-method -->
+
+    
+      <div id="method-i-create_from_wkt" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_from_wkt</span><span
+            class="method-args">(str_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create any object given the OGC WKT format. Raises <a
+href="../../Error/ParseError.html">Error::ParseError</a> if a syntax error
+is encounterred.</p>
+          
+
+          
+          <div class="method-source-code" id="create_from_wkt-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_from_wkt</span>(<span class="ruby-identifier">str_</span>)
+  <span class="ruby-constant">WKTParser</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">str_</span>).<span class="ruby-identifier">parse</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_from_wkt-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_from_wkt-method -->
+
+    
+      <div id="method-i-create_geographic_coordinate_system" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_geographic_coordinate_system</span><span
+            class="method-args">(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a
+href="GeographicCoordinateSystem.html">GeographicCoordinateSystem</a>,
+given a name, an <a href="AngularUnit.html">AngularUnit</a>, a <a
+href="HorizontalDatum.html">HorizontalDatum</a>, a <a
+href="PrimeMeridian.html">PrimeMeridian</a>, and two <a
+href="AxisInfo.html">AxisInfo</a> objects. The <a
+href="AxisInfo.html">AxisInfo</a> objects are optional and may be set to
+nil.</p>
+          
+
+          
+          <div class="method-source-code" id="create_geographic_coordinate_system-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 116</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_geographic_coordinate_system</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">angular_unit_</span>, <span class="ruby-identifier">horizontal_datum_</span>, <span class="ruby-identifier">prime_meridian_</span>, <span class="ruby-identifier">axis0_</span>, <span class="ruby-identifier">axis1_</span>)
+  <span class="ruby-constant">GeographicCoordinateSystem</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">angular_unit_</span>, <span class="ruby-identifier">horizontal_datum_</span>, <span class="ruby-identifier">prime_meridian_</span>, <span class="ruby-identifier">axis0_</span>, <span class="ruby-identifier">axis1_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_geographic_coordinate_system-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_geographic_coordinate_system-method -->
+
+    
+      <div id="method-i-create_horizontal_datum" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_horizontal_datum</span><span
+            class="method-args">(name_, horizontal_datum_type_, ellipsoid_, to_wgs84_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a href="HorizontalDatum.html">HorizontalDatum</a> given a name, a
+horizontal datum type code, an <a href="Ellipsoid.html">Ellipsoid</a>, and
+a <a href="WGS84ConversionInfo.html">WGS84ConversionInfo</a>. The <a
+href="WGS84ConversionInfo.html">WGS84ConversionInfo</a> is optional and may
+be set to nil.</p>
+          
+
+          
+          <div class="method-source-code" id="create_horizontal_datum-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_horizontal_datum</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">horizontal_datum_type_</span>, <span class="ruby-identifier">ellipsoid_</span>, <span class="ruby-identifier">to_wgs84_</span>)
+  <span class="ruby-constant">HorizontalDatum</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">horizontal_datum_type_</span>, <span class="ruby-identifier">ellipsoid_</span>, <span class="ruby-identifier">to_wgs84_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_horizontal_datum-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_horizontal_datum-method -->
+
+    
+      <div id="method-i-create_local_coordinate_system" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_local_coordinate_system</span><span
+            class="method-args">(name_, datum_, unit_, axes_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a href="LocalCoordinateSystem.html">LocalCoordinateSystem</a>
+given a name, a <a href="LocalDatum.html">LocalDatum</a>, a <a
+href="Unit.html">Unit</a>, and an array of at least one <a
+href="AxisInfo.html">AxisInfo</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="create_local_coordinate_system-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 133</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_local_coordinate_system</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">datum_</span>, <span class="ruby-identifier">unit_</span>, <span class="ruby-identifier">axes_</span>)
+  <span class="ruby-constant">LocalCoordinateSystem</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">datum_</span>, <span class="ruby-identifier">unit_</span>, <span class="ruby-identifier">axes_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_local_coordinate_system-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_local_coordinate_system-method -->
+
+    
+      <div id="method-i-create_local_datum" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_local_datum</span><span
+            class="method-args">(name_, local_datum_type_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a href="LocalDatum.html">LocalDatum</a> given a name and a local
+datum type code.</p>
+          
+
+          
+          <div class="method-source-code" id="create_local_datum-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_local_datum</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">local_datum_type_</span>)
+  <span class="ruby-constant">LocalDatum</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">local_datum_type_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_local_datum-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_local_datum-method -->
+
+    
+      <div id="method-i-create_prime_meridian" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_prime_meridian</span><span
+            class="method-args">(name_, angular_unit_, longitude_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a href="PrimeMeridian.html">PrimeMeridian</a> given a name, an <a
+href="AngularUnit.html">AngularUnit</a>, and a longitude offset.</p>
+          
+
+          
+          <div class="method-source-code" id="create_prime_meridian-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 148</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_prime_meridian</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">angular_unit_</span>, <span class="ruby-identifier">longitude_</span>)
+  <span class="ruby-constant">PrimeMeridian</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">angular_unit_</span>, <span class="ruby-identifier">longitude_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_prime_meridian-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_prime_meridian-method -->
+
+    
+      <div id="method-i-create_projected_coordinate_system" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_projected_coordinate_system</span><span
+            class="method-args">(name_, gcs_, projection_, linear_unit_, axis0_, axis1_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a
+href="ProjectedCoordinateSystem.html">ProjectedCoordinateSystem</a> given a
+name, a <a
+href="GeographicCoordinateSystem.html">GeographicCoordinateSystem</a>, and
+<a href="Projection.html">Projection</a>, a <a
+href="LinearUnit.html">LinearUnit</a>, and two <a
+href="AxisInfo.html">AxisInfo</a> objects. The <a
+href="AxisInfo.html">AxisInfo</a> objects are optional and may be set to
+nil.</p>
+          
+
+          
+          <div class="method-source-code" id="create_projected_coordinate_system-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 158</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_projected_coordinate_system</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">gcs_</span>, <span class="ruby-identifier">projection_</span>, <span class="ruby-identifier">linear_unit_</span>, <span class="ruby-identifier">axis0_</span>, <span class="ruby-identifier">axis1_</span>)
+  <span class="ruby-constant">ProjectedCoordinateSystem</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">gcs_</span>, <span class="ruby-identifier">projection_</span>, <span class="ruby-identifier">linear_unit_</span>, <span class="ruby-identifier">axis0_</span>, <span class="ruby-identifier">axis1_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_projected_coordinate_system-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_projected_coordinate_system-method -->
+
+    
+      <div id="method-i-create_projection" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_projection</span><span
+            class="method-args">(name_, wkt_projection_class_, parameters_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a href="Projection.html">Projection</a> given a name, a
+projection class, and an array of <a
+href="ProjectionParameter.html">ProjectionParameter</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="create_projection-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 166</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_projection</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">wkt_projection_class_</span>, <span class="ruby-identifier">parameters_</span>)
+  <span class="ruby-constant">Projection</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">wkt_projection_class_</span>, <span class="ruby-identifier">parameters_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_projection-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_projection-method -->
+
+    
+      <div id="method-i-create_vertical_coordinate_system" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_vertical_coordinate_system</span><span
+            class="method-args">(name_, vertical_datum_, vertical_unit_, axis_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a
+href="VerticalCoordinateSystem.html">VerticalCoordinateSystem</a> given a
+name, a <a href="VerticalDatum.html">VerticalDatum</a>, a VerticalUnit, and
+an <a href="AxisInfo.html">AxisInfo</a>. The <a
+href="AxisInfo.html">AxisInfo</a> is optional and may be nil.</p>
+          
+
+          
+          <div class="method-source-code" id="create_vertical_coordinate_system-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 175</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_vertical_coordinate_system</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">vertical_datum_</span>, <span class="ruby-identifier">vertical_unit_</span>, <span class="ruby-identifier">axis_</span>)
+  <span class="ruby-constant">VerticalCoordinateSystem</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">vertical_datum_</span>, <span class="ruby-identifier">vertical_unit_</span>, <span class="ruby-identifier">axis_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_vertical_coordinate_system-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_vertical_coordinate_system-method -->
+
+    
+      <div id="method-i-create_vertical_datum" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_vertical_datum</span><span
+            class="method-args">(name_, vertical_datum_type_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a <a href="VerticalDatum.html">VerticalDatum</a> given a name ane a
+datum type code.</p>
+          
+
+          
+          <div class="method-source-code" id="create_vertical_datum-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/factories.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_vertical_datum</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">vertical_datum_type_</span>)
+  <span class="ruby-constant">VerticalDatum</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">vertical_datum_type_</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_vertical_datum-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_vertical_datum-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

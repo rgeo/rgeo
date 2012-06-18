@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class RGeo::CoordSys::Proj4 - RGeo 0.3.13 Documentation</title>
+
+<link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../../index.html">Home</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/rgeo/coord_sys/proj4.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="../../Object.html">Object</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-create">::create</a>
+    
+    <li><a href="#method-c-new">::new</a>
+    
+    <li><a href="#method-c-supported-3F">::supported?</a>
+    
+    <li><a href="#method-c-transform">::transform</a>
+    
+    <li><a href="#method-c-transform_coords">::transform_coords</a>
+    
+    <li><a href="#method-i-3D-3D">#==</a>
+    
+    <li><a href="#method-i-canonical_hash">#canonical_hash</a>
+    
+    <li><a href="#method-i-canonical_str">#canonical_str</a>
+    
+    <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-geocentric-3F">#geocentric?</a>
+    
+    <li><a href="#method-i-geographic-3F">#geographic?</a>
+    
+    <li><a href="#method-i-get_geographic">#get_geographic</a>
+    
+    <li><a href="#method-i-original_str">#original_str</a>
+    
+    <li><a href="#method-i-radians-3F">#radians?</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../../README_rdoc.html">README</a>
+  
+    <li class="file"><a href="../../Spatial_Programming_With_RGeo_rdoc.html">Spatial_Programming_With_RGeo</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../RGeo.html">RGeo</a>
+  
+    <li><a href="../../RGeo/Cartesian.html">RGeo::Cartesian</a>
+  
+    <li><a href="../../RGeo/Cartesian/Analysis.html">RGeo::Cartesian::Analysis</a>
+  
+    <li><a href="../../RGeo/Cartesian/BoundingBox.html">RGeo::Cartesian::BoundingBox</a>
+  
+    <li><a href="../../RGeo/Cartesian/Factory.html">RGeo::Cartesian::Factory</a>
+  
+    <li><a href="../../RGeo/CoordSys.html">RGeo::CoordSys</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS.html">RGeo::CoordSys::CS</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/AngularUnit.html">RGeo::CoordSys::CS::AngularUnit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/AxisInfo.html">RGeo::CoordSys::CS::AxisInfo</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Base.html">RGeo::CoordSys::CS::Base</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CompoundCoordinateSystem.html">RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CoordinateSystem.html">RGeo::CoordSys::CS::CoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CoordinateSystemFactory.html">RGeo::CoordSys::CS::CoordinateSystemFactory</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Datum.html">RGeo::CoordSys::CS::Datum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Ellipsoid.html">RGeo::CoordSys::CS::Ellipsoid</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/GeocentricCoordinateSystem.html">RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/HorizontalCoordinateSystem.html">RGeo::CoordSys::CS::HorizontalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/HorizontalDatum.html">RGeo::CoordSys::CS::HorizontalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Info.html">RGeo::CoordSys::CS::Info</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LinearUnit.html">RGeo::CoordSys::CS::LinearUnit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LocalCoordinateSystem.html">RGeo::CoordSys::CS::LocalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LocalDatum.html">RGeo::CoordSys::CS::LocalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/PrimeMeridian.html">RGeo::CoordSys::CS::PrimeMeridian</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/ProjectedCoordinateSystem.html">RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Projection.html">RGeo::CoordSys::CS::Projection</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/ProjectionParameter.html">RGeo::CoordSys::CS::ProjectionParameter</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Unit.html">RGeo::CoordSys::CS::Unit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/VerticalCoordinateSystem.html">RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/VerticalDatum.html">RGeo::CoordSys::CS::VerticalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/WGS84ConversionInfo.html">RGeo::CoordSys::CS::WGS84ConversionInfo</a>
+  
+    <li><a href="../../RGeo/CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase.html">RGeo::CoordSys::SRSDatabase</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html">RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Entry.html">RGeo::CoordSys::SRSDatabase::Entry</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Interface.html">RGeo::CoordSys::SRSDatabase::Interface</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Proj4Data.html">RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/SrOrg.html">RGeo::CoordSys::SRSDatabase::SrOrg</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/UrlReader.html">RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li><a href="../../RGeo/Error.html">RGeo::Error</a>
+  
+    <li><a href="../../RGeo/Error/InvalidGeometry.html">RGeo::Error::InvalidGeometry</a>
+  
+    <li><a href="../../RGeo/Error/ParseError.html">RGeo::Error::ParseError</a>
+  
+    <li><a href="../../RGeo/Error/RGeoError.html">RGeo::Error::RGeoError</a>
+  
+    <li><a href="../../RGeo/Error/UnsupportedOperation.html">RGeo::Error::UnsupportedOperation</a>
+  
+    <li><a href="../../RGeo/Feature.html">RGeo::Feature</a>
+  
+    <li><a href="../../RGeo/Feature/Curve.html">RGeo::Feature::Curve</a>
+  
+    <li><a href="../../RGeo/Feature/Factory.html">RGeo::Feature::Factory</a>
+  
+    <li><a href="../../RGeo/Feature/Factory/Instance.html">RGeo::Feature::Factory::Instance</a>
+  
+    <li><a href="../../RGeo/Feature/FactoryGenerator.html">RGeo::Feature::FactoryGenerator</a>
+  
+    <li><a href="../../RGeo/Feature/Geometry.html">RGeo::Feature::Geometry</a>
+  
+    <li><a href="../../RGeo/Feature/GeometryCollection.html">RGeo::Feature::GeometryCollection</a>
+  
+    <li><a href="../../RGeo/Feature/Instance.html">RGeo::Feature::Instance</a>
+  
+    <li><a href="../../RGeo/Feature/Line.html">RGeo::Feature::Line</a>
+  
+    <li><a href="../../RGeo/Feature/LineString.html">RGeo::Feature::LineString</a>
+  
+    <li><a href="../../RGeo/Feature/LinearRing.html">RGeo::Feature::LinearRing</a>
+  
+    <li><a href="../../RGeo/Feature/MixinCollection.html">RGeo::Feature::MixinCollection</a>
+  
+    <li><a href="../../RGeo/Feature/MixinCollection/TypeData.html">RGeo::Feature::MixinCollection::TypeData</a>
+  
+    <li><a href="../../RGeo/Feature/MultiCurve.html">RGeo::Feature::MultiCurve</a>
+  
+    <li><a href="../../RGeo/Feature/MultiLineString.html">RGeo::Feature::MultiLineString</a>
+  
+    <li><a href="../../RGeo/Feature/MultiPoint.html">RGeo::Feature::MultiPoint</a>
+  
+    <li><a href="../../RGeo/Feature/MultiPolygon.html">RGeo::Feature::MultiPolygon</a>
+  
+    <li><a href="../../RGeo/Feature/MultiSurface.html">RGeo::Feature::MultiSurface</a>
+  
+    <li><a href="../../RGeo/Feature/Point.html">RGeo::Feature::Point</a>
+  
+    <li><a href="../../RGeo/Feature/Polygon.html">RGeo::Feature::Polygon</a>
+  
+    <li><a href="../../RGeo/Feature/Surface.html">RGeo::Feature::Surface</a>
+  
+    <li><a href="../../RGeo/Feature/Type.html">RGeo::Feature::Type</a>
+  
+    <li><a href="../../RGeo/Geographic.html">RGeo::Geographic</a>
+  
+    <li><a href="../../RGeo/Geographic/Factory.html">RGeo::Geographic::Factory</a>
+  
+    <li><a href="../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
+  
+    <li><a href="../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
+  
+    <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
+  
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+  
+    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+  
+    <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
+  
+    <li><a href="../../RGeo/WKRep.html">RGeo::WKRep</a>
+  
+    <li><a href="../../RGeo/WKRep/WKBGenerator.html">RGeo::WKRep::WKBGenerator</a>
+  
+    <li><a href="../../RGeo/WKRep/WKBParser.html">RGeo::WKRep::WKBParser</a>
+  
+    <li><a href="../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
+  
+    <li><a href="../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
+  
+    <li><a href="../../Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class RGeo::CoordSys::Proj4</h1>
+
+  <div id="description" class="description">
+    
+<p>This is a Ruby wrapper around a <a href="Proj4.html">Proj4</a> coordinate
+system. It represents a single geographic coordinate system, which may be a
+flat projection, a geocentric (3-dimensional) coordinate system, or a
+geographic (latitude-longitude) coordinate system.</p>
+
+<p>Generally, these are used to define the projection for a <a
+href="../Feature/Factory.html">Feature::Factory</a>. You can then convert
+between coordinate systems by casting geometries between such factories
+using the :project option. You may also use this object directly to perform
+low-level coordinate transformations.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">(defn_, opts_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new <a href="Proj4.html">Proj4</a> object, given a definition,
+which may be either a string or a hash. Returns nil if the given definition
+is invalid or <a href="Proj4.html">Proj4</a> is not supported.</p>
+
+<p>Recognized options include:</p>
+<dl class="rdoc-list label-list"><dt><code>:radians</code>
+<dd>
+<p>If set to true, then this proj4 will represent geographic
+(latitude/longitude) coordinates in radians rather than degrees. If this is
+a geographic coordinate system, then its units will be in radians. If this
+is a projected coordinate system, then its units will be unchanged, but any
+geographic coordinate system obtained using <a
+href="Proj4.html#method-i-get_geographic">#get_geographic</a> will use
+radians as its units. If this is a geocentric or other type of coordinate
+system, this has no effect. Default is false. (That is all coordinates are
+in degrees by default.)</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 216</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>={})
+  <span class="ruby-identifier">result_</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">supported?</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">defn_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Hash</span>)
+      <span class="ruby-identifier">defn_</span> = <span class="ruby-identifier">defn_</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">k_</span>, <span class="ruby-identifier">v_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v_</span> <span class="ruby-operator">?</span> <span class="ruby-node">&quot;+#{k_}=#{v_}&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-node">&quot;+#{k_}&quot;</span> }.<span class="ruby-identifier">join</span>(<span class="ruby-string">' '</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">defn_</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r^\s*\+/</span>
+      <span class="ruby-identifier">defn_</span> = <span class="ruby-identifier">defn_</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r^(\s*)/</span>, <span class="ruby-string">'\1+'</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp">%r(\s+)([^+\s])/</span>, <span class="ruby-string">'\1+\2'</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">result_</span> = <span class="ruby-identifier">_create</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:radians</span>])
+    <span class="ruby-identifier">result_</span> = <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">result_</span>.<span class="ruby-identifier">_valid?</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(defn_, opts_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a new <a href="Proj4.html">Proj4</a> object, given a definition,
+which may be either a string or a hash. Raises <a
+href="../Error/UnsupportedOperation.html">Error::UnsupportedOperation</a>
+if the given definition is invalid or <a href="Proj4.html">Proj4</a> is not
+supported.</p>
+
+<p>Recognized options include:</p>
+<dl class="rdoc-list label-list"><dt><code>:radians</code>
+<dd>
+<p>If set to true, then this proj4 will represent geographic
+(latitude/longitude) coordinates in radians rather than degrees. If this is
+a geographic coordinate system, then its units will be in radians. If this
+is a projected coordinate system, then its units will be unchanged, but any
+geographic coordinate system obtained using <a
+href="Proj4.html#method-i-get_geographic">#get_geographic</a> will use
+radians as its units. If this is a geocentric or other type of coordinate
+system, this has no effect. Default is false. (That is all coordinates are
+in degrees by default.)</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 249</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>={})
+  <span class="ruby-identifier">result_</span> = <span class="ruby-identifier">create</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>)
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">result_</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-string">&quot;Proj4 not supported in this installation&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+      <div id="method-c-supported-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">supported?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if <a href="Proj4.html">Proj4</a> is supported in this
+installation. If this returns false, the other methods such as create will
+not work.</p>
+          
+
+          
+          <div class="method-source-code" id="supported-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 194</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">supported?</span>
+  <span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:_create</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- supported-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- supported-3F-method -->
+
+    
+      <div id="method-c-transform" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">transform</span><span
+            class="method-args">(from_proj_, from_geometry_, to_proj_, to_factory_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Low-level geometry transform method. Transforms the given geometry between
+the given two projections. The resulting geometry is constructed using the
+to_factory. Any projections associated with the factories themselves are
+ignored.</p>
+          
+
+          
+          <div class="method-source-code" id="transform-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 283</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">transform</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">from_geometry_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">from_geometry_</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Point</span>
+    <span class="ruby-identifier">_transform_point</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">from_geometry_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Line</span>
+    <span class="ruby-identifier">to_factory_</span>.<span class="ruby-identifier">line</span>(<span class="ruby-identifier">from_geometry_</span>.<span class="ruby-identifier">points</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">p_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_transform_point</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">p_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>) })
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">LinearRing</span>
+    <span class="ruby-identifier">_transform_linear_ring</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">from_geometry_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">LineString</span>
+    <span class="ruby-identifier">to_factory_</span>.<span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">from_geometry_</span>.<span class="ruby-identifier">points</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">p_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_transform_point</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">p_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>) })
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Polygon</span>
+    <span class="ruby-identifier">_transform_polygon</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">from_geometry_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">MultiPoint</span>
+    <span class="ruby-identifier">to_factory_</span>.<span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">from_geometry_</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">p_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_transform_point</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">p_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>) })
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">MultiLineString</span>
+    <span class="ruby-identifier">to_factory_</span>.<span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">from_geometry_</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">g_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">transform</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">g_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>) })
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">MultiPolygon</span>
+    <span class="ruby-identifier">to_factory_</span>.<span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">from_geometry_</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">p_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">_transform_polygon</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">p_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>) })
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">GeometryCollection</span>
+    <span class="ruby-identifier">to_factory_</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">from_geometry_</span>.<span class="ruby-identifier">map</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">g_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">transform</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">g_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>) })
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- transform-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- transform-method -->
+
+    
+      <div id="method-c-transform_coords" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">transform_coords</span><span
+            class="method-args">(from_proj_, to_proj_, x_, y_, z_=nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Low-level coordinate transform method. Transforms the given coordinate (x,
+y, [z]) from one proj4 coordinate system to another. Returns an array with
+either two or three elements.</p>
+          
+
+          
+          <div class="method-source-code" id="transform_coords-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 263</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">transform_coords</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">z_</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">from_proj_</span>.<span class="ruby-identifier">_radians?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">from_proj_</span>.<span class="ruby-identifier">_geographic?</span>
+    <span class="ruby-identifier">x_</span> <span class="ruby-operator">*=</span> <span class="ruby-constant">ImplHelper</span><span class="ruby-operator">::</span><span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">RADIANS_PER_DEGREE</span>
+    <span class="ruby-identifier">y_</span> <span class="ruby-operator">*=</span> <span class="ruby-constant">ImplHelper</span><span class="ruby-operator">::</span><span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">RADIANS_PER_DEGREE</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result_</span> = <span class="ruby-identifier">_transform_coords</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">z_</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">result_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">to_proj_</span>.<span class="ruby-identifier">_radians?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">to_proj_</span>.<span class="ruby-identifier">_geographic?</span>
+    <span class="ruby-identifier">result_</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">*=</span> <span class="ruby-constant">ImplHelper</span><span class="ruby-operator">::</span><span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">DEGREES_PER_RADIAN</span>
+    <span class="ruby-identifier">result_</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">*=</span> <span class="ruby-constant">ImplHelper</span><span class="ruby-operator">::</span><span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">DEGREES_PER_RADIAN</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">result_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- transform_coords-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- transform_coords-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-3D-3D" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">==</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Proj4.html#method-i-eql-3F">eql?</a>
+        </div>
+        
+      </div><!-- 3D-3D-method -->
+
+    
+      <div id="method-i-canonical_hash" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">canonical_hash</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the “canonical” hash definition for this coordinate system, as
+reported by <a href="Proj4.html">Proj4</a>. This may be slightly different
+from the definition used to construct this object.</p>
+          
+
+          
+          <div class="method-source-code" id="canonical_hash-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 132</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">canonical_hash</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@canonical_hash</span>)
+    <span class="ruby-ivar">@canonical_hash</span> = {}
+    <span class="ruby-identifier">canonical_str</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">%r\s+/</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">elem_</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">elem_</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">%r^\+(\w+)(=(\S+))?$/</span>
+        <span class="ruby-ivar">@canonical_hash</span>[<span class="ruby-node">$1</span>] = <span class="ruby-node">$3</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@canonical_hash</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- canonical_hash-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- canonical_hash-method -->
+
+    
+      <div id="method-i-canonical_str" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">canonical_str</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the “canonical” string definition for this coordinate system, as
+reported by <a href="Proj4.html">Proj4</a>. This may be slightly different
+from the definition used to construct this object.</p>
+          
+
+          
+          <div class="method-source-code" id="canonical_str-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 117</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">canonical_str</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@canonical_str</span>)
+    <span class="ruby-ivar">@canonical_str</span> = <span class="ruby-identifier">_canonical_str</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@canonical_str</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:force_encoding</span>)
+      <span class="ruby-ivar">@canonical_str</span>.<span class="ruby-identifier">force_encoding</span>(<span class="ruby-string">'US-ASCII'</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@canonical_str</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- canonical_str-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- canonical_str-method -->
+
+    
+      <div id="method-i-eql-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">eql?</span><span
+            class="method-args">(rhs_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this <a href="Proj4.html">Proj4</a> is equivalent to the
+given <a href="Proj4.html">Proj4</a>.</p>
+
+<p>Note: this tests for equivalence by comparing only the hash definitions of
+the <a href="Proj4.html">Proj4</a> objects, and returning true if those
+definitions are equivalent. In some cases, this may still return false even
+if the actual coordinate systems are identical, since there are sometimes
+multiple ways to express a given coordinate system.</p>
+          
+
+          
+          <div class="method-source-code" id="eql-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 80</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
+  <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">canonical_hash</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">canonical_hash</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">_radians?</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">_radians?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- eql-3F-source -->
+          
+        </div>
+
+        
+        <div class="aliases">
+          Also aliased as: <a href="Proj4.html#method-i-3D-3D">==</a>
+        </div>
+        
+
+        
+      </div><!-- eql-3F-method -->
+
+    
+      <div id="method-i-geocentric-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">geocentric?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this <a href="Proj4.html">Proj4</a> object is a geocentric
+(3dz) coordinate system.</p>
+          
+
+          
+          <div class="method-source-code" id="geocentric-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 165</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">geocentric?</span>
+  <span class="ruby-identifier">_geocentric?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- geocentric-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- geocentric-3F-method -->
+
+    
+      <div id="method-i-geographic-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">geographic?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this <a href="Proj4.html">Proj4</a> object is a geographic
+(lat-long) coordinate system.</p>
+          
+
+          
+          <div class="method-source-code" id="geographic-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">geographic?</span>
+  <span class="ruby-identifier">_geographic?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- geographic-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- geographic-3F-method -->
+
+    
+      <div id="method-i-get_geographic" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_geographic</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Get the geographic (unprojected lat-long) coordinate system corresponding
+to this coordinate system; i.e. the one that uses the same ellipsoid and
+datum.</p>
+          
+
+          
+          <div class="method-source-code" id="get_geographic-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_geographic</span>
+  <span class="ruby-identifier">_get_geographic</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_geographic-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_geographic-method -->
+
+    
+      <div id="method-i-original_str" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">original_str</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the string definition originally used to construct this object.
+Returns nil if this object wasn’t created by a string definition; i.e. if
+it was created using get_geographic.</p>
+          
+
+          
+          <div class="method-source-code" id="original_str-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">original_str</span>
+  <span class="ruby-identifier">_original_str</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- original_str-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- original_str-method -->
+
+    
+      <div id="method-i-radians-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">radians?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if this <a href="Proj4.html">Proj4</a> object uses radians
+rather than degrees if it is a geographic coordinate system.</p>
+          
+
+          
+          <div class="method-source-code" id="radians-3F-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">radians?</span>
+  <span class="ruby-identifier">_radians?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- radians-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- radians-3F-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

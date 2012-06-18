@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>module RGeo::Feature::Factory - RGeo 0.3.13 Documentation</title>
+
+<link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../../index.html">Home</a>
+    <a href="../../table_of_contents.html#classes">Classes</a>
+    <a href="../../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/rgeo/feature/factory.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-collection">#collection</a>
+    
+    <li><a href="#method-i-coord_sys">#coord_sys</a>
+    
+    <li><a href="#method-i-line">#line</a>
+    
+    <li><a href="#method-i-line_string">#line_string</a>
+    
+    <li><a href="#method-i-linear_ring">#linear_ring</a>
+    
+    <li><a href="#method-i-multi_line_string">#multi_line_string</a>
+    
+    <li><a href="#method-i-multi_point">#multi_point</a>
+    
+    <li><a href="#method-i-multi_polygon">#multi_polygon</a>
+    
+    <li><a href="#method-i-override_cast">#override_cast</a>
+    
+    <li><a href="#method-i-parse_wkb">#parse_wkb</a>
+    
+    <li><a href="#method-i-parse_wkt">#parse_wkt</a>
+    
+    <li><a href="#method-i-point">#point</a>
+    
+    <li><a href="#method-i-polygon">#polygon</a>
+    
+    <li><a href="#method-i-proj4">#proj4</a>
+    
+    <li><a href="#method-i-property">#property</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../../README_rdoc.html">README</a>
+  
+    <li class="file"><a href="../../Spatial_Programming_With_RGeo_rdoc.html">Spatial_Programming_With_RGeo</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../../RGeo.html">RGeo</a>
+  
+    <li><a href="../../RGeo/Cartesian.html">RGeo::Cartesian</a>
+  
+    <li><a href="../../RGeo/Cartesian/Analysis.html">RGeo::Cartesian::Analysis</a>
+  
+    <li><a href="../../RGeo/Cartesian/BoundingBox.html">RGeo::Cartesian::BoundingBox</a>
+  
+    <li><a href="../../RGeo/Cartesian/Factory.html">RGeo::Cartesian::Factory</a>
+  
+    <li><a href="../../RGeo/CoordSys.html">RGeo::CoordSys</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS.html">RGeo::CoordSys::CS</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/AngularUnit.html">RGeo::CoordSys::CS::AngularUnit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/AxisInfo.html">RGeo::CoordSys::CS::AxisInfo</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Base.html">RGeo::CoordSys::CS::Base</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CompoundCoordinateSystem.html">RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CoordinateSystem.html">RGeo::CoordSys::CS::CoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/CoordinateSystemFactory.html">RGeo::CoordSys::CS::CoordinateSystemFactory</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Datum.html">RGeo::CoordSys::CS::Datum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Ellipsoid.html">RGeo::CoordSys::CS::Ellipsoid</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/GeocentricCoordinateSystem.html">RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/HorizontalCoordinateSystem.html">RGeo::CoordSys::CS::HorizontalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/HorizontalDatum.html">RGeo::CoordSys::CS::HorizontalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Info.html">RGeo::CoordSys::CS::Info</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LinearUnit.html">RGeo::CoordSys::CS::LinearUnit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LocalCoordinateSystem.html">RGeo::CoordSys::CS::LocalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/LocalDatum.html">RGeo::CoordSys::CS::LocalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/PrimeMeridian.html">RGeo::CoordSys::CS::PrimeMeridian</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/ProjectedCoordinateSystem.html">RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Projection.html">RGeo::CoordSys::CS::Projection</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/ProjectionParameter.html">RGeo::CoordSys::CS::ProjectionParameter</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/Unit.html">RGeo::CoordSys::CS::Unit</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/VerticalCoordinateSystem.html">RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/VerticalDatum.html">RGeo::CoordSys::CS::VerticalDatum</a>
+  
+    <li><a href="../../RGeo/CoordSys/CS/WGS84ConversionInfo.html">RGeo::CoordSys::CS::WGS84ConversionInfo</a>
+  
+    <li><a href="../../RGeo/CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase.html">RGeo::CoordSys::SRSDatabase</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html">RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Entry.html">RGeo::CoordSys::SRSDatabase::Entry</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Interface.html">RGeo::CoordSys::SRSDatabase::Interface</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/Proj4Data.html">RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/SrOrg.html">RGeo::CoordSys::SRSDatabase::SrOrg</a>
+  
+    <li><a href="../../RGeo/CoordSys/SRSDatabase/UrlReader.html">RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li><a href="../../RGeo/Error.html">RGeo::Error</a>
+  
+    <li><a href="../../RGeo/Error/InvalidGeometry.html">RGeo::Error::InvalidGeometry</a>
+  
+    <li><a href="../../RGeo/Error/ParseError.html">RGeo::Error::ParseError</a>
+  
+    <li><a href="../../RGeo/Error/RGeoError.html">RGeo::Error::RGeoError</a>
+  
+    <li><a href="../../RGeo/Error/UnsupportedOperation.html">RGeo::Error::UnsupportedOperation</a>
+  
+    <li><a href="../../RGeo/Feature.html">RGeo::Feature</a>
+  
+    <li><a href="../../RGeo/Feature/Curve.html">RGeo::Feature::Curve</a>
+  
+    <li><a href="../../RGeo/Feature/Factory.html">RGeo::Feature::Factory</a>
+  
+    <li><a href="../../RGeo/Feature/Factory/Instance.html">RGeo::Feature::Factory::Instance</a>
+  
+    <li><a href="../../RGeo/Feature/FactoryGenerator.html">RGeo::Feature::FactoryGenerator</a>
+  
+    <li><a href="../../RGeo/Feature/Geometry.html">RGeo::Feature::Geometry</a>
+  
+    <li><a href="../../RGeo/Feature/GeometryCollection.html">RGeo::Feature::GeometryCollection</a>
+  
+    <li><a href="../../RGeo/Feature/Instance.html">RGeo::Feature::Instance</a>
+  
+    <li><a href="../../RGeo/Feature/Line.html">RGeo::Feature::Line</a>
+  
+    <li><a href="../../RGeo/Feature/LineString.html">RGeo::Feature::LineString</a>
+  
+    <li><a href="../../RGeo/Feature/LinearRing.html">RGeo::Feature::LinearRing</a>
+  
+    <li><a href="../../RGeo/Feature/MixinCollection.html">RGeo::Feature::MixinCollection</a>
+  
+    <li><a href="../../RGeo/Feature/MixinCollection/TypeData.html">RGeo::Feature::MixinCollection::TypeData</a>
+  
+    <li><a href="../../RGeo/Feature/MultiCurve.html">RGeo::Feature::MultiCurve</a>
+  
+    <li><a href="../../RGeo/Feature/MultiLineString.html">RGeo::Feature::MultiLineString</a>
+  
+    <li><a href="../../RGeo/Feature/MultiPoint.html">RGeo::Feature::MultiPoint</a>
+  
+    <li><a href="../../RGeo/Feature/MultiPolygon.html">RGeo::Feature::MultiPolygon</a>
+  
+    <li><a href="../../RGeo/Feature/MultiSurface.html">RGeo::Feature::MultiSurface</a>
+  
+    <li><a href="../../RGeo/Feature/Point.html">RGeo::Feature::Point</a>
+  
+    <li><a href="../../RGeo/Feature/Polygon.html">RGeo::Feature::Polygon</a>
+  
+    <li><a href="../../RGeo/Feature/Surface.html">RGeo::Feature::Surface</a>
+  
+    <li><a href="../../RGeo/Feature/Type.html">RGeo::Feature::Type</a>
+  
+    <li><a href="../../RGeo/Geographic.html">RGeo::Geographic</a>
+  
+    <li><a href="../../RGeo/Geographic/Factory.html">RGeo::Geographic::Factory</a>
+  
+    <li><a href="../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
+  
+    <li><a href="../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
+  
+    <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
+  
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+  
+    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+  
+    <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
+  
+    <li><a href="../../RGeo/WKRep.html">RGeo::WKRep</a>
+  
+    <li><a href="../../RGeo/WKRep/WKBGenerator.html">RGeo::WKRep::WKBGenerator</a>
+  
+    <li><a href="../../RGeo/WKRep/WKBParser.html">RGeo::WKRep::WKBParser</a>
+  
+    <li><a href="../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
+  
+    <li><a href="../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
+  
+    <li><a href="../../Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module RGeo::Feature::Factory</h1>
+
+  <div id="description" class="description">
+    
+<p>This is a standard interface for factories of features. Generally, each <a
+href="../Feature.html">Feature</a> implementation will implement these
+methods as a standard way to create features.</p>
+
+<p>If the implementation is unable to create the given feature, it should
+generally return nil. Implementations may also choose to raise an exception
+on failure.</p>
+
+<p>Some implementations may extend this interface to provide facilities for
+creating additional objects according to the capabilities provided by that
+implementation. Examples might include higher-dimensional coordinates or
+additional subclasses not explicitly required by the Simple Features
+Specification.</p>
+
+<p><a href="Factory.html">Factory</a> is defined as a module and is provided
+primarily for the sake of documentation. Implementations need not
+necessarily include this module itself. Therefore, you should not depend on
+the result of <code>is_a?(Factory)</code> to check type. However, to
+support testing for factory-ness, the <code>Factory::Instance</code>
+submodule is provided. All factory implementation classes MUST include
+<code>Factory::Instance</code>, and you may use it in <code>is_a?</code>,
+<code>===</code>, and case-when constructs.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-collection" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">collection</span><span
+            class="method-args">(elems_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a
+href="GeometryCollection.html">GeometryCollection</a>. The elems should be
+an Enumerable of <a href="Geometry.html">Geometry</a> objects.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="collection-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 214</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- collection-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- collection-method -->
+
+    
+      <div id="method-i-coord_sys" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">coord_sys</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the coordinate system specification for the features created by
+this factory, or nil if there is no such coordinate system.</p>
+
+<p>NOTE: This is a required method of the factory interface, but the
+coordinate system classes themselves are not yet available, so
+implementations should just return nil for now.</p>
+          
+
+          
+          <div class="method-source-code" id="coord_sys-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 286</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_sys</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- coord_sys-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- coord_sys-method -->
+
+    
+      <div id="method-i-line" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">line</span><span
+            class="method-args">(start_, end_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="Line.html">Line</a>. The given point
+arguments should be <a href="Point.html">Point</a> objects, or objects that
+can be cast to <a href="Point.html">Point</a>.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="line-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- line-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- line-method -->
+
+    
+      <div id="method-i-line_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">line_string</span><span
+            class="method-args">(points_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="LineString.html">LineString</a>. The
+given points argument should be an Enumerable of <a
+href="Point.html">Point</a> objects, or objects that can be cast to <a
+href="Point.html">Point</a>.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="line_string-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- line_string-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- line_string-method -->
+
+    
+      <div id="method-i-linear_ring" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">linear_ring</span><span
+            class="method-args">(points_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="LinearRing.html">LinearRing</a>. The
+given points argument should be an Enumerable of <a
+href="Point.html">Point</a> objects, or objects that can be cast to <a
+href="Point.html">Point</a>. If the first and last points are not equal,
+the ring is automatically closed by appending the first point to the end of
+the string.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="linear_ring-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 184</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- linear_ring-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- linear_ring-method -->
+
+    
+      <div id="method-i-multi_line_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">multi_line_string</span><span
+            class="method-args">(elems_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a
+href="MultiLineString.html">MultiLineString</a>. The elems should be an
+Enumerable of objects that are or can be cast to <a
+href="LineString.html">LineString</a> or any of its subclasses. Returns nil
+if any of the contained geometries is not a <a
+href="LineString.html">LineString</a>, which would break the <a
+href="MultiLineString.html">MultiLineString</a> contract.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="multi_line_string-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 246</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- multi_line_string-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- multi_line_string-method -->
+
+    
+      <div id="method-i-multi_point" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">multi_point</span><span
+            class="method-args">(elems_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="MultiPoint.html">MultiPoint</a>. The
+elems should be an Enumerable of <a href="Point.html">Point</a> objects, or
+objects that can be cast to <a href="Point.html">Point</a>. Returns nil if
+any of the contained geometries is not a <a href="Point.html">Point</a>,
+which would break the <a href="MultiPoint.html">MultiPoint</a> contract.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="multi_point-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 230</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- multi_point-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- multi_point-method -->
+
+    
+      <div id="method-i-multi_polygon" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">multi_polygon</span><span
+            class="method-args">(elems_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="MultiPolygon.html">MultiPolygon</a>. The
+elems should be an Enumerable of objects that are or can be cast to <a
+href="Polygon.html">Polygon</a> or any of its subclasses. Returns nil if
+any of the contained geometries is not a <a
+href="Polygon.html">Polygon</a>, which would break the <a
+href="MultiPolygon.html">MultiPolygon</a> contract. Also returns nil if any
+of the other assertions for <a href="MultiPolygon.html">MultiPolygon</a>
+are not met, e.g. if any of the polygons overlap.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="multi_polygon-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 264</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- multi_polygon-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- multi_polygon-method -->
+
+    
+      <div id="method-i-override_cast" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">override_cast</span><span
+            class="method-args">(original_, type_, flags_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This is an optional method that may be implemented to customize casting for
+this factory. Basically, <a href="../../RGeo.html">RGeo</a> defines
+standard ways to cast certain types of objects from one factory to another
+and one SFS type to another. However, a factory may choose to override how
+things are casted TO its implementation using this method. It can do this
+to optimize certain casting cases, or implement special cases particular to
+this factory.</p>
+
+<p>This method will be called (if defined) on the destination factory, and
+will be passed the original object (which may or may not already be created
+by this factory), the SFS feature type (which again may or may not already
+be the type of the original object), and a hash of additional flags. These
+flags are:</p>
+<dl class="rdoc-list label-list"><dt><code>:keep_subtype</code>
+<dd>
+<p>indicates whether to keep the subtype if casting to a supertype of the
+current type</p>
+</dd><dt><code>:force_new</code>
+<dd>
+<p>indicates whether to force the creation of a new object even if the
+original is already of the desired factory and type</p>
+</dd><dt><code>:project</code>
+<dd>
+<p>indicates whether to project the coordinates from the source to the
+destination proj4 coordinate system, if available</p>
+</dd></dl>
+
+<p>It should return either a casted result object, false, or nil. A nil return
+value indicates that casting should be forced to fail (and <a
+href="../Feature.html#method-c-cast">RGeo::Feature.cast</a> will return
+nil). A false return value indicates that this method declines to override
+the casting algorithm, and <a href="../../RGeo.html">RGeo</a> should use
+its default algorithm to cast the object. Therefore, by default, you should
+return false.</p>
+          
+
+          
+          <div class="method-source-code" id="override_cast-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 323</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">override_cast</span>(<span class="ruby-identifier">original_</span>, <span class="ruby-identifier">type_</span>, <span class="ruby-identifier">flags_</span>)
+  <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- override_cast-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- override_cast-method -->
+
+    
+      <div id="method-i-parse_wkb" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_wkb</span><span
+            class="method-args">(str_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parse the given string in well-known-binary format and return the resulting
+feature. Returns nil if the string couldn’t be parsed.</p>
+          
+
+          
+          <div class="method-source-code" id="parse_wkb-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkb</span>(<span class="ruby-identifier">str_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- parse_wkb-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- parse_wkb-method -->
+
+    
+      <div id="method-i-parse_wkt" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">parse_wkt</span><span
+            class="method-args">(str_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Parse the given string in well-known-text format and return the resulting
+feature. Returns nil if the string couldn’t be parsed.</p>
+          
+
+          
+          <div class="method-source-code" id="parse_wkt-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 119</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkt</span>(<span class="ruby-identifier">str_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- parse_wkt-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- parse_wkt-method -->
+
+    
+      <div id="method-i-point" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">point</span><span
+            class="method-args">(x_, y_, *extra_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="Point.html">Point</a>. The x and y
+parameters should be Float values.</p>
+
+<p>The extra parameters should be the Z and/or M coordinates, if supported. If
+both Z and M coordinates are supported, Z should be passed first.</p>
+          
+
+          
+          <div class="method-source-code" id="point-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, *<span class="ruby-identifier">extra_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- point-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- point-method -->
+
+    
+      <div id="method-i-polygon" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">polygon</span><span
+            class="method-args">(outer_ring_, inner_rings_=nil)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Create a feature of type <a href="Polygon.html">Polygon</a>. The outer_ring
+should be a <a href="LinearRing.html">LinearRing</a>, or an object that can
+be cast to <a href="LinearRing.html">LinearRing</a>. The inner_rings should
+be a possibly empty Enumerable of <a href="LinearRing.html">LinearRing</a>
+(or objects that can be casted to <a
+href="LinearRing.html">LinearRing</a>). You may also pass nil to indicate
+no inner rings.</p>
+
+<p>Although implementations are free to attempt to handle input objects that
+are not of this factory, strictly speaking, the result of building
+geometries from objects of the wrong factory is undefined.</p>
+          
+
+          
+          <div class="method-source-code" id="polygon-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 201</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- polygon-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- polygon-method -->
+
+    
+      <div id="method-i-proj4" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">proj4</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a <a href="../CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a>
+representing the projection for the coordinate system of features created
+by this factory, or nil if there is no such proj4 projection.</p>
+          
+
+          
+          <div class="method-source-code" id="proj4-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 273</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">proj4</span>
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- proj4-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- proj4-method -->
+
+    
+      <div id="method-i-property" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">property</span><span
+            class="method-args">(name_)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns meta-information about this factory, by key. This information may
+involve support for optional functionality, properties of the coordinate
+system, or other characteristics.</p>
+
+<p>Each property has a symbolic name. Names that have no periods are
+considered well-known names and are reserved for use by <a
+href="../../RGeo.html">RGeo</a>. If you want to define your own properties,
+use a name that is namespaced with periods, such as
+<code>:'mycompany.myprop'</code>.</p>
+
+<p>Property values are dependent on the individual property. Generally,
+properties that involve testing for functionality should return true if the
+functionality is support, or false or nil if not. A property value could
+also invlove different values indicating different levels of support. In
+any case, the factory should return nil for property names it does not
+recognize. This value is considered the “default” or “no value” value.</p>
+
+<p>Currently defined well-known properties are:</p>
+<dl class="rdoc-list label-list"><dt><code>:has_z_coordinate</code>
+<dd>
+<p>Set to true if geometries created by this factory include a Z coordinate,
+and the <a href="Point.html#method-i-z">RGeo::Feature::Point#z</a> method
+is available.</p>
+</dd><dt><code>:has_m_coordinate</code>
+<dd>
+<p>Set to true if geometries created by this factory include a M coordinate,
+and the <a href="Point.html#method-i-m">RGeo::Feature::Point#m</a> method
+is available.</p>
+</dd><dt><code>:is_cartesian</code>
+<dd>
+<p>Set to true if this <a href="Factory.html">Factory</a> guarantees that it
+operates in <a href="../Cartesian.html">Cartesian</a> geometry. If false or
+nil, no such guarantee is made, though it is possible the geometries may
+still be <a href="../Cartesian.html">Cartesian</a>.</p>
+</dd><dt><code>:is_geographic</code>
+<dd>
+<p>Set to true if this Factory’s coordinate system is meant to be interpreted
+as x=longitude and y=latitude. If false or nil, no information is present
+about whether the coordinate system is meant to be so interpreted.</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="property-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/factory.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">property</span>(<span class="ruby-identifier">name_</span>)
+  <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- property-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- property-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

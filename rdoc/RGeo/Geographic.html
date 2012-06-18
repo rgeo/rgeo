@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>module RGeo::Geographic - RGeo 0.3.13 Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/rgeo/geographic/factory.rb
+    <li>lib/rgeo/geographic/interface.rb
+    <li>lib/rgeo/geographic/proj4_projector.rb
+    <li>lib/rgeo/geographic/projected_feature_classes.rb
+    <li>lib/rgeo/geographic/projected_feature_methods.rb
+    <li>lib/rgeo/geographic/projected_window.rb
+    <li>lib/rgeo/geographic/simple_mercator_projector.rb
+    <li>lib/rgeo/geographic/spherical_feature_classes.rb
+    <li>lib/rgeo/geographic/spherical_feature_methods.rb
+    <li>lib/rgeo/geographic/spherical_math.rb
+    <li>lib/rgeo/geographic.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-projected_factory">::projected_factory</a>
+    
+    <li><a href="#method-c-simple_mercator_factory">::simple_mercator_factory</a>
+    
+    <li><a href="#method-c-spherical_factory">::spherical_factory</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../History_rdoc.html">History</a>
+  
+    <li class="file"><a href="../README_rdoc.html">README</a>
+  
+    <li class="file"><a href="../Spatial_Programming_With_RGeo_rdoc.html">Spatial_Programming_With_RGeo</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../RGeo.html">RGeo</a>
+  
+    <li><a href="../RGeo/Cartesian.html">RGeo::Cartesian</a>
+  
+    <li><a href="../RGeo/Cartesian/Analysis.html">RGeo::Cartesian::Analysis</a>
+  
+    <li><a href="../RGeo/Cartesian/BoundingBox.html">RGeo::Cartesian::BoundingBox</a>
+  
+    <li><a href="../RGeo/Cartesian/Factory.html">RGeo::Cartesian::Factory</a>
+  
+    <li><a href="../RGeo/CoordSys.html">RGeo::CoordSys</a>
+  
+    <li><a href="../RGeo/CoordSys/CS.html">RGeo::CoordSys::CS</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/AngularUnit.html">RGeo::CoordSys::CS::AngularUnit</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/AxisInfo.html">RGeo::CoordSys::CS::AxisInfo</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/Base.html">RGeo::CoordSys::CS::Base</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/CompoundCoordinateSystem.html">RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/CoordinateSystem.html">RGeo::CoordSys::CS::CoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/CoordinateSystemFactory.html">RGeo::CoordSys::CS::CoordinateSystemFactory</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/Datum.html">RGeo::CoordSys::CS::Datum</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/Ellipsoid.html">RGeo::CoordSys::CS::Ellipsoid</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/GeocentricCoordinateSystem.html">RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/HorizontalCoordinateSystem.html">RGeo::CoordSys::CS::HorizontalCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/HorizontalDatum.html">RGeo::CoordSys::CS::HorizontalDatum</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/Info.html">RGeo::CoordSys::CS::Info</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/LinearUnit.html">RGeo::CoordSys::CS::LinearUnit</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/LocalCoordinateSystem.html">RGeo::CoordSys::CS::LocalCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/LocalDatum.html">RGeo::CoordSys::CS::LocalDatum</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/PrimeMeridian.html">RGeo::CoordSys::CS::PrimeMeridian</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/ProjectedCoordinateSystem.html">RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/Projection.html">RGeo::CoordSys::CS::Projection</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/ProjectionParameter.html">RGeo::CoordSys::CS::ProjectionParameter</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/Unit.html">RGeo::CoordSys::CS::Unit</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/VerticalCoordinateSystem.html">RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/VerticalDatum.html">RGeo::CoordSys::CS::VerticalDatum</a>
+  
+    <li><a href="../RGeo/CoordSys/CS/WGS84ConversionInfo.html">RGeo::CoordSys::CS::WGS84ConversionInfo</a>
+  
+    <li><a href="../RGeo/CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase.html">RGeo::CoordSys::SRSDatabase</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html">RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase/Entry.html">RGeo::CoordSys::SRSDatabase::Entry</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase/Interface.html">RGeo::CoordSys::SRSDatabase::Interface</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase/Proj4Data.html">RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase/SrOrg.html">RGeo::CoordSys::SRSDatabase::SrOrg</a>
+  
+    <li><a href="../RGeo/CoordSys/SRSDatabase/UrlReader.html">RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li><a href="../RGeo/Error.html">RGeo::Error</a>
+  
+    <li><a href="../RGeo/Error/InvalidGeometry.html">RGeo::Error::InvalidGeometry</a>
+  
+    <li><a href="../RGeo/Error/ParseError.html">RGeo::Error::ParseError</a>
+  
+    <li><a href="../RGeo/Error/RGeoError.html">RGeo::Error::RGeoError</a>
+  
+    <li><a href="../RGeo/Error/UnsupportedOperation.html">RGeo::Error::UnsupportedOperation</a>
+  
+    <li><a href="../RGeo/Feature.html">RGeo::Feature</a>
+  
+    <li><a href="../RGeo/Feature/Curve.html">RGeo::Feature::Curve</a>
+  
+    <li><a href="../RGeo/Feature/Factory.html">RGeo::Feature::Factory</a>
+  
+    <li><a href="../RGeo/Feature/Factory/Instance.html">RGeo::Feature::Factory::Instance</a>
+  
+    <li><a href="../RGeo/Feature/FactoryGenerator.html">RGeo::Feature::FactoryGenerator</a>
+  
+    <li><a href="../RGeo/Feature/Geometry.html">RGeo::Feature::Geometry</a>
+  
+    <li><a href="../RGeo/Feature/GeometryCollection.html">RGeo::Feature::GeometryCollection</a>
+  
+    <li><a href="../RGeo/Feature/Instance.html">RGeo::Feature::Instance</a>
+  
+    <li><a href="../RGeo/Feature/Line.html">RGeo::Feature::Line</a>
+  
+    <li><a href="../RGeo/Feature/LineString.html">RGeo::Feature::LineString</a>
+  
+    <li><a href="../RGeo/Feature/LinearRing.html">RGeo::Feature::LinearRing</a>
+  
+    <li><a href="../RGeo/Feature/MixinCollection.html">RGeo::Feature::MixinCollection</a>
+  
+    <li><a href="../RGeo/Feature/MixinCollection/TypeData.html">RGeo::Feature::MixinCollection::TypeData</a>
+  
+    <li><a href="../RGeo/Feature/MultiCurve.html">RGeo::Feature::MultiCurve</a>
+  
+    <li><a href="../RGeo/Feature/MultiLineString.html">RGeo::Feature::MultiLineString</a>
+  
+    <li><a href="../RGeo/Feature/MultiPoint.html">RGeo::Feature::MultiPoint</a>
+  
+    <li><a href="../RGeo/Feature/MultiPolygon.html">RGeo::Feature::MultiPolygon</a>
+  
+    <li><a href="../RGeo/Feature/MultiSurface.html">RGeo::Feature::MultiSurface</a>
+  
+    <li><a href="../RGeo/Feature/Point.html">RGeo::Feature::Point</a>
+  
+    <li><a href="../RGeo/Feature/Polygon.html">RGeo::Feature::Polygon</a>
+  
+    <li><a href="../RGeo/Feature/Surface.html">RGeo::Feature::Surface</a>
+  
+    <li><a href="../RGeo/Feature/Type.html">RGeo::Feature::Type</a>
+  
+    <li><a href="../RGeo/Geographic.html">RGeo::Geographic</a>
+  
+    <li><a href="../RGeo/Geographic/Factory.html">RGeo::Geographic::Factory</a>
+  
+    <li><a href="../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
+  
+    <li><a href="../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
+  
+    <li><a href="../RGeo/Geos.html">RGeo::Geos</a>
+  
+    <li><a href="../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+  
+    <li><a href="../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+  
+    <li><a href="../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
+  
+    <li><a href="../RGeo/WKRep.html">RGeo::WKRep</a>
+  
+    <li><a href="../RGeo/WKRep/WKBGenerator.html">RGeo::WKRep::WKBGenerator</a>
+  
+    <li><a href="../RGeo/WKRep/WKBParser.html">RGeo::WKRep::WKBParser</a>
+  
+    <li><a href="../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
+  
+    <li><a href="../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
+  
+    <li><a href="../Object.html">Object</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module RGeo::Geographic</h1>
+
+  <div id="description" class="description">
+    
+<p>The <a href="Geographic.html">Geographic</a> implementation actually
+comprises a suite of implementations with one common feature: they
+represent geographic latitude/longitude coordinates measured in degrees.
+The “x” coordinate corresponds to longitude, and the “y” coordinate to
+latitude. Thus, coordinates are often expressed in reverse (i.e. long-lat)
+order. e.g.</p>
+
+<pre>location = geographic_factory.point(long, lat)</pre>
+
+<p>Some geographic implementations include a secondary factory that represents
+a projection. For these implementations, you can quickly transform data
+between lat/long coordinates and the projected coordinate system, and most
+calculations are done in the projected coordinate system. For
+implementations that do not include this secondary projection factory,
+calculations are done on the sphereoid. See the various class methods of <a
+href="Geographic.html">Geographic</a> for more information on the behaviors
+of the factories they generate.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-projected_factory" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">projected_factory</span><span
+            class="method-args">(opts_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates and returns a geographic factory that includes a projection
+specified by a Proj4 coordinate system. Like all geographic factories, this
+one creates features using latitude- longitude values. However,
+calculations such as intersections are done in the projected coordinate
+system, and size and distance calculations report results in the projected
+units. Thus, this factory actually includes two factories representing
+different coordinate systems: the main factory representing the geographic
+lat-long coordinate system, and an auxiliary “projection factory”
+representing the projected coordinate system.</p>
+
+<p>This implementation is intended for advanced GIS applications requiring
+greater control over the projection being used.</p>
+
+<h3 id="method-c-projected_factory-label-Options">Options</h3>
+
+<p>When creating a projected implementation, you must provide enough
+information to construct a Proj4 specification for the projection.
+Generally, this means you will provide either the projection’s factory
+itself (via the <code>:projection_factory</code> option), in which case the
+factory must include a Proj4 coordinate system; or, alternatively, you
+should provide the Proj4 coordinate system and let this method construct a
+projection factory for you (which it will do using the preferred <a
+href="Cartesian.html">Cartesian</a> factory generator). If you choose this
+second method, you may provide the proj4 directly via the
+<code>:projection_proj4</code> option, or indirectly by providing both an
+<code>:srid</code> and a <code>:srs_database</code> to use to look up the
+coordinate system.</p>
+
+<p>Following are detailed descriptions of the various options you can pass to
+this method.</p>
+<dl class="rdoc-list label-list"><dt><code>:projection_factory</code>
+<dd>
+<p>Specify an existing <a href="Cartesian.html">Cartesian</a> factory to use
+for the projection. This factory must have a non-nil Proj4. If this is
+provided, any <code>:projection_proj4</code>,
+<code>:projection_coord_sys</code>, and <code>:projection_srid</code> are
+ignored.</p>
+</dd><dt><code>:projection_proj4</code>
+<dd>
+<p>Specify a Proj4 projection to use to construct the projection factory. This
+may be specified as a <a href="CoordSys/Proj4.html">CoordSys::Proj4</a>
+object, or as a Proj4 string or hash representation.</p>
+</dd><dt><code>:projection_coord_sys</code>
+<dd>
+<p>Specify a OGC coordinate system for the projection. This may be specified
+as an <a
+href="CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+object, or as a String in OGC WKT format. Optional.</p>
+</dd><dt><code>:projection_srid</code>
+<dd>
+<p>The SRID value to use for the projection factory. Defaults to the given
+projection coordinate system’s authority code, or to 0 if no projection
+coordinate system is known.</p>
+</dd><dt><code>:proj4</code>
+<dd>
+<p>A proj4 projection for the geographic (lat-lon) factory. You may pass
+either an <a href="CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a> object,
+or a string or hash containing the Proj4 parameters. This coordinate system
+must be a geographic (lat/long) coordinate system. It defaults to the
+geographic part of the projection factory’s coordinate system. Generally,
+you should leave it at the default unless you want the geographic
+coordinate system to be based on a different horizontal datum than the
+projection.</p>
+</dd><dt><code>:coord_sys</code>
+<dd>
+<p>An OGC coordinate system for the geographic (lat-lon) factory, which may be
+an <a
+href="CoordSys/CS/GeographicCoordinateSystem.html">RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+object or a string in OGC WKT format. It defaults to the geographic system
+embedded in the projection coordinate system. Generally, you should leave
+it at the default unless you want the geographic coordinate system to be
+based on a different horizontal datum than the projection.</p>
+</dd><dt><code>:srid</code>
+<dd>
+<p>The SRID value to use for the main geographic factory. Defaults to the
+given geographic coordinate system’s authority code, or to 0 if no
+geographic coordinate system is known.</p>
+</dd><dt><code>:srs_database</code>
+<dd>
+<p>Optional. If provided, the value should be an implementation of <a
+href="CoordSys/SRSDatabase/Interface.html">CoordSys::SRSDatabase::Interface</a>.
+If both this and an SRID are provided, they are used to look up the proj4
+and coord_sys objects from a spatial reference system database.</p>
+</dd><dt><code>:has_z_coordinate</code>
+<dd>
+<p>Support a Z coordinate. Default is false. Note: this is ignored if a
+<code>:projection_factory</code> is provided; in that case, the geographic
+factory’s z-coordinate availability will match the projection factory’s
+setting.</p>
+</dd><dt><code>:has_m_coordinate</code>
+<dd>
+<p>Support an M coordinate. Default is false. Note: this is ignored if a
+<code>:projection_factory</code> is provided; in that case, the geographic
+factory’s m-coordinate availability will match the projection factory’s
+setting.</p>
+</dd><dt><code>:wkt_parser</code>
+<dd>
+<p>Configure the parser for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTParser.html#method-c-new">RGeo::WKRep::WKTParser.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKTParser.html">WKRep::WKTParser</a>.</p>
+</dd><dt><code>:wkb_parser</code>
+<dd>
+<p>Configure the parser for WKB. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKBParser.html#method-c-new">RGeo::WKRep::WKBParser.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKBParser.html">WKRep::WKBParser</a>.</p>
+</dd><dt><code>:wkt_generator</code>
+<dd>
+<p>Configure the generator for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTGenerator.html#method-c-new">RGeo::WKRep::WKTGenerator.new</a>.
+Default is <code>{:convert_case =&gt; :upper}</code>.</p>
+</dd><dt><code>:wkb_generator</code>
+<dd>
+<p>Configure the generator for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTGenerator.html#method-c-new">RGeo::WKRep::WKTGenerator.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKBGenerator.html">WKRep::WKBGenerator</a>.</p>
+</dd></dl>
+
+<p>If a <code>:projection_factory</code> is <em>not</em> provided, you may
+also provide options for configuring the projected <a
+href="Cartesian.html">Cartesian</a> factory. For example, if GEOS is used
+for the projected factory, you may also set the
+<code>:lenient_multi_polygon_assertions</code> and
+<code>:buffer_resolution</code> options. See <a
+href="Geos.html#method-c-factory">RGeo::Geos.factory</a> for more details.</p>
+          
+
+          
+          <div class="method-source-code" id="projected_factory-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/interface.rb, line 381</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">projected_factory</span>(<span class="ruby-identifier">opts_</span>={})
+  <span class="ruby-keyword">unless</span> <span class="ruby-constant">CoordSys</span><span class="ruby-operator">::</span><span class="ruby-constant">Proj4</span>.<span class="ruby-identifier">supported?</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-string">&quot;Proj4 is not supported because the proj4 library was not found at install time.&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">db_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:srs_database</span>]
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">projection_factory_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:projection_factory</span>])
+    <span class="ruby-comment"># Get the projection coordinate systems from the given factory</span>
+    <span class="ruby-identifier">projection_proj4_</span> = <span class="ruby-identifier">projection_factory_</span>.<span class="ruby-identifier">proj4</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">projection_proj4_</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">'The :projection_factory does not have a proj4.'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">projection_coord_sys_</span> = <span class="ruby-identifier">projection_factory_</span>.<span class="ruby-identifier">coord_sys</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">projection_coord_sys_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">projection_coord_sys_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">CoordSys</span><span class="ruby-operator">::</span><span class="ruby-constant">CS</span><span class="ruby-operator">::</span><span class="ruby-constant">ProjectedCoordinateSystem</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">'The :projection_factory\s coord_sys is not a ProjectedCoordinateSystem.'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># Determine geographic coordinate system. First check parameters.</span>
+    <span class="ruby-identifier">proj4_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:proj4</span>]
+    <span class="ruby-identifier">coord_sys_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:coord_sys</span>]
+    <span class="ruby-identifier">srid_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:srid</span>]
+    <span class="ruby-comment"># Lookup srid from srs database if needed</span>
+    <span class="ruby-keyword">if</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">coord_sys_</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">srid_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">db_</span>
+      <span class="ruby-identifier">entry_</span> = <span class="ruby-identifier">db_</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">srid_</span>.<span class="ruby-identifier">to_i</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry_</span>
+        <span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">proj4</span>
+        <span class="ruby-identifier">coord_sys_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">coord_sys</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># Fall back to getting the values from the projection.</span>
+    <span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">projection_proj4_</span>.<span class="ruby-identifier">get_geographic</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">_proj4_4326</span>
+    <span class="ruby-identifier">coord_sys_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">projection_coord_sys_</span>.<span class="ruby-identifier">geographic_coordinate_system</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">projection_coord_sys_</span>
+    <span class="ruby-identifier">srid_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">coord_sys_</span>.<span class="ruby-identifier">authority_code</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">coord_sys_</span>
+    <span class="ruby-identifier">srid_</span> <span class="ruby-operator">||=</span> <span class="ruby-value">4326</span>
+    <span class="ruby-comment"># Now we should have all the coordinate system info.</span>
+    <span class="ruby-identifier">factory_</span> = <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">Factory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'Projected'</span>,
+      <span class="ruby-value">:proj4</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">proj4_</span>,
+      <span class="ruby-value">:coord_sys</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">coord_sys_</span>,
+      <span class="ruby-value">:srid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">srid_</span>.<span class="ruby-identifier">to_i</span>,
+      <span class="ruby-value">:has_z_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">projection_factory_</span>.<span class="ruby-identifier">property</span>(<span class="ruby-value">:has_z_coordinate</span>),
+      <span class="ruby-value">:has_m_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">projection_factory_</span>.<span class="ruby-identifier">property</span>(<span class="ruby-value">:has_m_coordinate</span>),
+      <span class="ruby-value">:wkt_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_parser</span>], <span class="ruby-value">:wkt_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_generator</span>],
+      <span class="ruby-value">:wkb_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_parser</span>], <span class="ruby-value">:wkb_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_generator</span>])
+    <span class="ruby-identifier">projector_</span> = <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">Proj4Projector</span>.<span class="ruby-identifier">create_from_existing_factory</span>(<span class="ruby-identifier">factory_</span>,
+      <span class="ruby-identifier">projection_factory_</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># Determine projection coordinate system. First check the parameters.</span>
+    <span class="ruby-identifier">projection_proj4_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:projection_proj4</span>]
+    <span class="ruby-identifier">projection_coord_sys_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:projection_coord_sys</span>]
+    <span class="ruby-identifier">projection_srid_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:projection_srid</span>]
+    <span class="ruby-comment"># Check the case where we need to look up a srid from an srs database.</span>
+    <span class="ruby-keyword">if</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">projection_proj4_</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">projection_coord_sys_</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">projection_srid_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">db_</span>
+      <span class="ruby-identifier">entry_</span> = <span class="ruby-identifier">db_</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">projection_srid_</span>.<span class="ruby-identifier">to_i</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry_</span>
+        <span class="ruby-identifier">projection_proj4_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">proj4</span>
+        <span class="ruby-identifier">projection_coord_sys_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">coord_sys</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># A projection proj4 is absolutely required.</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">projection_proj4_</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">'Unable to determine the Proj4 for the projected coordinate system.'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># Check the projection coordinate systems, and parse if needed.</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">projection_proj4_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">String</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">projection_proj4_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Hash</span>)
+      <span class="ruby-identifier">actual_projection_proj4_</span> = <span class="ruby-constant">CoordSys</span><span class="ruby-operator">::</span><span class="ruby-constant">Proj4</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">projection_proj4_</span>)
+      <span class="ruby-keyword">unless</span> <span class="ruby-identifier">actual_projection_proj4_</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Bad proj4 syntax: #{projection_proj4_.inspect}&quot;</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">projection_proj4_</span> = <span class="ruby-identifier">actual_projection_proj4_</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">projection_coord_sys_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">projection_coord_sys_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">CoordSys</span><span class="ruby-operator">::</span><span class="ruby-constant">CS</span><span class="ruby-operator">::</span><span class="ruby-constant">ProjectedCoordinateSystem</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">'The :projection_coord_sys is not a ProjectedCoordinateSystem.'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">projection_srid_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">projection_coord_sys_</span>.<span class="ruby-identifier">authority_code</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">projection_coord_sys_</span>
+    <span class="ruby-comment"># Determine geographic coordinate system. First check parameters.</span>
+    <span class="ruby-identifier">proj4_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:proj4</span>]
+    <span class="ruby-identifier">coord_sys_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:coord_sys</span>]
+    <span class="ruby-identifier">srid_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:srid</span>]
+    <span class="ruby-comment"># Lookup srid from srs database if needed</span>
+    <span class="ruby-keyword">if</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">coord_sys_</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">srid_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">db_</span>
+      <span class="ruby-identifier">entry_</span> = <span class="ruby-identifier">db_</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">srid_</span>.<span class="ruby-identifier">to_i</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry_</span>
+        <span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">proj4</span>
+        <span class="ruby-identifier">coord_sys_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">coord_sys</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-comment"># Fall back to getting the values from the projection.</span>
+    <span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">projection_proj4_</span>.<span class="ruby-identifier">get_geographic</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">_proj4_4326</span>
+    <span class="ruby-identifier">coord_sys_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">projection_coord_sys_</span>.<span class="ruby-identifier">geographic_coordinate_system</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">projection_coord_sys_</span>
+    <span class="ruby-identifier">srid_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">coord_sys_</span>.<span class="ruby-identifier">authority_code</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">coord_sys_</span>
+    <span class="ruby-identifier">srid_</span> <span class="ruby-operator">||=</span> <span class="ruby-value">4326</span>
+    <span class="ruby-comment"># Now we should have all the coordinate system info.</span>
+    <span class="ruby-identifier">factory_</span> = <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">Factory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'Projected'</span>,
+      <span class="ruby-value">:proj4</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">proj4_</span>,
+      <span class="ruby-value">:coord_sys</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">coord_sys_</span>,
+      <span class="ruby-value">:srid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">srid_</span>.<span class="ruby-identifier">to_i</span>,
+      <span class="ruby-value">:has_z_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_z_coordinate</span>],
+      <span class="ruby-value">:has_m_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_m_coordinate</span>],
+      <span class="ruby-value">:wkt_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_parser</span>], <span class="ruby-value">:wkt_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_generator</span>],
+      <span class="ruby-value">:wkb_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_parser</span>], <span class="ruby-value">:wkb_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_generator</span>])
+    <span class="ruby-identifier">projector_</span> = <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">Proj4Projector</span>.<span class="ruby-identifier">create_from_proj4</span>(<span class="ruby-identifier">factory_</span>,
+      <span class="ruby-identifier">projection_proj4_</span>,
+      <span class="ruby-value">:srid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">projection_srid_</span>,
+      <span class="ruby-value">:coord_sys</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">projection_coord_sys_</span>,
+      <span class="ruby-value">:buffer_resolution</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:buffer_resolution</span>],
+      <span class="ruby-value">:lenient_multi_polygon_assertions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:lenient_multi_polygon_assertions</span>],
+      <span class="ruby-value">:has_z_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_z_coordinate</span>],
+      <span class="ruby-value">:has_m_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_m_coordinate</span>],
+      <span class="ruby-value">:wkt_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_parser</span>], <span class="ruby-value">:wkt_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_generator</span>],
+      <span class="ruby-value">:wkb_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_parser</span>], <span class="ruby-value">:wkb_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_generator</span>])
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">factory_</span>.<span class="ruby-identifier">_set_projector</span>(<span class="ruby-identifier">projector_</span>)
+  <span class="ruby-identifier">factory_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- projected_factory-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- projected_factory-method -->
+
+    
+      <div id="method-c-simple_mercator_factory" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">simple_mercator_factory</span><span
+            class="method-args">(opts_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates and returns a geographic factory that is designed for visualization
+applications that use Google or Bing maps, or any other visualization
+systems that use the same projection. It includes a projection factory that
+matches the projection used by those mapping systems.</p>
+
+<p>Like all geographic factories, this one creates features using
+latitude-longitude values. However, calculations such as intersections are
+done in the projected coordinate system, and size and distance calculations
+report results in the projected units.</p>
+
+<p>The behavior of the simple_mercator factory could also be obtained using a
+<a
+href="Geographic.html#method-c-projected_factory">::projected_factory</a>
+with appropriate Proj4 specifications. However, the simple_mercator
+implementation is done without actually requiring the Proj4 library. The
+projections are simple enough to be implemented in pure ruby.</p>
+
+<h3 id="method-c-simple_mercator_factory-label-About+the+coordinate+system">About the coordinate system</h3>
+
+<p>Many popular visualization technologies, such as Google and Bing maps,
+actually use two coordinate systems. The first is the standard WSG84
+lat-long system used by the GPS and represented by EPSG 4326. Most API
+calls and input-output in these mapping technologies utilize this
+coordinate system. The second is a Mercator projection based on a
+“sphericalization” of the WGS84 lat-long system. This projection is the
+basis of the map’s screen and tiling coordinates, and has been assigned
+EPSG 3785.</p>
+
+<p>This factory represents both coordinate systems. The main factory produces
+data in the lat-long system and reports SRID 4326, and the projected
+factory produces data in the projection and reports SRID 3785. Latitudes
+are restricted to the range (-85.05112877980659, 85.05112877980659), which
+conveniently results in a square projected domain.</p>
+
+<h3 id="method-c-simple_mercator_factory-label-Options">Options</h3>
+
+<p>You may use the following options when creating a simple_mercator factory:</p>
+<dl class="rdoc-list label-list"><dt><code>:has_z_coordinate</code>
+<dd>
+<p>Support a Z coordinate. Default is false.</p>
+</dd><dt><code>:has_m_coordinate</code>
+<dd>
+<p>Support an M coordinate. Default is false.</p>
+</dd><dt><code>:wkt_parser</code>
+<dd>
+<p>Configure the parser for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTParser.html#method-c-new">RGeo::WKRep::WKTParser.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKTParser.html">WKRep::WKTParser</a>.</p>
+</dd><dt><code>:wkb_parser</code>
+<dd>
+<p>Configure the parser for WKB. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKBParser.html#method-c-new">RGeo::WKRep::WKBParser.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKBParser.html">WKRep::WKBParser</a>.</p>
+</dd><dt><code>:wkt_generator</code>
+<dd>
+<p>Configure the generator for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTGenerator.html#method-c-new">RGeo::WKRep::WKTGenerator.new</a>.
+Default is <code>{:convert_case =&gt; :upper}</code>.</p>
+</dd><dt><code>:wkb_generator</code>
+<dd>
+<p>Configure the generator for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTGenerator.html#method-c-new">RGeo::WKRep::WKTGenerator.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKBGenerator.html">WKRep::WKBGenerator</a>.</p>
+</dd></dl>
+
+<p>You may also provide options understood by the underlying projected <a
+href="Cartesian.html">Cartesian</a> factory. For example, if GEOS is used
+for the projected factory, you may also set the
+<code>:lenient_multi_polygon_assertions</code> and
+<code>:buffer_resolution</code> options. See <a
+href="Geos.html#method-c-factory">RGeo::Geos.factory</a> for more details.</p>
+          
+
+          
+          <div class="method-source-code" id="simple_mercator_factory-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/interface.rb, line 248</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">simple_mercator_factory</span>(<span class="ruby-identifier">opts_</span>={})
+  <span class="ruby-identifier">factory_</span> = <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">Factory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'Projected'</span>,
+    <span class="ruby-value">:proj4</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">_proj4_4326</span>,
+    <span class="ruby-value">:coord_sys</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">_coordsys_4326</span>,
+    <span class="ruby-value">:srid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">4326</span>,
+    <span class="ruby-value">:wkt_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_parser</span>],
+    <span class="ruby-value">:wkb_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_parser</span>],
+    <span class="ruby-value">:wkt_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_generator</span>],
+    <span class="ruby-value">:wkb_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_generator</span>],
+    <span class="ruby-value">:has_z_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_z_coordinate</span>],
+    <span class="ruby-value">:has_m_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_m_coordinate</span>])
+  <span class="ruby-identifier">projector_</span> = <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">SimpleMercatorProjector</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">factory_</span>,
+    <span class="ruby-value">:buffer_resolution</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:buffer_resolution</span>],
+    <span class="ruby-value">:lenient_multi_polygon_assertions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:lenient_multi_polygon_assertions</span>],
+    <span class="ruby-value">:has_z_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_z_coordinate</span>],
+    <span class="ruby-value">:has_m_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_m_coordinate</span>])
+  <span class="ruby-identifier">factory_</span>.<span class="ruby-identifier">_set_projector</span>(<span class="ruby-identifier">projector_</span>)
+  <span class="ruby-identifier">factory_</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- simple_mercator_factory-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- simple_mercator_factory-method -->
+
+    
+      <div id="method-c-spherical_factory" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">spherical_factory</span><span
+            class="method-args">(opts_={})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates and returns a geographic factory that does not include a a
+projection, and which performs calculations assuming a spherical earth. In
+other words, geodesics are treated as great circle arcs, and geometric
+calculations are handled accordingly. Size and distance calculations report
+results in meters. This implementation is thus ideal for everyday
+calculations on the globe in which good accuracy is desired, but in which
+it is not deemed necessary to perform the complex ellipsoidal calculations
+needed for greater precision.</p>
+
+<p>The maximum error is about 0.5 percent, for objects and calculations that
+span a significant percentage of the globe, due to distortion caused by
+rotational flattening of the earth. For calculations that span a much
+smaller area, the error can drop to a few meters or less.</p>
+
+<h3 id="method-c-spherical_factory-label-Limitations">Limitations</h3>
+
+<p>This implementation does not implement some of the more advanced geometric
+operations. In particular:</p>
+<ul><li>
+<p>Relational operators such as <a
+href="Feature/Geometry.html#method-i-intersects-3F">RGeo::Feature::Geometry#intersects?</a>
+are not implemented for most types.</p>
+</li><li>
+<p>Relational constructors such as <a
+href="Feature/Geometry.html#method-i-union">RGeo::Feature::Geometry#union</a>
+are not implemented for most types.</p>
+</li><li>
+<p>Buffer, convex hull, and envelope calculations are not implemented for most
+types. Boundaries are available except for GeometryCollection.</p>
+</li><li>
+<p>Length calculations are available, but areas are not. Distances are
+available only between points.</p>
+</li><li>
+<p>Equality and simplicity evaluation are implemented for some but not all
+types.</p>
+</li><li>
+<p>Assertions for polygons and multipolygons are not implemented.</p>
+</li></ul>
+
+<p>Unimplemented operations will return nil if invoked.</p>
+
+<h3 id="method-c-spherical_factory-label-Options">Options</h3>
+
+<p>You may use the following options when creating a spherical factory:</p>
+<dl class="rdoc-list label-list"><dt><code>:has_z_coordinate</code>
+<dd>
+<p>Support a Z coordinate. Default is false.</p>
+</dd><dt><code>:has_m_coordinate</code>
+<dd>
+<p>Support an M coordinate. Default is false.</p>
+</dd><dt><code>:uses_lenient_assertions</code>
+<dd>
+<p>If set to true, assertion checking is disabled. This includes simplicity
+checking on LinearRing, and validity checks on Polygon and MultiPolygon.
+This may speed up creation of certain objects, at the expense of not doing
+the proper checking for OGC compliance. Default is false.</p>
+</dd><dt><code>:buffer_resolution</code>
+<dd>
+<p>The resolution of buffers around geometries created by this factory. This
+controls the number of line segments used to approximate curves. The
+default is 1, which causes, for example, the buffer around a point to be
+approximated by a 4-sided polygon. A resolution of 2 would cause that
+buffer to be approximated by an 8-sided polygon. The exact behavior for
+different kinds of buffers is not specified precisely, but in general the
+value is taken as the number of segments per 90-degree curve.</p>
+</dd><dt><code>:proj4</code>
+<dd>
+<p>Provide the coordinate system in Proj4 format. You may pass either an <a
+href="CoordSys/Proj4.html">RGeo::CoordSys::Proj4</a> object, or a string or
+hash containing the Proj4 parameters. This coordinate system must be a
+geographic (lat/long) coordinate system. The default is the “popular
+visualization CRS” (EPSG 4055), represented by “<code>+proj=longlat
++a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs</code>”. Has no
+effect if Proj4 is not available.</p>
+</dd><dt><code>:coord_sys</code>
+<dd>
+<p>Provide a coordinate system in OGC format, either as an object (one of the
+<a href="CoordSys/CS.html">CoordSys::CS</a> classes) or as a string in WKT
+format. This coordinate system must be a GeographicCoordinateSystem. The
+default is the “popular visualization CRS” (EPSG 4055).</p>
+</dd><dt><code>:srid</code>
+<dd>
+<p>The SRID that should be returned by features from this factory. Default is
+4055, indicating EPSG 4055, the “popular visualization crs”. You may
+alternatively wish to set the srid to 4326, indicating the WGS84 crs, but
+note that that value implies an ellipsoidal datum, not a spherical datum.</p>
+</dd><dt><code>:srs_database</code>
+<dd>
+<p>Optional. If provided, the value should be an implementation of <a
+href="CoordSys/SRSDatabase/Interface.html">CoordSys::SRSDatabase::Interface</a>.
+If both this and an SRID are provided, they are used to look up the proj4
+and coord_sys objects from a spatial reference system database.</p>
+</dd><dt><code>:wkt_parser</code>
+<dd>
+<p>Configure the parser for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTParser.html#method-c-new">RGeo::WKRep::WKTParser.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKTParser.html">WKRep::WKTParser</a>.</p>
+</dd><dt><code>:wkb_parser</code>
+<dd>
+<p>Configure the parser for WKB. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKBParser.html#method-c-new">RGeo::WKRep::WKBParser.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKBParser.html">WKRep::WKBParser</a>.</p>
+</dd><dt><code>:wkt_generator</code>
+<dd>
+<p>Configure the generator for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTGenerator.html#method-c-new">RGeo::WKRep::WKTGenerator.new</a>.
+Default is <code>{:convert_case =&gt; :upper}</code>.</p>
+</dd><dt><code>:wkb_generator</code>
+<dd>
+<p>Configure the generator for WKT. The value is a hash of configuration
+parameters for <a
+href="WKRep/WKTGenerator.html#method-c-new">RGeo::WKRep::WKTGenerator.new</a>.
+Default is the empty hash, indicating the default configuration for <a
+href="WKRep/WKBGenerator.html">WKRep::WKBGenerator</a>.</p>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="spherical_factory-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/interface.rb, line 149</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">spherical_factory</span>(<span class="ruby-identifier">opts_</span>={})
+  <span class="ruby-identifier">proj4_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:proj4</span>]
+  <span class="ruby-identifier">coord_sys_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:coord_sys</span>]
+  <span class="ruby-identifier">srid_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:srid</span>]
+  <span class="ruby-keyword">if</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">coord_sys_</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">srid_</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">db_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:srs_database</span>])
+    <span class="ruby-identifier">entry_</span> = <span class="ruby-identifier">db_</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">srid_</span>.<span class="ruby-identifier">to_i</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry_</span>
+      <span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">proj4</span>
+      <span class="ruby-identifier">coord_sys_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">entry_</span>.<span class="ruby-identifier">coord_sys</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">srid_</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">coord_sys_</span>.<span class="ruby-identifier">authority_code</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">coord_sys_</span>
+  <span class="ruby-constant">Geographic</span><span class="ruby-operator">::</span><span class="ruby-constant">Factory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">'Spherical'</span>,
+    <span class="ruby-value">:has_z_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_z_coordinate</span>],
+    <span class="ruby-value">:has_m_coordinate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:has_m_coordinate</span>],
+    <span class="ruby-value">:proj4</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">proj4_</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">_proj4_4055</span>,
+    <span class="ruby-value">:coord_sys</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">coord_sys_</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">_coordsys_4055</span>,
+    <span class="ruby-value">:uses_lenient_assertions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:uses_lenient_assertions</span>],
+    <span class="ruby-value">:buffer_resolution</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:buffer_resolution</span>],
+    <span class="ruby-value">:wkt_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_parser</span>],
+    <span class="ruby-value">:wkb_parser</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_parser</span>],
+    <span class="ruby-value">:wkt_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkt_generator</span>],
+    <span class="ruby-value">:wkb_generator</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:wkb_generator</span>],
+    <span class="ruby-value">:srid</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">srid_</span> <span class="ruby-operator">||</span> <span class="ruby-value">4055</span>).<span class="ruby-identifier">to_i</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- spherical_factory-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- spherical_factory-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+
