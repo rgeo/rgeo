@@ -71,10 +71,12 @@ begin
   require 'rgeo/geos/geos_c_impl'
 rescue ::LoadError; end
 require 'rgeo/geos/impl_additions'
+require 'rgeo/geos/ffi_feature_methods'
+require 'rgeo/geos/ffi_feature_classes'
 require 'rgeo/geos/ffi_factory'
-require 'rgeo/geos/ffi_classes'
+require 'rgeo/geos/zm_feature_methods'
+require 'rgeo/geos/zm_feature_classes'
 require 'rgeo/geos/zm_factory'
-require 'rgeo/geos/zm_impl'
 
 # Determine ffi support.
 begin

@@ -159,6 +159,47 @@ module RGeo
     end
 
 
+    module ProjectedPointMethods  # :nodoc:
+
+
+      def _validate_geometry
+        @y = 85.0511287 if @y > 85.0511287
+        @y = -85.0511287 if @y < -85.0511287
+        super
+      end
+
+
+      def canonical_x
+        x_ = @x % 360.0
+        x_ -= 360.0 if x_ >= 180.0
+        x_
+      end
+      alias_method :canonical_longitude, :canonical_x
+      alias_method :canonical_lon, :canonical_x
+
+
+      def canonical_point
+        if @x >= -180.0 && @x < 180.0
+          self
+        else
+          PointImpl.new(@factory, canonical_x, @y)
+        end
+      end
+
+
+      def self.included(klass_)
+        klass_.module_eval do
+          alias_method :longitude, :x
+          alias_method :lon, :x
+          alias_method :latitude, :y
+          alias_method :lat, :y
+        end
+      end
+
+
+    end
+
+
     module ProjectedNCurveMethods  # :nodoc:
 
 
@@ -218,6 +259,34 @@ module RGeo
 
       def point_on_surface
         factory.unproject(projection.point_on_surface)
+      end
+
+
+    end
+
+
+    module ProjectedPolygonMethods  # :nodoc:
+
+
+      def _validate_geometry
+        super
+        unless projection
+          raise Error::InvalidGeometry, 'Polygon failed assertions'
+        end
+      end
+
+
+    end
+
+
+    module ProjectedMultiPolygonMethods  # :nodoc:
+
+
+      def _validate_geometry
+        super
+        unless projection
+          raise Error::InvalidGeometry, 'MultiPolygon failed assertions'
+        end
       end
 
 

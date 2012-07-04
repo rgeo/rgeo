@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Projtected geographic feature classes
+# GEOS implementation additions written in Ruby
 #
 # -----------------------------------------------------------------------------
 # Copyright 2010-2012 Daniel Azuma
@@ -36,18 +36,14 @@
 
 module RGeo
 
-  module Geographic
+  module Geos
 
 
-    class ProjectedPointImpl  # :nodoc:
+    class ZMPointImpl  # :nodoc:
 
 
-      include Feature::Point
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicPointMethods
-      include ProjectedGeometryMethods
-      include ProjectedPointMethods
-
+      include ZMGeometryMethods
+      include ZMPointMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self, true)
 
@@ -55,16 +51,11 @@ module RGeo
     end
 
 
-    class ProjectedLineStringImpl  # :nodoc:
+    class ZMLineStringImpl  # :nodoc:
 
 
-      include Feature::LineString
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicLineStringMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-      include ProjectedLineStringMethods
-
+      include ZMGeometryMethods
+      include ZMLineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self, true)
 
@@ -72,17 +63,11 @@ module RGeo
     end
 
 
-    class ProjectedLinearRingImpl  # :nodoc:
+    class ZMLinearRingImpl  # :nodoc:
 
 
-      include Feature::LinearRing
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicLineStringMethods
-      include ImplHelper::BasicLinearRingMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-      include ProjectedLineStringMethods
-
+      include ZMGeometryMethods
+      include ZMLineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self, true)
 
@@ -90,17 +75,11 @@ module RGeo
     end
 
 
-    class ProjectedLineImpl  # :nodoc:
+    class ZMLineImpl  # :nodoc:
 
 
-      include Feature::Line
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicLineStringMethods
-      include ImplHelper::BasicLineMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-      include ProjectedLineStringMethods
-
+      include ZMGeometryMethods
+      include ZMLineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self, true)
 
@@ -108,16 +87,11 @@ module RGeo
     end
 
 
-    class ProjectedPolygonImpl  # :nodoc:
+    class ZMPolygonImpl  # :nodoc:
 
 
-      include Feature::Polygon
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicPolygonMethods
-      include ProjectedGeometryMethods
-      include ProjectedNSurfaceMethods
-      include ProjectedPolygonMethods
-
+      include ZMGeometryMethods
+      include ZMPolygonMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self, true)
 
@@ -125,14 +99,11 @@ module RGeo
     end
 
 
-    class ProjectedGeometryCollectionImpl  # :nodoc:
+    class ZMGeometryCollectionImpl  # :nodoc:
 
 
-      include Feature::GeometryCollection
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ProjectedGeometryMethods
-
+      include ZMGeometryMethods
+      include ZMGeometryCollectionMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self, true)
 
@@ -140,15 +111,11 @@ module RGeo
     end
 
 
-    class ProjectedMultiPointImpl  # :nodoc:
+    class ZMMultiPointImpl  # :nodoc:
 
 
-      include Feature::MultiPoint
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ImplHelper::BasicMultiPointMethods
-      include ProjectedGeometryMethods
-
+      include ZMGeometryMethods
+      include ZMGeometryCollectionMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self, true)
 
@@ -156,16 +123,12 @@ module RGeo
     end
 
 
-    class ProjectedMultiLineStringImpl  # :nodoc:
+    class ZMMultiLineStringImpl  # :nodoc:
 
 
-      include Feature::MultiLineString
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ImplHelper::BasicMultiLineStringMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-
+      include ZMGeometryMethods
+      include ZMGeometryCollectionMethods
+      include ZMMultiLineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
 
@@ -173,19 +136,25 @@ module RGeo
     end
 
 
-    class ProjectedMultiPolygonImpl  # :nodoc:
+    class ZMMultiPolygonImpl  # :nodoc:
 
 
-      include Feature::MultiPolygon
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ImplHelper::BasicMultiPolygonMethods
-      include ProjectedGeometryMethods
-      include ProjectedNSurfaceMethods
-      include ProjectedMultiPolygonMethods
-
+      include ZMGeometryMethods
+      include ZMGeometryCollectionMethods
+      include ZMMultiPolygonMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self, true)
+
+
+    end
+
+
+    class ZMGeometryImpl  # :nodoc:
+
+
+      include ZMGeometryMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Geometry).include_in_class(self, true)
 
 
     end
