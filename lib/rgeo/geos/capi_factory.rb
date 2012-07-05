@@ -41,7 +41,7 @@ module RGeo
 
     # This the GEOS CAPI implementation of ::RGeo::Feature::Factory.
 
-    class Factory
+    class CAPIFactory
 
 
       include Feature::Factory::Instance
@@ -158,7 +158,7 @@ module RGeo
       # Factory equivalence test.
 
       def eql?(rhs_)
-        rhs_.is_a?(Factory) && rhs_.srid == _srid &&
+        rhs_.is_a?(CAPIFactory) && rhs_.srid == _srid &&
           rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
           rhs_.proj4 == _proj4
       end
@@ -201,7 +201,7 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize_copy(Factory.create(
+        initialize_copy(CAPIFactory.create(
           :has_z_coordinate => data_['hasz'],
           :has_m_coordinate => data_['hasm'],
           :srid => data_['srid'],
@@ -255,7 +255,7 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize_copy(Factory.create(
+        initialize_copy(CAPIFactory.create(
           :has_z_coordinate => coder_['has_z_coordinate'],
           :has_m_coordinate => coder_['has_m_coordinate'],
           :srid => coder_['srid'],
@@ -344,7 +344,7 @@ module RGeo
         if extra_.length > (_flags & 6 == 0 ? 0 : 1)
           nil
         else
-          PointImpl.create(self, x_, y_, extra_[0].to_f) rescue nil
+          CAPIPointImpl.create(self, x_, y_, extra_[0].to_f) rescue nil
         end
       end
 
@@ -353,14 +353,14 @@ module RGeo
 
       def line_string(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
-        LineStringImpl.create(self, points_) rescue nil
+        CAPILineStringImpl.create(self, points_) rescue nil
       end
 
 
       # See ::RGeo::Feature::Factory#line
 
       def line(start_, end_)
-        LineImpl.create(self, start_, end_) rescue nil
+        CAPILineImpl.create(self, start_, end_) rescue nil
       end
 
 
@@ -368,7 +368,7 @@ module RGeo
 
       def linear_ring(points_)
         points_ = points_.to_a unless points_.kind_of?(::Array)
-        LinearRingImpl.create(self, points_) rescue nil
+        CAPILinearRingImpl.create(self, points_) rescue nil
       end
 
 
@@ -376,7 +376,7 @@ module RGeo
 
       def polygon(outer_ring_, inner_rings_=nil)
         inner_rings_ = inner_rings_.to_a unless inner_rings_.kind_of?(::Array)
-        PolygonImpl.create(self, outer_ring_, inner_rings_) rescue nil
+        CAPIPolygonImpl.create(self, outer_ring_, inner_rings_) rescue nil
       end
 
 
@@ -384,7 +384,7 @@ module RGeo
 
       def collection(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        GeometryCollectionImpl.create(self, elems_) rescue nil
+        CAPIGeometryCollectionImpl.create(self, elems_) rescue nil
       end
 
 
@@ -392,7 +392,7 @@ module RGeo
 
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        MultiPointImpl.create(self, elems_) rescue nil
+        CAPIMultiPointImpl.create(self, elems_) rescue nil
       end
 
 
@@ -400,7 +400,7 @@ module RGeo
 
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        MultiLineStringImpl.create(self, elems_) rescue nil
+        CAPIMultiLineStringImpl.create(self, elems_) rescue nil
       end
 
 
@@ -408,7 +408,7 @@ module RGeo
 
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.kind_of?(::Array)
-        MultiPolygonImpl.create(self, elems_) rescue nil
+        CAPIMultiPolygonImpl.create(self, elems_) rescue nil
       end
 
 
@@ -436,7 +436,7 @@ module RGeo
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
         case original_
-        when GeometryImpl
+        when CAPIGeometryMethods
           # Optimization if we're just changing factories, but the
           # factories are zm-compatible and proj4-compatible.
           if original_.factory != self && ntype_ == type_ &&
@@ -455,7 +455,7 @@ module RGeo
           then
             return IMPL_CLASSES[ntype_]._copy_from(self, original_)
           end
-        when ZMGeometryImpl
+        when ZMGeometryMethods
           # Optimization for just removing a coordinate from an otherwise
           # compatible factory
           if _flags & 0x6 == 0x2 && self == original_.factory.z_factory
@@ -466,6 +466,22 @@ module RGeo
         end
         false
       end
+
+
+      # :stopdoc:
+
+      IMPL_CLASSES = {
+        Feature::Point => CAPIPointImpl,
+        Feature::LineString => CAPILineStringImpl,
+        Feature::LinearRing => CAPILinearRingImpl,
+        Feature::Line => CAPILineImpl,
+        Feature::GeometryCollection => CAPIGeometryCollectionImpl,
+        Feature::MultiPoint => CAPIMultiPointImpl,
+        Feature::MultiLineString => CAPIMultiLineStringImpl,
+        Feature::MultiPolygon => CAPIMultiPolygonImpl,
+      }.freeze
+
+      # :startdoc:
 
 
     end

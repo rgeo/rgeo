@@ -14,4 +14,4 @@
 Makefile*
 mkmf.log
 /test/coord_sys/database.yml
-Gemfile.lock
+/Gemfile.lock

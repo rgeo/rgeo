@@ -577,6 +577,12 @@ static VALUE method_get_wkb_parser(VALUE self)
 }
 
 
+static VALUE alloc_geometry(VALUE klass)
+{
+  return rgeo_wrap_geos_geometry(Qnil, NULL, klass);
+}
+
+
 /**** INITIALIZATION FUNCTION ****/
 
 
@@ -586,13 +592,27 @@ RGeo_Globals* rgeo_init_geos_factory()
   VALUE rgeo_module;
   VALUE geos_factory_class;
   VALUE wrapped_globals;
+  VALUE feature_module;
 
   globals = ALLOC(RGeo_Globals);
-  rgeo_module = rb_define_module("RGeo");
-  globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
-  globals->feature_module = rb_define_module_under(rgeo_module, "Feature");
-  globals->global_mixins = rb_const_get_at(rb_const_get_at(globals->feature_module, rb_intern("MixinCollection")), rb_intern("GLOBAL"));
 
+  // Cache some modules so we don't have to look them up by name every time
+  rgeo_module = rb_define_module("RGeo");
+  feature_module = rb_define_module_under(rgeo_module, "Feature");
+  globals->feature_module = feature_module;
+  globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
+  globals->feature_geometry = rb_const_get_at(feature_module, rb_intern("Geometry"));
+  globals->feature_point = rb_const_get_at(feature_module, rb_intern("Point"));
+  globals->feature_line_string = rb_const_get_at(feature_module, rb_intern("LineString"));
+  globals->feature_linear_ring = rb_const_get_at(feature_module, rb_intern("LinearRing"));
+  globals->feature_line = rb_const_get_at(feature_module, rb_intern("Line"));
+  globals->feature_polygon = rb_const_get_at(feature_module, rb_intern("Polygon"));
+  globals->feature_geometry_collection = rb_const_get_at(feature_module, rb_intern("GeometryCollection"));
+  globals->feature_multi_point = rb_const_get_at(feature_module, rb_intern("MultiPoint"));
+  globals->feature_multi_line_string = rb_const_get_at(feature_module, rb_intern("MultiLineString"));
+  globals->feature_multi_polygon = rb_const_get_at(feature_module, rb_intern("MultiPolygon"));
+
+  // Cache some commonly used names
   globals->id_cast = rb_intern("cast");
   globals->id_eql = rb_intern("eql?");
   globals->id_generate = rb_intern("generate");
@@ -604,9 +624,8 @@ RGeo_Globals* rgeo_init_geos_factory()
   globals->marshal_wkb_generator = Qnil;
 #endif
 
-
   // Add C methods to the factory.
-  geos_factory_class = rb_const_get_at(globals->geos_module, rb_intern("Factory"));
+  geos_factory_class = rb_define_class_under(globals->geos_module, "CAPIFactory", rb_cObject);
   rb_define_alloc_func(geos_factory_class, alloc_factory);
   rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
@@ -626,6 +645,28 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_method(geos_factory_class, "_read_for_psych", method_factory_read_for_psych, 1);
   rb_define_method(geos_factory_class, "_write_for_psych", method_factory_write_for_psych, 1);
   rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 7);
+
+  // Pre-define implementation classes and set up allocation methods
+  globals->geos_geometry = rb_define_class_under(globals->geos_module, "CAPIGeometryImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_geometry, alloc_geometry);
+  globals->geos_point = rb_define_class_under(globals->geos_module, "CAPIPointImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_point, alloc_geometry);
+  globals->geos_line_string = rb_define_class_under(globals->geos_module, "CAPILineStringImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_line_string, alloc_geometry);
+  globals->geos_linear_ring = rb_define_class_under(globals->geos_module, "CAPILinearRingImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_linear_ring, alloc_geometry);
+  globals->geos_line = rb_define_class_under(globals->geos_module, "CAPILineImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_line, alloc_geometry);
+  globals->geos_polygon = rb_define_class_under(globals->geos_module, "CAPIPolygonImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_polygon, alloc_geometry);
+  globals->geos_geometry_collection = rb_define_class_under(globals->geos_module, "CAPIGeometryCollectionImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_geometry_collection, alloc_geometry);
+  globals->geos_multi_point = rb_define_class_under(globals->geos_module, "CAPIMultiPointImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_multi_point, alloc_geometry);
+  globals->geos_multi_line_string = rb_define_class_under(globals->geos_module, "CAPIMultiLineStringImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_multi_line_string, alloc_geometry);
+  globals->geos_multi_polygon = rb_define_class_under(globals->geos_module, "CAPIMultiPolygonImpl", rb_cObject);
+  rb_define_alloc_func(globals->geos_multi_polygon, alloc_geometry);
 
   // Wrap the globals in a Ruby object and store it off so we have access
   // to it later. Each factory instance will reference it internally.

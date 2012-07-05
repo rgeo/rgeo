@@ -52,7 +52,6 @@ RGEO_BEGIN_C
 */
 typedef struct {
   VALUE feature_module;
-  VALUE global_mixins;
   VALUE feature_geometry;
   VALUE feature_point;
   VALUE feature_line_string;

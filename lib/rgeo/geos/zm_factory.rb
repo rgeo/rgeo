@@ -99,8 +99,8 @@ module RGeo
           @zfactory = FFIFactory.new(config_.merge(:has_z_coordinate => true))
           @mfactory = FFIFactory.new(config_.merge(:has_m_coordinate => true))
         else
-          @zfactory = Factory.create(config_.merge(:has_z_coordinate => true))
-          @mfactory = Factory.create(config_.merge(:has_m_coordinate => true))
+          @zfactory = CAPIFactory.create(config_.merge(:has_z_coordinate => true))
+          @mfactory = CAPIFactory.create(config_.merge(:has_m_coordinate => true))
         end
 
         wkt_generator_ = opts_[:wkt_generator]
@@ -395,7 +395,8 @@ module RGeo
         project_ = flags_[:project]
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
-        if original_.factory.is_a?(ZMFactory)
+        case original_
+        when ZMGeometryMethods
           # Optimization if we're just changing factories, but to
           # another ZM factory.
           if original_.factory != self && ntype_ == type_ &&

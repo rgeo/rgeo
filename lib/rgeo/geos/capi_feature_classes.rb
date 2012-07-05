@@ -38,7 +38,8 @@ module RGeo
   module Geos
 
 
-    class GeometryImpl  # :nodoc:
+    module CAPIGeometryMethods  # :nodoc:
+
 
       include Feature::Instance
 
@@ -87,23 +88,132 @@ module RGeo
     end
 
 
-    class Factory
+    module CAPIGeometryCollectionMethods  # :nodoc:
+
+      include ::Enumerable
+
+    end
 
 
-      # :stopdoc:
-      if defined?(::RGeo::Geos::PointImpl)
-        IMPL_CLASSES = {
-          Feature::Point => PointImpl,
-          Feature::LineString => LineStringImpl,
-          Feature::LinearRing => LinearRingImpl,
-          Feature::Line => LineImpl,
-          Feature::GeometryCollection => GeometryCollectionImpl,
-          Feature::MultiPoint => MultiPointImpl,
-          Feature::MultiLineString => MultiLineStringImpl,
-          Feature::MultiPolygon => MultiPolygonImpl,
-        }.freeze
-      end
-      # :startdoc:
+    class CAPIGeometryImpl
+
+
+      include CAPIGeometryMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Geometry).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPIPointImpl
+
+
+      include CAPIGeometryMethods
+      include CAPIPointMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPILineStringImpl
+
+
+      include CAPIGeometryMethods
+      include CAPILineStringMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPILinearRingImpl
+
+
+      include CAPIGeometryMethods
+      include CAPILineStringMethods
+      include CAPILinearRingMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPILineImpl
+
+
+      include CAPIGeometryMethods
+      include CAPILineStringMethods
+      include CAPILineMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPIPolygonImpl
+
+
+      include CAPIGeometryMethods
+      include CAPIPolygonMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPIGeometryCollectionImpl
+
+
+      include CAPIGeometryMethods
+      include CAPIGeometryCollectionMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPIMultiPointImpl
+
+
+      include CAPIGeometryMethods
+      include CAPIGeometryCollectionMethods
+      include CAPIMultiPointMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPIMultiLineStringImpl
+
+
+      include CAPIGeometryMethods
+      include CAPIGeometryCollectionMethods
+      include CAPIMultiLineStringMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
+
+
+    end
+
+
+    class CAPIMultiPolygonImpl
+
+
+      include CAPIGeometryMethods
+      include CAPIGeometryCollectionMethods
+      include CAPIMultiPolygonMethods
+
+      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self, true)
 
 
     end

@@ -543,51 +543,43 @@ static VALUE cmethod_linear_ring_copy_from(VALUE klass, VALUE factory, VALUE ori
 
 void rgeo_init_geos_line_string(RGeo_Globals* globals)
 {
-  VALUE geos_line_string_class;
-  VALUE geos_linear_ring_class;
-  VALUE geos_line_class;
+  VALUE geos_line_string_methods;
+  VALUE geos_linear_ring_methods;
+  VALUE geos_line_methods;
 
-  geos_line_string_class = rb_define_class_under(globals->geos_module, "LineStringImpl", globals->geos_geometry);
-  globals->geos_line_string = geos_line_string_class;
-  globals->feature_line_string = rb_const_get_at(globals->feature_module, rb_intern("LineString"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    rb_const_get_at(globals->feature_module, rb_intern("Curve")), geos_line_string_class);
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_line_string, geos_line_string_class);
+  // Class methods for CAPILineStringImpl
+  rb_define_module_function(globals->geos_line_string, "create", cmethod_create_line_string, 2);
+  rb_define_module_function(globals->geos_line_string, "_copy_from", cmethod_line_string_copy_from, 2);
 
-  geos_linear_ring_class = rb_define_class_under(globals->geos_module, "LinearRingImpl", geos_line_string_class);
-  globals->geos_linear_ring = geos_linear_ring_class;
-  globals->feature_linear_ring = rb_const_get_at(globals->feature_module, rb_intern("LinearRing"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_linear_ring, geos_linear_ring_class);
+  // Class methods for CAPILinearRingImpl
+  rb_define_module_function(globals->geos_linear_ring, "create", cmethod_create_linear_ring, 2);
+  rb_define_module_function(globals->geos_linear_ring, "_copy_from", cmethod_linear_ring_copy_from, 2);
 
-  geos_line_class = rb_define_class_under(globals->geos_module, "LineImpl", geos_line_string_class);
-  globals->geos_line = geos_line_class;
-  globals->feature_line = rb_const_get_at(globals->feature_module, rb_intern("Line"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_line, geos_line_class);
+  // Class methods for CAPILineImpl
+  rb_define_module_function(globals->geos_line, "create", cmethod_create_line, 3);
+  rb_define_module_function(globals->geos_line, "_copy_from", cmethod_line_copy_from, 2);
 
-  rb_define_module_function(geos_line_string_class, "create", cmethod_create_line_string, 2);
-  rb_define_module_function(geos_line_string_class, "_copy_from", cmethod_line_string_copy_from, 2);
-  rb_define_method(geos_line_string_class, "rep_equals?", method_line_string_eql, 1);
-  rb_define_method(geos_line_string_class, "eql?", method_line_string_eql, 1);
-  rb_define_method(geos_line_string_class, "geometry_type", method_line_string_geometry_type, 0);
-  rb_define_method(geos_line_string_class, "length", method_line_string_length, 0);
-  rb_define_method(geos_line_string_class, "num_points", method_line_string_num_points, 0);
-  rb_define_method(geos_line_string_class, "point_n", method_line_string_point_n, 1);
-  rb_define_method(geos_line_string_class, "points", method_line_string_points, 0);
-  rb_define_method(geos_line_string_class, "start_point", method_line_string_start_point, 0);
-  rb_define_method(geos_line_string_class, "end_point", method_line_string_end_point, 0);
-  rb_define_method(geos_line_string_class, "is_closed?", method_line_string_is_closed, 0);
-  rb_define_method(geos_line_string_class, "is_ring?", method_line_string_is_ring, 0);
+  // CAPILineStringMethods module
+  geos_line_string_methods = rb_define_module_under(globals->geos_module, "CAPILineStringMethods");
+  rb_define_method(geos_line_string_methods, "rep_equals?", method_line_string_eql, 1);
+  rb_define_method(geos_line_string_methods, "eql?", method_line_string_eql, 1);
+  rb_define_method(geos_line_string_methods, "geometry_type", method_line_string_geometry_type, 0);
+  rb_define_method(geos_line_string_methods, "length", method_line_string_length, 0);
+  rb_define_method(geos_line_string_methods, "num_points", method_line_string_num_points, 0);
+  rb_define_method(geos_line_string_methods, "point_n", method_line_string_point_n, 1);
+  rb_define_method(geos_line_string_methods, "points", method_line_string_points, 0);
+  rb_define_method(geos_line_string_methods, "start_point", method_line_string_start_point, 0);
+  rb_define_method(geos_line_string_methods, "end_point", method_line_string_end_point, 0);
+  rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
+  rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
 
-  rb_define_module_function(geos_linear_ring_class, "create", cmethod_create_linear_ring, 2);
-  rb_define_module_function(geos_linear_ring_class, "_copy_from", cmethod_linear_ring_copy_from, 2);
-  rb_define_method(geos_linear_ring_class, "geometry_type", method_linear_ring_geometry_type, 0);
+  // CAPILinearRingMethods module
+  geos_linear_ring_methods = rb_define_module_under(globals->geos_module, "CAPILinearRingMethods");
+  rb_define_method(geos_linear_ring_methods, "geometry_type", method_linear_ring_geometry_type, 0);
 
-  rb_define_module_function(geos_line_class, "create", cmethod_create_line, 3);
-  rb_define_module_function(geos_line_class, "_copy_from", cmethod_line_copy_from, 2);
-  rb_define_method(geos_line_class, "geometry_type", method_line_geometry_type, 0);
+  // CAPILineMethods module
+  geos_line_methods = rb_define_module_under(globals->geos_module, "CAPILineMethods");
+  rb_define_method(geos_line_methods, "geometry_type", method_line_geometry_type, 0);
 }
 
 
