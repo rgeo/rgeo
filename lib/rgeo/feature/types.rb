@@ -47,20 +47,40 @@ module RGeo
     end
 
 
-    # These methods are available as module methods (not instance methods)
-    # of the various feature types.
+    # This module provides the API for geometry type objects. Technically
+    # these objects are modules (such as ::RGeo::Feature::Point), but as
+    # objects they respond to the methods documented here.
+    #
     # For example, you may determine whether a feature object is a
     # point by calling:
     #
     #   ::RGeo::Feature::Point.check_type(object)
     #
     # A corresponding === operator is provided so you can use the type
-    # modules in a case-when clause.
+    # modules in a case-when clause:
+    #
+    #   case object
+    #   when ::RGeo::Feature::Point
+    #     # do stuff here...
+    #
+    # However, a feature object may not actually include the point module
+    # itself; hence, the following will *not* work:
+    #
+    #   object.is_a?(::RGeo::Feature::Point)  # DON'T DO THIS-- DOES NOT WORK
+    #
+    # You may obtain the type of a feature object by calling its
+    # geometry_type method. You may then use the methods in this module to
+    # interrogate that type.
+    #
+    #   # supppose object is a Point
+    #   type = object.geometry_type  # ::RGeo::Feature::Point
+    #   type.type_name               # "Point"
+    #   type.supertype               # ::RGeo::Feature::Geometry
     #
     # You may also use the presence of this module to determine whether
     # a particular object is a feature type:
     #
-    #   object.kind_of?(::RGeo::Feature::Type)
+    #   ::RGeo::Feature::Type === object.geometry_type  # true
 
     module Type
 
@@ -74,6 +94,7 @@ module RGeo
       # this type or a subtype thereof.
       #
       # Note that feature objects need not actually include this module.
+      # Therefore, the is_a? method will generally not work.
 
       def check_type(rhs_)
         rhs_ = rhs_.geometry_type if rhs_.kind_of?(Feature::Instance)
@@ -105,11 +126,14 @@ module RGeo
       end
 
 
-      # Returns the OpenGIS type name of this type.
+      # Returns the OpenGIS type name of this type. For example:
+      #
+      #   ::RGeo::Feature::Point.type_name  # "Point"
 
       def type_name
         self.name.sub('RGeo::Feature::', '')
       end
+      alias_method :to_s, :type_name
 
 
       def _add_subtype(type_)  # :nodoc:

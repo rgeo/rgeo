@@ -69,8 +69,11 @@ require 'rgeo/geos/interface'
 begin
   require 'rgeo/geos/geos_c_impl'
 rescue ::LoadError; end
-require 'rgeo/geos/capi_feature_classes'
-require 'rgeo/geos/capi_factory'
+::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos.const_defined?(:CAPIGeometryMethods)
+if ::RGeo::Geos::CAPI_SUPPORTED
+  require 'rgeo/geos/capi_feature_classes'
+  require 'rgeo/geos/capi_factory'
+end
 require 'rgeo/geos/ffi_feature_methods'
 require 'rgeo/geos/ffi_feature_classes'
 require 'rgeo/geos/ffi_factory'
@@ -93,9 +96,6 @@ rescue => ex_
   ::RGeo::Geos::FFI_SUPPORTED = false
   ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = ex_
 end
-
-# Determine capi support.
-::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos::CAPIFactory.respond_to?(:_create) ? true : false
 
 # Determine preferred native interface
 if ::RGeo::Geos::CAPI_SUPPORTED
