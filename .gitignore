@@ -2,6 +2,7 @@
 /pkg/
 /tmp/
 /future/
+.rbx
 .#*
 .DS_Store
 *.dSYM
@@ -13,4 +14,4 @@
 Makefile*
 mkmf.log
 /test/coord_sys/database.yml
-Gemfile.lock
+/Gemfile.lock

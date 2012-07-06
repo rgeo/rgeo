@@ -39,11 +39,9 @@ module RGeo
   module Geos
 
 
-    class FFIGeometryImpl  # :nodoc:
+    module FFIGeometryMethods  # :nodoc:
 
       include Feature::Instance
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Geometry).include_in_class(self)
 
 
       def initialize(factory_, fg_geom_, klasses_)
@@ -355,9 +353,7 @@ module RGeo
     end
 
 
-    class FFIPointImpl < FFIGeometryImpl  # :nodoc:
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self)
+    module FFIPointMethods  # :nodoc:
 
 
       def x
@@ -402,11 +398,7 @@ module RGeo
     end
 
 
-    class FFILineStringImpl < FFIGeometryImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Curve).include_in_class(self)
-      Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self)
+    module FFILineStringMethods  # :nodoc:
 
 
       def geometry_type
@@ -478,10 +470,7 @@ module RGeo
     end
 
 
-    class FFILinearRingImpl < FFILineStringImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self)
+    module FFILinearRingMethods  # :nodoc:
 
 
       def geometry_type
@@ -492,10 +481,7 @@ module RGeo
     end
 
 
-    class FFILineImpl < FFILineStringImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self)
+    module FFILineMethods  # :nodoc:
 
 
       def geometry_type
@@ -506,11 +492,7 @@ module RGeo
     end
 
 
-    class FFIPolygonImpl < FFIGeometryImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Surface).include_in_class(self)
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self)
+    module FFIPolygonMethods  # :nodoc:
 
 
       def geometry_type
@@ -579,10 +561,7 @@ module RGeo
     end
 
 
-    class FFIGeometryCollectionImpl < FFIGeometryImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self)
+    module FFIGeometryCollectionMethods  # :nodoc:
 
 
       def geometry_type
@@ -649,10 +628,7 @@ module RGeo
     end
 
 
-    class FFIMultiPointImpl < FFIGeometryCollectionImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self)
+    module FFIMultiPointMethods  # :nodoc:
 
 
       def geometry_type
@@ -663,11 +639,7 @@ module RGeo
     end
 
 
-    class FFIMultiLineStringImpl < FFIGeometryCollectionImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiCurve).include_in_class(self)
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self)
+    module FFIMultiLineStringMethods  # :nodoc:
 
 
       def geometry_type
@@ -692,11 +664,7 @@ module RGeo
     end
 
 
-    class FFIMultiPolygonImpl < FFIGeometryCollectionImpl  # :nodoc:
-
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiSurface).include_in_class(self)
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self)
+    module FFIMultiPolygonMethods  # :nodoc:
 
 
       def geometry_type

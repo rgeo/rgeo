@@ -39,7 +39,7 @@ module RGeo
   module Geos
 
 
-    class ZMGeometryImpl  # :nodoc:
+    module ZMGeometryMethods  # :nodoc:
 
       include Feature::Instance
 
@@ -91,7 +91,7 @@ module RGeo
 
 
       def envelope
-        ZMGeometryImpl.create(@factory, @zgeometry.envelope, @mgeometry.envelope)
+        @factory._create_feature(nil, @zgeometry.envelope, @mgeometry.envelope)
       end
 
 
@@ -116,7 +116,7 @@ module RGeo
 
 
       def boundary
-        ZMGeometryImpl.create(@factory, @zgeometry.boundary, @mgeometry.boundary)
+        @factory._create_feature(nil, @zgeometry.boundary, @mgeometry.boundary)
       end
 
 
@@ -172,36 +172,36 @@ module RGeo
 
 
       def buffer(distance_)
-        ZMGeometryImpl.create(@factory, @zgeometry.buffer(distance_), @mgeometry.buffer(distance_))
+        @factory._create_feature(nil, @zgeometry.buffer(distance_), @mgeometry.buffer(distance_))
       end
 
 
       def convex_hull
-        ZMGeometryImpl.create(@factory, @zgeometry.convex_hull, @mgeometry.convex_hull)
+        @factory._create_feature(nil, @zgeometry.convex_hull, @mgeometry.convex_hull)
       end
 
 
       def intersection(rhs_)
         rhs_ = ::RGeo::Feature.cast(rhs_, self)
-        ZMGeometryImpl.create(@factory, @zgeometry.intersection(rhs_.z_geometry), @mgeometry.intersection(rhs_.m_geometry))
+        @factory._create_feature(nil, @zgeometry.intersection(rhs_.z_geometry), @mgeometry.intersection(rhs_.m_geometry))
       end
 
 
       def union(rhs_)
         rhs_ = ::RGeo::Feature.cast(rhs_, self)
-        ZMGeometryImpl.create(@factory, @zgeometry.union(rhs_.z_geometry), @mgeometry.union(rhs_.m_geometry))
+        @factory._create_feature(nil, @zgeometry.union(rhs_.z_geometry), @mgeometry.union(rhs_.m_geometry))
       end
 
 
       def difference(rhs_)
         rhs_ = ::RGeo::Feature.cast(rhs_, self)
-        ZMGeometryImpl.create(@factory, @zgeometry.difference(rhs_.z_geometry), @mgeometry.difference(rhs_.m_geometry))
+        @factory._create_feature(nil, @zgeometry.difference(rhs_.z_geometry), @mgeometry.difference(rhs_.m_geometry))
       end
 
 
       def sym_difference(rhs_)
         rhs_ = ::RGeo::Feature.cast(rhs_, self)
-        ZMGeometryImpl.create(@factory, @zgeometry.sym_difference(rhs_.z_geometry), @mgeometry.sym_difference(rhs_.m_geometry))
+        @factory._create_feature(nil, @zgeometry.sym_difference(rhs_.z_geometry), @mgeometry.sym_difference(rhs_.m_geometry))
       end
 
 
@@ -247,7 +247,7 @@ module RGeo
     end
 
 
-    class ZMPointImpl < ZMGeometryImpl  # :nodoc:
+    module ZMPointMethods  # :nodoc:
 
 
       def x
@@ -273,7 +273,7 @@ module RGeo
     end
 
 
-    class ZMLineStringImpl < ZMGeometryImpl  # :nodoc:
+    module ZMLineStringMethods  # :nodoc:
 
 
       def length
@@ -307,7 +307,7 @@ module RGeo
 
 
       def point_n(n_)
-        ZMPointImpl.create(@factory, @zgeometry.point_n(n_), @mgeometry.point_n(n_))
+        @factory._create_feature(ZMPointImpl, @zgeometry.point_n(n_), @mgeometry.point_n(n_))
       end
 
 
@@ -316,7 +316,7 @@ module RGeo
         zpoints_ = @zgeometry.points
         mpoints_ = @mgeometry.points
         zpoints_.size.times do |i_|
-          result_ << ZMPointImpl.create(@factory, zpoints_[i_], mpoints_[i_])
+          result_ << @factory._create_feature(ZMPointImpl, zpoints_[i_], mpoints_[i_])
         end
         result_
       end
@@ -325,7 +325,7 @@ module RGeo
     end
 
 
-    class ZMPolygonImpl < ZMGeometryImpl  # :nodoc:
+    module ZMPolygonMethods  # :nodoc:
 
 
       def area
@@ -334,17 +334,17 @@ module RGeo
 
 
       def centroid
-        ZMPointImpl.create(@factory, @zgeometry.centroid, @mgeometry.centroid)
+        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
 
       def point_on_surface
-        ZMPointImpl.create(@factory, @zgeometry.centroid, @mgeometry.centroid)
+        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
 
       def exterior_ring
-        ZMLineStringImpl.create(@factory, @zgeometry.exterior_ring, @mgeometry.exterior_ring)
+        @factory._create_feature(ZMLineStringImpl, @zgeometry.exterior_ring, @mgeometry.exterior_ring)
       end
 
 
@@ -354,7 +354,7 @@ module RGeo
 
 
       def interior_ring_n(n_)
-        ZMLineStringImpl.create(@factory, @zgeometry.interior_ring_n(n_), @mgeometry.interior_ring_n(n_))
+        @factory._create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(n_), @mgeometry.interior_ring_n(n_))
       end
 
 
@@ -363,7 +363,7 @@ module RGeo
         zrings_ = @zgeometry.interior_rings
         mrings_ = @mgeometry.interior_rings
         zrings_.size.times do |i_|
-          result_ << ZMLineStringImpl.create(@factory, zrings_[i_], mrings_[i_])
+          result_ << @factory._create_feature(ZMLineStringImpl, zrings_[i_], mrings_[i_])
         end
         result_
       end
@@ -372,10 +372,7 @@ module RGeo
     end
 
 
-    class ZMGeometryCollectionImpl < ZMGeometryImpl  # :nodoc:
-
-
-      include ::Enumerable
+    module ZMGeometryCollectionMethods  # :nodoc:
 
 
       def num_geometries
@@ -385,7 +382,7 @@ module RGeo
 
 
       def geometry_n(n_)
-        ZMGeometryImpl.create(@factory, @zgeometry.geometry_n(n_), @mgeometry.geometry_n(n_))
+        @factory._create_feature(nil, @zgeometry.geometry_n(n_), @mgeometry.geometry_n(n_))
       end
       alias_method :[], :geometry_n
 
@@ -397,10 +394,13 @@ module RGeo
       end
 
 
+      include ::Enumerable
+
+
     end
 
 
-    class ZMMultiLineStringImpl < ZMGeometryCollectionImpl  # :nodoc:
+    module ZMMultiLineStringMethods  # :nodoc:
 
 
       def length
@@ -416,7 +416,7 @@ module RGeo
     end
 
 
-    class ZMMultiPolygonImpl < ZMGeometryCollectionImpl  # :nodoc:
+    module ZMMultiPolygonMethods  # :nodoc:
 
 
       def area
@@ -425,36 +425,12 @@ module RGeo
 
 
       def centroid
-        ZMPointImpl.create(@factory, @zgeometry.centroid, @mgeometry.centroid)
+        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
 
       def point_on_surface
-        ZMPointImpl.create(@factory, @zgeometry.centroid, @mgeometry.centroid)
-      end
-
-
-    end
-
-
-    class ZMGeometryImpl  # :nodoc:
-
-      TYPE_KLASSES = {
-        Feature::Point => ZMPointImpl,
-        Feature::LineString => ZMLineStringImpl,
-        Feature::Line => ZMLineStringImpl,
-        Feature::LinearRing => ZMLineStringImpl,
-        Feature::Polygon => ZMPolygonImpl,
-        Feature::GeometryCollection => ZMGeometryCollectionImpl,
-        Feature::MultiPoint => ZMGeometryCollectionImpl,
-        Feature::MultiLineString => ZMMultiLineStringImpl,
-        Feature::MultiPolygon => ZMMultiPolygonImpl,
-      }.freeze
-
-
-      def self.create(factory_, zgeometry_, mgeometry_)
-        klass_ = self == ZMGeometryImpl ? TYPE_KLASSES[zgeometry_.geometry_type] : self
-        klass_ && zgeometry_ && mgeometry_ ? klass_.new(factory_, zgeometry_, mgeometry_) : nil
+        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
 

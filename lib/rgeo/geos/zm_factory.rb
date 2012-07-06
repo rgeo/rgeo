@@ -46,6 +46,19 @@ module RGeo
       include Feature::Factory::Instance
 
 
+      TYPE_KLASSES = {
+        Feature::Point => ZMPointImpl,
+        Feature::LineString => ZMLineStringImpl,
+        Feature::Line => ZMLineImpl,
+        Feature::LinearRing => ZMLinearRingImpl,
+        Feature::Polygon => ZMPolygonImpl,
+        Feature::GeometryCollection => ZMGeometryCollectionImpl,
+        Feature::MultiPoint => ZMMultiPointImpl,
+        Feature::MultiLineString => ZMMultiLineStringImpl,
+        Feature::MultiPolygon => ZMMultiPolygonImpl,
+      }.freeze
+
+
       class << self
 
 
@@ -86,8 +99,8 @@ module RGeo
           @zfactory = FFIFactory.new(config_.merge(:has_z_coordinate => true))
           @mfactory = FFIFactory.new(config_.merge(:has_m_coordinate => true))
         else
-          @zfactory = Factory.create(config_.merge(:has_z_coordinate => true))
-          @mfactory = Factory.create(config_.merge(:has_m_coordinate => true))
+          @zfactory = CAPIFactory.create(config_.merge(:has_z_coordinate => true))
+          @mfactory = CAPIFactory.create(config_.merge(:has_m_coordinate => true))
         end
 
         wkt_generator_ = opts_[:wkt_generator]
@@ -299,63 +312,63 @@ module RGeo
       # See ::RGeo::Feature::Factory#point
 
       def point(x_, y_, z_=0, m_=0)
-        ZMPointImpl.create(self, @zfactory.point(x_, y_, z_), @mfactory.point(x_, y_, m_))
+        _create_feature(ZMPointImpl, @zfactory.point(x_, y_, z_), @mfactory.point(x_, y_, m_))
       end
 
 
       # See ::RGeo::Feature::Factory#line_string
 
       def line_string(points_)
-        ZMLineStringImpl.create(self, @zfactory.line_string(points_), @mfactory.line_string(points_))
+        _create_feature(ZMLineStringImpl, @zfactory.line_string(points_), @mfactory.line_string(points_))
       end
 
 
       # See ::RGeo::Feature::Factory#line
 
       def line(start_, end_)
-        ZMLineStringImpl.create(self, @zfactory.line(start_, end_), @mfactory.line(start_, end_))
+        _create_feature(ZMLineImpl, @zfactory.line(start_, end_), @mfactory.line(start_, end_))
       end
 
 
       # See ::RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
-        ZMLineStringImpl.create(self, @zfactory.linear_ring(points_), @mfactory.linear_ring(points_))
+        _create_feature(ZMLinearRingImpl, @zfactory.linear_ring(points_), @mfactory.linear_ring(points_))
       end
 
 
       # See ::RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_=nil)
-        ZMPolygonImpl.create(self, @zfactory.polygon(outer_ring_, inner_rings_), @mfactory.polygon(outer_ring_, inner_rings_))
+        _create_feature(ZMPolygonImpl, @zfactory.polygon(outer_ring_, inner_rings_), @mfactory.polygon(outer_ring_, inner_rings_))
       end
 
 
       # See ::RGeo::Feature::Factory#collection
 
       def collection(elems_)
-        ZMGeometryCollectionImpl.create(self, @zfactory.collection(elems_), @mfactory.collection(elems_))
+        _create_feature(ZMGeometryCollectionImpl, @zfactory.collection(elems_), @mfactory.collection(elems_))
       end
 
 
       # See ::RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
-        ZMGeometryCollectionImpl.create(self, @zfactory.multi_point(elems_), @mfactory.multi_point(elems_))
+        _create_feature(ZMMultiPointImpl, @zfactory.multi_point(elems_), @mfactory.multi_point(elems_))
       end
 
 
       # See ::RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
-        ZMMultiLineStringImpl.create(self, @zfactory.multi_line_string(elems_), @mfactory.multi_line_string(elems_))
+        _create_feature(ZMMultiLineStringImpl, @zfactory.multi_line_string(elems_), @mfactory.multi_line_string(elems_))
       end
 
 
       # See ::RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
-        ZMMultiPolygonImpl.create(self, @zfactory.multi_polygon(elems_), @mfactory.multi_polygon(elems_))
+        _create_feature(ZMMultiPolygonImpl, @zfactory.multi_polygon(elems_), @mfactory.multi_polygon(elems_))
       end
 
 
@@ -383,7 +396,7 @@ module RGeo
         type_ = original_.geometry_type
         ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
         case original_
-        when ZMGeometryImpl
+        when ZMGeometryMethods
           # Optimization if we're just changing factories, but to
           # another ZM factory.
           if original_.factory != self && ntype_ == type_ &&
@@ -407,6 +420,12 @@ module RGeo
           end
         end
         false
+      end
+
+
+      def _create_feature(klass_, zgeometry_, mgeometry_)  # :nodoc:
+        klass_ ||= TYPE_KLASSES[zgeometry_.geometry_type] || ZMGeometryImpl
+        zgeometry_ && mgeometry_ ? klass_.new(self, zgeometry_, mgeometry_) : nil
       end
 
 

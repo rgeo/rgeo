@@ -46,7 +46,7 @@ RAKEFILE_CONFIG = {} unless defined?(::RAKEFILE_CONFIG)
 require 'rubygems'
 gemspec_ = eval(::File.read(::Dir.glob('*.gemspec').first))
 release_gemspec_ = eval(::File.read(::Dir.glob('*.gemspec').first))
-release_gemspec_.version = gemspec_.version.to_s.sub(/\.build\d+$/, '')
+release_gemspec_.version = gemspec_.version.to_s.sub(/\.nonrelease$/, '')
 
 
 # Platform info
@@ -149,6 +149,7 @@ clean_files_ = [doc_directory_, pkg_directory_, tmp_directory_] +
   ::Dir.glob('ext/**/Makefile*') +
   ::Dir.glob('ext/**/*.{o,class,log,dSYM}') +
   ::Dir.glob("**/*.{bundle,so,dll,rbc,jar}") +
+  ::Dir.glob('**/.rbx') +
   (::RAKEFILE_CONFIG[:extra_clean_files] || [])
 task :clean do
   clean_files_.each{ |path_| rm_rf path_ }

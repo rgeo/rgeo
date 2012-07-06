@@ -448,7 +448,7 @@ module RGeo
         klasses_ = []
         fg_geoms_ = []
         elems_.each do |elem_|
-          k_ = elem_._klasses if elem_.is_a?(FFIGeometryImpl)
+          k_ = elem_._klasses if elem_.factory.is_a?(FFIFactory)
           elem_ = ::RGeo::Feature.cast(elem_, self, :force_new, :keep_subtype)
           if elem_
             klasses_ << (k_ || elem_.class)

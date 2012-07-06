@@ -885,12 +885,6 @@ static VALUE method_geometry_sym_difference(VALUE self, VALUE rhs)
 }
 
 
-static VALUE alloc_geometry(VALUE klass)
-{
-  return rgeo_wrap_geos_geometry(Qnil, NULL, klass);
-}
-
-
 static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
 {
   RGeo_GeometryData* self_data;
@@ -980,53 +974,48 @@ static VALUE method_geometry_steal(VALUE self, VALUE orig)
 
 void rgeo_init_geos_geometry(RGeo_Globals* globals)
 {
-  VALUE geos_geometry_class;
+  VALUE geos_geometry_methods;
 
-  geos_geometry_class = rb_define_class_under(globals->geos_module, "GeometryImpl", rb_cObject);
-  globals->geos_geometry = geos_geometry_class;
-  globals->feature_geometry = rb_const_get_at(globals->feature_module, rb_intern("Geometry"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_geometry, geos_geometry_class);
+  geos_geometry_methods = rb_define_module_under(globals->geos_module, "CAPIGeometryMethods");
 
-  rb_define_alloc_func(geos_geometry_class, alloc_geometry);
-  rb_define_method(geos_geometry_class, "_set_factory", method_geometry_set_factory, 1);
-  rb_define_method(geos_geometry_class, "initialize_copy", method_geometry_initialize_copy, 1);
-  rb_define_method(geos_geometry_class, "_steal", method_geometry_steal, 1);
-  rb_define_method(geos_geometry_class, "initialized?", method_geometry_initialized_p, 0);
-  rb_define_method(geos_geometry_class, "factory", method_geometry_factory, 0);
-  rb_define_method(geos_geometry_class, "prepared?", method_geometry_prepared_p, 0);
-  rb_define_method(geos_geometry_class, "prepare!", method_geometry_prepare, 0);
-  rb_define_method(geos_geometry_class, "dimension", method_geometry_dimension, 0);
-  rb_define_method(geos_geometry_class, "geometry_type", method_geometry_geometry_type, 0);
-  rb_define_method(geos_geometry_class, "srid", method_geometry_srid, 0);
-  rb_define_method(geos_geometry_class, "envelope", method_geometry_envelope, 0);
-  rb_define_method(geos_geometry_class, "boundary", method_geometry_boundary, 0);
-  rb_define_method(geos_geometry_class, "_as_text", method_geometry_as_text, 0);
-  rb_define_method(geos_geometry_class, "as_binary", method_geometry_as_binary, 0);
-  rb_define_method(geos_geometry_class, "is_empty?", method_geometry_is_empty, 0);
-  rb_define_method(geos_geometry_class, "is_simple?", method_geometry_is_simple, 0);
-  rb_define_method(geos_geometry_class, "equals?", method_geometry_equals, 1);
-  rb_define_method(geos_geometry_class, "==", method_geometry_equals, 1);
-  rb_define_method(geos_geometry_class, "rep_equals?", method_geometry_eql, 1);
-  rb_define_method(geos_geometry_class, "eql?", method_geometry_eql, 1);
-  rb_define_method(geos_geometry_class, "disjoint?", method_geometry_disjoint, 1);
-  rb_define_method(geos_geometry_class, "intersects?", method_geometry_intersects, 1);
-  rb_define_method(geos_geometry_class, "touches?", method_geometry_touches, 1);
-  rb_define_method(geos_geometry_class, "crosses?", method_geometry_crosses, 1);
-  rb_define_method(geos_geometry_class, "within?", method_geometry_within, 1);
-  rb_define_method(geos_geometry_class, "contains?", method_geometry_contains, 1);
-  rb_define_method(geos_geometry_class, "overlaps?", method_geometry_overlaps, 1);
-  rb_define_method(geos_geometry_class, "relate?", method_geometry_relate, 2);
-  rb_define_method(geos_geometry_class, "distance", method_geometry_distance, 1);
-  rb_define_method(geos_geometry_class, "buffer", method_geometry_buffer, 1);
-  rb_define_method(geos_geometry_class, "convex_hull", method_geometry_convex_hull, 0);
-  rb_define_method(geos_geometry_class, "intersection", method_geometry_intersection, 1);
-  rb_define_method(geos_geometry_class, "*", method_geometry_intersection, 1);
-  rb_define_method(geos_geometry_class, "union", method_geometry_union, 1);
-  rb_define_method(geos_geometry_class, "+", method_geometry_union, 1);
-  rb_define_method(geos_geometry_class, "difference", method_geometry_difference, 1);
-  rb_define_method(geos_geometry_class, "-", method_geometry_difference, 1);
-  rb_define_method(geos_geometry_class, "sym_difference", method_geometry_sym_difference, 1);
+  rb_define_method(geos_geometry_methods, "_set_factory", method_geometry_set_factory, 1);
+  rb_define_method(geos_geometry_methods, "initialize_copy", method_geometry_initialize_copy, 1);
+  rb_define_method(geos_geometry_methods, "_steal", method_geometry_steal, 1);
+  rb_define_method(geos_geometry_methods, "initialized?", method_geometry_initialized_p, 0);
+  rb_define_method(geos_geometry_methods, "factory", method_geometry_factory, 0);
+  rb_define_method(geos_geometry_methods, "prepared?", method_geometry_prepared_p, 0);
+  rb_define_method(geos_geometry_methods, "prepare!", method_geometry_prepare, 0);
+  rb_define_method(geos_geometry_methods, "dimension", method_geometry_dimension, 0);
+  rb_define_method(geos_geometry_methods, "geometry_type", method_geometry_geometry_type, 0);
+  rb_define_method(geos_geometry_methods, "srid", method_geometry_srid, 0);
+  rb_define_method(geos_geometry_methods, "envelope", method_geometry_envelope, 0);
+  rb_define_method(geos_geometry_methods, "boundary", method_geometry_boundary, 0);
+  rb_define_method(geos_geometry_methods, "_as_text", method_geometry_as_text, 0);
+  rb_define_method(geos_geometry_methods, "as_binary", method_geometry_as_binary, 0);
+  rb_define_method(geos_geometry_methods, "is_empty?", method_geometry_is_empty, 0);
+  rb_define_method(geos_geometry_methods, "is_simple?", method_geometry_is_simple, 0);
+  rb_define_method(geos_geometry_methods, "equals?", method_geometry_equals, 1);
+  rb_define_method(geos_geometry_methods, "==", method_geometry_equals, 1);
+  rb_define_method(geos_geometry_methods, "rep_equals?", method_geometry_eql, 1);
+  rb_define_method(geos_geometry_methods, "eql?", method_geometry_eql, 1);
+  rb_define_method(geos_geometry_methods, "disjoint?", method_geometry_disjoint, 1);
+  rb_define_method(geos_geometry_methods, "intersects?", method_geometry_intersects, 1);
+  rb_define_method(geos_geometry_methods, "touches?", method_geometry_touches, 1);
+  rb_define_method(geos_geometry_methods, "crosses?", method_geometry_crosses, 1);
+  rb_define_method(geos_geometry_methods, "within?", method_geometry_within, 1);
+  rb_define_method(geos_geometry_methods, "contains?", method_geometry_contains, 1);
+  rb_define_method(geos_geometry_methods, "overlaps?", method_geometry_overlaps, 1);
+  rb_define_method(geos_geometry_methods, "relate?", method_geometry_relate, 2);
+  rb_define_method(geos_geometry_methods, "distance", method_geometry_distance, 1);
+  rb_define_method(geos_geometry_methods, "buffer", method_geometry_buffer, 1);
+  rb_define_method(geos_geometry_methods, "convex_hull", method_geometry_convex_hull, 0);
+  rb_define_method(geos_geometry_methods, "intersection", method_geometry_intersection, 1);
+  rb_define_method(geos_geometry_methods, "*", method_geometry_intersection, 1);
+  rb_define_method(geos_geometry_methods, "union", method_geometry_union, 1);
+  rb_define_method(geos_geometry_methods, "+", method_geometry_union, 1);
+  rb_define_method(geos_geometry_methods, "difference", method_geometry_difference, 1);
+  rb_define_method(geos_geometry_methods, "-", method_geometry_difference, 1);
+  rb_define_method(geos_geometry_methods, "sym_difference", method_geometry_sym_difference, 1);
 }
 
 

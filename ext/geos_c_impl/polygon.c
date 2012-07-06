@@ -272,28 +272,23 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
 
 void rgeo_init_geos_polygon(RGeo_Globals* globals)
 {
-  VALUE geos_polygon_class;
+  VALUE geos_polygon_methods;
 
-  geos_polygon_class = rb_define_class_under(globals->geos_module, "PolygonImpl", globals->geos_geometry);
-  globals->geos_polygon = geos_polygon_class;
-  globals->feature_polygon = rb_const_get_at(globals->feature_module, rb_intern("Polygon"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    rb_const_get_at(globals->feature_module, rb_intern("Surface")), geos_polygon_class);
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_polygon, geos_polygon_class);
+  // Class methods for CAPIPolygonImpl
+  rb_define_module_function(globals->geos_polygon, "create", cmethod_create, 3);
 
-  rb_define_module_function(geos_polygon_class, "create", cmethod_create, 3);
-
-  rb_define_method(geos_polygon_class, "rep_equals?", method_polygon_eql, 1);
-  rb_define_method(geos_polygon_class, "eql?", method_polygon_eql, 1);
-  rb_define_method(geos_polygon_class, "geometry_type", method_polygon_geometry_type, 0);
-  rb_define_method(geos_polygon_class, "area", method_polygon_area, 0);
-  rb_define_method(geos_polygon_class, "centroid", method_polygon_centroid, 0);
-  rb_define_method(geos_polygon_class, "point_on_surface", method_polygon_point_on_surface, 0);
-  rb_define_method(geos_polygon_class, "exterior_ring", method_polygon_exterior_ring, 0);
-  rb_define_method(geos_polygon_class, "num_interior_rings", method_polygon_num_interior_rings, 0);
-  rb_define_method(geos_polygon_class, "interior_ring_n", method_polygon_interior_ring_n, 1);
-  rb_define_method(geos_polygon_class, "interior_rings", method_polygon_interior_rings, 0);
+  // CAPIPolygonMethods module
+  geos_polygon_methods = rb_define_module_under(globals->geos_module, "CAPIPolygonMethods");
+  rb_define_method(geos_polygon_methods, "rep_equals?", method_polygon_eql, 1);
+  rb_define_method(geos_polygon_methods, "eql?", method_polygon_eql, 1);
+  rb_define_method(geos_polygon_methods, "geometry_type", method_polygon_geometry_type, 0);
+  rb_define_method(geos_polygon_methods, "area", method_polygon_area, 0);
+  rb_define_method(geos_polygon_methods, "centroid", method_polygon_centroid, 0);
+  rb_define_method(geos_polygon_methods, "point_on_surface", method_polygon_point_on_surface, 0);
+  rb_define_method(geos_polygon_methods, "exterior_ring", method_polygon_exterior_ring, 0);
+  rb_define_method(geos_polygon_methods, "num_interior_rings", method_polygon_num_interior_rings, 0);
+  rb_define_method(geos_polygon_methods, "interior_ring_n", method_polygon_interior_ring_n, 1);
+  rb_define_method(geos_polygon_methods, "interior_rings", method_polygon_interior_rings, 0);
 }
 
 

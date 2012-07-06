@@ -67,9 +67,9 @@ module RGeo
       # the given factory is a CAPI GEOS factory.
 
       def is_capi_geos?(object_)
-        Factory === object_ || GeometryImpl === object_ ||
-          ZMFactory === object_ && Factory === object_.z_factory ||
-          ZMGeometryImpl === object_ && GeometryImpl === object_.z_geometry
+        CAPIFactory === object_ || CAPIGeometryImpl === object_ ||
+          ZMFactory === object_ && CAPIFactory === object_.z_factory ||
+          ZMGeometryImpl === object_ && CAPIGeometryImpl === object_.z_geometry
       end
 
 
@@ -87,7 +87,7 @@ module RGeo
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
       def is_geos?(object_)
-        Factory === object_ || GeometryImpl === object_ ||
+        CAPIFactory === object_ || CAPIGeometryImpl === object_ ||
           FFIFactory === object_ || FFIGeometryImpl === object_ ||
           ZMFactory === object_ || ZMGeometryImpl === object_
       end
@@ -204,7 +204,7 @@ module RGeo
           elsif native_interface_ == :ffi
             FFIFactory.new(opts_)
           else
-            Factory.create(opts_)
+            CAPIFactory.create(opts_)
           end
         else
           nil

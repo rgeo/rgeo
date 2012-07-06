@@ -175,23 +175,20 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE x, VALUE y, VALUE
 
 void rgeo_init_geos_point(RGeo_Globals* globals)
 {
-  VALUE geos_point_class;
+  VALUE geos_point_methods;
 
-  geos_point_class = rb_define_class_under(globals->geos_module, "PointImpl", globals->geos_geometry);
-  globals->geos_point = geos_point_class;
-  globals->feature_point = rb_const_get_at(globals->feature_module, rb_intern("Point"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_point, geos_point_class);
+  // Class methods for CAPIPointImpl
+  rb_define_module_function(globals->geos_point, "create", cmethod_create, 4);
 
-  rb_define_module_function(geos_point_class, "create", cmethod_create, 4);
-
-  rb_define_method(geos_point_class, "rep_equals?", method_point_eql, 1);
-  rb_define_method(geos_point_class, "eql?", method_point_eql, 1);
-  rb_define_method(geos_point_class, "geometry_type", method_point_geometry_type, 0);
-  rb_define_method(geos_point_class, "x", method_point_x, 0);
-  rb_define_method(geos_point_class, "y", method_point_y, 0);
-  rb_define_method(geos_point_class, "z", method_point_z, 0);
-  rb_define_method(geos_point_class, "m", method_point_m, 0);
+  // CAPIPointMethods module
+  geos_point_methods = rb_define_module_under(globals->geos_module, "CAPIPointMethods");
+  rb_define_method(geos_point_methods, "rep_equals?", method_point_eql, 1);
+  rb_define_method(geos_point_methods, "eql?", method_point_eql, 1);
+  rb_define_method(geos_point_methods, "geometry_type", method_point_geometry_type, 0);
+  rb_define_method(geos_point_methods, "x", method_point_x, 0);
+  rb_define_method(geos_point_methods, "y", method_point_y, 0);
+  rb_define_method(geos_point_methods, "z", method_point_z, 0);
+  rb_define_method(geos_point_methods, "m", method_point_m, 0);
 }
 
 

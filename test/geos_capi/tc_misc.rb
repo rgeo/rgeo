@@ -51,7 +51,7 @@ module RGeo
 
 
         def test_uninitialized
-          geom_ = ::RGeo::Geos::GeometryImpl.new
+          geom_ = ::RGeo::Geos::CAPIGeometryImpl.new
           assert_equal(false, geom_.initialized?)
           assert_nil(geom_.geometry_type)
         end

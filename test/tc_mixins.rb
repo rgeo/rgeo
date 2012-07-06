@@ -104,7 +104,7 @@ module RGeo
 
         def test_basic_mixin_geos_capi
           factory_ = ::RGeo::Geos.factory(:native_interface => :capi)
-          assert_equal(::RGeo::Geos::PointImpl, factory_.point(1, 1).class)
+          assert_equal(::RGeo::Geos::CAPIPointImpl, factory_.point(1, 1).class)
           assert(factory_.point(1, 1).class.include?(Mixin1))
           assert(!factory_.point(1, 1).class.include?(Mixin2))
           assert(factory_.point(1, 1).respond_to?(:mixin1_method))

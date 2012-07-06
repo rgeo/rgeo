@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-# Projtected geographic feature classes
+# FFI-GEOS geometry implementation
 #
 # -----------------------------------------------------------------------------
 # Copyright 2010-2012 Daniel Azuma
@@ -36,18 +36,25 @@
 
 module RGeo
 
-  module Geographic
+  module Geos
 
 
-    class ProjectedPointImpl  # :nodoc:
+    class FFIGeometryImpl  # :nodoc:
 
 
-      include Feature::Point
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicPointMethods
-      include ProjectedGeometryMethods
-      include ProjectedPointMethods
+      include FFIGeometryMethods
 
+      Feature::MixinCollection::GLOBAL.for_type(Feature::Geometry).include_in_class(self, true)
+
+
+    end
+
+
+    class FFIPointImpl  # :nodoc:
+
+
+      include FFIGeometryMethods
+      include FFIPointMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self, true)
 
@@ -55,16 +62,11 @@ module RGeo
     end
 
 
-    class ProjectedLineStringImpl  # :nodoc:
+    class FFILineStringImpl  # :nodoc:
 
 
-      include Feature::LineString
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicLineStringMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-      include ProjectedLineStringMethods
-
+      include FFIGeometryMethods
+      include FFILineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self, true)
 
@@ -72,17 +74,12 @@ module RGeo
     end
 
 
-    class ProjectedLinearRingImpl  # :nodoc:
+    class FFILinearRingImpl  # :nodoc:
 
 
-      include Feature::LinearRing
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicLineStringMethods
-      include ImplHelper::BasicLinearRingMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-      include ProjectedLineStringMethods
-
+      include FFIGeometryMethods
+      include FFILineStringMethods
+      include FFILinearRingMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self, true)
 
@@ -90,17 +87,12 @@ module RGeo
     end
 
 
-    class ProjectedLineImpl  # :nodoc:
+    class FFILineImpl  # :nodoc:
 
 
-      include Feature::Line
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicLineStringMethods
-      include ImplHelper::BasicLineMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-      include ProjectedLineStringMethods
-
+      include FFIGeometryMethods
+      include FFILineStringMethods
+      include FFILineMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self, true)
 
@@ -108,16 +100,11 @@ module RGeo
     end
 
 
-    class ProjectedPolygonImpl  # :nodoc:
+    class FFIPolygonImpl  # :nodoc:
 
 
-      include Feature::Polygon
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicPolygonMethods
-      include ProjectedGeometryMethods
-      include ProjectedNSurfaceMethods
-      include ProjectedPolygonMethods
-
+      include FFIGeometryMethods
+      include FFIPolygonMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self, true)
 
@@ -125,14 +112,11 @@ module RGeo
     end
 
 
-    class ProjectedGeometryCollectionImpl  # :nodoc:
+    class FFIGeometryCollectionImpl  # :nodoc:
 
 
-      include Feature::GeometryCollection
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ProjectedGeometryMethods
-
+      include FFIGeometryMethods
+      include FFIGeometryCollectionMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self, true)
 
@@ -140,15 +124,12 @@ module RGeo
     end
 
 
-    class ProjectedMultiPointImpl  # :nodoc:
+    class FFIMultiPointImpl  # :nodoc:
 
 
-      include Feature::MultiPoint
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ImplHelper::BasicMultiPointMethods
-      include ProjectedGeometryMethods
-
+      include FFIGeometryMethods
+      include FFIGeometryCollectionMethods
+      include FFIMultiPointMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self, true)
 
@@ -156,16 +137,12 @@ module RGeo
     end
 
 
-    class ProjectedMultiLineStringImpl  # :nodoc:
+    class FFIMultiLineStringImpl  # :nodoc:
 
 
-      include Feature::MultiLineString
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ImplHelper::BasicMultiLineStringMethods
-      include ProjectedGeometryMethods
-      include ProjectedNCurveMethods
-
+      include FFIGeometryMethods
+      include FFIGeometryCollectionMethods
+      include FFIMultiLineStringMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
 
@@ -173,17 +150,12 @@ module RGeo
     end
 
 
-    class ProjectedMultiPolygonImpl  # :nodoc:
+    class FFIMultiPolygonImpl  # :nodoc:
 
 
-      include Feature::MultiPolygon
-      include ImplHelper::BasicGeometryMethods
-      include ImplHelper::BasicGeometryCollectionMethods
-      include ImplHelper::BasicMultiPolygonMethods
-      include ProjectedGeometryMethods
-      include ProjectedNSurfaceMethods
-      include ProjectedMultiPolygonMethods
-
+      include FFIGeometryMethods
+      include FFIGeometryCollectionMethods
+      include FFIMultiPolygonMethods
 
       Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self, true)
 

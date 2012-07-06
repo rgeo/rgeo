@@ -65,29 +65,37 @@ end
 
 # Implementation files
 require 'rgeo/geos/utils'
-require 'rgeo/geos/factory'
 require 'rgeo/geos/interface'
 begin
   require 'rgeo/geos/geos_c_impl'
 rescue ::LoadError; end
-require 'rgeo/geos/impl_additions'
+::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos.const_defined?(:CAPIGeometryMethods)
+if ::RGeo::Geos::CAPI_SUPPORTED
+  require 'rgeo/geos/capi_feature_classes'
+  require 'rgeo/geos/capi_factory'
+end
+require 'rgeo/geos/ffi_feature_methods'
+require 'rgeo/geos/ffi_feature_classes'
 require 'rgeo/geos/ffi_factory'
-require 'rgeo/geos/ffi_classes'
+require 'rgeo/geos/zm_feature_methods'
+require 'rgeo/geos/zm_feature_classes'
 require 'rgeo/geos/zm_factory'
-require 'rgeo/geos/zm_impl'
 
 # Determine ffi support.
 begin
   require 'ffi-geos'
+  # An additional check to make sure FFI loaded okay. This can fail on
+  # some versions of ffi-geos and some versions of Rubinius.
+  ::FFI::AutoPointer
   ::RGeo::Geos::FFI_SUPPORTED = true
-rescue ::LoadError
+  ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = nil
+rescue ::LoadError => ex_
   ::RGeo::Geos::FFI_SUPPORTED = false
-rescue
+  ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = ex_
+rescue => ex_
   ::RGeo::Geos::FFI_SUPPORTED = false
+  ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = ex_
 end
-
-# Determine capi support.
-::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos::Factory.respond_to?(:_create) ? true : false
 
 # Determine preferred native interface
 if ::RGeo::Geos::CAPI_SUPPORTED

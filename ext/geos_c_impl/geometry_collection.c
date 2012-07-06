@@ -461,68 +461,44 @@ static VALUE cmethod_multi_polygon_create(VALUE module, VALUE factory, VALUE arr
 
 void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
 {
-  VALUE geos_geometry_collection_class;
-  VALUE geos_multi_point_class;
-  VALUE geos_multi_line_string_class;
-  VALUE geos_multi_polygon_class;
+  VALUE geos_geometry_collection_methods;
+  VALUE geos_multi_point_methods;
+  VALUE geos_multi_line_string_methods;
+  VALUE geos_multi_polygon_methods;
 
-  // Create implementation classes
-  geos_geometry_collection_class = rb_define_class_under(globals->geos_module, "GeometryCollectionImpl", globals->geos_geometry);
-  globals->geos_geometry_collection = geos_geometry_collection_class;
-  globals->feature_geometry_collection = rb_const_get_at(globals->feature_module, rb_intern("GeometryCollection"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_geometry_collection, geos_geometry_collection_class);
-
-  geos_multi_point_class = rb_define_class_under(globals->geos_module, "MultiPointImpl", geos_geometry_collection_class);
-  globals->geos_multi_point = geos_multi_point_class;
-  globals->feature_multi_point = rb_const_get_at(globals->feature_module, rb_intern("MultiPoint"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_multi_point, geos_multi_point_class);
-
-  geos_multi_line_string_class = rb_define_class_under(globals->geos_module, "MultiLineStringImpl", geos_geometry_collection_class);
-  globals->geos_multi_line_string = geos_multi_line_string_class;
-  globals->feature_multi_line_string = rb_const_get_at(globals->feature_module, rb_intern("MultiLineString"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    rb_const_get_at(globals->feature_module, rb_intern("MultiCurve")), geos_multi_line_string_class);
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_multi_line_string, geos_multi_line_string_class);
-
-  geos_multi_polygon_class = rb_define_class_under(globals->geos_module, "MultiPolygonImpl", geos_geometry_collection_class);
-  globals->geos_multi_polygon = geos_multi_polygon_class;
-  globals->feature_multi_polygon = rb_const_get_at(globals->feature_module, rb_intern("MultiPolygon"));
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    rb_const_get_at(globals->feature_module, rb_intern("MultiSurface")), geos_multi_polygon_class);
-  rb_funcall(globals->global_mixins, rb_intern("include_in_class"), 2,
-    globals->feature_multi_polygon, geos_multi_polygon_class);
+  // Class methods for geometry collection classes
+  rb_define_module_function(globals->geos_geometry_collection, "create", cmethod_geometry_collection_create, 2);
+  rb_define_module_function(globals->geos_multi_point, "create", cmethod_multi_point_create, 2);
+  rb_define_module_function(globals->geos_multi_line_string, "create", cmethod_multi_line_string_create, 2);
+  rb_define_module_function(globals->geos_multi_polygon, "create", cmethod_multi_polygon_create, 2);
 
   // Methods for GeometryCollectionImpl
-  rb_define_module_function(geos_geometry_collection_class, "create", cmethod_geometry_collection_create, 2);
-  rb_include_module(geos_geometry_collection_class, rb_define_module("Enumerable"));
-  rb_define_method(geos_geometry_collection_class, "rep_equals?", method_geometry_collection_eql, 1);
-  rb_define_method(geos_geometry_collection_class, "eql?", method_geometry_collection_eql, 1);
-  rb_define_method(geos_geometry_collection_class, "geometry_type", method_geometry_collection_geometry_type, 0);
-  rb_define_method(geos_geometry_collection_class, "num_geometries", method_geometry_collection_num_geometries, 0);
-  rb_define_method(geos_geometry_collection_class, "size", method_geometry_collection_num_geometries, 0);
-  rb_define_method(geos_geometry_collection_class, "geometry_n", method_geometry_collection_geometry_n, 1);
-  rb_define_method(geos_geometry_collection_class, "[]", method_geometry_collection_brackets, 1);
-  rb_define_method(geos_geometry_collection_class, "each", method_geometry_collection_each, 0);
+  geos_geometry_collection_methods = rb_define_module_under(globals->geos_module, "CAPIGeometryCollectionMethods");
+  rb_define_method(geos_geometry_collection_methods, "rep_equals?", method_geometry_collection_eql, 1);
+  rb_define_method(geos_geometry_collection_methods, "eql?", method_geometry_collection_eql, 1);
+  rb_define_method(geos_geometry_collection_methods, "geometry_type", method_geometry_collection_geometry_type, 0);
+  rb_define_method(geos_geometry_collection_methods, "num_geometries", method_geometry_collection_num_geometries, 0);
+  rb_define_method(geos_geometry_collection_methods, "size", method_geometry_collection_num_geometries, 0);
+  rb_define_method(geos_geometry_collection_methods, "geometry_n", method_geometry_collection_geometry_n, 1);
+  rb_define_method(geos_geometry_collection_methods, "[]", method_geometry_collection_brackets, 1);
+  rb_define_method(geos_geometry_collection_methods, "each", method_geometry_collection_each, 0);
 
   // Methods for MultiPointImpl
-  rb_define_module_function(geos_multi_point_class, "create", cmethod_multi_point_create, 2);
-  rb_define_method(geos_multi_point_class, "geometry_type", method_multi_point_geometry_type, 0);
+  geos_multi_point_methods = rb_define_module_under(globals->geos_module, "CAPIMultiPointMethods");
+  rb_define_method(geos_multi_point_methods, "geometry_type", method_multi_point_geometry_type, 0);
 
   // Methods for MultiLineStringImpl
-  rb_define_module_function(geos_multi_line_string_class, "create", cmethod_multi_line_string_create, 2);
-  rb_define_method(geos_multi_line_string_class, "geometry_type", method_multi_line_string_geometry_type, 0);
-  rb_define_method(geos_multi_line_string_class, "length", method_multi_line_string_length, 0);
-  rb_define_method(geos_multi_line_string_class, "is_closed?", method_multi_line_string_is_closed, 0);
+  geos_multi_line_string_methods = rb_define_module_under(globals->geos_module, "CAPIMultiLineStringMethods");
+  rb_define_method(geos_multi_line_string_methods, "geometry_type", method_multi_line_string_geometry_type, 0);
+  rb_define_method(geos_multi_line_string_methods, "length", method_multi_line_string_length, 0);
+  rb_define_method(geos_multi_line_string_methods, "is_closed?", method_multi_line_string_is_closed, 0);
 
   // Methods for MultiPolygonImpl
-  rb_define_module_function(geos_multi_polygon_class, "create", cmethod_multi_polygon_create, 2);
-  rb_define_method(geos_multi_polygon_class, "geometry_type", method_multi_polygon_geometry_type, 0);
-  rb_define_method(geos_multi_polygon_class, "area", method_multi_polygon_area, 0);
-  rb_define_method(geos_multi_polygon_class, "centroid", method_multi_polygon_centroid, 0);
-  rb_define_method(geos_multi_polygon_class, "point_on_surface", method_multi_polygon_point_on_surface, 0);
+  geos_multi_polygon_methods = rb_define_module_under(globals->geos_module, "CAPIMultiPolygonMethods");
+  rb_define_method(geos_multi_polygon_methods, "geometry_type", method_multi_polygon_geometry_type, 0);
+  rb_define_method(geos_multi_polygon_methods, "area", method_multi_polygon_area, 0);
+  rb_define_method(geos_multi_polygon_methods, "centroid", method_multi_polygon_centroid, 0);
+  rb_define_method(geos_multi_polygon_methods, "point_on_surface", method_multi_polygon_point_on_surface, 0);
 }
 
 
