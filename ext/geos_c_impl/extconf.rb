@@ -79,6 +79,7 @@ else
     have_func('GEOSPreparedContains_r', 'geos_c.h')
     have_func('GEOSPreparedDisjoint_r', 'geos_c.h')
     have_func('GEOSWKTWriter_setOutputDimension_r', 'geos_c.h')
+    have_func('rb_memhash', 'ruby.h')
   end
   unless found_geos_
     puts "**** WARNING: Unable to find GEOS headers or GEOS version is too old."

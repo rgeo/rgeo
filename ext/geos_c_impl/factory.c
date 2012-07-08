@@ -988,6 +988,22 @@ st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t h
 }
 
 
+st_index_t rgeo_internal_memhash(const void* ptr, long len)
+{
+  const char* bytes;
+  st_index_t hval;
+  long i;
+
+  bytes = (const char*)ptr;
+  hval = 0x811c9dc5;
+  for (i=0; i<len; ++i) {
+    hval ^= (unsigned int)(*bytes++);
+    hval *= 0x01000193;
+  }
+  return hval;
+}
+
+
 RGEO_END_C
 
 #endif
