@@ -96,7 +96,7 @@ module RGeo
     end
 
 
-    class CAPIGeometryImpl
+    class CAPIGeometryImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -107,7 +107,7 @@ module RGeo
     end
 
 
-    class CAPIPointImpl
+    class CAPIPointImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -119,7 +119,7 @@ module RGeo
     end
 
 
-    class CAPILineStringImpl
+    class CAPILineStringImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -131,7 +131,7 @@ module RGeo
     end
 
 
-    class CAPILinearRingImpl
+    class CAPILinearRingImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -144,7 +144,7 @@ module RGeo
     end
 
 
-    class CAPILineImpl
+    class CAPILineImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -157,7 +157,7 @@ module RGeo
     end
 
 
-    class CAPIPolygonImpl
+    class CAPIPolygonImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -169,7 +169,7 @@ module RGeo
     end
 
 
-    class CAPIGeometryCollectionImpl
+    class CAPIGeometryCollectionImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -181,7 +181,7 @@ module RGeo
     end
 
 
-    class CAPIMultiPointImpl
+    class CAPIMultiPointImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -194,7 +194,7 @@ module RGeo
     end
 
 
-    class CAPIMultiLineStringImpl
+    class CAPIMultiLineStringImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
@@ -207,7 +207,7 @@ module RGeo
     end
 
 
-    class CAPIMultiPolygonImpl
+    class CAPIMultiPolygonImpl  # :nodoc:
 
 
       include CAPIGeometryMethods
