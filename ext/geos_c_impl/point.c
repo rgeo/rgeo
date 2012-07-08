@@ -166,6 +166,22 @@ static VALUE method_point_eql(VALUE self, VALUE rhs)
 }
 
 
+static VALUE method_point_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_point, hash);
+  hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
 static VALUE cmethod_create(VALUE module, VALUE factory, VALUE x, VALUE y, VALUE z)
 {
   return rgeo_create_geos_point(factory, rb_num2dbl(x), rb_num2dbl(y),
@@ -184,6 +200,7 @@ void rgeo_init_geos_point(RGeo_Globals* globals)
   geos_point_methods = rb_define_module_under(globals->geos_module, "CAPIPointMethods");
   rb_define_method(geos_point_methods, "rep_equals?", method_point_eql, 1);
   rb_define_method(geos_point_methods, "eql?", method_point_eql, 1);
+  rb_define_method(geos_point_methods, "hash", method_point_hash, 0);
   rb_define_method(geos_point_methods, "geometry_type", method_point_geometry_type, 0);
   rb_define_method(geos_point_methods, "x", method_point_x, 0);
   rb_define_method(geos_point_methods, "y", method_point_y, 0);

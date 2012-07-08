@@ -77,6 +77,7 @@ typedef struct {
   ID id_eql;
   ID id_generate;
   ID id_enum_for;
+  ID id_hash;
   VALUE sym_force_new;
   VALUE sym_keep_subtype;
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
@@ -240,6 +241,24 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
   are of the same type and factory), or Qfalse otherwise.
 */
 VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2);
+
+/*
+  A tool for building up hash values.
+  You must pass in the context, a geos geometry, and a seed hash.
+  Returns an updated hash.
+  This call is useful in sequence, and should be bracketed by calls to
+  rb_hash_start and rb_hash_end.
+*/
+st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash);
+
+/*
+  A tool for building up hash values.
+  You must pass in a factory, a feature type module, and a seed hash.
+  Returns an updated hash.
+  This call is useful in sequence, and should be bracketed by calls to
+  rb_hash_start and rb_hash_end.
+*/
+st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash);
 
 
 RGEO_END_C

@@ -114,9 +114,17 @@ module RGeo
       # Equivalence test.
 
       def eql?(rhs_)
-        rhs_.is_a?(self.class) && @srid == rhs_.srid && @has_z == rhs_.property(:has_z_coordinate) && @has_m == rhs_.property(:has_m_coordinate)
+        rhs_.is_a?(self.class) && @srid == rhs_.srid &&
+          @has_z == rhs_.property(:has_z_coordinate) &&
+          @has_m == rhs_.property(:has_m_coordinate) &&
+          @proj4.eql?(rhs_.proj4)
       end
       alias_method :==, :eql?
+
+
+      def hash
+        @hash ||= [@srid, @has_z, @has_m, @proj4].hash
+      end
 
 
       # Marshal support

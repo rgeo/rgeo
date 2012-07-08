@@ -307,6 +307,54 @@ static VALUE method_line_string_eql(VALUE self, VALUE rhs)
 }
 
 
+static VALUE method_line_string_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_line_string, hash);
+  hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
+static VALUE method_linear_ring_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_linear_ring, hash);
+  hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
+static VALUE method_line_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_line, hash);
+  hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
 static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char close)
 {
   RGeo_FactoryData* factory_data;
@@ -563,6 +611,7 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   geos_line_string_methods = rb_define_module_under(globals->geos_module, "CAPILineStringMethods");
   rb_define_method(geos_line_string_methods, "rep_equals?", method_line_string_eql, 1);
   rb_define_method(geos_line_string_methods, "eql?", method_line_string_eql, 1);
+  rb_define_method(geos_line_string_methods, "hash", method_line_string_hash, 0);
   rb_define_method(geos_line_string_methods, "geometry_type", method_line_string_geometry_type, 0);
   rb_define_method(geos_line_string_methods, "length", method_line_string_length, 0);
   rb_define_method(geos_line_string_methods, "num_points", method_line_string_num_points, 0);
@@ -576,10 +625,12 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   // CAPILinearRingMethods module
   geos_linear_ring_methods = rb_define_module_under(globals->geos_module, "CAPILinearRingMethods");
   rb_define_method(geos_linear_ring_methods, "geometry_type", method_linear_ring_geometry_type, 0);
+  rb_define_method(geos_linear_ring_methods, "hash", method_linear_ring_hash, 0);
 
   // CAPILineMethods module
   geos_line_methods = rb_define_module_under(globals->geos_module, "CAPILineMethods");
   rb_define_method(geos_line_methods, "geometry_type", method_line_geometry_type, 0);
+  rb_define_method(geos_line_methods, "hash", method_line_hash, 0);
 }
 
 

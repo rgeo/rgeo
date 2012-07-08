@@ -177,6 +177,22 @@ static VALUE method_geometry_collection_eql(VALUE self, VALUE rhs)
 }
 
 
+static VALUE method_geometry_collection_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_geometry_collection, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
 static VALUE method_geometry_collection_geometry_type(VALUE self)
 {
   VALUE result;
@@ -301,6 +317,22 @@ static VALUE method_multi_point_geometry_type(VALUE self)
 }
 
 
+static VALUE method_multi_point_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_multi_point, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
 static VALUE method_multi_line_string_geometry_type(VALUE self)
 {
   VALUE result;
@@ -312,6 +344,22 @@ static VALUE method_multi_line_string_geometry_type(VALUE self)
     result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_multi_line_string;
   }
   return result;
+}
+
+
+static VALUE method_multi_line_string_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_multi_line_string, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
 }
 
 
@@ -378,6 +426,22 @@ static VALUE method_multi_polygon_geometry_type(VALUE self)
     result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_multi_polygon;
   }
   return result;
+}
+
+
+static VALUE method_multi_polygon_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_multi_polygon, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
 }
 
 
@@ -476,6 +540,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   geos_geometry_collection_methods = rb_define_module_under(globals->geos_module, "CAPIGeometryCollectionMethods");
   rb_define_method(geos_geometry_collection_methods, "rep_equals?", method_geometry_collection_eql, 1);
   rb_define_method(geos_geometry_collection_methods, "eql?", method_geometry_collection_eql, 1);
+  rb_define_method(geos_geometry_collection_methods, "hash", method_geometry_collection_hash, 0);
   rb_define_method(geos_geometry_collection_methods, "geometry_type", method_geometry_collection_geometry_type, 0);
   rb_define_method(geos_geometry_collection_methods, "num_geometries", method_geometry_collection_num_geometries, 0);
   rb_define_method(geos_geometry_collection_methods, "size", method_geometry_collection_num_geometries, 0);
@@ -486,12 +551,14 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   // Methods for MultiPointImpl
   geos_multi_point_methods = rb_define_module_under(globals->geos_module, "CAPIMultiPointMethods");
   rb_define_method(geos_multi_point_methods, "geometry_type", method_multi_point_geometry_type, 0);
+  rb_define_method(geos_multi_point_methods, "hash", method_multi_point_hash, 0);
 
   // Methods for MultiLineStringImpl
   geos_multi_line_string_methods = rb_define_module_under(globals->geos_module, "CAPIMultiLineStringMethods");
   rb_define_method(geos_multi_line_string_methods, "geometry_type", method_multi_line_string_geometry_type, 0);
   rb_define_method(geos_multi_line_string_methods, "length", method_multi_line_string_length, 0);
   rb_define_method(geos_multi_line_string_methods, "is_closed?", method_multi_line_string_is_closed, 0);
+  rb_define_method(geos_multi_line_string_methods, "hash", method_multi_line_string_hash, 0);
 
   // Methods for MultiPolygonImpl
   geos_multi_polygon_methods = rb_define_module_under(globals->geos_module, "CAPIMultiPolygonMethods");
@@ -499,6 +566,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_multi_polygon_methods, "area", method_multi_polygon_area, 0);
   rb_define_method(geos_multi_polygon_methods, "centroid", method_multi_polygon_centroid, 0);
   rb_define_method(geos_multi_polygon_methods, "point_on_surface", method_multi_polygon_point_on_surface, 0);
+  rb_define_method(geos_multi_polygon_methods, "hash", method_multi_polygon_hash, 0);
 }
 
 
@@ -576,6 +644,45 @@ VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOS
     }
   }
   return result;
+}
+
+
+st_index_t rgeo_geos_geometry_collection_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash)
+{
+  const GEOSGeometry* sub_geom;
+  int type;
+  unsigned int len;
+  unsigned int i;
+
+  if (geom) {
+    len = GEOSGetNumGeometries_r(context, geom);
+    for (i=0; i<len; ++i) {
+      sub_geom = GEOSGetGeometryN_r(context, geom, i);
+      if (sub_geom) {
+        type = GEOSGeomTypeId_r(context, sub_geom);
+        if (type >= 0) {
+          hash = hash ^ type;
+          switch (type) {
+          case GEOS_POINT:
+          case GEOS_LINESTRING:
+          case GEOS_LINEARRING:
+            hash = rgeo_geos_coordseq_hash(context, sub_geom, hash);
+            break;
+          case GEOS_POLYGON:
+            hash = rgeo_geos_polygon_hash(context, sub_geom, hash);
+            break;
+          case GEOS_GEOMETRYCOLLECTION:
+          case GEOS_MULTIPOINT:
+          case GEOS_MULTILINESTRING:
+          case GEOS_MULTIPOLYGON:
+            hash = rgeo_geos_geometry_collection_hash(context, sub_geom, hash);
+            break;
+          }
+        }
+      }
+    }
+  }
+  return hash;
 }
 
 

@@ -128,6 +128,13 @@ module RGeo
         end
 
 
+        def test_hashes_equal_for_representationally_equivalent_objects
+          geom1_ = @factory.multi_point([@point1, @point2])
+          geom2_ = @factory.multi_point([@point1, @point2])
+          assert_equal(geom1_.hash, geom2_.hash)
+        end
+
+
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('MULTIPOINT((0 0), (-4 2), (-5 3))')
           built_geom_ = @factory.multi_point([@point1, @point3, @point4])

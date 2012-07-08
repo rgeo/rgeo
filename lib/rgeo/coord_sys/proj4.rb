@@ -64,7 +64,7 @@ module RGeo
 
 
       def hash  # :nodoc:
-        canonical_hash.hash
+        @hash ||= canonical_hash.hash
       end
 
 

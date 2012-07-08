@@ -113,6 +113,14 @@ module RGeo
       end
 
 
+      def hash
+        @hash ||= begin
+          hash_ = (geometry_type.hash ^ @exterior_ring.hash).hash
+          @interior_rings.inject(hash_){ |h_, r_| (h_ ^ r_.hash).hash }
+        end
+      end
+
+
       def _copy_state_from(obj_)  # :nodoc:
         super
         @exterior_ring = obj_.exterior_ring

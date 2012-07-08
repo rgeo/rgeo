@@ -108,8 +108,15 @@ module RGeo
 
         def test_equivalence
           proj1_ = ::RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
-          proj2_ = ::RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          proj2_ = ::RGeo::CoordSys::Proj4.create(' +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
           assert_equal(proj1_, proj2_)
+        end
+
+
+        def test_hashes_equal_for_equivalent_objects
+          proj1_ = ::RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          proj2_ = ::RGeo::CoordSys::Proj4.create(' +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          assert_equal(proj1_.hash, proj2_.hash)
         end
 
 

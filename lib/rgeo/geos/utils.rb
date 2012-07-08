@@ -85,6 +85,13 @@ module RGeo
         end
 
 
+        def ffi_coord_seq_hash(cs_, hash_=0)
+          (0...cs_.length).inject(hash_) do |h_, i_|
+            [hash_, cs_.get_x(i_), cs_.get_y(i_), cs_.get_z(i_)].hash
+          end
+        end
+
+
         def _init
           if FFI_SUPPORTED
             @ffi_supports_prepared_level_1 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)

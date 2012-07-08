@@ -154,9 +154,16 @@ module RGeo
       def eql?(rhs_)
         rhs_.is_a?(self.class) && @srid == rhs_.srid &&
           @has_z == rhs_.property(:has_z_coordinate) &&
-          @has_m == rhs_.property(:has_m_coordinate)
+          @has_m == rhs_.property(:has_m_coordinate) &&
+          @buffer_resolution == rhs_.property(:buffer_resolution) &&
+          @proj4.eql?(rhs_.proj4)
       end
       alias_method :==, :eql?
+
+
+      def hash
+        @hash ||= [@srid, @has_z, @has_m, @buffer_resolution, @proj4].hash
+      end
 
 
       # Marshal support
@@ -304,11 +311,18 @@ module RGeo
       end
 
 
+      # Create a feature that wraps the given ffi-geos geometry object
+
+      def wrap_fg_geom(fg_geom_)
+        _wrap_fg_geom(fg_geom_, nil)
+      end
+
+
       # See ::RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
         if @wkt_reader
-          wrap_fg_geom(@wkt_reader.read(str_))
+          _wrap_fg_geom(@wkt_reader.read(str_), nil)
         else
           @wkt_parser.parse(str_)
         end
@@ -319,47 +333,10 @@ module RGeo
 
       def parse_wkb(str_)
         if @wkb_reader
-          wrap_fg_geom(@wkb_reader.read(str_))
+          _wrap_fg_geom(@wkb_reader.read(str_), nil)
         else
           @wkb_parser.parse(str_)
         end
-      end
-
-
-      def wrap_fg_geom(fg_geom_, klass_=nil)  # :nodoc:
-        klasses_ = nil
-        unless klass_.kind_of?(::Class)
-          is_collection_ = false
-          case fg_geom_.type_id
-          when ::Geos::GeomTypes::GEOS_POINT
-            inferred_klass_ = FFIPointImpl
-          when ::Geos::GeomTypes::GEOS_MULTIPOINT
-            inferred_klass_ = FFIMultiPointImpl
-            is_collection_ = true
-          when ::Geos::GeomTypes::GEOS_LINESTRING
-            inferred_klass_ = FFILineStringImpl
-          when ::Geos::GeomTypes::GEOS_LINEARRING
-            inferred_klass_ = FFILinearRingImpl
-          when ::Geos::GeomTypes::GEOS_MULTILINESTRING
-            inferred_klass_ = FFIMultiLineStringImpl
-            is_collection_ = true
-          when ::Geos::GeomTypes::GEOS_POLYGON
-            inferred_klass_ = FFIPolygonImpl
-          when ::Geos::GeomTypes::GEOS_MULTIPOLYGON
-            inferred_klass_ = FFIMultiPolygonImpl
-            is_collection_ = true
-          when ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
-            inferred_klass_ = FFIGeometryCollectionImpl
-            is_collection_ = true
-          else
-            inferred_klass_ = FFIGeometryImpl
-          end
-          if is_collection_ && klass_.is_a?(::Array)
-            klasses_ = klass_
-          end
-          klass_ = inferred_klass_
-        end
-        klass_.new(self, fg_geom_, klasses_)
       end
 
 
@@ -547,6 +524,43 @@ module RGeo
 
       attr_reader :_has_3d  # :nodoc:
       attr_reader :_auto_prepare  # :nodoc:
+
+
+      def _wrap_fg_geom(fg_geom_, klass_)  # :nodoc:
+        klasses_ = nil
+        unless klass_.kind_of?(::Class)
+          is_collection_ = false
+          case fg_geom_.type_id
+          when ::Geos::GeomTypes::GEOS_POINT
+            inferred_klass_ = FFIPointImpl
+          when ::Geos::GeomTypes::GEOS_MULTIPOINT
+            inferred_klass_ = FFIMultiPointImpl
+            is_collection_ = true
+          when ::Geos::GeomTypes::GEOS_LINESTRING
+            inferred_klass_ = FFILineStringImpl
+          when ::Geos::GeomTypes::GEOS_LINEARRING
+            inferred_klass_ = FFILinearRingImpl
+          when ::Geos::GeomTypes::GEOS_MULTILINESTRING
+            inferred_klass_ = FFIMultiLineStringImpl
+            is_collection_ = true
+          when ::Geos::GeomTypes::GEOS_POLYGON
+            inferred_klass_ = FFIPolygonImpl
+          when ::Geos::GeomTypes::GEOS_MULTIPOLYGON
+            inferred_klass_ = FFIMultiPolygonImpl
+            is_collection_ = true
+          when ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
+            inferred_klass_ = FFIGeometryCollectionImpl
+            is_collection_ = true
+          else
+            inferred_klass_ = FFIGeometryImpl
+          end
+          if is_collection_ && klass_.is_a?(::Array)
+            klasses_ = klass_
+          end
+          klass_ = inferred_klass_
+        end
+        klass_.new(self, fg_geom_, klasses_)
+      end
 
 
       def _convert_to_fg_geometry(obj_, type_=nil)  # :nodoc:

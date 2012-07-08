@@ -240,6 +240,31 @@ module RGeo
         end
 
 
+        def test_hashes_equal_for_representationally_equivalent_objects
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          point3_ = @factory.point(1, 0)
+          line1_ = @factory.line_string([point1_, point2_, point3_])
+          point4_ = @factory.point(0, 0)
+          point5_ = @factory.point(0, 1)
+          point6_ = @factory.point(1, 0)
+          line2_ = @factory.line_string([point4_, point5_, point6_])
+          assert_equal(line1_.hash, line2_.hash)
+        end
+
+
+        def test_out_of_order_is_not_equal
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          line1_ = @factory.line_string([point1_, point2_])
+          point4_ = @factory.point(0, 1)
+          point5_ = @factory.point(0, 0)
+          line2_ = @factory.line_string([point4_, point5_])
+          assert(!line1_.rep_equals?(line2_))
+          assert_not_equal(line1_.hash, line2_.hash)
+        end
+
+
         def test_wkt_creation
           line1_ = @factory.parse_wkt('LINESTRING(21 22, 11 12)')
           assert_equal(@factory.point(21, 22), line1_.point_n(0))

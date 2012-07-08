@@ -164,6 +164,27 @@ module RGeo
         end
 
 
+        def test_out_of_order_is_not_equal
+          point1_ = @factory.point(11, 12)
+          point2_ = @factory.point(12, 11)
+          assert_not_equal(point1_, point2_)
+          assert_not_equal(point1_.hash, point2_.hash)
+        end
+
+
+        def test_hashes_equal_for_representationally_equivalent_objects
+          point1_ = @factory.point(11, 12)
+          point2_ = @factory.point(11, 12)
+          assert_equal(point1_.hash, point2_.hash)
+        end
+
+
+        def test_point_as_hash_key
+          hash_ = {@factory.point(11, 12) => :hello}
+          assert_equal(:hello, hash_[@factory.point(11, 12)])
+        end
+
+
         def test_disjoint
           point1_ = @factory.point(11, 12)
           point2_ = @factory.point(11, 12)

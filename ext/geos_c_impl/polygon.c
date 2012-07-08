@@ -64,6 +64,22 @@ static VALUE method_polygon_eql(VALUE self, VALUE rhs)
 }
 
 
+static VALUE method_polygon_hash(VALUE self)
+{
+  st_index_t hash;
+  RGeo_GeometryData* self_data;
+  VALUE factory;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  hash = rb_hash_start(0);
+  hash = rgeo_geos_objbase_hash(factory,
+    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_polygon, hash);
+  hash = rgeo_geos_polygon_hash(self_data->geos_context, self_data->geom, hash);
+  return LONG2FIX(rb_hash_end(hash));
+}
+
+
 static VALUE method_polygon_geometry_type(VALUE self)
 {
   VALUE result;
@@ -281,6 +297,7 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
   geos_polygon_methods = rb_define_module_under(globals->geos_module, "CAPIPolygonMethods");
   rb_define_method(geos_polygon_methods, "rep_equals?", method_polygon_eql, 1);
   rb_define_method(geos_polygon_methods, "eql?", method_polygon_eql, 1);
+  rb_define_method(geos_polygon_methods, "hash", method_polygon_hash, 0);
   rb_define_method(geos_polygon_methods, "geometry_type", method_polygon_geometry_type, 0);
   rb_define_method(geos_polygon_methods, "area", method_polygon_area, 0);
   rb_define_method(geos_polygon_methods, "centroid", method_polygon_centroid, 0);
@@ -324,6 +341,22 @@ VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* ge
     }
   }
   return result;
+}
+
+
+st_index_t rgeo_geos_polygon_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash)
+{
+  unsigned int len;
+  unsigned int i;
+
+  if (geom) {
+    hash = rgeo_geos_coordseq_hash(context, GEOSGetExteriorRing_r(context, geom), hash);
+    len = GEOSGetNumInteriorRings_r(context, geom);
+    for (i=0; i<len; ++i) {
+      hash = rgeo_geos_coordseq_hash(context, GEOSGetInteriorRingN_r(context, geom, i), hash);
+    }
+  }
+  return hash;
 }
 
 

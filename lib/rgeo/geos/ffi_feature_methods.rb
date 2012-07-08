@@ -141,7 +141,7 @@ module RGeo
         if fg_geom_.type_id == ::Geos::GeomTypes::GEOS_POINT && fg_geom_.empty?
           fg_geom_ = ::Geos::Utils.create_geometry_collection
         end
-        @factory.wrap_fg_geom(fg_geom_)
+        @factory._wrap_fg_geom(fg_geom_, nil)
       end
 
 
@@ -149,7 +149,7 @@ module RGeo
         if self.class == FFIGeometryCollectionImpl
           nil
         else
-          @factory.wrap_fg_geom(@fg_geom.boundary)
+          @factory._wrap_fg_geom(@fg_geom.boundary, nil)
         end
       end
 
@@ -284,18 +284,18 @@ module RGeo
 
 
       def buffer(distance_)
-        @factory.wrap_fg_geom(@fg_geom.buffer(distance_, @factory.buffer_resolution))
+        @factory._wrap_fg_geom(@fg_geom.buffer(distance_, @factory.buffer_resolution), nil)
       end
 
 
       def convex_hull
-        @factory.wrap_fg_geom(@fg_geom.convex_hull)
+        @factory._wrap_fg_geom(@fg_geom.convex_hull, nil)
       end
 
 
       def intersection(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory.wrap_fg_geom(@fg_geom.intersection(fg_)) : nil
+        fg_ ? @factory._wrap_fg_geom(@fg_geom.intersection(fg_), nil) : nil
       end
 
       alias_method :*, :intersection
@@ -303,7 +303,7 @@ module RGeo
 
       def union(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory.wrap_fg_geom(@fg_geom.union(fg_)) : nil
+        fg_ ? @factory._wrap_fg_geom(@fg_geom.union(fg_), nil) : nil
       end
 
       alias_method :+, :union
@@ -311,7 +311,7 @@ module RGeo
 
       def difference(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory.wrap_fg_geom(@fg_geom.difference(fg_)) : nil
+        fg_ ? @factory._wrap_fg_geom(@fg_geom.difference(fg_), nil) : nil
       end
 
       alias_method :-, :difference
@@ -319,7 +319,7 @@ module RGeo
 
       def sym_difference(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory.wrap_fg_geom(@fg_geom.sym_difference(fg_)) : nil
+        fg_ ? @factory._wrap_fg_geom(@fg_geom.sym_difference(fg_), nil) : nil
       end
 
 
@@ -395,6 +395,11 @@ module RGeo
       end
 
 
+      def hash
+        @hash ||= Utils.ffi_coord_seq_hash(@fg_geom.coord_seq, [@factory, geometry_type].hash)
+      end
+
+
     end
 
 
@@ -467,6 +472,11 @@ module RGeo
       end
 
 
+      def hash
+        @hash ||= Utils.ffi_coord_seq_hash(@fg_geom.coord_seq, [@factory, geometry_type].hash)
+      end
+
+
     end
 
 
@@ -506,17 +516,17 @@ module RGeo
 
 
       def centroid
-        @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
+        @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
 
       def point_on_surface
-        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
 
       def exterior_ring
-        @factory.wrap_fg_geom(@fg_geom.exterior_ring, FFILinearRingImpl)
+        @factory._wrap_fg_geom(@fg_geom.exterior_ring, FFILinearRingImpl)
       end
 
 
@@ -527,7 +537,7 @@ module RGeo
 
       def interior_ring_n(n_)
         if n_ >= 0 && n_ < @fg_geom.num_interior_rings
-          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n_), FFILinearRingImpl)
+          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n_), FFILinearRingImpl)
         else
           nil
         end
@@ -536,7 +546,7 @@ module RGeo
 
       def interior_rings
         ::Array.new(@fg_geom.num_interior_rings) do |n_|
-          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n_), FFILinearRingImpl)
+          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n_), FFILinearRingImpl)
         end
       end
 
@@ -555,6 +565,17 @@ module RGeo
           end
         end
         false
+      end
+
+
+      def hash
+        @hash ||= begin
+          hash_ = Utils.ffi_coord_seq_hash(@fg_geom.exterior_ring.coord_seq,
+            [@factory, geometry_type].hash)
+          @fg_geom.interior_rings.inject(hash_) do |h_, r_|
+            Utils.ffi_coord_seq_hash(r_.coord_seq, h_)
+          end
+        end
       end
 
 
@@ -591,7 +612,7 @@ module RGeo
 
       def geometry_n(n_)
         if n_ >= 0 && n_ < @fg_geom.num_geometries
-          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n_),
+          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n_),
             @_klasses ? @_klasses[n_] : nil)
         else
           nil
@@ -602,7 +623,7 @@ module RGeo
       def [](n_)
         n_ += @fg_geom.num_geometries if n_ < 0
         if n_ >= 0 && n_ < @fg_geom.num_geometries
-          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n_),
+          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n_),
             @_klasses ? @_klasses[n_] : nil)
         else
           nil
@@ -610,10 +631,20 @@ module RGeo
       end
 
 
+      def hash
+        @hash ||= begin
+          hash_ = [@factory, geometry_type].hash
+          (0...num_geometries).inject(hash_) do |h_, i_|
+            (h_ ^ geometry_n(i_).hash).hash
+          end
+        end
+      end
+
+
       def each
         if block_given?
           @fg_geom.num_geometries.times do |n_|
-            yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n_),
+            yield @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n_),
               @_klasses ? @_klasses[n_] : nil)
           end
           self
@@ -678,12 +709,12 @@ module RGeo
 
 
       def centroid
-        @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
+        @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
 
       def point_on_surface
-        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
 

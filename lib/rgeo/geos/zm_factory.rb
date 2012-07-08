@@ -46,6 +46,8 @@ module RGeo
       include Feature::Factory::Instance
 
 
+      # :stopdoc:
+
       TYPE_KLASSES = {
         Feature::Point => ZMPointImpl,
         Feature::LineString => ZMLineStringImpl,
@@ -57,6 +59,8 @@ module RGeo
         Feature::MultiLineString => ZMMultiLineStringImpl,
         Feature::MultiPolygon => ZMMultiPolygonImpl,
       }.freeze
+
+      # :startdoc:
 
 
       class << self
@@ -281,6 +285,11 @@ module RGeo
         rhs_.is_a?(ZMFactory) && rhs_.z_factory == @zfactory
       end
       alias_method :==, :eql?
+
+
+      def hash
+        @hash ||= [@zfactory, @mfactory].hash
+      end
 
 
       # See ::RGeo::Feature::Factory#property

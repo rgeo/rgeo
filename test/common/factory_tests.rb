@@ -76,17 +76,23 @@ module RGeo
         end
 
 
-        def test_srid_preserved_through_dup
+        def test_srid_preserved_through_geometry_dup
           geom1_ = @factory.point(-10, 20)
           geom2_ = geom1_.clone
           assert_equal(_srid, geom2_.srid)
         end
 
 
-        def test_dup_factory
+        def test_dup_factory_results_in_equal_factories
           dup_factory_ = @factory.dup
           assert_equal(@factory, dup_factory_)
           assert_equal(_srid, dup_factory_.srid)
+        end
+
+
+        def test_dup_factory_results_in_equal_hashes
+          dup_factory_ = @factory.dup
+          assert_equal(@factory.hash, dup_factory_.hash)
         end
 
 

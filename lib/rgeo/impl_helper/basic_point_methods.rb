@@ -130,6 +130,11 @@ module RGeo
       end
 
 
+      def hash
+        @hash ||= [factory, geometry_type, @x, @y, @z, @m].hash
+      end
+
+
       def _copy_state_from(obj_)  # :nodoc:
         super
         @x = obj_.x

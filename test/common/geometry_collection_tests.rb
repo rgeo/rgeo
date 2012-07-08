@@ -158,6 +158,29 @@ module RGeo
         end
 
 
+        def test_hashes_equal_for_representationally_equivalent_objects
+          geom1_ = @factory.collection([@point1, @line1])
+          geom2_ = @factory.collection([@point1, @line1])
+          assert_equal(geom1_.hash, geom2_.hash)
+        end
+
+
+        def test_nested_equality
+          geom1_ = @factory.collection([@line1, @factory.collection([@point1, @point2])])
+          geom2_ = @factory.collection([@line1, @factory.collection([@point1, @point2])])
+          assert(geom1_.rep_equals?(geom2_))
+          assert_equal(geom1_.hash, geom2_.hash)
+        end
+
+
+        def test_out_of_order_is_not_equal
+          geom1_ = @factory.collection([@line1, @point2])
+          geom2_ = @factory.collection([@point2, @line1])
+          assert(!geom1_.rep_equals?(geom2_))
+          assert_not_equal(geom1_.hash, geom2_.hash)
+        end
+
+
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('GEOMETRYCOLLECTION(POINT(0 0), LINESTRING(-4 2, -5 3))')
           built_geom_ = @factory.collection([@point1, @line1])

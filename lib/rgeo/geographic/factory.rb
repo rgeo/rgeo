@@ -127,6 +127,11 @@ module RGeo
       alias_method :==, :eql?
 
 
+      def hash
+        @hash ||= [@impl_prefix, @support_z, @support_m, @proj4].hash
+      end
+
+
       # Marshal support
 
       def marshal_dump  # :nodoc:

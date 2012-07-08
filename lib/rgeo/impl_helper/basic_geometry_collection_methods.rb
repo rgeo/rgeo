@@ -106,6 +106,14 @@ module RGeo
       end
 
 
+      def hash
+        @hash ||= begin
+          hash_ = (factory.hash ^ geometry_type.hash).hash
+          @elements.inject(hash_){ |h_, g_| (h_ ^ g_.hash).hash }
+        end
+      end
+
+
       def _copy_state_from(obj_)  # :nodoc:
         super
         @elements = obj_._elements

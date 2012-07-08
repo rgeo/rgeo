@@ -192,6 +192,11 @@ module RGeo
         alias_method :==, :eql?
 
 
+        def hash
+          @hash ||= self.to_wkt.hash
+        end
+
+
         # Returns the default WKT representation.
 
         def to_s
@@ -206,7 +211,11 @@ module RGeo
         #   brackets. Default is false.
 
         def to_wkt(opts_={})
-          opts_[:standard_brackets] ? _to_wkt('(', ')') : _to_wkt('[', ']')
+          if opts_[:standard_brackets]
+            @standard_wkt ||= _to_wkt('(', ')')
+          else
+            @square_wkt ||= _to_wkt('[', ']')
+          end
         end
 
 

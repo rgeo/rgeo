@@ -617,6 +617,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   globals->id_eql = rb_intern("eql?");
   globals->id_generate = rb_intern("generate");
   globals->id_enum_for = rb_intern("enum_for");
+  globals->id_hash = rb_intern("hash");
   globals->sym_force_new = ID2SYM(rb_intern("force_new"));
   globals->sym_keep_subtype = ID2SYM(rb_intern("keep_subtype"));
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
@@ -929,6 +930,61 @@ VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
     result = rb_funcall(factory, RGEO_FACTORY_DATA_PTR(factory)->globals->id_eql, 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
   }
   return result;
+}
+
+
+typedef struct {
+  st_index_t seed_hash;
+  double x;
+  double y;
+  double z;
+} RGeo_Coordseq_Hash_Struct;
+
+st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash)
+{
+  const GEOSCoordSequence* cs;
+  unsigned int len;
+  unsigned int i;
+  RGeo_Coordseq_Hash_Struct hash_struct;
+
+  if (geom) {
+    cs = GEOSGeom_getCoordSeq_r(context, geom);
+    if (cs) {
+      if (GEOSCoordSeq_getSize_r(context, cs, &len)) {
+        for (i=0; i<len; ++i) {
+          if (GEOSCoordSeq_getX_r(context, cs, i, &hash_struct.x)) {
+            if (GEOSCoordSeq_getY_r(context, cs, i, &hash_struct.y)) {
+              if (!GEOSCoordSeq_getY_r(context, cs, i, &hash_struct.z)) {
+                hash_struct.z = 0;
+              }
+              hash_struct.seed_hash = hash;
+              hash = rb_memhash(&hash_struct, sizeof(RGeo_Coordseq_Hash_Struct));
+            }
+          }
+        }
+      }
+    }
+  }
+  return hash;
+}
+
+
+typedef struct {
+  st_index_t seed_hash;
+  st_index_t h1;
+  st_index_t h2;
+} RGeo_Objbase_Hash_Struct;
+
+st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash)
+{
+  ID hash_method;
+  RGeo_Objbase_Hash_Struct hash_struct;
+
+  hash_method = RGEO_FACTORY_DATA_PTR(factory)->globals->id_hash;
+  hash_struct.seed_hash = hash;
+  hash_struct.h1 = FIX2LONG(rb_funcall(factory, hash_method, 0));
+  hash_struct.h2 = FIX2LONG(rb_funcall(type_module, hash_method, 0));
+  return rb_memhash(&hash_struct, sizeof(RGeo_Objbase_Hash_Struct));
 }
 
 

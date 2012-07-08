@@ -140,6 +140,21 @@ module RGeo
         end
 
 
+        def test_hashes_equal_for_representationally_equivalent_objects
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          point3_ = @factory.point(1, 0)
+          exterior1_ = @factory.linear_ring([point1_, point2_, point3_, point1_])
+          poly1_ = @factory.polygon(exterior1_)
+          point4_ = @factory.point(0, 0)
+          point5_ = @factory.point(0, 1)
+          point6_ = @factory.point(1, 0)
+          exterior2_ = @factory.linear_ring([point4_, point5_, point6_, point4_])
+          poly2_ = @factory.polygon(exterior2_)
+          assert_equal(poly1_.hash, poly2_.hash)
+        end
+
+
         def test_wkt_creation_simple
           parsed_poly_ = @factory.parse_wkt('POLYGON((0 0, 0 1, 1 0, 0 0))')
           point1_ = @factory.point(0, 0)

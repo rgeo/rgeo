@@ -136,6 +136,13 @@ module RGeo
         end
 
 
+        def test_hashes_equal_for_representationally_equivalent_objects
+          geom1_ = @factory.multi_line_string([@linestring1, @linestring2])
+          geom2_ = @factory.multi_line_string([@linestring1, @linestring2])
+          assert_equal(geom1_.hash, geom2_.hash)
+        end
+
+
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('MULTILINESTRING((0 0, 1 0), (-4 2, -7 6, 5 11))')
           built_geom_ = @factory.multi_line_string([@linestring1, @linestring2])

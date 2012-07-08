@@ -60,6 +60,11 @@ module RGeo
       end
 
 
+      def hash
+        @factory.hash ^ @zgeometry.hash ^ @mgeometry.hash
+      end
+
+
       def factory
         @factory
       end

@@ -135,6 +135,13 @@ module RGeo
         end
 
 
+        def test_hashes_equal_for_representationally_equivalent_objects
+          geom1_ = @factory.multi_polygon([@poly1, @poly2])
+          geom2_ = @factory.multi_polygon([@poly1, @poly2])
+          assert_equal(geom1_.hash, geom2_.hash)
+        end
+
+
         def test_wkt_creation_simple
           parsed_geom_ = @factory.parse_wkt('MULTIPOLYGON(((0 0, 0 -10, -10 0, 0 0)), ((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))')
           built_geom_ = @factory.multi_polygon([@poly1, @poly2])

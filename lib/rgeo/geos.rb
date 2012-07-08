@@ -86,7 +86,7 @@ begin
   require 'ffi-geos'
   # An additional check to make sure FFI loaded okay. This can fail on
   # some versions of ffi-geos and some versions of Rubinius.
-  ::FFI::AutoPointer
+  raise 'Problem loading FFI' unless ::FFI::AutoPointer
   ::RGeo::Geos::FFI_SUPPORTED = true
   ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = nil
 rescue ::LoadError => ex_
