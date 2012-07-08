@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RGeo::Geographic::SphericalMultiLineStringMethods - RGeo 0.3.13 Documentation</title>
+<title>module RGeo::Geographic::SphericalMultiLineStringMethods - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -233,9 +233,9 @@
   
     <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -298,7 +298,7 @@
 
           
           <div class="method-source-code" id="length-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/spherical_feature_methods.rb, line 103</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/spherical_feature_methods.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">length</span>
   <span class="ruby-identifier">inject</span>(<span class="ruby-value">0.0</span>){ <span class="ruby-operator">|</span><span class="ruby-identifier">sum_</span>, <span class="ruby-identifier">geom_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum_</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">geom_</span>.<span class="ruby-identifier">length</span> }
 <span class="ruby-keyword">end</span></pre>

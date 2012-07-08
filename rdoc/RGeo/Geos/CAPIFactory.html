@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::Geos::Factory - RGeo 0.3.13 Documentation</title>
+<title>class RGeo::Geos::CAPIFactory - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -47,8 +47,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>lib/rgeo/geos/factory.rb
-    <li>lib/rgeo/geos/impl_additions.rb
+    <li>lib/rgeo/geos/capi_factory.rb
   </ul>
 </nav>
 
@@ -96,6 +95,8 @@
     <li><a href="#method-i-coord_sys">#coord_sys</a>
     
     <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-hash">#hash</a>
     
     <li><a href="#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions?</a>
     
@@ -294,9 +295,9 @@
   
     <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -319,7 +320,7 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="class">class RGeo::Geos::Factory</h1>
+  <h1 class="class">class RGeo::Geos::CAPIFactory</h1>
 
   <div id="description" class="description">
     
@@ -366,7 +367,7 @@ list of supported options.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">opts_</span>={})
   <span class="ruby-comment"># Make sure GEOS is available</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:_create</span>)
@@ -462,7 +463,7 @@ list of supported options.</p>
 
         
         <div class="aliases">
-          Also aliased as: <a href="Factory.html#method-c-new">new</a>
+          Also aliased as: <a href="CAPIFactory.html#method-c-new">new</a>
         </div>
         
 
@@ -491,7 +492,7 @@ list of supported options.</p>
 
         
         <div class="aliases">
-          Alias for: <a href="Factory.html#method-c-create">create</a>
+          Alias for: <a href="CAPIFactory.html#method-c-create">create</a>
         </div>
         
       </div><!-- new-method -->
@@ -524,7 +525,7 @@ list of supported options.</p>
 
         
         <div class="aliases">
-          Alias for: <a href="Factory.html#method-i-eql-3F">eql?</a>
+          Alias for: <a href="CAPIFactory.html#method-i-eql-3F">eql?</a>
         </div>
         
       </div><!-- 3D-3D-method -->
@@ -547,7 +548,7 @@ this factory</p>
 
           
           <div class="method-source-code" id="buffer_resolution-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 285</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 290</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">buffer_resolution</span>
   <span class="ruby-identifier">_buffer_resolution</span>
 <span class="ruby-keyword">end</span></pre>
@@ -578,10 +579,10 @@ href="../Feature/Factory.html#method-i-collection">RGeo::Feature::Factory#collec
 
           
           <div class="method-source-code" id="collection-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 385</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 390</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-identifier">elems_</span> = <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">GeometryCollectionImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPIGeometryCollectionImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- collection-source -->
           
@@ -610,7 +611,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="coord_sys-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 424</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 429</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_sys</span>
   <span class="ruby-identifier">_coord_sys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -635,14 +636,14 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
         <div class="method-description">
           
-          <p><a href="Factory.html">Factory</a> equivalence test.</p>
+          <p>Factory equivalence test.</p>
           
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 160</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 160</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
-  <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Factory</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">srid</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">_srid</span> <span class="ruby-operator">&amp;&amp;</span>
+  <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">CAPIFactory</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">srid</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">_srid</span> <span class="ruby-operator">&amp;&amp;</span>
     <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">_buffer_resolution</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">_buffer_resolution</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">_flags</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">_flags</span> <span class="ruby-operator">&amp;&amp;</span>
     <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">proj4</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">_proj4</span>
 <span class="ruby-keyword">end</span></pre>
@@ -652,12 +653,42 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
         
         <div class="aliases">
-          Also aliased as: <a href="Factory.html#method-i-3D-3D">==</a>
+          Also aliased as: <a href="CAPIFactory.html#method-i-3D-3D">==</a>
         </div>
         
 
         
       </div><!-- eql-3F-method -->
+
+    
+      <div id="method-i-hash" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hash</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="hash-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
+  <span class="ruby-ivar">@hash</span> <span class="ruby-operator">||=</span> [<span class="ruby-identifier">_srid</span>, <span class="ruby-identifier">_buffer_resolution</span>, <span class="ruby-identifier">_flags</span>, <span class="ruby-identifier">_proj4</span>].<span class="ruby-identifier">hash</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- hash-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- hash-method -->
 
     
       <div id="method-i-lenient_multi_polygon_assertions-3F" class="method-detail ">
@@ -676,7 +707,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="lenient_multi_polygon_assertions-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 292</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 297</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lenient_multi_polygon_assertions?</span>
   <span class="ruby-identifier">_flags</span> &amp; <span class="ruby-value">0x1</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -707,9 +738,9 @@ href="../Feature/Factory.html#method-i-line">RGeo::Feature::Factory#line</a></p>
 
           
           <div class="method-source-code" id="line-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 362</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 367</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>)
-  <span class="ruby-constant">LineImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPILineImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- line-source -->
           
@@ -738,10 +769,10 @@ href="../Feature/Factory.html#method-i-line_string">RGeo::Feature::Factory#line_
 
           
           <div class="method-source-code" id="line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 354</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 359</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>)
   <span class="ruby-identifier">points_</span> = <span class="ruby-identifier">points_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">points_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">LineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPILineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- line_string-source -->
           
@@ -770,10 +801,10 @@ href="../Feature/Factory.html#method-i-linear_ring">RGeo::Feature::Factory#linea
 
           
           <div class="method-source-code" id="linear_ring-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 369</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 374</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>)
   <span class="ruby-identifier">points_</span> = <span class="ruby-identifier">points_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">points_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">LinearRingImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPILinearRingImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- linear_ring-source -->
           
@@ -802,10 +833,10 @@ href="../Feature/Factory.html#method-i-multi_line_string">RGeo::Feature::Factory
 
           
           <div class="method-source-code" id="multi_line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 401</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 406</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-identifier">elems_</span> = <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">MultiLineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPIMultiLineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- multi_line_string-source -->
           
@@ -834,10 +865,10 @@ href="../Feature/Factory.html#method-i-multi_point">RGeo::Feature::Factory#multi
 
           
           <div class="method-source-code" id="multi_point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 393</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 398</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-identifier">elems_</span> = <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">MultiPointImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPIMultiPointImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- multi_point-source -->
           
@@ -866,10 +897,10 @@ href="../Feature/Factory.html#method-i-multi_polygon">RGeo::Feature::Factory#mul
 
           
           <div class="method-source-code" id="multi_polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 409</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 414</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-identifier">elems_</span> = <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">elems_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">MultiPolygonImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPIMultiPolygonImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- multi_polygon-source -->
           
@@ -898,7 +929,7 @@ href="../Feature/Factory.html#method-i-override_cast">RGeo::Feature::Factory#ove
 
           
           <div class="method-source-code" id="override_cast-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 431</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 436</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">override_cast</span>(<span class="ruby-identifier">original_</span>, <span class="ruby-identifier">ntype_</span>, <span class="ruby-identifier">flags_</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Geos</span>.<span class="ruby-identifier">supported?</span>
   <span class="ruby-identifier">keep_subtype_</span> = <span class="ruby-identifier">flags_</span>[<span class="ruby-value">:keep_subtype</span>]
@@ -907,7 +938,7 @@ href="../Feature/Factory.html#method-i-override_cast">RGeo::Feature::Factory#ove
   <span class="ruby-identifier">type_</span> = <span class="ruby-identifier">original_</span>.<span class="ruby-identifier">geometry_type</span>
   <span class="ruby-identifier">ntype_</span> = <span class="ruby-identifier">type_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">keep_subtype_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">type_</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">ntype_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">original_</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">GeometryImpl</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">CAPIGeometryMethods</span>
     <span class="ruby-comment"># Optimization if we're just changing factories, but the</span>
     <span class="ruby-comment"># factories are zm-compatible and proj4-compatible.</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">original_</span>.<span class="ruby-identifier">factory</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">self</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ntype_</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type_</span> <span class="ruby-operator">&amp;&amp;</span>
@@ -926,7 +957,7 @@ href="../Feature/Factory.html#method-i-override_cast">RGeo::Feature::Factory#ove
     <span class="ruby-keyword">then</span>
       <span class="ruby-keyword">return</span> <span class="ruby-constant">IMPL_CLASSES</span>[<span class="ruby-identifier">ntype_</span>].<span class="ruby-identifier">_copy_from</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">original_</span>)
     <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">ZMGeometryImpl</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">ZMGeometryMethods</span>
     <span class="ruby-comment"># Optimization for just removing a coordinate from an otherwise</span>
     <span class="ruby-comment"># compatible factory</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">_flags</span> &amp; <span class="ruby-value">0x6</span> <span class="ruby-operator">==</span> <span class="ruby-value">0x2</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">original_</span>.<span class="ruby-identifier">factory</span>.<span class="ruby-identifier">z_factory</span>
@@ -964,7 +995,7 @@ href="../Feature/Factory.html#method-i-parse_wkb">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkb-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 332</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 337</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkb</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-keyword">if</span> (<span class="ruby-identifier">wkb_parser_</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_wkb_parser</span>)
     <span class="ruby-identifier">wkb_parser_</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
@@ -999,7 +1030,7 @@ href="../Feature/Factory.html#method-i-parse_wkt">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkt-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 321</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 326</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkt</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-keyword">if</span> (<span class="ruby-identifier">wkt_parser_</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">_wkt_parser</span>)
     <span class="ruby-identifier">wkt_parser_</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
@@ -1034,12 +1065,12 @@ href="../Feature/Factory.html#method-i-point">RGeo::Feature::Factory#point</a></
 
           
           <div class="method-source-code" id="point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 343</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 348</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, *<span class="ruby-identifier">extra_</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">extra_</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">_flags</span> &amp; <span class="ruby-value">6</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-value">1</span>)
     <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-constant">PointImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">extra_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_f</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-constant">CAPIPointImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">extra_</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_f</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- point-source -->
@@ -1069,10 +1100,10 @@ href="../Feature/Factory.html#method-i-polygon">RGeo::Feature::Factory#polygon</
 
           
           <div class="method-source-code" id="polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 377</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 382</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">inner_rings_</span> = <span class="ruby-identifier">inner_rings_</span>.<span class="ruby-identifier">to_a</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">inner_rings_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Array</span>)
-  <span class="ruby-constant">PolygonImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-constant">CAPIPolygonImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- polygon-source -->
           
@@ -1101,7 +1132,7 @@ href="../Feature/Factory.html#method-i-proj4">RGeo::Feature::Factory#proj4</a></
 
           
           <div class="method-source-code" id="proj4-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 417</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 422</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">proj4</span>
   <span class="ruby-identifier">_proj4</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1132,7 +1163,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="property-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 299</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 304</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">property</span>(<span class="ruby-identifier">name_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name_</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:has_z_coordinate</span>
@@ -1177,7 +1208,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="srid-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/factory.rb, line 277</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/capi_factory.rb, line 282</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">srid</span>
   <span class="ruby-identifier">_srid</span>
 <span class="ruby-keyword">end</span></pre>

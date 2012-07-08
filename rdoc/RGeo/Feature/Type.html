@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RGeo::Feature::Type - RGeo 0.3.13 Documentation</title>
+<title>module RGeo::Feature::Type - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -73,6 +73,8 @@
     <li><a href="#method-i-subtype_of-3F">#subtype_of?</a>
     
     <li><a href="#method-i-supertype">#supertype</a>
+    
+    <li><a href="#method-i-to_s">#to_s</a>
     
     <li><a href="#method-i-type_name">#type_name</a>
     
@@ -243,9 +245,9 @@
   
     <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -272,19 +274,41 @@
 
   <div id="description" class="description">
     
-<p>These methods are available as module methods (not instance methods) of the
-various feature types. For example, you may determine whether a feature
-object is a point by calling:</p>
+<p>This module provides the API for geometry type objects. Technically these
+objects are modules (such as <a
+href="Point.html">::RGeo::Feature::Point</a>), but as objects they respond
+to the methods documented here.</p>
+
+<p>For example, you may determine whether a feature object is a point by
+calling:</p>
 
 <pre>::RGeo::Feature::Point.check_type(object)</pre>
 
 <p>A corresponding === operator is provided so you can use the type modules in
-a case-when clause.</p>
+a case-when clause:</p>
+
+<pre>case object
+when ::RGeo::Feature::Point
+  # do stuff here...</pre>
+
+<p>However, a feature object may not actually include the point module itself;
+hence, the following will <strong>not</strong> work:</p>
+
+<pre>object.is_a?(::RGeo::Feature::Point)  # DON'T DO THIS-- DOES NOT WORK</pre>
+
+<p>You may obtain the type of a feature object by calling its geometry_type
+method. You may then use the methods in this module to interrogate that
+type.</p>
+
+<pre># supppose object is a Point
+type = object.geometry_type  # ::RGeo::Feature::Point
+type.type_name               # &quot;Point&quot;
+type.supertype               # ::RGeo::Feature::Geometry</pre>
 
 <p>You may also use the presence of this module to determine whether a
 particular object is a feature type:</p>
 
-<pre>object.kind_of?(::RGeo::Feature::Type)</pre>
+<pre>::RGeo::Feature::Type === object.geometry_type  # true</pre>
 
   </div><!-- description -->
 
@@ -361,12 +385,13 @@ particular object is a feature type:</p>
 it is a feature object whose geometry_type is this type or a subtype
 thereof.</p>
 
-<p>Note that feature objects need not actually include this module.</p>
+<p>Note that feature objects need not actually include this module. Therefore,
+the is_a? method will generally not work.</p>
           
 
           
           <div class="method-source-code" id="check_type-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 78</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">check_type</span>(<span class="ruby-identifier">rhs_</span>)
   <span class="ruby-identifier">rhs_</span> = <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">geometry_type</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Instance</span>)
   <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Type</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">rhs_</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-keyword">self</span>))
@@ -401,7 +426,7 @@ thereof.</p>
 
           
           <div class="method-source-code" id="each_immediate_subtype-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 103</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each_immediate_subtype</span>(&amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-ivar">@subtypes</span>.<span class="ruby-identifier">each</span>(&amp;<span class="ruby-identifier">block_</span>) <span class="ruby-keyword">if</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@subtypes</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@subtypes</span>
 <span class="ruby-keyword">end</span></pre>
@@ -431,7 +456,7 @@ thereof.</p>
 
           
           <div class="method-source-code" id="subtype_of-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 88</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">subtype_of?</span>(<span class="ruby-identifier">type_</span>)
   <span class="ruby-keyword">self</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type_</span> <span class="ruby-operator">||</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">type_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -462,7 +487,7 @@ href="Geometry.html">Geometry</a> is nil.</p>
 
           
           <div class="method-source-code" id="supertype-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 96</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">supertype</span>
   <span class="ruby-ivar">@supertype</span>
 <span class="ruby-keyword">end</span></pre>
@@ -476,6 +501,33 @@ href="Geometry.html">Geometry</a> is nil.</p>
       </div><!-- supertype-method -->
 
     
+      <div id="method-i-to_s" class="method-detail method-alias">
+        
+        <div class="method-heading">
+          <span class="method-name">to_s</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+        </div>
+
+        
+
+        
+        <div class="aliases">
+          Alias for: <a href="Type.html#method-i-type_name">type_name</a>
+        </div>
+        
+      </div><!-- to_s-method -->
+
+    
       <div id="method-i-type_name" class="method-detail ">
         
         <div class="method-heading">
@@ -487,12 +539,14 @@ href="Geometry.html">Geometry</a> is nil.</p>
 
         <div class="method-description">
           
-          <p>Returns the OpenGIS type name of this type.</p>
+          <p>Returns the OpenGIS type name of this type. For example:</p>
+
+<pre>::RGeo::Feature::Point.type_name  # &quot;Point&quot;</pre>
           
 
           
           <div class="method-source-code" id="type_name-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 110</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/types.rb, line 133</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">type_name</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-string">'RGeo::Feature::'</span>, <span class="ruby-string">''</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -500,6 +554,10 @@ href="Geometry.html">Geometry</a> is nil.</p>
           
         </div>
 
+        
+        <div class="aliases">
+          Also aliased as: <a href="Type.html#method-i-to_s">to_s</a>
+        </div>
         
 
         

@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>History - RGeo 0.3.13 Documentation</title>
+<title>History - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -205,9 +205,9 @@
   
     <li><a href="./RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="./RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="./RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="./RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="./RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="./RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -231,6 +231,31 @@
 
 <div id="documentation" class="description">
   
+<h3 id="label-0.3.14+%2F+2012-07-08">0.3.14 / 2012-07-08</h3>
+<ul><li>
+<p>Compatibility note: The class names for some of the factory and feature
+implementations, as well as the superclass relationships, have changed in
+this release. These class names and hierarchy are internal, and clients
+should not depend on them. That is, <a href="RGeo.html">RGeo</a> types are
+generally duck-types. If you need to interrogate type, see the
+documentation for the <a
+href="RGeo/Feature/Type.html">::RGeo::Feature::Type</a> module.</p>
+</li><li>
+<p>The gemspec no longer includes the timestamp in the version, so that
+bundler can pull from github. (Reported by corneverbruggen)</p>
+</li><li>
+<p>Mixins were not being added to GEOS features with both Z and M coordinate.
+Fixed.</p>
+</li><li>
+<p>Mixins are added last to feature objects, so they should override anything
+added by other modules such as Enumerable. (Reported by Ben Hughes)</p>
+</li><li>
+<p>Some object hashes were not consistent with equality. Fixed. Hashes should
+now be consistent with representational equivalence (i.e. the eql? method).
+Therefore, it should now be possible to use <a href="RGeo.html">RGeo</a>
+factories and features as hash keys.</p>
+</li></ul>
+
 <h3 id="label-0.3.13+%2F+2012-05-04">0.3.13 / 2012-05-04</h3>
 <ul><li>
 <p>The spherical factory and the simple cartesian factory now support buffers

@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RGeo::Geos - RGeo 0.3.13 Documentation</title>
+<title>module RGeo::Geos - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -47,14 +47,16 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>lib/rgeo/geos/factory.rb
-    <li>lib/rgeo/geos/ffi_classes.rb
+    <li>lib/rgeo/geos/capi_factory.rb
+    <li>lib/rgeo/geos/capi_feature_classes.rb
     <li>lib/rgeo/geos/ffi_factory.rb
-    <li>lib/rgeo/geos/impl_additions.rb
+    <li>lib/rgeo/geos/ffi_feature_classes.rb
+    <li>lib/rgeo/geos/ffi_feature_methods.rb
     <li>lib/rgeo/geos/interface.rb
     <li>lib/rgeo/geos/utils.rb
     <li>lib/rgeo/geos/zm_factory.rb
-    <li>lib/rgeo/geos/zm_impl.rb
+    <li>lib/rgeo/geos/zm_feature_classes.rb
+    <li>lib/rgeo/geos/zm_feature_methods.rb
     <li>lib/rgeo/geos.rb
   </ul>
 </nav>
@@ -255,9 +257,9 @@
   
     <li><a href="../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -509,7 +511,7 @@ method).</p>
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">native_interface_</span> <span class="ruby-operator">==</span> <span class="ruby-value">:ffi</span>
       <span class="ruby-constant">FFIFactory</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">opts_</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-constant">Factory</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">opts_</span>)
+      <span class="ruby-constant">CAPIFactory</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">opts_</span>)
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">nil</span>
@@ -612,9 +614,9 @@ factory is a CAPI GEOS factory.</p>
           <div class="method-source-code" id="is_capi_geos-3F-source">
             <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">is_capi_geos?</span>(<span class="ruby-identifier">object_</span>)
-  <span class="ruby-constant">Factory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span> <span class="ruby-constant">GeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span>
-    <span class="ruby-constant">ZMFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">Factory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span>.<span class="ruby-identifier">z_factory</span> <span class="ruby-operator">||</span>
-    <span class="ruby-constant">ZMGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">GeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span>.<span class="ruby-identifier">z_geometry</span>
+  <span class="ruby-constant">CAPIFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span> <span class="ruby-constant">CAPIGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span>
+    <span class="ruby-constant">ZMFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">CAPIFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span>.<span class="ruby-identifier">z_factory</span> <span class="ruby-operator">||</span>
+    <span class="ruby-constant">ZMGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-constant">CAPIGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span>.<span class="ruby-identifier">z_geometry</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- is_capi_geos-3F-source -->
           
@@ -678,7 +680,7 @@ factory is a GEOS factory. Does not distinguish between CAPI and FFI.</p>
           <div class="method-source-code" id="is_geos-3F-source">
             <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 89</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">is_geos?</span>(<span class="ruby-identifier">object_</span>)
-  <span class="ruby-constant">Factory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span> <span class="ruby-constant">GeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span>
+  <span class="ruby-constant">CAPIFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span> <span class="ruby-constant">CAPIGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span>
     <span class="ruby-constant">FFIFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span> <span class="ruby-constant">FFIGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span>
     <span class="ruby-constant">ZMFactory</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span> <span class="ruby-operator">||</span> <span class="ruby-constant">ZMGeometryImpl</span> <span class="ruby-operator">===</span> <span class="ruby-identifier">object_</span>
 <span class="ruby-keyword">end</span></pre>

@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::Geos::ZMFactory - RGeo 0.3.13 Documentation</title>
+<title>class RGeo::Geos::ZMFactory - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -93,6 +93,8 @@
     <li><a href="#method-i-coord_sys">#coord_sys</a>
     
     <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-hash">#hash</a>
     
     <li><a href="#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions?</a>
     
@@ -295,9 +297,9 @@
   
     <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -363,7 +365,7 @@ supported.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 55</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">opts_</span>={})
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Geos</span>.<span class="ruby-identifier">supported?</span>
   <span class="ruby-identifier">new</span>(<span class="ruby-identifier">opts_</span>)
@@ -428,7 +430,7 @@ this factory</p>
 
           
           <div class="method-source-code" id="buffer_resolution-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 239</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 256</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">buffer_resolution</span>
   <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">buffer_resolution</span>
 <span class="ruby-keyword">end</span></pre>
@@ -459,9 +461,9 @@ href="../Feature/Factory.html#method-i-collection">RGeo::Feature::Factory#collec
 
           
           <div class="method-source-code" id="collection-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 336</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 358</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>)
-  <span class="ruby-constant">ZMGeometryCollectionImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMGeometryCollectionImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- collection-source -->
           
@@ -490,7 +492,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="coord_sys-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 371</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 393</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_sys</span>
   <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">coord_sys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -515,12 +517,12 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
         <div class="method-description">
           
-          <p><a href="Factory.html">Factory</a> equivalence test.</p>
+          <p>Factory equivalence test.</p>
           
 
           
           <div class="method-source-code" id="eql-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 267</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 284</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">rhs_</span>)
   <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">ZMFactory</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">rhs_</span>.<span class="ruby-identifier">z_factory</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@zfactory</span>
 <span class="ruby-keyword">end</span></pre>
@@ -536,6 +538,36 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
         
       </div><!-- eql-3F-method -->
+
+    
+      <div id="method-i-hash" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hash</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="hash-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 290</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
+  <span class="ruby-ivar">@hash</span> <span class="ruby-operator">||=</span> [<span class="ruby-ivar">@zfactory</span>, <span class="ruby-ivar">@mfactory</span>].<span class="ruby-identifier">hash</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- hash-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- hash-method -->
 
     
       <div id="method-i-lenient_multi_polygon_assertions-3F" class="method-detail ">
@@ -554,7 +586,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="lenient_multi_polygon_assertions-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 246</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 263</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lenient_multi_polygon_assertions?</span>
   <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">lenient_multi_polygon_assertions?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -585,9 +617,9 @@ href="../Feature/Factory.html#method-i-line">RGeo::Feature::Factory#line</a></p>
 
           
           <div class="method-source-code" id="line-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 315</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 337</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>)
-  <span class="ruby-constant">ZMLineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMLineImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- line-source -->
           
@@ -616,9 +648,9 @@ href="../Feature/Factory.html#method-i-line_string">RGeo::Feature::Factory#line_
 
           
           <div class="method-source-code" id="line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 308</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 330</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>)
-  <span class="ruby-constant">ZMLineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMLineStringImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- line_string-source -->
           
@@ -647,9 +679,9 @@ href="../Feature/Factory.html#method-i-linear_ring">RGeo::Feature::Factory#linea
 
           
           <div class="method-source-code" id="linear_ring-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 322</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 344</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>)
-  <span class="ruby-constant">ZMLineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMLinearRingImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- linear_ring-source -->
           
@@ -677,7 +709,7 @@ href="../Feature/Factory.html#method-i-linear_ring">RGeo::Feature::Factory#linea
 
           
           <div class="method-source-code" id="m_factory-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 260</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 277</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">m_factory</span>
   <span class="ruby-ivar">@mfactory</span>
 <span class="ruby-keyword">end</span></pre>
@@ -708,9 +740,9 @@ href="../Feature/Factory.html#method-i-multi_line_string">RGeo::Feature::Factory
 
           
           <div class="method-source-code" id="multi_line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 350</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 372</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>)
-  <span class="ruby-constant">ZMMultiLineStringImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMMultiLineStringImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- multi_line_string-source -->
           
@@ -739,9 +771,9 @@ href="../Feature/Factory.html#method-i-multi_point">RGeo::Feature::Factory#multi
 
           
           <div class="method-source-code" id="multi_point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 343</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 365</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>)
-  <span class="ruby-constant">ZMGeometryCollectionImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMMultiPointImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- multi_point-source -->
           
@@ -770,9 +802,9 @@ href="../Feature/Factory.html#method-i-multi_polygon">RGeo::Feature::Factory#mul
 
           
           <div class="method-source-code" id="multi_polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 357</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 379</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>)
-  <span class="ruby-constant">ZMMultiPolygonImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMMultiPolygonImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- multi_polygon-source -->
           
@@ -801,7 +833,7 @@ href="../Feature/Factory.html#method-i-override_cast">RGeo::Feature::Factory#ove
 
           
           <div class="method-source-code" id="override_cast-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 378</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 400</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">override_cast</span>(<span class="ruby-identifier">original_</span>, <span class="ruby-identifier">ntype_</span>, <span class="ruby-identifier">flags_</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-constant">Geos</span>.<span class="ruby-identifier">supported?</span>
   <span class="ruby-identifier">keep_subtype_</span> = <span class="ruby-identifier">flags_</span>[<span class="ruby-value">:keep_subtype</span>]
@@ -810,7 +842,7 @@ href="../Feature/Factory.html#method-i-override_cast">RGeo::Feature::Factory#ove
   <span class="ruby-identifier">type_</span> = <span class="ruby-identifier">original_</span>.<span class="ruby-identifier">geometry_type</span>
   <span class="ruby-identifier">ntype_</span> = <span class="ruby-identifier">type_</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">keep_subtype_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">type_</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">ntype_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">original_</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">ZMGeometryImpl</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">ZMGeometryMethods</span>
     <span class="ruby-comment"># Optimization if we're just changing factories, but to</span>
     <span class="ruby-comment"># another ZM factory.</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">original_</span>.<span class="ruby-identifier">factory</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">self</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">ntype_</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">type_</span> <span class="ruby-operator">&amp;&amp;</span>
@@ -862,7 +894,7 @@ href="../Feature/Factory.html#method-i-parse_wkb">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkb-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 294</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 316</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkb</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-ivar">@wkb_parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -893,7 +925,7 @@ href="../Feature/Factory.html#method-i-parse_wkt">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkt-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 287</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 309</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkt</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-ivar">@wkt_parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -924,9 +956,9 @@ href="../Feature/Factory.html#method-i-point">RGeo::Feature::Factory#point</a></
 
           
           <div class="method-source-code" id="point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 301</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 323</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">z_</span>=<span class="ruby-value">0</span>, <span class="ruby-identifier">m_</span>=<span class="ruby-value">0</span>)
-  <span class="ruby-constant">ZMPointImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">z_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">m_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMPointImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">z_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">m_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- point-source -->
           
@@ -955,9 +987,9 @@ href="../Feature/Factory.html#method-i-polygon">RGeo::Feature::Factory#polygon</
 
           
           <div class="method-source-code" id="polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 329</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 351</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>=<span class="ruby-keyword">nil</span>)
-  <span class="ruby-constant">ZMPolygonImpl</span>.<span class="ruby-identifier">create</span>(<span class="ruby-keyword">self</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>))
+  <span class="ruby-identifier">_create_feature</span>(<span class="ruby-constant">ZMPolygonImpl</span>, <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>), <span class="ruby-ivar">@mfactory</span>.<span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>))
 <span class="ruby-keyword">end</span></pre>
           </div><!-- polygon-source -->
           
@@ -986,7 +1018,7 @@ href="../Feature/Factory.html#method-i-proj4">RGeo::Feature::Factory#proj4</a></
 
           
           <div class="method-source-code" id="proj4-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 364</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 386</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">proj4</span>
   <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">proj4</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1017,7 +1049,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="property-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 275</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 297</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">property</span>(<span class="ruby-identifier">name_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name_</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:has_z_coordinate</span>, <span class="ruby-value">:has_m_coordinate</span>, <span class="ruby-value">:is_cartesian</span>
@@ -1052,7 +1084,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="srid-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 231</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 248</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">srid</span>
   <span class="ruby-ivar">@zfactory</span>.<span class="ruby-identifier">srid</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1082,7 +1114,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="z_factory-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 253</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/zm_factory.rb, line 270</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">z_factory</span>
   <span class="ruby-ivar">@zfactory</span>
 <span class="ruby-keyword">end</span></pre>

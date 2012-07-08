@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::CoordSys::CS::Projection - RGeo 0.3.13 Documentation</title>
+<title>class RGeo::CoordSys::CS::Projection - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../../../rdoc.css" rel="stylesheet">
 
@@ -245,9 +245,9 @@
   
     <li><a href="../../../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -338,7 +338,7 @@ href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 1004</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 1013</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">class_name_</span>, <span class="ruby-identifier">parameters_</span>, *<span class="ruby-identifier">optional_</span>)
   <span class="ruby-identifier">new</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">class_name_</span>, <span class="ruby-identifier">parameters_</span>, *<span class="ruby-identifier">optional_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -374,7 +374,7 @@ href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="each_parameter-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 983</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 992</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each_parameter</span>(&amp;<span class="ruby-identifier">block_</span>)
   <span class="ruby-ivar">@parameters</span>.<span class="ruby-identifier">each</span>(&amp;<span class="ruby-identifier">block_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -404,7 +404,7 @@ href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="get_parameter-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 976</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 985</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_parameter</span>(<span class="ruby-identifier">index_</span>)
   <span class="ruby-ivar">@parameters</span>[<span class="ruby-identifier">index_</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -434,7 +434,7 @@ href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="num_parameters-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 969</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 978</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">num_parameters</span>
   <span class="ruby-ivar">@parameters</span>.<span class="ruby-identifier">size</span>
 <span class="ruby-keyword">end</span></pre>

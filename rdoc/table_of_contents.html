@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>Table of Contents - RGeo 0.3.13 Documentation</title>
+<title>Table of Contents - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -21,7 +21,7 @@
 
 
 <body class="indexpage">
-<h1>Table of Contents - RGeo 0.3.13 Documentation</h1>
+<h1>Table of Contents - RGeo 0.3.14 Documentation</h1>
 
 <h2>Pages</h2>
 <ul>
@@ -30,6 +30,7 @@
 
     <img class="toc-toggle" src="images/transparent.png" alt="" title="toggle headings">
     <ul class="initially-hidden">
+      <li><a href="History_rdoc.html#label-0.3.14+%2F+2012-07-08">0.3.14 / 2012-07-08</a>
       <li><a href="History_rdoc.html#label-0.3.13+%2F+2012-05-04">0.3.13 / 2012-05-04</a>
       <li><a href="History_rdoc.html#label-0.3.12+%2F+2012-04-24">0.3.12 / 2012-04-24</a>
       <li><a href="History_rdoc.html#label-0.3.11+%2F+2012-04-14">0.3.11 / 2012-04-14</a>
@@ -562,10 +563,10 @@
     <a href="RGeo/Geos.html">RGeo::Geos</a>
   </li>
     <li class="class">
-    <a href="RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <a href="RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   </li>
     <li class="class">
-    <a href="RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <a href="RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   </li>
     <li class="class">
     <a href="RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
@@ -620,7 +621,7 @@
   
     <li class="method"><a href="RGeo/Feature.html#method-c-cast">::cast &mdash; RGeo::Feature</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-c-create">::create &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-c-create">::create &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/AxisInfo.html#method-c-create">::create &mdash; RGeo::CoordSys::CS::AxisInfo</a>
   
@@ -692,27 +693,7 @@
   
     <li class="method"><a href="RGeo/Geos.html#method-c-is_geos-3F">::is_geos? &mdash; RGeo::Geos</a>
   
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
-  
-    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-c-new">::new &mdash; RGeo::Cartesian::BoundingBox</a>
-  
     <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-c-new">::new &mdash; RGeo::CoordSys::Proj4</a>
-  
-    <li class="method"><a href="RGeo/WKRep/WKTGenerator.html#method-c-new">::new &mdash; RGeo::WKRep::WKTGenerator</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/SrOrg.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::SrOrg</a>
-  
-    <li class="method"><a href="RGeo/WKRep/WKBGenerator.html#method-c-new">::new &mdash; RGeo::WKRep::WKBGenerator</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Entry.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::Entry</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-c-new">::new &mdash; RGeo::Geos::Factory</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Proj4Data.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::Proj4Data</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/UrlReader.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::UrlReader</a>
-  
-    <li class="method"><a href="RGeo/Feature/MixinCollection.html#method-c-new">::new &mdash; RGeo::Feature::MixinCollection</a>
   
     <li class="method"><a href="RGeo/WKRep/WKTParser.html#method-c-new">::new &mdash; RGeo::WKRep::WKTParser</a>
   
@@ -720,9 +701,29 @@
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-c-new">::new &mdash; RGeo::Geographic::ProjectedWindow</a>
   
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-c-new">::new &mdash; RGeo::Cartesian::Factory</a>
+    <li class="method"><a href="RGeo/WKRep/WKBGenerator.html#method-c-new">::new &mdash; RGeo::WKRep::WKBGenerator</a>
   
     <li class="method"><a href="RGeo/WKRep/WKBParser.html#method-c-new">::new &mdash; RGeo::WKRep::WKBParser</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-c-new">::new &mdash; RGeo::Cartesian::BoundingBox</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-c-new">::new &mdash; RGeo::Geos::CAPIFactory</a>
+  
+    <li class="method"><a href="RGeo/Feature/MixinCollection.html#method-c-new">::new &mdash; RGeo::Feature::MixinCollection</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/SrOrg.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::SrOrg</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/UrlReader.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li class="method"><a href="RGeo/WKRep/WKTGenerator.html#method-c-new">::new &mdash; RGeo::WKRep::WKTGenerator</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Entry.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::Entry</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Proj4Data.html#method-c-new">::new &mdash; RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-c-new">::new &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/Cartesian.html#method-c-preferred_factory">::preferred_factory &mdash; RGeo::Cartesian</a>
   
@@ -742,9 +743,9 @@
   
     <li class="method"><a href="RGeo/Geographic.html#method-c-spherical_factory">::spherical_factory &mdash; RGeo::Geographic</a>
   
-    <li class="method"><a href="RGeo/Geos.html#method-c-supported-3F">::supported? &mdash; RGeo::Geos</a>
-  
     <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-c-supported-3F">::supported? &mdash; RGeo::CoordSys::Proj4</a>
+  
+    <li class="method"><a href="RGeo/Geos.html#method-c-supported-3F">::supported? &mdash; RGeo::Geos</a>
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-c-surrounding_point">::surrounding_point &mdash; RGeo::Geographic::ProjectedWindow</a>
   
@@ -762,21 +763,21 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-2D">#- &mdash; RGeo::Feature::Geometry</a>
   
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-3D-3D">#== &mdash; RGeo::Cartesian::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-3D-3D">#== &mdash; RGeo::Geos::Factory</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-3D-3D">#== &mdash; RGeo::CoordSys::Proj4</a>
-  
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-3D-3D">#== &mdash; RGeo::Geos::ZMFactory</a>
+  
+    <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-3D-3D">#== &mdash; RGeo::Feature::Geometry</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-3D-3D">#== &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-3D-3D">#== &mdash; RGeo::CoordSys::CS::Base</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-3D-3D">#== &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-3D-3D">#== &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-3D-3D">#== &mdash; RGeo::Feature::Geometry</a>
+    <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-3D-3D">#== &mdash; RGeo::CoordSys::Proj4</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-3D-3D">#== &mdash; RGeo::CoordSys::CS::Base</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-3D-3D">#== &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/Feature/Type.html#method-i-3D-3D-3D">#=== &mdash; RGeo::Feature::Type</a>
   
@@ -784,13 +785,13 @@
   
     <li class="method"><a href="RGeo/Feature/MixinCollection.html#method-i-add">#add &mdash; RGeo::Feature::MixinCollection</a>
   
-    <li class="method"><a href="RGeo/Feature/MixinCollection/TypeData.html#method-i-add">#add &mdash; RGeo::Feature::MixinCollection::TypeData</a>
-  
     <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-add">#add &mdash; RGeo::Cartesian::BoundingBox</a>
   
-    <li class="method"><a href="RGeo/Feature/MultiSurface.html#method-i-area">#area &mdash; RGeo::Feature::MultiSurface</a>
+    <li class="method"><a href="RGeo/Feature/MixinCollection/TypeData.html#method-i-add">#add &mdash; RGeo::Feature::MixinCollection::TypeData</a>
   
     <li class="method"><a href="RGeo/Feature/Surface.html#method-i-area">#area &mdash; RGeo::Feature::Surface</a>
+  
+    <li class="method"><a href="RGeo/Feature/MultiSurface.html#method-i-area">#area &mdash; RGeo::Feature::MultiSurface</a>
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-as_binary">#as_binary &mdash; RGeo::Feature::Geometry</a>
   
@@ -802,7 +803,7 @@
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-buffer_resolution">#buffer_resolution &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-buffer_resolution">#buffer_resolution &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-buffer_resolution">#buffer_resolution &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-buffer_resolution">#buffer_resolution &mdash; RGeo::Geos::ZMFactory</a>
   
@@ -832,15 +833,17 @@
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-clamped_by">#clamped_by &mdash; RGeo::Geographic::ProjectedWindow</a>
   
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Proj4Data.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::Proj4Data</a>
-  
     <li class="method"><a href="RGeo/CoordSys/SRSDatabase/SrOrg.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::SrOrg</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/UrlReader.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::UrlReader</a>
   
     <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Interface.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::Interface</a>
   
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Proj4Data.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::Proj4Data</a>
+  
     <li class="method"><a href="RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/UrlReader.html#method-i-clear_cache">#clear_cache &mdash; RGeo::CoordSys::SRSDatabase::UrlReader</a>
+  
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-collection">#collection &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-collection">#collection &mdash; RGeo::Feature::Factory</a>
   
@@ -848,15 +851,13 @@
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-collection">#collection &mdash; RGeo::Cartesian::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-collection">#collection &mdash; RGeo::Geos::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-collection">#collection &mdash; RGeo::Geos::FFIFactory</a>
-  
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-collection">#collection &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-contains-3F">#contains? &mdash; RGeo::Cartesian::BoundingBox</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-collection">#collection &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-contains-3F">#contains? &mdash; RGeo::Feature::Geometry</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-contains-3F">#contains? &mdash; RGeo::Cartesian::BoundingBox</a>
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-contains_point-3F">#contains_point? &mdash; RGeo::Geographic::ProjectedWindow</a>
   
@@ -866,17 +867,17 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-convex_hull">#convex_hull &mdash; RGeo::Feature::Geometry</a>
   
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geos::ZMFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geos::CAPIFactory</a>
+  
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Cartesian::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Feature::Factory</a>
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geographic::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geos::ZMFactory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-coord_sys">#coord_sys &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/CoordinateSystemFactory.html#method-i-create_compound_coordinate_system">#create_compound_coordinate_system &mdash; RGeo::CoordSys::CS::CoordinateSystemFactory</a>
   
@@ -908,9 +909,9 @@
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-crosses_seam-3F">#crosses_seam? &mdash; RGeo::Geographic::ProjectedWindow</a>
   
-    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-degenerate-3F">#degenerate? &mdash; RGeo::Cartesian::BoundingBox</a>
-  
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-degenerate-3F">#degenerate? &mdash; RGeo::Geographic::ProjectedWindow</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-degenerate-3F">#degenerate? &mdash; RGeo::Cartesian::BoundingBox</a>
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-difference">#difference &mdash; RGeo::Feature::Geometry</a>
   
@@ -936,21 +937,21 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-envelope">#envelope &mdash; RGeo::Feature::Geometry</a>
   
-    <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-eql-3F">#eql? &mdash; RGeo::Feature::Geometry</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-eql-3F">#eql? &mdash; RGeo::Geos::Factory</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-eql-3F">#eql? &mdash; RGeo::CoordSys::CS::Base</a>
-  
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-eql-3F">#eql? &mdash; RGeo::Geos::ZMFactory</a>
   
-    <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-eql-3F">#eql? &mdash; RGeo::CoordSys::Proj4</a>
-  
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-eql-3F">#eql? &mdash; RGeo::Geographic::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-eql-3F">#eql? &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-eql-3F">#eql? &mdash; RGeo::Cartesian::Factory</a>
   
+    <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-eql-3F">#eql? &mdash; RGeo::CoordSys::CS::Base</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-eql-3F">#eql? &mdash; RGeo::CoordSys::Proj4</a>
+  
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-eql-3F">#eql? &mdash; RGeo::Geos::FFIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-eql-3F">#eql? &mdash; RGeo::Geographic::Factory</a>
+  
+    <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-eql-3F">#eql? &mdash; RGeo::Feature::Geometry</a>
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-equals-3F">#equals? &mdash; RGeo::Feature::Geometry</a>
   
@@ -960,21 +961,21 @@
   
     <li class="method"><a href="RGeo/Feature/Polygon.html#method-i-exterior_ring">#exterior_ring &mdash; RGeo::Feature::Polygon</a>
   
+    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-factory">#factory &mdash; RGeo::Cartesian::BoundingBox</a>
+  
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-factory">#factory &mdash; RGeo::Geographic::ProjectedWindow</a>
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-factory">#factory &mdash; RGeo::Feature::Geometry</a>
   
-    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-factory">#factory &mdash; RGeo::Cartesian::BoundingBox</a>
+    <li class="method"><a href="RGeo/WKRep/WKBParser.html#method-i-factory_generator">#factory_generator &mdash; RGeo::WKRep::WKBParser</a>
   
     <li class="method"><a href="RGeo/WKRep/WKTParser.html#method-i-factory_generator">#factory_generator &mdash; RGeo::WKRep::WKTParser</a>
   
-    <li class="method"><a href="RGeo/WKRep/WKBParser.html#method-i-factory_generator">#factory_generator &mdash; RGeo::WKRep::WKBParser</a>
-  
     <li class="method"><a href="RGeo/Feature/MixinCollection.html#method-i-for_type">#for_type &mdash; RGeo::Feature::MixinCollection</a>
   
-    <li class="method"><a href="RGeo/WKRep/WKBGenerator.html#method-i-generate">#generate &mdash; RGeo::WKRep::WKBGenerator</a>
-  
     <li class="method"><a href="RGeo/WKRep/WKTGenerator.html#method-i-generate">#generate &mdash; RGeo::WKRep::WKTGenerator</a>
+  
+    <li class="method"><a href="RGeo/WKRep/WKBGenerator.html#method-i-generate">#generate &mdash; RGeo::WKRep::WKBGenerator</a>
   
     <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-geocentric-3F">#geocentric? &mdash; RGeo::CoordSys::Proj4</a>
   
@@ -984,47 +985,47 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-geometry_type">#geometry_type &mdash; RGeo::Feature::Geometry</a>
   
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Interface.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::Interface</a>
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/UrlReader.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::UrlReader</a>
   
     <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Proj4Data.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::Proj4Data</a>
   
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/SrOrg.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::SrOrg</a>
-  
     <li class="method"><a href="RGeo/CoordSys/SRSDatabase/ActiveRecordTable.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::ActiveRecordTable</a>
   
-    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/UrlReader.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::UrlReader</a>
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/SrOrg.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::SrOrg</a>
   
-    <li class="method"><a href="RGeo/CoordSys/CS/GeocentricCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/CS/CompoundCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+    <li class="method"><a href="RGeo/CoordSys/SRSDatabase/Interface.html#method-i-get">#get &mdash; RGeo::CoordSys::SRSDatabase::Interface</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/CoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::CoordinateSystem</a>
   
-    <li class="method"><a href="RGeo/CoordSys/CS/GeographicCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+    <li class="method"><a href="RGeo/CoordSys/CS/VerticalCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/LocalCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::LocalCoordinateSystem</a>
   
-    <li class="method"><a href="RGeo/CoordSys/CS/VerticalCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+    <li class="method"><a href="RGeo/CoordSys/CS/GeocentricCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/ProjectedCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/CompoundCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/GeographicCoordinateSystem.html#method-i-get_axis">#get_axis &mdash; RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
   
     <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-get_geographic">#get_geographic &mdash; RGeo::CoordSys::Proj4</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/Projection.html#method-i-get_parameter">#get_parameter &mdash; RGeo::CoordSys::CS::Projection</a>
   
-    <li class="method"><a href="RGeo/CoordSys/CS/CompoundCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/CS/VerticalCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/CS/LocalCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::LocalCoordinateSystem</a>
-  
     <li class="method"><a href="RGeo/CoordSys/CS/GeocentricCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::GeocentricCoordinateSystem</a>
-  
-    <li class="method"><a href="RGeo/CoordSys/CS/GeographicCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/ProjectedCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::ProjectedCoordinateSystem</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/CoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::CoordinateSystem</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/VerticalCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::VerticalCoordinateSystem</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/GeographicCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/LocalCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::LocalCoordinateSystem</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/CompoundCoordinateSystem.html#method-i-get_units">#get_units &mdash; RGeo::CoordSys::CS::CompoundCoordinateSystem</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/GeographicCoordinateSystem.html#method-i-get_wgs84_conversion_info">#get_wgs84_conversion_info &mdash; RGeo::CoordSys::CS::GeographicCoordinateSystem</a>
   
@@ -1033,6 +1034,18 @@
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-has_projection-3F">#has_projection? &mdash; RGeo::Geographic::Factory</a>
   
     <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-has_z">#has_z &mdash; RGeo::Cartesian::BoundingBox</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-hash">#hash &mdash; RGeo::Cartesian::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-hash">#hash &mdash; RGeo::Geos::CAPIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-hash">#hash &mdash; RGeo::Geos::ZMFactory</a>
+  
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-hash">#hash &mdash; RGeo::Geographic::Factory</a>
+  
+    <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-hash">#hash &mdash; RGeo::CoordSys::CS::Base</a>
+  
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-hash">#hash &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-height">#height &mdash; RGeo::Geographic::ProjectedWindow</a>
   
@@ -1070,53 +1083,53 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-is_simple-3F">#is_simple? &mdash; RGeo::Feature::Geometry</a>
   
-    <li class="method"><a href="RGeo/Feature/Curve.html#method-i-length">#length &mdash; RGeo::Feature::Curve</a>
+    <li class="method"><a href="RGeo/Feature/MultiCurve.html#method-i-length">#length &mdash; RGeo::Feature::MultiCurve</a>
   
     <li class="method"><a href="RGeo/Geographic/SphericalMultiLineStringMethods.html#method-i-length">#length &mdash; RGeo::Geographic::SphericalMultiLineStringMethods</a>
   
-    <li class="method"><a href="RGeo/Feature/MultiCurve.html#method-i-length">#length &mdash; RGeo::Feature::MultiCurve</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions? &mdash; RGeo::Geos::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions? &mdash; RGeo::Geos::FFIFactory</a>
+    <li class="method"><a href="RGeo/Feature/Curve.html#method-i-length">#length &mdash; RGeo::Feature::Curve</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions? &mdash; RGeo::Geos::ZMFactory</a>
   
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-line">#line &mdash; RGeo::Geographic::Factory</a>
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions? &mdash; RGeo::Geos::FFIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-lenient_multi_polygon_assertions-3F">#lenient_multi_polygon_assertions? &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-line">#line &mdash; RGeo::Feature::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-line">#line &mdash; RGeo::Geos::ZMFactory</a>
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-line">#line &mdash; RGeo::Cartesian::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-line">#line &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-line">#line &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-line">#line &mdash; RGeo::Cartesian::Factory</a>
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-line">#line &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-line">#line &mdash; RGeo::Geos::Factory</a>
-  
-    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-line_string">#line_string &mdash; RGeo::Feature::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-line_string">#line_string &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-line">#line &mdash; RGeo::Geos::ZMFactory</a>
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-line_string">#line_string &mdash; RGeo::Geographic::Factory</a>
   
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-line_string">#line_string &mdash; RGeo::Geos::ZMFactory</a>
+  
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-line_string">#line_string &mdash; RGeo::Cartesian::Factory</a>
+  
+    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-line_string">#line_string &mdash; RGeo::Feature::Factory</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-line_string">#line_string &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-line_string">#line_string &mdash; RGeo::Geos::ZMFactory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-line_string">#line_string &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Cartesian::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Geographic::Factory</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Feature::Factory</a>
   
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Geos::CAPIFactory</a>
+  
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Geos::ZMFactory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-linear_ring">#linear_ring &mdash; RGeo::Geographic::Factory</a>
   
     <li class="method"><a href="RGeo/WKRep/WKBGenerator.html#method-i-little_endian-3F">#little_endian? &mdash; RGeo::WKRep::WKBGenerator</a>
   
@@ -1150,39 +1163,39 @@
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Geos::ZMFactory</a>
   
+    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Feature::Factory</a>
+  
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Cartesian::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Geos::FFIFactory</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Geos::Factory</a>
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Feature::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Geos::CAPIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-multi_line_string">#multi_line_string &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-multi_point">#multi_point &mdash; RGeo::Feature::Factory</a>
   
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-multi_point">#multi_point &mdash; RGeo::Geos::FFIFactory</a>
+  
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-multi_point">#multi_point &mdash; RGeo::Geographic::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-multi_point">#multi_point &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-multi_point">#multi_point &mdash; RGeo::Cartesian::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-multi_point">#multi_point &mdash; RGeo::Geos::FFIFactory</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-multi_point">#multi_point &mdash; RGeo::Geos::Factory</a>
-  
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-multi_point">#multi_point &mdash; RGeo::Geos::ZMFactory</a>
-  
-    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Feature::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geos::ZMFactory</a>
-  
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geographic::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Cartesian::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geos::FFIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geos::ZMFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geos::CAPIFactory</a>
+  
+    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Feature::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-multi_polygon">#multi_polygon &mdash; RGeo::Geographic::Factory</a>
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-ne_point">#ne_point &mdash; RGeo::Geographic::ProjectedWindow</a>
   
@@ -1202,11 +1215,11 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-overlaps-3F">#overlaps? &mdash; RGeo::Feature::Geometry</a>
   
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-override_cast">#override_cast &mdash; RGeo::Geos::FFIFactory</a>
-  
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-override_cast">#override_cast &mdash; RGeo::Feature::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-override_cast">#override_cast &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-override_cast">#override_cast &mdash; RGeo::Geos::FFIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-override_cast">#override_cast &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-override_cast">#override_cast &mdash; RGeo::Geos::ZMFactory</a>
   
@@ -1216,73 +1229,73 @@
   
     <li class="method"><a href="RGeo/WKRep/WKBParser.html#method-i-parse_hex">#parse_hex &mdash; RGeo::WKRep::WKBParser</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geos::ZMFactory</a>
   
-    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Feature::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geographic::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Cartesian::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geos::ZMFactory</a>
+    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Feature::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-parse_wkb">#parse_wkb &mdash; RGeo::Geographic::Factory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Feature::Factory</a>
   
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Geographic::Factory</a>
+  
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Cartesian::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Geos::ZMFactory</a>
   
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Geographic::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Geos::Factory</a>
-  
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-parse_wkt">#parse_wkt &mdash; RGeo::Geos::FFIFactory</a>
-  
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-point">#point &mdash; RGeo::Geographic::Factory</a>
-  
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-point">#point &mdash; RGeo::Cartesian::Factory</a>
-  
-    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-point">#point &mdash; RGeo::Feature::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-point">#point &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-point">#point &mdash; RGeo::Geos::ZMFactory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-point">#point &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-point">#point &mdash; RGeo::Feature::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-point">#point &mdash; RGeo::Geographic::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-point">#point &mdash; RGeo::Geos::FFIFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-point">#point &mdash; RGeo::Geos::CAPIFactory</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-point">#point &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/Feature/LineString.html#method-i-point_n">#point_n &mdash; RGeo::Feature::LineString</a>
   
-    <li class="method"><a href="RGeo/Feature/MultiSurface.html#method-i-point_on_surface">#point_on_surface &mdash; RGeo::Feature::MultiSurface</a>
-  
     <li class="method"><a href="RGeo/Feature/Surface.html#method-i-point_on_surface">#point_on_surface &mdash; RGeo::Feature::Surface</a>
+  
+    <li class="method"><a href="RGeo/Feature/MultiSurface.html#method-i-point_on_surface">#point_on_surface &mdash; RGeo::Feature::MultiSurface</a>
   
     <li class="method"><a href="RGeo/Feature/LineString.html#method-i-points">#points &mdash; RGeo::Feature::LineString</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-polygon">#polygon &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-polygon">#polygon &mdash; RGeo::Geographic::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-polygon">#polygon &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-polygon">#polygon &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-polygon">#polygon &mdash; RGeo::Geos::ZMFactory</a>
   
+    <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-polygon">#polygon &mdash; RGeo::Geographic::Factory</a>
+  
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-polygon">#polygon &mdash; RGeo::Feature::Factory</a>
   
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-polygon">#polygon &mdash; RGeo::Cartesian::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-polygon">#polygon &mdash; RGeo::Geos::CAPIFactory</a>
   
-    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-proj4">#proj4 &mdash; RGeo::Feature::Factory</a>
-  
-    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-proj4">#proj4 &mdash; RGeo::Geos::FFIFactory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-proj4">#proj4 &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-proj4">#proj4 &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-proj4">#proj4 &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-proj4">#proj4 &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Feature/Factory.html#method-i-proj4">#proj4 &mdash; RGeo::Feature::Factory</a>
   
     <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-proj4">#proj4 &mdash; RGeo::Geos::ZMFactory</a>
+  
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-proj4">#proj4 &mdash; RGeo::Geos::FFIFactory</a>
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-project">#project &mdash; RGeo::Geographic::Factory</a>
   
@@ -1292,17 +1305,17 @@
   
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-projection_wraps-3F">#projection_wraps? &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-property">#property &mdash; RGeo::Cartesian::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-property">#property &mdash; RGeo::Geos::CAPIFactory</a>
   
     <li class="method"><a href="RGeo/Feature/Factory.html#method-i-property">#property &mdash; RGeo::Feature::Factory</a>
   
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-property">#property &mdash; RGeo::Geos::ZMFactory</a>
-  
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-property">#property &mdash; RGeo::Geographic::Factory</a>
+  
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-property">#property &mdash; RGeo::Geos::ZMFactory</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-property">#property &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-property">#property &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-property">#property &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/CoordSys/Proj4.html#method-i-radians-3F">#radians? &mdash; RGeo::CoordSys::Proj4</a>
   
@@ -1324,17 +1337,17 @@
   
     <li class="method"><a href="RGeo/WKRep/WKTGenerator.html#method-i-square_brackets-3F">#square_brackets? &mdash; RGeo::WKRep::WKTGenerator</a>
   
-    <li class="method"><a href="RGeo/Geos/Factory.html#method-i-srid">#srid &mdash; RGeo::Geos::Factory</a>
+    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-srid">#srid &mdash; RGeo::Geos::ZMFactory</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-srid">#srid &mdash; RGeo::Cartesian::Factory</a>
   
     <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-srid">#srid &mdash; RGeo::Geos::FFIFactory</a>
   
-    <li class="method"><a href="RGeo/Geos/ZMFactory.html#method-i-srid">#srid &mdash; RGeo::Geos::ZMFactory</a>
-  
-    <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-srid">#srid &mdash; RGeo::Feature::Geometry</a>
-  
     <li class="method"><a href="RGeo/Geographic/Factory.html#method-i-srid">#srid &mdash; RGeo::Geographic::Factory</a>
   
-    <li class="method"><a href="RGeo/Cartesian/Factory.html#method-i-srid">#srid &mdash; RGeo::Cartesian::Factory</a>
+    <li class="method"><a href="RGeo/Geos/CAPIFactory.html#method-i-srid">#srid &mdash; RGeo::Geos::CAPIFactory</a>
+  
+    <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-srid">#srid &mdash; RGeo::Feature::Geometry</a>
   
     <li class="method"><a href="RGeo/Feature/Curve.html#method-i-start_point">#start_point &mdash; RGeo::Feature::Curve</a>
   
@@ -1362,6 +1375,8 @@
   
     <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-to_geometry">#to_geometry &mdash; RGeo::Cartesian::BoundingBox</a>
   
+    <li class="method"><a href="RGeo/Feature/Type.html#method-i-to_s">#to_s &mdash; RGeo::Feature::Type</a>
+  
     <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-to_s">#to_s &mdash; RGeo::CoordSys::CS::Base</a>
   
     <li class="method"><a href="RGeo/CoordSys/CS/Base.html#method-i-to_wkt">#to_wkt &mdash; RGeo::CoordSys::CS::Base</a>
@@ -1384,15 +1399,17 @@
   
     <li class="method"><a href="RGeo/Feature/Geometry.html#method-i-within-3F">#within? &mdash; RGeo::Feature::Geometry</a>
   
+    <li class="method"><a href="RGeo/Geos/FFIFactory.html#method-i-wrap_fg_geom">#wrap_fg_geom &mdash; RGeo::Geos::FFIFactory</a>
+  
     <li class="method"><a href="RGeo/Feature/Point.html#method-i-x">#x &mdash; RGeo::Feature::Point</a>
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-x_max">#x_max &mdash; RGeo::Geographic::ProjectedWindow</a>
   
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-x_min">#x_min &mdash; RGeo::Geographic::ProjectedWindow</a>
   
-    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-x_span">#x_span &mdash; RGeo::Cartesian::BoundingBox</a>
-  
     <li class="method"><a href="RGeo/Geographic/ProjectedWindow.html#method-i-x_span">#x_span &mdash; RGeo::Geographic::ProjectedWindow</a>
+  
+    <li class="method"><a href="RGeo/Cartesian/BoundingBox.html#method-i-x_span">#x_span &mdash; RGeo::Cartesian::BoundingBox</a>
   
     <li class="method"><a href="RGeo/Feature/Point.html#method-i-y">#y &mdash; RGeo::Feature::Point</a>
   

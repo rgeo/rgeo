@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::CoordSys::CS::Base - RGeo 0.3.13 Documentation</title>
+<title>class RGeo::CoordSys::CS::Base - RGeo 0.3.14 Documentation</title>
 
 <link type="text/css" media="screen" href="../../../rdoc.css" rel="stylesheet">
 
@@ -73,6 +73,8 @@
     <li><a href="#method-i-3D-3D">#==</a>
     
     <li><a href="#method-i-eql-3F">#eql?</a>
+    
+    <li><a href="#method-i-hash">#hash</a>
     
     <li><a href="#method-i-to_s">#to_s</a>
     
@@ -245,9 +247,9 @@
   
     <li><a href="../../../RGeo/Geos.html">RGeo::Geos</a>
   
-    <li><a href="../../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
+    <li><a href="../../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
-    <li><a href="../../../RGeo/Geos/Factory.html">RGeo::Geos::Factory</a>
+    <li><a href="../../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
   
     <li><a href="../../../RGeo/Geos/ZMFactory.html">RGeo::Geos::ZMFactory</a>
   
@@ -361,6 +363,36 @@ type (class) and the same WKT representation.</p>
       </div><!-- eql-3F-method -->
 
     
+      <div id="method-i-hash" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hash</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="hash-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
+  <span class="ruby-ivar">@hash</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">to_wkt</span>.<span class="ruby-identifier">hash</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- hash-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- hash-method -->
+
+    
       <div id="method-i-to_s" class="method-detail ">
         
         <div class="method-heading">
@@ -377,7 +409,7 @@ type (class) and the same WKT representation.</p>
 
           
           <div class="method-source-code" id="to_s-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 197</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 202</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   <span class="ruby-identifier">to_wkt</span>
 <span class="ruby-keyword">end</span></pre>
@@ -412,9 +444,13 @@ false.</p>
 
           
           <div class="method-source-code" id="to_wkt-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 208</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 213</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_wkt</span>(<span class="ruby-identifier">opts_</span>={})
-  <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:standard_brackets</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">_to_wkt</span>(<span class="ruby-string">'('</span>, <span class="ruby-string">')'</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">_to_wkt</span>(<span class="ruby-string">'['</span>, <span class="ruby-string">']'</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:standard_brackets</span>]
+    <span class="ruby-ivar">@standard_wkt</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">_to_wkt</span>(<span class="ruby-string">'('</span>, <span class="ruby-string">')'</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@square_wkt</span> <span class="ruby-operator">||=</span> <span class="ruby-identifier">_to_wkt</span>(<span class="ruby-string">'['</span>, <span class="ruby-string">']'</span>)
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- to_wkt-source -->
           
