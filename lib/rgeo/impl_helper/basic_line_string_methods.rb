@@ -135,8 +135,8 @@ module RGeo
 
       def hash
         @hash ||= begin
-          hash_ = (factory.hash ^ geometry_type.hash).hash
-          @points.inject(hash_){ |h_, p_| (h_ ^ p_.hash).hash }
+          hash_ = [factory, geometry_type].hash
+          @points.inject(hash_){ |h_, p_| (1664525 * h_ + p_.hash).hash }
         end
       end
 

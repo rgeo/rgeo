@@ -115,8 +115,8 @@ module RGeo
 
       def hash
         @hash ||= begin
-          hash_ = (geometry_type.hash ^ @exterior_ring.hash).hash
-          @interior_rings.inject(hash_){ |h_, r_| (h_ ^ r_.hash).hash }
+          hash_ = [geometry_type, @exterior_ring].hash
+          @interior_rings.inject(hash_){ |h_, r_| (1664525 * h_ + r_.hash).hash }
         end
       end
 
