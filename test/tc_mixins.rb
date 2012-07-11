@@ -42,7 +42,12 @@ module RGeo
   module Tests  # :nodoc:
 
     class TestMixins < ::Test::Unit::TestCase  # :nodoc:
-
+      # Simulates case of Enumerable#as_json as
+      # defined in ActiveSupport
+      module ::Enumerable # :nodoc:
+        def mixin3_method
+        end
+      end
 
       module Mixin1  # :nodoc:
         def mixin1_method
@@ -54,10 +59,17 @@ module RGeo
         end
       end
 
+      module Mixin3
+        def mixin3_method
+        end
+      end
+
+
       ::RGeo::Feature::MixinCollection::GLOBAL.for_type(::RGeo::Feature::Point).add(Mixin1)
       ::RGeo::Feature::MixinCollection::GLOBAL.for_type(::RGeo::Feature::GeometryCollection).add(Mixin1)
       ::RGeo::Feature::MixinCollection::GLOBAL.for_type(::RGeo::Feature::MultiCurve).add(Mixin2)
 
+      ::RGeo::Feature::MixinCollection::GLOBAL.for_type(::RGeo::Feature::Geometry).add(Mixin3)
 
       def test_basic_mixin_cartesian
         factory_ = ::RGeo::Cartesian.simple_factory
@@ -74,10 +86,16 @@ module RGeo
         assert(factory_.collection([]).class.include?(Mixin1))
         assert(!factory_.collection([]).class.include?(Mixin2))
         assert(factory_.collection([]).respond_to?(:mixin1_method))
+        assert_equal(
+          Mixin3,
+          factory_.collection([]).method(:mixin3_method).owner)
         assert(!factory_.collection([]).respond_to?(:mixin2_method))
         assert(factory_.multi_line_string([]).class.include?(Mixin1))
         assert(factory_.multi_line_string([]).class.include?(Mixin2))
         assert(factory_.multi_line_string([]).respond_to?(:mixin1_method))
+        assert_equal(
+          Mixin3,
+          factory_.multi_line_string([]).method(:mixin3_method).owner)
         assert(factory_.multi_line_string([]).respond_to?(:mixin2_method))
       end
 
@@ -99,10 +117,16 @@ module RGeo
           assert(factory_.collection([]).class.include?(Mixin1))
           assert(!factory_.collection([]).class.include?(Mixin2))
           assert(factory_.collection([]).respond_to?(:mixin1_method))
+          assert_equal(
+            Mixin3,
+            factory_.collection([]).method(:mixin3_method).owner)
           assert(!factory_.collection([]).respond_to?(:mixin2_method))
           assert(factory_.multi_line_string([]).class.include?(Mixin1))
           assert(factory_.multi_line_string([]).class.include?(Mixin2))
           assert(factory_.multi_line_string([]).respond_to?(:mixin1_method))
+          assert_equal(
+            Mixin3,
+            factory_.multi_line_string([]).method(:mixin3_method).owner)
           assert(factory_.multi_line_string([]).respond_to?(:mixin2_method))
         end
 
@@ -126,10 +150,16 @@ module RGeo
           assert(factory_.collection([]).class.include?(Mixin1))
           assert(!factory_.collection([]).class.include?(Mixin2))
           assert(factory_.collection([]).respond_to?(:mixin1_method))
+          assert_equal(
+            Mixin3,
+            factory_.collection([]).method(:mixin3_method).owner)
           assert(!factory_.collection([]).respond_to?(:mixin2_method))
           assert(factory_.multi_line_string([]).class.include?(Mixin1))
           assert(factory_.multi_line_string([]).class.include?(Mixin2))
           assert(factory_.multi_line_string([]).respond_to?(:mixin1_method))
+          assert_equal(
+            Mixin3,
+            factory_.multi_line_string([]).method(:mixin3_method).owner)
           assert(factory_.multi_line_string([]).respond_to?(:mixin2_method))
         end
 
@@ -149,12 +179,18 @@ module RGeo
       def test_inherited_mixin_spherical
         factory_ = ::RGeo::Geographic.spherical_factory
         assert(factory_.collection([]).class.include?(Mixin1))
+        assert_equal(
+          Mixin3,
+          factory_.collection([]).method(:mixin3_method).owner)
         assert(!factory_.collection([]).class.include?(Mixin2))
         assert(factory_.collection([]).respond_to?(:mixin1_method))
         assert(!factory_.collection([]).respond_to?(:mixin2_method))
         assert(factory_.multi_line_string([]).class.include?(Mixin1))
         assert(factory_.multi_line_string([]).class.include?(Mixin2))
         assert(factory_.multi_line_string([]).respond_to?(:mixin1_method))
+        assert_equal(
+          Mixin3,
+          factory_.multi_line_string([]).method(:mixin3_method).owner)
         assert(factory_.multi_line_string([]).respond_to?(:mixin2_method))
       end
 
@@ -174,10 +210,16 @@ module RGeo
         assert(factory_.collection([]).class.include?(Mixin1))
         assert(!factory_.collection([]).class.include?(Mixin2))
         assert(factory_.collection([]).respond_to?(:mixin1_method))
+        assert_equal(
+          Mixin3,
+          factory_.collection([]).method(:mixin3_method).owner)
         assert(!factory_.collection([]).respond_to?(:mixin2_method))
         assert(factory_.multi_line_string([]).class.include?(Mixin1))
         assert(factory_.multi_line_string([]).class.include?(Mixin2))
         assert(factory_.multi_line_string([]).respond_to?(:mixin1_method))
+        assert_equal(
+          Mixin3,
+          factory_.multi_line_string([]).method(:mixin3_method).owner)
         assert(factory_.multi_line_string([]).respond_to?(:mixin2_method))
       end
 

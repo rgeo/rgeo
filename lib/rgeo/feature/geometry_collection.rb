@@ -61,11 +61,11 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module GeometryCollection
+      include ::Enumerable
 
       include Geometry
       extend Type
 
-      include ::Enumerable
 
 
       # === SFS 1.1 Description
