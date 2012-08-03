@@ -56,6 +56,13 @@ module RGeo
         include ::RGeo::Tests::Common::FactoryTests
 
 
+        def test_is_geos_factory
+          assert_equal(true, ::RGeo::Geos.is_geos?(@factory))
+          assert_equal(true, ::RGeo::Geos.is_capi_geos?(@factory))
+          assert_equal(false, ::RGeo::Geos.is_ffi_geos?(@factory))
+        end
+
+
       end
 
     end

@@ -2,7 +2,7 @@
 /pkg/
 /tmp/
 /future/
-.rbx
+.rbx/
 .#*
 .DS_Store
 *.dSYM

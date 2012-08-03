@@ -64,6 +64,18 @@ module RGeo
         # END_TEMP
 
 
+        def test_is_geos
+          point_ = @factory.point(21, -22)
+          assert_equal(true, ::RGeo::Geos.is_geos?(point_))
+          assert_equal(false, ::RGeo::Geos.is_capi_geos?(point_))
+          assert_equal(true, ::RGeo::Geos.is_ffi_geos?(point_))
+          point2_ = @zmfactory.point(21, -22, 0, 0)
+          assert_equal(true, ::RGeo::Geos.is_geos?(point2_))
+          assert_equal(false, ::RGeo::Geos.is_capi_geos?(point2_))
+          assert_equal(true, ::RGeo::Geos.is_ffi_geos?(point2_))
+        end
+
+
         def test_has_no_projection
           point_ = @factory.point(21, -22)
           assert(!point_.respond_to?(:projection))
