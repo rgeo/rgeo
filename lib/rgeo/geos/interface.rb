@@ -67,9 +67,10 @@ module RGeo
       # the given factory is a CAPI GEOS factory.
 
       def is_capi_geos?(object_)
-        CAPIFactory === object_ || CAPIGeometryMethods === object_ ||
+        CAPI_SUPPORTED &&
+          (CAPIFactory === object_ || CAPIGeometryMethods === object_ ||
           ZMFactory === object_ && CAPIFactory === object_.z_factory ||
-          ZMGeometryMethods === object_ && CAPIGeometryMethods === object_.z_geometry
+          ZMGeometryMethods === object_ && CAPIGeometryMethods === object_.z_geometry)
       end
 
 
@@ -77,9 +78,10 @@ module RGeo
       # the given factory is an FFI GEOS factory.
 
       def is_ffi_geos?(object_)
-        FFIFactory === object_ || FFIGeometryMethods === object_ ||
+        FFI_SUPPORTED &&
+          (FFIFactory === object_ || FFIGeometryMethods === object_ ||
           ZMFactory === object_ && FFIFactory === object_.z_factory ||
-          ZMGeometryMethods === object_ && FFIGeometryMethods === object_.z_geometry
+          ZMGeometryMethods === object_ && FFIGeometryMethods === object_.z_geometry)
       end
 
 
@@ -87,8 +89,8 @@ module RGeo
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
       def is_geos?(object_)
-        CAPIFactory === object_ || CAPIGeometryMethods === object_ ||
-          FFIFactory === object_ || FFIGeometryMethods === object_ ||
+        CAPI_SUPPORTED && (CAPIFactory === object_ || CAPIGeometryMethods === object_) ||
+          FFI_SUPPORTED && (FFIFactory === object_ || FFIGeometryMethods === object_) ||
           ZMFactory === object_ || ZMGeometryMethods === object_
       end
 
