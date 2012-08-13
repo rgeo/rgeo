@@ -73,7 +73,7 @@ Install RGeo as a gem:
 
 Note: By default, the gem installation looks for the GEOS library in the
 following locations: <tt>/usr/local</tt>, <tt>/usr/local/geos</tt>,
-<tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>,
+<tt>/opt/local</tt>, <tt>/opt/geos</tt>, <tt>/opt</tt>, <tt>/usr</tt>, <tt>/usr/include</tt>, <tt>/usr/lib64</tt>,
 and <tt>/Library/Frameworks/GEOS.framework/unix</tt>. In other words,
 MacPorts, Homebrew, the Kyngchaos port, and building from source to
 /usr/local are supported out of the box.
