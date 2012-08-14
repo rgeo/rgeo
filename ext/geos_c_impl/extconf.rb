@@ -60,6 +60,7 @@ else
      '/opt/local/lib',
      '/opt/geos/lib',
      '/opt/lib',
+     '/usr/lib64',
      '/Library/Frameworks/GEOS.framework/unix/lib',
      ::RbConfig::CONFIG['libdir'],
      '/usr/lib',
