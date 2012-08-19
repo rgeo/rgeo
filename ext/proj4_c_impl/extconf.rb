@@ -58,6 +58,7 @@ else
   lib_dirs_ =
     [
      '/usr/local/lib',
+     '/usr/local/lib64',
      '/usr/local/proj/lib',
      '/usr/local/proj4/lib',
      '/opt/local/lib',
@@ -67,6 +68,7 @@ else
      '/Library/Frameworks/PROJ.framework/unix/lib',
      ::RbConfig::CONFIG['libdir'],
      '/usr/lib',
+     '/usr/lib64',
     ]
   header_dirs_.delete_if{ |path_| !::File.directory?(path_) }
   lib_dirs_.delete_if{ |path_| !::File.directory?(path_) }

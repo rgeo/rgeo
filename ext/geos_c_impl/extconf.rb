@@ -55,14 +55,15 @@ else
     ]
   lib_dirs_ =
     [
+     '/usr/local/lib64',
      '/usr/local/lib',
      '/usr/local/geos/lib',
      '/opt/local/lib',
      '/opt/geos/lib',
      '/opt/lib',
-     '/usr/lib64',
      '/Library/Frameworks/GEOS.framework/unix/lib',
      ::RbConfig::CONFIG['libdir'],
+     '/usr/lib64',
      '/usr/lib',
     ]
   header_dirs_.delete_if{ |path_| !::File.directory?(path_) }

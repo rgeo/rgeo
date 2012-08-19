@@ -1,3 +1,8 @@
+=== 0.3.16 / 2012-08-19
+
+* Added /usr/lib64 to the list of libraries searched. (Thanks to hunterae.)
+* Re-added Geos::Factory as an alias of Geos::CAPIFactory, for compatibility with old serializations.
+
 === 0.3.15 / 2012-08-02
 
 * The class shuffle in 0.3.14 broke RGeo::Geos.is_geos? and similar. Fixed.
