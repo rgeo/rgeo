@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RGeo::Feature::Point - RGeo 0.3.16 Documentation</title>
+<title>module RGeo::Feature::Point - RGeo 0.3.17 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -302,6 +302,16 @@ module.</p>
 
 <p>Some implementations may support higher dimensional points.</p>
 
+<p>Some libraries, such as GEOS, support “empty” points. Such objects might be
+returned as, for example, the centroid of an empty <a
+href="MultiPolygon.html">MultiPolygon</a>. The SFS does not clearly define
+or even acknowledge the existence of such a type, so <a
+href="../../RGeo.html">RGeo</a> will currently generally replace them with
+empty <a href="GeometryCollection.html">GeometryCollection</a> objects.
+Therefore, currently, every <a href="../../RGeo.html">RGeo</a> <a
+href="Point.html">Point</a> object represents an actual location with real
+coordinates.</p>
+
   </div><!-- description -->
 
   
@@ -342,7 +352,7 @@ coordinates.</p>
 
           
           <div class="method-source-code" id="m-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 109</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 117</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">m</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Point#m not defined.&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -378,7 +388,7 @@ coordinates.</p>
 
           
           <div class="method-source-code" id="x-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">x</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Point#x not defined.&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -414,7 +424,7 @@ coordinates.</p>
 
           
           <div class="method-source-code" id="y-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 87</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">y</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Point#y not defined.&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -448,7 +458,7 @@ coordinates.</p>
 
           
           <div class="method-source-code" id="z-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 98</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/feature/point.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">z</span>
   <span class="ruby-identifier">raise</span> <span class="ruby-constant">Error</span><span class="ruby-operator">::</span><span class="ruby-constant">UnsupportedOperation</span>, <span class="ruby-node">&quot;Method Point#z not defined.&quot;</span>
 <span class="ruby-keyword">end</span></pre>

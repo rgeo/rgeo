@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>README - RGeo 0.3.16 Documentation</title>
+<title>README - RGeo 0.3.17 Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -275,8 +275,6 @@ location-based web services using the <strong>rgeo-geojson</strong> gem.</p>
 and PostGIS using RGeo’s spatial ActiveRecord adapters. These are available
 via the gems:</p>
 <ul><li>
-<p><strong>activerecord-mysqlspatial-adapter</strong></p>
-</li><li>
 <p><strong>activerecord-mysql2spatial-adapter</strong></p>
 </li><li>
 <p><strong>activerecord-spatialite-adapter</strong></p>
@@ -306,19 +304,27 @@ expected in the future.</p>
 
 <p>Some features also require the following:</p>
 <ul><li>
-<p>GEOS 3.2 or later is highly recommended. Some functions will not be
-available without it. This C/C++ library may be available via your
-operating system’s package manager, or you can download it from <a
-href="http://trac.osgeo.org/geos">trac.osgeo.org/geos</a></p>
+<p>GEOS 3.2 or later is highly recommended. (3.3.3 or later preferred.) Some
+functions will not be available without it. This C/C++ library may be
+available via your operating system’s package manager, or you can download
+it from <a href="http://trac.osgeo.org/geos">trac.osgeo.org/geos</a></p>
 </li><li>
 <p>Proj 4.7 or later is also recommended. This library is needed if you want
 to translate coordinates between geographic projections. It also may be
 available via your operating system’s package manager, or from <a
 href="http://trac.osgeo.org/proj">trac.osgeo.org/proj</a></p>
+</li><li>
+<p>On some platforms, you should install the ffi-geos gem (version 0.0.6 or
+later recommended.) JRuby requires this gem to properly link with Geos, and
+Windows builds probably do as well.</p>
 </li></ul>
 
 <p>Note: The build system assumes a unix-like environment. Windows builds may
-be possible, but not likely “out of the box”.</p>
+be possible, but not likely “out of the box”. I have heard that some
+Windows users have had success getting the ffi-geos implementation working,
+after suitably installing the Geos library. However, since I’m not a
+Windows user myself, I can’t provide any direct support for this
+configuration.</p>
 
 <h3 id="label-Installation">Installation</h3>
 
