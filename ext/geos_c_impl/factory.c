@@ -696,9 +696,9 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
   if (geom || !NIL_P(klass)) {
     factory_data = NIL_P(factory) ? NULL : RGEO_FACTORY_DATA_PTR(factory);
     factory_context = factory_data ? factory_data->geos_context : NULL;
+    globals = factory_data ? factory_data->globals : NULL;
     klasses = Qnil;
     if (TYPE(klass) != T_CLASS) {
-      globals = factory_data->globals;
       inferred_klass = Qnil;
       is_collection = 0;
       switch (GEOSGeomTypeId_r(factory_context, geom)) {
@@ -739,18 +739,20 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       klass = inferred_klass;
     }
-    data = ALLOC(RGeo_GeometryData);
-    if (data) {
-      if (geom) {
-        GEOSSetSRID_r(factory_context, geom, factory_data->srid);
+    if (!globals || klass != globals->geos_point || !GEOSisEmpty_r(factory_context, geom)) {
+      data = ALLOC(RGeo_GeometryData);
+      if (data) {
+        if (geom) {
+          GEOSSetSRID_r(factory_context, geom, factory_data->srid);
+        }
+        data->geos_context = factory_context;
+        data->geom = geom;
+        data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
+          (GEOSPreparedGeometry*)1 : NULL;
+        data->factory = factory;
+        data->klasses = klasses;
+        result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
       }
-      data->geos_context = factory_context;
-      data->geom = geom;
-      data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
-        (GEOSPreparedGeometry*)1 : NULL;
-      data->factory = factory;
-      data->klasses = klasses;
-      result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
     }
   }
   return result;

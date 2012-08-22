@@ -559,7 +559,11 @@ module RGeo
           end
           klass_ = inferred_klass_
         end
-        klass_.new(self, fg_geom_, klasses_)
+        if klass_ == FFIPointImpl && fg_geom_.empty?
+          nil
+        else
+          klass_.new(self, fg_geom_, klasses_)
+        end
       end
 
 

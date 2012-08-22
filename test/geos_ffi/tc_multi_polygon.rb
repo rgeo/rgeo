@@ -57,6 +57,15 @@ module RGeo
         include ::RGeo::Tests::Common::MultiPolygonTests
 
 
+        # Centroid of an empty should return nil rather than throw a
+        # weird exception out of ffi-geos
+
+        def test_empty_centroid
+          mp_ = @factory.multi_polygon([])
+          assert_nil(mp_.centroid)
+        end
+
+
       end
 
     end

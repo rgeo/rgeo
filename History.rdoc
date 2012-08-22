@@ -1,6 +1,10 @@
+=== 0.3.17 / 2012-08-21
+
+* Geos-based implementations crashed when an operation resulted in an empty point, e.g. taking the centroid of an empty MultiPolygon. Fixed. Such operations now return nil (for the time being). (Reported by Ben Hughes)
+
 === 0.3.16 / 2012-08-19
 
-* Added /usr/lib64 to the list of libraries searched. (Thanks to hunterae.)
+* Added /usr/lib64 to the list of libraries searched. (Thanks to hunterae)
 * Re-added Geos::Factory as an alias of Geos::CAPIFactory, for compatibility with old serializations.
 
 === 0.3.15 / 2012-08-02
