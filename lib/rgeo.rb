@@ -94,7 +94,8 @@
 #
 # * <b>mysqlspatial</b>, an adapter for MySQL spatial extensions based on
 #   the mysql adapter. Available as the activerecord-mysqlspatial-adapter
-#   gem.
+#   gem. <i>This adapter is deprecated due to bugs in the legacy mysql
+#   gem. You should use the mysql2spatial adapter instead.</i>
 #
 # * <b>mysql2spatial</b>, an adapter for MySQL spatial extensions based on
 #   the mysql2 adapter. Available as the activerecord-mysql2spatial-adapter

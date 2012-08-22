@@ -528,10 +528,14 @@ module RGeo
 
       def _wrap_fg_geom(fg_geom_, klass_)  # :nodoc:
         klasses_ = nil
+
+        # We don't allow "empty" points, so replace such objects with
+        # an empty collection.
         if fg_geom_.type_id == ::Geos::GeomTypes::GEOS_POINT && fg_geom_.empty?
           fg_geom_ = ::Geos::Utils.create_geometry_collection
           klass_ = FFIGeometryCollectionImpl
         end
+
         unless klass_.kind_of?(::Class)
           is_collection_ = false
           case fg_geom_.type_id

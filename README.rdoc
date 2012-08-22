@@ -32,7 +32,6 @@ Several optional modules are currently available:
 * Extend ActiveRecord to handle spatial data in MySQL Spatial, SpatiaLite,
   and PostGIS using RGeo's spatial ActiveRecord adapters. These are
   available via the gems:
-  * <b>activerecord-mysqlspatial-adapter</b>
   * <b>activerecord-mysql2spatial-adapter</b>
   * <b>activerecord-spatialite-adapter</b>
   * <b>activerecord-postgis-adapter</b>
@@ -53,17 +52,24 @@ RGeo is known to work with the following Ruby implementations:
 
 Some features also require the following:
 
-* GEOS 3.2 or later is highly recommended. Some functions will not be
-  available without it. This C/C++ library may be available via your
-  operating system's package manager, or you can download it from
-  http://trac.osgeo.org/geos
+* GEOS 3.2 or later is highly recommended. (3.3.3 or later preferred.)
+  Some functions will not be available without it.
+  This C/C++ library may be available via your operating system's package
+  manager, or you can download it from http://trac.osgeo.org/geos
 * Proj 4.7 or later is also recommended. This library is needed if you
   want to translate coordinates between geographic projections. It also
   may be available via your operating system's package manager, or from
   http://trac.osgeo.org/proj
+* On some platforms, you should install the ffi-geos gem (version 0.0.6
+  or later recommended.) JRuby requires this gem to properly link with
+  Geos, and Windows builds probably do as well.
 
 Note: The build system assumes a unix-like environment. Windows builds
-may be possible, but not likely "out of the box".
+may be possible, but not likely "out of the box". I have heard that
+some Windows users have had success getting the ffi-geos implementation
+working, after suitably installing the Geos library. However, since I'm
+not a Windows user myself, I can't provide any direct support for this
+configuration.
 
 === Installation
 
