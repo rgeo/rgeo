@@ -528,6 +528,10 @@ module RGeo
 
       def _wrap_fg_geom(fg_geom_, klass_)  # :nodoc:
         klasses_ = nil
+        if fg_geom_.type_id == ::Geos::GeomTypes::GEOS_POINT && fg_geom_.empty?
+          fg_geom_ = ::Geos::Utils.create_geometry_collection
+          klass_ = FFIGeometryCollectionImpl
+        end
         unless klass_.kind_of?(::Class)
           is_collection_ = false
           case fg_geom_.type_id
@@ -559,11 +563,7 @@ module RGeo
           end
           klass_ = inferred_klass_
         end
-        if klass_ == FFIPointImpl && fg_geom_.empty?
-          nil
-        else
-          klass_.new(self, fg_geom_, klasses_)
-        end
+        klass_.new(self, fg_geom_, klasses_)
       end
 
 

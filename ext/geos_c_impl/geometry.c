@@ -254,14 +254,7 @@ static VALUE method_geometry_envelope(VALUE self)
   if (self_geom) {
     geos_context = self_data->geos_context;
     envelope = GEOSEnvelope_r(geos_context, self_geom);
-    // GEOS returns an "empty" point for an empty collection's envelope.
-    // We don't allow that type, so we replace it with an empty collection.
-    if (!envelope ||
-        GEOSGeomTypeId_r(geos_context, envelope) == GEOS_POINT &&
-        GEOSGetNumCoordinates_r(geos_context, envelope) == 0) {
-      if (envelope) {
-        GEOSGeom_destroy_r(geos_context, envelope);
-      }
+    if (!envelope) {
       envelope = GEOSGeom_createCollection_r(geos_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
     }
     result = rgeo_wrap_geos_geometry(self_data->factory, envelope, Qnil);

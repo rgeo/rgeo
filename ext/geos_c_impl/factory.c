@@ -697,6 +697,17 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
     factory_data = NIL_P(factory) ? NULL : RGEO_FACTORY_DATA_PTR(factory);
     factory_context = factory_data ? factory_data->geos_context : NULL;
     globals = factory_data ? factory_data->globals : NULL;
+
+    // We don't allow "empty" points, so replace such objects with
+    // an empty collection.
+    if (geom && factory) {
+      if (GEOSGeomTypeId_r(factory_context, geom) == GEOS_POINT && GEOSGetNumCoordinates_r(factory_context, geom) == 0) {
+        GEOSGeom_destroy_r(factory_context, geom);
+        geom = GEOSGeom_createCollection_r(factory_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
+        klass = globals->geos_geometry_collection;
+      }
+    }
+
     klasses = Qnil;
     if (TYPE(klass) != T_CLASS) {
       inferred_klass = Qnil;
@@ -739,20 +750,18 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       klass = inferred_klass;
     }
-    if (!globals || klass != globals->geos_point || !GEOSisEmpty_r(factory_context, geom)) {
-      data = ALLOC(RGeo_GeometryData);
-      if (data) {
-        if (geom) {
-          GEOSSetSRID_r(factory_context, geom, factory_data->srid);
-        }
-        data->geos_context = factory_context;
-        data->geom = geom;
-        data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
-          (GEOSPreparedGeometry*)1 : NULL;
-        data->factory = factory;
-        data->klasses = klasses;
-        result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
+    data = ALLOC(RGeo_GeometryData);
+    if (data) {
+      if (geom) {
+        GEOSSetSRID_r(factory_context, geom, factory_data->srid);
       }
+      data->geos_context = factory_context;
+      data->geom = geom;
+      data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
+        (GEOSPreparedGeometry*)1 : NULL;
+      data->factory = factory;
+      data->klasses = klasses;
+      result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
     }
   }
   return result;

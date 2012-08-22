@@ -58,11 +58,12 @@ module RGeo
     # Some implementations may support higher dimensional points.
     #
     # Some libraries, such as GEOS, support "empty" points. Such objects
-    # would be returned as, for example, the centroid of an empty
+    # might be returned as, for example, the centroid of an empty
     # MultiPolygon. The SFS does not clearly define or even acknowledge
-    # the existence of such an object, so RGeo currently generally
-    # returns nil for such cases. In RGeo, currently, every Point object
-    # represents an actual location with real coordinates.
+    # the existence of such a type, so RGeo will currently generally
+    # replace them with empty GeometryCollection objects. Therefore,
+    # currently, every RGeo Point object represents an actual location
+    # with real coordinates.
 
     module Point
 

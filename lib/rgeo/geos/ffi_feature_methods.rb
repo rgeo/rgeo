@@ -135,13 +135,7 @@ module RGeo
 
 
       def envelope
-        fg_geom_ = @fg_geom.envelope
-        # GEOS returns an "empty" point for an empty collection's envelope.
-        # We don't allow that type, so we replace it with an empty collection.
-        if fg_geom_.type_id == ::Geos::GeomTypes::GEOS_POINT && fg_geom_.empty?
-          fg_geom_ = ::Geos::Utils.create_geometry_collection
-        end
-        @factory._wrap_fg_geom(fg_geom_, nil)
+        @factory._wrap_fg_geom(@fg_geom.envelope, nil)
       end
 
 
