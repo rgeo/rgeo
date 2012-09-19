@@ -196,6 +196,31 @@ module RGeo
         end
 
 
+        # Returns the Proj library version as a string of the format "x.y.z".
+        # Returns nil if Proj4 is not available.
+
+        def version_string
+          unless defined?(@version_string)
+            @version_string = respond_to?(:_proj_version) ? _proj_version.to_s.split('').join('.') : nil
+          end
+          @version_string
+        end
+
+
+        # Returns the Proj4 library version as a Versionomy object if the
+        # Versionomy library is available; otherwise as a string of the
+        # format "x.y.z".
+        # Returns nil if Proj4 is not available.
+
+        def version
+          unless defined?(@version)
+            str_ = version_string
+            @version = str_ && defined?(::Versionomy) ? ::Versionomy.parse(str_) : str_
+          end
+          @version
+        end
+
+
         # Create a new Proj4 object, given a definition, which may be
         # either a string or a hash. Returns nil if the given definition
         # is invalid or Proj4 is not supported.

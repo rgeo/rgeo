@@ -252,7 +252,13 @@ static VALUE method_proj4_is_valid(VALUE self)
 }
 
 
-static VALUE cmethod_proj4_transform(VALUE method, VALUE from, VALUE to, VALUE x, VALUE y, VALUE z)
+static VALUE cmethod_proj4_version(VALUE module)
+{
+  return INT2NUM(PJ_VERSION);
+}
+
+
+static VALUE cmethod_proj4_transform(VALUE module, VALUE from, VALUE to, VALUE x, VALUE y, VALUE z)
 {
   VALUE result;
   projPJ from_pj;
@@ -324,6 +330,7 @@ static void rgeo_init_proj4()
   rb_define_method(proj4_class, "_radians?", method_proj4_uses_radians, 0);
   rb_define_method(proj4_class, "_get_geographic", method_proj4_get_geographic, 0);
   rb_define_module_function(proj4_class, "_transform_coords", cmethod_proj4_transform, 5);
+  rb_define_module_function(proj4_class, "_proj_version", cmethod_proj4_version, 0);
 }
 
 

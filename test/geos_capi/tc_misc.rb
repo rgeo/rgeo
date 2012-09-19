@@ -109,6 +109,11 @@ module RGeo
         end
 
 
+        def test_geos_version
+          assert_match(/^\d+\.\d+(\.\d+)?$/, ::RGeo::Geos.version_string)
+        end
+
+
       end
 
     end

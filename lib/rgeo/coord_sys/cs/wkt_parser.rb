@@ -52,8 +52,9 @@ module RGeo
 
         def parse(containing_type_=nil)
           if @cur_token.kind_of?(QuotedString) ||
-              @cur_token.kind_of?(::Numeric) ||
-              (containing_type_ == 'AXIS' && @cur_token.kind_of?(TypeString))
+            @cur_token.kind_of?(::Numeric) ||
+            (containing_type_ == 'AXIS' && @cur_token.kind_of?(TypeString))
+          then
             value_ = @cur_token
             next_token
             return value_
@@ -76,6 +77,8 @@ module RGeo
           case type_
           when 'AUTHORITY'
             obj_ = AuthorityClause.new(args_.shift(QuotedString), args_.shift(QuotedString))
+          when 'EXTENSION'
+            obj_ = ExtensionClause.new(args_.shift(QuotedString), args_.shift(QuotedString))
           when 'AXIS'
             obj_ = AxisInfo.create(args_.shift(QuotedString), args_.shift(TypeString))
           when 'TOWGS84'
@@ -93,27 +96,27 @@ module RGeo
             else
               klass_ = Unit
             end
-            obj_ = klass_.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.find_first(AuthorityClause).to_a)
+            obj_ = klass_.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.create_optionals)
           when 'PARAMETER'
             obj_ = ProjectionParameter.create(args_.shift(QuotedString), args_.shift(::Numeric))
           when 'PRIMEM'
-            obj_ = PrimeMeridian.create(args_.shift(QuotedString), nil, args_.shift(::Numeric), *args_.find_first(AuthorityClause).to_a)
+            obj_ = PrimeMeridian.create(args_.shift(QuotedString), nil, args_.shift(::Numeric), *args_.create_optionals)
           when 'SPHEROID'
-            obj_ = Ellipsoid.create_flattened_sphere(args_.shift(QuotedString), args_.shift(::Numeric), args_.shift(::Numeric), args_.find_first(LinearUnit), *args_.find_first(AuthorityClause).to_a)
+            obj_ = Ellipsoid.create_flattened_sphere(args_.shift(QuotedString), args_.shift(::Numeric), args_.shift(::Numeric), args_.find_first(LinearUnit), *args_.create_optionals)
           when 'PROJECTION'
             name_ = args_.shift(QuotedString)
-            obj_ = Projection.create(name_, name_, args_.find_all(ProjectionParameter), *args_.find_first(AuthorityClause).to_a)
+            obj_ = Projection.create(name_, name_, args_.find_all(ProjectionParameter), *args_.create_optionals)
           when 'DATUM'
             name_ = args_.shift(QuotedString)
             ellipsoid_ = args_.find_first(Ellipsoid)
             to_wgs84_ = args_.find_first(WGS84ConversionInfo)
-            obj_ = HorizontalDatum.create(name_, HD_GEOCENTRIC, ellipsoid_, to_wgs84_, *args_.find_first(AuthorityClause).to_a)
+            obj_ = HorizontalDatum.create(name_, HD_GEOCENTRIC, ellipsoid_, to_wgs84_, *args_.create_optionals)
           when 'VERT_DATUM'
-            obj_ = VerticalDatum.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.find_first(AuthorityClause).to_a)
+            obj_ = VerticalDatum.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.create_optionals)
           when 'LOCAL_DATUM'
-            obj_ = LocalDatum.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.find_first(AuthorityClause).to_a)
+            obj_ = LocalDatum.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.create_optionals)
           when 'COMPD_CS'
-            obj_ = CompoundCoordinateSystem.create(args_.shift(QuotedString), args_.shift(CoordinateSystem), args_.shift(CoordinateSystem), *args_.find_first(AuthorityClause).to_a)
+            obj_ = CompoundCoordinateSystem.create(args_.shift(QuotedString), args_.shift(CoordinateSystem), args_.shift(CoordinateSystem), *args_.create_optionals)
           when 'LOCAL_CS'
             name_ = args_.shift(QuotedString)
             local_datum_ = args_.find_first(LocalDatum)
@@ -122,7 +125,7 @@ module RGeo
             unless axes_.size > 0
               raise Error::ParseError("Expected at least one AXIS in a LOCAL_CS")
             end
-            obj_ = LocalCoordinateSystem.create(name_, local_datum_, unit_, axes_, *args_.find_first(AuthorityClause).to_a)
+            obj_ = LocalCoordinateSystem.create(name_, local_datum_, unit_, axes_, *args_.create_optionals)
           when 'GEOCCS'
             name_ = args_.shift(QuotedString)
             horizontal_datum_ = args_.find_first(HorizontalDatum)
@@ -132,13 +135,13 @@ module RGeo
             unless axes_.size == 0 || axes_.size == 3
               raise Error::ParseError("GEOCCS must contain either 0 or 3 AXIS parameters")
             end
-            obj_ = GeocentricCoordinateSystem.create(name_, horizontal_datum_, prime_meridian_, linear_unit_, axes_[0], axes_[1], axes_[2], *args_.find_first(AuthorityClause).to_a)
+            obj_ = GeocentricCoordinateSystem.create(name_, horizontal_datum_, prime_meridian_, linear_unit_, axes_[0], axes_[1], axes_[2], *args_.create_optionals)
           when 'VERT_CS'
             name_ = args_.shift(QuotedString)
             vertical_datum_ = args_.find_first(VerticalDatum)
             linear_unit_ = args_.find_first(LinearUnit)
             axis_ = args_.find_first(AxisInfo)
-            obj_ = VerticalCoordinateSystem.create(name_, vertical_datum_, linear_unit_, axis_, *args_.find_first(AuthorityClause).to_a)
+            obj_ = VerticalCoordinateSystem.create(name_, vertical_datum_, linear_unit_, axis_, *args_.create_optionals)
           when 'GEOGCS'
             name_ = args_.shift(QuotedString)
             horizontal_datum_ = args_.find_first(HorizontalDatum)
@@ -148,7 +151,7 @@ module RGeo
             unless axes_.size == 0 || axes_.size == 2
               raise Error::ParseError("GEOGCS must contain either 0 or 2 AXIS parameters")
             end
-            obj_ = GeographicCoordinateSystem.create(name_, angular_unit_, horizontal_datum_, prime_meridian_, axes_[0], axes_[1], *args_.find_first(AuthorityClause).to_a)
+            obj_ = GeographicCoordinateSystem.create(name_, angular_unit_, horizontal_datum_, prime_meridian_, axes_[0], axes_[1], *args_.create_optionals)
           when 'PROJCS'
             name_ = args_.shift(QuotedString)
             geographic_coordinate_system_ = args_.find_first(GeographicCoordinateSystem)
@@ -160,7 +163,7 @@ module RGeo
             unless axes_.size == 0 || axes_.size == 2
               raise Error::ParseError("PROJCS must contain either 0 or 2 AXIS parameters")
             end
-            obj_ = ProjectedCoordinateSystem.create(name_, geographic_coordinate_system_, projection_, linear_unit_, axes_[0], axes_[1], *args_.find_first(AuthorityClause).to_a)
+            obj_ = ProjectedCoordinateSystem.create(name_, geographic_coordinate_system_, projection_, linear_unit_, axes_[0], axes_[1], *args_.create_optionals)
           else
             raise Error::ParseError, "Unrecognized type: #{type_}"
           end
@@ -240,6 +243,19 @@ module RGeo
         end
 
 
+        class ExtensionClause  # :nodoc:
+
+          def initialize(key_, value_)
+            @key = key_
+            @value = value_
+          end
+
+          attr_reader :key
+          attr_reader :value
+
+        end
+
+
         class ArgumentList  # :nodoc:
 
           def initialize
@@ -255,7 +271,7 @@ module RGeo
               names_ = @values.map do |val_|
                 val_.kind_of?(Base) ? val_._wkt_typename : val_.inspect
               end
-              raise Error::ParseError, "#{@remaining} unexpected arguments: #{names_.join(', ')}"
+              raise Error::ParseError, "#{@values.size} unexpected arguments: #{names_.join(', ')}"
             end
           end
 
@@ -281,6 +297,12 @@ module RGeo
             end
             @values = nvalues_
             results_
+          end
+
+          def create_optionals
+            hash_ = {}
+            find_all(ExtensionClause).each{ |ec_| hash_[ec_.key] = ec_.value }
+            (find_first(AuthorityClause) || [nil, nil]).to_a + [nil, nil, nil, hash_]
           end
 
           def shift(klass_=nil)

@@ -226,7 +226,12 @@ module RGeo
           else
             authority_ = ''
           end
-          "#{_wkt_typename}#{open_}#{@name.inspect}#{content_}#{authority_}#{close_}"
+          if defined?(@extensions) && @extensions
+            extensions_ = @extensions.map{ |k_, v_| ",EXTENSION#{open_}#{k_.inspect},#{v_.inspect}#{close_}" }.join
+          else
+            extensions_ = ''
+          end
+          "#{_wkt_typename}#{open_}#{@name.inspect}#{content_}#{extensions_}#{authority_}#{close_}"
         end
 
 
@@ -486,16 +491,21 @@ module RGeo
       # * <b>abbreviation</b>: an abbreviation
       # * <b>alias</b>: an alias
       # * <b>remarks</b>: provider-supplied remarks.
+      # * <b>extensions</b>: a hash of extension keys and values
 
       class Info < Base
 
-        def initialize(name_, authority_=nil, authority_code_=nil, abbreviation_=nil, alias_=nil, remarks_=nil)  # :nodoc:
+        def initialize(name_, authority_=nil, authority_code_=nil, abbreviation_=nil, alias_=nil, remarks_=nil, extensions_=nil)  # :nodoc:
           @name = name_
           @authority = authority_ ? authority_.to_s : nil
           @authority_code = authority_code_ ? authority_code_.to_s : nil
           @abbreviation = abbreviation_ ? abbreviation_.to_s : nil
           @alias = alias_ ? alias_.to_s : nil
           @remarks = remarks_ ? remarks_.to_s : nil
+          @extensions = {}
+          if extensions_
+            extensions_.each{ |k_, v_| @extensions[k_.to_s] = v_.to_s }
+          end
         end
 
 
@@ -528,6 +538,14 @@ module RGeo
 
         # Gets the provider-supplied remarks.
         attr_reader :remarks
+
+        # Gets the value of a keyed extension.
+        # This is not part of the OGC spec, but it is supported because
+        # some coordinate system databases (such as the spatial_ref_sys
+        # table for PostGIS 2.0) include it.
+        def extension(key_)
+          @extensions[key_.to_s]
+        end
 
 
       end

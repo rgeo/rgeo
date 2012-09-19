@@ -45,6 +45,11 @@ module RGeo
       class TestProj4 < ::Test::Unit::TestCase  # :nodoc:
 
 
+        def test_proj4_version
+          assert_match(/^\d+\.\d+(\.\d+)?$/, ::RGeo::CoordSys::Proj4.version_string)
+        end
+
+
         def test_create_wgs84
           proj_ = ::RGeo::CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
           assert_equal(true, proj_.geographic?)

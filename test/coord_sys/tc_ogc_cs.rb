@@ -185,6 +185,14 @@ module RGeo
         end
 
 
+        def test_local_datum_with_extension
+          obj_ = ::RGeo::CoordSys::CS::LocalDatum.create('Random Local Datum', ::RGeo::CoordSys::CS::LD_MIN, nil, nil, nil, nil, nil, {:foo => :bar})
+          assert_equal('bar', obj_.extension(:foo))
+          assert_nil(obj_.extension(:bar))
+          assert_equal('LOCAL_DATUM["Random Local Datum",10000,EXTENSION["foo","bar"]]', obj_.to_wkt)
+        end
+
+
         def test_vertical_datum
           obj_ = ::RGeo::CoordSys::CS::VerticalDatum.create('Ordnance Datum Newlyn', ::RGeo::CoordSys::CS::VD_GEOID_MODE_DERIVED, 'EPSG', '5101')
           assert_equal('Ordnance Datum Newlyn', obj_.name)
@@ -357,6 +365,16 @@ module RGeo
           assert_kind_of(::RGeo::CoordSys::CS::VerticalCoordinateSystem, obj_.tail)
           assert_equal(3, obj_.dimension)
           assert_match(_lenient_regex_for(input_), obj_.to_wkt)
+        end
+
+
+        def test_parse_local_datum_with_extension
+          input_ = 'LOCAL_DATUM["Random Local Datum",10000,EXTENSION["foo","bar"]]'
+          obj_ = ::RGeo::CoordSys::CS.create_from_wkt(input_)
+          assert_kind_of(::RGeo::CoordSys::CS::LocalDatum, obj_)
+          assert_equal('bar', obj_.extension(:foo))
+          assert_nil(obj_.extension(:bar))
+          assert_equal(input_, obj_.to_wkt)
         end
 
 
