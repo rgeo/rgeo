@@ -63,6 +63,15 @@ module RGeo
         end
 
 
+        def _test_geos_bug_582
+          f_ = ::RGeo::Geos.factory(:buffer_resolution => 2)
+          p1_ = f_.polygon(f_.linear_ring([]))
+          p2_ = f_.polygon(f_.linear_ring([f_.point(0, 0), f_.point(0, 1), f_.point(1, 1), f_.point(1, 0)]))
+          mp_ = f_.multi_polygon([p2_, p1_])
+          mp_.centroid.as_text
+        end
+
+
       end
 
     end
