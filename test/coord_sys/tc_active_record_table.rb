@@ -70,8 +70,11 @@ module RGeo
 
               def test_4326
                 entry_ = @@db.get(4326)
-                # assert_equal('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', entry_.proj4.original_str)  # PostGIS 1.5
-                assert_equal('+proj=longlat +datum=WGS84 +no_defs', entry_.proj4.original_str)  # PostGIS 2.0
+                allowed_vals_ = [
+                  '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs',  # Proj 4.7
+                  '+proj=longlat +datum=WGS84 +no_defs'  # Proj 4.8
+                ]
+                assert(allowed_vals_.include?(entry_.proj4.original_str))
                 assert_kind_of(::RGeo::CoordSys::CS::GeographicCoordinateSystem, entry_.coord_sys)
                 assert_equal('WGS 84', entry_.name)
               end
@@ -79,8 +82,11 @@ module RGeo
 
               def test_3785
                 entry_ = @@db.get(3785)
-                # assert_equal('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +units=m +k=1.0 +nadgrids=@null +no_defs', entry_.proj4.original_str)   # PostGIS 1.5
-                assert_equal('+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs', entry_.proj4.original_str)  # PostGIS 2.0
+                allowed_vals_ = [
+                  '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +units=m +k=1.0 +nadgrids=@null +no_defs',  # Proj 4.7
+                  '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs'  # Proj 4.8
+                ]
+                assert(allowed_vals_.include?(entry_.proj4.original_str))
                 assert_kind_of(::RGeo::CoordSys::CS::ProjectedCoordinateSystem, entry_.coord_sys)
                 assert_equal('Popular Visualisation CRS / Mercator (deprecated)', entry_.name)
               end

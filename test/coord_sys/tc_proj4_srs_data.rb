@@ -48,8 +48,11 @@ module RGeo
         def test_epsg_4326
           db_ = ::RGeo::CoordSys::SRSDatabase::Proj4Data.new('epsg')
           entry_ = db_.get(4326)
-          # assert_equal('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', entry_.proj4.original_str)  # PostGIS 1.5
-          assert_equal('+proj=longlat +datum=WGS84 +no_defs', entry_.proj4.original_str)  # PostGIS 2.0
+          allowed_vals_ = [
+            '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs',  # Proj 4.7
+            '+proj=longlat +datum=WGS84 +no_defs'  # Proj 4.8
+          ]
+          assert(allowed_vals_.include?(entry_.proj4.original_str))
           assert_equal('WGS 84', entry_.name)
         end
 
