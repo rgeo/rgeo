@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>module RGeo::Geos - RGeo 0.3.17 Documentation</title>
+<title>module RGeo::Geos - RGeo 0.3.18 Documentation</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -89,6 +89,10 @@
     <li><a href="#method-c-is_geos-3F">::is_geos?</a>
     
     <li><a href="#method-c-supported-3F">::supported?</a>
+    
+    <li><a href="#method-c-version">::version</a>
+    
+    <li><a href="#method-c-version_string">::version_string</a>
     
   </ul>
 </nav>
@@ -380,7 +384,7 @@ FFI over CAPI.</p>
 
         <div class="method-description">
           
-          <p>Returns true if CAPI GEOS implementation is supported.</p>
+          <p>Returns true if the CAPI GEOS implementation is supported.</p>
           
 
           
@@ -518,7 +522,7 @@ method).</p>
 
           
           <div class="method-source-code" id="factory-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 201</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 232</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">factory</span>(<span class="ruby-identifier">opts_</span>={})
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">supported?</span>
     <span class="ruby-identifier">native_interface_</span> = <span class="ruby-identifier">opts_</span>[<span class="ruby-value">:native_interface</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">Geos</span>.<span class="ruby-identifier">preferred_native_interface</span>
@@ -567,7 +571,7 @@ href="CoordSys.html">CoordSys</a> objects.</p>
 
           
           <div class="method-source-code" id="factory_generator-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 225</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 256</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">factory_generator</span>(<span class="ruby-identifier">defaults_</span>={})
   <span class="ruby-operator">::</span><span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">c_</span><span class="ruby-operator">|</span> <span class="ruby-identifier">factory</span>(<span class="ruby-identifier">defaults_</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">c_</span>)) }
 <span class="ruby-keyword">end</span></pre>
@@ -592,7 +596,7 @@ href="CoordSys.html">CoordSys</a> objects.</p>
 
         <div class="method-description">
           
-          <p>Returns true if FFI GEOS implementation is supported.</p>
+          <p>Returns true if the FFI GEOS implementation is supported.</p>
           
 
           
@@ -741,6 +745,82 @@ false, GEOS features are not available at all.</p>
 
         
       </div><!-- supported-3F-method -->
+
+    
+      <div id="method-c-version" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">version</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the GEOS library version as a Versionomy object if the Versionomy
+library is available; otherwise as a string of the format “x.y.z”. Returns
+nil if GEOS is not available.</p>
+          
+
+          
+          <div class="method-source-code" id="version-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">version</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@version</span>)
+    <span class="ruby-identifier">str_</span> = <span class="ruby-identifier">version_string</span>
+    <span class="ruby-ivar">@version</span> = <span class="ruby-identifier">str_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Versionomy</span>) <span class="ruby-operator">?</span> <span class="ruby-operator">::</span><span class="ruby-constant">Versionomy</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">str_</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@version</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- version-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- version-method -->
+
+    
+      <div id="method-c-version_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">version_string</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the GEOS library version as a string of the format “x.y.z”. Returns
+nil if GEOS is not available.</p>
+          
+
+          
+          <div class="method-source-code" id="version_string-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/geos/interface.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">version_string</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@version_string</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">::</span><span class="ruby-constant">RGeo</span><span class="ruby-operator">::</span><span class="ruby-constant">Geos</span><span class="ruby-operator">::</span><span class="ruby-constant">CAPI_SUPPORTED</span>
+      <span class="ruby-ivar">@version_string</span> = <span class="ruby-operator">::</span><span class="ruby-constant">RGeo</span><span class="ruby-operator">::</span><span class="ruby-constant">Geos</span><span class="ruby-operator">::</span><span class="ruby-constant">CAPIFactory</span>.<span class="ruby-identifier">_geos_version</span>.<span class="ruby-identifier">freeze</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-operator">::</span><span class="ruby-constant">RGeo</span><span class="ruby-operator">::</span><span class="ruby-constant">Geos</span><span class="ruby-operator">::</span><span class="ruby-constant">FFI_SUPPORTED</span>
+      <span class="ruby-ivar">@version_string</span> = <span class="ruby-operator">::</span><span class="ruby-constant">Geos</span><span class="ruby-operator">::</span><span class="ruby-constant">FFIGeos</span>.<span class="ruby-constant">GEOSversion</span>.<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">%r-CAPI-.*$/</span>, <span class="ruby-string">''</span>).<span class="ruby-identifier">freeze</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@version_string</span> = <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@version_string</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- version_string-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- version_string-method -->
 
     
     </section><!-- public-class-method-details -->

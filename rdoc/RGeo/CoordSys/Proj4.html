@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::CoordSys::Proj4 - RGeo 0.3.17 Documentation</title>
+<title>class RGeo::CoordSys::Proj4 - RGeo 0.3.18 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -79,6 +79,10 @@
     <li><a href="#method-c-transform">::transform</a>
     
     <li><a href="#method-c-transform_coords">::transform_coords</a>
+    
+    <li><a href="#method-c-version">::version</a>
+    
+    <li><a href="#method-c-version_string">::version_string</a>
     
     <li><a href="#method-i-3D-3D">#==</a>
     
@@ -359,7 +363,7 @@ in degrees by default.)</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 216</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 241</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>={})
   <span class="ruby-identifier">result_</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">supported?</span>
@@ -418,7 +422,7 @@ in degrees by default.)</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 249</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 274</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>={})
   <span class="ruby-identifier">result_</span> = <span class="ruby-identifier">create</span>(<span class="ruby-identifier">defn_</span>, <span class="ruby-identifier">opts_</span>)
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">result_</span>
@@ -487,7 +491,7 @@ ignored.</p>
 
           
           <div class="method-source-code" id="transform-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 283</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 308</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">transform</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">from_geometry_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">to_factory_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">from_geometry_</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">Feature</span><span class="ruby-operator">::</span><span class="ruby-constant">Point</span>
@@ -538,7 +542,7 @@ either two or three elements.</p>
 
           
           <div class="method-source-code" id="transform_coords-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 263</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 288</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">transform_coords</span>(<span class="ruby-identifier">from_proj_</span>, <span class="ruby-identifier">to_proj_</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, <span class="ruby-identifier">z_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">from_proj_</span>.<span class="ruby-identifier">_radians?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">from_proj_</span>.<span class="ruby-identifier">_geographic?</span>
     <span class="ruby-identifier">x_</span> <span class="ruby-operator">*=</span> <span class="ruby-constant">ImplHelper</span><span class="ruby-operator">::</span><span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">RADIANS_PER_DEGREE</span>
@@ -559,6 +563,77 @@ either two or three elements.</p>
 
         
       </div><!-- transform_coords-method -->
+
+    
+      <div id="method-c-version" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">version</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the <a href="Proj4.html">Proj4</a> library version as a Versionomy
+object if the Versionomy library is available; otherwise as a string of the
+format “x.y.z”. Returns nil if <a href="Proj4.html">Proj4</a> is not
+available.</p>
+          
+
+          
+          <div class="method-source-code" id="version-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">version</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@version</span>)
+    <span class="ruby-identifier">str_</span> = <span class="ruby-identifier">version_string</span>
+    <span class="ruby-ivar">@version</span> = <span class="ruby-identifier">str_</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-operator">::</span><span class="ruby-constant">Versionomy</span>) <span class="ruby-operator">?</span> <span class="ruby-operator">::</span><span class="ruby-constant">Versionomy</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>) <span class="ruby-operator">:</span> <span class="ruby-identifier">str_</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@version</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- version-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- version-method -->
+
+    
+      <div id="method-c-version_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">version_string</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the Proj library version as a string of the format “x.y.z”. Returns
+nil if <a href="Proj4.html">Proj4</a> is not available.</p>
+          
+
+          
+          <div class="method-source-code" id="version_string-source">
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/proj4.rb, line 202</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">version_string</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@version_string</span>)
+    <span class="ruby-ivar">@version_string</span> = <span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:_proj_version</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">_proj_version</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">''</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">'.'</span>) <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@version_string</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- version_string-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- version_string-method -->
 
     
     </section><!-- public-class-method-details -->
