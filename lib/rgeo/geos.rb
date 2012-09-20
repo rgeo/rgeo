@@ -63,48 +63,54 @@ end
 
 # :stopdoc:
 
-# Implementation files
-require 'rgeo/geos/utils'
-require 'rgeo/geos/interface'
-begin
-  require 'rgeo/geos/geos_c_impl'
-rescue ::LoadError; end
-::RGeo::Geos::CAPI_SUPPORTED = ::RGeo::Geos.const_defined?(:CAPIGeometryMethods)
-if ::RGeo::Geos::CAPI_SUPPORTED
-  require 'rgeo/geos/capi_feature_classes'
-  require 'rgeo/geos/capi_factory'
-end
-require 'rgeo/geos/ffi_feature_methods'
-require 'rgeo/geos/ffi_feature_classes'
-require 'rgeo/geos/ffi_factory'
-require 'rgeo/geos/zm_feature_methods'
-require 'rgeo/geos/zm_feature_classes'
-require 'rgeo/geos/zm_factory'
+module RGeo
+  module Geos
 
-# Determine ffi support.
-begin
-  require 'ffi-geos'
-  # An additional check to make sure FFI loaded okay. This can fail on
-  # some versions of ffi-geos and some versions of Rubinius.
-  raise 'Problem loading FFI' unless ::FFI::AutoPointer
-  ::RGeo::Geos::FFI_SUPPORTED = true
-  ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = nil
-rescue ::LoadError => ex_
-  ::RGeo::Geos::FFI_SUPPORTED = false
-  ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = ex_
-rescue => ex_
-  ::RGeo::Geos::FFI_SUPPORTED = false
-  ::RGeo::Geos::FFI_SUPPORT_EXCEPTION = ex_
-end
+    # Implementation files
+    require 'rgeo/geos/utils'
+    require 'rgeo/geos/interface'
+    begin
+      require 'rgeo/geos/geos_c_impl'
+    rescue ::LoadError; end
+    CAPI_SUPPORTED = ::RGeo::Geos.const_defined?(:CAPIGeometryMethods)
+    if CAPI_SUPPORTED
+      require 'rgeo/geos/capi_feature_classes'
+      require 'rgeo/geos/capi_factory'
+    end
+    require 'rgeo/geos/ffi_feature_methods'
+    require 'rgeo/geos/ffi_feature_classes'
+    require 'rgeo/geos/ffi_factory'
+    require 'rgeo/geos/zm_feature_methods'
+    require 'rgeo/geos/zm_feature_classes'
+    require 'rgeo/geos/zm_factory'
 
-# Determine preferred native interface
-if ::RGeo::Geos::CAPI_SUPPORTED
-  ::RGeo::Geos.preferred_native_interface = :capi
-elsif ::RGeo::Geos::FFI_SUPPORTED
-  ::RGeo::Geos.preferred_native_interface = :ffi
-end
+    # Determine ffi support.
+    begin
+      require 'ffi-geos'
+      # An additional check to make sure FFI loaded okay. This can fail on
+      # some versions of ffi-geos and some versions of Rubinius.
+      raise 'Problem loading FFI' unless ::FFI::AutoPointer
+      FFI_SUPPORTED = true
+      FFI_SUPPORT_EXCEPTION = nil
+    rescue ::LoadError => ex_
+      FFI_SUPPORTED = false
+      FFI_SUPPORT_EXCEPTION = ex_
+    rescue => ex_
+      FFI_SUPPORTED = false
+      FFI_SUPPORT_EXCEPTION = ex_
+    end
 
-# Init internal utilities
-::RGeo::Geos::Utils._init
+    # Default preferred native interface
+    if CAPI_SUPPORTED
+      self.preferred_native_interface = :capi
+    elsif FFI_SUPPORTED
+      self.preferred_native_interface = :ffi
+    end
+
+    # Init internal utilities
+    Utils._init
+
+  end
+end
 
 # :startdoc:

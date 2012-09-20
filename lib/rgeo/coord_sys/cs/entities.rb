@@ -178,7 +178,9 @@ module RGeo
       class Base
 
 
-        def inspect  # :nodoc:
+        # Standard object inspection output
+
+        def inspect
           "#<#{self.class}:0x#{object_id.to_s(16)} #{to_wkt}>"
         end
 
@@ -191,6 +193,8 @@ module RGeo
         end
         alias_method :==, :eql?
 
+
+        # Standard hash code
 
         def hash
           @hash ||= self.to_wkt.hash

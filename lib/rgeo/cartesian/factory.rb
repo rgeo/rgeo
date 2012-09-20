@@ -122,6 +122,8 @@ module RGeo
       alias_method :==, :eql?
 
 
+      # Standard hash code
+
       def hash
         @hash ||= [@srid, @has_z, @has_m, @proj4].hash
       end

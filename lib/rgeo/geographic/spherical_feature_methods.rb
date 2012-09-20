@@ -181,7 +181,7 @@ module RGeo
     end
 
 
-    module SphericalMultiLineStringMethods
+    module SphericalMultiLineStringMethods  # :nodoc:
 
 
       def length
