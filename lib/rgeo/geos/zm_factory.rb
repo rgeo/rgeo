@@ -287,6 +287,8 @@ module RGeo
       alias_method :==, :eql?
 
 
+      # Standard hash code
+
       def hash
         @hash ||= [@zfactory, @mfactory].hash
       end

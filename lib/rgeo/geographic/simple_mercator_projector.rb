@@ -51,6 +51,7 @@ module RGeo
           :coord_sys => SimpleMercatorProjector._coordsys_3785,
           :buffer_resolution => opts_[:buffer_resolution],
           :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+          :uses_lenient_assertions => opts_[:uses_lenient_assertions],
           :has_z_coordinate => opts_[:has_z_coordinate],
           :has_m_coordinate => opts_[:has_m_coordinate])
       end

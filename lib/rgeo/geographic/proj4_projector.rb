@@ -92,6 +92,7 @@ module RGeo
             :coord_sys => opts_[:coord_sys], :srid => opts_[:srid],
             :buffer_resolution => opts_[:buffer_resolution],
             :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
+            :uses_lenient_assertions => opts_[:uses_lenient_assertions],
             :has_z_coordinate => opts_[:has_z_coordinate],
             :has_m_coordinate => opts_[:has_m_coordinate],
             :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],

@@ -1,3 +1,8 @@
+=== 0.3.19 / 2012-09-20
+
+* The Geos factories, as well as the projected geographic convenience factories such as simple_mercator, now support the :uses_lenient_assertions option.
+* RGeo::Geographic::ProjectedWindow#height was incorrectly aliased to x_span rather than y_span. Fixed.
+
 === 0.3.18 / 2012-09-19
 
 * The coordinate system WKT parser now recognizes the nonstandard "EXTENSION" node. This node is not part of the WKT, but it is present in some data sets, including the coordinate systems shipped with Proj 4.8, so we now support it.

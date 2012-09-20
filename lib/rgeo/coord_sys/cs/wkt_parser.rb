@@ -50,7 +50,7 @@ module RGeo
         end
 
 
-        def parse(containing_type_=nil)
+        def parse(containing_type_=nil)  # :nodoc:
           if @cur_token.kind_of?(QuotedString) ||
             @cur_token.kind_of?(::Numeric) ||
             (containing_type_ == 'AXIS' && @cur_token.kind_of?(TypeString))
@@ -231,12 +231,12 @@ module RGeo
 
         class AuthorityClause  # :nodoc:
 
-          def initialize(name_, code_)
+          def initialize(name_, code_)  # :nodoc:
             @name = name_
             @code = code_
           end
 
-          def to_a
+          def to_a  # :nodoc:
             [@name, @code]
           end
 
@@ -245,28 +245,28 @@ module RGeo
 
         class ExtensionClause  # :nodoc:
 
-          def initialize(key_, value_)
+          def initialize(key_, value_)  # :nodoc:
             @key = key_
             @value = value_
           end
 
-          attr_reader :key
-          attr_reader :value
+          attr_reader :key  # :nodoc:
+          attr_reader :value  # :nodoc:
 
         end
 
 
         class ArgumentList  # :nodoc:
 
-          def initialize
+          def initialize  # :nodoc:
             @values = []
           end
 
-          def <<(value_)
+          def <<(value_)  # :nodoc:
             @values << value_
           end
 
-          def assert_empty
+          def assert_empty  # :nodoc:
             if @values.size > 0
               names_ = @values.map do |val_|
                 val_.kind_of?(Base) ? val_._wkt_typename : val_.inspect
@@ -275,7 +275,7 @@ module RGeo
             end
           end
 
-          def find_first(klass_)
+          def find_first(klass_)  # :nodoc:
             @values.each_with_index do |val_, index_|
               if val_.kind_of?(klass_)
                 @values.slice!(index_)
@@ -285,7 +285,7 @@ module RGeo
             nil
           end
 
-          def find_all(klass_)
+          def find_all(klass_)  # :nodoc:
             results_ = []
             nvalues_ = []
             @values.each do |val_|
@@ -299,13 +299,13 @@ module RGeo
             results_
           end
 
-          def create_optionals
+          def create_optionals  # :nodoc:
             hash_ = {}
             find_all(ExtensionClause).each{ |ec_| hash_[ec_.key] = ec_.value }
             (find_first(AuthorityClause) || [nil, nil]).to_a + [nil, nil, nil, hash_]
           end
 
-          def shift(klass_=nil)
+          def shift(klass_=nil)  # :nodoc:
             val_ = @values.shift
             unless val_
               raise Error::ParseError, "No arguments left... expected #{klass_}"

@@ -54,8 +54,8 @@ module RGeo
 
       def initialize(opts_={})
         # Main flags
-        @uses_lenient_multi_polygon_assertions = opts_[:lenient_multi_polygon_assertions] ||
-          opts_[:uses_lenient_multi_polygon_assertions]
+        @uses_lenient_multi_polygon_assertions = opts_[:uses_lenient_assertions] ||
+          opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
         @has_z = opts_[:has_z_coordinate] ? true : false
         @has_m = opts_[:has_m_coordinate] ? true : false
         if @has_z && @has_m
@@ -144,7 +144,9 @@ module RGeo
       end
 
 
-      def inspect  # :nodoc:
+      # Standard object inspection output
+
+      def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} srid=#{srid}>"
       end
 
@@ -160,6 +162,8 @@ module RGeo
       end
       alias_method :==, :eql?
 
+
+      # Standard hash code
 
       def hash
         @hash ||= [@srid, @has_z, @has_m, @buffer_resolution, @proj4].hash

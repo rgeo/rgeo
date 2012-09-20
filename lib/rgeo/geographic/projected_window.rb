@@ -181,7 +181,7 @@ module RGeo
       def y_span
         @y_max - @y_min
       end
-      alias_method :height, :x_span
+      alias_method :height, :y_span
 
 
       # Returns a two-element array containing the x and y coordinates

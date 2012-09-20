@@ -61,7 +61,7 @@ module RGeo
 
           # Get flags to pass to the C extension
           flags_ = 0
-          flags_ |= 1 if opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
+          flags_ |= 1 if opts_[:uses_lenient_assertions] || opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
           flags_ |= 2 if opts_[:has_z_coordinate]
           flags_ |= 4 if opts_[:has_m_coordinate]
           if flags_ & 6 == 6
@@ -150,7 +150,9 @@ module RGeo
       end
 
 
-      def inspect  # :nodoc:
+      # Standard object inspection output
+
+      def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} srid=#{_srid} bufres=#{_buffer_resolution} flags=#{_flags}>"
       end
 
@@ -164,6 +166,8 @@ module RGeo
       end
       alias_method :==, :eql?
 
+
+      # Standard hash code
 
       def hash
         @hash ||= [_srid, _buffer_resolution, _flags, _proj4].hash
