@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::CoordSys::CS::Ellipsoid - RGeo 0.3.18 Documentation</title>
+<title>class RGeo::CoordSys::CS::Ellipsoid - RGeo 0.3.19 Documentation</title>
 
 <link type="text/css" media="screen" href="../../../rdoc.css" rel="stylesheet">
 
@@ -239,10 +239,6 @@
   
     <li><a href="../../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
   
-    <li><a href="../../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
-  
-    <li><a href="../../../RGeo/Geos.html">RGeo::Geos</a>
-  
     <li><a href="../../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
     <li><a href="../../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
@@ -260,8 +256,6 @@
     <li><a href="../../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
   
     <li><a href="../../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
-  
-    <li><a href="../../../Object.html">Object</a>
   
   </ul>
 </nav>
@@ -402,7 +396,7 @@ href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 779</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 783</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">semi_minor_axis_</span>, <span class="ruby-identifier">inverse_flattening_</span>, <span class="ruby-identifier">ivf_definitive_</span>, <span class="ruby-identifier">linear_unit_</span>, *<span class="ruby-identifier">optional_</span>)
   <span class="ruby-identifier">new</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">semi_minor_axis_</span>, <span class="ruby-identifier">inverse_flattening_</span>, <span class="ruby-identifier">ivf_definitive_</span>, <span class="ruby-identifier">linear_unit_</span>, *<span class="ruby-identifier">optional_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -437,7 +431,7 @@ parameters specified by the <a href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="create_ellipsoid-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 790</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 794</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create_ellipsoid</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">semi_minor_axis_</span>, <span class="ruby-identifier">linear_unit_</span>, *<span class="ruby-identifier">optional_</span>)
   <span class="ruby-identifier">semi_major_axis_</span> = <span class="ruby-identifier">semi_major_axis_</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">semi_minor_axis_</span> = <span class="ruby-identifier">semi_minor_axis_</span>.<span class="ruby-identifier">to_f</span>
@@ -476,7 +470,7 @@ parameters specified by the <a href="Info.html">Info</a> interface.</p>
 
           
           <div class="method-source-code" id="create_flattened_sphere-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 805</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/coord_sys/cs/entities.rb, line 809</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create_flattened_sphere</span>(<span class="ruby-identifier">name_</span>, <span class="ruby-identifier">semi_major_axis_</span>, <span class="ruby-identifier">inverse_flattening_</span>, <span class="ruby-identifier">linear_unit_</span>, *<span class="ruby-identifier">optional_</span>)
   <span class="ruby-identifier">semi_major_axis_</span> = <span class="ruby-identifier">semi_major_axis_</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">inverse_flattening_</span> = <span class="ruby-identifier">inverse_flattening_</span>.<span class="ruby-identifier">to_f</span>

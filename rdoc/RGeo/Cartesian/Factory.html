@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::Cartesian::Factory - RGeo 0.3.18 Documentation</title>
+<title>class RGeo::Cartesian::Factory - RGeo 0.3.19 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -59,7 +59,7 @@
     <nav id="parent-class-section" class="section">
   <h3 class="section-header">Parent</h3>
   
-  <p class="link"><a href="../../Object.html">Object</a>
+  <p class="link">Object
   
 </nav>
 
@@ -283,10 +283,6 @@
   
     <li><a href="../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
   
-    <li><a href="../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
-  
-    <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
-  
     <li><a href="../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
     <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
@@ -304,8 +300,6 @@
     <li><a href="../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
   
     <li><a href="../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
-  
-    <li><a href="../../Object.html">Object</a>
   
   </ul>
 </nav>
@@ -479,7 +473,7 @@ href="../Feature/Factory.html#method-i-collection">RGeo::Feature::Factory#collec
 
           
           <div class="method-source-code" id="collection-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 305</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 307</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-constant">GeometryCollectionImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -510,7 +504,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="coord_sys-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 340</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 342</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_sys</span>
   <span class="ruby-ivar">@coord_sys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -572,12 +566,12 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
         <div class="method-description">
           
-          
+          <p>Standard hash code</p>
           
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 125</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 127</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@hash</span> <span class="ruby-operator">||=</span> [<span class="ruby-ivar">@srid</span>, <span class="ruby-ivar">@has_z</span>, <span class="ruby-ivar">@has_m</span>, <span class="ruby-ivar">@proj4</span>].<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -608,7 +602,7 @@ href="../Feature/Factory.html#method-i-line">RGeo::Feature::Factory#line</a></p>
 
           
           <div class="method-source-code" id="line-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 284</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 286</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>)
   <span class="ruby-constant">LineImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -639,7 +633,7 @@ href="../Feature/Factory.html#method-i-line_string">RGeo::Feature::Factory#line_
 
           
           <div class="method-source-code" id="line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 277</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 279</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>)
   <span class="ruby-constant">LineStringImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -670,7 +664,7 @@ href="../Feature/Factory.html#method-i-linear_ring">RGeo::Feature::Factory#linea
 
           
           <div class="method-source-code" id="linear_ring-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 291</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 293</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>)
   <span class="ruby-constant">LinearRingImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -701,7 +695,7 @@ href="../Feature/Factory.html#method-i-multi_line_string">RGeo::Feature::Factory
 
           
           <div class="method-source-code" id="multi_line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 319</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 321</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-constant">MultiLineStringImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -732,7 +726,7 @@ href="../Feature/Factory.html#method-i-multi_point">RGeo::Feature::Factory#multi
 
           
           <div class="method-source-code" id="multi_point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 312</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 314</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-constant">MultiPointImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -763,7 +757,7 @@ href="../Feature/Factory.html#method-i-multi_polygon">RGeo::Feature::Factory#mul
 
           
           <div class="method-source-code" id="multi_polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 326</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 328</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-constant">MultiPolygonImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -794,7 +788,7 @@ href="../Feature/Factory.html#method-i-parse_wkb">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkb-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 263</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 265</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkb</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-ivar">@wkb_parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -825,7 +819,7 @@ href="../Feature/Factory.html#method-i-parse_wkt">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkt-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 256</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 258</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkt</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-ivar">@wkt_parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -856,7 +850,7 @@ href="../Feature/Factory.html#method-i-point">RGeo::Feature::Factory#point</a></
 
           
           <div class="method-source-code" id="point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 270</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 272</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, *<span class="ruby-identifier">extra_</span>)
   <span class="ruby-constant">PointImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, *<span class="ruby-identifier">extra_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -887,7 +881,7 @@ href="../Feature/Factory.html#method-i-polygon">RGeo::Feature::Factory#polygon</
 
           
           <div class="method-source-code" id="polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 298</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 300</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-constant">PolygonImpl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -918,7 +912,7 @@ href="../Feature/Factory.html#method-i-proj4">RGeo::Feature::Factory#proj4</a></
 
           
           <div class="method-source-code" id="proj4-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 333</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 335</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">proj4</span>
   <span class="ruby-ivar">@proj4</span>
 <span class="ruby-keyword">end</span></pre>
@@ -949,7 +943,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="property-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 236</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 238</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">property</span>(<span class="ruby-identifier">name_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name_</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:has_z_coordinate</span>
@@ -992,7 +986,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="srid-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 229</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/cartesian/factory.rb, line 231</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">srid</span>
   <span class="ruby-ivar">@srid</span>
 <span class="ruby-keyword">end</span></pre>

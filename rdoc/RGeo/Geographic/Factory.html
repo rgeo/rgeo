@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class RGeo::Geographic::Factory - RGeo 0.3.18 Documentation</title>
+<title>class RGeo::Geographic::Factory - RGeo 0.3.19 Documentation</title>
 
 <link type="text/css" media="screen" href="../../rdoc.css" rel="stylesheet">
 
@@ -59,7 +59,7 @@
     <nav id="parent-class-section" class="section">
   <h3 class="section-header">Parent</h3>
   
-  <p class="link"><a href="../../Object.html">Object</a>
+  <p class="link">Object
   
 </nav>
 
@@ -293,10 +293,6 @@
   
     <li><a href="../../RGeo/Geographic/ProjectedWindow.html">RGeo::Geographic::ProjectedWindow</a>
   
-    <li><a href="../../RGeo/Geographic/SphericalMultiLineStringMethods.html">RGeo::Geographic::SphericalMultiLineStringMethods</a>
-  
-    <li><a href="../../RGeo/Geos.html">RGeo::Geos</a>
-  
     <li><a href="../../RGeo/Geos/CAPIFactory.html">RGeo::Geos::CAPIFactory</a>
   
     <li><a href="../../RGeo/Geos/FFIFactory.html">RGeo::Geos::FFIFactory</a>
@@ -314,8 +310,6 @@
     <li><a href="../../RGeo/WKRep/WKTGenerator.html">RGeo::WKRep::WKTGenerator</a>
   
     <li><a href="../../RGeo/WKRep/WKTParser.html">RGeo::WKRep::WKTParser</a>
-  
-    <li><a href="../../Object.html">Object</a>
   
   </ul>
 </nav>
@@ -396,7 +390,7 @@ href="../Feature/Factory.html#method-i-collection">RGeo::Feature::Factory#collec
 
           
           <div class="method-source-code" id="collection-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 409</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 411</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">collection</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-ivar">@geometry_collection_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -427,7 +421,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="coord_sys-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 444</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 446</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">coord_sys</span>
   <span class="ruby-ivar">@coord_sys</span>
 <span class="ruby-keyword">end</span></pre>
@@ -495,7 +489,7 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
           
           <div class="method-source-code" id="has_projection-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 267</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 269</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_projection?</span>
   <span class="ruby-operator">!</span><span class="ruby-ivar">@projector</span>.<span class="ruby-identifier">nil?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -520,12 +514,12 @@ href="../Feature/Factory.html#method-i-coord_sys">RGeo::Feature::Factory#coord_s
 
         <div class="method-description">
           
-          
+          <p>Standard hash code</p>
           
 
           
           <div class="method-source-code" id="hash-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 130</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">hash</span>
   <span class="ruby-ivar">@hash</span> <span class="ruby-operator">||=</span> [<span class="ruby-ivar">@impl_prefix</span>, <span class="ruby-ivar">@support_z</span>, <span class="ruby-ivar">@support_m</span>, <span class="ruby-ivar">@proj4</span>].<span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -556,7 +550,7 @@ href="../Feature/Factory.html#method-i-line">RGeo::Feature::Factory#line</a></p>
 
           
           <div class="method-source-code" id="line-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 388</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 390</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line</span>(<span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>)
   <span class="ruby-ivar">@line_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">start_</span>, <span class="ruby-identifier">end_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -587,7 +581,7 @@ href="../Feature/Factory.html#method-i-line_string">RGeo::Feature::Factory#line_
 
           
           <div class="method-source-code" id="line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 381</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 383</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">line_string</span>(<span class="ruby-identifier">points_</span>)
   <span class="ruby-ivar">@line_string_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -618,7 +612,7 @@ href="../Feature/Factory.html#method-i-linear_ring">RGeo::Feature::Factory#linea
 
           
           <div class="method-source-code" id="linear_ring-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 395</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 397</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">linear_ring</span>(<span class="ruby-identifier">points_</span>)
   <span class="ruby-ivar">@linear_ring_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">points_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -649,7 +643,7 @@ href="../Feature/Factory.html#method-i-multi_line_string">RGeo::Feature::Factory
 
           
           <div class="method-source-code" id="multi_line_string-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 423</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 425</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_line_string</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-ivar">@multi_line_string_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -680,7 +674,7 @@ href="../Feature/Factory.html#method-i-multi_point">RGeo::Feature::Factory#multi
 
           
           <div class="method-source-code" id="multi_point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 416</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 418</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_point</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-ivar">@multi_point_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -711,7 +705,7 @@ href="../Feature/Factory.html#method-i-multi_polygon">RGeo::Feature::Factory#mul
 
           
           <div class="method-source-code" id="multi_polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 430</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 432</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">multi_polygon</span>(<span class="ruby-identifier">elems_</span>)
   <span class="ruby-ivar">@multi_polygon_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">elems_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -742,7 +736,7 @@ href="../Feature/Factory.html#method-i-parse_wkb">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkb-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 367</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 369</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkb</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-ivar">@wkb_parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -773,7 +767,7 @@ href="../Feature/Factory.html#method-i-parse_wkt">RGeo::Feature::Factory#parse_w
 
           
           <div class="method-source-code" id="parse_wkt-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 360</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 362</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">parse_wkt</span>(<span class="ruby-identifier">str_</span>)
   <span class="ruby-ivar">@wkt_parser</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str_</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -804,7 +798,7 @@ href="../Feature/Factory.html#method-i-point">RGeo::Feature::Factory#point</a></
 
           
           <div class="method-source-code" id="point-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 374</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 376</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">point</span>(<span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, *<span class="ruby-identifier">extra_</span>)
   <span class="ruby-ivar">@point_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">x_</span>, <span class="ruby-identifier">y_</span>, *<span class="ruby-identifier">extra_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -835,7 +829,7 @@ href="../Feature/Factory.html#method-i-polygon">RGeo::Feature::Factory#polygon</
 
           
           <div class="method-source-code" id="polygon-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 402</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 404</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">polygon</span>(<span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@polygon_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">self</span>, <span class="ruby-identifier">outer_ring_</span>, <span class="ruby-identifier">inner_rings_</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -866,7 +860,7 @@ href="../Feature/Factory.html#method-i-proj4">RGeo::Feature::Factory#proj4</a></
 
           
           <div class="method-source-code" id="proj4-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 437</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 439</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">proj4</span>
   <span class="ruby-ivar">@proj4</span>
 <span class="ruby-keyword">end</span></pre>
@@ -900,7 +894,7 @@ given geometry is not of this factory.</p>
 
           
           <div class="method-source-code" id="project-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 286</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 288</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">project</span>(<span class="ruby-identifier">geometry_</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@projector</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">geometry_</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">geometry_</span>.<span class="ruby-identifier">factory</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">self</span>
@@ -935,7 +929,7 @@ factory does not support a projection.</p>
 
           
           <div class="method-source-code" id="projection_factory-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 275</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 277</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">projection_factory</span>
   <span class="ruby-ivar">@projector</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@projector</span>.<span class="ruby-identifier">projection_factory</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -967,7 +961,7 @@ does not support a projection, or the projection limits are not known.</p>
 
           
           <div class="method-source-code" id="projection_limits_window-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 326</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 328</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">projection_limits_window</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@projector</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-keyword">defined?</span>(<span class="ruby-ivar">@projection_limits_window</span>)
@@ -1008,7 +1002,7 @@ whether or not it wraps.</p>
 
           
           <div class="method-source-code" id="projection_wraps-3F-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 316</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 318</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">projection_wraps?</span>
   <span class="ruby-ivar">@projector</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@projector</span>.<span class="ruby-identifier">wraps?</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1039,7 +1033,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="property-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 340</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 342</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">property</span>(<span class="ruby-identifier">name_</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">name_</span>
   <span class="ruby-keyword">when</span> <span class="ruby-value">:has_z_coordinate</span>
@@ -1082,7 +1076,7 @@ href="../Feature/Factory.html#method-i-property">RGeo::Feature::Factory#property
 
           
           <div class="method-source-code" id="srid-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 260</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 262</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">srid</span>
   <span class="ruby-ivar">@srid</span>
 <span class="ruby-keyword">end</span></pre>
@@ -1115,7 +1109,7 @@ given geometry is not of the projection defined by this factory.</p>
 
           
           <div class="method-source-code" id="unproject-source">
-            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 300</span>
+            <pre><span class="ruby-comment"># File lib/rgeo/geographic/factory.rb, line 302</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">unproject</span>(<span class="ruby-identifier">geometry_</span>)
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">geometry_</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@projector</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@projector</span>.<span class="ruby-identifier">projection_factory</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">geometry_</span>.<span class="ruby-identifier">factory</span>
