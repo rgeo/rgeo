@@ -61,7 +61,7 @@ Some features also require the following:
   may be available via your operating system's package manager, or from
   http://trac.osgeo.org/proj
 * On some platforms, you should install the ffi-geos gem (version 0.0.6
-  or later recommended.) JRuby requires this gem to properly link with
+  or later recommended.) JRuby requires this gem to link properly with
   Geos, and Windows builds probably do as well.
 
 Note: The build system assumes a unix-like environment. Windows builds

@@ -110,6 +110,27 @@ module RGeo
         end
 
 
+        def test_distance_coincident
+          point1_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+          point2_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+          assert_equal(0.0, point1_.dist_to_point(point2_))
+        end
+
+
+        def test_distance_opposite
+          point1_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+          point2_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(-1, 0, 0)
+          assert_close_enough(::Math::PI, point1_.dist_to_point(point2_))
+        end
+
+
+        def test_distance_right_angle
+          point1_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+          point2_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(0, -1, 0)
+          assert_close_enough(::Math::PI / 2, point1_.dist_to_point(point2_))
+        end
+
+
         def test_arc_axis
           point1_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(1, 1, 0)
           point2_ = ::RGeo::Geographic::SphericalMath::PointXYZ.new(1, -1, 0)

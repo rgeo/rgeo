@@ -1,3 +1,7 @@
+=== 0.3.20 / 2012-12-08
+
+* Distances computed by the spherical factory were incorrect when covering more than 90 degrees of the globe. Fixed. (reported by exoth)
+
 === 0.3.19 / 2012-09-20
 
 * The Geos factories, as well as the projected geographic convenience factories such as simple_mercator, now support the :uses_lenient_assertions option.

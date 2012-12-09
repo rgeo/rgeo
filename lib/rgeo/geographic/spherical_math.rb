@@ -118,12 +118,16 @@ module RGeo
           rx_ = rhs_.x
           ry_ = rhs_.y
           rz_ = rhs_.z
-          x_ = @y*rz_-@z*ry_
-          y_ = @z*rx_-@x*rz_
-          z_ = @x*ry_-@y*rx_
-          r_ = ::Math.sqrt(x_*x_ + y_*y_ + z_*z_)
-          r_ = 1.0 if r_ > 1.0
-          ::Math.asin(r_)
+          dot_ = @x * rx_ + @y * ry_ + @z * rz_
+          if dot_ > -0.8 && dot_ < 0.8
+            ::Math.acos(dot_)
+          else
+            x_ = @y*rz_-@z*ry_
+            y_ = @z*rx_-@x*rz_
+            z_ = @x*ry_-@y*rx_
+            as_ = ::Math.asin(::Math.sqrt(x_*x_ + y_*y_ + z_*z_))
+            dot_ > 0.0 ? as_ : ::Math::PI - as_
+          end
         end
 
 
