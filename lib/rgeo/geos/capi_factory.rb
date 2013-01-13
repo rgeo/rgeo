@@ -328,6 +328,7 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
+        str_.gsub!('NAN','0.0')
         if (wkt_parser_ = self._wkt_parser)
           wkt_parser_.parse(str_)
         else

@@ -360,6 +360,7 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
+        str_.gsub!('NAN','0.0')
         @wkt_parser.parse(str_)
       end
 

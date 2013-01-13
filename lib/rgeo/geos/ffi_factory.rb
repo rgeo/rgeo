@@ -325,6 +325,7 @@ module RGeo
       # See ::RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
+	      str_.gsub!('NAN','0.0')
         if @wkt_reader
           _wrap_fg_geom(@wkt_reader.read(str_), nil)
         else
