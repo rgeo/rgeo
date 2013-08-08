@@ -120,7 +120,11 @@ module RGeo
           mp_ = @factory.multi_point([p1_, p2_])
           collection_ = @factory.collection([p1_, p2_])
           geom_ = collection_.unary_union
-          assert(geom_.eql?(mp_))
+          if ::RGeo::Geos::CAPIFactory._supports_unary_union?
+            assert(geom_.eql?(mp_))
+          else
+            assert_equal(nil, geom_)
+          end
         end
 
 
@@ -128,7 +132,11 @@ module RGeo
           collection_ = @factory.parse_wkt("GEOMETRYCOLLECTION (POLYGON ((0 0, 0 90, 90 90, 90 0, 0 0)),   POLYGON ((120 0, 120 90, 210 90, 210 0, 120 0)),  LINESTRING (40 50, 40 140),  LINESTRING (160 50, 160 140),  POINT (60 50),  POINT (60 140),  POINT (40 140))")
           expected_ = @factory.parse_wkt("GEOMETRYCOLLECTION (POINT (60 140),   LINESTRING (40 90, 40 140), LINESTRING (160 90, 160 140), POLYGON ((0 0, 0 90, 40 90, 90 90, 90 0, 0 0)), POLYGON ((120 0, 120 90, 160 90, 210 90, 210 0, 120 0)))")
           geom_ = collection_.unary_union
-          assert(geom_.eql?(expected_))
+          if ::RGeo::Geos::CAPIFactory._supports_unary_union?
+            assert(geom_.eql?(expected_))
+          else
+            assert_equal(nil, geom_)
+          end
         end
 
 
