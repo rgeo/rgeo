@@ -250,7 +250,6 @@ module RGeo
           limits_ = @factory.projection_limits_window
           x_ -= limits_.x_span if x_ >= limits_.x_max
         else
-          #x_ = (@x_min + @x_max) * rand
           x_ = @x_min + (@x_max - @x_min) * rand
         end
         @factory.unproject(@factory.projection_factory.point(x_, y_))
