@@ -54,9 +54,9 @@ module RGeo
         end
 
 
-        def test_epsg_3785
+        def test_epsg_3857
           db_ = ::RGeo::CoordSys::SRSDatabase::SrOrg.new('epsg')
-          entry_ = db_.get(3785)
+          entry_ = db_.get(3857)
           assert_equal('+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs', entry_.proj4.original_str)
           assert_kind_of(::RGeo::CoordSys::CS::ProjectedCoordinateSystem, entry_.coord_sys)
           assert_equal('Popular Visualisation CRS / Mercator', entry_.name)
