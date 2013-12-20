@@ -46,9 +46,9 @@ module RGeo
 
       def initialize(geography_factory_, opts_={})
         @geography_factory = geography_factory_
-        @projection_factory = Cartesian.preferred_factory(:srid => 3785,
-          :proj4 => SimpleMercatorProjector._proj4_3785,
-          :coord_sys => SimpleMercatorProjector._coordsys_3785,
+        @projection_factory = Cartesian.preferred_factory(:srid => 3857,
+          :proj4 => SimpleMercatorProjector._proj4_3857,
+          :coord_sys => SimpleMercatorProjector._coordsys_3857,
           :buffer_resolution => opts_[:buffer_resolution],
           :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
           :uses_lenient_assertions => opts_[:uses_lenient_assertions],
@@ -140,19 +140,19 @@ module RGeo
       end
 
 
-      def self._proj4_3785  # :nodoc:
-        unless defined?(@proj4_3785)
-          @proj4_3785 = CoordSys::Proj4.create('+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
+      def self._proj4_3857  # :nodoc:
+        unless defined?(@proj4_3857)
+          @proj4_3857 = CoordSys::Proj4.create('+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs')
         end
-        @proj4_3785
+        @proj4_3857
       end
 
 
-      def self._coordsys_3785  # :nodoc:
-        unless defined?(@coordsys_3785)
-          @coordsys_3785 = CoordSys::CS.create_from_wkt('PROJCS["Popular Visualisation CRS / Mercator",GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]],UNIT["metre",1,AUTHORITY["EPSG","9001"]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",0],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],AUTHORITY["EPSG","3785"],AXIS["X",EAST],AXIS["Y",NORTH]]')
+      def self._coordsys_3857  # :nodoc:
+        unless defined?(@coordsys_3857)
+          @coordsys_3857 = CoordSys::CS.create_from_wkt('PROJCS["Popular Visualisation CRS / Mercator",GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]],UNIT["metre",1,AUTHORITY["EPSG","9001"]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",0],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],AUTHORITY["EPSG","3785"],AXIS["X",EAST],AXIS["Y",NORTH]]')
         end
-        @coordsys_3785
+        @coordsys_3857
       end
 
 

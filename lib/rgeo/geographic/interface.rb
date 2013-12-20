@@ -200,12 +200,12 @@ module RGeo
       # technologies utilize this coordinate system. The second is a
       # Mercator projection based on a "sphericalization" of the WGS84
       # lat-long system. This projection is the basis of the map's screen
-      # and tiling coordinates, and has been assigned EPSG 3785.
+      # and tiling coordinates, and has been assigned EPSG 3857.
       #
       # This factory represents both coordinate systems. The main factory
       # produces data in the lat-long system and reports SRID 4326, and
       # the projected factory produces data in the projection and reports
-      # SRID 3785. Latitudes are restricted to the range
+      # SRID 3857. Latitudes are restricted to the range
       # (-85.05112877980659, 85.05112877980659), which conveniently
       # results in a square projected domain.
       #

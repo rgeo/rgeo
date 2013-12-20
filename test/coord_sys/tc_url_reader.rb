@@ -60,17 +60,17 @@ module RGeo
         end
 
 
-        def test_sr_org_epsg_3785_ogcwkt
+        def test_sr_org_epsg_3857_ogcwkt
           db_ = ::RGeo::CoordSys::SRSDatabase::UrlReader.new
-          entry_ = db_.get('http://spatialreference.org/ref/epsg/3785/ogcwkt/')
+          entry_ = db_.get('http://spatialreference.org/ref/epsg/3857/ogcwkt/')
           assert_kind_of(::RGeo::CoordSys::CS::ProjectedCoordinateSystem, entry_.coord_sys)
           assert_equal('Popular Visualisation CRS / Mercator', entry_.name)
         end
 
 
-        def test_sr_org_epsg_3785_proj4
+        def test_sr_org_epsg_3857_proj4
           db_ = ::RGeo::CoordSys::SRSDatabase::UrlReader.new
-          entry_ = db_.get('http://spatialreference.org/ref/epsg/3785/proj4/')
+          entry_ = db_.get('http://spatialreference.org/ref/epsg/3857/proj4/')
           assert_equal('+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs', entry_.proj4.original_str)
         end
 
