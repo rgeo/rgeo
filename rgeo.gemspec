@@ -41,7 +41,7 @@
   s_.version = "#{::File.read('Version').strip}.nonrelease"
   s_.author = 'Daniel Azuma'
   s_.email = 'dazuma@gmail.com'
-  s_.homepage = "http://dazuma.github.com/rgeo"
+  s_.homepage = "http://rgeo.github.com/rgeo"
   s_.rubyforge_project = 'virtuoso'
   s_.required_ruby_version = '>= 1.8.7'
   s_.files = ::Dir.glob("lib/**/*.rb") +

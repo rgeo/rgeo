@@ -122,15 +122,15 @@ we are planning on introducing more add-on modules, including:
 
 === Development and support
 
-Documentation is available at http://dazuma.github.com/rgeo/rdoc
+Documentation is available at http://rgeo.github.com/rgeo/rdoc
 
-Source code is hosted on Github at http://github.com/dazuma/rgeo
+Source code is hosted on Github at http://github.com/rgeo/rgeo
 
 Contributions are welcome. Fork the project on Github.
 
-Build status: {<img src="https://secure.travis-ci.org/dazuma/rgeo.png" />}[http://travis-ci.org/dazuma/rgeo]
+Build status: {<img src="https://secure.travis-ci.org/rgeo/rgeo.png" />}[http://travis-ci.org/rgeo/rgeo]
 
-Report bugs on Github issues at http://github.org/dazuma/rgeo/issues
+Report bugs on Github issues at http://github.org/rgeo/rgeo/issues
 
 Support available on the rgeo-users google group at http://groups.google.com/group/rgeo-users
 
