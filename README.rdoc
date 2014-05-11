@@ -44,7 +44,7 @@ http://groups.google.com/group/rgeo-users
 
 RGeo is known to work with the following Ruby implementations:
 
-* Standard "MRI" Ruby 1.8.7 or later. (1.9.2 or later preferred.)
+* Ruby 1.8.7 or later. (2.0 or later preferred.)
 * Rubinius 1.1 or later.
 * Partial support for JRuby 1.6.3 or later. The FFI implementation of
   GEOS is available (ffi-geos gem required) but CAPI is not.
@@ -122,7 +122,7 @@ we are planning on introducing more add-on modules, including:
 
 === Development and support
 
-Documentation is available at http://rgeo.github.com/rgeo/rdoc
+RDoc Documentation is available at http://rdoc.info/gems/rgeo
 
 Source code is hosted on Github at http://github.com/rgeo/rgeo
 
@@ -130,11 +130,9 @@ Contributions are welcome. Fork the project on Github.
 
 Build status: {<img src="https://secure.travis-ci.org/rgeo/rgeo.png" />}[http://travis-ci.org/rgeo/rgeo]
 
-Report bugs on Github issues at http://github.org/rgeo/rgeo/issues
+Report bugs on Github issues at http://github.com/rgeo/rgeo/issues
 
 Support available on the rgeo-users google group at http://groups.google.com/group/rgeo-users
-
-Contact the author at dazuma at gmail dot com.
 
 === Acknowledgments
 
