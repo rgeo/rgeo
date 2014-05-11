@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
-# 
+#
 # RGeo gemspec
-# 
+#
 # -----------------------------------------------------------------------------
 # Copyright 2011-2012 Daniel Azuma
 #
@@ -31,8 +31,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 # -----------------------------------------------------------------------------
-;
-
 
 ::Gem::Specification.new do |s_|
   s_.name = 'rgeo'
@@ -41,8 +39,7 @@
   s_.version = "#{::File.read('Version').strip}.nonrelease"
   s_.author = 'Daniel Azuma'
   s_.email = 'dazuma@gmail.com'
-  s_.homepage = "http://rgeo.github.com/rgeo"
-  s_.rubyforge_project = 'virtuoso'
+  s_.homepage = "http://github.com/rgeo/rgeo"
   s_.required_ruby_version = '>= 1.8.7'
   s_.files = ::Dir.glob("lib/**/*.rb") +
     ::Dir.glob("ext/**/*.{rb,c,h}") +
