@@ -31,13 +31,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 # -----------------------------------------------------------------------------
-;
 
+source "https://rubygems.org"
 
-source "http://rubygems.org"
-
-group(:test) do
-  gem('rake', '>= 0.9.2')
-  gem('rdoc', '>= 3.12')
-  gem('ffi-geos', '>= 0.1.0')
+group :test  do
+  gem 'rake', '>= 0.9.2'
+  gem 'rdoc', '>= 3.12'
+  gem 'ffi-geos', '>= 0.1.0'
 end
