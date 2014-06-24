@@ -11,6 +11,23 @@ if ::RUBY_DESCRIPTION =~ /^jruby\s/
 else
 
   require 'mkmf'
+  require 'rbconfig'
+
+  if find_executable('geos-config')
+    $CFLAGS << " #{`geos-config --cflags`.strip}"
+    $LIBS << " #{`geos-config --libs`.strip}"
+  else
+  end
+
+  if CONFIG['CC'] =~ /gcc/
+    $CFLAGS << ' -Wall -Wextra'
+  end
+
+  create_makefile('rgeo/geos/geos_c_impl')
+end
+
+if false
+  require 'mkmf'
 
   header_dirs_ =
     [
