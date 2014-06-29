@@ -259,6 +259,16 @@ module RGeo
           assert(poly2_.is_empty?)
         end
 
+        def test_ignores_duplicate_points
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 1)
+          point3_ = @factory.point(0, 1)
+          point4_ = @factory.point(1, 0)
+          exterior_ = @factory.linear_ring([point1_, point2_, point3_, point4_, point1_])
+          poly1_ = @factory.polygon(exterior_)
+          assert(!poly1_.nil?)
+        end
+
 
       end
 

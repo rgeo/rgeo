@@ -191,6 +191,9 @@ module RGeo
         super
         if @points.size > 0
           @points << @points.first if @points.first != @points.last
+          (1...@points.length-1).each do |i|
+            @points.delete_at i if @points[i] == @points[i+1]
+          end
           if !@factory.property(:uses_lenient_assertions) && !is_ring?
             raise Error::InvalidGeometry, 'LinearRing failed ring test'
           end
