@@ -78,6 +78,18 @@ module RGeo
           assert_equal(poly1_, poly3_)
         end
 
+        def test_simplify
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 2)
+          point3_ = @factory.point(2, 2)
+          point4_ = @factory.point(2, 0)
+          point5_ = @factory.point(2.00001, 0)
+          poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_, point5_]))
+          poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point5_]))
+          assert_not_equal(poly1_, poly1_.simplify(1))
+          assert_equal(poly2_, poly1_.simplify(1))
+        end
+
 
       end
 
