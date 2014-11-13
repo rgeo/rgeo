@@ -479,7 +479,6 @@ static VALUE method_multi_polygon_centroid(VALUE self)
   return result;
 }
 
-
 static VALUE method_multi_polygon_point_on_surface(VALUE self)
 {
   VALUE result;
@@ -495,6 +494,24 @@ static VALUE method_multi_polygon_point_on_surface(VALUE self)
   return result;
 }
 
+static VALUE method_multi_polygon_simplify(VALUE self, VALUE tolerance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t self_context;
+  double ctolerance = NUM2DBL(tolerance);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+      self_context = self_data->geos_context;
+      GEOSGeometry *geom = GEOSSimplify_r(self_context, self_geom, ctolerance);
+      result = rgeo_wrap_geos_geometry(self_data->factory, geom, Qnil);
+  }
+  return result;
+}
 
 static VALUE cmethod_geometry_collection_create(VALUE module, VALUE factory, VALUE array)
 {
@@ -566,6 +583,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_multi_polygon_methods, "area", method_multi_polygon_area, 0);
   rb_define_method(geos_multi_polygon_methods, "centroid", method_multi_polygon_centroid, 0);
   rb_define_method(geos_multi_polygon_methods, "point_on_surface", method_multi_polygon_point_on_surface, 0);
+  rb_define_method(geos_multi_polygon_methods, "simplify", method_multi_polygon_simplify, 1);
   rb_define_method(geos_multi_polygon_methods, "hash", method_multi_polygon_hash, 0);
 }
 
