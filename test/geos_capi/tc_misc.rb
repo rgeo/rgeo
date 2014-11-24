@@ -50,6 +50,42 @@ module RGeo
         end
 
 
+        def test_marshal_dump_with_geos
+          @factory = ::RGeo::Geos.factory(
+            :srid => 4326,
+            :wkt_generator => :geos,
+            :wkb_generator => :geos,
+            :wkt_parser => :geos,
+            :wkb_parser => :geos
+          )
+
+          dump = nil
+          assert_nothing_raised { dump = @factory.marshal_dump }
+          assert_equal({}, dump['wktg'])
+          assert_equal({}, dump['wkbg'])
+          assert_equal({}, dump['wktp'])
+          assert_equal({}, dump['wkbp'])
+        end
+
+
+        def test_encode_with_geos
+          @factory = ::RGeo::Geos.factory(
+            :srid => 4326,
+            :wkt_generator => :geos,
+            :wkb_generator => :geos,
+            :wkt_parser => :geos,
+            :wkb_parser => :geos
+          )
+          coder = Psych::Coder.new('test')
+
+          assert_nothing_raised { @factory.encode_with(coder) }
+          assert_equal({}, coder['wkt_generator'])
+          assert_equal({}, coder['wkb_generator'])
+          assert_equal({}, coder['wkt_parser'])
+          assert_equal({}, coder['wkb_parser'])
+        end
+
+
         def test_uninitialized
           geom_ = ::RGeo::Geos::CAPIGeometryImpl.new
           assert_equal(false, geom_.initialized?)
