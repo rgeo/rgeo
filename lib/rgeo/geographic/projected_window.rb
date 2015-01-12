@@ -240,18 +240,14 @@ module RGeo
       end
 
 
-      # Returns a random point the rectangle in _unprojected_
+      # Returns a random point inside the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def random_point
-        y_ = @y_min + (@y_max - @y_min) * rand
-        if @x_min > @x_max
-          x_ = @x_min + x_span * rand
-          limits_ = @factory.projection_limits_window
-          x_ -= limits_.x_span if x_ >= limits_.x_max
-        else
-          x_ = (@x_min + @x_max) * rand
-        end
+        y_ = @y_min + y_span * rand
+        x_ = @x_min + x_span * rand
+        limits_ = @factory.projection_limits_window
+        x_ -= limits_.x_span if x_ >= limits_.x_max
         @factory.unproject(@factory.projection_factory.point(x_, y_))
       end
 
