@@ -171,7 +171,7 @@ module RGeo
 
       def canonical_x
         x_ = @x % 360.0
-        x_ -= 360.0 if x_ >= 180.0
+        x_ -= 360.0 if x_ > 180.0
         x_
       end
       alias_method :canonical_longitude, :canonical_x

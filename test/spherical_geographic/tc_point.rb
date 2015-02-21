@@ -64,6 +64,17 @@ module RGeo
           assert_equal(-22, point_.latitude)
         end
 
+        def test_antimeridian_positive
+          point_ = @factory.point(180, 85)
+          assert_equal(180, point_.longitude)
+          assert_equal(85, point_.latitude)
+        end        
+
+        def test_antimeridian_netagive
+          point_ = @factory.point(-180, -85)
+          assert_equal(-180, point_.longitude)
+          assert_equal(-85, point_.latitude)
+        end        
 
         def test_srid
           point_ = @factory.point(11, 12)
