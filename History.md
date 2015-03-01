@@ -1,3 +1,7 @@
+### 0.3.21 / 2015-02-21
+
+*   Antimerdian x coordinates (longitude: +180) are no longer sign flipped (longitude:-180) (ajturner)
+
 ### 0.3.20 / 2012-12-08
 
 *   Distances computed by the spherical factory were incorrect when covering
