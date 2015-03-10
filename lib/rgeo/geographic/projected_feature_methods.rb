@@ -129,7 +129,12 @@ module RGeo
       def buffer(distance_)
         factory.unproject(projection.buffer(distance_))
       end
-
+      
+      
+      def simplify(tolerance_)
+        factory.unproject(projection.simplify(tolerance_))
+      end
+      
 
       def convex_hull
         factory.unproject(projection.convex_hull)
