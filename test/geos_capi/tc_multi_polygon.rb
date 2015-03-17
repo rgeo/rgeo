@@ -62,6 +62,18 @@ module RGeo
           assert_equal(@factory.collection([]), @factory.multi_polygon([]).centroid)
         end
 
+        def test_simplify
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 2)
+          point3_ = @factory.point(2, 2)
+          point4_ = @factory.point(2, 0)
+          point5_ = @factory.point(2.00001, 0)
+          poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_, point5_]))
+          poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point5_]))
+          mp1_ = @lenient_factory.multi_polygon([poly1_, poly1_])
+          mp2_ = @lenient_factory.multi_polygon([poly2_, poly2_])
+          assert_equal(mp2_, mp1_.simplify(0.1))
+        end
 
         def _test_geos_bug_582
           f_ = ::RGeo::Geos.factory(:buffer_resolution => 2)
@@ -70,7 +82,6 @@ module RGeo
           mp_ = f_.multi_polygon([p2_, p1_])
           mp_.centroid.as_text
         end
-
 
       end
 

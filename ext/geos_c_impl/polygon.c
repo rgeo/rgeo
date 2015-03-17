@@ -285,6 +285,25 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
   return Qnil;
 }
 
+static VALUE method_polygon_simplify(VALUE self, VALUE tolerance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t self_context;
+  double ctolerance = NUM2DBL(tolerance);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+      self_context = self_data->geos_context;
+      GEOSGeometry *geom = GEOSSimplify_r(self_context, self_geom, ctolerance);
+      VALUE klass = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_polygon;
+      result = rgeo_wrap_geos_geometry(self_data->factory, geom, klass);
+  }
+  return result;
+}
 
 void rgeo_init_geos_polygon(RGeo_Globals* globals)
 {
@@ -306,6 +325,7 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
   rb_define_method(geos_polygon_methods, "num_interior_rings", method_polygon_num_interior_rings, 0);
   rb_define_method(geos_polygon_methods, "interior_ring_n", method_polygon_interior_ring_n, 1);
   rb_define_method(geos_polygon_methods, "interior_rings", method_polygon_interior_rings, 0);
+  rb_define_method(geos_polygon_methods, "simplify", method_polygon_simplify, 1);
 }
 
 
