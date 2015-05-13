@@ -7,6 +7,7 @@ Gem::Specification.new do |spec|
     "most standard spatial/geographic data storage systems such as PostGIS. A " \
     "number of add-on modules are also available to help with writing " \
     "location-based applications using Ruby-based frameworks such as Ruby On Rails."
+
   spec.version = "#{::File.read('Version').strip}.nonrelease"
   spec.author = "Daniel Azuma"
   spec.email = "dazuma@gmail.com"
@@ -21,4 +22,8 @@ Gem::Specification.new do |spec|
   spec.test_files = Dir.glob("test/**/tc_*.rb")
   spec.platform = Gem::Platform::RUBY
   spec.extensions = Dir.glob("ext/*/extconf.rb")
+
+  spec.add_development_dependency "rake", "~> 10.4"
+  spec.add_development_dependency "rdoc", "~> 4.2"
+  spec.add_development_dependency "ffi-geos", "~> 1.0"
 end
