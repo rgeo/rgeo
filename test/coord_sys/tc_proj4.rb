@@ -16,7 +16,7 @@ module RGeo
 
 
         def test_proj4_version
-          assert_match(/^\d+\.\d+(\.\d+)?$/, ::RGeo::CoordSys::Proj4.version_string)
+          assert_match(/^\d+\.\d+(\.\d+)?$/, ::RGeo::CoordSys::Proj4.version)
         end
 
 

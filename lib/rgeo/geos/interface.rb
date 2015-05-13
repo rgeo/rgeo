@@ -68,29 +68,15 @@ module RGeo
       # Returns the GEOS library version as a string of the format "x.y.z".
       # Returns nil if GEOS is not available.
 
-      def version_string
-        unless defined?(@version_string)
-          if ::RGeo::Geos::CAPI_SUPPORTED
-            @version_string = ::RGeo::Geos::CAPIFactory._geos_version.freeze
-          elsif ::RGeo::Geos::FFI_SUPPORTED
-            @version_string = ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, '').freeze
-          else
-            @version_string = nil
-          end
-        end
-        @version_string
-      end
-
-
-      # Returns the GEOS library version as a Versionomy object if the
-      # Versionomy library is available; otherwise as a string of the
-      # format "x.y.z".
-      # Returns nil if GEOS is not available.
-
       def version
         unless defined?(@version)
-          str_ = version_string
-          @version = str_ && defined?(::Versionomy) ? ::Versionomy.parse(str_) : str_
+          if ::RGeo::Geos::CAPI_SUPPORTED
+            @version = ::RGeo::Geos::CAPIFactory._geos_version.freeze
+          elsif ::RGeo::Geos::FFI_SUPPORTED
+            @version = ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, '').freeze
+          else
+            @version = nil
+          end
         end
         @version
       end
