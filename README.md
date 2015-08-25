@@ -1,5 +1,8 @@
 ## RGeo
 
+[![Gem Version](https://badge.fury.io/rb/rgeo.svg)](http://badge.fury.io/rb/rgeo)
+[![Build Status](https://travis-ci.org/rgeo/rgeo.svg?branch=master)](https://travis-ci.org/rgeo/rgeo)
+
 RGeo is a geospatial data library for Ruby.
 
 ### Summary
@@ -130,9 +133,6 @@ RDoc Documentation is available at http://rdoc.info/gems/rgeo
 Source code is hosted on Github at http://github.com/rgeo/rgeo
 
 Contributions are welcome. Fork the project on Github.
-
-Build status: [<img src="https://secure.travis-ci.org/rgeo/rgeo.png"
-/>](http://travis-ci.org/rgeo/rgeo)
 
 Report bugs on Github issues at http://github.com/rgeo/rgeo/issues
 
