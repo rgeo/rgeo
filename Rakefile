@@ -12,6 +12,7 @@ gemspec_ = eval(::File.read(::Dir.glob('*.gemspec').first))
 release_gemspec_ = eval(::File.read(::Dir.glob('*.gemspec').first))
 release_gemspec_.version = gemspec_.version.to_s.sub(/\.nonrelease$/, '')
 
+require 'bundler/gem_tasks'
 
 # Platform info
 
@@ -134,29 +135,7 @@ file "#{doc_directory_}/index.html" => all_rdoc_files_ do
   ::RDoc::RDoc.new.document(args_ + all_rdoc_files_)
 end
 
-
-# Gem release tasks
-
-task :build_other
-
-task :build_gem => :build_other do
-  ::Gem::Builder.new(gemspec_).build
-  mkdir_p(pkg_directory_)
-  mv "#{gemspec_.name}-#{gemspec_.version}.gem", "#{pkg_directory_}/"
-end
-
-task :build_release => :build_other do
-  ::Gem::Builder.new(release_gemspec_).build
-  mkdir_p(pkg_directory_)
-  mv "#{release_gemspec_.name}-#{release_gemspec_.version}.gem", "#{pkg_directory_}/"
-end
-
-task :release_gem => :build_release do
-  ::Dir.chdir(pkg_directory_) do
-    sh "#{::RbConfig::TOPDIR}/bin/gem push #{release_gemspec_.name}-#{release_gemspec_.version}.gem"
-  end
-end
-
+task build_other: [:build]
 
 # Unit test task
 
