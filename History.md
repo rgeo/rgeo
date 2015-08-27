@@ -1,6 +1,10 @@
-### 0.3.21 / 2015-02-21
+### 0.4.0 / 2015-08-27
 
-*   Antimerdian x coordinates (longitude: +180) are no longer sign flipped (longitude:-180) (ajturner)
+*   Drop support for ruby 1.8.7, require ruby 1.9.3+
+*   Add support for GEOS CAPI simplify (quidquid) #95 
+*   Antimerdian x coordinates (longitude: +180) are no longer sign flipped (longitude:-180) (ajturner) #89
+*   Fix Marshal and Psych support for native geos factories (cjab) #84
+*   Fix random_point to return point inside rectangle (glampr) #89
 
 ### 0.3.20 / 2012-12-08
 
