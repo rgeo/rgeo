@@ -900,7 +900,7 @@ static VALUE method_geometry_initialize_copy(VALUE self, VALUE orig)
       GEOSSetSRID_r(orig_context, clone_geom, GEOSGetSRID_r(orig_context, geom));
       self_data->geom = clone_geom;
       self_data->geos_context = orig_context;
-      self_data->prep = factory_data && (factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC != 0) ?
+      self_data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
         (GEOSPreparedGeometry*)1 : NULL;
       self_data->factory = orig_data->factory;
       self_data->klasses = orig_data->klasses;
