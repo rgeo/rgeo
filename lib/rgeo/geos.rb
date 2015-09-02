@@ -77,6 +77,14 @@ module RGeo
       self.preferred_native_interface = :ffi
     end
 
+    CAP_ROUND  = 0
+    CAP_FLAT   = 1
+    CAP_SQUARE = 2
+
+    JOIN_ROUND = 0
+    JOIN_MITRE = 1
+    JOIN_BEVEL = 2
+
     # Init internal utilities
     Utils._init
 
