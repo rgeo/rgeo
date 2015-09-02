@@ -99,6 +99,11 @@ module RGeo
       def buffer(distance_)
         factory.unproject(projection.buffer(distance_))
       end
+
+
+      def buffer_with_style(distance_, endCapStyle_, joinStyle_, mitreLimit_)
+        factory.unproject(projection.buffer_with_style(distance_, endCapStyle_, joinStyle_, mitreLimit_))
+      end
       
       
       def simplify(tolerance_)
