@@ -273,6 +273,15 @@ module RGeo
       alias_method :+, :union
 
 
+      def unary_union
+        if @fg_geom.respond_to?(:unary_union)
+          @factory.wrap_fg_geom(@fg_geom.unary_union)
+        else
+          nil
+        end
+      end
+
+
       def difference(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         fg_ ? @factory._wrap_fg_geom(@fg_geom.difference(fg_), nil) : nil
