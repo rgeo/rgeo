@@ -70,6 +70,8 @@ platform_suffix_ =
       'mri19'
     elsif ::RUBY_VERSION =~ /^2\.0\..*$/
       'mri20'
+    elsif ::RUBY_VERSION =~ /^2\.2\..*$/
+      'mri22'
     else
       raise "Unknown version of Matz Ruby Interpreter (#{::RUBY_VERSION})"
     end
