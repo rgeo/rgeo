@@ -81,6 +81,24 @@ module RGeo
           assert_equal polygon, polygon2
         end
 
+        def test_simplify_preserve_topology()
+          xys1 = [[0.0, 0.0], [5.0, 0.0], [10.0, 0.0], [10.0, 10.0], [5.0, 12.0], [0.0, 10.0], [0.0, 0.0]]
+          xys2 = [[0.1, 0.1], [0.1, 0.6], [0.3, 0.8],  [0.5, 0.5],   [0.7, 0.3],  [0.3, 0.1],  [0.1, 0.1]]
+          
+          points1 = xys1.collect { |x,y| @factory.point(x, y) }
+          points2 = xys2.collect { |x,y| @factory.point(x, y) }
+          
+          ln1 = @factory.line_string(points1)
+          ln2 = @factory.line_string(points2)
+
+          poly = @factory.polygon(ln1,[ln2])
+
+          simplified = poly.simplify_preserve_topology(1)
+          interior_points = simplified.interior_rings[0].points
+
+          assert_equal 5, interior_points.length
+        end
+
         def test_buffer_with_style
           polygon_coordinates = [[0.7316718427000253, 3.865835921350013],
                                  [1.0, 4.3],[6.0, 4.3],[6.3, 4.3],
@@ -106,7 +124,6 @@ module RGeo
           assert_equal polygon, buffered_line_string
         end
       end
-
     end
   end
 end if ::RGeo::Geos.capi_supported?
