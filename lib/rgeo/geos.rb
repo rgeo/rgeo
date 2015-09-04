@@ -79,9 +79,10 @@ module RGeo
 
     # There is some trouble with END_CAP in GEOS
     # In docs CAP_ROUND = 1, but it's work properly with 0
+    # and CAP_SQUARE in docs - 2, but works properly with 1
     CAP_ROUND  = 0
-    CAP_FLAT   = 1
-    CAP_SQUARE = 2
+    CAP_FLAT   = 2
+    CAP_SQUARE = 1
 
     JOIN_ROUND = 0
     JOIN_MITRE = 1
