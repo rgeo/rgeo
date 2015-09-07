@@ -99,8 +99,8 @@ module RGeo
           point3 = @factory.point(6,4)
           line_string = @factory.line_string([point1,point2,point3])
           buffered_line_string = line_string.buffer_with_style(0.3,
-                                                                 RGeo::Geos::CAP_SQUARE,
-                                                                 RGeo::Geos::JOIN_ROUND,
+                                                                 RGeo::Geos::EndCapStyle::CAP_SQUARE,
+                                                                 RGeo::Geos::JoinStyle::JOIN_ROUND,
                                                                  0.0)
 
           assert_equal polygon, buffered_line_string
