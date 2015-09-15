@@ -800,6 +800,24 @@ static VALUE method_geometry_simplify_preserve_topology(VALUE self, VALUE tolera
   return result;
 }
 
+static VALUE method_geometry_simplify_preserve_topology(VALUE self, VALUE tolerance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  VALUE factory;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    factory = self_data->factory;
+    result = rgeo_wrap_geos_geometry(factory, GEOSTopologyPreserveSimplify_r(self_data->geos_context, self_geom,
+      rb_num2dbl(tolerance)), Qnil);
+  }
+  return result;
+}
+
 
 static VALUE method_geometry_convex_hull(VALUE self)
 {

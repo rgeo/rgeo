@@ -99,6 +99,27 @@ module RGeo
           assert_equal 5, interior_points.length
         end
 
+        def test_buffer
+          polygon_coordinates = [[0.5527864045000421, 3.776393202250021],
+                                 [0.7763932022500211, 4.447213595499958],
+                                 [1.4472135954999579, 4.223606797749979],
+                                 [2.447213595499958, 2.223606797749979],
+                                 [2.223606797749979, 1.5527864045000421],
+                                 [1.5527864045000421, 1.776393202250021],
+                                 [0.5527864045000421, 3.776393202250021]]
+
+          points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+          outer_ring = @factory.linear_ring(points_arr)
+          polygon = @factory.polygon(outer_ring)
+
+          point1 = @factory.point(2,2)
+          point2 = @factory.point(1,4)
+          line_string = @factory.line_string([point1,point2])
+          polygon2 = line_string.buffer(0.5)
+
+          assert_equal polygon, polygon2
+        end
+
         def test_buffer_with_style
           polygon_coordinates = [[0.7316718427000253, 3.865835921350013],
                                  [1.0, 4.3],[6.0, 4.3],[6.3, 4.3],
