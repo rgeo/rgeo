@@ -14,17 +14,18 @@ else
 
   header_dirs_ =
     [
+     ::RbConfig::CONFIG['includedir'],
      '/usr/local/include',
      '/usr/local/geos/include',
      '/opt/local/include',
      '/opt/geos/include',
      '/opt/include',
      '/Library/Frameworks/GEOS.framework/unix/include',
-     ::RbConfig::CONFIG['includedir'],
      '/usr/include',
     ]
   lib_dirs_ =
     [
+     ::RbConfig::CONFIG['libdir'],
      '/usr/local/lib64',
      '/usr/local/lib',
      '/usr/local/geos/lib',
@@ -32,7 +33,6 @@ else
      '/opt/geos/lib',
      '/opt/lib',
      '/Library/Frameworks/GEOS.framework/unix/lib',
-     ::RbConfig::CONFIG['libdir'],
      '/usr/lib64',
      '/usr/lib',
     ]

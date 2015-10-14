@@ -14,6 +14,7 @@ else
 
   header_dirs_ =
     [
+     ::RbConfig::CONFIG['includedir'],
      '/usr/local/include',
      '/usr/local/proj/include',
      '/usr/local/proj4/include',
@@ -22,11 +23,11 @@ else
      '/opt/proj4/include',
      '/opt/include',
      '/Library/Frameworks/PROJ.framework/unix/include',
-     ::RbConfig::CONFIG['includedir'],
      '/usr/include',
     ]
   lib_dirs_ =
     [
+     ::RbConfig::CONFIG['libdir'],
      '/usr/local/lib',
      '/usr/local/lib64',
      '/usr/local/proj/lib',
@@ -36,7 +37,6 @@ else
      '/opt/proj4/lib',
      '/opt/lib',
      '/Library/Frameworks/PROJ.framework/unix/lib',
-     ::RbConfig::CONFIG['libdir'],
      '/usr/lib',
      '/usr/lib64',
     ]
