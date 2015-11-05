@@ -337,6 +337,10 @@ module RGeo
           assert_equal(line1_, line2_)
         end
 
+        def test_linestring_coordinates
+          line = @factory.line_string([@factory.point(0.0, 1.0), @factory.point(2.0, 3.0)])
+          assert_equal(line.coordinates, [[0.0, 1.0], [2.0, 3.0]])
+        end
 
         if ::RGeo.yaml_supported?
 

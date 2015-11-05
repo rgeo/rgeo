@@ -194,6 +194,10 @@ module RGeo
           assert_equal(0, geom2_.length)
         end
 
+        def test_coordinates
+          ml = @factory.multi_line_string([@linestring1, @linestring2])
+          assert_equal(ml.coordinates, [@linestring1, @linestring2].map(&:coordinates))
+        end
 
       end
 

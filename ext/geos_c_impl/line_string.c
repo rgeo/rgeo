@@ -16,6 +16,8 @@
 #include "point.h"
 #include "line_string.h"
 
+#include "coordinates.h"
+
 RGEO_BEGIN_C
 
 
@@ -94,6 +96,40 @@ static VALUE method_line_string_num_points(VALUE self)
   }
   return result;
 }
+
+
+static void d(VALUE v) {
+    ID sym_puts = rb_intern("puts");
+    ID sym_inspect = rb_intern("inspect");
+    rb_funcall(rb_mKernel, sym_puts, 1,
+        rb_funcall(v, sym_inspect, 0));
+}
+
+static VALUE method_line_string_coordinates(VALUE self)
+{
+  VALUE result;
+  VALUE point_tuple;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  const GEOSCoordSequence* coord_sequence;
+  
+  GEOSContextHandle_t context;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+
+  if (self_geom) {
+    context = self_data->geos_context;
+    coord_sequence = GEOSGeom_getCoordSeq_r(context, self_geom);
+    if(coord_sequence) {
+      result = extract_points_from_coordinate_sequence(context, coord_sequence);
+    }
+  }
+  return result;
+}
+
 
 
 static VALUE get_point_from_coordseq(VALUE self, const GEOSCoordSequence* coord_seq, unsigned int i, char has_z)
@@ -589,6 +625,7 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_methods, "end_point", method_line_string_end_point, 0);
   rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
   rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
+  rb_define_method(geos_line_string_methods, "coordinates", method_line_string_coordinates, 0);
 
   // CAPILinearRingMethods module
   geos_linear_ring_methods = rb_define_module_under(globals->geos_module, "CAPILinearRingMethods");

@@ -356,6 +356,10 @@ module RGeo
           assert_equal(point_, point2_)
         end
 
+        def test_coordinates
+          point_ = @factory.point(11.0, 12.0)
+          assert_equal([11.0, 12.0], point_.coordinates)
+        end
 
         if ::RGeo.yaml_supported?
 

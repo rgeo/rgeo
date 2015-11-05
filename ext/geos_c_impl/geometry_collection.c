@@ -16,6 +16,8 @@
 #include "polygon.h"
 #include "geometry_collection.h"
 
+#include "coordinates.h"
+
 RGEO_BEGIN_C
 
 
@@ -270,7 +272,6 @@ static VALUE method_geometry_collection_each(VALUE self)
   }
 }
 
-
 static VALUE method_multi_point_geometry_type(VALUE self)
 {
   VALUE result;
@@ -298,6 +299,36 @@ static VALUE method_multi_point_hash(VALUE self)
     RGEO_FACTORY_DATA_PTR(factory)->globals->feature_multi_point, hash);
   hash = rgeo_geos_geometry_collection_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
+}
+
+
+static VALUE method_multi_point_coordinates(VALUE self)
+{
+  VALUE result = Qnil;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t context;
+  const GEOSCoordSequence* coord_sequence;
+
+  const GEOSGeometry* point;
+  unsigned int count;
+  unsigned int i;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if(self_geom) {
+    context = self_data->geos_context;
+    count = GEOSGetNumGeometries_r(context, self_geom);
+    result = rb_ary_new2(count);
+    for(i = 0; i < count; ++i) {
+      point = GEOSGetGeometryN_r(context, self_geom, i);
+      coord_sequence = GEOSGeom_getCoordSeq_r(context, point);
+      rb_ary_push(result, rb_ary_pop(extract_points_from_coordinate_sequence(context, coord_sequence)));
+    }
+  }
+
+  return result;
 }
 
 
@@ -330,6 +361,35 @@ static VALUE method_multi_line_string_hash(VALUE self)
   return LONG2FIX(rb_hash_end(hash));
 }
 
+
+static VALUE method_multi_line_string_coordinates(VALUE self)
+{
+  VALUE result = Qnil;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t context;
+  const GEOSCoordSequence* coord_sequence;
+
+  const GEOSGeometry* line_string;
+  unsigned int count;
+  unsigned int i;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  
+  if(self_geom) {
+    context = self_data->geos_context;
+    count = GEOSGetNumGeometries_r(context, self_geom);
+    result = rb_ary_new2(count);
+    for(i = 0; i < count; ++i) {
+      line_string = GEOSGetGeometryN_r(context, self_geom, i);
+      coord_sequence = GEOSGeom_getCoordSeq_r(context, line_string);
+      rb_ary_push(result, extract_points_from_coordinate_sequence(context, coord_sequence));
+    }
+  }
+
+  return result;
+}
 
 static VALUE method_multi_line_string_length(VALUE self)
 {
@@ -410,6 +470,34 @@ static VALUE method_multi_polygon_hash(VALUE self)
     RGEO_FACTORY_DATA_PTR(factory)->globals->feature_multi_polygon, hash);
   hash = rgeo_geos_geometry_collection_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
+}
+
+
+static VALUE method_multi_polygon_coordinates(VALUE self)
+{
+  VALUE result = Qnil;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t context;
+
+  const GEOSGeometry* poly;
+  unsigned int count;
+  unsigned int i;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  
+  if(self_geom) {
+    context = self_data->geos_context;
+    count = GEOSGetNumGeometries_r(context, self_geom);
+    result = rb_ary_new2(count);
+    for(i = 0; i < count; ++i) {
+      poly = GEOSGetGeometryN_r(context, self_geom, i);
+      rb_ary_push(result, extract_points_from_polygon(context, poly));
+    }
+  }
+
+  return result;
 }
 
 
@@ -516,10 +604,12 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_geometry_collection_methods, "[]", method_geometry_collection_brackets, 1);
   rb_define_method(geos_geometry_collection_methods, "each", method_geometry_collection_each, 0);
 
+
   // Methods for MultiPointImpl
   geos_multi_point_methods = rb_define_module_under(globals->geos_module, "CAPIMultiPointMethods");
   rb_define_method(geos_multi_point_methods, "geometry_type", method_multi_point_geometry_type, 0);
   rb_define_method(geos_multi_point_methods, "hash", method_multi_point_hash, 0);
+  rb_define_method(geos_multi_point_methods, "coordinates", method_multi_point_coordinates, 0);
 
   // Methods for MultiLineStringImpl
   geos_multi_line_string_methods = rb_define_module_under(globals->geos_module, "CAPIMultiLineStringMethods");
@@ -527,6 +617,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_multi_line_string_methods, "length", method_multi_line_string_length, 0);
   rb_define_method(geos_multi_line_string_methods, "is_closed?", method_multi_line_string_is_closed, 0);
   rb_define_method(geos_multi_line_string_methods, "hash", method_multi_line_string_hash, 0);
+  rb_define_method(geos_multi_line_string_methods, "coordinates", method_multi_line_string_coordinates, 0);
 
   // Methods for MultiPolygonImpl
   geos_multi_polygon_methods = rb_define_module_under(globals->geos_module, "CAPIMultiPolygonMethods");
@@ -535,6 +626,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_multi_polygon_methods, "centroid", method_multi_polygon_centroid, 0);
   rb_define_method(geos_multi_polygon_methods, "point_on_surface", method_multi_polygon_point_on_surface, 0);
   rb_define_method(geos_multi_polygon_methods, "hash", method_multi_polygon_hash, 0);
+  rb_define_method(geos_multi_polygon_methods, "coordinates", method_multi_polygon_coordinates, 0);
 }
 
 

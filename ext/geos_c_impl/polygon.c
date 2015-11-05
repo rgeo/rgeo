@@ -15,6 +15,8 @@
 #include "line_string.h"
 #include "polygon.h"
 
+#include "coordinates.h"
+
 RGEO_BEGIN_C
 
 
@@ -112,6 +114,27 @@ static VALUE method_polygon_point_on_surface(VALUE self)
   return result;
 }
 
+
+static VALUE method_polygon_coordinates(VALUE self)
+{
+  VALUE result = Qnil;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSContextHandle_t self_context;
+
+  GEOSGeometry* ring;
+  GEOSCoordSequence* coord_sequence;
+  unsigned int interior_ring_count;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    self_context = self_data->geos_context;
+    result = extract_points_from_polygon(self_context, self_geom);
+  }
+  return result;
+}
 
 static VALUE method_polygon_exterior_ring(VALUE self)
 {
@@ -274,6 +297,7 @@ void rgeo_init_geos_polygon(RGeo_Globals* globals)
   rb_define_method(geos_polygon_methods, "num_interior_rings", method_polygon_num_interior_rings, 0);
   rb_define_method(geos_polygon_methods, "interior_ring_n", method_polygon_interior_ring_n, 1);
   rb_define_method(geos_polygon_methods, "interior_rings", method_polygon_interior_rings, 0);
+  rb_define_method(geos_polygon_methods, "coordinates", method_polygon_coordinates, 0);
 }
 
 

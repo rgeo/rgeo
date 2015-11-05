@@ -41,7 +41,6 @@ module RGeo
           mp_.centroid.as_text
         end
 
-
       end
 
     end

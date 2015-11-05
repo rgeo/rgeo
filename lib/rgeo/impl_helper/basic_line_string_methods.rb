@@ -117,6 +117,10 @@ module RGeo
       end
 
 
+      def coordinates
+        @points.map &:coordinates
+      end
+
     end
 
 
@@ -150,7 +154,9 @@ module RGeo
         Feature::Line
       end
 
-
+      def coordinates
+        @points.map &:coordinates
+      end
     end
 
 
