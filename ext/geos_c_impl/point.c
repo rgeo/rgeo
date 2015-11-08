@@ -39,15 +39,17 @@ static VALUE method_point_coordinates(VALUE self)
   const GEOSGeometry* self_geom;
   GEOSContextHandle_t context;
   const GEOSCoordSequence* coord_sequence;
+  int zCoordinate;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
+    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
     coord_sequence = GEOSGeom_getCoordSeq_r(context, self_geom);
     if(coord_sequence) {
-      result = rb_ary_pop(extract_points_from_coordinate_sequence(context, coord_sequence));
+      result = rb_ary_pop(extract_points_from_coordinate_sequence(context, coord_sequence, zCoordinate));
     }
   }
   return result;

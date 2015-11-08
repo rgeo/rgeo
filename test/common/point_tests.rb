@@ -361,6 +361,31 @@ module RGeo
           assert_equal([11.0, 12.0], point_.coordinates)
         end
 
+
+        def test_coordinates_3dz
+          point_ = @zfactory.point(11, 12, 13)
+          assert_equal([11.0, 12.0, 13.0], point_.coordinates)
+          point2_ = @zfactory.point(21, 22)
+          assert_equal([21.0, 22.0, 0.0], point2_.coordinates)
+        end
+
+
+        def test_coordinates_3dm
+          point_ = @mfactory.point(11, 12, 13)
+          assert_equal([11.0, 12.0, 13.0], point_.coordinates)
+          point2_ = @mfactory.point(21, 22)
+          assert_equal([21.0, 22.0, 0.0], point2_.coordinates)
+        end
+
+
+        def test_coordinates_4d
+          point_ = @zmfactory.point(11, 12, 13, 14)
+          assert_equal([11.0, 12.0, 13.0, 14.0], point_.coordinates)
+          point2_ = @zmfactory.point(21, 22)
+          assert_equal([21.0, 22.0, 0.0, 0.0], point2_.coordinates)
+        end
+
+
         if ::RGeo.yaml_supported?
 
           def test_psych_roundtrip

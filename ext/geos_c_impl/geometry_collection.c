@@ -313,18 +313,20 @@ static VALUE method_multi_point_coordinates(VALUE self)
   const GEOSGeometry* point;
   unsigned int count;
   unsigned int i;
+  int zCoordinate;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if(self_geom) {
+    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
     count = GEOSGetNumGeometries_r(context, self_geom);
     result = rb_ary_new2(count);
     for(i = 0; i < count; ++i) {
       point = GEOSGetGeometryN_r(context, self_geom, i);
       coord_sequence = GEOSGeom_getCoordSeq_r(context, point);
-      rb_ary_push(result, rb_ary_pop(extract_points_from_coordinate_sequence(context, coord_sequence)));
+      rb_ary_push(result, rb_ary_pop(extract_points_from_coordinate_sequence(context, coord_sequence, zCoordinate)));
     }
   }
 
@@ -373,18 +375,20 @@ static VALUE method_multi_line_string_coordinates(VALUE self)
   const GEOSGeometry* line_string;
   unsigned int count;
   unsigned int i;
+  int zCoordinate;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   
   if(self_geom) {
+    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
     count = GEOSGetNumGeometries_r(context, self_geom);
     result = rb_ary_new2(count);
     for(i = 0; i < count; ++i) {
       line_string = GEOSGetGeometryN_r(context, self_geom, i);
       coord_sequence = GEOSGeom_getCoordSeq_r(context, line_string);
-      rb_ary_push(result, extract_points_from_coordinate_sequence(context, coord_sequence));
+      rb_ary_push(result, extract_points_from_coordinate_sequence(context, coord_sequence, zCoordinate));
     }
   }
 
@@ -483,17 +487,19 @@ static VALUE method_multi_polygon_coordinates(VALUE self)
   const GEOSGeometry* poly;
   unsigned int count;
   unsigned int i;
+  int zCoordinate;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   
   if(self_geom) {
+    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
     count = GEOSGetNumGeometries_r(context, self_geom);
     result = rb_ary_new2(count);
     for(i = 0; i < count; ++i) {
       poly = GEOSGetGeometryN_r(context, self_geom, i);
-      rb_ary_push(result, extract_points_from_polygon(context, poly));
+      rb_ary_push(result, extract_points_from_polygon(context, poly, zCoordinate));
     }
   }
 

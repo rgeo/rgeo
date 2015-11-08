@@ -244,7 +244,12 @@ module RGeo
         @mgeometry.m
       end
 
-
+      def coordinates
+        [x, y].tap do |coords|
+          coords << z if @factory.property(:has_z_coordinate)
+          coords << m if @factory.property(:has_m_coordinate)
+        end
+      end
     end
 
 
@@ -296,7 +301,9 @@ module RGeo
         result_
       end
 
-
+      def coordinates
+        points.map &:coordinates
+      end
     end
 
 
@@ -344,6 +351,9 @@ module RGeo
       end
 
 
+      def coordinates
+        ([exterior_ring] + interior_rings).map &:coordinates
+      end
     end
 
 
@@ -388,6 +398,9 @@ module RGeo
       end
 
 
+      def coordinates
+        each.map &:coordinates
+      end
     end
 
 
@@ -409,6 +422,9 @@ module RGeo
       end
 
 
+      def coordinates
+        each.map &:coordinates
+      end
     end
 
 

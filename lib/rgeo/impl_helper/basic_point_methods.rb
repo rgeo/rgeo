@@ -115,22 +115,11 @@ module RGeo
 
 
       def coordinates
-        [x, y]
-        # if factory.property(:has_z_coordinate)
-        #   if factory.property(:has_m_coordinate)
-        #     [x, y, z, m]
-        #   else
-        #     [x, y, z]
-        #   end
-        # else
-        #   if factory.property(:has_m_coordinate)
-        #     [x, y, m]
-        #   else
-        #     [x, y]
-        #   end
-        # end
+        [x, y].tap do |coords|
+          coords << z if factory.property(:has_z_coordinate)
+          coords << m if factory.property(:has_m_coordinate)
+        end
       end
-
     end
 
 

@@ -365,7 +365,10 @@ module RGeo
 
 
       def coordinates
-        [x, y]
+        [x, y].tap do |coords|
+          coords << z if @factory.property(:has_z_coordinate)
+          coords << m if @factory.property(:has_m_coordinate)
+        end
       end
     end
 

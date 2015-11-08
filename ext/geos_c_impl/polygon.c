@@ -125,13 +125,15 @@ static VALUE method_polygon_coordinates(VALUE self)
   GEOSGeometry* ring;
   GEOSCoordSequence* coord_sequence;
   unsigned int interior_ring_count;
+  int zCoordinate;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
+    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     self_context = self_data->geos_context;
-    result = extract_points_from_polygon(self_context, self_geom);
+    result = extract_points_from_polygon(self_context, self_geom, zCoordinate);
   }
   return result;
 }
