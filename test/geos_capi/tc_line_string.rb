@@ -16,17 +16,13 @@ module RGeo
 
       class TestLineString < ::Test::Unit::TestCase  # :nodoc:
 
+        include ::RGeo::Tests::Common::LineStringTests
 
         def setup
           @factory = ::RGeo::Geos.factory
         end
 
-
-        include ::RGeo::Tests::Common::LineStringTests
-
-
       end
-
     end
   end
 end if ::RGeo::Geos.capi_supported?

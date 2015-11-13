@@ -211,6 +211,15 @@ module RGeo
           assert_equal(p1_, mp_[0])
         end
 
+        def test_coordinate
+          p0 = @factory.point(0, 0)
+          p1 = @factory.point(1, 1)
+          p2 = @factory.point(2, 2)
+          points = [p0, p1, p2]
+          mp = @factory.multi_point(points)
+          assert_equal(mp.coordinates, points.map(&:coordinates))
+        end
+
 
       end
 

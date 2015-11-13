@@ -6,7 +6,6 @@
 
 require 'rgeo'
 
-
 module RGeo
   module Tests  # :nodoc:
     module Common  # :nodoc:
@@ -185,7 +184,27 @@ module RGeo
           assert(geom2_.is_empty?)
         end
 
+        def test_multi_polygon_coordinates
+          poly1_coordinates = [
+            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0]],
+            [[0.25, 0.25], [0.75, 0.25], [0.75, 0.75], [0.25, 0.75], [0.25, 0.25]]
+          ]
+          poly2_coordinates = [
+            [[2.0, 2.0], [3.0, 2.0], [3.0, 3.0], [2.0, 3.0], [2.0, 2.0]],
+            [[2.25, 2.25], [2.75, 2.25], [2.75, 2.75], [2.25, 2.75], [2.25, 2.25]]
+          ]
+          
+          ring = @factory.line_string(poly1_coordinates.first.map {|(x, y)| @factory.point x, y })
+          inner_ring = @factory.line_string(poly1_coordinates.last.map {|(x, y)| @factory.point x, y })
+          poly1 = @factory.polygon ring, [inner_ring]
 
+          ring = @factory.line_string(poly2_coordinates.first.map {|(x, y)| @factory.point x, y })
+          inner_ring = @factory.line_string(poly2_coordinates.last.map {|(x, y)| @factory.point x, y })
+          poly2 = @factory.polygon ring, [inner_ring]
+
+          multi_polygon = @factory.multi_polygon [poly1, poly2]
+          assert_equal(multi_polygon.coordinates, [poly1_coordinates, poly2_coordinates])
+        end
       end
 
     end

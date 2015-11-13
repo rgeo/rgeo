@@ -97,7 +97,9 @@ module RGeo
         @interior_rings = obj_.interior_rings
       end
 
-
+      def coordinates
+        ([@exterior_ring] + @interior_rings).map &:coordinates
+      end
     end
 
 

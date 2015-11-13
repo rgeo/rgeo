@@ -230,6 +230,17 @@ module RGeo
         end
 
 
+        def test_polygon_coordinates
+          coordinates = [
+            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0]],
+            [[0.25, 0.25], [0.75, 0.25], [0.75, 0.75], [0.25, 0.75], [0.25, 0.25]]
+          ]
+          
+          ring = @factory.line_string(coordinates.first.map {|(x, y)| @factory.point x, y })
+          inner_ring = @factory.line_string(coordinates.last.map {|(x, y)| @factory.point x, y })
+          polygon = @factory.polygon ring, [inner_ring]
+          assert_equal(polygon.coordinates, coordinates)
+        end
       end
 
     end

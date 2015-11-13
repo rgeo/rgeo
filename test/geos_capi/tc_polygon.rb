@@ -105,6 +105,7 @@ module RGeo
 
           assert_equal polygon, buffered_line_string
         end
+
       end
 
     end

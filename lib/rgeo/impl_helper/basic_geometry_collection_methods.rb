@@ -150,7 +150,9 @@ module RGeo
         factory.multi_point([array_])
       end
 
-
+      def coordinates
+        @elements.map &:coordinates
+      end
     end
 
 
@@ -179,6 +181,10 @@ module RGeo
         factory.collection([])
       end
 
+
+      def coordinates
+        @elements.map &:coordinates
+      end
 
     end
 
@@ -221,6 +227,9 @@ module RGeo
       end
 
 
+      def coordinates
+        @elements.map &:coordinates
+      end
     end
 
 

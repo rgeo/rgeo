@@ -60,7 +60,6 @@ module RGeo
           assert_equal(2, point1_.distance(point3_))
         end
 
-
         if defined?(::Encoding)
 
           def test_as_text_encoding
