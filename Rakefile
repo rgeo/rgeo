@@ -29,6 +29,19 @@ platform_suffix_ =
   case platform_
   when :mri
     ::RUBY_VERSION.to_s
+    if ::RUBY_VERSION =~ /^1\.8\..*$/
+      'mri18'
+    elsif ::RUBY_VERSION =~ /^1\.9\..*$/
+      'mri19'
+    elsif ::RUBY_VERSION =~ /^2\.0\..*$/
+      'mri20'
+    elsif ::RUBY_VERSION =~ /^2\.1\..*$/
+      'mri21'
+    elsif ::RUBY_VERSION =~ /^2\.2\..*$/
+      'mri22'
+    else
+      raise "Unknown version of Matz Ruby Interpreter (#{::RUBY_VERSION})"
+    end
   when :rubinius then 'rbx'
   when :jruby then 'jruby'
   else 'unknown'
