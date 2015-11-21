@@ -15,3 +15,9 @@ Makefile*
 mkmf.log
 /test/coord_sys/database.yml
 /Gemfile.lock
+
+# Generated files
+/ext/geos_c_impl/geos_c_impl_*.so
+/ext/proj4_c_impl/proj4_c_impl_*.so
+/lib/rgeo/coord_sys/proj4_c_impl.so
+/lib/rgeo/geos/geos_c_impl.so
