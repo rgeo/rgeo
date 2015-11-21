@@ -13,7 +13,6 @@
 *.rbc
 Makefile*
 mkmf.log
-/test/coord_sys/database.yml
 /Gemfile.lock
 
 # Generated files
