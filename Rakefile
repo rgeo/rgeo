@@ -27,8 +27,7 @@ platform_ =
 
 platform_suffix_ =
   case platform_
-  when :mri
-    ::RUBY_VERSION.to_s
+  when :mri then ::RUBY_VERSION.to_s
   when :rubinius then 'rbx'
   when :jruby then 'jruby'
   else 'unknown'
