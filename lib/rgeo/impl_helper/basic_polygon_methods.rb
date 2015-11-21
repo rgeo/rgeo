@@ -98,7 +98,7 @@ module RGeo
       end
 
       def coordinates
-        ([@exterior_ring] + @interior_rings).map &:coordinates
+        ([@exterior_ring] + @interior_rings).map(&:coordinates)
       end
     end
 

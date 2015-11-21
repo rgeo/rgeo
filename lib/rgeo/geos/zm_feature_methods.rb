@@ -302,7 +302,7 @@ module RGeo
       end
 
       def coordinates
-        points.map &:coordinates
+        points.map(&:coordinates)
       end
     end
 
@@ -352,7 +352,7 @@ module RGeo
 
 
       def coordinates
-        ([exterior_ring] + interior_rings).map &:coordinates
+        ([exterior_ring] + interior_rings).map(&:coordinates)
       end
     end
 
@@ -399,7 +399,7 @@ module RGeo
 
 
       def coordinates
-        each.map &:coordinates
+        each.map(&:coordinates)
       end
     end
 
@@ -423,7 +423,7 @@ module RGeo
 
 
       def coordinates
-        each.map &:coordinates
+        each.map(&:coordinates)
       end
     end
 

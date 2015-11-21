@@ -151,7 +151,7 @@ module RGeo
       end
 
       def coordinates
-        @elements.map &:coordinates
+        @elements.map(&:coordinates)
       end
     end
 
@@ -183,7 +183,7 @@ module RGeo
 
 
       def coordinates
-        @elements.map &:coordinates
+        @elements.map(&:coordinates)
       end
 
     end
@@ -228,7 +228,7 @@ module RGeo
 
 
       def coordinates
-        @elements.map &:coordinates
+        @elements.map(&:coordinates)
       end
     end
 
