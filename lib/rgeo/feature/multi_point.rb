@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A MultiPoint is a 0-dimensional GeometryCollection. The elements of
@@ -29,14 +26,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module MultiPoint
-
       include GeometryCollection
       extend Type
-
-
     end
-
-
   end
-
 end

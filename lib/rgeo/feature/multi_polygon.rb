@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A MultiPolygon is a MultiSurface whose elements are Polygons.
@@ -53,14 +50,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module MultiPolygon
-
       include MultiSurface
       extend Type
-
-
     end
-
-
   end
-
 end

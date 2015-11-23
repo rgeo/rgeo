@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A Surface is a 2-dimensional geometric object.
@@ -37,10 +34,8 @@ module RGeo
     # Some implementations may support higher dimensional points.
 
     module Surface
-
       include Geometry
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -52,9 +47,8 @@ module RGeo
       # Returns a floating-point scalar value.
 
       def area
-        raise Error::UnsupportedOperation, "Method Surface#area not defined."
+        fail Error::UnsupportedOperation, "Method Surface#area not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -66,9 +60,8 @@ module RGeo
       # Returns an object that supports the Point interface.
 
       def centroid
-        raise Error::UnsupportedOperation, "Method Surface#centroid not defined."
+        fail Error::UnsupportedOperation, "Method Surface#centroid not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -79,13 +72,8 @@ module RGeo
       # Returns an object that supports the Point interface.
 
       def point_on_surface
-        raise Error::UnsupportedOperation, "Method Surface#point_on_surface not defined."
+        fail Error::UnsupportedOperation, "Method Surface#point_on_surface not defined."
       end
-
-
     end
-
-
   end
-
 end

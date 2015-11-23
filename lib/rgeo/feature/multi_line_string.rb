@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A MultiLineString is a MultiCurve whose elements are LineStrings.
@@ -22,14 +19,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module MultiLineString
-
       include MultiCurve
       extend Type
-
-
     end
-
-
   end
-
 end

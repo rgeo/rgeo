@@ -5,18 +5,13 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Geos
-
     class << self
-
-
       # Returns true if the CAPI GEOS implementation is supported.
 
       def capi_supported?
         CAPI_SUPPORTED
       end
-
 
       # Returns true if the FFI GEOS implementation is supported.
 
@@ -24,14 +19,12 @@ module RGeo
         FFI_SUPPORTED
       end
 
-
       # Returns true if any GEOS implementation is supported.
       # If this returns false, GEOS features are not available at all.
 
       def supported?
         FFI_SUPPORTED || CAPI_SUPPORTED
       end
-
 
       # Returns true if the given feature is a CAPI GEOS feature, or if
       # the given factory is a CAPI GEOS factory.
@@ -43,7 +36,6 @@ module RGeo
           ZMGeometryMethods === object_ && CAPIGeometryMethods === object_.z_geometry)
       end
 
-
       # Returns true if the given feature is an FFI GEOS feature, or if
       # the given factory is an FFI GEOS factory.
 
@@ -54,7 +46,6 @@ module RGeo
           ZMGeometryMethods === object_ && FFIGeometryMethods === object_.z_geometry)
       end
 
-
       # Returns true if the given feature is a GEOS feature, or if the given
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
@@ -64,7 +55,6 @@ module RGeo
           ZMFactory === object_ || ZMGeometryMethods === object_
       end
 
-
       # Returns the GEOS library version as a string of the format "x.y.z".
       # Returns nil if GEOS is not available.
 
@@ -73,14 +63,13 @@ module RGeo
           if ::RGeo::Geos::CAPI_SUPPORTED
             @version = ::RGeo::Geos::CAPIFactory._geos_version.freeze
           elsif ::RGeo::Geos::FFI_SUPPORTED
-            @version = ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, '').freeze
+            @version = ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, "").freeze
           else
             @version = nil
           end
         end
         @version
       end
-
 
       # The preferred native interface. This is the native interface
       # used by default when a factory is created.
@@ -93,7 +82,6 @@ module RGeo
       # FFI over CAPI.
 
       attr_accessor :preferred_native_interface
-
 
       # Returns a factory for the GEOS implementation.
       # Returns nil if the GEOS implementation is not supported.
@@ -185,7 +173,7 @@ module RGeo
       #   never automatically generates a prepared geometry (unless you
       #   generate one explicitly using the <tt>prepare!</tt> method).
 
-      def factory(opts_={})
+      def factory(opts_ = {})
         if supported?
           native_interface_ = opts_[:native_interface] || Geos.preferred_native_interface
           if opts_[:has_z_coordinate] && opts_[:has_m_coordinate]
@@ -195,11 +183,8 @@ module RGeo
           else
             CAPIFactory.create(opts_)
           end
-        else
-          nil
         end
       end
-
 
       # Returns a Feature::FactoryGenerator that creates Geos-backed
       # factories. The given options are used as the default options.
@@ -209,13 +194,9 @@ module RGeo
       # an SRID and it will automatically fetch the appropriate Proj4
       # and CoordSys objects.
 
-      def factory_generator(defaults_={})
-        ::Proc.new{ |c_| factory(defaults_.merge(c_)) }
+      def factory_generator(defaults_ = {})
+        ::Proc.new { |c_| factory(defaults_.merge(c_)) }
       end
-
-
     end
-
   end
-
 end

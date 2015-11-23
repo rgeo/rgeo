@@ -5,14 +5,10 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Cartesian
-
-
     # Represents a line segment in the plane.
 
-    class Segment  # :nodoc:
-
+    class Segment # :nodoc:
       def initialize(start_, end_)
         @s = start_
         @e = end_
@@ -25,28 +21,23 @@ module RGeo
         @lensq = @dx * @dx + @dy * @dy
       end
 
-
       attr_reader :s
       attr_reader :e
       attr_reader :dx
       attr_reader :dy
 
-
       def to_s
         "#{@s} - #{@e}"
       end
 
-
       def eql?(rhs_)
-        rhs_.kind_of?(Segment) && @s == rhs_.s && @e == rhs_.e
+        rhs_.is_a?(Segment) && @s == rhs_.s && @e == rhs_.e
       end
       alias_method :==, :eql?
-
 
       def degenerate?
         @lensq == 0
       end
-
 
       # Returns a negative value if the point is to the left,
       # a positive value if the point is to the right, or
@@ -58,7 +49,6 @@ module RGeo
         (@sx - px_) * (@ey - py_) - (@sy - py_) * (@ex - px_)
       end
 
-
       def tproj(p_)
         if @lensq == 0
           nil
@@ -66,7 +56,6 @@ module RGeo
           (@dx * (p_.x - @sx) + @dy * (p_.y - @sy)) / @lensq
         end
       end
-
 
       def contains_point?(p_)
         if side(p_) == 0
@@ -76,7 +65,6 @@ module RGeo
           false
         end
       end
-
 
       def intersects_segment?(seg_)
         s2_ = seg_.s
@@ -95,7 +83,7 @@ module RGeo
         sy2_ = s2_.y
         dx2_ = seg_.dx
         dy2_ = seg_.dy
-        denom_ = @dx*dy2_ - @dy*dx2_
+        denom_ = @dx * dy2_ - @dy * dx2_
         if denom_ == 0
           # Segments are parallel. Make sure they are collinear.
           return false unless side(s2_) == 0
@@ -117,15 +105,9 @@ module RGeo
         end
       end
 
-
       def length
         ::Math.sqrt(@lensq)
       end
-
-
     end
-
-
   end
-
 end

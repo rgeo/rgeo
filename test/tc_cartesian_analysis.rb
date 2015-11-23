@@ -4,20 +4,15 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'test/unit'
-require 'rgeo'
-
+require "test/unit"
+require "rgeo"
 
 module RGeo
-  module Tests  # :nodoc:
-
-    class TestCartesianAnalysis < ::Test::Unit::TestCase  # :nodoc:
-
-
+  module Tests # :nodoc:
+    class TestCartesianAnalysis < ::Test::Unit::TestCase # :nodoc:
       def setup
         @factory = ::RGeo::Cartesian.simple_factory
       end
-
 
       def test_ring_direction_clockwise_triangle
         p1_ = @factory.point(1, 1)
@@ -27,7 +22,6 @@ module RGeo
         assert_equal(-1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
       end
 
-
       def test_ring_direction_counterclockwise_triangle
         p1_ = @factory.point(1, 1)
         p2_ = @factory.point(2, 4)
@@ -35,7 +29,6 @@ module RGeo
         ring_ = @factory.line_string([p1_, p3_, p2_, p1_])
         assert_equal(1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
       end
-
 
       def test_ring_direction_clockwise_puckered_quad
         p1_ = @factory.point(1, 1)
@@ -46,7 +39,6 @@ module RGeo
         assert_equal(-1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
       end
 
-
       def test_ring_direction_counterclockwise_puckered_quad
         p1_ = @factory.point(1, 1)
         p2_ = @factory.point(2, 6)
@@ -55,7 +47,6 @@ module RGeo
         ring_ = @factory.line_string([p1_, p4_, p3_, p2_, p1_])
         assert_equal(1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
       end
-
 
       def test_ring_direction_counterclockwise_near_circle
         p1_ = @factory.point(0, -3)
@@ -69,9 +60,6 @@ module RGeo
         ring_ = @factory.line_string([p1_, p2_, p3_, p4_, p5_, p6_, p7_, p8_, p1_])
         assert_equal(1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
       end
-
-
     end
-
   end
 end

@@ -5,24 +5,14 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Geographic
-
-
-    module SphericalGeometryMethods  # :nodoc:
-
-
+    module SphericalGeometryMethods # :nodoc:
       def srid
         factory.srid
       end
-
-
     end
 
-
-    module SphericalPointMethods   # :nodoc:
-
-
+    module SphericalPointMethods # :nodoc:
       def _validate_geometry
         if @x < -180.0 || @x > 180.0
           @x = @x % 360.0
@@ -33,11 +23,9 @@ module RGeo
         super
       end
 
-
       def _xyz
         @xyz ||= SphericalMath::PointXYZ.from_latlon(@y, @x)
       end
-
 
       def distance(rhs_)
         rhs_ = Feature.cast(rhs_, @factory)
@@ -49,9 +37,8 @@ module RGeo
         end
       end
 
-
       def equals?(rhs_)
-        return false unless rhs_.is_a?(self.class) && rhs_.factory == self.factory
+        return false unless rhs_.is_a?(self.class) && rhs_.factory == factory
         case rhs_
         when Feature::Point
           if @y == 90
@@ -62,14 +49,13 @@ module RGeo
             rhs_.x == @x && rhs_.y == @y
           end
         when Feature::LineString
-          rhs_.num_points > 0 && rhs_.points.all?{ |elem_| equals?(elem_) }
+          rhs_.num_points > 0 && rhs_.points.all? { |elem_| equals?(elem_) }
         when Feature::GeometryCollection
-          rhs_.num_geometries > 0 && rhs_.all?{ |elem_| equals?(elem_) }
+          rhs_.num_geometries > 0 && rhs_.all? { |elem_| equals?(elem_) }
         else
           false
         end
       end
-
 
       def buffer(distance_)
         radius_ = distance_ / SphericalMath::RADIUS
@@ -90,7 +76,6 @@ module RGeo
         factory.polygon(factory.linear_ring(points_))
       end
 
-
       def self.included(klass_)
         klass_.module_eval do
           alias_method :longitude, :x
@@ -99,28 +84,22 @@ module RGeo
           alias_method :lat, :y
         end
       end
-
-
     end
 
-
-    module SphericalLineStringMethods  # :nodoc:
-
-
+    module SphericalLineStringMethods # :nodoc:
       def _arcs
         unless defined?(@arcs)
-          @arcs = (0..num_points-2).map do |i_|
-            SphericalMath::ArcXYZ.new(point_n(i_)._xyz, point_n(i_+1)._xyz)
+          @arcs = (0..num_points - 2).map do |i_|
+            SphericalMath::ArcXYZ.new(point_n(i_)._xyz, point_n(i_ + 1)._xyz)
           end
         end
         @arcs
       end
 
-
       def is_simple?
         arcs_ = _arcs
         len_ = arcs_.length
-        return false if arcs_.any?{ |a_| a_.degenerate? }
+        return false if arcs_.any?(&:degenerate?)
         return true if len_ == 1
         return arcs_[0].s != arcs_[1].e if len_ == 2
         arcs_.each_with_index do |arc_, index_|
@@ -130,38 +109,26 @@ module RGeo
           pindex_ = index_ - 1
           pindex_ = nil if pindex_ < 0
           return false if pindex_ && arc_.contains_point?(arcs_[pindex_].s)
-          if nindex_
-            oindex_ = nindex_ + 1
-            while oindex_ < len_
-              oarc_ = arcs_[oindex_]
-              return false if !(index_ == 0 && oindex_ == len_-1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
-              oindex_ += 1
-            end
+          next unless nindex_
+          oindex_ = nindex_ + 1
+          while oindex_ < len_
+            oarc_ = arcs_[oindex_]
+            return false if !(index_ == 0 && oindex_ == len_ - 1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
+            oindex_ += 1
           end
         end
         true
       end
 
-
       def length
-        _arcs.inject(0.0){ |sum_, arc_| sum_ + arc_.length } * SphericalMath::RADIUS
+        _arcs.inject(0.0) { |sum_, arc_| sum_ + arc_.length } * SphericalMath::RADIUS
       end
-
-
     end
 
-
-    module SphericalMultiLineStringMethods  # :nodoc:
-
-
+    module SphericalMultiLineStringMethods # :nodoc:
       def length
-        inject(0.0){ |sum_, geom_| sum_ + geom_.length }
+        inject(0.0) { |sum_, geom_| sum_ + geom_.length }
       end
-
-
     end
-
-
   end
-
 end

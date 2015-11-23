@@ -5,13 +5,8 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module CoordSys
-
-
     module CS
-
-
       # An axis orientation constant for AxisInfo.
       # Unknown or unspecified axis orientation. This can be used for
       # local or fitted coordinate systems.
@@ -44,7 +39,6 @@ module RGeo
       # Increasing ordinates values go down. This is used for vertical
       # coordinate systems.
       AO_DOWN = 6
-
 
       # A datum type constant for HorizontalDatum.
       # Lowest possible value for horizontal datum types.
@@ -132,12 +126,11 @@ module RGeo
 
       # A datum type constant for LocalDatum.
       # Lowest possible value for local datum types.
-      LD_MIN = 10000
+      LD_MIN = 10_000
 
       # A datum type constant for LocalDatum.
       # Highest possible value for local datum types.
-      LD_MAX = 32767
-
+      LD_MAX = 32_767
 
       # This is a base class for all OGC coordinate system objects.
       # This includes both interfaces and data types from the OGC
@@ -146,30 +139,25 @@ module RGeo
       # This is a non-instantiable abstract class.
 
       class Base
-
-
         # Standard object inspection output
 
         def inspect
           "#<#{self.class}:0x#{object_id.to_s(16)} #{to_wkt}>"
         end
 
-
         # Tests for equality. Two objects are defined as equal if they
         # have the same type (class) and the same WKT representation.
 
         def eql?(rhs_)
-          rhs_.class == self.class && rhs_.to_wkt == self.to_wkt
+          rhs_.class == self.class && rhs_.to_wkt == to_wkt
         end
         alias_method :==, :eql?
-
 
         # Standard hash code
 
         def hash
-          @hash ||= self.to_wkt.hash
+          @hash ||= to_wkt.hash
         end
-
 
         # Returns the default WKT representation.
 
@@ -177,84 +165,74 @@ module RGeo
           to_wkt
         end
 
-
         # Computes the WKT representation. Options include:
         #
         # [<tt>:standard_brackets</tt>]
         #   If set to true, outputs parentheses rather than square
         #   brackets. Default is false.
 
-        def to_wkt(opts_={})
+        def to_wkt(opts_ = {})
           if opts_[:standard_brackets]
-            @standard_wkt ||= _to_wkt('(', ')')
+            @standard_wkt ||= _to_wkt("(", ")")
           else
-            @square_wkt ||= _to_wkt('[', ']')
+            @square_wkt ||= _to_wkt("[", "]")
           end
         end
 
-
-        def _to_wkt(open_, close_)  # :nodoc:
-          content_ = _wkt_content(open_, close_).map{ |obj_| ",#{obj_}" }.join
+        def _to_wkt(open_, close_) # :nodoc:
+          content_ = _wkt_content(open_, close_).map { |obj_| ",#{obj_}" }.join
           if defined?(@authority) && @authority
             authority_ = ",AUTHORITY#{open_}#{@authority.inspect},#{@authority_code.inspect}#{close_}"
           else
-            authority_ = ''
+            authority_ = ""
           end
           if defined?(@extensions) && @extensions
-            extensions_ = @extensions.map{ |k_, v_| ",EXTENSION#{open_}#{k_.inspect},#{v_.inspect}#{close_}" }.join
+            extensions_ = @extensions.map { |k_, v_| ",EXTENSION#{open_}#{k_.inspect},#{v_.inspect}#{close_}" }.join
           else
-            extensions_ = ''
+            extensions_ = ""
           end
           "#{_wkt_typename}#{open_}#{@name.inspect}#{content_}#{extensions_}#{authority_}#{close_}"
         end
 
-
         # Marshal support
 
-        def marshal_dump  # :nodoc:
+        def marshal_dump # :nodoc:
           to_wkt
         end
 
-        def marshal_load(data_)  # :nodoc:
-          data_ = data_['wkt'] if data_.is_a?(::Hash)
+        def marshal_load(data_) # :nodoc:
+          data_ = data_["wkt"] if data_.is_a?(::Hash)
           temp_ = CS.create_from_wkt(data_)
           if temp_.class == self.class
             temp_.instance_variables.each do |iv_|
               instance_variable_set(iv_, temp_.instance_variable_get(iv_))
             end
           else
-            raise ::TypeError, 'Bad Marshal data'
+            fail ::TypeError, "Bad Marshal data"
           end
         end
 
-
         # Psych support
 
-        def encode_with(coder_)  # :nodoc:
-          coder_['wkt'] = to_wkt
+        def encode_with(coder_) # :nodoc:
+          coder_["wkt"] = to_wkt
         end
 
-        def init_with(coder_)  # :nodoc:
-          temp_ = CS.create_from_wkt(coder_.type == :scalar ? coder_.scalar : coder_['wkt'] )
+        def init_with(coder_) # :nodoc:
+          temp_ = CS.create_from_wkt(coder_.type == :scalar ? coder_.scalar : coder_["wkt"])
           if temp_.class == self.class
             temp_.instance_variables.each do |iv_|
               instance_variable_set(iv_, temp_.instance_variable_get(iv_))
             end
           else
-            raise ::TypeError, 'Bad YAML data'
+            fail ::TypeError, "Bad YAML data"
           end
         end
 
-
         class << self
-
           private :new
-
         end
-
-
       end
-
 
       # == OGC spec description
       #
@@ -262,12 +240,11 @@ module RGeo
       # orientation.
 
       class AxisInfo < Base
-
         # :stopdoc:
-        NAMES_BY_VALUE = ['OTHER', 'NORTH', 'SOUTH', 'EAST', 'WEST', 'UP', 'DOWN']
+        NAMES_BY_VALUE = %w(OTHER NORTH SOUTH EAST WEST UP DOWN)
         # :startdoc:
 
-        def initialize(name_, orientation_)  # :nodoc:
+        def initialize(name_, orientation_) # :nodoc:
           @name = name_
           case orientation_
           when ::String, ::Symbol
@@ -277,7 +254,6 @@ module RGeo
           end
         end
 
-
         # Human readable name for axis. Possible values are "X", "Y",
         # "Long", "Lat" or any other short string.
         attr_reader :name
@@ -285,19 +261,15 @@ module RGeo
         # Gets enumerated value for orientation.
         attr_reader :orientation
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "AXIS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [NAMES_BY_VALUE[@orientation]]
         end
 
-
         class << self
-
-
           # Creates an AxisInfo. you must pass the human readable name for
           # the axis (e.g. "X", "Y", "Long", "Lat", or other short string)
           # and either an integer orientation code or a string. Possible
@@ -309,12 +281,8 @@ module RGeo
           def create(name_, orientation_)
             new(name_, orientation_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -325,12 +293,10 @@ module RGeo
       # system that the projected coordinate system is based on.
 
       class ProjectionParameter < Base
-
-        def initialize(name_, value_)  # :nodoc:
+        def initialize(name_, value_) # :nodoc:
           @name = name_
           @value = value_.to_f
         end
-
 
         # The parameter name.
         attr_reader :name
@@ -338,30 +304,22 @@ module RGeo
         # The parameter value.
         attr_reader :value
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "PARAMETER"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [@value]
         end
 
-
         class << self
-
-
           # Create a parameter given the name and value.
 
           def create(name_, value_)
             new(name_, value_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -371,8 +329,7 @@ module RGeo
       # points East, and the Z axis points North.
 
       class WGS84ConversionInfo < Base
-
-        def initialize(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)  # :nodoc:
+        def initialize(dx_, dy_, dz_, ex_, ey_, ez_, ppm_) # :nodoc:
           @dx = dx_.to_f
           @dy = dy_.to_f
           @dz = dz_.to_f
@@ -381,7 +338,6 @@ module RGeo
           @ez = ez_.to_f
           @ppm = ppm_.to_f
         end
-
 
         # Bursa Wolf shift in meters.
         attr_reader :dx
@@ -404,15 +360,11 @@ module RGeo
         # Bursa Wolf scaling in in parts per million.
         attr_reader :ppm
 
-
-        def _to_wkt(open_, close_)  # :nodoc:
+        def _to_wkt(open_, close_) # :nodoc:
           "TOWGS84#{open_}#{@dx},#{@dy},#{@dz},#{@ex},#{@ey},#{@ez},#{@ppm}#{close_}"
         end
 
-
         class << self
-
-
           # Create the horizontal datum shift transformation into WGS84,
           # given the seven Bursa Wolf parameters.
           # The Bursa Wolf shift should be in meters, the rotation in arc
@@ -421,12 +373,8 @@ module RGeo
           def create(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)
             new(dx_, dy_, dz_, ex_, ey_, ez_, ppm_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -468,8 +416,7 @@ module RGeo
       # * <b>extensions</b>: a hash of extension keys and values
 
       class Info < Base
-
-        def initialize(name_, authority_=nil, authority_code_=nil, abbreviation_=nil, alias_=nil, remarks_=nil, extensions_=nil)  # :nodoc:
+        def initialize(name_, authority_ = nil, authority_code_ = nil, abbreviation_ = nil, alias_ = nil, remarks_ = nil, extensions_ = nil) # :nodoc:
           @name = name_
           @authority = authority_ ? authority_.to_s : nil
           @authority_code = authority_code_ ? authority_code_.to_s : nil
@@ -478,10 +425,9 @@ module RGeo
           @remarks = remarks_ ? remarks_.to_s : nil
           @extensions = {}
           if extensions_
-            extensions_.each{ |k_, v_| @extensions[k_.to_s] = v_.to_s }
+            extensions_.each { |k_, v_| @extensions[k_.to_s] = v_.to_s }
           end
         end
-
 
         # Gets the abbreviation.
         attr_reader :abbreviation
@@ -520,10 +466,7 @@ module RGeo
         def extension(key_)
           @extensions[key_.to_s]
         end
-
-
       end
-
 
       # == OGC spec description
       #
@@ -536,31 +479,25 @@ module RGeo
       # not clear whether the data refers to a LinearUnit or AngularUnit.
 
       class Unit < Info
-
-        def initialize(name_, conversion_factor_, *optional_)  # :nodoc:
+        def initialize(name_, conversion_factor_, *optional_) # :nodoc:
           super(name_, *optional_)
           @conversion_factor = conversion_factor_.to_f
         end
-
 
         # This field is not part of the OGC CT spec, but is part of the
         # SFS. It is an alias of the appropriate field in the subclass,
         # i.e. LinearUnit#meters_per_unit or AngularUnit#radians_per_unit.
         attr_reader :conversion_factor
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "UNIT"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [@conversion_factor]
         end
 
-
         class << self
-
-
           # Create a bare Unit that does not specify whether it is a
           # LinearUnit or an AngularUnit, given a unit name and a
           # conversion factor. You may also provide the optional
@@ -569,20 +506,14 @@ module RGeo
           def create(name_, conversion_factor_, *optional_)
             new(name_, conversion_factor_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
       # Definition of linear units.
 
       class LinearUnit < Unit
-
-
         # Returns the number of meters per LinearUnit.
         # Also available as Unit#conversion_factor.
 
@@ -590,10 +521,7 @@ module RGeo
           @conversion_factor
         end
 
-
         class << self
-
-
           # Create a LinearUnit given a unit name and a conversion factor
           # in meters per unit. You may also provide the optional
           # parameters specified by the Info interface.
@@ -601,20 +529,14 @@ module RGeo
           def create(name_, meters_per_unit_, *optional_)
             new(name_, meters_per_unit_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
       # Definition of angular units.
 
       class AngularUnit < Unit
-
-
         # Returns the number of radians per AngularUnit.
         # Also available as Unit#conversion_factor.
 
@@ -622,10 +544,7 @@ module RGeo
           @conversion_factor
         end
 
-
         class << self
-
-
           # Create an AngularUnit given a unit name and a conversion
           # factor in radians per unit. You may also provide the optional
           # parameters specified by the Info interface.
@@ -633,25 +552,19 @@ module RGeo
           def create(name_, radians_per_unit_, *optional_)
             new(name_, radians_per_unit_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
       # A meridian used to take longitude measurements from.
 
       class PrimeMeridian < Info
-
-        def initialize(name_, angular_unit_, longitude_, *optional_)  # :nodoc:
+        def initialize(name_, angular_unit_, longitude_, *optional_) # :nodoc:
           super(name_, *optional_)
           @angular_unit = angular_unit_
           @longitude = longitude_.to_f
         end
-
 
         # Returns the AngularUnits.
         attr_reader :angular_unit
@@ -660,19 +573,15 @@ module RGeo
         # The longitude is expressed in this objects angular units.
         attr_reader :longitude
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "PRIMEM"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [@longitude]
         end
 
-
         class << self
-
-
           # Create a PrimeMeridian given a name, AngularUnits, and the
           # longitude relative to the Greenwich Meridian, expressed in
           # the AngularUnits. You may also provide the optional parameters
@@ -681,21 +590,15 @@ module RGeo
           def create(name_, angular_unit_, longitude_, *optional_)
             new(name_, angular_unit_, longitude_, *optional_)
           end
-
-
         end
-
-
       end
-
 
       # == OGC spec description
       #
       # An approximation of the Earth's surface as a squashed sphere.
 
       class Ellipsoid < Info
-
-        def initialize(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)  # :nodoc:
+        def initialize(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_) # :nodoc:
           super(name_, *optional_)
           @semi_major_axis = semi_major_axis_.to_f
           @semi_minor_axis = semi_minor_axis_.to_f
@@ -703,7 +606,6 @@ module RGeo
           @ivf_definitive = ivf_definitive_ ? true : false
           @linear_unit = linear_unit_
         end
-
 
         # Gets the equatorial radius. The returned length is expressed in
         # this object's axis units.
@@ -730,19 +632,15 @@ module RGeo
         # semi-minor axis values.
         attr_reader :axis_unit
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "SPHEROID"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [@semi_major_axis, @inverse_flattening]
         end
 
-
         class << self
-
-
           # Create an Ellipsoid given a name, semi-major and semi-minor
           # axes, the inverse flattening, a boolean indicating whether
           # the inverse flattening is definitive, and the LinearUnit
@@ -753,7 +651,6 @@ module RGeo
           def create(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)
             new(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, ivf_definitive_, linear_unit_, *optional_)
           end
-
 
           # Create an Ellipsoid given a name, semi-major and semi-minor
           # axes, and the LinearUnit indicating the axis units. In the
@@ -769,7 +666,6 @@ module RGeo
             new(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, false, linear_unit_, *optional_)
           end
 
-
           # Create an Ellipsoid given a name, semi-major axis, inverse
           # flattening, and the LinearUnit indicating the axis units. In
           # the resulting ellipsoid, the inverse flattening is definitive.
@@ -783,12 +679,8 @@ module RGeo
             semi_minor_axis_ = semi_major_axis_ if semi_minor_axis_.infinite?
             new(name_, semi_major_axis_, semi_minor_axis_, inverse_flattening_, true, linear_unit_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -811,42 +703,33 @@ module RGeo
       # LocalDatum.
 
       class Datum < Info
-
-        def initialize(name_, datum_type_, *optional_)  # :nodoc:
+        def initialize(name_, datum_type_, *optional_) # :nodoc:
           super(name_, *optional_)
           @datum_type = datum_type_.to_i
         end
 
-
         # Gets the type of the datum as an enumerated code.
         attr_reader :datum_type
 
-
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           []
         end
-
-
       end
-
 
       # == OGC spec description
       #
       # Procedure used to measure vertical distances.
 
       class VerticalDatum < Datum
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "VERT_DATUM"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [@datum_type]
         end
 
         class << self
-
-
           # Create a VerticalDatum given a name and a datum type code.
           # You may also provide the optional parameters specified by the
           # Info interface.
@@ -854,12 +737,8 @@ module RGeo
           def create(name_, datum_type_, *optional_)
             new(name_, datum_type_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -870,18 +749,15 @@ module RGeo
       # datum.
 
       class LocalDatum < Datum
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "LOCAL_DATUM"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           [@datum_type]
         end
 
         class << self
-
-
           # Create a LocalDatum given a name and a datum type code. You
           # may also provide the optional parameters specified by the
           # Info interface.
@@ -889,25 +765,19 @@ module RGeo
           def create(name_, datum_type_, *optional_)
             new(name_, datum_type_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
       # Procedure used to measure positions on the surface of the Earth.
 
       class HorizontalDatum < Datum
-
-        def initialize(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)  # :nodoc:
+        def initialize(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_) # :nodoc:
           super(name_, datum_type_, *optional_)
           @ellipsoid = ellipsoid_
           @wgs84_parameters = wgs84_parameters_
         end
-
 
         # Returns the Ellipsoid.
         attr_reader :ellipsoid
@@ -917,21 +787,17 @@ module RGeo
         # (ex,ey,ez) in arc-seconds, and scaling in parts-per-million.
         attr_reader :wgs84_parameters
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "DATUM"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(open_, close_) # :nodoc:
           array_ = [@ellipsoid._to_wkt(open_, close_)]
           array_ << @wgs84_parameters._to_wkt(open_, close_) if @wgs84_parameters
           array_
         end
 
-
         class << self
-
-
           # Create a HorizontalDatum given a name, datum type code,
           # Ellipsoid, and WGS84ConversionInfo. The WGS84ConversionInfo
           # is optional and may be set to nil. You may also provide the
@@ -940,30 +806,23 @@ module RGeo
           def create(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)
             new(name_, datum_type_, ellipsoid_, wgs84_parameters_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
       # A projection from geographic coordinates to projected coordinates.
 
       class Projection < Info
-
-        def initialize(name_, class_name_, parameters_, *optional_)  # :nodoc:
+        def initialize(name_, class_name_, parameters_, *optional_) # :nodoc:
           super(name_, *optional_)
           @class_name = class_name_.to_s
           @parameters = parameters_ ? parameters_.dup : []
         end
 
-
         # Gets the projection classification name
         # (e.g. "Transverse_Mercator").
         attr_reader :class_name
-
 
         # Gets number of parameters of the projection.
 
@@ -971,13 +830,11 @@ module RGeo
           @parameters.size
         end
 
-
         # Gets an inexed parameter of the projection.
 
         def get_parameter(index_)
           @parameters[index_]
         end
-
 
         # Iterates over the parameters of the projection.
 
@@ -985,19 +842,15 @@ module RGeo
           @parameters.each(&block_)
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "PROJECTION"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(_open_, _close_) # :nodoc:
           []
         end
 
-
         class << self
-
-
           # Create a Projection given a name, a projection class, and an
           # array of ProjectionParameter. You may also provide the
           # optional parameters specified by the Info interface.
@@ -1005,12 +858,8 @@ module RGeo
           def create(name_, class_name_, parameters_, *optional_)
             new(name_, class_name_, parameters_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -1042,35 +891,28 @@ module RGeo
       # CompoundCoordinateSystem.
 
       class CoordinateSystem < Info
-
-        def initialize(name_, dimension_, *optional_)  # :nodoc:
+        def initialize(name_, dimension_, *optional_) # :nodoc:
           super(name_, *optional_)
           @dimension = dimension_.to_i
         end
 
-
         # Dimension of the coordinate system
         attr_reader :dimension
-
 
         # Gets axis details for dimension within coordinate system. Each
         # dimension in the coordinate system has a corresponding axis.
 
-        def get_axis(dimension_)
+        def get_axis(_dimension_)
           nil
         end
-
 
         # Gets units for dimension within coordinate system. Each
         # dimension in the coordinate system has corresponding units.
 
-        def get_units(dimension_)
+        def get_units(_dimension_)
           nil
         end
-
-
       end
-
 
       # == OGC spec description
       #
@@ -1081,20 +923,17 @@ module RGeo
       # coordinate system with a vertical datum.
 
       class CompoundCoordinateSystem < CoordinateSystem
-
-        def initialize(name_, head_, tail_, *optional_)  # :nodoc:
+        def initialize(name_, head_, tail_, *optional_) # :nodoc:
           super(name_, head_.dimension + tail_.dimension, *optional_)
           @head = head_
           @tail = tail_
         end
-
 
         # Gets first sub-coordinate system.
         attr_reader :head
 
         # Gets second sub-coordinate system.
         attr_reader :tail
-
 
         # Implements CoordinateSystem#get_axis
 
@@ -1103,7 +942,6 @@ module RGeo
           index_ < hd_ ? @head.get_axis(index_) : @tail.get_axis(index_ - hd_)
         end
 
-
         # Implements CoordinateSystem#get_units
 
         def get_units(index_)
@@ -1111,19 +949,15 @@ module RGeo
           index_ < hd_ ? @head.get_units(index_) : @tail.get_units(index_ - hd_)
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "COMPD_CS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(open_, close_) # :nodoc:
           [@head._to_wkt(open_, close_), @tail._to_wkt(open_, close_)]
         end
 
-
         class << self
-
-
           # Create a CompoundCoordinateSystem given two sub-coordinate
           # systems. You may also provide the optional parameters
           # specified by the Info interface.
@@ -1131,13 +965,8 @@ module RGeo
           def create(name_, head_, tail_, *optional_)
             new(name_, head_, tail_, *optional_)
           end
-
-
         end
-
-
       end
-
 
       # == OGC spec description
       #
@@ -1159,18 +988,15 @@ module RGeo
       # Transformation (CT) package.
 
       class LocalCoordinateSystem < CoordinateSystem
-
-        def initialize(name_, local_datum_, unit_, axes_, *optional_)  # :nodoc:
+        def initialize(name_, local_datum_, unit_, axes_, *optional_) # :nodoc:
           super(name_, axes_.size, *optional_)
           @local_datum = local_datum_
           @unit = unit_
           @axes = axes_.dup
         end
 
-
         # Gets the local datum.
         attr_reader :local_datum
-
 
         # Implements CoordinateSystem#get_axis
 
@@ -1178,26 +1004,21 @@ module RGeo
           @axes[index_]
         end
 
-
         # Implements CoordinateSystem#get_units
 
-        def get_units(index_)
+        def get_units(_index_)
           @unit
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "LOCAL_CS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
-          [@local_datum._to_wkt(open_, close_), @unit._to_wkt(open_, close_)] + @axes.map{ |ax_| ax_._to_wkt(open_, close_) }
+        def _wkt_content(open_, close_) # :nodoc:
+          [@local_datum._to_wkt(open_, close_), @unit._to_wkt(open_, close_)] + @axes.map { |ax_| ax_._to_wkt(open_, close_) }
         end
 
-
         class << self
-
-
           # Create a LocalCoordinateSystem given a name, a LocalDatum, a
           # Unit, and an array of at least one AxisInfo. You may also
           # provide the optional parameters specified by the Info
@@ -1206,12 +1027,8 @@ module RGeo
           def create(name_, local_datum_, unit_, axes_, *optional_)
             new(name_, local_datum_, unit_, axes_, *optional_)
           end
-
-
         end
-
       end
-
 
       # == OGC spec description
       #
@@ -1223,8 +1040,7 @@ module RGeo
       # non-default values.
 
       class GeocentricCoordinateSystem < CoordinateSystem
-
-        def initialize(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)  # :nodoc:
+        def initialize(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_) # :nodoc:
           super(name_, 3, *optional_)
           @horizontal_datum = horizontal_datum_
           @prime_meridian = prime_meridian_
@@ -1233,7 +1049,6 @@ module RGeo
           @axis1 = axis1_
           @axis2 = axis2_
         end
-
 
         # Returns the HorizontalDatum. The horizontal datum is used to
         # determine where the centre of the Earth is considered to be.
@@ -1247,13 +1062,11 @@ module RGeo
         # Gets the units used along all the axes.
         attr_reader :linear_unit
 
-
         # Implements CoordinateSystem#get_units
 
-        def get_units(index_)
+        def get_units(_index_)
           @linear_unit
         end
-
 
         # Implements CoordinateSystem#get_axis
 
@@ -1261,12 +1074,11 @@ module RGeo
           [@axis0, @axis1, @axis2][index_]
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "GEOCCS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(open_, close_) # :nodoc:
           arr_ = [@horizontal_datum._to_wkt(open_, close_), @prime_meridian._to_wkt(open_, close_), @linear_unit._to_wkt(open_, close_)]
           arr_ << @axis0._to_wkt(open_, close_) if @axis0
           arr_ << @axis1._to_wkt(open_, close_) if @axis1
@@ -1274,10 +1086,7 @@ module RGeo
           arr_
         end
 
-
         class << self
-
-
           # Create a GeocentricCoordinateSystem given a name, a
           # HorizontalDatum, a PrimeMeridian, a LinearUnit, and three
           # AxisInfo objects. The AxisInfo are optional and may be nil.
@@ -1287,13 +1096,8 @@ module RGeo
           def create(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)
             new(name_, horizontal_datum_, prime_meridian_, linear_unit_, axis0_, axis1_, axis2_, *optional_)
           end
-
-
         end
-
-
       end
-
 
       # == OGC spec description
       #
@@ -1301,14 +1105,12 @@ module RGeo
       # measurements.
 
       class VerticalCoordinateSystem < CoordinateSystem
-
-        def initialize(name_, vertical_datum_, vertical_unit_, axis_, *optional_)  # :nodoc:
+        def initialize(name_, vertical_datum_, vertical_unit_, axis_, *optional_) # :nodoc:
           super(name_, 1, *optional_)
           @vertical_datum = vertical_datum_
           @vertical_unit = vertical_unit_
           @axis = axis_
         end
-
 
         # Gets the vertical datum, which indicates the measurement method.
         attr_reader :vertical_datum
@@ -1317,35 +1119,29 @@ module RGeo
         # must be the same as the CS_CoordinateSystem units.
         attr_reader :vertical_unit
 
-
         # Implements CoordinateSystem#get_units
 
-        def get_units(index_)
+        def get_units(_index_)
           @vertical_unit
         end
 
-
         # Implements CoordinateSystem#get_axis
 
-        def get_axis(index_)
+        def get_axis(_index_)
           @axis
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "VERT_CS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(open_, close_) # :nodoc:
           arr_ = [@vertical_datum._to_wkt(open_, close_), @vertical_unit._to_wkt(open_, close_)]
           arr_ << @axis._to_wkt(open_, close_) if @axis
           arr_
         end
 
-
         class << self
-
-
           # Create a VerticalCoordinateSystem given a name, a
           # VerticalDatum, a LinearUnit, and an AxisInfo. The AxisInfo is
           # optional and may be nil. You may also provide the optional
@@ -1354,13 +1150,8 @@ module RGeo
           def create(name_, vertical_datum_, vertical_unit_, axis_, *optional_)
             new(name_, vertical_datum_, vertical_unit_, axis_, *optional_)
           end
-
-
         end
-
-
       end
-
 
       # == OGC spec description
       #
@@ -1373,19 +1164,14 @@ module RGeo
       # ProjectedCoordinateSystem.
 
       class HorizontalCoordinateSystem < CoordinateSystem
-
-        def initialize(name_, horizontal_datum_, *optional_)  # :nodoc:
+        def initialize(name_, horizontal_datum_, *optional_) # :nodoc:
           super(name_, 2, *optional_)
           @horizontal_datum = horizontal_datum_
         end
 
-
         # Returns the HorizontalDatum.
         attr_reader :horizontal_datum
-
-
       end
-
 
       # == OGC spec description
       #
@@ -1396,15 +1182,13 @@ module RGeo
       # systems use degrees.
 
       class GeographicCoordinateSystem < HorizontalCoordinateSystem
-
-        def initialize(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)  # :nodoc:
+        def initialize(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_) # :nodoc:
           super(name_, horizontal_datum_, *optional_)
           @prime_meridian = prime_meridian_
           @angular_unit = angular_unit_
           @axis0 = axis0_
           @axis1 = axis1_
         end
-
 
         # Returns the PrimeMeridian.
         attr_reader :prime_meridian
@@ -1413,13 +1197,11 @@ module RGeo
         # the CS_CoordinateSystem units.
         attr_reader :angular_unit
 
-
         # Implements CoordinateSystem#get_units
 
-        def get_units(index_)
+        def get_units(_index_)
           @angular_unit
         end
-
 
         # Implements CoordinateSystem#get_axis
 
@@ -1427,13 +1209,11 @@ module RGeo
           index_ == 1 ? @axis1 : @axis0
         end
 
-
         # Gets the number of available conversions to WGS84 coordinates.
 
         def num_conversion_to_wgs84
           @horizontal_datum.wgs84_parameters ? 1 : 0
         end
-
 
         # Gets details on a conversion to WGS84. Some geographic
         # coordinate systems provide several transformations into WGS84,
@@ -1441,26 +1221,22 @@ module RGeo
         # of interest. The first conversion (with index=0) should provide
         # acceptable accuracy over the largest possible area of interest.
 
-        def get_wgs84_conversion_info(index_)
+        def get_wgs84_conversion_info(_index_)
           @horizontal_datum.wgs84_parameters
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "GEOGCS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(open_, close_) # :nodoc:
           arr_ = [@horizontal_datum._to_wkt(open_, close_), @prime_meridian._to_wkt(open_, close_), @angular_unit._to_wkt(open_, close_)]
           arr_ << @axis0._to_wkt(open_, close_) if @axis0
           arr_ << @axis1._to_wkt(open_, close_) if @axis1
           arr_
         end
 
-
         class << self
-
-
           # Create a GeographicCoordinateSystem, given a name, an
           # AngularUnit, a HorizontalDatum, a PrimeMeridian, and two
           # AxisInfo objects. The AxisInfo objects are optional and may
@@ -1470,21 +1246,15 @@ module RGeo
           def create(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)
             new(name_, angular_unit_, horizontal_datum_, prime_meridian_, axis0_, axis1_, *optional_)
           end
-
-
         end
-
-
       end
-
 
       # == OGC spec description
       #
       # A 2D cartographic coordinate system.
 
       class ProjectedCoordinateSystem < HorizontalCoordinateSystem
-
-        def initialize(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)  # :nodoc:
+        def initialize(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_) # :nodoc:
           super(name_, geographic_coordinate_system_.horizontal_datum, *optional_)
           @geographic_coordinate_system = geographic_coordinate_system_
           @projection = projection_
@@ -1492,7 +1262,6 @@ module RGeo
           @axis0 = axis0_
           @axis1 = axis1_
         end
-
 
         # Returns the GeographicCoordinateSystem.
         attr_reader :geographic_coordinate_system
@@ -1504,13 +1273,11 @@ module RGeo
         # the CS_CoordinateSystem units.
         attr_reader :linear_unit
 
-
         # Implements CoordinateSystem#get_units
 
-        def get_units(index_)
+        def get_units(_index_)
           @linear_unit
         end
-
 
         # Implements CoordinateSystem#get_axis
 
@@ -1518,24 +1285,20 @@ module RGeo
           index_ == 1 ? @axis1 : @axis0
         end
 
-
-        def _wkt_typename  # :nodoc:
+        def _wkt_typename # :nodoc:
           "PROJCS"
         end
 
-        def _wkt_content(open_, close_)  # :nodoc:
+        def _wkt_content(open_, close_) # :nodoc:
           arr_ = [@geographic_coordinate_system._to_wkt(open_, close_), @projection._to_wkt(open_, close_)]
-          @projection.each_parameter{ |param_| arr_ << param_._to_wkt(open_, close_) }
+          @projection.each_parameter { |param_| arr_ << param_._to_wkt(open_, close_) }
           arr_ << @linear_unit._to_wkt(open_, close_)
           arr_ << @axis0._to_wkt(open_, close_) if @axis0
           arr_ << @axis1._to_wkt(open_, close_) if @axis1
           arr_
         end
 
-
         class << self
-
-
           # Create a ProjectedCoordinateSystem given a name, a
           # GeographicCoordinateSystem, and Projection, a LinearUnit, and
           # two AxisInfo objects. The AxisInfo objects are optional and
@@ -1545,17 +1308,8 @@ module RGeo
           def create(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)
             new(name_, geographic_coordinate_system_, projection_, linear_unit_, axis0_, axis1_, *optional_)
           end
-
-
         end
-
-
       end
-
-
     end
-
-
   end
-
 end
