@@ -60,11 +60,13 @@ Some features also require the following:
 
 *   GEOS 3.2 or later is highly recommended. (3.3.3 or later preferred.) Some
     functions will not be available without it. This C/C++ library may be
-    available via your operating system's package manager, or you can download
-    it from http://trac.osgeo.org/geos
+    available via your operating system's package manager (`sudo aptitude
+    install libgeos-dev` for debian based Linux distributions), or you can
+    download it from http://trac.osgeo.org/geos
 *   Proj 4.7 or later is also recommended. This library is needed if you want
     to translate coordinates between geographic projections. It also may be
-    available via your operating system's package manager, or from
+    available via your operating system's package manager (`sudo aptitude
+    install libproj-dev` for debian based Linux distributions), or from
     http://trac.osgeo.org/proj
 *   On some platforms, you should install the ffi-geos gem (version 0.0.6 or
     later recommended.) JRuby requires this gem to link properly with Geos,
