@@ -49,7 +49,7 @@ http://groups.google.com/group/rgeo-users
 
 RGeo is known to work with the following Ruby implementations:
 
-*   Ruby 1.8.7 or later. (2.0 or later preferred.)
+*   Ruby 1.9.3 or later. (2.0 or later preferred.)
 *   Rubinius 1.1 or later.
 *   Partial support for JRuby 1.6.3 or later. The FFI implementation of GEOS
     is available (ffi-geos gem required) but CAPI is not. Proj4 support is
