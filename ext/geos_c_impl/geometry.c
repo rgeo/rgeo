@@ -782,6 +782,42 @@ static VALUE method_geometry_simplify(VALUE self, VALUE tolerance)
   return result;
 }
 
+static VALUE method_geometry_simplify_preserve_topology(VALUE self, VALUE tolerance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  VALUE factory;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    factory = self_data->factory;
+    result = rgeo_wrap_geos_geometry(factory, GEOSTopologyPreserveSimplify_r(self_data->geos_context, self_geom,
+      rb_num2dbl(tolerance)), Qnil);
+  }
+  return result;
+}
+
+static VALUE method_geometry_simplify_preserve_topology(VALUE self, VALUE tolerance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  VALUE factory;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    factory = self_data->factory;
+    result = rgeo_wrap_geos_geometry(factory, GEOSTopologyPreserveSimplify_r(self_data->geos_context, self_geom,
+      rb_num2dbl(tolerance)), Qnil);
+  }
+  return result;
+}
+
 
 static VALUE method_geometry_convex_hull(VALUE self)
 {
@@ -1012,6 +1048,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_methods, "buffer", method_geometry_buffer, 1);
   rb_define_method(geos_geometry_methods, "buffer_with_style", method_geometry_buffer_with_style, 4);
   rb_define_method(geos_geometry_methods, "simplify", method_geometry_simplify, 1);
+  rb_define_method(geos_geometry_methods, "simplify_preserve_topology", method_geometry_simplify_preserve_topology, 1);
   rb_define_method(geos_geometry_methods, "convex_hull", method_geometry_convex_hull, 0);
   rb_define_method(geos_geometry_methods, "intersection", method_geometry_intersection, 1);
   rb_define_method(geos_geometry_methods, "*", method_geometry_intersection, 1);

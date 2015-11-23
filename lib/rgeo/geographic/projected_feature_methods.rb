@@ -109,6 +109,11 @@ module RGeo
       def simplify(tolerance_)
         factory.unproject(projection.simplify(tolerance_))
       end
+
+  
+      def simplify_preserve_topology(tolerance_)
+        factory.unproject(projection.simplify_preserve_topology(tolerance_))
+      end
       
 
       def convex_hull
