@@ -4,22 +4,15 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'net/http'
-
+require "net/http"
 
 module RGeo
-
   module CoordSys
-
     module SRSDatabase
-
-
       # A spatial reference database implementation that fetches data
       # from the spatialreference.org website.
 
       class SrOrg
-
-
         # Create a database backed by the given catalog of the
         # spatialreference.org website. Catalogs currently supported by
         # spatialreference.org are "epsg", "esri", "iau2000" and "sr-org".
@@ -31,15 +24,13 @@ module RGeo
         #   is requested again, the result is served from cache rather
         #   than issuing another HTTP request. Default is false.
 
-        def initialize(catalog_, opts_={})
+        def initialize(catalog_, opts_ = {})
           @catalog = catalog_.to_s.downcase
           @cache = opts_[:cache] ? {} : nil
         end
 
-
         # The spatialreference.org catalog used by this database.
         attr_reader :catalog
-
 
         # Retrieve the Entry from a spatialreference.org catalog given an
         # integer ID.
@@ -49,30 +40,23 @@ module RGeo
           return @cache[ident_] if @cache && @cache.include?(ident_)
           coord_sys_ = nil
           proj4_ = nil
-          ::Net::HTTP.start('spatialreference.org') do |http_|
+          ::Net::HTTP.start("spatialreference.org") do |http_|
             response_ = http_.request_get("/ref/#{@catalog}/#{ident_}/ogcwkt/")
-            coord_sys_ = response_.body if response_.kind_of?(::Net::HTTPSuccess)
+            coord_sys_ = response_.body if response_.is_a?(::Net::HTTPSuccess)
             response_ = http_.request_get("/ref/#{@catalog}/#{ident_}/proj4/")
-            proj4_ = response_.body if response_.kind_of?(::Net::HTTPSuccess)
+            proj4_ = response_.body if response_.is_a?(::Net::HTTPSuccess)
           end
-          result_ = Entry.new(ident_, :coord_sys => coord_sys_.strip, :proj4 => proj4_.strip)
+          result_ = Entry.new(ident_, coord_sys: coord_sys_.strip, proj4: proj4_.strip)
           @cache[ident_] = result_ if @cache
           result_
         end
-
 
         # Clear the cache if one exists.
 
         def clear_cache
           @cache.clear if @cache
         end
-
-
       end
-
-
     end
-
   end
-
 end

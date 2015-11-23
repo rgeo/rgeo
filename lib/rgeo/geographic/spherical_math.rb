@@ -5,14 +5,9 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Geographic
-
-    module SphericalMath  # :nodoc:
-
-
-      RADIUS = 6378137.0
-
+    module SphericalMath # :nodoc:
+      RADIUS = 6_378_137.0
 
       # Represents a point on the unit sphere in (x,y,z) coordinates
       # instead of lat-lon. This form is often faster, more convenient,
@@ -25,48 +20,49 @@ module RGeo
       # This object is also used to represent a great circle, as its axis
       # of rotation.
 
-      class PointXYZ  # :nodoc:
-
+      class PointXYZ # :nodoc:
         def initialize(x_, y_, z_)
           r_ = ::Math.sqrt(x_ * x_ + y_ * y_ + z_ * z_)
           @x = (x_ / r_).to_f
           @y = (y_ / r_).to_f
           @z = (z_ / r_).to_f
-          raise "Not a number" if @x.nan? || @y.nan? || @z.nan?
+          fail "Not a number" if @x.nan? || @y.nan? || @z.nan?
         end
-
 
         def to_s
           "(#{@x}, #{@y}, #{@z})"
         end
 
-
         attr_reader :x
         attr_reader :y
         attr_reader :z
 
-
         def eql?(rhs_)
-          rhs_.kind_of?(PointXYZ) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z
+          rhs_.is_a?(PointXYZ) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z
         end
         alias_method :==, :eql?
 
-
         def latlon
           lat_rad_ = ::Math.asin(@z)
-          lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
+          lon_rad_ = begin
+                       ::Math.atan2(@y, @x)
+                     rescue
+                       0.0
+                     end
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           [lat_rad_ / rpd_, lon_rad_ / rpd_]
         end
 
-
         def lonlat
           lat_rad_ = ::Math.asin(@z)
-          lon_rad_ = ::Math.atan2(@y, @x) rescue 0.0
+          lon_rad_ = begin
+                       ::Math.atan2(@y, @x)
+                     rescue
+                       0.0
+                     end
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           [lon_rad_ / rpd_, lat_rad_ / rpd_]
         end
-
 
         def *(rhs_)
           val_ = @x * rhs_.x + @y * rhs_.y + @z * rhs_.z
@@ -75,14 +71,16 @@ module RGeo
           val_
         end
 
-
         def %(rhs_)
           rx_ = rhs_.x
           ry_ = rhs_.y
           rz_ = rhs_.z
-          PointXYZ.new(@y*rz_-@z*ry_, @z*rx_-@x*rz_, @x*ry_-@y*rx_) rescue nil
+          begin
+            PointXYZ.new(@y * rz_ - @z * ry_, @z * rx_ - @x * rz_, @x * ry_ - @y * rx_)
+          rescue
+            nil
+          end
         end
-
 
         def dist_to_point(rhs_)
           rx_ = rhs_.x
@@ -92,14 +90,13 @@ module RGeo
           if dot_ > -0.8 && dot_ < 0.8
             ::Math.acos(dot_)
           else
-            x_ = @y*rz_-@z*ry_
-            y_ = @z*rx_-@x*rz_
-            z_ = @x*ry_-@y*rx_
-            as_ = ::Math.asin(::Math.sqrt(x_*x_ + y_*y_ + z_*z_))
+            x_ = @y * rz_ - @z * ry_
+            y_ = @z * rx_ - @x * rz_
+            z_ = @x * ry_ - @y * rx_
+            as_ = ::Math.asin(::Math.sqrt(x_ * x_ + y_ * y_ + z_ * z_))
             dot_ > 0.0 ? as_ : ::Math::PI - as_
           end
         end
-
 
         # Creates some point that is perpendicular to this point
 
@@ -110,7 +107,6 @@ module RGeo
           p2dot_ = -p2dot_ if p2dot_ < 0
           p1dot_ < p2dot_ ? (self % P1) : (self % P2)
         end
-
 
         def self.from_latlon(lat_, lon_)
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
@@ -123,57 +119,44 @@ module RGeo
           new(x_, y_, z_)
         end
 
-
         def self.weighted_combination(p1_, w1_, p2_, w2_)
           new(p1_.x * w1_ + p2_.x * w2_, p1_.y * w1_ + p2_.y * w2_, p1_.z * w1_ + p2_.z * w2_)
         end
 
-
         P1 = new(1, 0, 0)
         P2 = new(0, 1, 0)
-
       end
-
 
       # Represents a finite arc on the sphere.
 
-      class ArcXYZ  # :nodoc:
-
+      class ArcXYZ # :nodoc:
         def initialize(start_, end_)
           @s = start_
           @e = end_
           @axis = false
         end
 
-
         attr_reader :s
         attr_reader :e
-
 
         def to_s
           "#{@s} - #{@e}"
         end
 
-
         def eql?(rhs_)
-          rhs_.kind_of?(ArcXYZ) && @s == rhs_.s && @e == rhs_.e
+          rhs_.is_a?(ArcXYZ) && @s == rhs_.s && @e == rhs_.e
         end
         alias_method :==, :eql?
-
 
         def degenerate?
           axis_ = axis
           axis_.x == 0 && axis_.y == 0 && axis_.z == 0
         end
 
-
         def axis
-          if @axis == false
-            @axis = @s % @e
-          end
+          @axis = @s % @e if @axis == false
           @axis
         end
-
 
         def contains_point?(obj_)
           axis_ = axis
@@ -181,7 +164,6 @@ module RGeo
           eaxis_ = ArcXYZ.new(obj_, @e).axis
           !saxis_ || !eaxis_ || obj_ * axis_ == 0.0 && saxis_ * axis_ > 0 && eaxis_ * axis_ > 0
         end
-
 
         def intersects_arc?(obj_)
           my_axis_ = axis
@@ -197,17 +179,10 @@ module RGeo
           end
         end
 
-
         def length
           @s.dist_to_point(@e)
         end
-
-
       end
-
-
     end
-
   end
-
 end

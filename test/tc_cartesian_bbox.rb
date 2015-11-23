@@ -4,20 +4,15 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'test/unit'
-require 'rgeo'
-
+require "test/unit"
+require "rgeo"
 
 module RGeo
-  module Tests  # :nodoc:
-
-    class TestCartesianBBox < ::Test::Unit::TestCase  # :nodoc:
-
-
+  module Tests # :nodoc:
+    class TestCartesianBBox < ::Test::Unit::TestCase # :nodoc:
       def setup
         @factory = ::RGeo::Cartesian.factory
       end
-
 
       def test_empty_bbox
         bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
@@ -33,7 +28,6 @@ module RGeo
         assert_equal(0, bbox_.x_span)
         assert_equal(0, bbox_.subdivide.size)
       end
-
 
       def test_point_bbox
         empty_bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
@@ -60,7 +54,6 @@ module RGeo
         assert_equal([bbox_], bbox_.subdivide)
       end
 
-
       def test_rect_bbox
         empty_bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
         bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
@@ -86,7 +79,6 @@ module RGeo
         assert_equal(1, bbox_.y_span)
       end
 
-
       def test_bbox_from_points
         bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
         bbox_.add(@factory.point(1, 4))
@@ -96,42 +88,36 @@ module RGeo
         assert_equal(bbox_, bbox2_)
       end
 
-
       def test_basic_rect_subdivide
         bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
         bbox_.add(@factory.point(1, 2))
         bbox_.add(@factory.point(5, 4))
         quads_ = bbox_.subdivide
-        quads_.each{ |q_| assert_equal(2.0, q_.to_geometry.area) }
+        quads_.each { |q_| assert_equal(2.0, q_.to_geometry.area) }
         quadsum_ = quads_[0].to_geometry + quads_[1].to_geometry +
-          quads_[2].to_geometry + quads_[3].to_geometry
+                   quads_[2].to_geometry + quads_[3].to_geometry
         assert_equal(bbox_.to_geometry, quadsum_)
       end
-
 
       def test_horiz_line_subdivide
         bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
         bbox_.add(@factory.point(1, 2))
         bbox_.add(@factory.point(5, 2))
         lines_ = bbox_.subdivide
-        lines_.each{ |line_| assert_equal(2.0, line_.to_geometry.length) }
+        lines_.each { |line_| assert_equal(2.0, line_.to_geometry.length) }
         linesum_ = lines_[0].to_geometry + lines_[1].to_geometry
         assert_equal(bbox_.to_geometry, linesum_)
       end
-
 
       def test_vert_line_subdivide
         bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
         bbox_.add(@factory.point(1, 2))
         bbox_.add(@factory.point(1, 6))
         lines_ = bbox_.subdivide
-        lines_.each{ |line_| assert_equal(2.0, line_.to_geometry.length) }
+        lines_.each { |line_| assert_equal(2.0, line_.to_geometry.length) }
         linesum_ = lines_[0].to_geometry + lines_[1].to_geometry
         assert_equal(bbox_.to_geometry, linesum_)
       end
-
-
     end
-
   end
 end

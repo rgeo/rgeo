@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # This is a standard interface for factories of features.
     # Generally, each Feature implementation will implement these
     # methods as a standard way to create features.
@@ -33,15 +30,12 @@ module RGeo
     # <tt>===</tt>, and case-when constructs.
 
     module Factory
-
-
       # All factory implementations MUST include this submodule.
       # This serves as a marker that may be used to test an object for
       # factory-ness.
 
       module Instance
       end
-
 
       # Returns meta-information about this factory, by key. This
       # information may involve support for optional functionality,
@@ -78,26 +72,23 @@ module RGeo
       #   information is present about whether the coordinate system is
       #   meant to be so interpreted.
 
-      def property(name_)
+      def property(_name_)
         nil
       end
-
 
       # Parse the given string in well-known-text format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
 
-      def parse_wkt(str_)
+      def parse_wkt(_str_)
         nil
       end
-
 
       # Parse the given string in well-known-binary format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
 
-      def parse_wkb(str_)
+      def parse_wkb(_str_)
         nil
       end
-
 
       # Create a feature of type Point.
       # The x and y parameters should be Float values.
@@ -106,10 +97,9 @@ module RGeo
       # supported. If both Z and M coordinates are supported, Z should
       # be passed first.
 
-      def point(x_, y_, *extra_)
+      def point(_x_, _y_, *_extra_)
         nil
       end
-
 
       # Create a feature of type LineString.
       # The given points argument should be an Enumerable of Point
@@ -120,10 +110,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def line_string(points_)
+      def line_string(_points_)
         nil
       end
-
 
       # Create a feature of type Line.
       # The given point arguments should be Point objects, or objects
@@ -134,10 +123,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def line(start_, end_)
+      def line(_start_, _end_)
         nil
       end
-
 
       # Create a feature of type LinearRing.
       # The given points argument should be an Enumerable of Point
@@ -151,10 +139,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def linear_ring(points_)
+      def linear_ring(_points_)
         nil
       end
-
 
       # Create a feature of type Polygon.
       # The outer_ring should be a LinearRing, or an object that can be
@@ -168,10 +155,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def polygon(outer_ring_, inner_rings_=nil)
+      def polygon(_outer_ring_, _inner_rings_ = nil)
         nil
       end
-
 
       # Create a feature of type GeometryCollection.
       # The elems should be an Enumerable of Geometry objects.
@@ -181,10 +167,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def collection(elems_)
+      def collection(_elems_)
         nil
       end
-
 
       # Create a feature of type MultiPoint.
       # The elems should be an Enumerable of Point objects, or objects
@@ -197,10 +182,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def multi_point(elems_)
+      def multi_point(_elems_)
         nil
       end
-
 
       # Create a feature of type MultiLineString.
       # The elems should be an Enumerable of objects that are or can be
@@ -213,10 +197,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def multi_line_string(elems_)
+      def multi_line_string(_elems_)
         nil
       end
-
 
       # Create a feature of type MultiPolygon.
       # The elems should be an Enumerable of objects that are or can be
@@ -231,10 +214,9 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def multi_polygon(elems_)
+      def multi_polygon(_elems_)
         nil
       end
-
 
       # Returns a RGeo::CoordSys::Proj4 representing the projection for
       # the coordinate system of features created by this factory, or nil
@@ -243,7 +225,6 @@ module RGeo
       def proj4
         nil
       end
-
 
       # Returns the coordinate system specification for the features
       # created by this factory, or nil if there is no such coordinate
@@ -256,7 +237,6 @@ module RGeo
       def coord_sys
         nil
       end
-
 
       # This is an optional method that may be implemented to customize
       # casting for this factory. Basically, RGeo defines standard ways
@@ -290,14 +270,9 @@ module RGeo
       # algorithm to cast the object. Therefore, by default, you should
       # return false.
 
-      def override_cast(original_, type_, flags_)
+      def override_cast(_original_, _type_, _flags_)
         false
       end
-
-
     end
-
-
   end
-
 end

@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A MultiSurface is a 2-dimensional GeometryCollection whose elements
@@ -31,10 +28,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module MultiSurface
-
       include GeometryCollection
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -46,9 +41,8 @@ module RGeo
       # Returns a floating-point scalar value.
 
       def area
-        raise Error::UnsupportedOperation, "Method MultiSurface#area not defined."
+        fail Error::UnsupportedOperation, "Method MultiSurface#area not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -60,9 +54,8 @@ module RGeo
       # Returns an object that supports the Point interface.
 
       def centroid
-        raise Error::UnsupportedOperation, "Method MultiSurface#centroid not defined."
+        fail Error::UnsupportedOperation, "Method MultiSurface#centroid not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -73,13 +66,8 @@ module RGeo
       # Returns an object that supports the Point interface.
 
       def point_on_surface
-        raise Error::UnsupportedOperation, "Method MultiSurface#point_on_surface not defined."
+        fail Error::UnsupportedOperation, "Method MultiSurface#point_on_surface not defined."
       end
-
-
     end
-
-
   end
-
 end

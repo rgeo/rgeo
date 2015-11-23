@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module WKRep
-
-
     # This class provides the functionality of serializing a geometry as
     # WKT (well-known text) format. You may also customize the serializer
     # to generate PostGIS EWKT extensions to the output, or to follow the
@@ -48,12 +45,10 @@ module RGeo
     #   generator to emphasize readability.) Default is nil.
 
     class WKTGenerator
-
-
       # Create and configure a WKT generator. See the WKTGenerator
       # documentation for the options that can be passed.
 
-      def initialize(opts_={})
+      def initialize(opts_ = {})
         @tag_format = opts_[:tag_format] || opts_[:type_format] || :wkt11
         @emit_ewkt_srid = @tag_format == :ewkt ?
           (opts_[:emit_ewkt_srid] ? true : false) : nil
@@ -61,11 +56,8 @@ module RGeo
         @convert_case = opts_[:convert_case]
       end
 
-
       # Returns the format for type tags. See WKTGenerator for details.
-      def tag_format
-        @tag_format
-      end
+      attr_reader :tag_format
       alias_method :type_format, :tag_format
 
       # Returns whether SRID is embedded. See WKTGenerator for details.
@@ -80,27 +72,23 @@ module RGeo
       end
 
       # Returns the case for output. See WKTGenerator for details.
-      def convert_case
-        @convert_case
-      end
+      attr_reader :convert_case
 
-
-      def _properties  # :nodoc:
+      def _properties # :nodoc:
         {
-          'tag_format' => @tag_format.to_s,
-          'emit_ewkt_srid' => @emit_ewkt_srid,
-          'square_brackets' => @square_brackets,
-          'convert_case' => @convert_case ? @convert_case.to_s : nil,
+          "tag_format" => @tag_format.to_s,
+          "emit_ewkt_srid" => @emit_ewkt_srid,
+          "square_brackets" => @square_brackets,
+          "convert_case" => @convert_case ? @convert_case.to_s : nil
         }
       end
-
 
       # Generate and return the WKT format for the given geometry object,
       # according to the current settings.
 
       def generate(obj_)
-        @begin_bracket = @square_brackets ? '[' : '('
-        @end_bracket = @square_brackets ? ']' : ')'
+        @begin_bracket = @square_brackets ? "[" : "("
+        @end_bracket = @square_brackets ? "]" : ")"
         factory_ = obj_.factory
         if @tag_format == :wkt11_strict
           @cur_support_z = nil
@@ -119,27 +107,22 @@ module RGeo
         end
       end
 
-
-      def _generate_feature(obj_, toplevel_=false)  # :nodoc:
+      def _generate_feature(obj_, toplevel_ = false) # :nodoc:
         type_ = obj_.geometry_type
         type_ = Feature::LineString if type_.subtype_of?(Feature::LineString)
         tag_ = type_.type_name
         if @tag_format == :ewkt
-          if @cur_support_m && !@cur_support_z
-            tag_ << 'M'
-          end
-          if toplevel_ && @emit_ewkt_srid
-            tag_ = "SRID=#{obj_.srid};#{tag_}"
-          end
+          tag_ << "M" if @cur_support_m && !@cur_support_z
+          tag_ = "SRID=#{obj_.srid};#{tag_}" if toplevel_ && @emit_ewkt_srid
         elsif @tag_format == :wkt12
           if @cur_support_z
             if @cur_support_m
-              tag_ << ' ZM'
+              tag_ << " ZM"
             else
-              tag_ << ' Z'
+              tag_ << " Z"
             end
           elsif @cur_support_m
-            tag_ << ' M'
+            tag_ << " M"
           end
         end
         if type_ == Feature::Point
@@ -157,81 +140,68 @@ module RGeo
         elsif type_ == Feature::MultiPolygon
           "#{tag_} #{_generate_multi_polygon(obj_)}"
         else
-          raise Error::ParseError, "Unrecognized geometry type: #{type_}"
+          fail Error::ParseError, "Unrecognized geometry type: #{type_}"
         end
       end
 
-
-      def _generate_coords(obj_)  # :nodoc:
-        str_ = "#{obj_.x.to_s} #{obj_.y.to_s}"
-        str_ << " #{obj_.z.to_s}" if @cur_support_z
-        str_ << " #{obj_.m.to_s}" if @cur_support_m
+      def _generate_coords(obj_) # :nodoc:
+        str_ = "#{obj_.x} #{obj_.y}"
+        str_ << " #{obj_.z}" if @cur_support_z
+        str_ << " #{obj_.m}" if @cur_support_m
         str_
       end
 
-
-      def _generate_point(obj_)  # :nodoc:
+      def _generate_point(obj_) # :nodoc:
         "#{@begin_bracket}#{_generate_coords(obj_)}#{@end_bracket}"
       end
 
-
-      def _generate_line_string(obj_)  # :nodoc:
+      def _generate_line_string(obj_) # :nodoc:
         if obj_.is_empty?
-          'EMPTY'
+          "EMPTY"
         else
-          "#{@begin_bracket}#{obj_.points.map{ |p_| _generate_coords(p_) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.points.map { |p_| _generate_coords(p_) }.join(', ')}#{@end_bracket}"
         end
       end
 
-
-      def _generate_polygon(obj_)  # :nodoc:
+      def _generate_polygon(obj_) # :nodoc:
         if obj_.is_empty?
-          'EMPTY'
+          "EMPTY"
         else
-          "#{@begin_bracket}#{([_generate_line_string(obj_.exterior_ring)] + obj_.interior_rings.map{ |r_| _generate_line_string(r_) }).join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{([_generate_line_string(obj_.exterior_ring)] + obj_.interior_rings.map { |r_| _generate_line_string(r_) }).join(', ')}#{@end_bracket}"
         end
       end
 
-
-      def _generate_geometry_collection(obj_)  # :nodoc:
+      def _generate_geometry_collection(obj_) # :nodoc:
         if obj_.is_empty?
-          'EMPTY'
+          "EMPTY"
         else
-          "#{@begin_bracket}#{obj_.map{ |f_| _generate_feature(f_) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.map { |f_| _generate_feature(f_) }.join(', ')}#{@end_bracket}"
         end
       end
 
-
-      def _generate_multi_point(obj_)  # :nodoc:
+      def _generate_multi_point(obj_) # :nodoc:
         if obj_.is_empty?
-          'EMPTY'
+          "EMPTY"
         else
-          "#{@begin_bracket}#{obj_.map{ |f_| _generate_point(f_) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.map { |f_| _generate_point(f_) }.join(', ')}#{@end_bracket}"
         end
       end
 
-
-      def _generate_multi_line_string(obj_)  # :nodoc:
+      def _generate_multi_line_string(obj_) # :nodoc:
         if obj_.is_empty?
-          'EMPTY'
+          "EMPTY"
         else
-          "#{@begin_bracket}#{obj_.map{ |f_| _generate_line_string(f_) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.map { |f_| _generate_line_string(f_) }.join(', ')}#{@end_bracket}"
         end
       end
 
-
-      def _generate_multi_polygon(obj_)  # :nodoc:
+      def _generate_multi_polygon(obj_) # :nodoc:
         if obj_.is_empty?
-          'EMPTY'
+          "EMPTY"
         else
-          "#{@begin_bracket}#{obj_.map{ |f_| _generate_polygon(f_) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj_.map { |f_| _generate_polygon(f_) }.join(', ')}#{@end_bracket}"
         end
       end
-
-
     end
-
-
   end
-
 end

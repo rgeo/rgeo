@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A Curve is a 1-dimensional geometric object usually stored as a
@@ -43,10 +40,8 @@ module RGeo
     # Some implementations may support higher dimensional points.
 
     module Curve
-
       include Geometry
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -57,9 +52,8 @@ module RGeo
       # Returns a floating-point scalar value.
 
       def length
-        raise Error::UnsupportedOperation, "Method Curve#length not defined."
+        fail Error::UnsupportedOperation, "Method Curve#length not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -70,9 +64,8 @@ module RGeo
       # Returns an object that supports the Point interface.
 
       def start_point
-        raise Error::UnsupportedOperation, "Method Curve#start_point not defined."
+        fail Error::UnsupportedOperation, "Method Curve#start_point not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -83,9 +76,8 @@ module RGeo
       # Returns an object that supports the Point interface.
 
       def end_point
-        raise Error::UnsupportedOperation, "Method Curve#end_point not defined."
+        fail Error::UnsupportedOperation, "Method Curve#end_point not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -97,9 +89,8 @@ module RGeo
       # specification, which stipulates an integer return value.
 
       def is_closed?
-        raise Error::UnsupportedOperation, "Method Curve#is_closed? not defined."
+        fail Error::UnsupportedOperation, "Method Curve#is_closed? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -113,13 +104,8 @@ module RGeo
       # specification, which stipulates an integer return value.
 
       def is_ring?
-        raise Error::UnsupportedOperation, "Method Curve#is_ring? not defined."
+        fail Error::UnsupportedOperation, "Method Curve#is_ring? not defined."
       end
-
-
     end
-
-
   end
-
 end

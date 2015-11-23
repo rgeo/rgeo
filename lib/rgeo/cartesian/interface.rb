@@ -5,12 +5,8 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Cartesian
-
     class << self
-
-
       # Creates and returns a cartesian factory of the preferred
       # Cartesian implementation.
       #
@@ -28,7 +24,7 @@ module RGeo
       # RGeo::Cartesian.simple_factory for details. Unsupported options
       # are ignored.
 
-      def preferred_factory(opts_={})
+      def preferred_factory(opts_ = {})
         if ::RGeo::Geos.supported?
           ::RGeo::Geos.factory(opts_)
         else
@@ -36,7 +32,6 @@ module RGeo
         end
       end
       alias_method :factory, :preferred_factory
-
 
       # Returns a factory for the simple Cartesian implementation. This
       # implementation provides all SFS 1.1 types, and also allows Z and
@@ -107,10 +102,9 @@ module RGeo
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
 
-      def simple_factory(opts_={})
+      def simple_factory(opts_ = {})
         Cartesian::Factory.new(opts_)
       end
-
 
       # Returns a Feature::FactoryGenerator that creates preferred
       # factories. The given options are used as the default options.
@@ -120,11 +114,10 @@ module RGeo
       # an SRID and it will automatically fetch the appropriate Proj4
       # and CoordSys objects.
 
-      def preferred_factory_generator(defaults_={})
-        ::Proc.new{ |c_| preferred_factory(defaults_.merge(c_)) }
+      def preferred_factory_generator(defaults_ = {})
+        ::Proc.new { |c_| preferred_factory(defaults_.merge(c_)) }
       end
       alias_method :factory_generator, :preferred_factory_generator
-
 
       # Returns a Feature::FactoryGenerator that creates simple factories.
       # The given options are used as the default options.
@@ -134,13 +127,9 @@ module RGeo
       # an SRID and it will automatically fetch the appropriate Proj4
       # and CoordSys objects.
 
-      def simple_factory_generator(defaults_={})
-        ::Proc.new{ |c_| simple_factory(defaults_.merge(c_)) }
+      def simple_factory_generator(defaults_ = {})
+        ::Proc.new { |c_| simple_factory(defaults_.merge(c_)) }
       end
-
-
     end
-
   end
-
 end

@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # MixinCollection is a mechanism for adding arbitrary methods to
     # geometry objects.
     #
@@ -38,14 +35,10 @@ module RGeo
     # To add a mixin to all objects, connect it to the Geometry base type.
 
     class MixinCollection
-
-
       # An API point controlling a particular type.
 
       class TypeData
-
-
-        def initialize(collection_, type_)  # :nodoc:
+        def initialize(collection_, type_) # :nodoc:
           @collection = collection_
           @type = type_
           @mixins = []
@@ -54,63 +47,54 @@ module RGeo
           @rclasses = []
         end
 
-
         # The feature type
         attr_reader :type
 
         # The MixinCollection owning this data
         attr_reader :collection
 
-
         # Add a mixin to be included in implementations of this type.
 
         def add(module_)
           @mixins << module_
-          @classes.each{ |k_| k_.class_eval{ include(module_) } }
+          @classes.each { |k_| k_.class_eval { include(module_) } }
           _radd(module_)
         end
-
 
         # A class that implements this type should call this method to
         # get the appropriate mixins.
         # If include_ancestry_ is set to true, then mixins connected to
         # subtypes of this type are also added to the class.
 
-        def include_in_class(klass_, include_ancestry_=false)
-          (include_ancestry_ ? @rmixins : @mixins).each{ |m_| klass_.class_eval{ include(m_) } }
+        def include_in_class(klass_, include_ancestry_ = false)
+          (include_ancestry_ ? @rmixins : @mixins).each { |m_| klass_.class_eval { include(m_) } }
           (include_ancestry_ ? @rclasses : @classes) << klass_
           self
         end
-
 
         # An object that implements this type should call this method to
         # get the appropriate mixins.
         # If include_ancestry_ is set to true, then mixins connected to
         # subtypes of this type are also added to the object.
 
-        def include_in_object(obj_, include_ancestry_=false)
-          (include_ancestry_ ? @rmixins : @mixins).each{ |m_| obj_.extend(m_) }
+        def include_in_object(obj_, include_ancestry_ = false)
+          (include_ancestry_ ? @rmixins : @mixins).each { |m_| obj_.extend(m_) }
           self
         end
 
-
-        def _radd(module_)  # :nodoc:
+        def _radd(module_) # :nodoc:
           @rmixins << module_
-          @rclasses.each{ |k_| k_.class_eval{ include(module_) } }
-          @type.each_immediate_subtype{ |t_| @collection.for_type(t_)._radd(module_) }
+          @rclasses.each { |k_| k_.class_eval { include(module_) } }
+          @type.each_immediate_subtype { |t_| @collection.for_type(t_)._radd(module_) }
           self
         end
-
-
       end
-
 
       # Create a new empty MixinCollection
 
       def initialize
         @types = {}
       end
-
 
       # Returns a TypeData for the given type.
       #
@@ -121,7 +105,6 @@ module RGeo
         (@types[type_] ||= TypeData.new(self, type_))
       end
 
-
       # Add a module connected to the given type.
       #
       # Shorthand for:
@@ -131,17 +114,15 @@ module RGeo
         for_type(type_).add(module_)
       end
 
-
       # A class that implements this type should call this method to
       # get the appropriate mixins.
       #
       # Shorthand for:
       #  for_type(type_).include_in_class(klass_, include_ancestry_)
 
-      def include_in_class(type_, klass_, include_ancestry_=false)
+      def include_in_class(type_, klass_, include_ancestry_ = false)
         for_type(type_).include_in_class(klass_, include_ancestry_)
       end
-
 
       # An object that implements this type should call this method to
       # get the appropriate mixins.
@@ -149,20 +130,14 @@ module RGeo
       # Shorthand for:
       #  for_type(type_).include_in_object(obj_, include_ancestry_)
 
-      def include_in_object(type_, obj_, include_ancestry_=false)
+      def include_in_object(type_, obj_, include_ancestry_ = false)
         for_type(type_).include_in_object(obj_, include_ancestry_)
       end
-
 
       # The global MixinCollection. Mixins added to this collection are
       # added to all geometry objects for all implementations.
 
       GLOBAL = MixinCollection.new
-
-
     end
-
-
   end
-
 end

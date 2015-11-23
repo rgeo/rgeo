@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 1.9.3"
 
   spec.files = Dir.glob("lib/**/*.rb") +
-    Dir.glob("ext/**/*.{rb,c,h}") +
-    Dir.glob("test/**/*.rb") +
-    Dir.glob("*.rdoc")
+               Dir.glob("ext/**/*.{rb,c,h}") +
+               Dir.glob("test/**/*.rb") +
+               Dir.glob("*.rdoc")
 
   spec.extra_rdoc_files = Dir.glob("*.rdoc")
   spec.test_files = Dir.glob("test/**/tc_*.rb")
@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rdoc", "~> 4.2"
   spec.add_development_dependency "ffi-geos", "~> 1.0"
   spec.add_development_dependency "test-unit", "~> 3.0"
+  spec.add_development_dependency "rubocop", "0.35.1"
 end

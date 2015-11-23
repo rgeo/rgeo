@@ -4,16 +4,12 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'rgeo'
-
+require "rgeo"
 
 module RGeo
-  module Tests  # :nodoc:
-    module Common  # :nodoc:
-
-      module PolygonTests  # :nodoc:
-
-
+  module Tests # :nodoc:
+    module Common # :nodoc:
+      module PolygonTests # :nodoc:
         def test_creation_simple
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -28,7 +24,6 @@ module RGeo
           assert_nil(polygon_.interior_ring_n(0))
           assert_nil(polygon_.interior_ring_n(-1))
         end
-
 
         def test_creation_one_hole
           point1_ = @factory.point(0, 0)
@@ -51,7 +46,6 @@ module RGeo
           assert_nil(polygon_.interior_ring_n(-1))
         end
 
-
         def test_required_equivalences
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -66,7 +60,6 @@ module RGeo
           assert(poly1_.eql?(poly2_))
           assert(poly1_ == poly2_)
         end
-
 
         def test_fully_equal
           point1_ = @factory.point(0, 0)
@@ -83,7 +76,6 @@ module RGeo
           assert(poly1_.equals?(poly2_))
         end
 
-
         def test_geometrically_equal_but_ordered_different
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -96,7 +88,6 @@ module RGeo
           assert(poly1_.equals?(poly2_))
         end
 
-
         def test_geometrically_equal_but_different_directions
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -108,7 +99,6 @@ module RGeo
           assert(!poly1_.rep_equals?(poly2_))
           assert(poly1_.equals?(poly2_))
         end
-
 
         def test_hashes_equal_for_representationally_equivalent_objects
           point1_ = @factory.point(0, 0)
@@ -124,9 +114,8 @@ module RGeo
           assert_equal(poly1_.hash, poly2_.hash)
         end
 
-
         def test_wkt_creation_simple
-          parsed_poly_ = @factory.parse_wkt('POLYGON((0 0, 0 1, 1 0, 0 0))')
+          parsed_poly_ = @factory.parse_wkt("POLYGON((0 0, 0 1, 1 0, 0 0))")
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
           point3_ = @factory.point(1, 0)
@@ -135,9 +124,8 @@ module RGeo
           assert(built_poly_.eql?(parsed_poly_))
         end
 
-
         def test_wkt_creation_one_hole
-          parsed_poly_ = @factory.parse_wkt('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4))')
+          parsed_poly_ = @factory.parse_wkt("POLYGON((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4))")
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 10)
           point3_ = @factory.point(10, 10)
@@ -151,7 +139,6 @@ module RGeo
           assert(built_poly_.eql?(parsed_poly_))
         end
 
-
         def test_clone
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -163,7 +150,6 @@ module RGeo
           assert(exterior_.eql?(poly2_.exterior_ring))
           assert_equal(0, poly2_.num_interior_rings)
         end
-
 
         def test_type_check
           point1_ = @factory.point(0, 0)
@@ -178,7 +164,6 @@ module RGeo
           assert(::RGeo::Feature::Polygon.check_type(poly_))
         end
 
-
         def test_as_text_wkt_round_trip
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -190,7 +175,6 @@ module RGeo
           assert(poly1_.eql?(poly2_))
         end
 
-
         def test_as_binary_wkb_round_trip
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -201,7 +185,6 @@ module RGeo
           poly2_ = @factory.parse_wkb(binary_)
           assert(poly1_.eql?(poly2_))
         end
-
 
         def test_dimension
           point1_ = @factory.point(0, 0)
@@ -217,7 +200,6 @@ module RGeo
           assert_equal(2, poly_.dimension)
         end
 
-
         def test_is_empty
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 1)
@@ -229,20 +211,18 @@ module RGeo
           assert(poly2_.is_empty?)
         end
 
-
         def test_polygon_coordinates
           coordinates = [
             [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0]],
             [[0.25, 0.25], [0.75, 0.25], [0.75, 0.75], [0.25, 0.75], [0.25, 0.25]]
           ]
-          
-          ring = @factory.line_string(coordinates.first.map {|(x, y)| @factory.point x, y })
-          inner_ring = @factory.line_string(coordinates.last.map {|(x, y)| @factory.point x, y })
+
+          ring = @factory.line_string(coordinates.first.map { |(x, y)| @factory.point x, y })
+          inner_ring = @factory.line_string(coordinates.last.map { |(x, y)| @factory.point x, y })
           polygon = @factory.polygon ring, [inner_ring]
           assert_equal(polygon.coordinates, coordinates)
         end
       end
-
     end
   end
 end

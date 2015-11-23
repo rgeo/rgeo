@@ -5,13 +5,9 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-  module ImplHelper  # :nodoc:
-
-    module Utils  # :nodoc:
-
+  module ImplHelper # :nodoc:
+    module Utils # :nodoc:
       class << self
-
         def stringize_hash(hash_)
           nhash_ = {}
           hash_.each do |k_, v_|
@@ -27,11 +23,7 @@ module RGeo
           end
           nhash_
         end
-
       end
-
     end
-
   end
-
 end
