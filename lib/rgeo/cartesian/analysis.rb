@@ -67,7 +67,7 @@ module RGeo
               revolutions_ += 1
             elsif y_ < 0.0 && sin_ >= 0.0
               revolutions_ -= 1
-                          end
+            end
           end
           revolutions_
         end
