@@ -76,15 +76,14 @@
 module RGeo
 end
 
-
 # Core modules
-require 'rgeo/yaml'
-require 'rgeo/version'
-require 'rgeo/error'
-require 'rgeo/feature'
-require 'rgeo/coord_sys'
-require 'rgeo/impl_helper'
-require 'rgeo/wkrep'
-require 'rgeo/geos'
-require 'rgeo/cartesian'
-require 'rgeo/geographic'
+require "rgeo/yaml"
+require "rgeo/version"
+require "rgeo/error"
+require "rgeo/feature"
+require "rgeo/coord_sys"
+require "rgeo/impl_helper"
+require "rgeo/wkrep"
+require "rgeo/geos"
+require "rgeo/cartesian"
+require "rgeo/geographic"

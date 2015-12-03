@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module WKRep
-
-
     # This class provides the functionality of parsing a geometry from
     # WKB (well-known binary) format. You may also customize the parser
     # to recognize PostGIS EWKB extensions to the input, or Simple
@@ -45,13 +42,11 @@ module RGeo
     #   the input. Defaults to nil (i.e. don't specify a SRID).
 
     class WKBParser
-
-
       # Create and configure a WKB parser. See the WKBParser
       # documentation for the options that can be passed.
 
-      def initialize(factory_generator_=nil, opts_={})
-        if factory_generator_.kind_of?(Feature::Factory::Instance)
+      def initialize(factory_generator_ = nil, opts_ = {})
+        if factory_generator_.is_a?(Feature::Factory::Instance)
           @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
           @exact_factory = factory_generator_
         elsif factory_generator_.respond_to?(:call)
@@ -67,17 +62,12 @@ module RGeo
         @default_srid = opts_[:default_srid]
       end
 
-
       # Returns the factory generator. See WKBParser for details.
-      def factory_generator
-        @factory_generator
-      end
+      attr_reader :factory_generator
 
       # If this parser was given an exact factory, returns it; otherwise
       # returns nil.
-      def exact_factory
-        @exact_factory
-      end
+      attr_reader :exact_factory
 
       # Returns true if this parser supports EWKB.
       # See WKBParser for details.
@@ -97,16 +87,14 @@ module RGeo
         @ignore_extra_bytes
       end
 
-
-      def _properties  # :nodoc:
+      def _properties # :nodoc:
         {
-          'support_ewkb' => @support_ewkb,
-          'support_wkb12' => @support_wkb12,
-          'ignore_extra_bytes' => @ignore_extra_bytes,
-          'default_srid' => @default_srid,
+          "support_ewkb" => @support_ewkb,
+          "support_wkb12" => @support_wkb12,
+          "ignore_extra_bytes" => @ignore_extra_bytes,
+          "default_srid" => @default_srid
         }
       end
-
 
       # Parse the given binary data or hexadecimal string, and return a
       # geometry object.
@@ -115,9 +103,7 @@ module RGeo
       # reasons but deprecated. Use #parse instead.
 
       def parse(data_)
-        if data_[0,1] =~ /[0-9a-fA-F]/
-          data_ = [data_].pack('H*')
-        end
+        data_ = [data_].pack("H*") if data_[0, 1] =~ /[0-9a-fA-F]/
         @cur_has_z = nil
         @cur_has_m = nil
         @cur_srid = nil
@@ -139,8 +125,7 @@ module RGeo
       end
       alias_method :parse_hex, :parse
 
-
-      def _parse_object(contained_)  # :nodoc:
+      def _parse_object(contained_) # :nodoc:
         endian_value_ = _get_byte
         case endian_value_
         when 0
@@ -183,7 +168,7 @@ module RGeo
           @cur_has_m = has_m_
           @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
           @cur_srid = srid_
-          @cur_factory = @factory_generator.call(:srid => @cur_srid, :has_z_coordinate => has_z_, :has_m_coordinate => has_m_)
+          @cur_factory = @factory_generator.call(srid: @cur_srid, has_z_coordinate: has_z_, has_m_coordinate: has_m_)
           if @cur_has_z && !@cur_factory.property(:has_z_coordinate)
             raise Error::ParseError, "Data has Z coordinates but the factory doesn't have Z coordinates"
           end
@@ -198,48 +183,43 @@ module RGeo
         when 2
           _parse_line_string(little_endian_)
         when 3
-          interior_rings_ = (1.._get_integer(little_endian_)).map{ _parse_line_string(little_endian_) }
+          interior_rings_ = (1.._get_integer(little_endian_)).map { _parse_line_string(little_endian_) }
           exterior_ring_ = interior_rings_.shift || @cur_factory.linear_ring([])
           @cur_factory.polygon(exterior_ring_, interior_rings_)
         when 4
-          @cur_factory.multi_point((1.._get_integer(little_endian_)).map{ _parse_object(1) })
+          @cur_factory.multi_point((1.._get_integer(little_endian_)).map { _parse_object(1) })
         when 5
-          @cur_factory.multi_line_string((1.._get_integer(little_endian_)).map{ _parse_object(2) })
+          @cur_factory.multi_line_string((1.._get_integer(little_endian_)).map { _parse_object(2) })
         when 6
-          @cur_factory.multi_polygon((1.._get_integer(little_endian_)).map{ _parse_object(3) })
+          @cur_factory.multi_polygon((1.._get_integer(little_endian_)).map { _parse_object(3) })
         when 7
-          @cur_factory.collection((1.._get_integer(little_endian_)).map{ _parse_object(true) })
+          @cur_factory.collection((1.._get_integer(little_endian_)).map { _parse_object(true) })
         else
           raise Error::ParseError, "Unknown type value: #{type_code_}."
         end
       end
 
-
-      def _parse_line_string(little_endian_)  # :nodoc:
+      def _parse_line_string(little_endian_) # :nodoc:
         count_ = _get_integer(little_endian_)
         coords_ = _get_doubles(little_endian_, @cur_dims * count_)
-        @cur_factory.line_string((0...count_).map{ |i_| @cur_factory.point(*coords_[@cur_dims*i_,@cur_dims]) })
+        @cur_factory.line_string((0...count_).map { |i_| @cur_factory.point(*coords_[@cur_dims * i_, @cur_dims]) })
       end
 
-
-      def _start_scanner(data_)  # :nodoc:
+      def _start_scanner(data_) # :nodoc:
         @_data = data_
         @_len = data_.length
         @_pos = 0
       end
 
-
-      def _clean_scanner  # :nodoc:
+      def _clean_scanner # :nodoc:
         @_data = nil
       end
 
-
-      def _bytes_remaining  # :nodoc:
+      def _bytes_remaining # :nodoc:
         @_len - @_pos
       end
 
-
-      def _get_byte  # :nodoc:
+      def _get_byte # :nodoc:
         if @_pos + 1 > @_len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
         end
@@ -248,8 +228,7 @@ module RGeo
         str_.unpack("C").first
       end
 
-
-      def _get_integer(little_endian_)  # :nodoc:
+      def _get_integer(little_endian_) # :nodoc:
         if @_pos + 4 > @_len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
         end
@@ -258,8 +237,7 @@ module RGeo
         str_.unpack("#{little_endian_ ? 'V' : 'N'}").first
       end
 
-
-      def _get_doubles(little_endian_, count_)  # :nodoc:
+      def _get_doubles(little_endian_, count_) # :nodoc:
         len_ = 8 * count_
         if @_pos + len_ > @_len
           raise Error::ParseError, "Not enough bytes left to fulfill #{count_} doubles"
@@ -268,11 +246,6 @@ module RGeo
         @_pos += len_
         str_.unpack("#{little_endian_ ? 'E' : 'G'}*")
       end
-
-
     end
-
-
   end
-
 end

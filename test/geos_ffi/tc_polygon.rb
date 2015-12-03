@@ -4,26 +4,20 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'test/unit'
-require 'rgeo'
+require "test/unit"
+require "rgeo"
 
-require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
-
+require ::File.expand_path("../common/polygon_tests.rb", ::File.dirname(__FILE__))
 
 module RGeo
-  module Tests  # :nodoc:
-    module GeosFFI  # :nodoc:
-
-      class TestPolygon < ::Test::Unit::TestCase  # :nodoc:
-
-
+  module Tests # :nodoc:
+    module GeosFFI # :nodoc:
+      class TestPolygon < ::Test::Unit::TestCase # :nodoc:
         def setup
-          @factory = ::RGeo::Geos.factory(:native_interface => :ffi)
+          @factory = ::RGeo::Geos.factory(native_interface: :ffi)
         end
 
-
         include ::RGeo::Tests::Common::PolygonTests
-
 
         def test_intersection
           point1_ = @factory.point(0, 0)
@@ -36,7 +30,6 @@ module RGeo
           assert_equal(poly2_, poly3_)
         end
 
-
         def test_union
           point1_ = @factory.point(0, 0)
           point2_ = @factory.point(0, 2)
@@ -47,10 +40,7 @@ module RGeo
           poly3_ = poly1_.union(poly2_)
           assert_equal(poly1_, poly3_)
         end
-
-
       end
-
     end
   end
 end if ::RGeo::Geos.ffi_supported?

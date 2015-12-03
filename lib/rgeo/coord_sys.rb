@@ -5,8 +5,6 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-
   # This module provides data structures and tools related to coordinate
   # systems and coordinate transforms. It comprises the following parts:
   #
@@ -29,20 +27,17 @@ module RGeo
 
   module CoordSys
   end
-
-
 end
-
 
 # Implementation files
 begin
-  require 'rgeo/coord_sys/proj4_c_impl'
+  require "rgeo/coord_sys/proj4_c_impl"
 rescue ::LoadError; end
-require 'rgeo/coord_sys/proj4'
-require 'rgeo/coord_sys/cs/factories'
-require 'rgeo/coord_sys/cs/entities'
-require 'rgeo/coord_sys/cs/wkt_parser'
-require 'rgeo/coord_sys/srs_database/interface.rb'
-require 'rgeo/coord_sys/srs_database/proj4_data.rb'
-require 'rgeo/coord_sys/srs_database/url_reader.rb'
-require 'rgeo/coord_sys/srs_database/sr_org.rb'
+require "rgeo/coord_sys/proj4"
+require "rgeo/coord_sys/cs/factories"
+require "rgeo/coord_sys/cs/entities"
+require "rgeo/coord_sys/cs/wkt_parser"
+require "rgeo/coord_sys/srs_database/interface.rb"
+require "rgeo/coord_sys/srs_database/proj4_data.rb"
+require "rgeo/coord_sys/srs_database/url_reader.rb"
+require "rgeo/coord_sys/srs_database/sr_org.rb"

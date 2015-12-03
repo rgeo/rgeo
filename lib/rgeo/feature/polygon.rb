@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A Polygon is a planar Surface defined by 1 exterior boundary and 0 or
@@ -48,10 +45,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module Polygon
-
       include Surface
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -65,7 +60,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Polygon#exterior_ring not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns the number of interiorRings in this Polygon.
@@ -78,7 +72,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Polygon#num_interior_rings not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns the Nth interiorRing for this Polygon as a LineString.
@@ -89,10 +82,9 @@ module RGeo
       # if the given N is out of range. N is zero-based.
       # Does not support negative indexes.
 
-      def interior_ring_n(n_)
+      def interior_ring_n(_n_)
         raise Error::UnsupportedOperation, "Method Polygon#interior_ring_n not defined."
       end
-
 
       # Returns the interior rings as a (possibly empty) array of objects
       # that support the LinearRing interface.
@@ -100,11 +92,6 @@ module RGeo
       def interior_rings
         raise Error::UnsupportedOperation, "Method Polygon#interior_rings not defined."
       end
-
-
     end
-
-
   end
-
 end

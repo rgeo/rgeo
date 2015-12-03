@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # Geometry is the root class of the hierarchy. Geometry is an abstract
@@ -81,9 +78,7 @@ module RGeo
     # of equivalence.
 
     module Geometry
-
       extend Type
-
 
       # Returns a factory for creating features related to this one.
       # This does not necessarily need to be the same factory that created
@@ -95,7 +90,6 @@ module RGeo
       def factory
         raise Error::UnsupportedOperation, "Method Geometry#factory not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -111,7 +105,6 @@ module RGeo
       def dimension
         raise Error::UnsupportedOperation, "Method Geometry#dimension not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -130,7 +123,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#geometry_type not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns the Spatial Reference System ID for this geometric object.
@@ -146,7 +138,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#srid not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # The minimum bounding box for this Geometry, returned as a Geometry.
@@ -161,7 +152,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#envelope not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Exports this geometric object to a specific Well-known Text
@@ -175,7 +165,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#as_text not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Exports this geometric object to a specific Well-known Binary
@@ -188,7 +177,6 @@ module RGeo
       def as_binary
         raise Error::UnsupportedOperation, "Method Geometry#as_binary not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -204,7 +192,6 @@ module RGeo
       def is_empty?
         raise Error::UnsupportedOperation, "Method Geometry#is_empty? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -223,7 +210,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#is_simple? not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns the closure of the combinatorial boundary of this geometric
@@ -238,7 +224,6 @@ module RGeo
       def boundary
         raise Error::UnsupportedOperation, "Method Geometry#boundary not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -255,10 +240,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def equals?(another_geometry_)
+      def equals?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#equals? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -275,10 +259,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def disjoint?(another_geometry_)
+      def disjoint?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#disjoint? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -295,10 +278,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def intersects?(another_geometry_)
+      def intersects?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#intersects? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -315,10 +297,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def touches?(another_geometry_)
+      def touches?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#touches? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -335,10 +316,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def crosses?(another_geometry_)
+      def crosses?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#crosses? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -355,10 +335,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def within?(another_geometry_)
+      def within?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#within? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -375,10 +354,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def contains?(another_geometry_)
+      def contains?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#contains? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -395,10 +373,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def overlaps?(another_geometry_)
+      def overlaps?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#overlaps? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -422,17 +399,15 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def relate?(another_geometry_, intersection_pattern_matrix_)
+      def relate?(_another_geometry_, _intersection_pattern_matrix_)
         raise Error::UnsupportedOperation, "Method Geometry#relate not defined."
       end
-
 
       # Deprecated alias of Geometry#relate?
 
       def relate(another_geometry_, intersection_pattern_matrix_)
         relate?(another_geometry_, intersection_pattern_matrix_)
       end
-
 
       # === SFS 1.1 Description
       #
@@ -449,10 +424,9 @@ module RGeo
       # this geometry, strictly speaking, the result of measuring the
       # distance between objects from different factories is undefined.
 
-      def distance(another_geometry_)
+      def distance(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#distance not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -465,10 +439,9 @@ module RGeo
       #
       # Returns an object that supports the Geometry interface.
 
-      def buffer(distance_)
+      def buffer(_distance_)
         raise Error::UnsupportedOperation, "Method Geometry#buffer not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -482,7 +455,6 @@ module RGeo
       def convex_hull
         raise Error::UnsupportedOperation, "Method Geometry#convex_hull not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -498,10 +470,9 @@ module RGeo
       # this geometry, strictly speaking, the result of performing
       # operations on objects from different factories is undefined.
 
-      def intersection(another_geometry_)
+      def intersection(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#intersection not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -517,10 +488,9 @@ module RGeo
       # this geometry, strictly speaking, the result of performing
       # operations on objects from different factories is undefined.
 
-      def union(another_geometry_)
+      def union(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#union not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -536,10 +506,9 @@ module RGeo
       # this geometry, strictly speaking, the result of performing
       # operations on objects from different factories is undefined.
 
-      def difference(another_geometry_)
+      def difference(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#difference not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -555,10 +524,9 @@ module RGeo
       # this geometry, strictly speaking, the result of performing
       # operations on objects from different factories is undefined.
 
-      def sym_difference(another_geometry_)
+      def sym_difference(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#sym_difference not defined."
       end
-
 
       # Returns true if this geometric object is representationally
       # equivalent to the given object.
@@ -568,10 +536,9 @@ module RGeo
       # this geometry, strictly speaking, the result of comparing objects
       # from different factories is undefined.
 
-      def rep_equals?(another_geometry_)
+      def rep_equals?(_another_geometry_)
         raise Error::UnsupportedOperation, "Method Geometry#rep_equals? not defined."
       end
-
 
       # This method should behave almost the same as the rep_equals?
       # method, with two key differences.
@@ -589,7 +556,7 @@ module RGeo
       # objective equivalence.
 
       def eql?(rhs_)
-        if rhs_.kind_of?(::RGeo::Feature::Instance)
+        if rhs_.is_a?(::RGeo::Feature::Instance)
           begin
             rep_equals?(rhs_)
           rescue Error::UnsupportedOperation
@@ -599,7 +566,6 @@ module RGeo
           false
         end
       end
-
 
       # This operator should behave almost the same as the equals? method,
       # with two key differences.
@@ -616,7 +582,7 @@ module RGeo
       # objective equivalence.
 
       def ==(rhs_)
-        if rhs_.kind_of?(::RGeo::Feature::Instance)
+        if rhs_.is_a?(::RGeo::Feature::Instance)
           begin
             equals?(rhs_)
           rescue Error::UnsupportedOperation
@@ -627,7 +593,6 @@ module RGeo
         end
       end
 
-
       # If the given rhs is a geometry object, this operator must behave
       # the same as the difference method. The behavior for other rhs
       # types is not specified; an implementation may choose to provide
@@ -636,7 +601,6 @@ module RGeo
       def -(rhs_)
         difference(rhs_)
       end
-
 
       # If the given rhs is a geometry object, this operator must behave
       # the same as the union method. The behavior for other rhs types
@@ -647,7 +611,6 @@ module RGeo
         union(rhs_)
       end
 
-
       # If the given rhs is a geometry object, this operator must behave
       # the same as the intersection method. The behavior for other rhs
       # types is not specified; an implementation may choose to provide
@@ -656,11 +619,6 @@ module RGeo
       def *(rhs_)
         intersection(rhs_)
       end
-
-
     end
-
-
   end
-
 end

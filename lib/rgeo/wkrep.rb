@@ -5,8 +5,6 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-
   # This module contains implementations of the OpenGIS well-known
   # representations: the WKT (well-known text representation) and the
   # WKB (well-known binary representation), as defined in the Simple
@@ -30,13 +28,10 @@ module RGeo
 
   module WKRep
   end
-
-
 end
 
-
 # Implementation files
-require 'rgeo/wkrep/wkt_parser'
-require 'rgeo/wkrep/wkt_generator'
-require 'rgeo/wkrep/wkb_parser'
-require 'rgeo/wkrep/wkb_generator'
+require "rgeo/wkrep/wkt_parser"
+require "rgeo/wkrep/wkt_generator"
+require "rgeo/wkrep/wkb_parser"
+require "rgeo/wkrep/wkb_generator"

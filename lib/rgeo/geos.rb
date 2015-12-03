@@ -5,8 +5,6 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-
   # The Geos module provides general tools for creating and manipulating
   # a GEOS-backed implementation of the SFS. This is a full implementation
   # of the SFS using a Cartesian coordinate system. It uses the GEOS C++
@@ -26,40 +24,36 @@ module RGeo
 
   module Geos
   end
-
-
 end
-
 
 # :stopdoc:
 
 module RGeo
   module Geos
-
     # Implementation files
-    require 'rgeo/geos/utils'
-    require 'rgeo/geos/interface'
+    require "rgeo/geos/utils"
+    require "rgeo/geos/interface"
     begin
-      require 'rgeo/geos/geos_c_impl'
+      require "rgeo/geos/geos_c_impl"
     rescue ::LoadError; end
     CAPI_SUPPORTED = ::RGeo::Geos.const_defined?(:CAPIGeometryMethods)
     if CAPI_SUPPORTED
-      require 'rgeo/geos/capi_feature_classes'
-      require 'rgeo/geos/capi_factory'
+      require "rgeo/geos/capi_feature_classes"
+      require "rgeo/geos/capi_factory"
     end
-    require 'rgeo/geos/ffi_feature_methods'
-    require 'rgeo/geos/ffi_feature_classes'
-    require 'rgeo/geos/ffi_factory'
-    require 'rgeo/geos/zm_feature_methods'
-    require 'rgeo/geos/zm_feature_classes'
-    require 'rgeo/geos/zm_factory'
+    require "rgeo/geos/ffi_feature_methods"
+    require "rgeo/geos/ffi_feature_classes"
+    require "rgeo/geos/ffi_factory"
+    require "rgeo/geos/zm_feature_methods"
+    require "rgeo/geos/zm_feature_classes"
+    require "rgeo/geos/zm_factory"
 
     # Determine ffi support.
     begin
-      require 'ffi-geos'
+      require "ffi-geos"
       # An additional check to make sure FFI loaded okay. This can fail on
       # some versions of ffi-geos and some versions of Rubinius.
-      raise 'Problem loading FFI' unless ::FFI::AutoPointer
+      raise "Problem loading FFI" unless ::FFI::AutoPointer
       FFI_SUPPORTED = true
       FFI_SUPPORT_EXCEPTION = nil
     rescue ::LoadError => ex_
@@ -89,7 +83,6 @@ module RGeo
 
     # Init internal utilities
     Utils._init
-
   end
 end
 

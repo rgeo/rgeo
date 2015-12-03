@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A LinearRing is a LineString that is both closed and simple.
@@ -22,14 +19,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module LinearRing
-
       include LineString
       extend Type
-
-
     end
-
-
   end
-
 end

@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A LineString is a Curve with linear interpolation between Points.
@@ -23,10 +20,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module LineString
-
       include Curve
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -40,7 +35,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method LineString#num_points not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns the specified Point N in this LineString.
@@ -51,10 +45,9 @@ module RGeo
       # if the given N is out of range. N is zero-based.
       # Does not support negative indexes.
 
-      def point_n(n_)
+      def point_n(_n_)
         raise Error::UnsupportedOperation, "Method LineString#point_n not defined."
       end
-
 
       # Returns the constituent points as an array of objects that
       # support the Point interface.
@@ -62,11 +55,6 @@ module RGeo
       def points
         raise Error::UnsupportedOperation, "Method LineString#points not defined."
       end
-
-
     end
-
-
   end
-
 end

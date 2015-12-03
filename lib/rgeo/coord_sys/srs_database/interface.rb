@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module CoordSys
-
-
     # This module contains tools for accessing spatial reference
     # databases. These are databases (either local or remote) from which
     # you can look up coordinate system specifications, typically in
@@ -19,42 +16,32 @@ module RGeo
     # spatialreference.org site.
 
     module SRSDatabase
-
-
       # Interface specification for spatial reference system databases.
       # This module exists primarily for the sake of documentation.
       # Database implementations need not actually include this module,
       # but at least need to duck-type its methods.
 
       module Interface
-
-
         # Retrieve an Entry given an identifier. The identifier is usually
         # a numeric spatial reference ID (SRID), but could be a string
         # value for certain database types.
 
-        def get(ident_)
+        def get(_ident_)
           nil
         end
-
 
         # Clears any cache utilized by this database.
 
         def clear_cache
           nil
         end
-
-
       end
-
 
       # An entry in a spatial reference system database.
       # Every entry has an identifier, but all the other attributes are
       # optional and may or may not be present depending on the database.
 
       class Entry
-
-
         # Create an entry.
         # You must provide an identifier, which may be numeric or a
         # string. The data hash should contain any other attributes,
@@ -77,19 +64,19 @@ module RGeo
         #   If the authority code is not provided directly, it is taken
         #   from the coord_sys.
 
-        def initialize(ident_, data_={})
+        def initialize(ident_, data_ = {})
           @identifier = ident_
           @authority = data_[:authority]
           @authority_code = data_[:authority_code]
           @name = data_[:name]
           @description = data_[:description]
           @coord_sys = data_[:coord_sys]
-          if @coord_sys.kind_of?(::String)
+          if @coord_sys.is_a?(::String)
             @coord_sys = CS.create_from_wkt(@coord_sys)
           end
           @proj4 = data_[:proj4]
           if Proj4.supported?
-            if @proj4.kind_of?(::String) || @proj4.kind_of?(::Hash)
+            if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
               @proj4 = Proj4.create(@proj4)
             end
           else
@@ -101,7 +88,6 @@ module RGeo
             @authority_code = @coord_sys.authority unless @authority_code
           end
         end
-
 
         # The database key or identifier.
         attr_reader :identifier
@@ -123,13 +109,7 @@ module RGeo
 
         # The Proj4 object.
         attr_reader :proj4
-
-
       end
-
-
     end
-
   end
-
 end

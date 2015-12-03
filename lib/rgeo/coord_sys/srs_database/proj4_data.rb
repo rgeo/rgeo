@@ -5,20 +5,14 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module CoordSys
-
     module SRSDatabase
-
-
       # A spatial reference database implementation backed by coordinate
       # system files installed as part of the proj4 library. For a given
       # Proj4Data object, you specify a single file (e.g. the epsg data
       # file), and you can retrieve records by ID number.
 
       class Proj4Data
-
-
         # Connect to one of the proj4 data files. You should provide the
         # file name, optionally the installation directory if it is not
         # in a typical location, and several additional options.
@@ -48,12 +42,12 @@ module RGeo
         #   entries. The authority code will be set to the identifier. If
         #   not set, then the authority fields of entries will be blank.
 
-        def initialize(filename_, opts_={})
+        def initialize(filename_, opts_ = {})
           dir_ = nil
           if opts_.include?(:dir)
             dir_ = opts_[:dir]
           else
-            ['/usr/local/share/proj', '/usr/local/proj/share/proj', '/usr/local/proj4/share/proj', '/opt/local/share/proj', '/opt/proj/share/proj', '/opt/proj4/share/proj', '/opt/share/proj', '/usr/share/proj'].each do |d_|
+            ["/usr/local/share/proj", "/usr/local/proj/share/proj", "/usr/local/proj4/share/proj", "/opt/local/share/proj", "/opt/proj/share/proj", "/opt/proj4/share/proj", "/opt/share/proj", "/usr/share/proj"].each do |d_|
               if ::File.directory?(d_) && ::File.readable?(d_)
                 dir_ = d_
                 break
@@ -79,7 +73,6 @@ module RGeo
           end
         end
 
-
         # Retrieve the Entry for the given ID number.
 
         def get(ident_)
@@ -88,7 +81,7 @@ module RGeo
           result_ = nil
           if @populate_state == 0
             data_ = _search_file(ident_)
-            result_ = Entry.new(ident_, :authority => @authority, :authority_code => @authority ? ident_ : nil, :name => data_[1], :proj4 => data_[2]) if data_
+            result_ = Entry.new(ident_, authority: @authority, authority_code: @authority ? ident_ : nil, name: data_[1], proj4: data_[2]) if data_
             @cache[ident_] = result_ if @cache
           elsif @populate_state == 1
             _search_file(nil)
@@ -98,7 +91,6 @@ module RGeo
           result_
         end
 
-
         # Clear the cache if one exists.
 
         def clear_cache
@@ -106,8 +98,7 @@ module RGeo
           @populate_state = 1 if @populate_state == 2
         end
 
-
-        def _search_file(ident_)  # :nodoc:
+        def _search_file(ident_) # :nodoc:
           ::File.open(@path) do |file_|
             cur_name_ = nil
             cur_ident_ = nil
@@ -115,44 +106,35 @@ module RGeo
             file_.each do |line_|
               line_.strip!
               if (comment_delim_ = line_.index('#'))
-                cur_name_ = line_[comment_delim_+1..-1].strip
-                line_ = line_[0..comment_delim_-1].strip
+                cur_name_ = line_[comment_delim_ + 1..-1].strip
+                line_ = line_[0..comment_delim_ - 1].strip
               end
               unless cur_ident_
                 if line_ =~ /^<(\w+)>(.*)/
-                  cur_ident_ = $1
+                  cur_ident_ = Regexp.last_match(1)
                   cur_text_ = []
-                  line_ = $2.strip
+                  line_ = Regexp.last_match(2).strip
                 end
               end
-              if cur_ident_
-                if line_[-2..-1] == '<>'
-                  cur_text_ << line_[0..-3].strip
-                  cur_text_ = cur_text_.join(' ')
-                  if ident_.nil?
-                    @cache[ident_] = Entry.new(ident_, :authority => @authority, :authority_code => @authority ? id_ : nil, :name => cur_name_, :proj4 => cur_text_)
-                  end
-                  if cur_ident_ == ident_
-                    return [ident_, cur_name_, cur_text_]
-                  end
-                  cur_ident_ = nil
-                  cur_name_ = nil
-                  cur_text_ = nil
-                else
-                  cur_text_ << line_
+              next unless cur_ident_
+              if line_[-2..-1] == "<>"
+                cur_text_ << line_[0..-3].strip
+                cur_text_ = cur_text_.join(" ")
+                if ident_.nil?
+                  @cache[ident_] = Entry.new(ident_, authority: @authority, authority_code: @authority ? id_ : nil, name: cur_name_, proj4: cur_text_)
                 end
-              end
+                return [ident_, cur_name_, cur_text_] if cur_ident_ == ident_
+                cur_ident_ = nil
+                cur_name_ = nil
+                cur_text_ = nil
+              else
+                cur_text_ << line_
+                              end
             end
           end
           nil
         end
-
-
       end
-
-
     end
-
   end
-
 end

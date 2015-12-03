@@ -4,15 +4,12 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'rgeo'
+require "rgeo"
 
 module RGeo
-  module Tests  # :nodoc:
-    module Common  # :nodoc:
-
-      module MultiPolygonTests  # :nodoc:
-
-
+  module Tests # :nodoc:
+    module Common # :nodoc:
+      module MultiPolygonTests # :nodoc:
         def setup
           create_factories
           point1_ = @factory.point(0, 0)
@@ -36,7 +33,6 @@ module RGeo
           @line1 = interior1_
         end
 
-
         def test_creation_simple
           geom_ = @factory.multi_polygon([@poly1, @poly2])
           assert_not_nil(geom_)
@@ -47,7 +43,6 @@ module RGeo
           assert(@poly2.eql?(geom_[1]))
         end
 
-
         def test_creation_empty
           geom_ = @factory.multi_polygon([])
           assert_not_nil(geom_)
@@ -57,12 +52,10 @@ module RGeo
           assert_equal([], geom_.to_a)
         end
 
-
         def test_creation_wrong_type
           geom_ = @factory.multi_polygon([@poly1, @line1])
           assert_nil(geom_)
         end
-
 
         def test_creation_overlapping
           geom_ = @factory.multi_polygon([@poly1, @poly1])
@@ -71,14 +64,12 @@ module RGeo
           assert_not_nil(geom2_)
         end
 
-
         def test_creation_connected
           geom_ = @factory.multi_polygon([@poly3, @poly4])
           assert_nil(geom_)
           geom2_ = @lenient_factory.multi_polygon([@poly3, @poly4])
           assert_not_nil(geom2_)
         end
-
 
         def test_required_equivalences
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
@@ -87,14 +78,12 @@ module RGeo
           assert(geom1_ == geom2_)
         end
 
-
         def test_equal
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           geom2_ = @factory.multi_polygon([@poly1, @poly2])
           assert(geom1_.rep_equals?(geom2_))
           assert(geom1_.equals?(geom2_))
         end
-
 
         def test_not_equal
           geom1_ = @factory.multi_polygon([@poly1])
@@ -103,28 +92,24 @@ module RGeo
           assert(!geom1_.equals?(geom2_))
         end
 
-
         def test_hashes_equal_for_representationally_equivalent_objects
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           geom2_ = @factory.multi_polygon([@poly1, @poly2])
           assert_equal(geom1_.hash, geom2_.hash)
         end
 
-
         def test_wkt_creation_simple
-          parsed_geom_ = @factory.parse_wkt('MULTIPOLYGON(((0 0, 0 -10, -10 0, 0 0)), ((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))')
+          parsed_geom_ = @factory.parse_wkt("MULTIPOLYGON(((0 0, 0 -10, -10 0, 0 0)), ((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))")
           built_geom_ = @factory.multi_polygon([@poly1, @poly2])
           assert(built_geom_.eql?(parsed_geom_))
         end
 
-
         def test_wkt_creation_empty
-          parsed_geom_ = @factory.parse_wkt('MULTIPOLYGON EMPTY')
+          parsed_geom_ = @factory.parse_wkt("MULTIPOLYGON EMPTY")
           assert_equal(::RGeo::Feature::MultiPolygon, parsed_geom_.geometry_type)
           assert_equal(0, parsed_geom_.num_geometries)
           assert_equal([], parsed_geom_.to_a)
         end
-
 
         def test_clone
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
@@ -135,7 +120,6 @@ module RGeo
           assert(@poly1.eql?(geom2_[0]))
           assert(@poly2.eql?(geom2_[1]))
         end
-
 
         def test_type_check
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
@@ -152,14 +136,12 @@ module RGeo
           assert(::RGeo::Feature::MultiPolygon.check_type(geom2_))
         end
 
-
         def test_as_text_wkt_round_trip
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           text_ = geom1_.as_text
           geom2_ = @factory.parse_wkt(text_)
           assert(geom1_.eql?(geom2_))
         end
-
 
         def test_as_binary_wkb_round_trip
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
@@ -168,14 +150,12 @@ module RGeo
           assert(geom1_.eql?(geom2_))
         end
 
-
         def test_dimension
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           assert_equal(2, geom1_.dimension)
           geom2_ = @factory.multi_polygon([])
           assert_equal(-1, geom2_.dimension)
         end
-
 
         def test_is_empty
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
@@ -193,20 +173,19 @@ module RGeo
             [[2.0, 2.0], [3.0, 2.0], [3.0, 3.0], [2.0, 3.0], [2.0, 2.0]],
             [[2.25, 2.25], [2.75, 2.25], [2.75, 2.75], [2.25, 2.75], [2.25, 2.25]]
           ]
-          
-          ring = @factory.line_string(poly1_coordinates.first.map {|(x, y)| @factory.point x, y })
-          inner_ring = @factory.line_string(poly1_coordinates.last.map {|(x, y)| @factory.point x, y })
+
+          ring = @factory.line_string(poly1_coordinates.first.map { |(x, y)| @factory.point x, y })
+          inner_ring = @factory.line_string(poly1_coordinates.last.map { |(x, y)| @factory.point x, y })
           poly1 = @factory.polygon ring, [inner_ring]
 
-          ring = @factory.line_string(poly2_coordinates.first.map {|(x, y)| @factory.point x, y })
-          inner_ring = @factory.line_string(poly2_coordinates.last.map {|(x, y)| @factory.point x, y })
+          ring = @factory.line_string(poly2_coordinates.first.map { |(x, y)| @factory.point x, y })
+          inner_ring = @factory.line_string(poly2_coordinates.last.map { |(x, y)| @factory.point x, y })
           poly2 = @factory.polygon ring, [inner_ring]
 
           multi_polygon = @factory.multi_polygon [poly1, poly2]
           assert_equal(multi_polygon.coordinates, [poly1_coordinates, poly2_coordinates])
         end
       end
-
     end
   end
 end

@@ -4,17 +4,13 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'test/unit'
-require 'rgeo'
-require 'ffi-geos'
-
+require "test/unit"
+require "rgeo"
+require "ffi-geos"
 
 module RGeo
-  module Tests  # :nodoc:
-
-    class TestOneOff < ::Test::Unit::TestCase  # :nodoc:
-
-
+  module Tests # :nodoc:
+    class TestOneOff < ::Test::Unit::TestCase # :nodoc:
       def setup
         # @mercator_factory = ::RGeo::Geographic.simple_mercator_factory
         # @spherical_factory = ::RGeo::Geographic.spherical_factory(:buffer_resolution => 2)
@@ -23,12 +19,8 @@ module RGeo
         # @cartesian_factory = ::RGeo::Cartesian.simple_factory(:buffer_resolution => 2)
       end
 
-
       def test_dummy
       end
-
-
     end
-
   end
 end

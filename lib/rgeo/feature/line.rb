@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A Line is a LineString with exactly 2 Points.
@@ -22,15 +19,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module Line
-
-
       include LineString
       extend Type
-
-
     end
-
-
   end
-
 end

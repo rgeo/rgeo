@@ -6,28 +6,26 @@
 
 if ::RUBY_DESCRIPTION =~ /^jruby\s/
 
-  ::File.open('Makefile', 'w'){ |f_| f_.write(".PHONY: install\ninstall:\n") }
+  ::File.open("Makefile", "w") { |f_| f_.write(".PHONY: install\ninstall:\n") }
 
 else
-  require 'mkmf'
+  require "mkmf"
 
-  if geosconfig = (with_config('geos-config') || find_executable('geos-config'))
-    puts "Using GEOS compile configuration from %s" [ geosconfig ]
+  if geosconfig = (with_config("geos-config") || find_executable("geos-config"))
+    puts "Using GEOS compile configuration from %s" [geosconfig]
     $INCFLAGS << " " << `#{geosconfig} --cflags`.strip
-    geos_libs = `#{geosconfig} --clibs`.gsub("\n", " ")
+    geos_libs = `#{geosconfig} --clibs`.tr("\n", " ")
     geos_libs.split(/\s+/).each do |flag|
-      $libs << ' ' + flag unless $libs.include?(flag)
+      $libs << " " + flag unless $libs.include?(flag)
     end
   end
 
   found_geos_ = false
-  if have_header('geos_c.h')
-    if have_func('GEOSSetSRID_r', 'geos_c.h')
-      found_geos_ = true
-    end
-    have_func('GEOSPreparedContains_r', 'geos_c.h')
-    have_func('GEOSPreparedDisjoint_r', 'geos_c.h')
-    have_func('rb_memhash', 'ruby.h')
+  if have_header("geos_c.h")
+    found_geos_ = true if have_func("GEOSSetSRID_r", "geos_c.h")
+    have_func("GEOSPreparedContains_r", "geos_c.h")
+    have_func("GEOSPreparedDisjoint_r", "geos_c.h")
+    have_func("rb_memhash", "ruby.h")
   end
 
   unless found_geos_
@@ -36,5 +34,5 @@ else
     puts "**** Compiling without GEOS support."
   end
 
-  create_makefile('rgeo/geos/geos_c_impl')
+  create_makefile("rgeo/geos/geos_c_impl")
 end
