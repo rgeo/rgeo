@@ -5,17 +5,13 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # All geometry implementations MUST include this submodule.
     # This serves as a marker that may be used to test an object for
     # feature-ness.
 
     module Instance
     end
-
 
     # This module provides the API for geometry type objects. Technically
     # these objects are modules (such as ::RGeo::Feature::Point), but as
@@ -53,11 +49,8 @@ module RGeo
     #   ::RGeo::Feature::Type === object.geometry_type  # true
 
     module Type
-
-
       # Deprecated alias for RGeo::Feature::Instance
       Instance = Feature::Instance
-
 
       # Returns true if the given object is this type or a subtype
       # thereof, or if it is a feature object whose geometry_type is
@@ -67,11 +60,10 @@ module RGeo
       # Therefore, the is_a? method will generally not work.
 
       def check_type(rhs_)
-        rhs_ = rhs_.geometry_type if rhs_.kind_of?(Feature::Instance)
-        rhs_.kind_of?(Type) && (rhs_ == self || rhs_.include?(self))
+        rhs_ = rhs_.geometry_type if rhs_.is_a?(Feature::Instance)
+        rhs_.is_a?(Type) && (rhs_ == self || rhs_.include?(self))
       end
       alias_method :===, :check_type
-
 
       # Returns true if this type is the same type or a subtype of the
       # given type.
@@ -80,7 +72,6 @@ module RGeo
         self == type_ || self.include?(type_)
       end
 
-
       # Returns the supertype of this type. The supertype of Geometry
       # is nil.
 
@@ -88,42 +79,33 @@ module RGeo
         @supertype
       end
 
-
       # Iterates over the known immediate subtypes of this type.
 
       def each_immediate_subtype(&block_)
         @subtypes.each(&block_) if defined?(@subtypes) && @subtypes
       end
 
-
       # Returns the OpenGIS type name of this type. For example:
       #
       #   ::RGeo::Feature::Point.type_name  # "Point"
 
       def type_name
-        self.name.sub('RGeo::Feature::', '')
+        name.sub("RGeo::Feature::", "")
       end
       alias_method :to_s, :type_name
 
-
-      def _add_subtype(type_)  # :nodoc:
+      def _add_subtype(type_) # :nodoc:
         (@subtypes ||= []) << type_
       end
 
-
-      def self.extended(type_)  # :nodoc:
-        supertype_ = type_.included_modules.find{ |m_| m_.kind_of?(self) }
+      def self.extended(type_) # :nodoc:
+        supertype_ = type_.included_modules.find { |m_| m_.is_a?(self) }
         type_.instance_variable_set(:@supertype, supertype_)
         supertype_._add_subtype(type_) if supertype_
       end
-
-
     end
 
-
     class << self
-
-
       # Cast the given object according to the given parameters, if
       # possible, and return the resulting object. If the requested cast
       # is not possible, nil is returned.
@@ -232,22 +214,20 @@ module RGeo
             elsif type_ == Line
               nfactory_.line(cast(obj_.start_point, nfactory_, opts_), cast(obj_.end_point, nfactory_, opts_))
             elsif type_ == LinearRing
-              nfactory_.linear_ring(obj_.points.map{ |p_| cast(p_, nfactory_, opts_) })
+              nfactory_.linear_ring(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
             elsif type_ == LineString
-              nfactory_.line_string(obj_.points.map{ |p_| cast(p_, nfactory_, opts_) })
+              nfactory_.line_string(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
             elsif type_ == Polygon
               nfactory_.polygon(cast(obj_.exterior_ring, nfactory_, opts_),
-                                obj_.interior_rings.map{ |r_| cast(r_, nfactory_, opts_) })
+                                obj_.interior_rings.map { |r_| cast(r_, nfactory_, opts_) })
             elsif type_ == MultiPoint
-              nfactory_.multi_point(obj_.map{ |g_| cast(g_, nfactory_, opts_) })
+              nfactory_.multi_point(obj_.map { |g_| cast(g_, nfactory_, opts_) })
             elsif type_ == MultiLineString
-              nfactory_.multi_line_string(obj_.map{ |g_| cast(g_, nfactory_, opts_) })
+              nfactory_.multi_line_string(obj_.map { |g_| cast(g_, nfactory_, opts_) })
             elsif type_ == MultiPolygon
-              nfactory_.multi_polygon(obj_.map{ |g_| cast(g_, nfactory_, opts_) })
+              nfactory_.multi_polygon(obj_.map { |g_| cast(g_, nfactory_, opts_) })
             elsif type_ == GeometryCollection
-              nfactory_.collection(obj_.map{ |g_| cast(g_, nfactory_, opts_) })
-            else
-              nil
+              nfactory_.collection(obj_.map { |g_| cast(g_, nfactory_, opts_) })
             end
           end
         else
@@ -255,72 +235,50 @@ module RGeo
           if ntype_ == Point && (type_ == MultiPoint || type_ == GeometryCollection) ||
               (ntype_ == Line || ntype_ == LineString || ntype_ == LinearRing) && (type_ == MultiLineString || type_ == GeometryCollection) ||
               ntype_ == Polygon && (type_ == MultiPolygon || type_ == GeometryCollection)
-          then
             if obj_.num_geometries == 1
               cast(obj_.geometry_n(0), nfactory_, ntype_, opts_)
-            else
-              nil
             end
           elsif ntype_ == Point
             nil
           elsif ntype_ == Line
             if type_ == LineString && obj_.num_points == 2
               nfactory_.line(cast(obj_.point_n(0), nfactory_, opts_), cast(obj_.point_n(1), nfactory_, opts_))
-            else
-              nil
             end
           elsif ntype_ == LinearRing
             if type_ == LineString
-              nfactory_.linear_ring(obj_.points.map{ |p_| cast(p_, nfactory_, opts_) })
-            else
-              nil
+              nfactory_.linear_ring(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == LineString
             if type_ == Line || type_ == LinearRing
-              nfactory_.line_string(obj_.points.map{ |p_| cast(p_, nfactory_, opts_) })
-            else
-              nil
+              nfactory_.line_string(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == MultiPoint
             if type_ == Point
               nfactory_.multi_point([cast(obj_, nfactory_, opts_)])
             elsif type_ == GeometryCollection
-              nfactory_.multi_point(obj_.map{ |g_| cast(p_, nfactory_, opts_) })
-            else
-              nil
+              nfactory_.multi_point(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == MultiLineString
             if type_ == Line || type_ == LinearRing || type_ == LineString
               nfactory_.multi_line_string([cast(obj_, nfactory_, opts_)])
             elsif type_ == GeometryCollection
-              nfactory_.multi_line_string(obj_.map{ |g_| cast(p_, nfactory_, opts_) })
-            else
-              nil
+              nfactory_.multi_line_string(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == MultiPolygon
             if type_ == Polygon
               nfactory_.multi_polygon([cast(obj_, nfactory_, opts_)])
             elsif type_ == GeometryCollection
-              nfactory_.multi_polygon(obj_.map{ |g_| cast(p_, nfactory_, opts_) })
-            else
-              nil
+              nfactory_.multi_polygon(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == GeometryCollection
             if type_ == MultiPoint || type_ == MultiLineString || type_ == MultiPolygon
-              nfactory_.collection(obj_.map{ |g_| cast(p_, nfactory_, opts_) })
+              nfactory_.collection(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
             else
               nfactory_.collection([cast(obj_, nfactory_, opts_)])
             end
-          else
-            nil
           end
         end
       end
-
-
     end
-
-
   end
-
 end

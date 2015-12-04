@@ -5,8 +5,6 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-
   # The Feature namespace contains interfaces and general tools for
   # implementations of the Open Geospatial Consortium Simple Features
   # Specification (SFS), version 1.1.0.
@@ -33,27 +31,24 @@ module RGeo
 
   module Feature
   end
-
-
 end
 
-
 # Implementation files
-require 'rgeo/feature/factory'
-require 'rgeo/feature/mixins'
-require 'rgeo/feature/types'
-require 'rgeo/feature/geometry'
-require 'rgeo/feature/point'
-require 'rgeo/feature/curve'
-require 'rgeo/feature/line_string'
-require 'rgeo/feature/linear_ring'
-require 'rgeo/feature/line'
-require 'rgeo/feature/surface'
-require 'rgeo/feature/polygon'
-require 'rgeo/feature/geometry_collection'
-require 'rgeo/feature/multi_point'
-require 'rgeo/feature/multi_curve'
-require 'rgeo/feature/multi_line_string'
-require 'rgeo/feature/multi_surface'
-require 'rgeo/feature/multi_polygon'
-require 'rgeo/feature/factory_generator'
+require "rgeo/feature/factory"
+require "rgeo/feature/mixins"
+require "rgeo/feature/types"
+require "rgeo/feature/geometry"
+require "rgeo/feature/point"
+require "rgeo/feature/curve"
+require "rgeo/feature/line_string"
+require "rgeo/feature/linear_ring"
+require "rgeo/feature/line"
+require "rgeo/feature/surface"
+require "rgeo/feature/polygon"
+require "rgeo/feature/geometry_collection"
+require "rgeo/feature/multi_point"
+require "rgeo/feature/multi_curve"
+require "rgeo/feature/multi_line_string"
+require "rgeo/feature/multi_surface"
+require "rgeo/feature/multi_polygon"
+require "rgeo/feature/factory_generator"

@@ -1,0 +1,13 @@
+inherit_from: .rubocop_todo.yml
+
+Style/AlignParameters:
+  Enabled: false
+
+Style/MultilineOperationIndentation:
+  Enabled: false
+
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

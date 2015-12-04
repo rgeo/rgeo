@@ -4,14 +4,10 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'strscan'
-
+require "strscan"
 
 module RGeo
-
   module WKRep
-
-
     # This class provides the functionality of parsing a geometry from
     # WKT (well-known text) format. You may also customize the parser
     # to recognize PostGIS EWKT extensions to the input, or Simple
@@ -52,13 +48,11 @@ module RGeo
     #   the input. Defaults to nil (i.e. don't specify a SRID).
 
     class WKTParser
-
-
       # Create and configure a WKT parser. See the WKTParser
       # documentation for the options that can be passed.
 
-      def initialize(factory_generator_=nil, opts_={})
-        if factory_generator_.kind_of?(Feature::Factory::Instance)
+      def initialize(factory_generator_ = nil, opts_ = {})
+        if factory_generator_.is_a?(Feature::Factory::Instance)
           @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
           @exact_factory = factory_generator_
         elsif factory_generator_.respond_to?(:call)
@@ -75,17 +69,12 @@ module RGeo
         @default_srid = opts_[:default_srid]
       end
 
-
       # Returns the factory generator. See WKTParser for details.
-      def factory_generator
-        @factory_generator
-      end
+      attr_reader :factory_generator
 
       # If this parser was given an exact factory, returns it; otherwise
       # returns nil.
-      def exact_factory
-        @exact_factory
-      end
+      attr_reader :exact_factory
 
       # Returns true if this parser supports EWKT.
       # See WKTParser for details.
@@ -111,17 +100,15 @@ module RGeo
         @ignore_extra_tokens
       end
 
-
-      def _properties  # :nodoc:
+      def _properties # :nodoc:
         {
-          'support_ewkt' => @support_ewkt,
-          'support_wkt12' => @support_wkt12,
-          'strict_wkt11' => @strict_wkt11,
-          'ignore_extra_tokens' => @ignore_extra_tokens,
-          'default_srid' => @default_srid,
+          "support_ewkt" => @support_ewkt,
+          "support_wkt12" => @support_wkt12,
+          "strict_wkt11" => @strict_wkt11,
+          "ignore_extra_tokens" => @ignore_extra_tokens,
+          "default_srid" => @default_srid
         }
       end
-
 
       # Parse the given string, and return a geometry object.
 
@@ -137,7 +124,7 @@ module RGeo
         @cur_srid = @default_srid
         if @support_ewkt && str_ =~ /^srid=(\d+);/i
           str_ = $'
-          @cur_srid = $1.to_i
+          @cur_srid = Regexp.last_match(1).to_i
         end
         begin
           _start_scanner(str_)
@@ -151,8 +138,7 @@ module RGeo
         obj_
       end
 
-
-      def _check_factory_support  # :nodoc:
+      def _check_factory_support # :nodoc:
         if @cur_expect_z && !@cur_factory_support_z
           raise Error::ParseError, "Geometry calls for Z coordinate but factory doesn't support it."
         end
@@ -161,10 +147,9 @@ module RGeo
         end
       end
 
-
-      def _ensure_factory  # :nodoc:
+      def _ensure_factory # :nodoc:
         unless @cur_factory
-          @cur_factory = @factory_generator.call(:srid => @cur_srid, :has_z_coordinate => @cur_expect_z, :has_m_coordinate => @cur_expect_m)
+          @cur_factory = @factory_generator.call(srid: @cur_srid, has_z_coordinate: @cur_expect_z, has_m_coordinate: @cur_expect_m)
           @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
           @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
           _check_factory_support unless @cur_expect_z.nil?
@@ -172,30 +157,29 @@ module RGeo
         @cur_factory
       end
 
-
-      def _parse_type_tag(contained_)  # :nodoc:
+      def _parse_type_tag(_contained_) # :nodoc:
         _expect_token_type(::String)
         if @support_ewkt && @cur_token =~ /^(.+)(m)$/
-          type_ = $1
-          zm_ = $2
+          type_ = Regexp.last_match(1)
+          zm_ = Regexp.last_match(2)
         else
           type_ = @cur_token
-          zm_ = ''
+          zm_ = ""
         end
         _next_token
-        if zm_.length == 0 && @support_wkt12 && @cur_token.kind_of?(::String) && @cur_token =~ /^z?m?$/
+        if zm_.length == 0 && @support_wkt12 && @cur_token.is_a?(::String) && @cur_token =~ /^z?m?$/
           zm_ = @cur_token
           _next_token
         end
         if zm_.length > 0 || @strict_wkt11
           creating_expectation_ = @cur_expect_z.nil?
-          expect_z_ = zm_[0,1] == 'z' ? true : false
+          expect_z_ = zm_[0, 1] == "z" ? true : false
           if @cur_expect_z.nil?
             @cur_expect_z = expect_z_
           elsif expect_z_ != @cur_expect_z
             raise Error::ParseError, "Surrounding collection has Z but contained geometry doesn't."
           end
-          expect_m_ = zm_[-1,1] == 'm' ? true : false
+          expect_m_ = zm_[-1, 1] == "m" ? true : false
           if @cur_expect_m.nil?
             @cur_expect_m = expect_m_
           elsif expect_m_ != @cur_expect_m
@@ -210,27 +194,26 @@ module RGeo
           end
         end
         case type_
-        when 'point'
+        when "point"
           _parse_point(true)
-        when 'linestring'
+        when "linestring"
           _parse_line_string
-        when 'polygon'
+        when "polygon"
           _parse_polygon
-        when 'geometrycollection'
+        when "geometrycollection"
           _parse_geometry_collection
-        when 'multipoint'
+        when "multipoint"
           _parse_multi_point
-        when 'multilinestring'
+        when "multilinestring"
           _parse_multi_line_string
-        when 'multipolygon'
+        when "multipolygon"
           _parse_multi_polygon
         else
           raise Error::ParseError, "Unknown type tag: #{type_.inspect}."
         end
       end
 
-
-      def _parse_coords  # :nodoc:
+      def _parse_coords # :nodoc:
         _expect_token_type(::Numeric)
         x_ = @cur_token
         _next_token
@@ -249,7 +232,7 @@ module RGeo
           @cur_expect_m = num_extras_ > 0 && (!@cur_factory || @cur_factory_support_m) ? true : false
           num_extras_ -= 1 if @cur_expect_m
           if num_extras_ > 0
-            raise Error::ParseError, "Found #{extra_.size+2} coordinates, which is too many for this factory."
+            raise Error::ParseError, "Found #{extra_.size + 2} coordinates, which is too many for this factory."
           end
           _ensure_factory
         else
@@ -259,25 +242,20 @@ module RGeo
             val_ = @cur_token
             _next_token
           end
-          if @cur_factory_support_z
-            extra_ << val_
-          end
+          extra_ << val_ if @cur_factory_support_z
           val_ = 0
           if @cur_expect_m
             _expect_token_type(::Numeric)
             val_ = @cur_token
             _next_token
           end
-          if @cur_factory_support_m
-            extra_ << val_
-          end
+          extra_ << val_ if @cur_factory_support_m
         end
         @cur_factory.point(x_, y_, *extra_)
       end
 
-
-      def _parse_point(convert_empty_=false)  # :nodoc:
-        if convert_empty_ && @cur_token == 'empty'
+      def _parse_point(convert_empty_ = false) # :nodoc:
+        if convert_empty_ && @cur_token == "empty"
           point_ = _ensure_factory.multi_point([])
         else
           _expect_token_type(:begin)
@@ -289,10 +267,9 @@ module RGeo
         point_
       end
 
-
-      def _parse_line_string  # :nodoc:
+      def _parse_line_string # :nodoc:
         points_ = []
-        if @cur_token != 'empty'
+        if @cur_token != "empty"
           _expect_token_type(:begin)
           _next_token
           loop do
@@ -306,10 +283,9 @@ module RGeo
         _ensure_factory.line_string(points_)
       end
 
-
-      def _parse_polygon  # :nodoc:
+      def _parse_polygon # :nodoc:
         inner_rings_ = []
-        if @cur_token == 'empty'
+        if @cur_token == "empty"
           outer_ring_ = _ensure_factory.linear_ring([])
         else
           _expect_token_type(:begin)
@@ -326,10 +302,9 @@ module RGeo
         _ensure_factory.polygon(outer_ring_, inner_rings_)
       end
 
-
-      def _parse_geometry_collection  # :nodoc:
+      def _parse_geometry_collection # :nodoc:
         geometries_ = []
-        if @cur_token != 'empty'
+        if @cur_token != "empty"
           _expect_token_type(:begin)
           _next_token
           loop do
@@ -343,10 +318,9 @@ module RGeo
         _ensure_factory.collection(geometries_)
       end
 
-
-      def _parse_multi_point  # :nodoc:
+      def _parse_multi_point # :nodoc:
         points_ = []
-        if @cur_token != 'empty'
+        if @cur_token != "empty"
           _expect_token_type(:begin)
           _next_token
           loop do
@@ -366,10 +340,9 @@ module RGeo
         _ensure_factory.multi_point(points_)
       end
 
-
-      def _parse_multi_line_string  # :nodoc:
+      def _parse_multi_line_string # :nodoc:
         line_strings_ = []
-        if @cur_token != 'empty'
+        if @cur_token != "empty"
           _expect_token_type(:begin)
           _next_token
           loop do
@@ -383,10 +356,9 @@ module RGeo
         _ensure_factory.multi_line_string(line_strings_)
       end
 
-
       def _parse_multi_polygon  # :nodoc:
         polygons_ = []
-        if @cur_token != 'empty'
+        if @cur_token != "empty"
           _expect_token_type(:begin)
           _next_token
           loop do
@@ -400,27 +372,23 @@ module RGeo
         _ensure_factory.multi_polygon(polygons_)
       end
 
-
       def _start_scanner(str_)  # :nodoc:
         @_scanner = ::StringScanner.new(str_)
         _next_token
       end
 
-
-      def _clean_scanner  # :nodoc:
+      def _clean_scanner # :nodoc:
         @_scanner = nil
         @cur_token = nil
       end
 
-
-      def _expect_token_type(type_)  # :nodoc:
+      def _expect_token_type(type_) # :nodoc:
         unless type_ === @cur_token
           raise Error::ParseError, "#{type_.inspect} expected but #{@cur_token.inspect} found."
         end
       end
 
-
-      def _next_token  # :nodoc:
+      def _next_token # :nodoc:
         if @_scanner.scan_until(/\(|\)|\[|\]|,|[^\s\(\)\[\],]+/)
           token_ = @_scanner.matched
           case token_
@@ -428,11 +396,11 @@ module RGeo
             @cur_token = token_.to_f
           when /^[a-z]+$/
             @cur_token = token_
-          when ','
+          when ","
             @cur_token = :comma
-          when '(','['
+          when "(", "["
             @cur_token = :begin
-          when ']',')'
+          when "]", ")"
             @cur_token = :end
           else
             raise Error::ParseError, "Bad token: #{token_.inspect}"
@@ -442,11 +410,6 @@ module RGeo
         end
         @cur_token
       end
-
-
     end
-
-
   end
-
 end

@@ -5,12 +5,9 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-
   # All RGeo errors are members of this namespace.
 
   module Error
-
     # Base class for all RGeo-related exceptions
     class RGeoError < ::RuntimeError
     end
@@ -26,8 +23,5 @@ module RGeo
     # Parsing failed
     class ParseError < RGeoError
     end
-
   end
-
-
 end

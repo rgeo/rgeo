@@ -5,8 +5,6 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
-
   # The Geographic implementation actually comprises a suite of
   # implementations with one common feature: they represent geographic
   # latitude/longitude coordinates measured in degrees. The "x"
@@ -27,19 +25,16 @@ module RGeo
 
   module Geographic
   end
-
-
 end
 
-
 # Implementation files.
-require 'rgeo/geographic/factory'
-require 'rgeo/geographic/projected_window'
-require 'rgeo/geographic/interface'
-require 'rgeo/geographic/spherical_math'
-require 'rgeo/geographic/spherical_feature_methods'
-require 'rgeo/geographic/spherical_feature_classes'
-require 'rgeo/geographic/proj4_projector'
-require 'rgeo/geographic/simple_mercator_projector'
-require 'rgeo/geographic/projected_feature_methods'
-require 'rgeo/geographic/projected_feature_classes'
+require "rgeo/geographic/factory"
+require "rgeo/geographic/projected_window"
+require "rgeo/geographic/interface"
+require "rgeo/geographic/spherical_math"
+require "rgeo/geographic/spherical_feature_methods"
+require "rgeo/geographic/spherical_feature_classes"
+require "rgeo/geographic/proj4_projector"
+require "rgeo/geographic/simple_mercator_projector"
+require "rgeo/geographic/projected_feature_methods"
+require "rgeo/geographic/projected_feature_classes"

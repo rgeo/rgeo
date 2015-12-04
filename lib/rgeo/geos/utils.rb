@@ -5,15 +5,9 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Geos
-
-
-    module Utils  # :nodoc:
-
+    module Utils # :nodoc:
       class << self
-
-
         def ffi_coord_seqs_equal?(cs1_, cs2_, check_z_)
           len1_ = cs1_.length
           len2_ = cs2_.length
@@ -28,7 +22,6 @@ module RGeo
             false
           end
         end
-
 
         def ffi_compute_dimension(geom_)
           result_ = -1
@@ -54,13 +47,11 @@ module RGeo
           result_
         end
 
-
-        def ffi_coord_seq_hash(cs_, hash_=0)
-          (0...cs_.length).inject(hash_) do |h_, i_|
+        def ffi_coord_seq_hash(cs_, hash_ = 0)
+          (0...cs_.length).inject(hash_) do |_h_, i_|
             [hash_, cs_.get_x(i_), cs_.get_y(i_), cs_.get_z(i_)].hash
           end
         end
-
 
         def _init
           if FFI_SUPPORTED
@@ -68,7 +59,7 @@ module RGeo
             @ffi_supports_prepared_level_2 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
             @ffi_supports_set_output_dimension = ::Geos::FFIGeos.respond_to?(:GEOSWKTWriter_setOutputDimension_r)
           end
-          @psych_wkt_generator = WKRep::WKTGenerator.new(:convert_case => :upper)
+          @psych_wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
           @marshal_wkb_generator = WKRep::WKBGenerator.new
         end
 
@@ -77,13 +68,7 @@ module RGeo
         attr_reader :ffi_supports_set_output_dimension
         attr_reader :psych_wkt_generator
         attr_reader :marshal_wkb_generator
-
-
       end
-
     end
-
-
   end
-
 end

@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A Curve is a 1-dimensional geometric object usually stored as a
@@ -43,10 +40,8 @@ module RGeo
     # Some implementations may support higher dimensional points.
 
     module Curve
-
       include Geometry
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -60,7 +55,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Curve#length not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # The start Point of this Curve.
@@ -72,7 +66,6 @@ module RGeo
       def start_point
         raise Error::UnsupportedOperation, "Method Curve#start_point not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -86,7 +79,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Curve#end_point not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns true if this Curve is closed [StartPoint() = EndPoint()].
@@ -99,7 +91,6 @@ module RGeo
       def is_closed?
         raise Error::UnsupportedOperation, "Method Curve#is_closed? not defined."
       end
-
 
       # === SFS 1.1 Description
       #
@@ -115,11 +106,6 @@ module RGeo
       def is_ring?
         raise Error::UnsupportedOperation, "Method Curve#is_ring? not defined."
       end
-
-
     end
-
-
   end
-
 end

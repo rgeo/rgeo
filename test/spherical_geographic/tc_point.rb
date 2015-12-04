@@ -4,29 +4,23 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'test/unit'
-require 'rgeo'
+require "test/unit"
+require "rgeo"
 
-require ::File.expand_path('../common/point_tests.rb', ::File.dirname(__FILE__))
-
+require ::File.expand_path("../common/point_tests.rb", ::File.dirname(__FILE__))
 
 module RGeo
-  module Tests  # :nodoc:
-    module SphericalGeographic  # :nodoc:
-
-      class TestPoint < ::Test::Unit::TestCase  # :nodoc:
-
-
+  module Tests # :nodoc:
+    module SphericalGeographic # :nodoc:
+      class TestPoint < ::Test::Unit::TestCase # :nodoc:
         def setup
-          @factory = ::RGeo::Geographic.spherical_factory(:buffer_resolution => 8)
-          @zfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true)
-          @mfactory = ::RGeo::Geographic.spherical_factory(:has_m_coordinate => true)
-          @zmfactory = ::RGeo::Geographic.spherical_factory(:has_z_coordinate => true, :has_m_coordinate => true)
+          @factory = ::RGeo::Geographic.spherical_factory(buffer_resolution: 8)
+          @zfactory = ::RGeo::Geographic.spherical_factory(has_z_coordinate: true)
+          @mfactory = ::RGeo::Geographic.spherical_factory(has_m_coordinate: true)
+          @zmfactory = ::RGeo::Geographic.spherical_factory(has_z_coordinate: true, has_m_coordinate: true)
         end
 
-
         include ::RGeo::Tests::Common::PointTests
-
 
         def test_latlon
           point_ = @factory.point(21, -22)
@@ -51,7 +45,6 @@ module RGeo
           assert_equal(4055, point_.srid)
         end
 
-
         def test_distance
           point1_ = @factory.point(0, 10)
           point2_ = @factory.point(0, 10)
@@ -60,7 +53,6 @@ module RGeo
           assert_in_delta(::Math::PI / 6.0 * ::RGeo::Geographic::SphericalMath::RADIUS, point1_.distance(point3_), 0.0001)
         end
 
-
         def test_floating_point_perturbation
           # A naive way of wrapping longitudes to [-180,180] might cause
           # perturbation due to floating point errors. Make sure this
@@ -68,7 +60,6 @@ module RGeo
           point_ = @factory.point(-98.747534, 38.057583)
           assert_equal(-98.747534, point_.x)
         end
-
 
         undef_method :test_disjoint
         undef_method :test_intersects
@@ -81,10 +72,7 @@ module RGeo
         undef_method :test_union
         undef_method :test_difference
         undef_method :test_sym_difference
-
-
       end
-
     end
   end
 end

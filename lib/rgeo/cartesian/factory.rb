@@ -5,28 +5,23 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Cartesian
-
-
     # This class implements the factory for the simple cartesian
     # implementation.
 
     class Factory
-
       include Feature::Factory::Instance
-
 
       # Create a new simple cartesian factory.
       #
       # See ::RGeo::Cartesian.simple_factory for a list of supported options.
 
-      def initialize(opts_={})
+      def initialize(opts_ = {})
         @has_z = opts_[:has_z_coordinate] ? true : false
         @has_m = opts_[:has_m_coordinate] ? true : false
         @proj4 = opts_[:proj4]
         if CoordSys::Proj4.supported?
-          if @proj4.kind_of?(::String) || @proj4.kind_of?(::Hash)
+          if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         else
@@ -34,8 +29,12 @@ module RGeo
         end
         srid_ = opts_[:srid]
         @coord_sys = opts_[:coord_sys]
-        if @coord_sys.kind_of?(::String)
-          @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys) rescue nil
+        if @coord_sys.is_a?(::String)
+          @coord_sys = begin
+                         CoordSys::CS.create_from_wkt(@coord_sys)
+                       rescue
+                         nil
+                       end
         end
         if (!@proj4 || !@coord_sys) && srid_ && (db_ = opts_[:srs_database])
           entry_ = db_.get(srid_.to_i)
@@ -55,7 +54,7 @@ module RGeo
         when ::Hash
           @wkt_generator = WKRep::WKTGenerator.new(wkt_generator_)
         else
-          @wkt_generator = WKRep::WKTGenerator.new(:convert_case => :upper)
+          @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
         end
         wkb_generator_ = opts_[:wkb_generator]
         case wkb_generator_
@@ -80,7 +79,6 @@ module RGeo
         end
       end
 
-
       # Equivalence test.
 
       def eql?(rhs_)
@@ -91,117 +89,110 @@ module RGeo
       end
       alias_method :==, :eql?
 
-
       # Standard hash code
 
       def hash
         @hash ||= [@srid, @has_z, @has_m, @proj4].hash
       end
 
-
       # Marshal support
 
-      def marshal_dump  # :nodoc:
+      def marshal_dump # :nodoc:
         hash_ = {
-          'hasz' => @has_z,
-          'hasm' => @has_m,
-          'srid' => @srid,
-          'wktg' => @wkt_generator._properties,
-          'wkbg' => @wkb_generator._properties,
-          'wktp' => @wkt_parser._properties,
-          'wkbp' => @wkb_parser._properties,
-          'lena' => @lenient_assertions,
-          'bufr' => @buffer_resolution,
+          "hasz" => @has_z,
+          "hasm" => @has_m,
+          "srid" => @srid,
+          "wktg" => @wkt_generator._properties,
+          "wkbg" => @wkb_generator._properties,
+          "wktp" => @wkt_parser._properties,
+          "wkbp" => @wkb_parser._properties,
+          "lena" => @lenient_assertions,
+          "bufr" => @buffer_resolution
         }
-        hash_['proj4'] = @proj4.marshal_dump if @proj4
-        hash_['cs'] = @coord_sys.to_wkt if @coord_sys
+        hash_["proj4"] = @proj4.marshal_dump if @proj4
+        hash_["cs"] = @coord_sys.to_wkt if @coord_sys
         hash_
       end
 
-      def marshal_load(data_)  # :nodoc:
-        if CoordSys::Proj4.supported? && (proj4_data_ = data_['proj4'])
+      def marshal_load(data_) # :nodoc:
+        if CoordSys::Proj4.supported? && (proj4_data_ = data_["proj4"])
           proj4_ = CoordSys::Proj4.allocate
           proj4_.marshal_load(proj4_data_)
         else
           proj4_ = nil
         end
-        if (coord_sys_data_ = data_['cs'])
+        if (coord_sys_data_ = data_["cs"])
           coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
         else
           coord_sys_ = nil
         end
         initialize(
-          :has_z_coordinate => data_['hasz'],
-          :has_m_coordinate => data_['hasm'],
-          :srid => data_['srid'],
-          :wkt_generator => ImplHelper::Utils.symbolize_hash(data_['wktg']),
-          :wkb_generator => ImplHelper::Utils.symbolize_hash(data_['wkbg']),
-          :wkt_parser => ImplHelper::Utils.symbolize_hash(data_['wktp']),
-          :wkb_parser => ImplHelper::Utils.symbolize_hash(data_['wkbp']),
-          :uses_lenient_assertions => data_['lena'],
-          :buffer_resolution => data_['bufr'],
-          :proj4 => proj4_,
-          :coord_sys => coord_sys_
+          has_z_coordinate: data_["hasz"],
+          has_m_coordinate: data_["hasm"],
+          srid: data_["srid"],
+          wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
+          wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
+          wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
+          wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
+          uses_lenient_assertions: data_["lena"],
+          buffer_resolution: data_["bufr"],
+          proj4: proj4_,
+          coord_sys: coord_sys_
         )
       end
 
-
       # Psych support
 
-      def encode_with(coder_)  # :nodoc:
-        coder_['has_z_coordinate'] = @has_z
-        coder_['has_m_coordinate'] = @has_m
-        coder_['srid'] = @srid
-        coder_['lenient_assertions'] = @lenient_assertions
-        coder_['buffer_resolution'] = @buffer_resolution
-        coder_['wkt_generator'] = @wkt_generator._properties
-        coder_['wkb_generator'] = @wkb_generator._properties
-        coder_['wkt_parser'] = @wkt_parser._properties
-        coder_['wkb_parser'] = @wkb_parser._properties
+      def encode_with(coder_) # :nodoc:
+        coder_["has_z_coordinate"] = @has_z
+        coder_["has_m_coordinate"] = @has_m
+        coder_["srid"] = @srid
+        coder_["lenient_assertions"] = @lenient_assertions
+        coder_["buffer_resolution"] = @buffer_resolution
+        coder_["wkt_generator"] = @wkt_generator._properties
+        coder_["wkb_generator"] = @wkb_generator._properties
+        coder_["wkt_parser"] = @wkt_parser._properties
+        coder_["wkb_parser"] = @wkb_parser._properties
         if @proj4
           str_ = @proj4.original_str || @proj4.canonical_str
-          coder_['proj4'] = @proj4.radians? ? {'proj4' => str_, 'radians' => true} : str_
+          coder_["proj4"] = @proj4.radians? ? { "proj4" => str_, "radians" => true } : str_
         end
-        coder_['coord_sys'] = @coord_sys.to_wkt if @coord_sys
+        coder_["coord_sys"] = @coord_sys.to_wkt if @coord_sys
       end
 
-      def init_with(coder_)  # :nodoc:
-        if (proj4_data_ = coder_['proj4'])
+      def init_with(coder_) # :nodoc:
+        if (proj4_data_ = coder_["proj4"])
           if proj4_data_.is_a?(::Hash)
-            proj4_ = CoordSys::Proj4.create(proj4_data_['proj4'], :radians => proj4_data_['radians'])
+            proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
           else
             proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
           end
         else
           proj4_ = nil
         end
-        if (coord_sys_data_ = coder_['cs'])
+        if (coord_sys_data_ = coder_["cs"])
           coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
         else
           coord_sys_ = nil
         end
         initialize(
-          :has_z_coordinate => coder_['has_z_coordinate'],
-          :has_m_coordinate => coder_['has_m_coordinate'],
-          :srid => coder_['srid'],
-          :wkt_generator => ImplHelper::Utils.symbolize_hash(coder_['wkt_generator']),
-          :wkb_generator => ImplHelper::Utils.symbolize_hash(coder_['wkb_generator']),
-          :wkt_parser => ImplHelper::Utils.symbolize_hash(coder_['wkt_parser']),
-          :wkb_parser => ImplHelper::Utils.symbolize_hash(coder_['wkb_parser']),
-          :uses_lenient_assertions => coder_['lenient_assertions'],
-          :buffer_resolution => coder_['buffer_resolution'],
-          :proj4 => proj4_,
-          :coord_sys => coord_sys_
+          has_z_coordinate: coder_["has_z_coordinate"],
+          has_m_coordinate: coder_["has_m_coordinate"],
+          srid: coder_["srid"],
+          wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
+          wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
+          wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
+          wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
+          uses_lenient_assertions: coder_["lenient_assertions"],
+          buffer_resolution: coder_["buffer_resolution"],
+          proj4: proj4_,
+          coord_sys: coord_sys_
         )
       end
 
-
       # Returns the SRID.
 
-      def srid
-        @srid
-      end
-
+      attr_reader :srid
 
       # See ::RGeo::Feature::Factory#property
 
@@ -217,11 +208,8 @@ module RGeo
           @buffer_resolution
         when :is_cartesian
           true
-        else
-          nil
         end
       end
-
 
       # See ::RGeo::Feature::Factory#parse_wkt
 
@@ -229,140 +217,131 @@ module RGeo
         @wkt_parser.parse(str_)
       end
 
-
       # See ::RGeo::Feature::Factory#parse_wkb
 
       def parse_wkb(str_)
         @wkb_parser.parse(str_)
       end
 
-
       # See ::RGeo::Feature::Factory#point
 
       def point(x_, y_, *extra_)
-        PointImpl.new(self, x_, y_, *extra_) rescue nil
+        PointImpl.new(self, x_, y_, *extra_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#line_string
 
       def line_string(points_)
-        LineStringImpl.new(self, points_) rescue nil
+        LineStringImpl.new(self, points_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#line
 
       def line(start_, end_)
-        LineImpl.new(self, start_, end_) rescue nil
+        LineImpl.new(self, start_, end_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
-        LinearRingImpl.new(self, points_) rescue nil
+        LinearRingImpl.new(self, points_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#polygon
 
-      def polygon(outer_ring_, inner_rings_=nil)
-        PolygonImpl.new(self, outer_ring_, inner_rings_) rescue nil
+      def polygon(outer_ring_, inner_rings_ = nil)
+        PolygonImpl.new(self, outer_ring_, inner_rings_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#collection
 
       def collection(elems_)
-        GeometryCollectionImpl.new(self, elems_) rescue nil
+        GeometryCollectionImpl.new(self, elems_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
-        MultiPointImpl.new(self, elems_) rescue nil
+        MultiPointImpl.new(self, elems_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
-        MultiLineStringImpl.new(self, elems_) rescue nil
+        MultiLineStringImpl.new(self, elems_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
-        MultiPolygonImpl.new(self, elems_) rescue nil
+        MultiPolygonImpl.new(self, elems_)
+      rescue
+        nil
       end
-
 
       # See ::RGeo::Feature::Factory#proj4
 
-      def proj4
-        @proj4
-      end
-
+      attr_reader :proj4
 
       # See ::RGeo::Feature::Factory#coord_sys
 
-      def coord_sys
-        @coord_sys
-      end
-
+      attr_reader :coord_sys
 
       def _generate_wkt(obj_)  # :nodoc:
         @wkt_generator.generate(obj_)
       end
 
-
       def _generate_wkb(obj_)  # :nodoc:
         @wkb_generator.generate(obj_)
       end
 
-
-      def _marshal_wkb_generator  # :nodoc:
+      def _marshal_wkb_generator # :nodoc:
         unless defined?(@marshal_wkb_generator)
           @marshal_wkb_generator = ::RGeo::WKRep::WKBGenerator.new(
-            :type_format => :wkb12)
+            type_format: :wkb12)
         end
         @marshal_wkb_generator
       end
 
-
-      def _marshal_wkb_parser  # :nodoc:
+      def _marshal_wkb_parser # :nodoc:
         unless defined?(@marshal_wkb_parser)
           @marshal_wkb_parser = ::RGeo::WKRep::WKBParser.new(self,
-            :support_wkb12 => true)
+            support_wkb12: true)
         end
         @marshal_wkb_parser
       end
 
-
-      def _psych_wkt_generator  # :nodoc:
+      def _psych_wkt_generator # :nodoc:
         unless defined?(@psych_wkt_generator)
           @psych_wkt_generator = ::RGeo::WKRep::WKTGenerator.new(
-            :tag_format => :wkt12)
+            tag_format: :wkt12)
         end
         @psych_wkt_generator
       end
 
-
-      def _psych_wkt_parser  # :nodoc:
+      def _psych_wkt_parser # :nodoc:
         unless defined?(@psych_wkt_parser)
           @psych_wkt_parser = ::RGeo::WKRep::WKTParser.new(self,
-            :support_wkt12 => true, :support_ewkt => true)
+            support_wkt12: true, support_ewkt: true)
         end
         @psych_wkt_parser
       end
-
-
     end
-
-
   end
-
 end

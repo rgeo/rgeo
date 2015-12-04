@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # A FactoryGenerator is a callable object (usually a Proc) that
     # takes a configuration as a hash and returns a factory. These are
     # often used, e.g., by parsers to determine what factory the parsed
@@ -34,8 +31,6 @@ module RGeo
     # factory generator.
 
     module FactoryGenerator
-
-
       # Generate a factory given a configuration as a hash.
       #
       # If the generator does not recognize or does not support a given
@@ -77,32 +72,25 @@ module RGeo
       # [<tt>:has_m_coordinate</tt>]
       #   Support M coordinates. Default is usually false.
 
-      def call(config_={})
+      def call(_config_ = {})
         nil
       end
-
 
       # Return a new FactoryGenerator that always returns the given
       # factory.
 
       def self.single(factory_)
-        ::Proc.new{ |c_| factory_ }
+        ::Proc.new { |_c_| factory_ }
       end
-
 
       # Return a new FactoryGenerator that calls the given delegate, but
       # modifies the configuration passed to it. You can provide defaults
       # for configuration values not explicitly specified, and you can
       # force certain values to override the given configuration.
 
-      def self.decorate(delegate_, default_config_={}, force_config_={})
-        ::Proc.new{ |c_| delegate_.call(default_config_.merge(c_).merge(force_config_)) }
+      def self.decorate(delegate_, default_config_ = {}, force_config_ = {})
+        ::Proc.new { |c_| delegate_.call(default_config_.merge(c_).merge(force_config_)) }
       end
-
-
     end
-
-
   end
-
 end

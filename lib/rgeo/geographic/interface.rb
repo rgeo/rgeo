@@ -5,12 +5,8 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Geographic
-
     class << self
-
-
       # Creates and returns a geographic factory that does not include a
       # a projection, and which performs calculations assuming a
       # spherical earth. In other words, geodesics are treated as great
@@ -116,7 +112,7 @@ module RGeo
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
 
-      def spherical_factory(opts_={})
+      def spherical_factory(opts_ = {})
         proj4_ = opts_[:proj4]
         coord_sys_ = opts_[:coord_sys]
         srid_ = opts_[:srid]
@@ -128,20 +124,19 @@ module RGeo
           end
         end
         srid_ ||= coord_sys_.authority_code if coord_sys_
-        Geographic::Factory.new('Spherical',
-          :has_z_coordinate => opts_[:has_z_coordinate],
-          :has_m_coordinate => opts_[:has_m_coordinate],
-          :proj4 => proj4_ || _proj4_4055,
-          :coord_sys => coord_sys_ || _coordsys_4055,
-          :uses_lenient_assertions => opts_[:uses_lenient_assertions],
-          :buffer_resolution => opts_[:buffer_resolution],
-          :wkt_parser => opts_[:wkt_parser],
-          :wkb_parser => opts_[:wkb_parser],
-          :wkt_generator => opts_[:wkt_generator],
-          :wkb_generator => opts_[:wkb_generator],
-          :srid => (srid_ || 4055).to_i)
+        Geographic::Factory.new("Spherical",
+          has_z_coordinate: opts_[:has_z_coordinate],
+          has_m_coordinate: opts_[:has_m_coordinate],
+          proj4: proj4_ || _proj4_4055,
+          coord_sys: coord_sys_ || _coordsys_4055,
+          uses_lenient_assertions: opts_[:uses_lenient_assertions],
+          buffer_resolution: opts_[:buffer_resolution],
+          wkt_parser: opts_[:wkt_parser],
+          wkb_parser: opts_[:wkb_parser],
+          wkt_generator: opts_[:wkt_generator],
+          wkb_generator: opts_[:wkb_generator],
+          srid: (srid_ || 4055).to_i)
       end
-
 
       # Creates and returns a geographic factory that is designed for
       # visualization applications that use Google or Bing maps, or any
@@ -215,27 +210,26 @@ module RGeo
       # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
 
-      def simple_mercator_factory(opts_={})
-        factory_ = Geographic::Factory.new('Projected',
-          :proj4 => _proj4_4326,
-          :coord_sys => _coordsys_4326,
-          :srid => 4326,
-          :wkt_parser => opts_[:wkt_parser],
-          :wkb_parser => opts_[:wkb_parser],
-          :wkt_generator => opts_[:wkt_generator],
-          :wkb_generator => opts_[:wkb_generator],
-          :has_z_coordinate => opts_[:has_z_coordinate],
-          :has_m_coordinate => opts_[:has_m_coordinate])
+      def simple_mercator_factory(opts_ = {})
+        factory_ = Geographic::Factory.new("Projected",
+          proj4: _proj4_4326,
+          coord_sys: _coordsys_4326,
+          srid: 4326,
+          wkt_parser: opts_[:wkt_parser],
+          wkb_parser: opts_[:wkb_parser],
+          wkt_generator: opts_[:wkt_generator],
+          wkb_generator: opts_[:wkb_generator],
+          has_z_coordinate: opts_[:has_z_coordinate],
+          has_m_coordinate: opts_[:has_m_coordinate])
         projector_ = Geographic::SimpleMercatorProjector.new(factory_,
-          :buffer_resolution => opts_[:buffer_resolution],
-          :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
-          :uses_lenient_assertions => opts_[:uses_lenient_assertions],
-          :has_z_coordinate => opts_[:has_z_coordinate],
-          :has_m_coordinate => opts_[:has_m_coordinate])
+          buffer_resolution: opts_[:buffer_resolution],
+          lenient_multi_polygon_assertions: opts_[:lenient_multi_polygon_assertions],
+          uses_lenient_assertions: opts_[:uses_lenient_assertions],
+          has_z_coordinate: opts_[:has_z_coordinate],
+          has_m_coordinate: opts_[:has_m_coordinate])
         factory_._set_projector(projector_)
         factory_
       end
-
 
       # Creates and returns a geographic factory that includes a
       # projection specified by a Proj4 coordinate system. Like all
@@ -349,7 +343,7 @@ module RGeo
       # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
 
-      def projected_factory(opts_={})
+      def projected_factory(opts_ = {})
         unless CoordSys::Proj4.supported?
           raise Error::UnsupportedOperation, "Proj4 is not supported because the proj4 library was not found at install time."
         end
@@ -358,10 +352,10 @@ module RGeo
           # Get the projection coordinate systems from the given factory
           projection_proj4_ = projection_factory_.proj4
           unless projection_proj4_
-            raise ::ArgumentError, 'The :projection_factory does not have a proj4.'
+            raise ::ArgumentError, "The :projection_factory does not have a proj4."
           end
           projection_coord_sys_ = projection_factory_.coord_sys
-          if projection_coord_sys_ && !projection_coord_sys_.kind_of?(CoordSys::CS::ProjectedCoordinateSystem)
+          if projection_coord_sys_ && !projection_coord_sys_.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
             raise ::ArgumentError, 'The :projection_factory\'s coord_sys is not a ProjectedCoordinateSystem.'
           end
           # Determine geographic coordinate system. First check parameters.
@@ -382,14 +376,14 @@ module RGeo
           srid_ ||= coord_sys_.authority_code if coord_sys_
           srid_ ||= 4326
           # Now we should have all the coordinate system info.
-          factory_ = Geographic::Factory.new('Projected',
-            :proj4 => proj4_,
-            :coord_sys => coord_sys_,
-            :srid => srid_.to_i,
-            :has_z_coordinate => projection_factory_.property(:has_z_coordinate),
-            :has_m_coordinate => projection_factory_.property(:has_m_coordinate),
-            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
-            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
+          factory_ = Geographic::Factory.new("Projected",
+            proj4: proj4_,
+            coord_sys: coord_sys_,
+            srid: srid_.to_i,
+            has_z_coordinate: projection_factory_.property(:has_z_coordinate),
+            has_m_coordinate: projection_factory_.property(:has_m_coordinate),
+            wkt_parser: opts_[:wkt_parser], wkt_generator: opts_[:wkt_generator],
+            wkb_parser: opts_[:wkb_parser], wkb_generator: opts_[:wkb_generator])
           projector_ = Geographic::Proj4Projector.create_from_existing_factory(factory_,
             projection_factory_)
         else
@@ -407,18 +401,18 @@ module RGeo
           end
           # A projection proj4 is absolutely required.
           unless projection_proj4_
-            raise ::ArgumentError, 'Unable to determine the Proj4 for the projected coordinate system.'
+            raise ::ArgumentError, "Unable to determine the Proj4 for the projected coordinate system."
           end
           # Check the projection coordinate systems, and parse if needed.
-          if projection_proj4_.kind_of?(::String) || projection_proj4_.kind_of?(::Hash)
+          if projection_proj4_.is_a?(::String) || projection_proj4_.is_a?(::Hash)
             actual_projection_proj4_ = CoordSys::Proj4.create(projection_proj4_)
             unless actual_projection_proj4_
               raise ::ArgumentError, "Bad proj4 syntax: #{projection_proj4_.inspect}"
             end
             projection_proj4_ = actual_projection_proj4_
           end
-          if projection_coord_sys_ && !projection_coord_sys_.kind_of?(CoordSys::CS::ProjectedCoordinateSystem)
-            raise ::ArgumentError, 'The :projection_coord_sys is not a ProjectedCoordinateSystem.'
+          if projection_coord_sys_ && !projection_coord_sys_.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
+            raise ::ArgumentError, "The :projection_coord_sys is not a ProjectedCoordinateSystem."
           end
           projection_srid_ ||= projection_coord_sys_.authority_code if projection_coord_sys_
           # Determine geographic coordinate system. First check parameters.
@@ -439,65 +433,57 @@ module RGeo
           srid_ ||= coord_sys_.authority_code if coord_sys_
           srid_ ||= 4326
           # Now we should have all the coordinate system info.
-          factory_ = Geographic::Factory.new('Projected',
-            :proj4 => proj4_,
-            :coord_sys => coord_sys_,
-            :srid => srid_.to_i,
-            :has_z_coordinate => opts_[:has_z_coordinate],
-            :has_m_coordinate => opts_[:has_m_coordinate],
-            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
-            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
+          factory_ = Geographic::Factory.new("Projected",
+            proj4: proj4_,
+            coord_sys: coord_sys_,
+            srid: srid_.to_i,
+            has_z_coordinate: opts_[:has_z_coordinate],
+            has_m_coordinate: opts_[:has_m_coordinate],
+            wkt_parser: opts_[:wkt_parser], wkt_generator: opts_[:wkt_generator],
+            wkb_parser: opts_[:wkb_parser], wkb_generator: opts_[:wkb_generator])
           projector_ = Geographic::Proj4Projector.create_from_proj4(factory_,
             projection_proj4_,
-            :srid => projection_srid_,
-            :coord_sys => projection_coord_sys_,
-            :buffer_resolution => opts_[:buffer_resolution],
-            :lenient_multi_polygon_assertions => opts_[:lenient_multi_polygon_assertions],
-            :uses_lenient_assertions => opts_[:uses_lenient_assertions],
-            :has_z_coordinate => opts_[:has_z_coordinate],
-            :has_m_coordinate => opts_[:has_m_coordinate],
-            :wkt_parser => opts_[:wkt_parser], :wkt_generator => opts_[:wkt_generator],
-            :wkb_parser => opts_[:wkb_parser], :wkb_generator => opts_[:wkb_generator])
+            srid: projection_srid_,
+            coord_sys: projection_coord_sys_,
+            buffer_resolution: opts_[:buffer_resolution],
+            lenient_multi_polygon_assertions: opts_[:lenient_multi_polygon_assertions],
+            uses_lenient_assertions: opts_[:uses_lenient_assertions],
+            has_z_coordinate: opts_[:has_z_coordinate],
+            has_m_coordinate: opts_[:has_m_coordinate],
+            wkt_parser: opts_[:wkt_parser], wkt_generator: opts_[:wkt_generator],
+            wkb_parser: opts_[:wkb_parser], wkb_generator: opts_[:wkb_generator])
         end
         factory_._set_projector(projector_)
         factory_
       end
 
-
-      def _proj4_4055  # :nodoc:
+      def _proj4_4055 # :nodoc:
         unless defined?(@proj4_4055)
-          @proj4_4055 = CoordSys::Proj4.create('+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs')
+          @proj4_4055 = CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
         end
         @proj4_4055
       end
 
-
-      def _coordsys_4055  # :nodoc:
+      def _coordsys_4055 # :nodoc:
         unless defined?(@coordsys_4055)
           @coordsys_4055 = CoordSys::CS.create_from_wkt('GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]]')
         end
         @coordsys_4055
       end
 
-
-      def _proj4_4326  # :nodoc:
+      def _proj4_4326 # :nodoc:
         unless defined?(@proj4_4326)
-          @proj4_4326 = CoordSys::Proj4.create('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+          @proj4_4326 = CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
         end
         @proj4_4326
       end
 
-
-      def _coordsys_4326  # :nodoc:
+      def _coordsys_4326 # :nodoc:
         unless defined?(@coordsys_4326)
           @coordsys_4326 = CoordSys::CS.create_from_wkt('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
         end
         @coordsys_4326
       end
-
-
     end
-
   end
-
 end

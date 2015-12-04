@@ -5,10 +5,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-
   module Feature
-
-
     # == SFS 1.1 Description
     #
     # A MultiCurve is a 1-dimensional GeometryCollection whose elements are
@@ -40,10 +37,8 @@ module RGeo
     # class method (or === operator) defined in the Type module.
 
     module MultiCurve
-
       include GeometryCollection
       extend Type
-
 
       # === SFS 1.1 Description
       #
@@ -58,7 +53,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method MultiCurve#length not defined."
       end
 
-
       # === SFS 1.1 Description
       #
       # Returns true if this MultiCurve is closed [StartPoint() = EndPoint()
@@ -72,11 +66,6 @@ module RGeo
       def is_closed?
         raise Error::UnsupportedOperation, "Method MultiCurve#is_closed? not defined."
       end
-
-
     end
-
-
   end
-
 end
