@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 1.9.3"
   spec.platform = Gem::Platform::RUBY
 
-  spec.files = Dir["lib/**/*", "ext/**/*", "LICENSE.txt"]
-  spec.test_files = Dir["test/**/*"]
+  spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c.h}", "LICENSE.txt"]
+  spec.test_files = Dir["test/**/*.rb"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
   spec.add_development_dependency "rake", "~> 10.4"
