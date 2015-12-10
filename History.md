@@ -1,7 +1,17 @@
+### 0.5.0 / 2015-12-10
+
+* Add #buffer_with_style (ynelin) #108
+* Prioritize lib and header directories of ruby managers (eddietejeda) #115
+* Coordinates support (2d/3d/4d) (tneems) #119
+* Remove RGeo::CoordSys::SRSDatabase::ActiveRecorTable
+* Support JRuby 1.7, 1.9 (nextdayflight, deivid-rodriguez) #120
+* Apply Rubocop style changes (deivid-rodriguez) #124
+
+
 ### 0.4.0 / 2015-08-27
 
 *   Drop support for ruby 1.8.7, require ruby 1.9.3+
-*   Add support for GEOS CAPI simplify (quidquid) #95 
+*   Add support for GEOS CAPI simplify (quidquid) #95
 *   Antimerdian x coordinates (longitude: +180) are no longer sign flipped (longitude:-180) (ajturner) #89
 *   Fix Marshal and Psych support for native geos factories (cjab) #84
 *   Fix random_point to return point inside rectangle (glampr) #89
