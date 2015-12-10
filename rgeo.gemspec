@@ -12,20 +12,15 @@ Gem::Specification.new do |spec|
     "location-based applications using Ruby-based frameworks such as Ruby On Rails."
 
   spec.version = RGeo::VERSION
-  spec.author = "Daniel Azuma"
-  spec.email = "dazuma@gmail.com"
-  spec.homepage = "http://github.com/rgeo/rgeo"
+  spec.author = "Daniel Azuma, Tee Parham"
+  spec.email = "dazuma@gmail.com, parhameter@gmail.com"
+  spec.homepage = "https://github.com/rgeo/rgeo"
   spec.required_ruby_version = ">= 1.9.3"
-
-  spec.files = Dir.glob("lib/**/*.rb") +
-    Dir.glob("ext/**/*.{rb,c,h}") +
-    Dir.glob("test/**/*.rb") +
-    Dir.glob("*.rdoc")
-
-  spec.extra_rdoc_files = Dir.glob("*.rdoc")
-  spec.test_files = Dir.glob("test/**/tc_*.rb")
   spec.platform = Gem::Platform::RUBY
-  spec.extensions = Dir.glob("ext/*/extconf.rb")
+
+  spec.files = Dir["lib/**/*", "ext/**/*", "LICENSE.txt"]
+  spec.test_files = Dir["test/**/*"]
+  spec.extensions = Dir["ext/*/extconf.rb"]
 
   spec.add_development_dependency "rake", "~> 10.4"
   spec.add_development_dependency "rdoc", "~> 4.2"
