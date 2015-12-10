@@ -1,3 +1,8 @@
+### 0.5.2 / 2015-12-10
+
+* Include .c and .h files in gem (fix typo in gemspec)
+
+
 ### 0.5.1 / 2015-12-10
 
 * Exclude generated files from packaged gem
