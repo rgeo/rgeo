@@ -12,7 +12,9 @@ if ::RUBY_DESCRIPTION =~ /^jruby\s/
 else
   require "mkmf"
 
-  if geosconfig = (with_config("geos-config") || find_executable("geos-config"))
+  geosconfig = with_config("geos-config") || find_executable("geos-config")
+
+  if geosconfig
     puts "Using GEOS compile configuration from %s" [geosconfig]
     $INCFLAGS << " " << `#{geosconfig} --cflags`.strip
     geos_libs = `#{geosconfig} --clibs`.tr("\n", " ")
