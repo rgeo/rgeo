@@ -1,3 +1,7 @@
+### 0.5.1 / 2015-12-10
+
+* Exclude generated files from packaged gem
+
 ### 0.5.0 / 2015-12-10
 
 * Add #buffer_with_style (ynelin) #108
