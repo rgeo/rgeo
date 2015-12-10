@@ -129,7 +129,7 @@ module RGeo
                 cur_text_ = nil
               else
                 cur_text_ << line_
-                              end
+              end
             end
           end
           nil
