@@ -3,11 +3,12 @@
 # Makefile builder for GEOS wrapper
 #
 # -----------------------------------------------------------------------------
+def create_dummy_makefile
+  ::File.open("Makefile", "w") { |f_| f_.write(".PHONY: install\ninstall:\n") }
+end
 
 if ::RUBY_DESCRIPTION =~ /^jruby\s/
-
-  ::File.open("Makefile", "w") { |f_| f_.write(".PHONY: install\ninstall:\n") }
-
+  create_dummy_makefile
 else
   require "mkmf"
 
@@ -28,11 +29,13 @@ else
     have_func("rb_memhash", "ruby.h")
   end
 
-  unless found_geos_
+  if found_geos_
+    create_makefile("rgeo/geos/geos_c_impl")
+  else
     puts "**** WARNING: Unable to find GEOS headers or libraries."
     puts "**** Ensure that 'geos-config' is in your PATH or provide that full path via --with-geos-config"
     puts "**** Compiling without GEOS support."
-  end
 
-  create_makefile("rgeo/geos/geos_c_impl")
+    create_dummy_makefile
+  end
 end
