@@ -85,22 +85,9 @@ Install RGeo as a gem:
 
     gem install rgeo
 
-Note: By default, the gem installation looks for the GEOS library in the
-following locations: `/usr/local`, `/usr/local/geos`, `/opt/local`,
-`/opt/geos`, `/opt`, `/usr`, and `/Library/Frameworks/GEOS.framework/unix`. In
-other words, MacPorts, Homebrew, the Kyngchaos port, and building from source
-to /usr/local are supported out of the box.
-
-If GEOS has been installed in a different location, you must provide its
-installation prefix directory using the "--with-geos-dir" option. This option
-must be preceded by "`--`" to separate it, as a build switch, from the
-switches interpreted by the gem command. For example:
-
-    gem install rgeo -- --with-geos-dir=/path/to/my/geos/installation
-
-Similarly, the gem installation looks for the Proj4 library in the following
-locations by default: `/usr/local`, `/usr/local/proj`, `/usr/local/proj4`,
-`/opt/local`, `/opt/proj`, `/opt/proj4`, `/opt`, `/usr`, and
+Note: By default, the gem installation looks for the Proj4 library in the
+following locations by default: `/usr/local`, `/usr/local/proj`,
+`/usr/local/proj4`, `/opt/local`, `/opt/proj`, `/opt/proj4`, `/opt`, `/usr`, and
 `/Library/Frameworks/PROJ.framework/unix`.
 
 If Proj4 is installed in a different location, you must provide its
