@@ -1,6 +1,8 @@
 ### 0.5.1 / 2015-12-10
 
 * Exclude generated files from packaged gem
+* Fix compile without Geos (deivid-rodriguez) #125
+
 
 ### 0.5.0 / 2015-12-10
 
