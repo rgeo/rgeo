@@ -35,12 +35,9 @@ Several optional modules are currently available:
 *   Extend ActiveRecord to handle spatial data in MySQL Spatial, SpatiaLite,
     and PostGIS using RGeo's spatial ActiveRecord adapters. These are
     available via the gems:
+    *   **activerecord-postgis-adapter**
     *   **activerecord-mysql2spatial-adapter**
     *   **activerecord-spatialite-adapter**
-    *   **activerecord-postgis-adapter**
-
-*   and more to come...
-
 
 Need help? Join the rgeo-users google group at:
 http://groups.google.com/group/rgeo-users
@@ -72,18 +69,13 @@ Some features also require the following:
     later recommended.) JRuby requires this gem to link properly with Geos,
     and Windows builds probably do as well.
 
-
-Note: The build system assumes a unix-like environment. Windows builds may be
-possible, but not likely "out of the box". I have heard that some Windows
-users have had success getting the ffi-geos implementation working, after
-suitably installing the Geos library. However, since I'm not a Windows user
-myself, I can't provide any direct support for this configuration.
-
 ### Installation
 
-Install RGeo as a gem:
+Install the RGeo gem:
 
-    gem install rgeo
+```sh
+gem install rgeo
+```
 
 Note: By default, the gem installation looks for the Proj4 library in the
 following locations by default: `/usr/local`, `/usr/local/proj`,
@@ -93,46 +85,26 @@ following locations by default: `/usr/local`, `/usr/local/proj`,
 If Proj4 is installed in a different location, you must provide its
 installation prefix directory using the "--with-proj-dir" option.
 
-### To-do list
-
-The RGeo suite of tools is evolving rapidly. The current to-do list for the
-core library includes:
-
-*   Better error handling and reporting.
-*   JRuby support for Proj4.
-*   GDAL integration including coordinate system interpretation.
-*   Ellipsoidal geography implementation, possibly utilizing geographiclib.
-*   Windows build support.
-
-
-Each of the current add-on modules also has its own feature roadmap, and we
-are planning on introducing more add-on modules, including:
-
-*   Raster support via GDAL.
-*   GeoRSS and KML format support.
-*   Custom spatial indexes.
-*   Possible additional ActiveRecord adapters (esp. JDBC-based adapters).
-*   Integration with third-party APIs.
-
-
 ### Development and support
 
 RDoc Documentation is available at http://rdoc.info/gems/rgeo
 
-Source code is hosted on Github at http://github.com/rgeo/rgeo
+Source code is hosted on Github at https://github.com/rgeo/rgeo
 
 Contributions are welcome. Fork the project on Github.
 
-Report bugs on Github issues at http://github.com/rgeo/rgeo/issues
+Report bugs on Github issues at https://github.com/rgeo/rgeo/issues
 
 Support available on the rgeo-users google group at
 http://groups.google.com/group/rgeo-users
 
 ### Acknowledgments
 
-RGeo is written by Daniel Azuma (http://www.daniel-azuma.com).
+RGeo was created by [Daniel Azuma](http://www.daniel-azuma.com).
+[Tee Parham](https://github.com/teeparham) is the current maintainer.
 
-Development is supported by Pirq (http://www.pirq.com).
+Thanks to [Pirq](http://www.pirq.com) and [Neighborland](https://neighborland.com) 
+for development support.
 
 Continuous integration service provided by Travis-CI (http://travis-ci.org).
 
@@ -142,10 +114,10 @@ These libraries are maintained by the Open Source Geospatial Foundation; more
 information is available on OSGeo's web site (http://www.osgeo.org).
 
 JRuby support is made possible by the ffi-geos (and upcoming ffi-proj4) gems,
-by J Smith (http://github.com/dark-panda).
+by J Smith (https://github.com/dark-panda).
 
 ### License
 
-Copyright 2012 Daniel Azuma
+Copyright (c) Daniel Azuma, Tee Parham
 
 https://github.com/rgeo/rgeo/blob/master/LICENSE.txt
