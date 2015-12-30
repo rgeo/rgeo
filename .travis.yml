@@ -14,3 +14,6 @@ rvm:
   - jruby-1.7
   - jruby-9.0.4.0
   - rbx-2
+matrix:
+  allow_failures:
+    rvm: rbx-2
