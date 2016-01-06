@@ -301,8 +301,13 @@ module RGeo
       alias_method :[], :geometry_n
 
       def each
-        num_geometries.times do |i_|
-          yield geometry_n(i_)
+        if block_given?
+          num_geometries.times do |i_|
+            yield geometry_n(i_)
+          end
+          self
+        else
+          enum_for
         end
       end
 
