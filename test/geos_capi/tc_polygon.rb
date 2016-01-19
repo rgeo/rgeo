@@ -4,10 +4,10 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test/unit"
-require "rgeo"
+require 'test/unit'
+require 'rgeo'
 
-require ::File.expand_path("../common/polygon_tests.rb", ::File.dirname(__FILE__))
+require ::File.expand_path('../common/polygon_tests.rb', ::File.dirname(__FILE__))
 
 module RGeo
   module Tests # :nodoc:
@@ -114,6 +114,39 @@ module RGeo
                                                                  0.0)
 
           assert_equal polygon, buffered_line_string
+        end
+
+        def test_is_valid_polygon
+          polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
+          points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+          outer_ring = @factory.linear_ring(points_arr)
+          polygon = @factory.polygon(outer_ring)
+          
+          assert_equal(polygon.valid?, true)
+                               
+          polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+          points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+          outer_ring = @factory.linear_ring(points_arr)
+          polygon = @factory.polygon(outer_ring)
+          
+          assert_equal(polygon.valid?, false)
+        end
+
+        def test_invalid_reason
+          polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+          points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+          outer_ring = @factory.linear_ring(points_arr)
+          polygon = @factory.polygon(outer_ring)
+
+          assert_equal(polygon.invalid_reason, "Self-intersection[0 0 0]")  
+        end
+
+        def test_invalid_reason_with_valid_polygon
+          polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
+          points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+          outer_ring = @factory.linear_ring(points_arr)
+          polygon = @factory.polygon(outer_ring)
+          polygon.invalid_reason
         end
       end
     end

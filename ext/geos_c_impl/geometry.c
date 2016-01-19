@@ -988,6 +988,50 @@ static VALUE method_geometry_steal(VALUE self, VALUE orig)
   return self;
 }
 
+static VALUE method_geometry_is_valid(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  char val;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    val = GEOSisValid_r(self_data->geos_context, self_geom);
+    if (val == 0) {
+      result = Qfalse;
+    }
+    else if (val == 1) {
+      result = Qtrue;
+    }
+  }
+  return result;
+}
+
+static VALUE method_geometry_invalid_reason(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  char* str;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    str = GEOSisValidReason_r(self_data->geos_context, self_geom);
+    if (str) {
+      result = rb_str_new2(str);
+    }
+    else {
+      result = rb_str_new2("Exception");
+    }
+  }
+  return result;
+}
+
 
 /**** INITIALIZATION FUNCTION ****/
 
@@ -1039,6 +1083,8 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_methods, "difference", method_geometry_difference, 1);
   rb_define_method(geos_geometry_methods, "-", method_geometry_difference, 1);
   rb_define_method(geos_geometry_methods, "sym_difference", method_geometry_sym_difference, 1);
+  rb_define_method(geos_geometry_methods, "valid?", method_geometry_is_valid, 0);
+  rb_define_method(geos_geometry_methods, "invalid_reason", method_geometry_invalid_reason, 0);
 }
 
 
