@@ -1,3 +1,4 @@
+require "rake/testtask"
 require "rake/extensiontask"
 # Load config if present
 
@@ -73,19 +74,12 @@ task build_other: [:build]
 
 # Unit test task
 
-task test: [:compile] do
-  $LOAD_PATH.unshift(::File.expand_path("lib", ::File.dirname(__FILE__)))
-  if ::ENV["TESTCASE"]
-    test_files_ = ::Dir.glob("test/#{::ENV['TESTCASE']}.rb")
-  else
-    test_files_ = ::Dir.glob("test/**/tc_*.rb")
-  end
-  $VERBOSE = true
-  test_files_.each do |path_|
-    load path_
-    puts "Loaded testcase #{path_}"
-  end
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
 end
 
-# Default task
+task test: :compile
+
 task default: [:clean, :test]
