@@ -3,23 +3,23 @@ require "rake/extensiontask"
 require "rdoc/task"
 # Load config if present
 
-config_path_ = ::File.expand_path("rakefile_config.rb", ::File.dirname(__FILE__))
-load(config_path_) if ::File.exist?(config_path_)
+config_path = ::File.expand_path("rakefile_config.rb", ::File.dirname(__FILE__))
+load(config_path) if ::File.exist?(config_path)
 RAKEFILE_CONFIG = {} unless defined?(::RAKEFILE_CONFIG)
 
 # Gemspec
 
-gemspec_ = eval(::File.read(::Dir.glob("*.gemspec").first))
-release_gemspec_ = eval(::File.read(::Dir.glob("*.gemspec").first))
-release_gemspec_.version = gemspec_.version.to_s.sub(/\.nonrelease$/, "")
+gemspec = eval(::File.read(::Dir.glob("*.gemspec").first))
+release_gemspec = eval(::File.read(::Dir.glob("*.gemspec").first))
+release_gemspec.version = gemspec.version.to_s.sub(/\.nonrelease$/, "")
 
 require "bundler/gem_tasks"
 
 # Directories
 
-doc_directory_ = ::RAKEFILE_CONFIG[:doc_directory] || "doc"
-pkg_directory_ = ::RAKEFILE_CONFIG[:pkg_directory] || "pkg"
-tmp_directory_ = ::RAKEFILE_CONFIG[:tmp_directory] || "tmp"
+doc_directory = ::RAKEFILE_CONFIG[:doc_directory] || "doc"
+pkg_directory = ::RAKEFILE_CONFIG[:pkg_directory] || "pkg"
+tmp_directory = ::RAKEFILE_CONFIG[:tmp_directory] || "tmp"
 
 # Build tasks
 
@@ -37,14 +37,15 @@ end
 
 # Clean task
 
-clean_files_ = [doc_directory_, pkg_directory_, tmp_directory_] +
+clean_files = [doc_directory, pkg_directory, tmp_directory] +
   ::Dir.glob("ext/**/Makefile*") +
   ::Dir.glob("ext/**/*.{o,class,log,dSYM}") +
   ::Dir.glob("**/*.{bundle,so,dll,rbc,jar}") +
   ::Dir.glob("**/.rbx") +
   (::RAKEFILE_CONFIG[:extra_clean_files] || [])
+
 task :clean do
-  clean_files_.each { |path_| rm_rf path_ }
+  clean_files.each { |path| rm_rf path }
 end
 #
 # RDoc tasks
@@ -53,7 +54,7 @@ end
 RDoc::Task.new do |rdoc|
   rdoc.rdoc_files.include("lib/**/*.rb")
   # rdoc.options << "--all"
-  rdoc.title = "#{::RAKEFILE_CONFIG[:product_visible_name] || gemspec_.name.capitalize} #{release_gemspec_.version} Documentation"
+  rdoc.title = "#{::RAKEFILE_CONFIG[:product_visible_name] || gemspec.name.capitalize} #{release_gemspec.version} Documentation"
   rdoc.rdoc_dir = "doc"
 end
 
