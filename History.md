@@ -1,3 +1,9 @@
+### 0.5.3 / 2016-2-17
+
+* Use rake-compiler to build extensions (tneems) #138
+* Add Geos validation methods (ynelin) #112
+
+
 ### 0.5.2 / 2015-12-10
 
 * Include .c and .h files in gem (fix typo in gemspec)
