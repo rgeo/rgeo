@@ -222,6 +222,39 @@ module RGeo
           polygon = @factory.polygon ring, [inner_ring]
           assert_equal(polygon.coordinates, coordinates)
         end
+
+        def test_ignores_consecutive_repeated_points
+          point1_ = @factory.point(0, 0)
+          point2_ = @factory.point(0, 0)
+          point3_ = @factory.point(0, 1)
+          point4_ = @factory.point(0, 1)
+          point5_ = @factory.point(0, 1)
+          point6_ = @factory.point(1, 0)
+          point7_ = @factory.point(1, 0)
+          point8_ = @factory.point(1, 0)
+          exterior_ = @factory.linear_ring([point1_, point2_, point3_, point4_, point5_, point6_, point7_, point8_])
+
+          poly1_ = @factory.polygon(exterior_)
+          assert(!poly1_.nil?)
+
+          line_string = poly1_.exterior_ring
+
+            case line_string.class.name
+            when "RGeo::Tests::GeosCAPI::TestPolygon"
+            when "RGeo::Geos::FFILinearRingImpl"
+            when "RGeo::Geos::CAPILinearRingImpl"
+            when "RGeo::Tests::GeosFFI::TestPolygon"
+              assert(line_string.points.count == 9)
+            else
+              assert(line_string.num_points == 4)
+            end
+
+          points = line_string.points
+          assert(points.first.x == points.last.x)
+          assert(points.first.y == points.last.y)
+          assert(points.first.z == points.last.z)
+        end
+
       end
     end
   end
