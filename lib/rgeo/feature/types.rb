@@ -246,11 +246,11 @@ module RGeo
             end
           elsif ntype_ == LinearRing
             if type_ == LineString
-              nfactory_.linear_ring(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
+              nfactory_.linear_ring(obj_.points.chunk{|x| x}.map(&:first).map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == LineString
             if type_ == Line || type_ == LinearRing
-              nfactory_.line_string(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
+              nfactory_.line_string(obj_.points.chunk{|x| x}.map(&:first).map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == MultiPoint
             if type_ == Point
