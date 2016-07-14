@@ -1,7 +1,7 @@
 require "./lib/rgeo/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "rgeo"
+  spec.name = "rgeo-dschee"
   spec.summary = "RGeo is a geospatial data library for Ruby."
 
   spec.description =
@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.version = RGeo::VERSION
   spec.author = "Daniel Azuma, Tee Parham"
   spec.email = "dazuma@gmail.com, parhameter@gmail.com"
-  spec.homepage = "https://github.com/rgeo/rgeo"
+  spec.homepage = "https://github.com/Dschee/rgeo"
   spec.required_ruby_version = ">= 1.9.3"
   spec.platform = Gem::Platform::RUBY
 
