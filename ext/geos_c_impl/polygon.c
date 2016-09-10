@@ -122,9 +122,6 @@ static VALUE method_polygon_coordinates(VALUE self)
   const GEOSGeometry* self_geom;
   GEOSContextHandle_t self_context;
 
-  GEOSGeometry* ring;
-  GEOSCoordSequence* coord_sequence;
-  unsigned int interior_ring_count;
   int zCoordinate;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);

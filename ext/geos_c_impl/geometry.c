@@ -728,7 +728,6 @@ static VALUE method_geometry_buffer(VALUE self, VALUE distance)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   VALUE factory;
-  int resolution;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -747,14 +746,13 @@ static VALUE method_geometry_buffer_with_style(VALUE self, VALUE distance, VALUE
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   VALUE factory;
-  int resolution;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
     factory = self_data->factory;
-    result = rgeo_wrap_geos_geometry(factory, 
+    result = rgeo_wrap_geos_geometry(factory,
                                      GEOSBufferWithStyle_r(self_data->geos_context, self_geom,
                                                            rb_num2dbl(distance),
                                                            RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution,

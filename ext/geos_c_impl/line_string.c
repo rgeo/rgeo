@@ -108,7 +108,6 @@ static void d(VALUE v) {
 static VALUE method_line_string_coordinates(VALUE self)
 {
   VALUE result;
-  VALUE point_tuple;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   const GEOSCoordSequence* coord_sequence;
@@ -204,9 +203,6 @@ static VALUE method_line_string_points(VALUE self)
   const GEOSCoordSequence* coord_seq;
   char has_z;
   unsigned int size;
-  double x;
-  double y;
-  double z;
   unsigned int i;
   VALUE point;
 
@@ -644,7 +640,7 @@ VALUE rgeo_is_geos_line_string_closed(GEOSContextHandle_t context, const GEOSGeo
 {
   VALUE result;
   unsigned int n;
-  double x1, x2, y1, y2, z1, z2;
+  double x1, x2, y1, y2;
   const GEOSCoordSequence* coord_seq;
 
   result = Qnil;
