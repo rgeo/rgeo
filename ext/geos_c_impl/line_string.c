@@ -98,17 +98,9 @@ static VALUE method_line_string_num_points(VALUE self)
 }
 
 
-static void d(VALUE v) {
-    ID sym_puts = rb_intern("puts");
-    ID sym_inspect = rb_intern("inspect");
-    rb_funcall(rb_mKernel, sym_puts, 1,
-        rb_funcall(v, sym_inspect, 0));
-}
-
 static VALUE method_line_string_coordinates(VALUE self)
 {
   VALUE result;
-  VALUE point_tuple;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   const GEOSCoordSequence* coord_sequence;
@@ -204,9 +196,6 @@ static VALUE method_line_string_points(VALUE self)
   const GEOSCoordSequence* coord_seq;
   char has_z;
   unsigned int size;
-  double x;
-  double y;
-  double z;
   unsigned int i;
   VALUE point;
 
@@ -644,7 +633,7 @@ VALUE rgeo_is_geos_line_string_closed(GEOSContextHandle_t context, const GEOSGeo
 {
   VALUE result;
   unsigned int n;
-  double x1, x2, y1, y2, z1, z2;
+  double x1, x2, y1, y2;
   const GEOSCoordSequence* coord_seq;
 
   result = Qnil;

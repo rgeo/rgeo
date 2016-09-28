@@ -337,7 +337,6 @@ static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
   const GEOSGeometry* geom;
   VALUE result;
   char* str;
-  size_t size;
   char has_3d;
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
   RGeo_Globals* globals;
