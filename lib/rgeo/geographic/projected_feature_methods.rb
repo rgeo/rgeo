@@ -151,28 +151,7 @@ module RGeo
 
     module ProjectedLineStringMethods # :nodoc:
       def _validate_geometry
-        size_ = @points.size
-        if size_ > 1
-          last_ = @points[0]
-          (1...size_).each do |i_|
-            p_ = @points[i_]
-            last_x_ = last_.x
-            p_x_ = p_.x
-            changed_ = true
-            if p_x_ < last_x_ - 180.0
-              p_x_ += 360.0 while p_x_ < last_x_ - 180.0
-            elsif p_x_ > last_x_ + 180.0
-              p_x_ -= 360.0 while p_x_ > last_x_ + 180.0
-            else
-              changed_ = false
-            end
-            if changed_
-              p_ = factory.point(p_x_, p_.y)
-              @points[i_] = p_
-            end
-            last_ = p_
-          end
-        end
+        @points = @points.map(&:canonical_point)
         super
       end
     end

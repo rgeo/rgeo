@@ -4,7 +4,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "rgeo"
+require "test_helper"
 
 module RGeo
   module Tests # :nodoc:
@@ -310,6 +310,14 @@ module RGeo
         def test_linestring_coordinates
           line = @factory.line_string([@factory.point(0.0, 1.0), @factory.point(2.0, 3.0)])
           assert_equal(line.coordinates, [[0.0, 1.0], [2.0, 3.0]])
+        end
+
+        def test_validate_coordinates
+          p1 = @factory.point(-169.478, -56)
+          p2 = @factory.point(167.95, 64.8333)
+          bbox = RGeo::Cartesian::BoundingBox.create_from_points(p1, p2)
+          assert_equal "POLYGON ((-169.478 -56.0, 167.95 -56.0, 167.95 64.8333, "\
+            "-169.478 64.8333, -169.478 -56.0))", bbox.to_geometry.to_s
         end
 
         if ::RGeo.yaml_supported?
