@@ -46,12 +46,10 @@ http://groups.google.com/group/rgeo-users
 
 RGeo is known to work with the following Ruby implementations:
 
-*   Ruby 1.9.3 or later. (2.0 or later preferred.)
-*   Rubinius 1.1 or later.
-*   Partial support for JRuby 1.7 or later. The FFI implementation of GEOS
-    is available (ffi-geos gem required) but CAPI is not. Proj4 support is
-    expected in the future.
-
+*   Ruby 2.0.0 or later.
+*   Partial support for JRuby 9.0 or later. The FFI implementation of GEOS
+    is available (ffi-geos gem required) but CAPI is not.
+*   See earlier versions for support for pre-2.0 ruby.
 
 Some features also require the following:
 
@@ -103,7 +101,7 @@ http://groups.google.com/group/rgeo-users
 RGeo was created by [Daniel Azuma](http://www.daniel-azuma.com).
 [Tee Parham](https://github.com/teeparham) is the current maintainer.
 
-Thanks to [Pirq](http://www.pirq.com) and [Neighborland](https://neighborland.com) 
+Thanks to [Pirq](http://www.pirq.com) and [Neighborland](https://neighborland.com)
 for development support.
 
 Continuous integration service provided by Travis-CI (http://travis-ci.org).
