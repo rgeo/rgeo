@@ -2,8 +2,8 @@ source "https://rubygems.org"
 
 gemspec
 
-platform :mri_23 do
-  unless ENV["TRAVIS"]
+unless ENV["TRAVIS"]
+  platform :mri_24 do
     gem "pry-byebug"
   end
 end
