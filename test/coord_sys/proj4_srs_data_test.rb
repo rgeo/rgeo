@@ -25,8 +25,10 @@ module RGeo
         def test_epsg_3857
           db_ = ::RGeo::CoordSys::SRSDatabase::Proj4Data.new("epsg")
           entry_ = db_.get(3857)
-          assert_equal("+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs", entry_.proj4.original_str)
-          assert_equal("WGS 84 / Pseudo-Mercator", entry_.name)
+          # some versions return "+wktext +no_defs", some "+wktext  +no_defs"
+          assert_equal "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs",
+            entry_.proj4.original_str.gsub("  ", " ")
+          assert_equal "WGS 84 / Pseudo-Mercator", entry_.name
         end
 
         def test_nad83_4601
