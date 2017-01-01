@@ -62,15 +62,11 @@ module RGeo
           assert_equal(_srid, factory2_.srid)
         end
 
-        if ::RGeo.yaml_supported?
-
-          def test_psych_dump_load_factory
-            data_ = ::Psych.dump(@factory)
-            factory2_ = ::Psych.load(data_)
-            assert_equal(@factory, factory2_)
-            assert_equal(_srid, factory2_.srid)
-          end
-
+        def test_psych_dump_load_factory
+          data_ = Psych.dump(@factory)
+          factory2_ = Psych.load(data_)
+          assert_equal(@factory, factory2_)
+          assert_equal(_srid, factory2_.srid)
         end
       end
     end

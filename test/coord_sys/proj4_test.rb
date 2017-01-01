@@ -130,15 +130,11 @@ module RGeo
           assert_equal(obj1_, obj3_)
         end
 
-        if ::RGeo.yaml_supported?
-
-          def test_yaml_roundtrip
-            obj1_ = ::RGeo::CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
-            dump_ = ::Psych.dump(obj1_)
-            obj2_ = ::Psych.load(dump_)
-            assert_equal(obj1_, obj2_)
-          end
-
+        def test_yaml_roundtrip
+          obj1_ = ::RGeo::CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+          dump_ = Psych.dump(obj1_)
+          obj2_ = Psych.load(dump_)
+          assert_equal(obj1_, obj2_)
         end
       end
     end
