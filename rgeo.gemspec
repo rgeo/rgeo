@@ -15,14 +15,14 @@ Gem::Specification.new do |spec|
   spec.author = "Daniel Azuma, Tee Parham"
   spec.email = "dazuma@gmail.com, parhameter@gmail.com"
   spec.homepage = "https://github.com/rgeo/rgeo"
-  spec.required_ruby_version = ">= 2.0.0"
+  spec.required_ruby_version = ">= 2.1.0"
   spec.platform = Gem::Platform::RUBY
 
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
   spec.test_files = Dir["test/**/*.rb"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
-  spec.add_development_dependency "rake", "~> 11.0"
+  spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rdoc", "~> 4.2"
   spec.add_development_dependency "ffi-geos", "~> 1.0"
   spec.add_development_dependency "test-unit", "~> 3.0"
