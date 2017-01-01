@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.test_files = Dir["test/**/*.rb"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
-  spec.add_development_dependency "rake", "~> 11.0"
+  spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rdoc", "~> 4.2"
   spec.add_development_dependency "ffi-geos", "~> 1.0"
   spec.add_development_dependency "test-unit", "~> 3.0"
