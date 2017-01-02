@@ -33,6 +33,46 @@ module RGeo
         assert(::RGeo::Feature::LineString.subtype_of?(::RGeo::Feature::Geometry))
         assert(!::RGeo::Feature::LineString.subtype_of?(::RGeo::Feature::Line))
       end
+
+      def test_illegal_cast
+        point = wkt_parser.parse("POINT(1 2)")
+        assert_nil RGeo::Feature.cast(point, RGeo::Feature::Line)
+      end
+
+      def test_cast_point_to_same_type
+        # geom is a RGeo::Geos::CAPIPointImpl
+        geom = wkt_parser.parse("POINT(1 2)")
+        point = RGeo::Feature.cast(geom, RGeo::Feature::Point)
+        assert RGeo::Feature::Point.check_type(point)
+        assert_equal "POINT (1.0 2.0)", point.to_s
+      end
+
+      def test_cast_linestring_to_line
+        # only works with 2-point linestrings
+        linestring = wkt_parser.parse("LINESTRING(1 2, 3 4)")
+        line = RGeo::Feature.cast(linestring, RGeo::Feature::Line)
+        assert RGeo::Feature::Line.check_type(line)
+        assert_equal "LINESTRING (1.0 2.0, 3.0 4.0)", line.to_s
+      end
+
+      def test_cast_collection_to_multipoint
+        p1 = factory.point(0, 0)
+        p2 = factory.point(1, 1)
+        collection = factory.collection([p1, p2])
+        multipoint = RGeo::Feature.cast(collection, RGeo::Feature::MultiPoint)
+        assert RGeo::Feature::MultiPoint.check_type(multipoint)
+        assert_equal "MULTIPOINT ((0.0 0.0), (1.0 1.0))", multipoint.to_s
+      end
+
+      private
+
+      def wkt_parser
+        RGeo::WKRep::WKTParser.new
+      end
+
+      def factory
+        RGeo::Cartesian.preferred_factory
+      end
     end
   end
 end
