@@ -256,23 +256,23 @@ module RGeo
             if type_ == Point
               nfactory_.multi_point([cast(obj_, nfactory_, opts_)])
             elsif type_ == GeometryCollection
-              nfactory_.multi_point(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
+              nfactory_.multi_point(obj_.map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == MultiLineString
             if type_ == Line || type_ == LinearRing || type_ == LineString
               nfactory_.multi_line_string([cast(obj_, nfactory_, opts_)])
             elsif type_ == GeometryCollection
-              nfactory_.multi_line_string(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
+              nfactory_.multi_line_string(obj_.map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == MultiPolygon
             if type_ == Polygon
               nfactory_.multi_polygon([cast(obj_, nfactory_, opts_)])
             elsif type_ == GeometryCollection
-              nfactory_.multi_polygon(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
+              nfactory_.multi_polygon(obj_.map { |p_| cast(p_, nfactory_, opts_) })
             end
           elsif ntype_ == GeometryCollection
             if type_ == MultiPoint || type_ == MultiLineString || type_ == MultiPolygon
-              nfactory_.collection(obj_.map { |_g_| cast(p_, nfactory_, opts_) })
+              nfactory_.collection(obj_.map { |p_| cast(p_, nfactory_, opts_) })
             else
               nfactory_.collection([cast(obj_, nfactory_, opts_)])
             end
