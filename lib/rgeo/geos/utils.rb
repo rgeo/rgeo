@@ -58,6 +58,7 @@ module RGeo
             @ffi_supports_prepared_level_1 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)
             @ffi_supports_prepared_level_2 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
             @ffi_supports_set_output_dimension = ::Geos::FFIGeos.respond_to?(:GEOSWKTWriter_setOutputDimension_r)
+            @ffi_supports_unary_union = ::Geos::FFIGeos.respond_to?(:GEOSUnaryUnion_r)
           end
           @psych_wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
           @marshal_wkb_generator = WKRep::WKBGenerator.new
@@ -66,6 +67,7 @@ module RGeo
         attr_reader :ffi_supports_prepared_level_1
         attr_reader :ffi_supports_prepared_level_2
         attr_reader :ffi_supports_set_output_dimension
+        attr_reader :ffi_supports_unary_union
         attr_reader :psych_wkt_generator
         attr_reader :marshal_wkb_generator
       end

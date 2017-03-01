@@ -388,6 +388,15 @@ static VALUE cmethod_factory_geos_version(VALUE klass)
 }
 
 
+static VALUE cmethod_factory_supports_unary_union(VALUE klass)
+{
+#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
+  return Qtrue;
+#else
+  return Qfalse;
+#endif
+}
+
 static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE buffer_resolution,
   VALUE wkt_generator, VALUE wkb_generator, VALUE proj4_obj, VALUE coord_sys_obj)
 {
@@ -620,6 +629,7 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_method(geos_factory_class, "_write_for_psych", method_factory_write_for_psych, 1);
   rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 7);
   rb_define_module_function(geos_factory_class, "_geos_version", cmethod_factory_geos_version, 0);
+  rb_define_module_function(geos_factory_class, "_supports_unary_union?", cmethod_factory_supports_unary_union, 0);
 
   // Pre-define implementation classes and set up allocation methods
   globals->geos_geometry = rb_define_class_under(globals->geos_module, "CAPIGeometryImpl", rb_cObject);
