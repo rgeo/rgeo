@@ -859,6 +859,29 @@ static VALUE method_geometry_union(VALUE self, VALUE rhs)
 }
 
 
+static VALUE method_geometry_unary_union(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+
+  result = Qnil;
+
+#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    GEOSContextHandle_t self_context = self_data->geos_context;
+    result = rgeo_wrap_geos_geometry(self_data->factory,
+      GEOSUnaryUnion_r(self_context, self_geom),
+      Qnil);
+  }
+#endif
+
+  return result;
+}
+
+
 static VALUE method_geometry_difference(VALUE self, VALUE rhs)
 {
   VALUE result;
@@ -1077,6 +1100,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_methods, "intersection", method_geometry_intersection, 1);
   rb_define_method(geos_geometry_methods, "*", method_geometry_intersection, 1);
   rb_define_method(geos_geometry_methods, "union", method_geometry_union, 1);
+  rb_define_method(geos_geometry_methods, "unary_union", method_geometry_unary_union, 0);
   rb_define_method(geos_geometry_methods, "+", method_geometry_union, 1);
   rb_define_method(geos_geometry_methods, "difference", method_geometry_difference, 1);
   rb_define_method(geos_geometry_methods, "-", method_geometry_difference, 1);

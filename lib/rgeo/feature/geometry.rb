@@ -540,6 +540,23 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#rep_equals? not defined."
       end
 
+      # Unions a collection of Geometry or a single Geometry
+      # (which may be a collection) together. By using this
+      # special-purpose operation over a collection of geometries
+      # it is possible to take advantage of various optimizations
+      # to improve performance. Heterogeneous GeometryCollections
+      # are fully supported.
+      #
+      # This is not a standard SFS method, but when it is available
+      # in GEOS, it is a very performant way to union all the
+      # geometries in a collection. GEOS version 3.3 or greater
+      # is required. If the feature is not available, unary_union
+      # returns nil.
+      #
+      def unary_union
+        raise Error::UnsupportedOperation, "Method Geometry#unary_union not defined."
+      end
+
       # This method should behave almost the same as the rep_equals?
       # method, with two key differences.
       #

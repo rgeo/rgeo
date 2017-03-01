@@ -28,6 +28,7 @@ else
     found_geos_ = true if have_func("GEOSSetSRID_r", "geos_c.h")
     have_func("GEOSPreparedContains_r", "geos_c.h")
     have_func("GEOSPreparedDisjoint_r", "geos_c.h")
+    have_func("GEOSUnaryUnion_r", "geos_c.h")
     have_func("rb_memhash", "ruby.h")
   end
 
