@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rdoc", "~> 4.2"
-  spec.add_development_dependency "ffi-geos", "~> 1.0"
+  spec.add_development_dependency "ffi-geos", "~> 1.2"
   spec.add_development_dependency "test-unit", "~> 3.0"
   spec.add_development_dependency "rubocop", "~> 0.35"
   spec.add_development_dependency "rake-compiler"
