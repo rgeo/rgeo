@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 unless ENV["TRAVIS"]
-  platform :mri_24 do
+  if RUBY_VERSION > "2.4"
     gem "pry-byebug"
   end
 end
