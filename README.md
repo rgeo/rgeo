@@ -44,9 +44,9 @@ http://groups.google.com/group/rgeo-users
 
 ### Dependencies
 
-RGeo is known to work with the following Ruby implementations:
+RGeo works with the following Ruby implementations:
 
-*   Ruby 2.0.0 or later.
+*   Ruby 2.1.0 or later.
 *   Partial support for JRuby 9.0 or later. The FFI implementation of GEOS
     is available (ffi-geos gem required) but CAPI is not.
 *   See earlier versions for support for pre-2.0 ruby.
@@ -63,7 +63,7 @@ Some features also require the following:
     available via your operating system's package manager (`sudo aptitude
     install libproj-dev` for debian based Linux distributions, `yum install proj proj-devel` for redhat based Linux distributions), or from
     http://trac.osgeo.org/proj
-*   On some platforms, you should install the ffi-geos gem (version 0.0.6 or
+*   On some platforms, you should install the ffi-geos gem (version 1.2.0 or
     later recommended.) JRuby requires this gem to link properly with Geos,
     and Windows builds probably do as well.
 

@@ -1,3 +1,14 @@
+### 0.6.0 / 2017-3-1
+
+* Require ruby 2.1+
+* Remove repeated consecutive points from line-strings (ChapterMedia) #136
+* Use canonical_point to validate line string (glampr) #152 #87
+* Remove unused Geos methods (tneems) #151
+* Remove RGeo.yaml_supported?
+* Fix RGeo::Feature.cast errors (Dschee) #162 #147 #146
+* Add Geometry#unary_union (ynelin, pRdm) #168 #110
+
+
 ### 0.5.3 / 2016-2-17
 
 * Use rake-compiler to build extensions (tneems) #138
