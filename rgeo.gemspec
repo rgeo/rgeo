@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
   spec.platform = Gem::Platform::RUBY
 
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
-  spec.test_files = Dir["test/**/*.rb"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
   spec.add_development_dependency "rake", "~> 12.0"
