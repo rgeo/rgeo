@@ -49,9 +49,6 @@ module RGeo
     #   ::RGeo::Feature::Type === object.geometry_type  # true
 
     module Type
-      # Deprecated alias for RGeo::Feature::Instance
-      Instance = Feature::Instance
-
       # Returns true if the given object is this type or a subtype
       # thereof, or if it is a feature object whose geometry_type is
       # this type or a subtype thereof.

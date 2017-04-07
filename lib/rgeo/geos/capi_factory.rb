@@ -462,9 +462,5 @@ module RGeo
 
       # :startdoc:
     end
-
-    # Deprecated alias of CAPIFactory.
-    # Defined primarily to support old YAML serializations.
-    Factory = CAPIFactory
   end
 end

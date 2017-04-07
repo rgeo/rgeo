@@ -403,12 +403,6 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Geometry#relate not defined."
       end
 
-      # Deprecated alias of Geometry#relate?
-
-      def relate(another_geometry_, intersection_pattern_matrix_)
-        relate?(another_geometry_, intersection_pattern_matrix_)
-      end
-
       # === SFS 1.1 Description
       #
       # Returns the shortest distance between any two Points in the two
