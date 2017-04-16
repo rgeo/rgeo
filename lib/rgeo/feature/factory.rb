@@ -78,6 +78,9 @@ module RGeo
 
       # Parse the given string in well-known-text format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
+      # NOTE: most implementations of this method are not thread-safe,
+      # so it's not advisable to use a class-level constant for a factory
+      # if you're using Puma or another threaded web server.
 
       def parse_wkt(_str_)
         nil
