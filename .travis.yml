@@ -2,12 +2,12 @@ sudo: false
 addons:
   apt:
     packages:
-    - libgeos-dev
+    - libgeos-3.3.8
     - libproj-dev
 language: ruby
 rvm:
   - 2.1
-  - 2.2.6
-  - 2.3.3
-  - 2.4.0
-  - jruby-9.1.5.0
+  - 2.2.7
+  - 2.3.4
+  - 2.4.1
+  - jruby-9.1.9.0
