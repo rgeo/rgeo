@@ -2,7 +2,7 @@ sudo: false
 addons:
   apt:
     packages:
-    - libgeos-3.3.8
+    - libgeos-3.4.0
     - libproj-dev
 language: ruby
 rvm:
