@@ -247,6 +247,54 @@ static VALUE method_line_string_end_point(VALUE self)
   return result;
 }
 
+static VALUE method_line_string_project_point(VALUE self, VALUE point)
+{
+  RGeo_FactoryData* factory_data;
+  VALUE result = Qnil;
+  VALUE factory;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  const GEOSGeometry *geos_point;
+
+  double location;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  self_geom = self_data->geom;
+  factory_data = RGEO_FACTORY_DATA_PTR(factory);
+
+  if(self_geom && point) {
+    geos_point = rgeo_convert_to_geos_geometry(factory, point, factory_data->globals->geos_point);
+    location = GEOSProject_r(self_data->geos_context, self_geom, geos_point);
+    result = DBL2NUM(location);
+  }
+  return result;
+}
+
+static VALUE method_line_string_interpolate_point(VALUE self, VALUE loc_num)
+{
+  RGeo_FactoryData* factory_data;
+  VALUE result = Qnil;
+  VALUE factory;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* geos_point;
+
+  double location;
+
+  location = NUM2DBL(loc_num);
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  factory_data = RGEO_FACTORY_DATA_PTR(factory);
+  self_geom = self_data->geom;
+
+  if(self_geom) {
+    geos_point = GEOSInterpolate_r(self_data->geos_context, self_geom, location);
+    result = rgeo_wrap_geos_geometry(factory, geos_point, factory_data->globals->geos_point);
+  }
+
+  return result;
+}
 
 static VALUE method_line_string_is_closed(VALUE self)
 {
@@ -613,6 +661,8 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_methods, "points", method_line_string_points, 0);
   rb_define_method(geos_line_string_methods, "start_point", method_line_string_start_point, 0);
   rb_define_method(geos_line_string_methods, "end_point", method_line_string_end_point, 0);
+  rb_define_method(geos_line_string_methods, "project_point", method_line_string_project_point, 1);
+  rb_define_method(geos_line_string_methods, "interpolate_point", method_line_string_interpolate_point, 1);
   rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
   rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
   rb_define_method(geos_line_string_methods, "coordinates", method_line_string_coordinates, 0);
