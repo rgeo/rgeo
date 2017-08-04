@@ -80,6 +80,12 @@ module RGeo
         raise Error::UnsupportedOperation, "Method GeometryCollection#[] not defined."
       end
 
+      # Nodes the linework in a list of Geometries
+      #
+      def node
+        raise Error::UnsupportedOperation, "Method GeometryCollection#node not defined."
+      end
+
       # Iterates over the geometries of this GeometryCollection.
       #
       # This is not a standard SFS method, but is provided so that a

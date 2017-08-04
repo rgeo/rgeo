@@ -363,6 +363,23 @@ static VALUE method_multi_line_string_hash(VALUE self)
   return LONG2FIX(rb_hash_end(hash));
 }
 
+static VALUE method_geometry_collection_node(VALUE self)
+{
+  VALUE result = Qnil;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* noded;
+  GEOSContextHandle_t context;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  context = self_data->geos_context;
+
+  noded = GEOSNode_r(context, self_geom);
+  result = rgeo_wrap_geos_geometry(self_data->factory, noded, Qnil);
+
+  return result;
+}
 
 static VALUE method_multi_line_string_coordinates(VALUE self)
 {
@@ -609,6 +626,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_geometry_collection_methods, "geometry_n", method_geometry_collection_geometry_n, 1);
   rb_define_method(geos_geometry_collection_methods, "[]", method_geometry_collection_brackets, 1);
   rb_define_method(geos_geometry_collection_methods, "each", method_geometry_collection_each, 0);
+  rb_define_method(geos_geometry_collection_methods, "node", method_geometry_collection_node, 0);
 
 
   // Methods for MultiPointImpl
