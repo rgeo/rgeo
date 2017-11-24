@@ -29,10 +29,6 @@ else
   Rake::ExtensionTask.new "geos_c_impl" do |ext|
     ext.lib_dir = "lib/rgeo/geos"
   end
-
-  Rake::ExtensionTask.new "proj4_c_impl" do |ext|
-    ext.lib_dir = "lib/rgeo/coord_sys"
-  end
 end
 
 # Clean task
