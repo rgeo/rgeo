@@ -26,6 +26,15 @@ module RGeo
   # such as those provided by spatialreference.org.
 
   module CoordSys
+    # The only valid key is :proj4
+    def self.supported?(key)
+      raise(Error::UnsupportedOperation, "Invalid key. The only valid key is :proj4.") unless key == :proj4
+      defined?(Proj4) && Proj4.supported?
+    end
+
+    def self.check!(key)
+      supported?(key) || raise(Error::UnsupportedOperation, "Coordinate system '#{key}' is not supported.")
+    end
   end
 end
 
