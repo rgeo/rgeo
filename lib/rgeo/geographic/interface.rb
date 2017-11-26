@@ -344,9 +344,7 @@ module RGeo
       # more details.
 
       def projected_factory(opts_ = {})
-        unless CoordSys::Proj4.supported?
-          raise Error::UnsupportedOperation, "Proj4 is not supported because the proj4 library was not found at install time."
-        end
+        CoordSys.check!(:proj4)
         db_ = opts_[:srs_database]
         if (projection_factory_ = opts_[:projection_factory])
           # Get the projection coordinate systems from the given factory
@@ -459,7 +457,7 @@ module RGeo
 
       def _proj4_4055 # :nodoc:
         unless defined?(@proj4_4055)
-          @proj4_4055 = CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
+          @proj4_4055 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
         end
         @proj4_4055
       end
@@ -473,7 +471,7 @@ module RGeo
 
       def _proj4_4326 # :nodoc:
         unless defined?(@proj4_4326)
-          @proj4_4326 = CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+          @proj4_4326 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
         end
         @proj4_4326
       end

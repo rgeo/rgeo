@@ -199,7 +199,7 @@ module RGeo
               end
               hasz_ = factory_.property(:has_z_coordinate)
               nhasz_ = nfactory_.property(:has_z_coordinate)
-              if proj_ && nproj_
+              if proj_ && nproj_ && CoordSys.check!(:proj4)
                 coords_ = CoordSys::Proj4.transform_coords(proj_, nproj_, obj_.x, obj_.y, hasz_ ? obj_.z : nil)
                 coords_ << (hasz_ ? obj_.z : 0.0) if nhasz_ && coords_.size < 3
               else

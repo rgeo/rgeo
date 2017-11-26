@@ -20,12 +20,10 @@ module RGeo
         @has_z = opts_[:has_z_coordinate] ? true : false
         @has_m = opts_[:has_m_coordinate] ? true : false
         @proj4 = opts_[:proj4]
-        if CoordSys::Proj4.supported?
+        if @proj4 && CoordSys.check!(:proj4)
           if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
-        else
-          @proj4 = nil
         end
         srid_ = opts_[:srid]
         @coord_sys = opts_[:coord_sys]
@@ -115,7 +113,7 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        if CoordSys::Proj4.supported? && (proj4_data_ = data_["proj4"])
+        if (proj4_data_ = data_["proj4"]) && CoordSys.check!(:proj4)
           proj4_ = CoordSys::Proj4.allocate
           proj4_.marshal_load(proj4_data_)
         else
@@ -161,7 +159,7 @@ module RGeo
       end
 
       def init_with(coder_) # :nodoc:
-        if (proj4_data_ = coder_["proj4"])
+        if (proj4_data_ = coder_["proj4"]) && CoordSys.check!(:proj4)
           if proj4_data_.is_a?(::Hash)
             proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
           else
