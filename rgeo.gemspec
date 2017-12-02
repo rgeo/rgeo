@@ -31,6 +31,6 @@ gem "rgeo-proj4"
   spec.add_development_dependency "rdoc", "~> 5.0"
   spec.add_development_dependency "ffi-geos", "~> 1.2"
   spec.add_development_dependency "test-unit", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 0.35"
-  spec.add_development_dependency "rake-compiler"
+  spec.add_development_dependency "rubocop", "~> 0.51"
+  spec.add_development_dependency "rake-compiler", "~> 1.0"
 end
