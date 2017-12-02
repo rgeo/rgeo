@@ -1,3 +1,3 @@
 module RGeo
-  VERSION = "0.6.0".freeze
+  VERSION = "1.0.0.rc1".freeze
 end

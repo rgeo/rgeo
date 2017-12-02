@@ -75,12 +75,10 @@ module RGeo
             @coord_sys = CS.create_from_wkt(@coord_sys)
           end
           @proj4 = data_[:proj4]
-          if Proj4.supported?
+          if @proj4 && CoordSys.check!(:proj4)
             if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
               @proj4 = Proj4.create(@proj4)
             end
-          else
-            @proj4 = nil
           end
           if @coord_sys
             @name = @coord_sys.name unless @name

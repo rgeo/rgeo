@@ -93,6 +93,7 @@ module RGeo
       end
 
       def self._proj4_3857 # :nodoc:
+        return unless CoordSys.supported?(:proj4)
         unless defined?(@proj4_3857)
           @proj4_3857 = CoordSys::Proj4.create("+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
         end

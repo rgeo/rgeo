@@ -21,6 +21,12 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
+  spec.post_install_message = %(
+rgeo has moved Proj4 support to a separate gem. If you use Proj4, add this to your Gemfile:
+
+gem "rgeo-proj4"
+)
+
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rdoc", "~> 5.0"
   spec.add_development_dependency "ffi-geos", "~> 1.2"

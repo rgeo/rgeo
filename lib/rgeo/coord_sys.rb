@@ -26,18 +26,22 @@ module RGeo
   # such as those provided by spatialreference.org.
 
   module CoordSys
+    # The only valid key is :proj4
+    def self.supported?(key)
+      raise(Error::UnsupportedOperation, "Invalid key. The only valid key is :proj4.") unless key == :proj4
+      defined?(Proj4) && Proj4.supported?
+    end
+
+    def self.check!(key)
+      supported?(key) || raise(Error::UnsupportedOperation, "Coordinate system '#{key}' is not supported.")
+    end
   end
 end
 
 # Implementation files
-begin
-  require "rgeo/coord_sys/proj4_c_impl"
-rescue ::LoadError; end
-require "rgeo/coord_sys/proj4"
 require "rgeo/coord_sys/cs/factories"
 require "rgeo/coord_sys/cs/entities"
 require "rgeo/coord_sys/cs/wkt_parser"
 require "rgeo/coord_sys/srs_database/interface.rb"
-require "rgeo/coord_sys/srs_database/proj4_data.rb"
 require "rgeo/coord_sys/srs_database/url_reader.rb"
 require "rgeo/coord_sys/srs_database/sr_org.rb"

@@ -4,7 +4,6 @@ addons:
   apt:
     packages:
     - libgeos-3.4.2
-    - libproj-dev
 language: ruby
 rvm:
   - 2.1
