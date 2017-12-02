@@ -1,9 +1,9 @@
 inherit_from: .rubocop_todo.yml
 
-Style/AlignParameters:
+Layout/AlignParameters:
   Enabled: false
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Enabled: false
 
 Style/SignalException:
