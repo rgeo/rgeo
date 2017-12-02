@@ -75,6 +75,12 @@ Install the RGeo gem:
 gem install rgeo
 ```
 
+or include it in your Gemfile:
+
+```ruby
+gem "rgeo"
+```
+
 If you are using proj.4 extensions, include the `rgeo-proj4` gem:
 
 ```ruby
