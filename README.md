@@ -58,11 +58,11 @@ Some features also require the following:
     available via your operating system's package manager (`sudo aptitude
     install libgeos-dev` for debian based Linux distributions, `yum install geos geos-devel` for redhat based Linux distributions), or you can
     download it from http://trac.osgeo.org/geos
-*   Proj 4.7 or later is also recommended. This library is needed if you want
+*   Proj 4.7 or later is optional. This library is needed if you want
     to translate coordinates between geographic projections. It also may be
     available via your operating system's package manager (`sudo aptitude
     install libproj-dev` for debian based Linux distributions, `yum install proj proj-devel` for redhat based Linux distributions), or from
-    http://trac.osgeo.org/proj
+    http://proj4.org/
 *   On some platforms, you should install the ffi-geos gem (version 1.2.0 or
     later recommended.) JRuby requires this gem to link properly with Geos,
     and Windows builds probably do as well.
@@ -75,13 +75,13 @@ Install the RGeo gem:
 gem install rgeo
 ```
 
-Note: By default, the gem installation looks for the Proj4 library in the
-following locations by default: `/usr/local`, `/usr/local/proj`,
-`/usr/local/proj4`, `/opt/local`, `/opt/proj`, `/opt/proj4`, `/opt`, `/usr`, and
-`/Library/Frameworks/PROJ.framework/unix`.
+If you are using proj.4 extensions, include the `rgeo-proj4` gem:
 
-If Proj4 is installed in a different location, you must provide its
-installation prefix directory using the "--with-proj-dir" option.
+```ruby
+gem "rgeo-proj4"
+```
+
+See https://github.com/rgeo/rgeo-proj4
 
 ### Development and support
 
