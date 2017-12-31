@@ -4,8 +4,6 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
-
 module RGeo
   module Tests # :nodoc:
     module Common # :nodoc:

@@ -4,8 +4,6 @@
 #
 # -----------------------------------------------------------------------------
 
-require "rgeo"
-
 module RGeo
   module Tests # :nodoc:
     module Common # :nodoc:

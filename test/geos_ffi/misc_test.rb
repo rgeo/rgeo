@@ -4,8 +4,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test/unit"
-require "rgeo"
+require "test_helper"
 
 module RGeo
   module Tests # :nodoc:

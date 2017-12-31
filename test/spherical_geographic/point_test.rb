@@ -4,10 +4,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test/unit"
-require "rgeo"
-
-require ::File.expand_path("../common/point_tests.rb", ::File.dirname(__FILE__))
+require "test_helper"
 
 module RGeo
   module Tests # :nodoc:
