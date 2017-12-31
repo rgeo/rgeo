@@ -22,10 +22,6 @@ module RGeo
           @zmfactory = ::RGeo::Geographic.simple_mercator_factory(has_z_coordinate: true, has_m_coordinate: true)
         end
 
-        # TEMP until ffi-geos 0.0.5 is released
-        undef_method :test_buffer
-        # END_TEMP
-
         def test_has_projection
           point_ = @factory.point(21, -22)
           assert(point_.respond_to?(:projection))

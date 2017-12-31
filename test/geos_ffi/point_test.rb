@@ -23,10 +23,6 @@ module RGeo
                                             native_interface: :ffi)
         end
 
-        # TEMP until ffi-geos 0.0.5 is released
-        undef_method :test_buffer
-        # END_TEMP
-
         def test_is_geos
           point_ = @factory.point(21, -22)
           assert_equal(true, ::RGeo::Geos.is_geos?(point_))
