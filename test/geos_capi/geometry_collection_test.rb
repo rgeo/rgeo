@@ -6,36 +6,30 @@
 
 require "test_helper"
 
-module RGeo
-  module Tests # :nodoc:
-    module GeosCAPI # :nodoc:
-      class TestGeometryCollection < ::Test::Unit::TestCase # :nodoc:
-        include RGeo::Tests::Common::GeometryCollectionTests
+class TestGeometryCollection < Test::Unit::TestCase # :nodoc:
+  include RGeo::Tests::Common::GeometryCollectionTests
 
-        def create_factory
-          ::RGeo::Geos.factory
-        end
+  def create_factory
+    ::RGeo::Geos.factory
+  end
 
-        def test_collection_node
-          lines = [ [[0,0], [0,2]], [[-1,1], [1,1]] ]
-            .map { |p1,p2| [@factory.point(*p1), @factory.point(*p2)] }
-            .map { |p1,p2| @factory.line(p1,p2) }
+  def test_collection_node
+    lines = [ [[0,0], [0,2]], [[-1,1], [1,1]] ]
+      .map { |p1,p2| [@factory.point(*p1), @factory.point(*p2)] }
+      .map { |p1,p2| @factory.line(p1,p2) }
 
-          multi = @factory.multi_line_string(lines)
+    multi = @factory.multi_line_string(lines)
 
-          expected_lines = [
-              [ [0,0],  [0,1] ],
-              [ [0,1],  [0,2] ],
-              [ [-1,1], [0,1] ],
-              [ [0,1],  [1,1] ]
-            ].map { |p1, p2| @factory.line(@factory.point(*p1), @factory.point(*p2)) }
+    expected_lines = [
+        [ [0,0],  [0,1] ],
+        [ [0,1],  [0,2] ],
+        [ [-1,1], [0,1] ],
+        [ [0,1],  [1,1] ]
+      ].map { |p1, p2| @factory.line(@factory.point(*p1), @factory.point(*p2)) }
 
-          noded = multi.node
+    noded = multi.node
 
-          assert_equal(noded.count, 4)
-          assert_true(expected_lines.all? { |line| noded.include? line })
-        end
-      end
-    end
+    assert_equal(noded.count, 4)
+    assert_true(expected_lines.all? { |line| noded.include? line })
   end
 end if ::RGeo::Geos.capi_supported?

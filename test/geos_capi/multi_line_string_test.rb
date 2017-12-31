@@ -6,16 +6,10 @@
 
 require "test_helper"
 
-module RGeo
-  module Tests # :nodoc:
-    module GeosCAPI # :nodoc:
-      class TestMultiLineString < ::Test::Unit::TestCase # :nodoc:
-        include RGeo::Tests::Common::MultiLineStringTests
+class TestMultiLineString < Test::Unit::TestCase # :nodoc:
+  include RGeo::Tests::Common::MultiLineStringTests
 
-        def create_factory
-          ::RGeo::Geos.factory
-        end
-      end
-    end
+  def create_factory
+    ::RGeo::Geos.factory
   end
-end if ::RGeo::Geos.capi_supported?
+end  if ::RGeo::Geos.capi_supported?
