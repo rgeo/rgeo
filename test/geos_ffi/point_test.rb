@@ -13,6 +13,8 @@ module RGeo
   module Tests # :nodoc:
     module GeosFFI # :nodoc:
       class TestPoint < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::PointTests
+
         def setup
           @factory = ::RGeo::Geos.factory(native_interface: :ffi, buffer_resolution: 8)
           @zfactory = ::RGeo::Geos.factory(has_z_coordinate: true, native_interface: :ffi)
@@ -20,8 +22,6 @@ module RGeo
           @zmfactory = ::RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true,
                                             native_interface: :ffi)
         end
-
-        include ::RGeo::Tests::Common::PointTests
 
         # TEMP until ffi-geos 0.0.5 is released
         undef_method :test_buffer

@@ -13,11 +13,11 @@ module RGeo
   module Tests # :nodoc:
     module GeosFFI # :nodoc:
       class TestGeometryCollection < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::GeometryCollectionTests
+
         def create_factory
           ::RGeo::Geos.factory(native_interface: :ffi)
         end
-
-        include ::RGeo::Tests::Common::GeometryCollectionTests
       end
     end
   end

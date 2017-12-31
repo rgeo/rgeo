@@ -13,12 +13,12 @@ module RGeo
   module Tests # :nodoc:
     module GeosCAPI # :nodoc:
       class TestMultiPolygon < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::MultiPolygonTests
+
         def create_factories
           @factory = ::RGeo::Geos.factory
           @lenient_factory = ::RGeo::Geos.factory(lenient_multi_polygon_assertions: true)
         end
-
-        include ::RGeo::Tests::Common::MultiPolygonTests
 
         # Centroid of an empty should return an empty collection rather than crash
 

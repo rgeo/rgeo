@@ -13,6 +13,8 @@ module RGeo
   module Tests # :nodoc:
     module GeosCAPI # :nodoc:
       class TestGeometryCollection < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::GeometryCollectionTests
+
         def create_factory
           ::RGeo::Geos.factory
         end
@@ -36,8 +38,6 @@ module RGeo
           assert_equal(noded.count, 4)
           assert_true(expected_lines.all? { |line| noded.include? line })
         end
-
-        include ::RGeo::Tests::Common::GeometryCollectionTests
       end
     end
   end

@@ -13,11 +13,11 @@ module RGeo
   module Tests # :nodoc:
     module SimpleCartesian # :nodoc:
       class TestMultiLineString < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::MultiLineStringTests
+
         def create_factory
           @factory = ::RGeo::Cartesian.simple_factory
         end
-
-        include ::RGeo::Tests::Common::MultiLineStringTests
 
         undef_method :test_fully_equal
         undef_method :test_geometrically_equal

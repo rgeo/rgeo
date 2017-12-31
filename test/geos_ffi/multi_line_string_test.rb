@@ -13,11 +13,12 @@ module RGeo
   module Tests # :nodoc:
     module GeosFFI # :nodoc:
       class TestMultiLineString < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::MultiLineStringTests
+
         def create_factory
           ::RGeo::Geos.factory(native_interface: :ffi)
         end
 
-        include ::RGeo::Tests::Common::MultiLineStringTests
       end
     end
   end

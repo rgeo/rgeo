@@ -13,14 +13,14 @@ module RGeo
   module Tests # :nodoc:
     module GeosCAPI # :nodoc:
       class TestPoint < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::PointTests
+
         def setup
           @factory = ::RGeo::Geos.factory(buffer_resolution: 8)
           @zfactory = ::RGeo::Geos.factory(has_z_coordinate: true)
           @mfactory = ::RGeo::Geos.factory(has_m_coordinate: true)
           @zmfactory = ::RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true)
         end
-
-        include ::RGeo::Tests::Common::PointTests
 
         def test_is_geos
           point_ = @factory.point(21, -22)

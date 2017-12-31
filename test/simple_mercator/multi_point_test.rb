@@ -13,11 +13,11 @@ module RGeo
   module Tests # :nodoc:
     module SimpleMercator # :nodoc:
       class TestMultiPoint < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::MultiPointTests
+
         def create_factory(opts_ = {})
           ::RGeo::Geographic.simple_mercator_factory(opts_)
         end
-
-        include ::RGeo::Tests::Common::MultiPointTests
 
         # These tests suffer from floating point issues
         undef_method :test_union

@@ -13,12 +13,12 @@ module RGeo
   module Tests # :nodoc:
     module SphericalGeographic # :nodoc:
       class TestMultiPolygon < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::MultiPolygonTests
+
         def create_factories
           @factory = ::RGeo::Geographic.spherical_factory
           @lenient_factory = ::RGeo::Geographic.spherical_factory(lenient_multi_polygon_assertions: true)
         end
-
-        include ::RGeo::Tests::Common::MultiPolygonTests
 
         undef_method :test_creation_wrong_type
         undef_method :test_creation_overlapping

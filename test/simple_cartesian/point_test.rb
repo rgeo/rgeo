@@ -13,14 +13,14 @@ module RGeo
   module Tests # :nodoc:
     module SimpleCartesian # :nodoc:
       class TestPoint < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::PointTests
+
         def setup
           @factory = ::RGeo::Cartesian.simple_factory(srid: 1, buffer_resolution: 8)
           @zfactory = ::RGeo::Cartesian.simple_factory(srid: 1, has_z_coordinate: true)
           @mfactory = ::RGeo::Cartesian.simple_factory(srid: 1, has_m_coordinate: true)
           @zmfactory = ::RGeo::Cartesian.simple_factory(srid: 1, has_z_coordinate: true, has_m_coordinate: true)
         end
-
-        include ::RGeo::Tests::Common::PointTests
 
         def test_srid
           point_ = @factory.point(11, 12)

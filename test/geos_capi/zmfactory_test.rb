@@ -13,12 +13,12 @@ module RGeo
   module Tests # :nodoc:
     module GeosCAPI # :nodoc:
       class TestZMFactory < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::FactoryTests
+
         def setup
           @factory = ::RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true, srid: 1000, buffer_resolution: 2)
           @srid = 1000
         end
-
-        include ::RGeo::Tests::Common::FactoryTests
 
         def test_is_geos_factory
           assert_equal(true, ::RGeo::Geos.is_geos?(@factory))

@@ -13,12 +13,12 @@ module RGeo
   module Tests # :nodoc:
     module GeosFFI # :nodoc:
       class TestFactory < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::FactoryTests
+
         def setup
           @factory = ::RGeo::Geos.factory(srid: 1000, native_interface: :ffi)
           @srid = 1000
         end
-
-        include ::RGeo::Tests::Common::FactoryTests
 
         def test_is_geos_factory
           assert_equal(true, ::RGeo::Geos.is_geos?(@factory))

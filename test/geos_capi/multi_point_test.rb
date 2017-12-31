@@ -13,11 +13,11 @@ module RGeo
   module Tests # :nodoc:
     module GeosCAPI # :nodoc:
       class TestMultiPoint < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::MultiPointTests
+
         def create_factory(opts_ = {})
           ::RGeo::Geos.factory(opts_)
         end
-
-        include ::RGeo::Tests::Common::MultiPointTests
       end
     end
   end

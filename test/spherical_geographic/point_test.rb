@@ -13,14 +13,14 @@ module RGeo
   module Tests # :nodoc:
     module SphericalGeographic # :nodoc:
       class TestPoint < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::PointTests
+
         def setup
           @factory = ::RGeo::Geographic.spherical_factory(buffer_resolution: 8)
           @zfactory = ::RGeo::Geographic.spherical_factory(has_z_coordinate: true)
           @mfactory = ::RGeo::Geographic.spherical_factory(has_m_coordinate: true)
           @zmfactory = ::RGeo::Geographic.spherical_factory(has_z_coordinate: true, has_m_coordinate: true)
         end
-
-        include ::RGeo::Tests::Common::PointTests
 
         def test_latlon
           point_ = @factory.point(21, -22)

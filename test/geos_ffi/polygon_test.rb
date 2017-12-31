@@ -13,11 +13,11 @@ module RGeo
   module Tests # :nodoc:
     module GeosFFI # :nodoc:
       class TestPolygon < ::Test::Unit::TestCase # :nodoc:
+        include RGeo::Tests::Common::PolygonTests
+
         def setup
           @factory = ::RGeo::Geos.factory(native_interface: :ffi)
         end
-
-        include ::RGeo::Tests::Common::PolygonTests
 
         def test_intersection
           point1_ = @factory.point(0, 0)
