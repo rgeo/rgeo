@@ -8,116 +8,116 @@ require "test_helper"
 
 class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Cartesian.preferred_factory(srid: 1000)
-    @factoryz = ::RGeo::Cartesian.preferred_factory(srid: 1000, has_z_coordinate: true)
-    @factorym = ::RGeo::Cartesian.preferred_factory(srid: 1000, has_m_coordinate: true)
-    @factoryzm = ::RGeo::Cartesian.preferred_factory(srid: 1000, has_z_coordinate: true, has_m_coordinate: true)
+    @factory = RGeo::Cartesian.preferred_factory(srid: 1000)
+    @factoryz = RGeo::Cartesian.preferred_factory(srid: 1000, has_z_coordinate: true)
+    @factorym = RGeo::Cartesian.preferred_factory(srid: 1000, has_m_coordinate: true)
+    @factoryzm = RGeo::Cartesian.preferred_factory(srid: 1000, has_z_coordinate: true, has_m_coordinate: true)
   end
 
   def test_point_2d
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.point(1, 2)
     assert_equal("Point (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_point_z
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factoryz.point(1, 2, 3)
     assert_equal("Point (1.0 2.0 3.0)", generator_.generate(obj_))
   end
 
   def test_point_z_wkt11strict
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :wkt11_strict)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :wkt11_strict)
     obj_ = @factoryz.point(1, 2, 3)
     assert_equal("Point (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_point_m
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factorym.point(1, 2, 3)
     assert_equal("Point (1.0 2.0 3.0)", generator_.generate(obj_))
   end
 
   def test_point_zm
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factoryzm.point(1, 2, 3, 4)
     assert_equal("Point (1.0 2.0 3.0 4.0)", generator_.generate(obj_))
   end
 
   def test_point_squarebrackets
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(square_brackets: true)
+    generator_ = RGeo::WKRep::WKTGenerator.new(square_brackets: true)
     obj_ = @factory.point(1, 2)
     assert_equal("Point [1.0 2.0]", generator_.generate(obj_))
   end
 
   def test_point_uppercase
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(convert_case: :upper)
+    generator_ = RGeo::WKRep::WKTGenerator.new(convert_case: :upper)
     obj_ = @factory.point(1, 2)
     assert_equal("POINT (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_point_lowercase
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(convert_case: :lower)
+    generator_ = RGeo::WKRep::WKTGenerator.new(convert_case: :lower)
     obj_ = @factory.point(1, 2)
     assert_equal("point (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_point_wkt12
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
     obj_ = @factory.point(1, 2)
     assert_equal("Point (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_point_wkt12_z
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
     obj_ = @factoryz.point(1, 2, 3)
     assert_equal("Point Z (1.0 2.0 3.0)", generator_.generate(obj_))
   end
 
   def test_point_wkt12_m
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
     obj_ = @factorym.point(1, 2, 3)
     assert_equal("Point M (1.0 2.0 3.0)", generator_.generate(obj_))
   end
 
   def test_point_wkt12_zm
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
     obj_ = @factoryzm.point(1, 2, 3, 4)
     assert_equal("Point ZM (1.0 2.0 3.0 4.0)", generator_.generate(obj_))
   end
 
   def test_point_ewkt
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
     obj_ = @factory.point(1, 2)
     assert_equal("Point (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_point_ewkt_z
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
     obj_ = @factoryz.point(1, 2, 3)
     assert_equal("Point (1.0 2.0 3.0)", generator_.generate(obj_))
   end
 
   def test_point_ewkt_m
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
     obj_ = @factorym.point(1, 2, 3)
     assert_equal("PointM (1.0 2.0 3.0)", generator_.generate(obj_))
   end
 
   def test_point_ewkt_zm
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt)
     obj_ = @factoryzm.point(1, 2, 3, 4)
     assert_equal("Point (1.0 2.0 3.0 4.0)", generator_.generate(obj_))
   end
 
   def test_point_ewkt_with_srid
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt, emit_ewkt_srid: true)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :ewkt, emit_ewkt_srid: true)
     obj_ = @factory.point(1, 2)
     assert_equal("SRID=1000;Point (1.0 2.0)", generator_.generate(obj_))
   end
 
   def test_linestring_basic
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(1, 2)
     p2_ = @factory.point(2, 2)
     p3_ = @factory.point(1, 1)
@@ -126,13 +126,13 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_linestring_empty
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.line_string([])
     assert_equal("LineString EMPTY", generator_.generate(obj_))
   end
 
   def test_polygon_basic
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(0, 0)
     p2_ = @factory.point(10, 0)
     p3_ = @factory.point(10, 10)
@@ -143,7 +143,7 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_polygon_with_hole
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(0, 0)
     p2_ = @factory.point(10, 0)
     p3_ = @factory.point(10, 10)
@@ -158,13 +158,13 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_polygon_empty
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.polygon(@factory.line_string([]))
     assert_equal("Polygon EMPTY", generator_.generate(obj_))
   end
 
   def test_multipoint_basic
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(1, 2)
     p2_ = @factory.point(2, 2)
     p3_ = @factory.point(1, 1)
@@ -173,13 +173,13 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_multipoint_empty
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.multi_point([])
     assert_equal("MultiPoint EMPTY", generator_.generate(obj_))
   end
 
   def test_multilinestring_basic
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(0, 0)
     p2_ = @factory.point(10, 0)
     p3_ = @factory.point(10, 10)
@@ -195,13 +195,13 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_multilinestring_empty
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.multi_line_string([])
     assert_equal("MultiLineString EMPTY", generator_.generate(obj_))
   end
 
   def test_multipolygon_basic
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(0, 0)
     p2_ = @factory.point(10, 0)
     p3_ = @factory.point(10, 10)
@@ -224,13 +224,13 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_multipolygon_empty
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.multi_polygon([])
     assert_equal("MultiPolygon EMPTY", generator_.generate(obj_))
   end
 
   def test_collection_basic
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     p1_ = @factory.point(0, 0)
     p2_ = @factory.point(10, 0)
     p3_ = @factory.point(10, 10)
@@ -255,7 +255,7 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_collection_wkt12_z
-    generator_ = ::RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
+    generator_ = RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
     p1_ = @factoryz.point(0, 0)
     p2_ = @factoryz.point(10, 0)
     p3_ = @factoryz.point(10, 10)
@@ -280,7 +280,7 @@ class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_collection_empty
-    generator_ = ::RGeo::WKRep::WKTGenerator.new
+    generator_ = RGeo::WKRep::WKTGenerator.new
     obj_ = @factory.collection([])
     assert_equal("GeometryCollection EMPTY", generator_.generate(obj_))
   end

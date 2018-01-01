@@ -10,8 +10,8 @@ class CartesianMultiPolygonTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
   def create_factories
-    @factory = ::RGeo::Cartesian.simple_factory
-    @lenient_factory = ::RGeo::Cartesian.simple_factory(lenient_multi_polygon_assertions: true)
+    @factory = RGeo::Cartesian.simple_factory
+    @lenient_factory = RGeo::Cartesian.simple_factory(lenient_multi_polygon_assertions: true)
   end
 
   undef_method :test_creation_wrong_type

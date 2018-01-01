@@ -6,7 +6,7 @@
 
 module RGeo
   module Geos
-    # This the GEOS CAPI implementation of ::RGeo::Feature::Factory.
+    # This the GEOS CAPI implementation of RGeo::Feature::Factory.
 
     class CAPIFactory
       include Feature::Factory::Instance
@@ -15,7 +15,7 @@ module RGeo
         # Create a new factory. Returns nil if the GEOS CAPI implementation
         # is not supported.
         #
-        # See ::RGeo::Geos.factory for a list of supported options.
+        # See RGeo::Geos.factory for a list of supported options.
 
         def create(opts_ = {})
           # Make sure GEOS is available
@@ -259,7 +259,7 @@ module RGeo
         _flags & 0x1 != 0
       end
 
-      # See ::RGeo::Feature::Factory#property
+      # See RGeo::Feature::Factory#property
 
       def property(name_)
         case name_
@@ -278,7 +278,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#parse_wkt
+      # See RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
         if (wkt_parser_ = _wkt_parser)
@@ -288,7 +288,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#parse_wkb
+      # See RGeo::Feature::Factory#parse_wkb
 
       def parse_wkb(str_)
         if (wkb_parser_ = _wkb_parser)
@@ -298,7 +298,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#point
+      # See RGeo::Feature::Factory#point
 
       def point(x_, y_, *extra_)
         if extra_.length > (_flags & 6 == 0 ? 0 : 1)
@@ -312,7 +312,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#line_string
+      # See RGeo::Feature::Factory#line_string
 
       def line_string(points_)
         points_ = points_.to_a unless points_.is_a?(::Array)
@@ -323,7 +323,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#line
+      # See RGeo::Feature::Factory#line
 
       def line(start_, end_)
         CAPILineImpl.create(self, start_, end_)
@@ -331,7 +331,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#linear_ring
+      # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
         points_ = points_.to_a unless points_.is_a?(::Array)
@@ -342,7 +342,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#polygon
+      # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_ = nil)
         inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(::Array)
@@ -353,7 +353,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#collection
+      # See RGeo::Feature::Factory#collection
 
       def collection(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
@@ -364,7 +364,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#multi_point
+      # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
@@ -375,7 +375,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#multi_line_string
+      # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
@@ -386,7 +386,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#multi_polygon
+      # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
@@ -397,19 +397,19 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#proj4
+      # See RGeo::Feature::Factory#proj4
 
       def proj4
         _proj4
       end
 
-      # See ::RGeo::Feature::Factory#coord_sys
+      # See RGeo::Feature::Factory#coord_sys
 
       def coord_sys
         _coord_sys
       end
 
-      # See ::RGeo::Feature::Factory#override_cast
+      # See RGeo::Feature::Factory#override_cast
 
       def override_cast(original_, ntype_, flags_)
         return nil unless Geos.supported?

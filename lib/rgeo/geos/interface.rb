@@ -60,9 +60,9 @@ module RGeo
 
       def version
         unless defined?(@version)
-          if ::RGeo::Geos::CAPI_SUPPORTED
-            @version = ::RGeo::Geos::CAPIFactory._geos_version.freeze
-          elsif ::RGeo::Geos::FFI_SUPPORTED
+          if RGeo::Geos::CAPI_SUPPORTED
+            @version = RGeo::Geos::CAPIFactory._geos_version.freeze
+          elsif RGeo::Geos::FFI_SUPPORTED
             @version = ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, "").freeze
           else
             @version = nil

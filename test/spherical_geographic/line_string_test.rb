@@ -8,10 +8,10 @@ require "test_helper"
 
 class SphericalLineStringTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Geographic.spherical_factory
+    @factory = RGeo::Geographic.spherical_factory
   end
 
-  include ::RGeo::Tests::Common::LineStringTests
+  include RGeo::Tests::Common::LineStringTests
 
   undef_method :test_fully_equal
   undef_method :test_geometrically_equal_but_different_type

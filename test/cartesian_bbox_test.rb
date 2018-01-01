@@ -8,11 +8,11 @@ require "test_helper"
 
 class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Cartesian.factory
+    @factory = RGeo::Cartesian.factory
   end
 
   def test_empty_bbox
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     assert_equal(true, bbox_.empty?)
     assert_equal(false, bbox_.has_z)
     assert_nil(bbox_.min_x)
@@ -27,8 +27,8 @@ class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_point_bbox
-    empty_bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    empty_bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     bbox_.add(@factory.point(1, 2))
     assert_equal(false, bbox_.empty?)
     assert_equal(false, bbox_.has_z)
@@ -52,8 +52,8 @@ class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_rect_bbox
-    empty_bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    empty_bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     bbox_.add(@factory.point(1, 4))
     bbox_.add(@factory.point(2, 3))
     assert_equal(false, bbox_.empty?)
@@ -77,16 +77,16 @@ class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_bbox_from_points
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     bbox_.add(@factory.point(1, 4))
     bbox_.add(@factory.point(2, 3))
-    bbox2_ = ::RGeo::Cartesian::BoundingBox.create_from_points(
+    bbox2_ = RGeo::Cartesian::BoundingBox.create_from_points(
       @factory.point(2, 3), @factory.point(1, 4))
     assert_equal(bbox_, bbox2_)
   end
 
   def test_basic_rect_subdivide
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     bbox_.add(@factory.point(1, 2))
     bbox_.add(@factory.point(5, 4))
     quads_ = bbox_.subdivide
@@ -97,7 +97,7 @@ class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_horiz_line_subdivide
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     bbox_.add(@factory.point(1, 2))
     bbox_.add(@factory.point(5, 2))
     lines_ = bbox_.subdivide
@@ -107,7 +107,7 @@ class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_vert_line_subdivide
-    bbox_ = ::RGeo::Cartesian::BoundingBox.new(@factory)
+    bbox_ = RGeo::Cartesian::BoundingBox.new(@factory)
     bbox_.add(@factory.point(1, 2))
     bbox_.add(@factory.point(1, 6))
     lines_ = bbox_.subdivide

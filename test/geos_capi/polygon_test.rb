@@ -10,7 +10,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup
-    @factory = ::RGeo::Geos.factory
+    @factory = RGeo::Geos.factory
   end
 
   def test_intersection
@@ -142,4 +142,4 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
     polygon = @factory.polygon(outer_ring)
     polygon.invalid_reason
   end
-end if ::RGeo::Geos.capi_supported?
+end if RGeo::Geos.capi_supported?

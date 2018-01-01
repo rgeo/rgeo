@@ -10,7 +10,7 @@ class SphericalFactoryTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup
-    @factory = ::RGeo::Geographic.spherical_factory
+    @factory = RGeo::Geographic.spherical_factory
     @srid = 4055
   end
 

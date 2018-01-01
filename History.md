@@ -98,7 +98,7 @@
     this release. These class names and hierarchy are internal, and clients
     should not depend on them. That is, RGeo types are generally duck-types.
     If you need to interrogate type, see the documentation for the
-    ::RGeo::Feature::Type module.
+    RGeo::Feature::Type module.
 *   The gemspec no longer includes the timestamp in the version, so that
     bundler can pull from github. (Reported by corneverbruggen)
 *   Mixins were not being added to GEOS features with both Z and M coordinate.

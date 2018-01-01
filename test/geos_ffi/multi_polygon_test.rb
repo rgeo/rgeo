@@ -10,8 +10,8 @@ class GeosFFIMultiPolygonTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
   def create_factories
-    @factory = ::RGeo::Geos.factory(native_interface: :ffi)
-    @lenient_factory = ::RGeo::Geos.factory(lenient_multi_polygon_assertions: true,
+    @factory = RGeo::Geos.factory(native_interface: :ffi)
+    @lenient_factory = RGeo::Geos.factory(lenient_multi_polygon_assertions: true,
                                             native_interface: :ffi)
   end
 
@@ -20,4 +20,4 @@ class GeosFFIMultiPolygonTest < Test::Unit::TestCase # :nodoc:
   def test_empty_centroid
     assert_equal(@factory.collection([]), @factory.multi_polygon([]).centroid)
   end
-end if ::RGeo::Geos.ffi_supported?
+end if RGeo::Geos.ffi_supported?

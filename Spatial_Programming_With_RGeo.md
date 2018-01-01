@@ -339,7 +339,7 @@ This factory uses a flat (Cartesian) coordinate system, and is implemented by
 GEOS (if available) or using the pure Ruby alternative if not. It can be
 retrieved by calling:
 
-    factory = ::RGeo::Cartesian.preferred_factory()
+    factory = RGeo::Cartesian.preferred_factory()
 
 Another common factory you might want to use is the "simple Mercator" factory.
 This is a geographic factory intended for simple location-based applications
@@ -348,14 +348,14 @@ longitude-latitude, but it also has a built-in facility for converting those
 coordinates to the flat "tiling" coordinate system used by the map. You can
 retrieve it by calling:
 
-    factory = ::RGeo::Geographic.simple_mercator_factory()
+    factory = RGeo::Geographic.simple_mercator_factory()
 
 In many cases, these factory creation methods take additional optional
 arguments that enable various features. For example, the preferred Cartesian
 factory, by default, uses only X and Y coordinates. You can activate Z and/or
 M coordinates by passing an appropriate argument, e.g.:
 
-    factory = ::RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
+    factory = RGeo::Cartesian.preferred_factory(:has_z_coordinate => true)
     factory.property(:has_z_coordinate)  # returns true
     factory.property(:has_m_coordinate)  # returns false
     point = factory.point(1, 2, 3)       # this point has a Z coordinate
@@ -393,7 +393,7 @@ example, a GeometryCollection may contain no items, or a LineString may
 contain no points. This state is indicated by the `Geometry#is_empty?` method.
 In RGeo, any geometry type except Point may be empty.
 
-    factory = ::RGeo::Cartesian.preferred_factory
+    factory = RGeo::Cartesian.preferred_factory
     factory.point(1, 2).is_empty?     # returns false
     factory.collection([]).is_empty?  # returns true
 
@@ -404,7 +404,7 @@ contains the same point more than once. Sometimes, a geometric analysis
 algorithm will have simplicity as a precondition. This property is indicated
 by the `Geometry#is_simple?` method.
 
-    factory = ::RGeo::Cartesian.preferred_factory
+    factory = RGeo::Cartesian.preferred_factory
     p00 = factory.point(0, 0)
     p01 = factory.point(0, 1)
     p11 = factory.point(1, 1)

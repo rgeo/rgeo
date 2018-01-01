@@ -8,11 +8,11 @@ require "test_helper"
 
 class GeosMiscTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Geos.factory(srid: 4326)
+    @factory = RGeo::Geos.factory(srid: 4326)
   end
 
   def test_marshal_dump_with_geos
-    @factory = ::RGeo::Geos.factory(
+    @factory = RGeo::Geos.factory(
       srid: 4326,
       wkt_generator: :geos,
       wkb_generator: :geos,
@@ -29,7 +29,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_encode_with_geos
-    @factory = ::RGeo::Geos.factory(
+    @factory = RGeo::Geos.factory(
       srid: 4326,
       wkt_generator: :geos,
       wkb_generator: :geos,
@@ -46,7 +46,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_uninitialized
-    geom_ = ::RGeo::Geos::CAPIGeometryImpl.new
+    geom_ = RGeo::Geos::CAPIGeometryImpl.new
     assert_equal(false, geom_.initialized?)
     assert_nil(geom_.geometry_type)
   end
@@ -79,7 +79,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
     polygon_.intersects?(p2_)
     assert_equal(true, polygon_.prepared?)
 
-    factory_no_auto_prepare_ = ::RGeo::Geos.factory(srid: 4326, auto_prepare: :disabled)
+    factory_no_auto_prepare_ = RGeo::Geos.factory(srid: 4326, auto_prepare: :disabled)
     polygon2_ = factory_no_auto_prepare_.polygon(
       factory_no_auto_prepare_.linear_ring([p1_, p2_, p3_, p1_]))
     assert_equal(false, polygon2_.prepared?)
@@ -100,7 +100,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_geos_version
-    assert_match(/^\d+\.\d+(\.\d+)?$/, ::RGeo::Geos.version)
+    assert_match(/^\d+\.\d+(\.\d+)?$/, RGeo::Geos.version)
   end
 
   def test_unary_union_simple_points
@@ -109,7 +109,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
     mp_ = @factory.multi_point([p1_, p2_])
     collection_ = @factory.collection([p1_, p2_])
     geom_ = collection_.unary_union
-    if ::RGeo::Geos::CAPIFactory._supports_unary_union?
+    if RGeo::Geos::CAPIFactory._supports_unary_union?
       assert(geom_.eql?(mp_))
     else
       assert_equal(nil, geom_)
@@ -120,14 +120,14 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
     collection_ = @factory.parse_wkt("GEOMETRYCOLLECTION (POLYGON ((0 0, 0 90, 90 90, 90 0, 0 0)),   POLYGON ((120 0, 120 90, 210 90, 210 0, 120 0)),  LINESTRING (40 50, 40 140),  LINESTRING (160 50, 160 140),  POINT (60 50),  POINT (60 140),  POINT (40 140))")
     expected_ = @factory.parse_wkt("GEOMETRYCOLLECTION (POINT (60 140),   LINESTRING (40 90, 40 140), LINESTRING (160 90, 160 140), POLYGON ((0 0, 0 90, 40 90, 90 90, 90 0, 0 0)), POLYGON ((120 0, 120 90, 160 90, 210 90, 210 0, 120 0)))")
     geom_ = collection_.unary_union
-    if ::RGeo::Geos::CAPIFactory._supports_unary_union?
+    if RGeo::Geos::CAPIFactory._supports_unary_union?
       assert(geom_.eql?(expected_))
     else
       assert_equal(nil, geom_)
     end
   end
-end if ::RGeo::Geos.capi_supported?
+end if RGeo::Geos.capi_supported?
 
-unless ::RGeo::Geos.capi_supported?
+unless RGeo::Geos.capi_supported?
   puts "WARNING: GEOS CAPI support not available. Related tests skipped."
 end

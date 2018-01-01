@@ -10,6 +10,6 @@ class MercatorLineStringTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::LineStringTests
 
   def setup
-    @factory = ::RGeo::Geographic.simple_mercator_factory
+    @factory = RGeo::Geographic.simple_mercator_factory
   end
 end

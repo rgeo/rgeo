@@ -10,7 +10,7 @@ class GeosLineStringTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::LineStringTests
 
   def setup
-    @factory = ::RGeo::Geos.factory
+    @factory = RGeo::Geos.factory
   end
 
   def test_project_interpolate_round_trip
@@ -20,4 +20,4 @@ class GeosLineStringTest < Test::Unit::TestCase # :nodoc:
     interpolated_point = line_string.interpolate_point location
     assert_equal point, interpolated_point
   end
-end if ::RGeo::Geos.capi_supported?
+end if RGeo::Geos.capi_supported?

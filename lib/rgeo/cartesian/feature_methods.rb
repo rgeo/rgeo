@@ -18,7 +18,7 @@ module RGeo
 
     module PointMethods # :nodoc:
       def distance(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, @factory)
+        rhs_ = RGeo::Feature.cast(rhs_, @factory)
         case rhs_
         when PointImpl
           dx_ = @x - rhs_.x

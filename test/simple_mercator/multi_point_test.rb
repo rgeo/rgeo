@@ -10,7 +10,7 @@ class MercatorMultiPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
   def create_factory(opts_ = {})
-    ::RGeo::Geographic.simple_mercator_factory(opts_)
+    RGeo::Geographic.simple_mercator_factory(opts_)
   end
 
   # These tests suffer from floating point issues

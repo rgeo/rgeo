@@ -10,7 +10,7 @@ class GeosGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory
-    ::RGeo::Geos.factory
+    RGeo::Geos.factory
   end
 
   def test_collection_node
@@ -32,4 +32,4 @@ class GeosGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
     assert_equal(noded.count, 4)
     assert_true(expected_lines.all? { |line| noded.include? line })
   end
-end if ::RGeo::Geos.capi_supported?
+end if RGeo::Geos.capi_supported?

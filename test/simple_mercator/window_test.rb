@@ -8,7 +8,7 @@ require "test_helper"
 
 class MercatorWindowTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Geographic.simple_mercator_factory
+    @factory = RGeo::Geographic.simple_mercator_factory
   end
 
   def assert_close_enough(p1_, p2_)

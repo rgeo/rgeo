@@ -25,8 +25,8 @@ module RGeo
       # are ignored.
 
       def preferred_factory(opts_ = {})
-        if ::RGeo::Geos.supported?
-          ::RGeo::Geos.factory(opts_)
+        if RGeo::Geos.supported?
+          RGeo::Geos.factory(opts_)
         else
           simple_factory(opts_)
         end

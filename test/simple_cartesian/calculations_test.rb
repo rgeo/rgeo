@@ -8,7 +8,7 @@ require "test_helper"
 
 class CartesianCalculationsTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Cartesian.simple_factory
+    @factory = RGeo::Cartesian.simple_factory
     @point1 = @factory.point(3, 4)
     @point2 = @factory.point(5, 5)
     @point3 = @factory.point(6, 4)
@@ -17,15 +17,15 @@ class CartesianCalculationsTest < Test::Unit::TestCase # :nodoc:
     @point6 = @factory.point(-1, 1)
     @point7 = @factory.point(5, 4)
     @point8 = @factory.point(1, 3)
-    @horiz_seg = ::RGeo::Cartesian::Segment.new(@point1, @point3)
-    @vert_seg = ::RGeo::Cartesian::Segment.new(@point4, @point1)
-    @short_rising_seg = ::RGeo::Cartesian::Segment.new(@point1, @point2)
-    @long_rising_seg = ::RGeo::Cartesian::Segment.new(@point5, @point2)
-    @collinear_rising_seg = ::RGeo::Cartesian::Segment.new(@point5, @point8)
-    @touching_collinear_rising_seg = ::RGeo::Cartesian::Segment.new(@point1, @point8)
-    @parallel_rising_seg = ::RGeo::Cartesian::Segment.new(@point6, @point7)
-    @steep_rising_seg = ::RGeo::Cartesian::Segment.new(@point6, @point4)
-    @degenerate_seg = ::RGeo::Cartesian::Segment.new(@point5, @point5)
+    @horiz_seg = RGeo::Cartesian::Segment.new(@point1, @point3)
+    @vert_seg = RGeo::Cartesian::Segment.new(@point4, @point1)
+    @short_rising_seg = RGeo::Cartesian::Segment.new(@point1, @point2)
+    @long_rising_seg = RGeo::Cartesian::Segment.new(@point5, @point2)
+    @collinear_rising_seg = RGeo::Cartesian::Segment.new(@point5, @point8)
+    @touching_collinear_rising_seg = RGeo::Cartesian::Segment.new(@point1, @point8)
+    @parallel_rising_seg = RGeo::Cartesian::Segment.new(@point6, @point7)
+    @steep_rising_seg = RGeo::Cartesian::Segment.new(@point6, @point4)
+    @degenerate_seg = RGeo::Cartesian::Segment.new(@point5, @point5)
   end
 
   def assert_close_enough(v1_, v2_)

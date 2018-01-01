@@ -14,39 +14,39 @@ module RGeo
     end
 
     # This module provides the API for geometry type objects. Technically
-    # these objects are modules (such as ::RGeo::Feature::Point), but as
+    # these objects are modules (such as RGeo::Feature::Point), but as
     # objects they respond to the methods documented here.
     #
     # For example, you may determine whether a feature object is a
     # point by calling:
     #
-    #   ::RGeo::Feature::Point.check_type(object)
+    #   RGeo::Feature::Point.check_type(object)
     #
     # A corresponding === operator is provided so you can use the type
     # modules in a case-when clause:
     #
     #   case object
-    #   when ::RGeo::Feature::Point
+    #   when RGeo::Feature::Point
     #     # do stuff here...
     #
     # However, a feature object may not actually include the point module
     # itself; hence, the following will *not* work:
     #
-    #   object.is_a?(::RGeo::Feature::Point)  # DON'T DO THIS-- DOES NOT WORK
+    #   object.is_a?(RGeo::Feature::Point)  # DON'T DO THIS-- DOES NOT WORK
     #
     # You may obtain the type of a feature object by calling its
     # geometry_type method. You may then use the methods in this module to
     # interrogate that type.
     #
     #   # supppose object is a Point
-    #   type = object.geometry_type  # ::RGeo::Feature::Point
+    #   type = object.geometry_type  # RGeo::Feature::Point
     #   type.type_name               # "Point"
-    #   type.supertype               # ::RGeo::Feature::Geometry
+    #   type.supertype               # RGeo::Feature::Geometry
     #
     # You may also use the presence of this module to determine whether
     # a particular object is a feature type:
     #
-    #   ::RGeo::Feature::Type === object.geometry_type  # true
+    #   RGeo::Feature::Type === object.geometry_type  # true
 
     module Type
       # Returns true if the given object is this type or a subtype
@@ -84,7 +84,7 @@ module RGeo
 
       # Returns the OpenGIS type name of this type. For example:
       #
-      #   ::RGeo::Feature::Point.type_name  # "Point"
+      #   RGeo::Feature::Point.type_name  # "Point"
 
       def type_name
         name.sub("RGeo::Feature::", "")
@@ -153,7 +153,7 @@ module RGeo
       # RGeo provides a default casting algorithm. Individual feature
       # implementation factories may override this and customize the
       # casting behavior by defining the override_cast method. See
-      # ::RGeo::Feature::Factory#override_cast for more details.
+      # RGeo::Feature::Factory#override_cast for more details.
 
       def cast(obj_, *params_)
         # Interpret params

@@ -10,14 +10,14 @@ class GeosZMFactoryTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup
-    @factory = ::RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true, srid: 1000, buffer_resolution: 2)
+    @factory = RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true, srid: 1000, buffer_resolution: 2)
     @srid = 1000
   end
 
   def test_is_geos_factory
-    assert_equal(true, ::RGeo::Geos.is_geos?(@factory))
-    assert_equal(true, ::RGeo::Geos.is_capi_geos?(@factory))
-    assert_equal(false, ::RGeo::Geos.is_ffi_geos?(@factory))
+    assert_equal(true, RGeo::Geos.is_geos?(@factory))
+    assert_equal(true, RGeo::Geos.is_capi_geos?(@factory))
+    assert_equal(false, RGeo::Geos.is_ffi_geos?(@factory))
   end
 
   def test_factory_parts
@@ -45,4 +45,4 @@ class GeosZMFactoryTest < Test::Unit::TestCase # :nodoc:
     assert_nil(point_.m_geometry.z)
     assert_equal(4, point_.m_geometry.m)
   end
-end if ::RGeo::Geos.capi_supported?
+end if RGeo::Geos.capi_supported?

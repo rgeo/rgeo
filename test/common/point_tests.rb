@@ -40,15 +40,15 @@ module RGeo
 
         def test_type_check
           point_ = @factory.point(21, 22)
-          assert(::RGeo::Feature::Geometry.check_type(point_))
-          assert(::RGeo::Feature::Point.check_type(point_))
-          assert(!::RGeo::Feature::GeometryCollection.check_type(point_))
-          assert(!::RGeo::Feature::Curve.check_type(point_))
+          assert(RGeo::Feature::Geometry.check_type(point_))
+          assert(RGeo::Feature::Point.check_type(point_))
+          assert(!RGeo::Feature::GeometryCollection.check_type(point_))
+          assert(!RGeo::Feature::Curve.check_type(point_))
         end
 
         def test_geometry_type
           point_ = @factory.point(11, 12)
-          assert_equal(::RGeo::Feature::Point, point_.geometry_type)
+          assert_equal(RGeo::Feature::Point, point_.geometry_type)
         end
 
         def test_dimension
@@ -207,7 +207,7 @@ module RGeo
           union12_ = point1_.union(point2_)
           union13_ = point1_.union(point3_)
           assert_close_enough(point1_, union12_)
-          assert_equal(::RGeo::Feature::MultiPoint, union13_.geometry_type)
+          assert_equal(RGeo::Feature::MultiPoint, union13_.geometry_type)
           assert_contains_approx(point1_, union13_)
           assert_contains_approx(point3_, union13_)
         end
@@ -218,7 +218,7 @@ module RGeo
           point3_ = @factory.point(12, 12)
           diff12_ = point1_.difference(point2_)
           diff13_ = point1_.difference(point3_)
-          assert_equal(::RGeo::Feature::GeometryCollection, diff12_.geometry_type)
+          assert_equal(RGeo::Feature::GeometryCollection, diff12_.geometry_type)
           assert(diff12_.is_empty?)
           assert_close_enough(point1_, diff13_)
         end
@@ -229,9 +229,9 @@ module RGeo
           point3_ = @factory.point(12, 12)
           diff12_ = point1_.sym_difference(point2_)
           diff13_ = point1_.sym_difference(point3_)
-          assert_equal(::RGeo::Feature::GeometryCollection, diff12_.geometry_type)
+          assert_equal(RGeo::Feature::GeometryCollection, diff12_.geometry_type)
           assert(diff12_.is_empty?)
-          assert_equal(::RGeo::Feature::MultiPoint, diff13_.geometry_type)
+          assert_equal(RGeo::Feature::MultiPoint, diff13_.geometry_type)
           assert_contains_approx(point1_, diff13_)
           assert_contains_approx(point3_, diff13_)
         end
@@ -239,7 +239,7 @@ module RGeo
         def test_buffer
           point_ = @factory.point(11, 12)
           buffer_ = point_.buffer(4)
-          assert_equal(::RGeo::Feature::Polygon, buffer_.geometry_type)
+          assert_equal(RGeo::Feature::Polygon, buffer_.geometry_type)
           assert_equal(33, buffer_.exterior_ring.num_points)
         end
 

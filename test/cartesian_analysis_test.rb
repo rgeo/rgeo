@@ -8,7 +8,7 @@ require "test_helper"
 
 class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
   def setup
-    @factory = ::RGeo::Cartesian.simple_factory
+    @factory = RGeo::Cartesian.simple_factory
   end
 
   def test_ring_direction_clockwise_triangle
@@ -16,7 +16,7 @@ class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
     p2_ = @factory.point(2, 4)
     p3_ = @factory.point(5, 2)
     ring_ = @factory.line_string([p1_, p2_, p3_, p1_])
-    assert_equal(-1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
+    assert_equal(-1, RGeo::Cartesian::Analysis.ring_direction(ring_))
   end
 
   def test_ring_direction_counterclockwise_triangle
@@ -24,7 +24,7 @@ class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
     p2_ = @factory.point(2, 4)
     p3_ = @factory.point(5, 2)
     ring_ = @factory.line_string([p1_, p3_, p2_, p1_])
-    assert_equal(1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
+    assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring_))
   end
 
   def test_ring_direction_clockwise_puckered_quad
@@ -33,7 +33,7 @@ class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
     p3_ = @factory.point(3, 3)
     p4_ = @factory.point(5, 2)
     ring_ = @factory.line_string([p1_, p2_, p3_, p4_, p1_])
-    assert_equal(-1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
+    assert_equal(-1, RGeo::Cartesian::Analysis.ring_direction(ring_))
   end
 
   def test_ring_direction_counterclockwise_puckered_quad
@@ -42,7 +42,7 @@ class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
     p3_ = @factory.point(3, 3)
     p4_ = @factory.point(5, 2)
     ring_ = @factory.line_string([p1_, p4_, p3_, p2_, p1_])
-    assert_equal(1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
+    assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring_))
   end
 
   def test_ring_direction_counterclockwise_near_circle
@@ -55,6 +55,6 @@ class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
     p7_ = @factory.point(-3, 0)
     p8_ = @factory.point(-2, -2)
     ring_ = @factory.line_string([p1_, p2_, p3_, p4_, p5_, p6_, p7_, p8_, p1_])
-    assert_equal(1, ::RGeo::Cartesian::Analysis.ring_direction(ring_))
+    assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring_))
   end
 end

@@ -22,8 +22,8 @@ module RGeo
         def test_creation_simple
           geom_ = @factory.collection([@point1, @line1])
           assert_not_nil(geom_)
-          assert(::RGeo::Feature::GeometryCollection === geom_)
-          assert_equal(::RGeo::Feature::GeometryCollection, geom_.geometry_type)
+          assert(RGeo::Feature::GeometryCollection === geom_)
+          assert_equal(RGeo::Feature::GeometryCollection, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
           assert(@point1.eql?(geom_[0]))
           assert(@line1.eql?(geom_[1]))
@@ -32,8 +32,8 @@ module RGeo
         def test_creation_empty
           geom_ = @factory.collection([])
           assert_not_nil(geom_)
-          assert(::RGeo::Feature::GeometryCollection === geom_)
-          assert_equal(::RGeo::Feature::GeometryCollection, geom_.geometry_type)
+          assert(RGeo::Feature::GeometryCollection === geom_)
+          assert_equal(RGeo::Feature::GeometryCollection, geom_.geometry_type)
           assert_equal(0, geom_.num_geometries)
           assert_equal([], geom_.to_a)
         end
@@ -48,8 +48,8 @@ module RGeo
         def test_creation_save_klass
           geom_ = @factory.collection([@point1, @line3])
           assert_not_nil(geom_)
-          assert(::RGeo::Feature::GeometryCollection === geom_)
-          assert_equal(::RGeo::Feature::GeometryCollection, geom_.geometry_type)
+          assert(RGeo::Feature::GeometryCollection === geom_)
+          assert_equal(RGeo::Feature::GeometryCollection, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
           assert(geom_[1].eql?(@line3))
         end
@@ -58,8 +58,8 @@ module RGeo
           geom1_ = @factory.collection([@point1, @line1])
           geom2_ = @factory.collection([@point2, geom1_])
           assert_not_nil(geom2_)
-          assert(::RGeo::Feature::GeometryCollection === geom2_)
-          assert_equal(::RGeo::Feature::GeometryCollection, geom2_.geometry_type)
+          assert(RGeo::Feature::GeometryCollection === geom2_)
+          assert_equal(RGeo::Feature::GeometryCollection, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
           assert(geom2_[1].eql?(geom1_))
         end
@@ -69,10 +69,10 @@ module RGeo
           geom2_ = @factory.collection([@point2, geom1_])
           ::GC.start
           assert_not_nil(geom2_)
-          assert(::RGeo::Feature::GeometryCollection === geom2_)
-          assert_equal(::RGeo::Feature::GeometryCollection, geom2_.geometry_type)
+          assert(RGeo::Feature::GeometryCollection === geom2_)
+          assert_equal(RGeo::Feature::GeometryCollection, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
-          assert_equal(::RGeo::Feature::Line, geom2_[1][1].geometry_type)
+          assert_equal(RGeo::Feature::Line, geom2_[1][1].geometry_type)
         end
 
         def test_required_equivalences
@@ -146,7 +146,7 @@ module RGeo
           geom1_ = @factory.collection([@point1, @line1])
           geom2_ = geom1_.clone
           assert(geom1_.eql?(geom2_))
-          assert_equal(::RGeo::Feature::GeometryCollection, geom2_.geometry_type)
+          assert_equal(RGeo::Feature::GeometryCollection, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
           assert(@point1.eql?(geom2_[0]))
           assert(@line1.eql?(geom2_[1]))
@@ -154,15 +154,15 @@ module RGeo
 
         def test_type_check
           geom1_ = @factory.collection([@point1, @line1])
-          assert(::RGeo::Feature::Geometry.check_type(geom1_))
-          assert(!::RGeo::Feature::Point.check_type(geom1_))
-          assert(::RGeo::Feature::GeometryCollection.check_type(geom1_))
-          assert(!::RGeo::Feature::MultiPoint.check_type(geom1_))
+          assert(RGeo::Feature::Geometry.check_type(geom1_))
+          assert(!RGeo::Feature::Point.check_type(geom1_))
+          assert(RGeo::Feature::GeometryCollection.check_type(geom1_))
+          assert(!RGeo::Feature::MultiPoint.check_type(geom1_))
           geom2_ = @factory.collection([@point1, @point2])
-          assert(::RGeo::Feature::Geometry.check_type(geom2_))
-          assert(!::RGeo::Feature::Point.check_type(geom2_))
-          assert(::RGeo::Feature::GeometryCollection.check_type(geom2_))
-          assert(!::RGeo::Feature::MultiPoint.check_type(geom2_))
+          assert(RGeo::Feature::Geometry.check_type(geom2_))
+          assert(!RGeo::Feature::Point.check_type(geom2_))
+          assert(RGeo::Feature::GeometryCollection.check_type(geom2_))
+          assert(!RGeo::Feature::MultiPoint.check_type(geom2_))
         end
 
         def test_as_text_wkt_round_trip

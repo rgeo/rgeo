@@ -10,10 +10,10 @@ class SphericalPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup
-    @factory = ::RGeo::Geographic.spherical_factory(buffer_resolution: 8)
-    @zfactory = ::RGeo::Geographic.spherical_factory(has_z_coordinate: true)
-    @mfactory = ::RGeo::Geographic.spherical_factory(has_m_coordinate: true)
-    @zmfactory = ::RGeo::Geographic.spherical_factory(has_z_coordinate: true, has_m_coordinate: true)
+    @factory = RGeo::Geographic.spherical_factory(buffer_resolution: 8)
+    @zfactory = RGeo::Geographic.spherical_factory(has_z_coordinate: true)
+    @mfactory = RGeo::Geographic.spherical_factory(has_m_coordinate: true)
+    @zmfactory = RGeo::Geographic.spherical_factory(has_z_coordinate: true, has_m_coordinate: true)
   end
 
   def test_latlon
@@ -44,7 +44,7 @@ class SphericalPointTest < Test::Unit::TestCase # :nodoc:
     point2_ = @factory.point(0, 10)
     point3_ = @factory.point(0, 40)
     assert_in_delta(0, point1_.distance(point2_), 0.0001)
-    assert_in_delta(::Math::PI / 6.0 * ::RGeo::Geographic::SphericalMath::RADIUS, point1_.distance(point3_), 0.0001)
+    assert_in_delta(::Math::PI / 6.0 * RGeo::Geographic::SphericalMath::RADIUS, point1_.distance(point3_), 0.0001)
   end
 
   def test_floating_point_perturbation

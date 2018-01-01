@@ -22,7 +22,7 @@ module RGeo
     # implementation. Thus, to get a corresponding factory generator,
     # you can use the <tt>method</tt> method. e.g.
     #
-    #  factory_generator = ::RGeo::Cartesian.method(:preferred_factory)
+    #  factory_generator = RGeo::Cartesian.method(:preferred_factory)
     #
     # FactoryGenerator is defined as a module and is provided
     # primarily for the sake of documentation. Implementations need not

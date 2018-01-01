@@ -148,7 +148,7 @@ module RGeo
                   )
         if (projklass_ = data_["prjc"]) && (projfactory_ = data_["prjf"])
           klass_ = begin
-                     ::RGeo::Geographic.const_get(projklass_)
+                     RGeo::Geographic.const_get(projklass_)
                    rescue
                      nil
                    end
@@ -215,7 +215,7 @@ module RGeo
                   )
         if (projklass_ = coder_["projector_class"]) && (projfactory_ = coder_["projection_factory"])
           klass_ = begin
-                     ::RGeo::Geographic.const_get(projklass_)
+                     RGeo::Geographic.const_get(projklass_)
                    rescue
                      nil
                    end
@@ -296,7 +296,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#property
+      # See RGeo::Feature::Factory#property
 
       def property(name_)
         case name_
@@ -313,19 +313,19 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#parse_wkt
+      # See RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
         @wkt_parser.parse(str_)
       end
 
-      # See ::RGeo::Feature::Factory#parse_wkb
+      # See RGeo::Feature::Factory#parse_wkb
 
       def parse_wkb(str_)
         @wkb_parser.parse(str_)
       end
 
-      # See ::RGeo::Feature::Factory#point
+      # See RGeo::Feature::Factory#point
 
       def point(x_, y_, *extra_)
         @point_class.new(self, x_, y_, *extra_)
@@ -333,7 +333,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#line_string
+      # See RGeo::Feature::Factory#line_string
 
       def line_string(points_)
         @line_string_class.new(self, points_)
@@ -341,7 +341,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#line
+      # See RGeo::Feature::Factory#line
 
       def line(start_, end_)
         @line_class.new(self, start_, end_)
@@ -349,7 +349,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#linear_ring
+      # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
         @linear_ring_class.new(self, points_)
@@ -357,7 +357,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#polygon
+      # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_ = nil)
         @polygon_class.new(self, outer_ring_, inner_rings_)
@@ -365,7 +365,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#collection
+      # See RGeo::Feature::Factory#collection
 
       def collection(elems_)
         @geometry_collection_class.new(self, elems_)
@@ -373,7 +373,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#multi_point
+      # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
         @multi_point_class.new(self, elems_)
@@ -381,7 +381,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#multi_line_string
+      # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
         @multi_line_string_class.new(self, elems_)
@@ -389,7 +389,7 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#multi_polygon
+      # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
         @multi_polygon_class.new(self, elems_)
@@ -397,11 +397,11 @@ module RGeo
         nil
       end
 
-      # See ::RGeo::Feature::Factory#proj4
+      # See RGeo::Feature::Factory#proj4
 
       attr_reader :proj4
 
-      # See ::RGeo::Feature::Factory#coord_sys
+      # See RGeo::Feature::Factory#coord_sys
 
       attr_reader :coord_sys
 
@@ -415,7 +415,7 @@ module RGeo
 
       def _marshal_wkb_generator # :nodoc:
         unless defined?(@marshal_wkb_generator)
-          @marshal_wkb_generator = ::RGeo::WKRep::WKBGenerator.new(
+          @marshal_wkb_generator = RGeo::WKRep::WKBGenerator.new(
             type_format: :wkb12)
         end
         @marshal_wkb_generator
@@ -423,7 +423,7 @@ module RGeo
 
       def _marshal_wkb_parser # :nodoc:
         unless defined?(@marshal_wkb_parser)
-          @marshal_wkb_parser = ::RGeo::WKRep::WKBParser.new(self,
+          @marshal_wkb_parser = RGeo::WKRep::WKBParser.new(self,
             support_wkb12: true)
         end
         @marshal_wkb_parser
@@ -431,7 +431,7 @@ module RGeo
 
       def _psych_wkt_generator # :nodoc:
         unless defined?(@psych_wkt_generator)
-          @psych_wkt_generator = ::RGeo::WKRep::WKTGenerator.new(
+          @psych_wkt_generator = RGeo::WKRep::WKTGenerator.new(
             tag_format: :wkt12)
         end
         @psych_wkt_generator
@@ -439,7 +439,7 @@ module RGeo
 
       def _psych_wkt_parser # :nodoc:
         unless defined?(@psych_wkt_parser)
-          @psych_wkt_parser = ::RGeo::WKRep::WKTParser.new(self,
+          @psych_wkt_parser = RGeo::WKRep::WKTParser.new(self,
             support_wkt12: true, support_ewkt: true)
         end
         @psych_wkt_parser

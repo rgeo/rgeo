@@ -10,7 +10,7 @@ class MercatorMultiLineStringTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiLineStringTests
 
   def create_factory
-    ::RGeo::Geographic.simple_mercator_factory
+    RGeo::Geographic.simple_mercator_factory
   end
 
   undef_method :test_length

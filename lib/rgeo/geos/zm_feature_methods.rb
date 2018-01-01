@@ -76,44 +76,44 @@ module RGeo
       end
 
       def equals?(rhs_)
-        @zgeometry.equals?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.equals?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def disjoint?(rhs_)
-        @zgeometry.disjoint?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.disjoint?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def intersects?(rhs_)
-        @zgeometry.intersects?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.intersects?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def touches?(rhs_)
-        @zgeometry.touches?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.touches?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def crosses?(rhs_)
-        @zgeometry.crosses?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.crosses?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def within?(rhs_)
-        @zgeometry.within?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.within?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def contains?(rhs_)
-        @zgeometry.contains?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.contains?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def overlaps?(rhs_)
-        @zgeometry.overlaps?(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.overlaps?(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def relate?(rhs_, pattern_)
-        @zgeometry.relate?(::RGeo::Feature.cast(rhs_, self).z_geometry, pattern_)
+        @zgeometry.relate?(RGeo::Feature.cast(rhs_, self).z_geometry, pattern_)
       end
       alias_method :relate, :relate? # DEPRECATED
 
       def distance(rhs_)
-        @zgeometry.distance(::RGeo::Feature.cast(rhs_, self).z_geometry)
+        @zgeometry.distance(RGeo::Feature.cast(rhs_, self).z_geometry)
       end
 
       def buffer(distance_)
@@ -125,27 +125,27 @@ module RGeo
       end
 
       def intersection(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, self)
+        rhs_ = RGeo::Feature.cast(rhs_, self)
         @factory._create_feature(nil, @zgeometry.intersection(rhs_.z_geometry), @mgeometry.intersection(rhs_.m_geometry))
       end
 
       def union(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, self)
+        rhs_ = RGeo::Feature.cast(rhs_, self)
         @factory._create_feature(nil, @zgeometry.union(rhs_.z_geometry), @mgeometry.union(rhs_.m_geometry))
       end
 
       def difference(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, self)
+        rhs_ = RGeo::Feature.cast(rhs_, self)
         @factory._create_feature(nil, @zgeometry.difference(rhs_.z_geometry), @mgeometry.difference(rhs_.m_geometry))
       end
 
       def sym_difference(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, self)
+        rhs_ = RGeo::Feature.cast(rhs_, self)
         @factory._create_feature(nil, @zgeometry.sym_difference(rhs_.z_geometry), @mgeometry.sym_difference(rhs_.m_geometry))
       end
 
       def rep_equals?(rhs_)
-        rhs_ = ::RGeo::Feature.cast(rhs_, self)
+        rhs_ = RGeo::Feature.cast(rhs_, self)
         rhs_.is_a?(self.class) && @factory.eql?(rhs_.factory) && @zgeometry.rep_equals?(rhs_.z_geometry) && @mgeometry.rep_equals?(rhs_.m_geometry)
       end
 

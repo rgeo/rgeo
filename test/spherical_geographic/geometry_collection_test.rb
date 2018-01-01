@@ -10,7 +10,7 @@ class SphericalGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory
-    @factory = ::RGeo::Geographic.spherical_factory
+    @factory = RGeo::Geographic.spherical_factory
   end
 
   undef_method :test_fully_equal

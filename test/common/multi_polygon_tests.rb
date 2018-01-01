@@ -34,8 +34,8 @@ module RGeo
         def test_creation_simple
           geom_ = @factory.multi_polygon([@poly1, @poly2])
           assert_not_nil(geom_)
-          assert(::RGeo::Feature::MultiPolygon === geom_)
-          assert_equal(::RGeo::Feature::MultiPolygon, geom_.geometry_type)
+          assert(RGeo::Feature::MultiPolygon === geom_)
+          assert_equal(RGeo::Feature::MultiPolygon, geom_.geometry_type)
           assert_equal(2, geom_.num_geometries)
           assert(@poly1.eql?(geom_[0]))
           assert(@poly2.eql?(geom_[1]))
@@ -44,8 +44,8 @@ module RGeo
         def test_creation_empty
           geom_ = @factory.multi_polygon([])
           assert_not_nil(geom_)
-          assert(::RGeo::Feature::MultiPolygon === geom_)
-          assert_equal(::RGeo::Feature::MultiPolygon, geom_.geometry_type)
+          assert(RGeo::Feature::MultiPolygon === geom_)
+          assert_equal(RGeo::Feature::MultiPolygon, geom_.geometry_type)
           assert_equal(0, geom_.num_geometries)
           assert_equal([], geom_.to_a)
         end
@@ -104,7 +104,7 @@ module RGeo
 
         def test_wkt_creation_empty
           parsed_geom_ = @factory.parse_wkt("MULTIPOLYGON EMPTY")
-          assert_equal(::RGeo::Feature::MultiPolygon, parsed_geom_.geometry_type)
+          assert_equal(RGeo::Feature::MultiPolygon, parsed_geom_.geometry_type)
           assert_equal(0, parsed_geom_.num_geometries)
           assert_equal([], parsed_geom_.to_a)
         end
@@ -113,7 +113,7 @@ module RGeo
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
           geom2_ = geom1_.clone
           assert(geom1_.eql?(geom2_))
-          assert_equal(::RGeo::Feature::MultiPolygon, geom2_.geometry_type)
+          assert_equal(RGeo::Feature::MultiPolygon, geom2_.geometry_type)
           assert_equal(2, geom2_.num_geometries)
           assert(@poly1.eql?(geom2_[0]))
           assert(@poly2.eql?(geom2_[1]))
@@ -121,17 +121,17 @@ module RGeo
 
         def test_type_check
           geom1_ = @factory.multi_polygon([@poly1, @poly2])
-          assert(::RGeo::Feature::Geometry.check_type(geom1_))
-          assert(!::RGeo::Feature::Polygon.check_type(geom1_))
-          assert(::RGeo::Feature::GeometryCollection.check_type(geom1_))
-          assert(!::RGeo::Feature::MultiPoint.check_type(geom1_))
-          assert(::RGeo::Feature::MultiPolygon.check_type(geom1_))
+          assert(RGeo::Feature::Geometry.check_type(geom1_))
+          assert(!RGeo::Feature::Polygon.check_type(geom1_))
+          assert(RGeo::Feature::GeometryCollection.check_type(geom1_))
+          assert(!RGeo::Feature::MultiPoint.check_type(geom1_))
+          assert(RGeo::Feature::MultiPolygon.check_type(geom1_))
           geom2_ = @factory.multi_polygon([])
-          assert(::RGeo::Feature::Geometry.check_type(geom2_))
-          assert(!::RGeo::Feature::Polygon.check_type(geom2_))
-          assert(::RGeo::Feature::GeometryCollection.check_type(geom2_))
-          assert(!::RGeo::Feature::MultiPoint.check_type(geom2_))
-          assert(::RGeo::Feature::MultiPolygon.check_type(geom2_))
+          assert(RGeo::Feature::Geometry.check_type(geom2_))
+          assert(!RGeo::Feature::Polygon.check_type(geom2_))
+          assert(RGeo::Feature::GeometryCollection.check_type(geom2_))
+          assert(!RGeo::Feature::MultiPoint.check_type(geom2_))
+          assert(RGeo::Feature::MultiPolygon.check_type(geom2_))
         end
 
         def test_as_text_wkt_round_trip

@@ -567,7 +567,7 @@ module RGeo
       # objective equivalence.
 
       def eql?(rhs_)
-        if rhs_.is_a?(::RGeo::Feature::Instance)
+        if rhs_.is_a?(RGeo::Feature::Instance)
           begin
             rep_equals?(rhs_)
           rescue Error::UnsupportedOperation
@@ -593,7 +593,7 @@ module RGeo
       # objective equivalence.
 
       def ==(rhs_)
-        if rhs_.is_a?(::RGeo::Feature::Instance)
+        if rhs_.is_a?(RGeo::Feature::Instance)
           begin
             equals?(rhs_)
           rescue Error::UnsupportedOperation

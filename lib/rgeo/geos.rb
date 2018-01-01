@@ -19,7 +19,7 @@ module RGeo
   # therefore not documented.
   #
   # To use the Geos implementation, first obtain a factory using the
-  # ::RGeo::Geos.factory method. You may then call any of the standard
+  # RGeo::Geos.factory method. You may then call any of the standard
   # factory methods on the resulting object.
 
   module Geos
@@ -36,7 +36,7 @@ module RGeo
     begin
       require "rgeo/geos/geos_c_impl"
     rescue ::LoadError; end
-    CAPI_SUPPORTED = ::RGeo::Geos.const_defined?(:CAPIGeometryMethods)
+    CAPI_SUPPORTED = RGeo::Geos.const_defined?(:CAPIGeometryMethods)
     if CAPI_SUPPORTED
       require "rgeo/geos/capi_feature_classes"
       require "rgeo/geos/capi_factory"

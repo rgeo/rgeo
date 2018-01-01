@@ -10,10 +10,10 @@ class MercatorPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup
-    @factory = ::RGeo::Geographic.simple_mercator_factory(buffer_resolution: 8)
-    @zfactory = ::RGeo::Geographic.simple_mercator_factory(has_z_coordinate: true)
-    @mfactory = ::RGeo::Geographic.simple_mercator_factory(has_m_coordinate: true)
-    @zmfactory = ::RGeo::Geographic.simple_mercator_factory(has_z_coordinate: true, has_m_coordinate: true)
+    @factory = RGeo::Geographic.simple_mercator_factory(buffer_resolution: 8)
+    @zfactory = RGeo::Geographic.simple_mercator_factory(has_z_coordinate: true)
+    @mfactory = RGeo::Geographic.simple_mercator_factory(has_m_coordinate: true)
+    @zmfactory = RGeo::Geographic.simple_mercator_factory(has_z_coordinate: true, has_m_coordinate: true)
   end
 
   def test_has_projection

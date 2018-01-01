@@ -6,7 +6,7 @@
 
 module RGeo
   module Geos
-    # This the FFI-GEOS implementation of ::RGeo::Feature::Factory.
+    # This the FFI-GEOS implementation of RGeo::Feature::Factory.
 
     class FFIFactory
       include Feature::Factory::Instance
@@ -14,7 +14,7 @@ module RGeo
       # Create a new factory. Returns nil if the FFI-GEOS implementation
       # is not supported.
       #
-      # See ::RGeo::Geos.factory for a list of supported options.
+      # See RGeo::Geos.factory for a list of supported options.
 
       def initialize(opts_ = {})
         # Main flags
@@ -249,7 +249,7 @@ module RGeo
         @uses_lenient_multi_polygon_assertions
       end
 
-      # See ::RGeo::Feature::Factory#property
+      # See RGeo::Feature::Factory#property
 
       def property(name_)
         case name_
@@ -274,7 +274,7 @@ module RGeo
         _wrap_fg_geom(fg_geom_, nil)
       end
 
-      # See ::RGeo::Feature::Factory#parse_wkt
+      # See RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str_)
         if @wkt_reader
@@ -284,7 +284,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#parse_wkb
+      # See RGeo::Feature::Factory#parse_wkb
 
       def parse_wkb(str_)
         if @wkb_reader
@@ -294,7 +294,7 @@ module RGeo
         end
       end
 
-      # See ::RGeo::Feature::Factory#point
+      # See RGeo::Feature::Factory#point
 
       def point(x_, y_, z_ = 0)
         cs_ = ::Geos::CoordinateSequence.new(1, 3)
@@ -304,7 +304,7 @@ module RGeo
         FFIPointImpl.new(self, ::Geos::Utils.create_point(cs_), nil)
       end
 
-      # See ::RGeo::Feature::Factory#line_string
+      # See RGeo::Feature::Factory#line_string
 
       def line_string(points_)
         points_ = points_.to_a unless points_.is_a?(::Array)
@@ -312,7 +312,7 @@ module RGeo
         return nil if size_ == 1
         cs_ = ::Geos::CoordinateSequence.new(size_, 3)
         points_.each_with_index do |p_, i_|
-          return nil unless ::RGeo::Feature::Point.check_type(p_)
+          return nil unless RGeo::Feature::Point.check_type(p_)
           cs_.set_x(i_, p_.x)
           cs_.set_y(i_, p_.y)
           if @has_z
@@ -324,11 +324,11 @@ module RGeo
         FFILineStringImpl.new(self, ::Geos::Utils.create_line_string(cs_), nil)
       end
 
-      # See ::RGeo::Feature::Factory#line
+      # See RGeo::Feature::Factory#line
 
       def line(start_, end_)
-        return nil unless ::RGeo::Feature::Point.check_type(start_) &&
-          ::RGeo::Feature::Point.check_type(end_)
+        return nil unless RGeo::Feature::Point.check_type(start_) &&
+          RGeo::Feature::Point.check_type(end_)
         cs_ = ::Geos::CoordinateSequence.new(2, 3)
         cs_.set_x(0, start_.x)
         cs_.set_x(1, end_.x)
@@ -344,7 +344,7 @@ module RGeo
         FFILineImpl.new(self, ::Geos::Utils.create_line_string(cs_), nil)
       end
 
-      # See ::RGeo::Feature::Factory#linear_ring
+      # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
         points_ = points_.to_a unless points_.is_a?(::Array)
@@ -352,14 +352,14 @@ module RGeo
         fg_geom_ ? FFILinearRingImpl.new(self, fg_geom_, nil) : nil
       end
 
-      # See ::RGeo::Feature::Factory#polygon
+      # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_ = nil)
         inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(::Array)
-        return nil unless ::RGeo::Feature::LineString.check_type(outer_ring_)
+        return nil unless RGeo::Feature::LineString.check_type(outer_ring_)
         outer_ring_ = _create_fg_linear_ring(outer_ring_.points)
         inner_rings_ = inner_rings_.map do |r_|
-          return nil unless ::RGeo::Feature::LineString.check_type(r_)
+          return nil unless RGeo::Feature::LineString.check_type(r_)
           _create_fg_linear_ring(r_.points)
         end
         inner_rings_.compact!
@@ -367,7 +367,7 @@ module RGeo
         fg_geom_ ? FFIPolygonImpl.new(self, fg_geom_, nil) : nil
       end
 
-      # See ::RGeo::Feature::Factory#collection
+      # See RGeo::Feature::Factory#collection
 
       def collection(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
@@ -375,7 +375,7 @@ module RGeo
         fg_geoms_ = []
         elems_.each do |elem_|
           k_ = elem_._klasses if elem_.factory.is_a?(FFIFactory)
-          elem_ = ::RGeo::Feature.cast(elem_, self, :force_new, :keep_subtype)
+          elem_ = RGeo::Feature.cast(elem_, self, :force_new, :keep_subtype)
           if elem_
             klasses_ << (k_ || elem_.class)
             fg_geoms_ << elem_._detach_fg_geom
@@ -386,12 +386,12 @@ module RGeo
         fg_geom_ ? FFIGeometryCollectionImpl.new(self, fg_geom_, klasses_) : nil
       end
 
-      # See ::RGeo::Feature::Factory#multi_point
+      # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
         elems_ = elems_.map do |elem_|
-          elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::Point,
+          elem_ = RGeo::Feature.cast(elem_, self, RGeo::Feature::Point,
             :force_new, :keep_subtype)
           return nil unless elem_
           elem_._detach_fg_geom
@@ -402,13 +402,13 @@ module RGeo
         fg_geom_ ? FFIMultiPointImpl.new(self, fg_geom_, klasses_) : nil
       end
 
-      # See ::RGeo::Feature::Factory#multi_line_string
+      # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
         klasses_ = []
         elems_ = elems_.map do |elem_|
-          elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::LineString,
+          elem_ = RGeo::Feature.cast(elem_, self, RGeo::Feature::LineString,
             :force_new, :keep_subtype)
           return nil unless elem_
           klasses_ << elem_.class
@@ -419,12 +419,12 @@ module RGeo
         fg_geom_ ? FFIMultiLineStringImpl.new(self, fg_geom_, klasses_) : nil
       end
 
-      # See ::RGeo::Feature::Factory#multi_polygon
+      # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
         elems_ = elems_.map do |elem_|
-          elem_ = ::RGeo::Feature.cast(elem_, self, ::RGeo::Feature::Polygon,
+          elem_ = RGeo::Feature.cast(elem_, self, RGeo::Feature::Polygon,
             :force_new, :keep_subtype)
           return nil unless elem_
           elem_._detach_fg_geom
@@ -445,15 +445,15 @@ module RGeo
         fg_geom_ ? FFIMultiPolygonImpl.new(self, fg_geom_, klasses_) : nil
       end
 
-      # See ::RGeo::Feature::Factory#proj4
+      # See RGeo::Feature::Factory#proj4
 
       attr_reader :proj4
 
-      # See ::RGeo::Feature::Factory#coord_sys
+      # See RGeo::Feature::Factory#coord_sys
 
       attr_reader :coord_sys
 
-      # See ::RGeo::Feature::Factory#override_cast
+      # See RGeo::Feature::Factory#override_cast
 
       def override_cast(_original_, _ntype_, _flags_)
         false
@@ -523,7 +523,7 @@ module RGeo
         end
         cs_ = ::Geos::CoordinateSequence.new(size_, 3)
         points_.each_with_index do |p_, i_|
-          return nil unless ::RGeo::Feature::Point.check_type(p_)
+          return nil unless RGeo::Feature::Point.check_type(p_)
           cs_.set_x(i_, p_.x)
           cs_.set_y(i_, p_.y)
           if @has_z

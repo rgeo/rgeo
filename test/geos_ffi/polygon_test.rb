@@ -10,7 +10,7 @@ class GeosFFIPolygonTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup
-    @factory = ::RGeo::Geos.factory(native_interface: :ffi)
+    @factory = RGeo::Geos.factory(native_interface: :ffi)
   end
 
   def test_intersection
@@ -34,4 +34,4 @@ class GeosFFIPolygonTest < Test::Unit::TestCase # :nodoc:
     poly3_ = poly1_.union(poly2_)
     assert_equal(poly1_, poly3_)
   end
-end if ::RGeo::Geos.ffi_supported?
+end if RGeo::Geos.ffi_supported?

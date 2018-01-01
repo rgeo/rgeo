@@ -120,7 +120,7 @@ module RGeo
       end
 
       def equals?(rhs_)
-        return false unless rhs_.is_a?(::RGeo::Feature::Instance)
+        return false unless rhs_.is_a?(RGeo::Feature::Instance)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         if !fg_
           false

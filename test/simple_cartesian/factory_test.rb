@@ -10,7 +10,7 @@ class CartesianFactoryTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup
-    @factory = ::RGeo::Cartesian.simple_factory(srid: 1000)
+    @factory = RGeo::Cartesian.simple_factory(srid: 1000)
     @srid = 1000
   end
 

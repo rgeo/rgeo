@@ -10,7 +10,7 @@ class CartesianPolygonTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup
-    @factory = ::RGeo::Cartesian.simple_factory
+    @factory = RGeo::Cartesian.simple_factory
   end
 
   undef_method :test_fully_equal

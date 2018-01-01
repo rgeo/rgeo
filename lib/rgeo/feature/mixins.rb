@@ -99,7 +99,7 @@ module RGeo
       # Returns a TypeData for the given type.
       #
       # e.g. to add a module for point types, you can call:
-      #  for_type(::RGeo::Feature::Point).add(module)
+      #  for_type(RGeo::Feature::Point).add(module)
 
       def for_type(type_)
         (@types[type_] ||= TypeData.new(self, type_))
