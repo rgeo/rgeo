@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestMultiLineString < Test::Unit::TestCase # :nodoc:
+class GeosMultiLineStringTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiLineStringTests
 
   def create_factory

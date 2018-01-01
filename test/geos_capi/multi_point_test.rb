@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestMultiPoint < Test::Unit::TestCase # :nodoc:
+class GeosMultiPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
   def create_factory(opts_ = {})

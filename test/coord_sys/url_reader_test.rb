@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestUrlReader < Test::Unit::TestCase # :nodoc:
+class UrlReaderTest < Test::Unit::TestCase # :nodoc:
   def test_sr_org_epsg_4326_ogcwkt
     db_ = ::RGeo::CoordSys::SRSDatabase::UrlReader.new
     entry_ = db_.get("http://spatialreference.org/ref/epsg/4326/ogcwkt/")

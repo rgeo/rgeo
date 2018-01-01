@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestMultiPolygon < Test::Unit::TestCase # :nodoc:
+class GeosMultiPolygonTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
   def create_factories

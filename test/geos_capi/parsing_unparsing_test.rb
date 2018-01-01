@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestParsingUnparsing < Test::Unit::TestCase # :nodoc:
+class GeosParsingUnparsingTest < Test::Unit::TestCase # :nodoc:
   def test_wkt_generator_default_floating_point
     # Bug report GH-4
     factory_ = ::RGeo::Geos.factory

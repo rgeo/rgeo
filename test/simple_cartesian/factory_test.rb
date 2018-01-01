@@ -6,20 +6,13 @@
 
 require "test_helper"
 
-module RGeo
-  module Tests # :nodoc:
-    module SimpleCartesian # :nodoc:
-      class TestFactory < ::Test::Unit::TestCase # :nodoc:
-        include RGeo::Tests::Common::FactoryTests
+class CartesianFactoryTest < Test::Unit::TestCase # :nodoc:
+  include RGeo::Tests::Common::FactoryTests
 
-        def setup
-          @factory = ::RGeo::Cartesian.simple_factory(srid: 1000)
-          @srid = 1000
-        end
-
-
-        undef_method :test_srid_preserved_through_geom_operations
-      end
-    end
+  def setup
+    @factory = ::RGeo::Cartesian.simple_factory(srid: 1000)
+    @srid = 1000
   end
+
+  undef_method :test_srid_preserved_through_geom_operations
 end

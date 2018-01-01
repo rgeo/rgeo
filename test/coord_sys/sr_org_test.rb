@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestSrOrg < Test::Unit::TestCase # :nodoc:
+class SrOrgTest < Test::Unit::TestCase # :nodoc:
   def test_epsg_4326
     db_ = ::RGeo::CoordSys::SRSDatabase::SrOrg.new("epsg")
     entry_ = db_.get(4326)

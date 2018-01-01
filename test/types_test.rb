@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestTypes < Test::Unit::TestCase
+class TypesTest < Test::Unit::TestCase
   def test_geometry
     assert_equal "Geometry", RGeo::Feature::Geometry.type_name
     assert_nil RGeo::Feature::Geometry.supertype

@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestLineString < Test::Unit::TestCase # :nodoc:
+class GeosLineStringTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::LineStringTests
 
   def setup

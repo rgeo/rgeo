@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestMisc < Test::Unit::TestCase # :nodoc:
+class GeosMiscTest < Test::Unit::TestCase # :nodoc:
   def setup
     @factory = ::RGeo::Geos.factory(srid: 4326)
   end

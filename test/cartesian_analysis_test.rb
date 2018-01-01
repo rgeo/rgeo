@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestCartesianAnalysis < Test::Unit::TestCase # :nodoc:
+class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
   def setup
     @factory = ::RGeo::Cartesian.simple_factory
   end

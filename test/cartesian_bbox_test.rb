@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestCartesianBBox < Test::Unit::TestCase # :nodoc:
+class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
   def setup
     @factory = ::RGeo::Cartesian.factory
   end

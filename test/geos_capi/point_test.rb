@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestPoint < Test::Unit::TestCase # :nodoc:
+class GeosPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup

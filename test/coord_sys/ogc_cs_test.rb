@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestOgcCs < Test::Unit::TestCase # :nodoc:
+class OgcCsTest < Test::Unit::TestCase # :nodoc:
   # Handle differences in floating-point output.
 
   def _lenient_regex_for(str_)

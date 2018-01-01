@@ -6,16 +6,10 @@
 
 require "test_helper"
 
-module RGeo
-  module Tests # :nodoc:
-    module SimpleMercator # :nodoc:
-      class TestLineString < ::Test::Unit::TestCase # :nodoc:
-        def setup
-          @factory = ::RGeo::Geographic.simple_mercator_factory
-        end
+class MercatorLineStringTest < Test::Unit::TestCase # :nodoc:
+  include RGeo::Tests::Common::LineStringTests
 
-        include ::RGeo::Tests::Common::LineStringTests
-      end
-    end
+  def setup
+    @factory = ::RGeo::Geographic.simple_mercator_factory
   end
 end

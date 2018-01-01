@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestZMFactory < Test::Unit::TestCase # :nodoc:
+class GeosZMFactoryTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup

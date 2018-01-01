@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestMixins < Test::Unit::TestCase # :nodoc:
+class MixinsTest < Test::Unit::TestCase # :nodoc:
   module Mixin1  # :nodoc:
     def mixin1_method
     end

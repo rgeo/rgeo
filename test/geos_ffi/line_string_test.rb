@@ -6,16 +6,10 @@
 
 require "test_helper"
 
-module RGeo
-  module Tests # :nodoc:
-    module GeosFFI # :nodoc:
-      class TestLineString < ::Test::Unit::TestCase # :nodoc:
-        def setup
-          @factory = ::RGeo::Geos.factory(native_interface: :ffi)
-        end
+class GeosFFILineStringTest < Test::Unit::TestCase # :nodoc:
+  include RGeo::Tests::Common::LineStringTests
 
-        include ::RGeo::Tests::Common::LineStringTests
-      end
-    end
+  def setup
+    @factory = ::RGeo::Geos.factory(native_interface: :ffi)
   end
 end if ::RGeo::Geos.ffi_supported?

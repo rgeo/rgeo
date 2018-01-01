@@ -6,7 +6,7 @@
 
 require "test_helper"
 
-class TestGeometryCollection < Test::Unit::TestCase # :nodoc:
+class GeosGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory
