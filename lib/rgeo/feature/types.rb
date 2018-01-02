@@ -60,7 +60,7 @@ module RGeo
         rhs_ = rhs_.geometry_type if rhs_.is_a?(Feature::Instance)
         rhs_.is_a?(Type) && (rhs_ == self || rhs_.include?(self))
       end
-      alias_method :===, :check_type
+      alias === check_type
 
       # Returns true if this type is the same type or a subtype of the
       # given type.
@@ -89,7 +89,7 @@ module RGeo
       def type_name
         name.sub("RGeo::Feature::", "")
       end
-      alias_method :to_s, :type_name
+      alias to_s type_name
 
       def _add_subtype(type_) # :nodoc:
         (@subtypes ||= []) << type_

@@ -58,7 +58,7 @@ module RGeo
 
       # Returns the format for type tags. See WKTGenerator for details.
       attr_reader :tag_format
-      alias_method :type_format, :tag_format
+      alias type_format tag_format
 
       # Returns whether SRID is embedded. See WKTGenerator for details.
       def emit_ewkt_srid?

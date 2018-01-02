@@ -110,7 +110,7 @@ module RGeo
           # Return the result
           result_
         end
-        alias_method :new, :create
+        alias new create
       end
 
       # Standard object inspection output
@@ -126,7 +126,7 @@ module RGeo
           rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
           rhs_.proj4 == _proj4
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       # Standard hash code
 

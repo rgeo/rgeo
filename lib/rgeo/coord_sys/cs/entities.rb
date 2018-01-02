@@ -151,7 +151,7 @@ module RGeo
         def eql?(rhs_)
           rhs_.class == self.class && rhs_.to_wkt == to_wkt
         end
-        alias_method :==, :eql?
+        alias == eql?
 
         # Standard hash code
 

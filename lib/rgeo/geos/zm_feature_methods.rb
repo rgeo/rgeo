@@ -110,7 +110,7 @@ module RGeo
       def relate?(rhs_, pattern_)
         @zgeometry.relate?(RGeo::Feature.cast(rhs_, self).z_geometry, pattern_)
       end
-      alias_method :relate, :relate? # DEPRECATED
+      alias relate relate? # DEPRECATED
 
       def distance(rhs_)
         @zgeometry.distance(RGeo::Feature.cast(rhs_, self).z_geometry)
@@ -149,12 +149,12 @@ module RGeo
         rhs_.is_a?(self.class) && @factory.eql?(rhs_.factory) && @zgeometry.rep_equals?(rhs_.z_geometry) && @mgeometry.rep_equals?(rhs_.m_geometry)
       end
 
-      alias_method :eql?, :rep_equals?
-      alias_method :==, :equals?
+      alias eql? rep_equals?
+      alias == equals?
 
-      alias_method :-, :difference
-      alias_method :+, :union
-      alias_method :*, :intersection
+      alias - difference
+      alias + union
+      alias * intersection
 
       def _copy_state_from(obj_) # :nodoc:
         @factory = obj_.factory
@@ -293,12 +293,12 @@ module RGeo
       def num_geometries
         @zgeometry.num_geometries
       end
-      alias_method :size, :num_geometries
+      alias size num_geometries
 
       def geometry_n(n_)
         @factory._create_feature(nil, @zgeometry.geometry_n(n_), @mgeometry.geometry_n(n_))
       end
-      alias_method :[], :geometry_n
+      alias [] geometry_n
 
       def each
         if block_given?

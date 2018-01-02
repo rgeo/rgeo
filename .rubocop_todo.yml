@@ -279,13 +279,6 @@ Security/MarshalLoad:
     - 'test/common/point_tests.rb'
     - 'test/coord_sys/ogc_cs_test.rb'
 
-# Offense count: 39
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: prefer_alias, prefer_alias_method
-Style/Alias:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

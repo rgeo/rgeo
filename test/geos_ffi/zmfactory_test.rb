@@ -11,7 +11,7 @@ class GeosFFIZMFactoryTest < Test::Unit::TestCase # :nodoc:
 
   def setup
     @factory = RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true,
-                                    srid: 1000, buffer_resolution: 2, native_interface: :ffi)
+                                  srid: 1000, buffer_resolution: 2, native_interface: :ffi)
     @srid = 1000
   end
 

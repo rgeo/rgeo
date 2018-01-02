@@ -85,7 +85,7 @@ module RGeo
           @has_m == rhs_.property(:has_m_coordinate) &&
           @proj4.eql?(rhs_.proj4)
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       # Standard hash code
 

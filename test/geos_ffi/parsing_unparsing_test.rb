@@ -16,7 +16,7 @@ class GeosFFIParsingUnparsingTest < Test::Unit::TestCase # :nodoc:
 
   def test_wkt_generator_downcase
     factory_ = RGeo::Geos.factory(wkt_generator: { convert_case: :lower },
-                                    native_interface: :ffi)
+                                  native_interface: :ffi)
     point_ = factory_.point(1, 1)
     assert_equal("point (1.0 1.0)", point_.as_text)
   end

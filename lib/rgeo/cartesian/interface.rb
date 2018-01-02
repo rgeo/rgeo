@@ -31,7 +31,7 @@ module RGeo
           simple_factory(opts_)
         end
       end
-      alias_method :factory, :preferred_factory
+      alias factory preferred_factory
 
       # Returns a factory for the simple Cartesian implementation. This
       # implementation provides all SFS 1.1 types, and also allows Z and
@@ -117,7 +117,7 @@ module RGeo
       def preferred_factory_generator(defaults_ = {})
         ::Proc.new { |c_| preferred_factory(defaults_.merge(c_)) }
       end
-      alias_method :factory_generator, :preferred_factory_generator
+      alias factory_generator preferred_factory_generator
 
       # Returns a Feature::FactoryGenerator that creates simple factories.
       # The given options are used as the default options.

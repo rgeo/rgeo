@@ -74,7 +74,7 @@ module RGeo
           @min_z == rhs_.min_z && @max_z == rhs_.max_z &&
           @min_m == rhs_.min_m && @max_m == rhs_.max_m
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       # Returns the bounding box's factory.
 

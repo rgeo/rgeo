@@ -12,7 +12,7 @@ class GeosFFIMultiPolygonTest < Test::Unit::TestCase # :nodoc:
   def create_factories
     @factory = RGeo::Geos.factory(native_interface: :ffi)
     @lenient_factory = RGeo::Geos.factory(lenient_multi_polygon_assertions: true,
-                                            native_interface: :ffi)
+                                          native_interface: :ffi)
   end
 
   # Centroid of an empty should return an empty collection

@@ -14,7 +14,7 @@ class GeosFFIPointTest < Test::Unit::TestCase # :nodoc:
     @zfactory = RGeo::Geos.factory(has_z_coordinate: true, native_interface: :ffi)
     @mfactory = RGeo::Geos.factory(has_m_coordinate: true, native_interface: :ffi)
     @zmfactory = RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true,
-                                      native_interface: :ffi)
+                                    native_interface: :ffi)
   end
 
   def test_is_geos

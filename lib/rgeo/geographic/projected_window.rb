@@ -67,7 +67,7 @@ module RGeo
         @factory == obj_.factory && @x_min == obj_.x_min && @x_max == obj_.x_max &&
           @y_min = obj_.y_min && @y_max = obj_.y_max
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       def hash # :nodoc:
         @factory.hash + @x_min.hash + @x_max.hash + @y_min.hash + @y_max.hash
@@ -116,14 +116,14 @@ module RGeo
         span_ += @factory.projection_limits_window.x_span if span_ < 0
         span_
       end
-      alias_method :width, :x_span
+      alias width x_span
 
       # Returns the height of the rectangle.
 
       def y_span
         @y_max - @y_min
       end
-      alias_method :height, :y_span
+      alias height y_span
 
       # Returns a two-element array containing the x and y coordinates
       # of the center of the rectangle.
@@ -240,7 +240,7 @@ module RGeo
           self
         end
       end
-      alias_method :*, :scaled_by
+      alias * scaled_by
 
       # Returns a new window resulting from clamping this window to the
       # given minimum and maximum widths and heights, in the projected

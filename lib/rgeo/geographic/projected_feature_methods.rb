@@ -122,8 +122,8 @@ module RGeo
         x_ -= 360.0 if x_ > 180.0
         x_
       end
-      alias_method :canonical_longitude, :canonical_x
-      alias_method :canonical_lon, :canonical_x
+      alias canonical_longitude canonical_x
+      alias canonical_lon canonical_x
 
       def canonical_point
         if @x >= -180.0 && @x < 180.0

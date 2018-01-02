@@ -123,7 +123,7 @@ module RGeo
         end
         obj_
       end
-      alias_method :parse_hex, :parse
+      alias parse_hex parse
 
       def _parse_object(contained_) # :nodoc:
         endian_value_ = _get_byte

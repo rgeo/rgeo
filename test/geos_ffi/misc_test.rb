@@ -40,7 +40,7 @@ class GeosFFIMiscTest < Test::Unit::TestCase # :nodoc:
     assert_equal(true, polygon_.prepared?)
 
     factory_no_auto_prepare_ = RGeo::Geos.factory(srid: 4326,
-                                                    native_interface: :ffi, auto_prepare: :disabled)
+                                                  native_interface: :ffi, auto_prepare: :disabled)
     polygon2_ = factory_no_auto_prepare_.polygon(
       factory_no_auto_prepare_.linear_ring([p1_, p2_, p3_, p1_]))
     assert_equal(false, polygon2_.prepared?)

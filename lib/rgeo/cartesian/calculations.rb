@@ -33,7 +33,7 @@ module RGeo
       def eql?(rhs_)
         rhs_.is_a?(Segment) && @s == rhs_.s && @e == rhs_.e
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       def degenerate?
         @lensq == 0

@@ -89,7 +89,7 @@ module RGeo
           @support_m == rhs_.instance_variable_get(:@support_m) &&
           @proj4 == rhs_.instance_variable_get(:@proj4)
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       # Standard hash code
 

@@ -105,7 +105,7 @@ module RGeo
         str_.force_encoding("US-ASCII") if str_.respond_to?(:force_encoding)
         str_
       end
-      alias_method :to_s, :as_text
+      alias to_s as_text
 
       def as_binary
         @factory._generate_wkb(self)
@@ -132,7 +132,7 @@ module RGeo
           @fg_geom.eql?(fg_)
         end
       end
-      alias_method :==, :equals?
+      alias == equals?
 
       def disjoint?(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
@@ -208,7 +208,7 @@ module RGeo
         fg_ = factory._convert_to_fg_geometry(rhs_)
         fg_ ? @fg_geom.relate_pattern(fg_, pattern_) : nil
       end
-      alias_method :relate, :relate? # DEPRECATED
+      alias relate relate? # DEPRECATED
 
       def distance(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
@@ -228,14 +228,14 @@ module RGeo
         fg_ ? @factory._wrap_fg_geom(@fg_geom.intersection(fg_), nil) : nil
       end
 
-      alias_method :*, :intersection
+      alias * intersection
 
       def union(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
         fg_ ? @factory._wrap_fg_geom(@fg_geom.union(fg_), nil) : nil
       end
 
-      alias_method :+, :union
+      alias + union
 
       def unary_union
         return unless @fg_geom.respond_to?(:unary_union)
@@ -247,7 +247,7 @@ module RGeo
         fg_ ? @factory._wrap_fg_geom(@fg_geom.difference(fg_), nil) : nil
       end
 
-      alias_method :-, :difference
+      alias - difference
 
       def sym_difference(rhs_)
         fg_ = factory._convert_to_fg_geometry(rhs_)
@@ -481,7 +481,7 @@ module RGeo
       def num_geometries
         @fg_geom.num_geometries
       end
-      alias_method :size, :num_geometries
+      alias size num_geometries
 
       def geometry_n(n_)
         if n_ >= 0 && n_ < @fg_geom.num_geometries

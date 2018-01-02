@@ -236,7 +236,7 @@ module RGeo
       def eql?(rhs_)
         rhs_.is_a?(ZMFactory) && rhs_.z_factory == @zfactory
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       # Standard hash code
 

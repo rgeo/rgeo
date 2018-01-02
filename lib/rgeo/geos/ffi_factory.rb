@@ -126,7 +126,7 @@ module RGeo
           @buffer_resolution == rhs_.property(:buffer_resolution) &&
           @proj4.eql?(rhs_.proj4)
       end
-      alias_method :==, :eql?
+      alias == eql?
 
       # Standard hash code
 

@@ -40,7 +40,7 @@ module RGeo
         def eql?(rhs_)
           rhs_.is_a?(PointXYZ) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z
         end
-        alias_method :==, :eql?
+        alias == eql?
 
         def latlon
           lat_rad_ = ::Math.asin(@z)
@@ -146,7 +146,7 @@ module RGeo
         def eql?(rhs_)
           rhs_.is_a?(ArcXYZ) && @s == rhs_.s && @e == rhs_.e
         end
-        alias_method :==, :eql?
+        alias == eql?
 
         def degenerate?
           axis_ = axis

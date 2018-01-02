@@ -12,4 +12,4 @@ class GeosMultiLineStringTest < Test::Unit::TestCase # :nodoc:
   def create_factory
     RGeo::Geos.factory
   end
-end  if RGeo::Geos.capi_supported?
+end if RGeo::Geos.capi_supported?

@@ -45,7 +45,7 @@ module RGeo
         str_.force_encoding("US-ASCII") if str_.respond_to?(:force_encoding)
         str_
       end
-      alias_method :to_s, :as_text
+      alias to_s as_text
     end
 
     module CAPIGeometryCollectionMethods # :nodoc:
