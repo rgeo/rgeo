@@ -15,13 +15,6 @@ Gemspec/OrderedDependencies:
     - 'rgeo.gemspec'
 
 # Offense count: 1
-# Configuration parameters: Include.
-# Include: **/*.gemspec
-Gemspec/RequiredRubyVersion:
-  Exclude:
-    - 'rgeo.gemspec'
-
-# Offense count: 1
 # Cop supports --auto-correct.
 Layout/EmptyLines:
   Exclude:
