@@ -1,3 +1,12 @@
+### 1.0.0 / 2017-12-2
+
+* rgeo-proj4 is a now separate gem, and not included in the rgeo gem
+* Extract proj4 to a separate gem (teeparham) #176
+* Remove deprecated aliases #163
+* Node geometry collection (alibby) #154
+* Linear project and interpolate (alibby) #156
+
+
 ### 0.6.0 / 2017-3-1
 
 * Require ruby 2.1+
