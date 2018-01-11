@@ -11,3 +11,4 @@ rvm:
   - 2.3.6
   - 2.2.9
   - jruby-9.1.9.0
+before_install: "gem update --system" # https://github.com/travis-ci/travis-ci/issues/8974
