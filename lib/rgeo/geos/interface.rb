@@ -126,8 +126,8 @@ module RGeo
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
       #   Optional.
       # [<tt>:srs_database</tt>]
-      #   Optional. If provided, the value should be an implementation of
-      #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
+      #   Optional. If provided, the object should respond to #get and
+      #   #clear_cache. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
       #   objects from a spatial reference system database.
       # [<tt>:has_z_coordinate</tt>]

@@ -88,8 +88,8 @@ module RGeo
       #   to 4326, indicating the WGS84 crs, but note that that value
       #   implies an ellipsoidal datum, not a spherical datum.
       # [<tt>:srs_database</tt>]
-      #   Optional. If provided, the value should be an implementation of
-      #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
+      #   Optional. If provided, the object should respond to #get and
+      #   #clear_cache. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
       #   objects from a spatial reference system database.
       # [<tt>:wkt_parser</tt>]
@@ -302,8 +302,8 @@ module RGeo
       #   to the given geographic coordinate system's authority code, or
       #   to 0 if no geographic coordinate system is known.
       # [<tt>:srs_database</tt>]
-      #   Optional. If provided, the value should be an implementation of
-      #   CoordSys::SRSDatabase::Interface. If both this and an SRID are
+      #   Optional. If provided, the object should respond to #get and
+      #   #clear_cache. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
       #   objects from a spatial reference system database.
       # [<tt>:has_z_coordinate</tt>]
