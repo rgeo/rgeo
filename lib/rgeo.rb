@@ -73,10 +73,6 @@
 #   database, and based on the postgresql adapter. Available as the
 #   activerecord-postgis-adapter gem.
 
-module RGeo
-end
-
-# Core modules
 require "rgeo/version"
 require "rgeo/error"
 require "rgeo/feature"

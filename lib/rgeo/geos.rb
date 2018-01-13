@@ -1,41 +1,31 @@
-# -----------------------------------------------------------------------------
+# The Geos module provides general tools for creating and manipulating
+# a GEOS-backed implementation of the SFS. This is a full implementation
+# of the SFS using a Cartesian coordinate system. It uses the GEOS C++
+# library to perform most operations, and hence is available only if
+# GEOS version 3.2 or later is installed and accessible when the rgeo
+# gem is installed. RGeo feature calls are translated into appropriate
+# GEOS calls and directed to the library's C api. RGeo also corrects a
+# few cases of missing or non-standard behavior in GEOS.
 #
-# GEOS wrapper for RGeo
+# This module also provides a namespace for the implementation classes
+# themselves; however, those classes are meant to be opaque and are
+# therefore not documented.
 #
-# -----------------------------------------------------------------------------
-
-module RGeo
-  # The Geos module provides general tools for creating and manipulating
-  # a GEOS-backed implementation of the SFS. This is a full implementation
-  # of the SFS using a Cartesian coordinate system. It uses the GEOS C++
-  # library to perform most operations, and hence is available only if
-  # GEOS version 3.2 or later is installed and accessible when the rgeo
-  # gem is installed. RGeo feature calls are translated into appropriate
-  # GEOS calls and directed to the library's C api. RGeo also corrects a
-  # few cases of missing or non-standard behavior in GEOS.
-  #
-  # This module also provides a namespace for the implementation classes
-  # themselves; however, those classes are meant to be opaque and are
-  # therefore not documented.
-  #
-  # To use the Geos implementation, first obtain a factory using the
-  # RGeo::Geos.factory method. You may then call any of the standard
-  # factory methods on the resulting object.
-
-  module Geos
-  end
-end
+# To use the Geos implementation, first obtain a factory using the
+# RGeo::Geos.factory method. You may then call any of the standard
+# factory methods on the resulting object.
 
 # :stopdoc:
 
 module RGeo
   module Geos
-    # Implementation files
     require "rgeo/geos/utils"
     require "rgeo/geos/interface"
     begin
       require "rgeo/geos/geos_c_impl"
-    rescue ::LoadError; end
+    rescue LoadError
+      # continue
+    end
     CAPI_SUPPORTED = RGeo::Geos.const_defined?(:CAPIGeometryMethods)
     if CAPI_SUPPORTED
       require "rgeo/geos/capi_feature_classes"
