@@ -4,6 +4,13 @@
 #
 # -----------------------------------------------------------------------------
 
+require "rgeo/coord_sys/cs/factories"
+require "rgeo/coord_sys/cs/entities"
+require "rgeo/coord_sys/cs/wkt_parser"
+require "rgeo/coord_sys/srs_database/entry"
+require "rgeo/coord_sys/srs_database/url_reader"
+require "rgeo/coord_sys/srs_database/sr_org"
+
 module RGeo
   # This module provides data structures and tools related to coordinate
   # systems and coordinate transforms. It comprises the following parts:
@@ -37,11 +44,3 @@ module RGeo
     end
   end
 end
-
-# Implementation files
-require "rgeo/coord_sys/cs/factories"
-require "rgeo/coord_sys/cs/entities"
-require "rgeo/coord_sys/cs/wkt_parser"
-require "rgeo/coord_sys/srs_database/interface.rb"
-require "rgeo/coord_sys/srs_database/url_reader.rb"
-require "rgeo/coord_sys/srs_database/sr_org.rb"
