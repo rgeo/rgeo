@@ -15,32 +15,24 @@ module RGeo
     # the proj4 library, or access online databases such as the
     # spatialreference.org site.
 
+    # Spatial reference system database classes must implement these methods:
+    #   get
+    #   clear_cache
+    #
+    # See SrOrg and UrlReader for implementations of SRSDatabase classes.
+    #
+    # Retrieve an Entry given an identifier. The identifier is usually
+    # a numeric spatial reference ID (SRID), but could be a string
+    # value for certain database types.
+    #   get(identifier)
+    #
+    # Clear any cache utilized by this database.
+    #   clear_cache
+
     module SRSDatabase
-      # Interface specification for spatial reference system databases.
-      # This module exists primarily for the sake of documentation.
-      # Database implementations need not actually include this module,
-      # but at least need to duck-type its methods.
-
-      module Interface
-        # Retrieve an Entry given an identifier. The identifier is usually
-        # a numeric spatial reference ID (SRID), but could be a string
-        # value for certain database types.
-
-        def get(_ident_)
-          nil
-        end
-
-        # Clears any cache utilized by this database.
-
-        def clear_cache
-          nil
-        end
-      end
-
       # An entry in a spatial reference system database.
       # Every entry has an identifier, but all the other attributes are
       # optional and may or may not be present depending on the database.
-
       class Entry
         # Create an entry.
         # You must provide an identifier, which may be numeric or a
