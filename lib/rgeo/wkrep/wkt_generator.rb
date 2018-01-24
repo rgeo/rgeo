@@ -108,9 +108,9 @@ module RGeo
       end
 
       def _generate_feature(obj, toplevel = false) # :nodoc:
-        type_ = obj.geometry_type
-        type_ = Feature::LineString if type.subtype_of?(Feature::LineString)
-        tag_ = type.type_name
+        type = obj.geometry_type
+        type = Feature::LineString if type.subtype_of?(Feature::LineString)
+        tag = type.type_name
         if @tag_format == :ewkt
           tag << "M" if @cur_support_m && !@cur_support_z
           tag = "SRID=#{obj.srid};#{tag}" if toplevel && @emit_ewkt_srid
