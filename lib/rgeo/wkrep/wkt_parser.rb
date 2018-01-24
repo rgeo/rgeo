@@ -326,7 +326,7 @@ module RGeo
           loop do
             uses_paren = @cur_token == :begin
             _next_token if uses_paren
-            points_ << _parse_coords
+            points << _parse_coords
             if uses_paren
               _expect_token_type(:end)
               _next_token
