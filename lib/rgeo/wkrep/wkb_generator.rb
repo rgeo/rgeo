@@ -170,7 +170,7 @@ module RGeo
 
       def _emit_line_string_coords(obj) # :nodoc:
         array = []
-        obj.points.each { |p| _point_coords(p, array_) }
+        obj.points.each { |p| _point_coords(p, array) }
         _emit_integer(obj.num_points)
         _emit_doubles(array)
       end
