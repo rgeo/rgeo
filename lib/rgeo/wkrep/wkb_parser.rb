@@ -225,7 +225,7 @@ module RGeo
         end
         str = @_data[@_pos, 1]
         @_pos += 1
-        str_.unpack("C").first
+        str.unpack("C").first
       end
 
       def _get_integer(little_endian) # :nodoc:
