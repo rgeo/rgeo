@@ -206,44 +206,44 @@ module RGeo
       end
 
       def _start_scanner(data) # :nodoc:
-        @_data = data
-        @_len = data.length
-        @_pos = 0
+        @data = data
+        @len = data.length
+        @pos = 0
       end
 
       def _clean_scanner # :nodoc:
-        @_data = nil
+        @data = nil
       end
 
       def _bytes_remaining # :nodoc:
-        @_len - @_pos
+        @len - @pos
       end
 
       def _get_byte # :nodoc:
-        if @_pos + 1 > @_len
+        if @pos + 1 > @len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
         end
-        str = @_data[@_pos, 1]
-        @_pos += 1
+        str = @data[@pos, 1]
+        @pos += 1
         str.unpack("C").first
       end
 
       def _get_integer(little_endian) # :nodoc:
-        if @_pos + 4 > @_len
+        if @pos + 4 > @len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
         end
-        str = @_data[@_pos, 4]
-        @_pos += 4
+        str = @data[@pos, 4]
+        @pos += 4
         str.unpack("#{little_endian ? 'V' : 'N'}").first
       end
 
       def _get_doubles(little_endian, count) # :nodoc:
         len = 8 * count
-        if @_pos + len > @_len
+        if @pos + len > @len
           raise Error::ParseError, "Not enough bytes left to fulfill #{count} doubles"
         end
-        str = @_data[@_pos, len]
-        @_pos += len
+        str = @data[@pos, len]
+        @pos += len
         str.unpack("#{little_endian ? 'E' : 'G'}*")
       end
     end
