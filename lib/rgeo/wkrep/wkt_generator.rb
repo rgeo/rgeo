@@ -159,7 +159,7 @@ module RGeo
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.points.map { |p_| _generate_coords(p) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.points.map { |p| _generate_coords(p) }.join(', ')}#{@end_bracket}"
         end
       end
 
