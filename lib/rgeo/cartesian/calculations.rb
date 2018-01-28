@@ -9,9 +9,9 @@ module RGeo
     # Represents a line segment in the plane.
 
     class Segment # :nodoc:
-      def initialize(start_, end_)
-        @s = start_
-        @e = end_
+      def initialize(start, stop)
+        @s = start
+        @e = stop
         @sx = @s.x
         @sy = @s.y
         @ex = @e.x
@@ -30,8 +30,8 @@ module RGeo
         "#{@s} - #{@e}"
       end
 
-      def eql?(rhs_)
-        rhs_.is_a?(Segment) && @s == rhs_.s && @e == rhs_.e
+      def eql?(rhs)
+        rhs.is_a?(Segment) && @s == rhs.s && @e == rhs.e
       end
       alias == eql?
 
@@ -43,65 +43,65 @@ module RGeo
       # a positive value if the point is to the right, or
       # 0 if the point is collinear to the segment.
 
-      def side(p_)
-        px_ = p_.x
-        py_ = p_.y
-        (@sx - px_) * (@ey - py_) - (@sy - py_) * (@ex - px_)
+      def side(p)
+        px = p.x
+        py = p.y
+        (@sx - px) * (@ey - py) - (@sy - py) * (@ex - px)
       end
 
-      def tproj(p_)
+      def tproj(p)
         if @lensq == 0
           nil
         else
-          (@dx * (p_.x - @sx) + @dy * (p_.y - @sy)) / @lensq
+          (@dx * (p.x - @sx) + @dy * (p.y - @sy)) / @lensq
         end
       end
 
-      def contains_point?(p_)
-        if side(p_) == 0
-          t_ = tproj(p_)
-          t_ && t_ >= 0.0 && t_ <= 1.0
+      def contains_point?(p)
+        if side(p) == 0
+          t = tproj(p)
+          t && t >= 0.0 && t <= 1.0
         else
           false
         end
       end
 
-      def intersects_segment?(seg_)
-        s2_ = seg_.s
+      def intersects_segment?(seg)
+        s2 = seg.s
         # Handle degenerate cases
-        if seg_.degenerate?
+        if seg.degenerate?
           if @lensq == 0
-            return @s == s2_
+            return @s == s2
           else
-            return contains_point?(s2_)
+            return contains_point?(s2)
           end
         elsif @lensq == 0
-          return seg_.contains_point?(@s)
+          return seg.contains_point?(@s)
         end
         # Both segments have nonzero length.
-        sx2_ = s2_.x
-        sy2_ = s2_.y
-        dx2_ = seg_.dx
-        dy2_ = seg_.dy
-        denom_ = @dx * dy2_ - @dy * dx2_
-        if denom_ == 0
+        sx2 = s2.x
+        sy2 = s2.y
+        dx2 = seg.dx
+        dy2 = seg.dy
+        denom = @dx * dy2 - @dy * dx2
+        if denom == 0
           # Segments are parallel. Make sure they are collinear.
-          return false unless side(s2_) == 0
+          return false unless side(s2) == 0
           # 1-D check.
-          ts_ = (@dx * (sx2_ - @sx) + @dy * (sy2_ - @sy)) / @lensq
-          te_ = (@dx * (sx2_ + dx2_ - @sx) + @dy * (sy2_ + dy2_ - @sy)) / @lensq
-          if ts_ < te_
-            te_ >= 0.0 && ts_ <= 1.0
+          ts = (@dx * (sx2 - @sx) + @dy * (sy2 - @sy)) / @lensq
+          te = (@dx * (sx2 + dx2 - @sx) + @dy * (sy2 + dy2 - @sy)) / @lensq
+          if ts < te
+            te >= 0.0 && ts <= 1.0
           else
-            ts_ >= 0.0 && te_ <= 1.0
+            ts >= 0.0 && te <= 1.0
           end
         else
           # Segments are not parallel. Check the intersection of their
           # containing lines.
-          t_ = (dy2_ * (sx2_ - @sx) + dx2_ * (@sy - sy2_)) / denom_
-          return false if t_ < 0.0 || t_ > 1.0
-          t2_ = (@dy * (sx2_ - @sx) + @dx * (@sy - sy2_)) / denom_
-          t2_ >= 0.0 && t2_ <= 1.0
+          t = (dy2 * (sx2 - @sx) + dx2 * (@sy - sy2)) / denom
+          return false if t < 0.0 || t > 1.0
+          t2 = (@dy * (sx2 - @sx) + @dx * (@sy - sy2)) / denom
+          t2 >= 0.0 && t2 <= 1.0
         end
       end
 

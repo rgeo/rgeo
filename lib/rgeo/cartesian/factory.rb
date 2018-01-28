@@ -16,17 +16,17 @@ module RGeo
       #
       # See RGeo::Cartesian.simple_factory for a list of supported options.
 
-      def initialize(opts_ = {})
-        @has_z = opts_[:has_z_coordinate] ? true : false
-        @has_m = opts_[:has_m_coordinate] ? true : false
-        @proj4 = opts_[:proj4]
+      def initialize(opts = {})
+        @has_z = opts[:has_z_coordinate] ? true : false
+        @has_m = opts[:has_m_coordinate] ? true : false
+        @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
           if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         end
-        srid_ = opts_[:srid]
-        @coord_sys = opts_[:coord_sys]
+        srid = opts[:srid]
+        @coord_sys = opts[:coord_sys]
         if @coord_sys.is_a?(::String)
           @coord_sys = begin
                          CoordSys::CS.create_from_wkt(@coord_sys)
@@ -34,44 +34,44 @@ module RGeo
                          nil
                        end
         end
-        if (!@proj4 || !@coord_sys) && srid_ && (db_ = opts_[:srs_database])
-          entry_ = db_.get(srid_.to_i)
-          if entry_
-            @proj4 ||= entry_.proj4
-            @coord_sys ||= entry_.coord_sys
+        if (!@proj4 || !@coord_sys) && srid && (db = opts[:srs_database])
+          entry = db.get(srid.to_i)
+          if entry
+            @proj4 ||= entry.proj4
+            @coord_sys ||= entry.coord_sys
           end
         end
-        srid_ ||= @coord_sys.authority_code if @coord_sys
-        @srid = srid_.to_i
-        @lenient_assertions = opts_[:uses_lenient_assertions] ? true : false
-        @buffer_resolution = opts_[:buffer_resolution].to_i
+        srid ||= @coord_sys.authoritycode if @coord_sys
+        @srid = srid.to_i
+        @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
+        @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
 
-        wkt_generator_ = opts_[:wkt_generator]
-        case wkt_generator_
+        wkt_generator = opts[:wkt_generator]
+        case wkt_generator
         when ::Hash
-          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator_)
+          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
         else
           @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
         end
-        wkb_generator_ = opts_[:wkb_generator]
-        case wkb_generator_
+        wkb_generator = opts[:wkb_generator]
+        case wkb_generator
         when ::Hash
-          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator_)
+          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
         else
           @wkb_generator = WKRep::WKBGenerator.new
         end
-        wkt_parser_ = opts_[:wkt_parser]
-        case wkt_parser_
+        wkt_parser = opts[:wkt_parser]
+        case wkt_parser
         when ::Hash
-          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser_)
+          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
         else
           @wkt_parser = WKRep::WKTParser.new(self)
         end
-        wkb_parser_ = opts_[:wkb_parser]
-        case wkb_parser_
+        wkb_parser = opts[:wkb_parser]
+        case wkb_parser
         when ::Hash
-          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser_)
+          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
         else
           @wkb_parser = WKRep::WKBParser.new(self)
         end
@@ -79,11 +79,11 @@ module RGeo
 
       # Equivalence test.
 
-      def eql?(rhs_)
-        rhs_.is_a?(self.class) && @srid == rhs_.srid &&
-          @has_z == rhs_.property(:has_z_coordinate) &&
-          @has_m == rhs_.property(:has_m_coordinate) &&
-          @proj4.eql?(rhs_.proj4)
+      def eql?(rhs)
+        rhs.is_a?(self.class) && @srid == rhs.srid &&
+          @has_z == rhs.property(:has_z_coordinate) &&
+          @has_m == rhs.property(:has_m_coordinate) &&
+          @proj4.eql?(rhs.proj4)
       end
       alias == eql?
 
@@ -112,79 +112,79 @@ module RGeo
         hash_
       end
 
-      def marshal_load(data_) # :nodoc:
-        if (proj4_data_ = data_["proj4"]) && CoordSys.check!(:proj4)
-          proj4_ = CoordSys::Proj4.allocate
-          proj4_.marshal_load(proj4_data_)
+      def marshal_load(data) # :nodoc:
+        if (proj4data = data["proj4"]) && CoordSys.check!(:proj4)
+          proj4 = CoordSys::Proj4.allocate
+          proj4.marshal_load(proj4data)
         else
-          proj4_ = nil
+          proj4 = nil
         end
-        if (coord_sys_data_ = data_["cs"])
-          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
+        if (coord_sysdata = data["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata)
         else
-          coord_sys_ = nil
+          coord_sys = nil
         end
         initialize(
-          has_z_coordinate: data_["hasz"],
-          has_m_coordinate: data_["hasm"],
-          srid: data_["srid"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
-          uses_lenient_assertions: data_["lena"],
-          buffer_resolution: data_["bufr"],
-          proj4: proj4_,
-          coord_sys: coord_sys_
+          has_z_coordinate: data["hasz"],
+          has_m_coordinate: data["hasm"],
+          srid: data["srid"],
+          wkt_generator: ImplHelper::Utils.symbolize_hash(data["wktg"]),
+          wkb_generator: ImplHelper::Utils.symbolize_hash(data["wkbg"]),
+          wkt_parser: ImplHelper::Utils.symbolize_hash(data["wktp"]),
+          wkb_parser: ImplHelper::Utils.symbolize_hash(data["wkbp"]),
+          uses_lenient_assertions: data["lena"],
+          buffer_resolution: data["bufr"],
+          proj4: proj4,
+          coord_sys: coord_sys
         )
       end
 
       # Psych support
 
-      def encode_with(coder_) # :nodoc:
-        coder_["has_z_coordinate"] = @has_z
-        coder_["has_m_coordinate"] = @has_m
-        coder_["srid"] = @srid
-        coder_["lenient_assertions"] = @lenient_assertions
-        coder_["buffer_resolution"] = @buffer_resolution
-        coder_["wkt_generator"] = @wkt_generator._properties
-        coder_["wkb_generator"] = @wkb_generator._properties
-        coder_["wkt_parser"] = @wkt_parser._properties
-        coder_["wkb_parser"] = @wkb_parser._properties
+      def encode_with(coder) # :nodoc:
+        coder["has_z_coordinate"] = @has_z
+        coder["has_m_coordinate"] = @has_m
+        coder["srid"] = @srid
+        coder["lenient_assertions"] = @lenient_assertions
+        coder["buffer_resolution"] = @buffer_resolution
+        coder["wkt_generator"] = @wkt_generator._properties
+        coder["wkb_generator"] = @wkb_generator._properties
+        coder["wkt_parser"] = @wkt_parser._properties
+        coder["wkb_parser"] = @wkb_parser._properties
         if @proj4
-          str_ = @proj4.original_str || @proj4.canonical_str
-          coder_["proj4"] = @proj4.radians? ? { "proj4" => str_, "radians" => true } : str_
+          str = @proj4.original_str || @proj4.canonical_str
+          coder["proj4"] = @proj4.radians? ? { "proj4" => str, "radians" => true } : str
         end
-        coder_["coord_sys"] = @coord_sys.to_wkt if @coord_sys
+        coder["coord_sys"] = @coord_sys.to_wkt if @coord_sys
       end
 
-      def init_with(coder_) # :nodoc:
-        if (proj4_data_ = coder_["proj4"]) && CoordSys.check!(:proj4)
-          if proj4_data_.is_a?(::Hash)
-            proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
+      def init_with(coder) # :nodoc:
+        if (proj4data = coder["proj4"]) && CoordSys.check!(:proj4)
+          if proj4data.is_a?(::Hash)
+            proj4 = CoordSys::Proj4.create(proj4data["proj4"], radians: proj4data["radians"])
           else
-            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
+            proj4 = CoordSys::Proj4.create(proj4data.to_s)
           end
         else
-          proj4_ = nil
+          proj4 = nil
         end
-        if (coord_sys_data_ = coder_["cs"])
-          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
+        if (coord_sysdata = coder["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata.to_s)
         else
-          coord_sys_ = nil
+          coord_sys = nil
         end
         initialize(
-          has_z_coordinate: coder_["has_z_coordinate"],
-          has_m_coordinate: coder_["has_m_coordinate"],
-          srid: coder_["srid"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
-          uses_lenient_assertions: coder_["lenient_assertions"],
-          buffer_resolution: coder_["buffer_resolution"],
-          proj4: proj4_,
-          coord_sys: coord_sys_
+          has_z_coordinate: coder["has_z_coordinate"],
+          has_m_coordinate: coder["has_m_coordinate"],
+          srid: coder["srid"],
+          wkt_generator: ImplHelper::Utils.symbolize_hash(coder["wkt_generator"]),
+          wkb_generator: ImplHelper::Utils.symbolize_hash(coder["wkb_generator"]),
+          wkt_parser: ImplHelper::Utils.symbolize_hash(coder["wkt_parser"]),
+          wkb_parser: ImplHelper::Utils.symbolize_hash(coder["wkb_parser"]),
+          uses_lenient_assertions: coder["lenient_assertions"],
+          buffer_resolution: coder["buffer_resolution"],
+          proj4: proj4,
+          coord_sys: coord_sys
         )
       end
 
@@ -194,8 +194,8 @@ module RGeo
 
       # See RGeo::Feature::Factory#property
 
-      def property(name_)
-        case name_
+      def property(name)
+        case name
         when :has_z_coordinate
           @has_z
         when :has_m_coordinate
@@ -211,84 +211,84 @@ module RGeo
 
       # See RGeo::Feature::Factory#parse_wkt
 
-      def parse_wkt(str_)
-        @wkt_parser.parse(str_)
+      def parse_wkt(str)
+        @wkt_parser.parse(str)
       end
 
       # See RGeo::Feature::Factory#parse_wkb
 
-      def parse_wkb(str_)
-        @wkb_parser.parse(str_)
+      def parse_wkb(str)
+        @wkb_parser.parse(str)
       end
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_, y_, *extra_)
-        PointImpl.new(self, x_, y_, *extra_)
+      def point(x, y, *extra)
+        PointImpl.new(self, x, y, *extra)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#line_string
 
-      def line_string(points_)
-        LineStringImpl.new(self, points_)
+      def line_string(points)
+        LineStringImpl.new(self, points)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#line
 
-      def line(start_, end_)
-        LineImpl.new(self, start_, end_)
+      def line(start, stop)
+        LineImpl.new(self, start, stop)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
-      def linear_ring(points_)
-        LinearRingImpl.new(self, points_)
+      def linear_ring(points)
+        LinearRingImpl.new(self, points)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#polygon
 
-      def polygon(outer_ring_, inner_rings_ = nil)
-        PolygonImpl.new(self, outer_ring_, inner_rings_)
+      def polygon(outer_ring, inner_rings = nil)
+        PolygonImpl.new(self, outer_ring, inner_rings)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#collection
 
-      def collection(elems_)
-        GeometryCollectionImpl.new(self, elems_)
+      def collection(elems)
+        GeometryCollectionImpl.new(self, elems)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#multi_point
 
-      def multi_point(elems_)
-        MultiPointImpl.new(self, elems_)
+      def multi_point(elems)
+        MultiPointImpl.new(self, elems)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
-      def multi_line_string(elems_)
-        MultiLineStringImpl.new(self, elems_)
+      def multi_line_string(elems)
+        MultiLineStringImpl.new(self, elems)
       rescue
         nil
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
-      def multi_polygon(elems_)
-        MultiPolygonImpl.new(self, elems_)
+      def multi_polygon(elems)
+        MultiPolygonImpl.new(self, elems)
       rescue
         nil
       end
@@ -301,12 +301,12 @@ module RGeo
 
       attr_reader :coord_sys
 
-      def _generate_wkt(obj_)  # :nodoc:
-        @wkt_generator.generate(obj_)
+      def _generate_wkt(obj)  # :nodoc:
+        @wkt_generator.generate(obj)
       end
 
-      def _generate_wkb(obj_)  # :nodoc:
-        @wkb_generator.generate(obj_)
+      def _generate_wkb(obj)  # :nodoc:
+        @wkb_generator.generate(obj)
       end
 
       def _marshal_wkb_generator # :nodoc:

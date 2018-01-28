@@ -24,11 +24,11 @@ module RGeo
       # RGeo::Cartesian.simple_factory for details. Unsupported options
       # are ignored.
 
-      def preferred_factory(opts_ = {})
+      def preferred_factory(opts = {})
         if RGeo::Geos.supported?
-          RGeo::Geos.factory(opts_)
+          RGeo::Geos.factory(opts)
         else
-          simple_factory(opts_)
+          simple_factory(opts)
         end
       end
       alias factory preferred_factory
@@ -102,8 +102,8 @@ module RGeo
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
 
-      def simple_factory(opts_ = {})
-        Cartesian::Factory.new(opts_)
+      def simple_factory(opts = {})
+        Cartesian::Factory.new(opts)
       end
 
       # Returns a Feature::FactoryGenerator that creates preferred
@@ -114,8 +114,8 @@ module RGeo
       # an SRID and it will automatically fetch the appropriate Proj4
       # and CoordSys objects.
 
-      def preferred_factory_generator(defaults_ = {})
-        ::Proc.new { |c_| preferred_factory(defaults_.merge(c_)) }
+      def preferred_factory_generator(defaults = {})
+        ::Proc.new { |c| preferred_factory(defaults.merge(c)) }
       end
       alias factory_generator preferred_factory_generator
 
@@ -127,8 +127,8 @@ module RGeo
       # an SRID and it will automatically fetch the appropriate Proj4
       # and CoordSys objects.
 
-      def simple_factory_generator(defaults_ = {})
-        ::Proc.new { |c_| simple_factory(defaults_.merge(c_)) }
+      def simple_factory_generator(defaults = {})
+        ::Proc.new { |c| simple_factory(defaults.merge(c)) }
       end
     end
   end
