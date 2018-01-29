@@ -13,58 +13,58 @@ module RGeo
         end
 
         def test_srid_preserved_through_factory
-          geom_ = @factory.point(-10, 20)
-          assert_equal(_srid, geom_.srid)
-          factory_ = geom_.factory
-          assert_equal(_srid, factory_.srid)
-          geom2_ = factory_.point(-20, 25)
-          assert_equal(_srid, geom2_.srid)
+          geom = @factory.point(-10, 20)
+          assert_equal(_srid, geom.srid)
+          factory = geom.factory
+          assert_equal(_srid, factory.srid)
+          geom2 = factory.point(-20, 25)
+          assert_equal(_srid, geom2.srid)
         end
 
         def test_srid_preserved_through_geom_operations
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = @factory.point(-20, 25)
-          geom3_ = geom1_.union(geom2_)
-          assert_equal(_srid, geom3_.srid)
-          assert_equal(_srid, geom3_.geometry_n(0).srid)
-          assert_equal(_srid, geom3_.geometry_n(1).srid)
+          geom1 = @factory.point(-10, 20)
+          geom2 = @factory.point(-20, 25)
+          geom3 = geom1.union(geom2)
+          assert_equal(_srid, geom3.srid)
+          assert_equal(_srid, geom3.geometry_n(0).srid)
+          assert_equal(_srid, geom3.geometry_n(1).srid)
         end
 
         def test_srid_preserved_through_geom_functions
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = geom1_.boundary
-          assert_equal(_srid, geom2_.srid)
+          geom1 = @factory.point(-10, 20)
+          geom2 = geom1.boundary
+          assert_equal(_srid, geom2.srid)
         end
 
         def test_srid_preserved_through_geometry_dup
-          geom1_ = @factory.point(-10, 20)
-          geom2_ = geom1_.clone
-          assert_equal(_srid, geom2_.srid)
+          geom1 = @factory.point(-10, 20)
+          geom2 = geom1.clone
+          assert_equal(_srid, geom2.srid)
         end
 
-        def test_dup_factory_results_in_equal_factories
-          dup_factory_ = @factory.dup
-          assert_equal(@factory, dup_factory_)
-          assert_equal(_srid, dup_factory_.srid)
+        def test_dup_factoryresults_in_equal_factories
+          dup_factory = @factory.dup
+          assert_equal(@factory, dup_factory)
+          assert_equal(_srid, dup_factory.srid)
         end
 
-        def test_dup_factory_results_in_equal_hashes
-          dup_factory_ = @factory.dup
-          assert_equal(@factory.hash, dup_factory_.hash)
+        def test_dup_factoryresults_in_equal_hashes
+          dup_factory = @factory.dup
+          assert_equal(@factory.hash, dup_factory.hash)
         end
 
         def test_marshal_dump_load_factory
-          data_ = ::Marshal.dump(@factory)
-          factory2_ = ::Marshal.load(data_)
-          assert_equal(@factory, factory2_)
-          assert_equal(_srid, factory2_.srid)
+          data = ::Marshal.dump(@factory)
+          factory2 = ::Marshal.load(data)
+          assert_equal(@factory, factory2)
+          assert_equal(_srid, factory2.srid)
         end
 
         def test_psych_dump_load_factory
-          data_ = Psych.dump(@factory)
-          factory2_ = Psych.load(data_)
-          assert_equal(@factory, factory2_)
-          assert_equal(_srid, factory2_.srid)
+          data = Psych.dump(@factory)
+          factory2 = Psych.load(data)
+          assert_equal(@factory, factory2)
+          assert_equal(_srid, factory2.srid)
         end
       end
     end
