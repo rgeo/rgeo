@@ -21,11 +21,11 @@ module RGeo
       # of rotation.
 
       class PointXYZ # :nodoc:
-        def initialize(x_, y_, z_)
-          r_ = ::Math.sqrt(x_ * x_ + y_ * y_ + z_ * z_)
-          @x = (x_ / r_).to_f
-          @y = (y_ / r_).to_f
-          @z = (z_ / r_).to_f
+        def initialize(x, y, z)
+          r = ::Math.sqrt(x * x + y * y + z * z)
+          @x = (x / r).to_f
+          @y = (y / r).to_f
+          @z = (z / r).to_f
           raise "Not a number" if @x.nan? || @y.nan? || @z.nan?
         end
 
@@ -43,25 +43,25 @@ module RGeo
         alias == eql?
 
         def latlon
-          lat_rad_ = ::Math.asin(@z)
-          lon_rad_ = begin
+          lat_rad = ::Math.asin(@z)
+          lon_rad = begin
                        ::Math.atan2(@y, @x)
                      rescue
                        0.0
                      end
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lat_rad_ / rpd_, lon_rad_ / rpd_]
+          [lat_rad / rpd_, lon_rad / rpd_]
         end
 
         def lonlat
-          lat_rad_ = ::Math.asin(@z)
-          lon_rad_ = begin
+          lat_rad = ::Math.asin(@z)
+          lon_rad = begin
                        ::Math.atan2(@y, @x)
                      rescue
                        0.0
                      end
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lon_rad_ / rpd_, lat_rad_ / rpd_]
+          [lon_rad / rpd_, lat_rad / rpd_]
         end
 
         def *(rhs_)
@@ -72,28 +72,28 @@ module RGeo
         end
 
         def %(rhs_)
-          rx_ = rhs_.x
-          ry_ = rhs_.y
-          rz_ = rhs_.z
+          rx = rhs_.x
+          ry = rhs_.y
+          rz = rhs_.z
           begin
-            PointXYZ.new(@y * rz_ - @z * ry_, @z * rx_ - @x * rz_, @x * ry_ - @y * rx_)
+            PointXYZ.new(@y * rz - @z * ry, @z * rx - @x * rz, @x * ry - @y * rx)
           rescue
             nil
           end
         end
 
         def dist_to_point(rhs_)
-          rx_ = rhs_.x
-          ry_ = rhs_.y
-          rz_ = rhs_.z
-          dot_ = @x * rx_ + @y * ry_ + @z * rz_
+          rx = rhs_.x
+          ry = rhs_.y
+          rz = rhs_.z
+          dot_ = @x * rx + @y * ry + @z * rz
           if dot_ > -0.8 && dot_ < 0.8
             ::Math.acos(dot_)
           else
-            x_ = @y * rz_ - @z * ry_
-            y_ = @z * rx_ - @x * rz_
-            z_ = @x * ry_ - @y * rx_
-            as_ = ::Math.asin(::Math.sqrt(x_ * x_ + y_ * y_ + z_ * z_))
+            x = @y * rz - @z * ry
+            y = @z * rx - @x * rz
+            z = @x * ry - @y * rx
+            as_ = ::Math.asin(::Math.sqrt(x * x + y * y + z * z))
             dot_ > 0.0 ? as_ : ::Math::PI - as_
           end
         end
@@ -108,19 +108,19 @@ module RGeo
           p1dot_ < p2dot_ ? (self % P1) : (self % P2)
         end
 
-        def self.from_latlon(lat_, lon_)
+        def self.from_latlon(lat, lon)
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          lat_rad_ = rpd_ * lat_
-          lon_rad_ = rpd_ * lon_
-          z_ = ::Math.sin(lat_rad_)
-          r_ = ::Math.cos(lat_rad_)
-          x_ = ::Math.cos(lon_rad_) * r_
-          y_ = ::Math.sin(lon_rad_) * r_
-          new(x_, y_, z_)
+          lat_rad = rpd_ * lat
+          lon_rad = rpd_ * lon
+          z = ::Math.sin(lat_rad)
+          r = ::Math.cos(lat_rad)
+          x = ::Math.cos(lon_rad) * r
+          y = ::Math.sin(lon_rad) * r
+          new(x, y, z)
         end
 
-        def self.weighted_combination(p1_, w1_, p2_, w2_)
-          new(p1_.x * w1_ + p2_.x * w2_, p1_.y * w1_ + p2_.y * w2_, p1_.z * w1_ + p2_.z * w2_)
+        def self.weighted_combination(p1, w1, p2, w2)
+          new(p1.x * w1 + p2.x * w2, p1.y * w1 + p2.y * w2, p1.z * w1 + p2.z * w2)
         end
 
         P1 = new(1, 0, 0)
@@ -130,9 +130,9 @@ module RGeo
       # Represents a finite arc on the sphere.
 
       class ArcXYZ # :nodoc:
-        def initialize(start_, end_)
-          @s = start_
-          @e = end_
+        def initialize(start, stop)
+          @s = start
+          @e = stop
           @axis = false
         end
 
@@ -166,9 +166,9 @@ module RGeo
         end
 
         def intersects_arc?(obj_)
-          my_axis_ = axis
-          dot1_ = my_axis_ * obj_.s
-          dot2_ = my_axis_ * obj_.e
+          myaxis_ = axis
+          dot1_ = myaxis_ * obj_.s
+          dot2_ = myaxis_ * obj_.e
           if dot1_ >= 0.0 && dot2_ <= 0.0 || dot1_ <= 0.0 && dot2_ >= 0.0
             ob_axis_ = obj_.axis
             dot1_ = ob_axis_ * @s
