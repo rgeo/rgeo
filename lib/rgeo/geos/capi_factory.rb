@@ -22,14 +22,14 @@ module RGeo
           return nil unless respond_to?(:_create)
 
           # Get flags to pass to the C extension
-          flags_ = 0
-          flags_ |= 1 if opts_[:uses_lenient_assertions] || opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
-          flags_ |= 2 if opts_[:has_z_coordinate]
-          flags_ |= 4 if opts_[:has_m_coordinate]
-          if flags_ & 6 == 6
+          flags = 0
+          flags |= 1 if opts_[:uses_lenient_assertions] || opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
+          flags |= 2 if opts_[:has_z_coordinate]
+          flags |= 4 if opts_[:has_m_coordinate]
+          if flags & 6 == 6
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
-          flags_ |= 8 unless opts_[:auto_prepare] == :disabled
+          flags |= 8 unless opts_[:auto_prepare] == :disabled
 
           # Buffer resolution
           buffer_resolution_ = opts_[:buffer_resolution].to_i
@@ -83,7 +83,7 @@ module RGeo
           srid_ ||= coord_sys_.authority_code if coord_sys_
 
           # Create the factory and set instance variables
-          result_ = _create(flags_, srid_.to_i, buffer_resolution_,
+          result = _create(flags, srid_.to_i, buffer_resolution_,
             wkt_generator_, wkb_generator_, proj4_, coord_sys_)
 
           # Interpret parser options
@@ -92,23 +92,23 @@ module RGeo
           when :geos
             wkt_parser_ = nil
           when ::Hash
-            wkt_parser_ = WKRep::WKTParser.new(result_, wkt_parser_)
+            wkt_parser_ = WKRep::WKTParser.new(result, wkt_parser_)
           else
-            wkt_parser_ = WKRep::WKTParser.new(result_)
+            wkt_parser_ = WKRep::WKTParser.new(result)
           end
           wkb_parser_ = opts_[:wkb_parser]
           case wkb_parser_
           when :geos
             wkb_parser_ = nil
           when ::Hash
-            wkb_parser_ = WKRep::WKBParser.new(result_, wkb_parser_)
+            wkb_parser_ = WKRep::WKBParser.new(result, wkb_parser_)
           else
-            wkb_parser_ = WKRep::WKBParser.new(result_)
+            wkb_parser_ = WKRep::WKBParser.new(result)
           end
-          result_._set_wkrep_parsers(wkt_parser_, wkb_parser_)
+          result._set_wkrep_parsers(wkt_parser_, wkb_parser_)
 
           # Return the result
-          result_
+          result
         end
         alias new create
       end
@@ -200,7 +200,7 @@ module RGeo
         coder_["wkb_parser"] = _wkb_parser ? _wkb_parser._properties : {}
         coder_["auto_prepare"] = ((_flags & 0x8) == 0 ? "disabled" : "simple")
         if (proj4_ = _proj4)
-          str_ = proj4_.original_str || proj4_.canonical_str
+          str_ = proj4_.originalstr || proj4_.canonical_str
           coder_["proj4"] = proj4_.radians? ? { "proj4" => str_, "radians" => true } : str_
         end
         if (coord_sys_ = _coord_sys)
@@ -411,38 +411,38 @@ module RGeo
 
       # See RGeo::Feature::Factory#override_cast
 
-      def override_cast(original_, ntype_, flags_)
+      def override_cast(original, ntype, flags)
         return nil unless Geos.supported?
-        keep_subtype_ = flags_[:keep_subtype]
-        # force_new_ = flags_[:force_new]
-        project_ = flags_[:project]
-        type_ = original_.geometry_type
-        ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
-        case original_
+        keep_subtype = flags[:keep_subtype]
+        # force_new_ = flags[:force_new]
+        project = flags[:project]
+        type = original.geometry_type
+        ntype = type if keep_subtype && type.include?(ntype)
+        case original
         when CAPIGeometryMethods
           # Optimization if we're just changing factories, but the
           # factories are zm-compatible and proj4-compatible.
-          if original_.factory != self && ntype_ == type_ &&
-              original_.factory._flags & 0x6 == _flags & 0x6 &&
-              (!project_ || original_.factory.proj4 == _proj4)
-            result_ = original_.dup
-            result_._set_factory(self)
-            return result_
+          if original.factory != self && ntype == type &&
+              original.factory._flags & 0x6 == _flags & 0x6 &&
+              (!project || original.factory.proj4 == _proj4)
+            result = original.dup
+            result._set_factory(self)
+            return result
           end
           # LineString conversion optimization.
-          if (original_.factory != self || ntype_ != type_) &&
-              original_.factory._flags & 0x6 == _flags & 0x6 &&
-              (!project_ || original_.factory.proj4 == _proj4) &&
-              type_.subtype_of?(Feature::LineString) && ntype_.subtype_of?(Feature::LineString)
-            return IMPL_CLASSES[ntype_]._copy_from(self, original_)
+          if (original.factory != self || ntype != type) &&
+              original.factory._flags & 0x6 == _flags & 0x6 &&
+              (!project || original.factory.proj4 == _proj4) &&
+              type.subtype_of?(Feature::LineString) && ntype.subtype_of?(Feature::LineString)
+            return IMPL_CLASSES[ntype]._copy_from(self, original)
           end
         when ZMGeometryMethods
           # Optimization for just removing a coordinate from an otherwise
           # compatible factory
-          if _flags & 0x6 == 0x2 && self == original_.factory.z_factory
-            return Feature.cast(original_.z_geometry, ntype_, flags_)
-          elsif _flags & 0x6 == 0x4 && self == original_.factory.m_factory
-            return Feature.cast(original_.m_geometry, ntype_, flags_)
+          if _flags & 0x6 == 0x2 && self == original.factory.z_factory
+            return Feature.cast(original.z_geometry, ntype, flags)
+          elsif _flags & 0x6 == 0x4 && self == original.factory.m_factory
+            return Feature.cast(original.m_geometry, ntype, flags)
           end
         end
         false

@@ -16,22 +16,22 @@ module RGeo
       #
       # See RGeo::Geos.factory for a list of supported options.
 
-      def initialize(opts_ = {})
+      def initialize(opts = {})
         # Main flags
-        @uses_lenient_multi_polygon_assertions = opts_[:uses_lenient_assertions] ||
-          opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
-        @has_z = opts_[:has_z_coordinate] ? true : false
-        @has_m = opts_[:has_m_coordinate] ? true : false
+        @uses_lenient_multi_polygon_assertions = opts[:uses_lenient_assertions] ||
+          opts[:lenient_multi_polygon_assertions] || opts[:uses_lenient_multi_polygon_assertions]
+        @has_z = opts[:has_z_coordinate] ? true : false
+        @has_m = opts[:has_m_coordinate] ? true : false
         if @has_z && @has_m
           raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
         end
         @_has_3d = @has_z || @has_m
-        @buffer_resolution = opts_[:buffer_resolution].to_i
+        @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
-        @_auto_prepare = opts_[:auto_prepare] == :disabled ? false : true
+        @_auto_prepare = opts[:auto_prepare] == :disabled ? false : true
 
         # Interpret the generator options
-        wkt_generator_ = opts_[:wkt_generator]
+        wkt_generator_ = opts[:wkt_generator]
         case wkt_generator_
         when :geos
           @wkt_writer = ::Geos::WktWriter.new
@@ -43,7 +43,7 @@ module RGeo
           @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
           @wkt_writer = nil
         end
-        wkb_generator_ = opts_[:wkb_generator]
+        wkb_generator_ = opts[:wkb_generator]
         case wkb_generator_
         when :geos
           @wkb_writer = ::Geos::WkbWriter.new
@@ -57,8 +57,8 @@ module RGeo
         end
 
         # Coordinate system (srid, proj4, and coord_sys)
-        @srid = opts_[:srid]
-        @proj4 = opts_[:proj4]
+        @srid = opts[:srid]
+        @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
           if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
@@ -66,7 +66,7 @@ module RGeo
         else
           @proj4 = nil
         end
-        @coord_sys = opts_[:coord_sys]
+        @coord_sys = opts[:coord_sys]
         if @coord_sys.is_a?(::String)
           @coord_sys = begin
                          CoordSys::CS.create_from_wkt(@coord_sys)
@@ -74,36 +74,36 @@ module RGeo
                          nil
                        end
         end
-        if (!@proj4 || !@coord_sys) && @srid && (db_ = opts_[:srs_database])
-          entry_ = db_.get(@srid.to_i)
-          if entry_
-            @proj4 ||= entry_.proj4
-            @coord_sys ||= entry_.coord_sys
+        if (!@proj4 || !@coord_sys) && @srid && (db = opts[:srs_database])
+          entry = db.get(@srid.to_i)
+          if entry
+            @proj4 ||= entry.proj4
+            @coord_sys ||= entry.coord_sys
           end
         end
         @srid ||= @coord_sys.authority_code if @coord_sys
         @srid = @srid.to_i
 
         # Interpret parser options
-        wkt_parser_ = opts_[:wkt_parser]
-        case wkt_parser_
+        wkt_parser = opts[:wkt_parser]
+        case wkt_parser
         when :geos
           @wkt_reader = ::Geos::WktReader.new
           @wkt_parser = nil
         when ::Hash
-          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser_)
+          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
           @wkt_reader = nil
         else
           @wkt_parser = WKRep::WKTParser.new(self)
           @wkt_reader = nil
         end
-        wkb_parser_ = opts_[:wkb_parser]
-        case wkb_parser_
+        wkb_parser = opts[:wkb_parser]
+        case wkb_parser
         when :geos
           @wkb_reader = ::Geos::WkbReader.new
           @wkb_parser = nil
         when ::Hash
-          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser_)
+          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
           @wkb_reader = nil
         else
           @wkb_parser = WKRep::WKBParser.new(self)
@@ -119,12 +119,12 @@ module RGeo
 
       # Factory equivalence test.
 
-      def eql?(rhs_)
-        rhs_.is_a?(self.class) && @srid == rhs_.srid &&
-          @has_z == rhs_.property(:has_z_coordinate) &&
-          @has_m == rhs_.property(:has_m_coordinate) &&
-          @buffer_resolution == rhs_.property(:buffer_resolution) &&
-          @proj4.eql?(rhs_.proj4)
+      def eql?(rhs)
+        rhs.is_a?(self.class) && @srid == rhs.srid &&
+          @has_z == rhs.property(:has_z_coordinate) &&
+          @has_m == rhs.property(:has_m_coordinate) &&
+          @buffer_resolution == rhs.property(:buffer_resolution) &&
+          @proj4.eql?(rhs.proj4)
       end
       alias == eql?
 
@@ -137,7 +137,7 @@ module RGeo
       # Marshal support
 
       def marshal_dump # :nodoc:
-        hash_ = {
+        hash = {
           "hasz" => @has_z,
           "hasm" => @has_m,
           "srid" => @srid,
@@ -149,88 +149,88 @@ module RGeo
           "lmpa" => @uses_lenient_multi_polygon_assertions,
           "apre" => @_auto_prepare
         }
-        hash_["proj4"] = @proj4.marshal_dump if @proj4
-        hash_["cs"] = @coord_sys.to_wkt if @coord_sys
-        hash_
+        hash["proj4"] = @proj4.marshal_dump if @proj4
+        hash["cs"] = @coord_sys.to_wkt if @coord_sys
+        hash
       end
 
-      def marshal_load(data_) # :nodoc:
-        if (proj4_data_ = data_["proj4"]) && CoordSys.check!(:proj4)
-          proj4_ = CoordSys::Proj4.allocate
-          proj4_.marshal_load(proj4_data_)
+      def marshal_load(data) # :nodoc:
+        if (proj4_data = data["proj4"]) && CoordSys.check!(:proj4)
+          proj4 = CoordSys::Proj4.allocate
+          proj4.marshal_load(proj4_data)
         else
-          proj4_ = nil
+          proj4 = nil
         end
-        if (coord_sys_data_ = data_["cs"])
-          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
+        if (coord_sysdata = data["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata)
         else
-          coord_sys_ = nil
+          coord_sys = nil
         end
         initialize(
-          has_z_coordinate: data_["hasz"],
-          has_m_coordinate: data_["hasm"],
-          srid: data_["srid"],
-          buffer_resolution: data_["bufr"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
-          uses_lenient_multi_polygon_assertions: data_["lmpa"],
-          auto_prepare: (data_["apre"] ? :simple : :disabled),
-          proj4: proj4_,
-          coord_sys: coord_sys_
+          has_z_coordinate: data["hasz"],
+          has_m_coordinate: data["hasm"],
+          srid: data["srid"],
+          buffer_resolution: data["bufr"],
+          wkt_generator: ImplHelper::Utils.symbolize_hash(data["wktg"]),
+          wkb_generator: ImplHelper::Utils.symbolize_hash(data["wkbg"]),
+          wkt_parser: ImplHelper::Utils.symbolize_hash(data["wktp"]),
+          wkb_parser: ImplHelper::Utils.symbolize_hash(data["wkbp"]),
+          uses_lenient_multi_polygon_assertions: data["lmpa"],
+          auto_prepare: (data["apre"] ? :simple : :disabled),
+          proj4: proj4,
+          coord_sys: coord_sys
         )
       end
 
       # Psych support
 
-      def encode_with(coder_) # :nodoc:
-        coder_["has_z_coordinate"] = @has_z
-        coder_["has_m_coordinate"] = @has_m
-        coder_["srid"] = @srid
-        coder_["buffer_resolution"] = @buffer_resolution
-        coder_["lenient_multi_polygon_assertions"] = @uses_lenient_multi_polygon_assertions
-        coder_["wkt_generator"] = @wkt_generator._properties
-        coder_["wkb_generator"] = @wkb_generator._properties
-        coder_["wkt_parser"] = @wkt_parser._properties
-        coder_["wkb_parser"] = @wkb_parser._properties
-        coder_["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
+      def encode_with(coder) # :nodoc:
+        coder["has_z_coordinate"] = @has_z
+        coder["has_m_coordinate"] = @has_m
+        coder["srid"] = @srid
+        coder["buffer_resolution"] = @buffer_resolution
+        coder["lenient_multi_polygon_assertions"] = @uses_lenient_multi_polygon_assertions
+        coder["wkt_generator"] = @wkt_generator._properties
+        coder["wkb_generator"] = @wkb_generator._properties
+        coder["wkt_parser"] = @wkt_parser._properties
+        coder["wkb_parser"] = @wkb_parser._properties
+        coder["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
         if @proj4
-          str_ = @proj4.original_str || @proj4.canonical_str
-          coder_["proj4"] = @proj4.radians? ? { "proj4" => str_, "radians" => true } : str_
+          str = @proj4.original_str || @proj4.canonical_str
+          coder["proj4"] = @proj4.radians? ? { "proj4" => str, "radians" => true } : str
         end
-        coder_["coord_sys"] = @coord_sys.to_wkt if @coord_sys
+        coder["coord_sys"] = @coord_sys.to_wkt if @coord_sys
       end
 
-      def init_with(coder_) # :nodoc:
-        if (proj4_data_ = coder_["proj4"])
+      def init_with(coder) # :nodoc:
+        if (proj4_data = coder["proj4"])
           CoordSys.check!(:proj4)
-          if proj4_data_.is_a?(::Hash)
-            proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
+          if proj4_data.is_a?(::Hash)
+            proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
-            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
+            proj4 = CoordSys::Proj4.create(proj4_data.to_s)
           end
         else
-          proj4_ = nil
+          proj4 = nil
         end
-        if (coord_sys_data_ = coder_["cs"])
-          coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
+        if (coord_sysdata = coder["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata.to_s)
         else
-          coord_sys_ = nil
+          coord_sys = nil
         end
         initialize(
-          has_z_coordinate: coder_["has_z_coordinate"],
-          has_m_coordinate: coder_["has_m_coordinate"],
-          srid: coder_["srid"],
-          buffer_resolution: coder_["buffer_resolution"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
-          auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
-          uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
-          proj4: proj4_,
-          coord_sys: coord_sys_
+          has_z_coordinate: coder["has_z_coordinate"],
+          has_m_coordinate: coder["has_m_coordinate"],
+          srid: coder["srid"],
+          buffer_resolution: coder["buffer_resolution"],
+          wkt_generator: ImplHelper::Utils.symbolize_hash(coder["wkt_generator"]),
+          wkb_generator: ImplHelper::Utils.symbolize_hash(coder["wkb_generator"]),
+          wkt_parser: ImplHelper::Utils.symbolize_hash(coder["wkt_parser"]),
+          wkb_parser: ImplHelper::Utils.symbolize_hash(coder["wkb_parser"]),
+          auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
+          uses_lenient_multi_polygon_assertions: coder["lenient_multi_polygon_assertions"],
+          proj4: proj4,
+          coord_sys: coord_sys
         )
       end
 
@@ -270,179 +270,179 @@ module RGeo
 
       # Create a feature that wraps the given ffi-geos geometry object
 
-      def wrap_fg_geom(fg_geom_)
-        _wrap_fg_geom(fg_geom_, nil)
+      def wrap_fg_geom(fg_geom)
+        _wrap_fg_geom(fg_geom, nil)
       end
 
       # See RGeo::Feature::Factory#parse_wkt
 
-      def parse_wkt(str_)
+      def parse_wkt(str)
         if @wkt_reader
-          _wrap_fg_geom(@wkt_reader.read(str_), nil)
+          _wrap_fg_geom(@wkt_reader.read(str), nil)
         else
-          @wkt_parser.parse(str_)
+          @wkt_parser.parse(str)
         end
       end
 
       # See RGeo::Feature::Factory#parse_wkb
 
-      def parse_wkb(str_)
+      def parse_wkb(str)
         if @wkb_reader
-          _wrap_fg_geom(@wkb_reader.read(str_), nil)
+          _wrap_fg_geom(@wkb_reader.read(str), nil)
         else
-          @wkb_parser.parse(str_)
+          @wkb_parser.parse(str)
         end
       end
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_, y_, z_ = 0)
-        cs_ = ::Geos::CoordinateSequence.new(1, 3)
-        cs_.set_x(0, x_)
-        cs_.set_y(0, y_)
-        cs_.set_z(0, z_)
-        FFIPointImpl.new(self, ::Geos::Utils.create_point(cs_), nil)
+      def point(x, y, z = 0)
+        cs = ::Geos::CoordinateSequence.new(1, 3)
+        cs.set_x(0, x)
+        cs.set_y(0, y)
+        cs.set_z(0, z)
+        FFIPointImpl.new(self, ::Geos::Utils.create_point(cs), nil)
       end
 
       # See RGeo::Feature::Factory#line_string
 
-      def line_string(points_)
-        points_ = points_.to_a unless points_.is_a?(::Array)
-        size_ = points_.size
-        return nil if size_ == 1
-        cs_ = ::Geos::CoordinateSequence.new(size_, 3)
-        points_.each_with_index do |p_, i_|
-          return nil unless RGeo::Feature::Point.check_type(p_)
-          cs_.set_x(i_, p_.x)
-          cs_.set_y(i_, p_.y)
+      def line_string(points)
+        points = points.to_a unless points.is_a?(::Array)
+        size = points.size
+        return nil if size == 1
+        cs = ::Geos::CoordinateSequence.new(size, 3)
+        points.each_with_index do |p, i|
+          return nil unless RGeo::Feature::Point.check_type(p)
+          cs.set_x(i, p.x)
+          cs.set_y(i, p.y)
           if @has_z
-            cs_.set_z(i_, p_.z)
+            cs.set_z(i, p.z)
           elsif @has_m
-            cs_.set_z(i_, p_.m)
+            cs.set_z(i, p.m)
           end
         end
-        FFILineStringImpl.new(self, ::Geos::Utils.create_line_string(cs_), nil)
+        FFILineStringImpl.new(self, ::Geos::Utils.create_line_string(cs), nil)
       end
 
       # See RGeo::Feature::Factory#line
 
-      def line(start_, end_)
-        return nil unless RGeo::Feature::Point.check_type(start_) &&
-          RGeo::Feature::Point.check_type(end_)
-        cs_ = ::Geos::CoordinateSequence.new(2, 3)
-        cs_.set_x(0, start_.x)
-        cs_.set_x(1, end_.x)
-        cs_.set_y(0, start_.y)
-        cs_.set_y(1, end_.y)
+      def line(start, stop)
+        return nil unless RGeo::Feature::Point.check_type(start) &&
+          RGeo::Feature::Point.check_type(stop)
+        cs = ::Geos::CoordinateSequence.new(2, 3)
+        cs.set_x(0, start.x)
+        cs.set_x(1, stop.x)
+        cs.set_y(0, start.y)
+        cs.set_y(1, stop.y)
         if @has_z
-          cs_.set_z(0, start_.z)
-          cs_.set_z(1, end_.z)
+          cs.set_z(0, start.z)
+          cs.set_z(1, stop.z)
         elsif @has_m
-          cs_.set_z(0, start_.m)
-          cs_.set_z(1, end_.m)
+          cs.set_z(0, start.m)
+          cs.set_z(1, stop.m)
         end
-        FFILineImpl.new(self, ::Geos::Utils.create_line_string(cs_), nil)
+        FFILineImpl.new(self, ::Geos::Utils.create_line_string(cs), nil)
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
-      def linear_ring(points_)
-        points_ = points_.to_a unless points_.is_a?(::Array)
-        fg_geom_ = _create_fg_linear_ring(points_)
-        fg_geom_ ? FFILinearRingImpl.new(self, fg_geom_, nil) : nil
+      def linear_ring(points)
+        points = points.to_a unless points.is_a?(::Array)
+        fg_geom = _create_fg_linear_ring(points)
+        fg_geom ? FFILinearRingImpl.new(self, fg_geom, nil) : nil
       end
 
       # See RGeo::Feature::Factory#polygon
 
-      def polygon(outer_ring_, inner_rings_ = nil)
-        inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(::Array)
-        return nil unless RGeo::Feature::LineString.check_type(outer_ring_)
-        outer_ring_ = _create_fg_linear_ring(outer_ring_.points)
-        inner_rings_ = inner_rings_.map do |r_|
-          return nil unless RGeo::Feature::LineString.check_type(r_)
-          _create_fg_linear_ring(r_.points)
+      def polygon(outer_ring, inner_rings = nil)
+        inner_rings = inner_rings.to_a unless inner_rings.is_a?(::Array)
+        return nil unless RGeo::Feature::LineString.check_type(outer_ring)
+        outer_ring = _create_fg_linear_ring(outer_ring.points)
+        inner_rings = inner_rings.map do |r|
+          return nil unless RGeo::Feature::LineString.check_type(r)
+          _create_fg_linear_ring(r.points)
         end
-        inner_rings_.compact!
-        fg_geom_ = ::Geos::Utils.create_polygon(outer_ring_, *inner_rings_)
-        fg_geom_ ? FFIPolygonImpl.new(self, fg_geom_, nil) : nil
+        inner_rings.compact!
+        fg_geom = ::Geos::Utils.create_polygon(outer_ring, *inner_rings)
+        fg_geom ? FFIPolygonImpl.new(self, fg_geom, nil) : nil
       end
 
       # See RGeo::Feature::Factory#collection
 
-      def collection(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        klasses_ = []
-        fg_geoms_ = []
-        elems_.each do |elem_|
-          k_ = elem_._klasses if elem_.factory.is_a?(FFIFactory)
-          elem_ = RGeo::Feature.cast(elem_, self, :force_new, :keep_subtype)
-          if elem_
-            klasses_ << (k_ || elem_.class)
-            fg_geoms_ << elem_._detach_fg_geom
+      def collection(elems)
+        elems = elems.to_a unless elems.is_a?(::Array)
+        klasses = []
+        my_fg_geoms = []
+        elems.each do |elem|
+          k = elem._klasses if elem.factory.is_a?(FFIFactory)
+          elem = RGeo::Feature.cast(elem, self, :force_new, :keep_subtype)
+          if elem
+            klasses << (k || elem.class)
+            my_fg_geoms << elem._detach_fg_geom
           end
         end
-        fg_geom_ = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION, fg_geoms_)
-        fg_geom_ ? FFIGeometryCollectionImpl.new(self, fg_geom_, klasses_) : nil
+        fg_geom = ::Geos::Utils.create_collection(
+          ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION, my_fg_geoms)
+        fg_geom ? FFIGeometryCollectionImpl.new(self, fg_geom, klasses) : nil
       end
 
       # See RGeo::Feature::Factory#multi_point
 
-      def multi_point(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        elems_ = elems_.map do |elem_|
-          elem_ = RGeo::Feature.cast(elem_, self, RGeo::Feature::Point,
+      def multi_point(elems)
+        elems = elems.to_a unless elems.is_a?(::Array)
+        elems = elems.map do |elem|
+          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Point,
             :force_new, :keep_subtype)
-          return nil unless elem_
-          elem_._detach_fg_geom
+          return nil unless elem
+          elem._detach_fg_geom
         end
-        klasses_ = ::Array.new(elems_.size, FFIPointImpl)
-        fg_geom_ = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_MULTIPOINT, elems_)
-        fg_geom_ ? FFIMultiPointImpl.new(self, fg_geom_, klasses_) : nil
+        klasses = ::Array.new(elems.size, FFIPointImpl)
+        fg_geom = ::Geos::Utils.create_collection(
+          ::Geos::GeomTypes::GEOS_MULTIPOINT, elems)
+        fg_geom ? FFIMultiPointImpl.new(self, fg_geom, klasses) : nil
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
-      def multi_line_string(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        klasses_ = []
-        elems_ = elems_.map do |elem_|
-          elem_ = RGeo::Feature.cast(elem_, self, RGeo::Feature::LineString,
+      def multi_line_string(elems)
+        elems = elems.to_a unless elems.is_a?(::Array)
+        klasses = []
+        elems = elems.map do |elem|
+          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::LineString,
             :force_new, :keep_subtype)
-          return nil unless elem_
-          klasses_ << elem_.class
-          elem_._detach_fg_geom
+          return nil unless elem
+          klasses << elem.class
+          elem._detach_fg_geom
         end
-        fg_geom_ = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_MULTILINESTRING, elems_)
-        fg_geom_ ? FFIMultiLineStringImpl.new(self, fg_geom_, klasses_) : nil
+        fg_geom = ::Geos::Utils.create_collection(
+          ::Geos::GeomTypes::GEOS_MULTILINESTRING, elems)
+        fg_geom ? FFIMultiLineStringImpl.new(self, fg_geom, klasses) : nil
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
-      def multi_polygon(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        elems_ = elems_.map do |elem_|
-          elem_ = RGeo::Feature.cast(elem_, self, RGeo::Feature::Polygon,
+      def multi_polygon(elems)
+        elems = elems.to_a unless elems.is_a?(::Array)
+        elems = elems.map do |elem|
+          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon,
             :force_new, :keep_subtype)
-          return nil unless elem_
-          elem_._detach_fg_geom
+          return nil unless elem
+          elem._detach_fg_geom
         end
         unless @uses_lenient_multi_polygon_assertions
-          (1...elems_.size).each do |i_|
-            (0...i_).each do |j_|
-              igeom_ = elems_[i_]
-              jgeom_ = elems_[j_]
-              return nil if igeom_.relate_pattern(jgeom_, "2********") ||
-                igeom_.relate_pattern(jgeom_, "****1****")
+          (1...elems.size).each do |i|
+            (0...i).each do |j|
+              igeom = elems[i]
+              jgeom = elems[j]
+              return nil if igeom.relate_pattern(jgeom, "2********") ||
+                igeom.relate_pattern(jgeom, "****1****")
             end
           end
         end
-        klasses_ = ::Array.new(elems_.size, FFIPolygonImpl)
-        fg_geom_ = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems_)
-        fg_geom_ ? FFIMultiPolygonImpl.new(self, fg_geom_, klasses_) : nil
+        klasses = ::Array.new(elems.size, FFIPolygonImpl)
+        fg_geom = ::Geos::Utils.create_collection(
+          ::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems)
+        fg_geom ? FFIMultiPolygonImpl.new(self, fg_geom, klasses) : nil
       end
 
       # See RGeo::Feature::Factory#proj4
@@ -455,7 +455,7 @@ module RGeo
 
       # See RGeo::Feature::Factory#override_cast
 
-      def override_cast(_original_, _ntype_, _flags_)
+      def override_cast(original, ntype, flags)
         false
         # TODO
       end
@@ -463,130 +463,130 @@ module RGeo
       attr_reader :_has_3d # :nodoc:
       attr_reader :_auto_prepare # :nodoc:
 
-      def _wrap_fg_geom(fg_geom_, klass_) # :nodoc:
-        klasses_ = nil
+      def _wrap_fg_geom(fg_geom, klass) # :nodoc:
+        klasses = nil
 
         # We don't allow "empty" points, so replace such objects with
         # an empty collection.
-        if fg_geom_.type_id == ::Geos::GeomTypes::GEOS_POINT && fg_geom_.empty?
-          fg_geom_ = ::Geos::Utils.create_geometry_collection
-          klass_ = FFIGeometryCollectionImpl
+        if fg_geom.type_id == ::Geos::GeomTypes::GEOS_POINT && fg_geom.empty?
+          fg_geom = ::Geos::Utils.create_geometry_collection
+          klass = FFIGeometryCollectionImpl
         end
 
-        unless klass_.is_a?(::Class)
-          is_collection_ = false
-          case fg_geom_.type_id
+        unless klass.is_a?(::Class)
+          is_collection = false
+          case fg_geom.type_id
           when ::Geos::GeomTypes::GEOS_POINT
-            inferred_klass_ = FFIPointImpl
+            inferred_klass = FFIPointImpl
           when ::Geos::GeomTypes::GEOS_MULTIPOINT
-            inferred_klass_ = FFIMultiPointImpl
-            is_collection_ = true
+            inferred_klass = FFIMultiPointImpl
+            is_collection = true
           when ::Geos::GeomTypes::GEOS_LINESTRING
-            inferred_klass_ = FFILineStringImpl
+            inferred_klass = FFILineStringImpl
           when ::Geos::GeomTypes::GEOS_LINEARRING
-            inferred_klass_ = FFILinearRingImpl
+            inferred_klass = FFILinearRingImpl
           when ::Geos::GeomTypes::GEOS_MULTILINESTRING
-            inferred_klass_ = FFIMultiLineStringImpl
-            is_collection_ = true
+            inferred_klass = FFIMultiLineStringImpl
+            is_collection = true
           when ::Geos::GeomTypes::GEOS_POLYGON
-            inferred_klass_ = FFIPolygonImpl
+            inferred_klass = FFIPolygonImpl
           when ::Geos::GeomTypes::GEOS_MULTIPOLYGON
-            inferred_klass_ = FFIMultiPolygonImpl
-            is_collection_ = true
+            inferred_klass = FFIMultiPolygonImpl
+            is_collection = true
           when ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
-            inferred_klass_ = FFIGeometryCollectionImpl
-            is_collection_ = true
+            inferred_klass = FFIGeometryCollectionImpl
+            is_collection = true
           else
-            inferred_klass_ = FFIGeometryImpl
+            inferred_klass = FFIGeometryImpl
           end
-          klasses_ = klass_ if is_collection_ && klass_.is_a?(::Array)
-          klass_ = inferred_klass_
+          klasses = klass if is_collection && klass.is_a?(::Array)
+          klass = inferred_klass
         end
-        klass_.new(self, fg_geom_, klasses_)
+        klass.new(self, fg_geom, klasses)
       end
 
-      def _convert_to_fg_geometry(obj_, type_ = nil) # :nodoc:
-        if type_.nil? && obj_.factory == self
-          obj_
+      def _convert_to_fg_geometry(obj, type = nil) # :nodoc:
+        if type.nil? && obj.factory == self
+          obj
         else
-          obj_ = Feature.cast(obj_, self, type_)
+          obj = Feature.cast(obj, self, type)
         end
-        obj_ ? obj_.fg_geom : nil
+        obj ? obj.fg_geom : nil
       end
 
-      def _create_fg_linear_ring(points_) # :nodoc:
-        size_ = points_.size
-        return nil if size_ == 1 || size_ == 2
-        if size_ > 0 && points_.first != points_.last
-          points_ += [points_.first]
-          size_ += 1
+      def _create_fg_linear_ring(points) # :nodoc:
+        size = points.size
+        return nil if size == 1 || size == 2
+        if size > 0 && points.first != points.last
+          points += [points.first]
+          size += 1
         end
-        cs_ = ::Geos::CoordinateSequence.new(size_, 3)
-        points_.each_with_index do |p_, i_|
-          return nil unless RGeo::Feature::Point.check_type(p_)
-          cs_.set_x(i_, p_.x)
-          cs_.set_y(i_, p_.y)
+        cs = ::Geos::CoordinateSequence.new(size, 3)
+        points.each_with_index do |p, i|
+          return nil unless RGeo::Feature::Point.check_type(p)
+          cs.set_x(i, p.x)
+          cs.set_y(i, p.y)
           if @has_z
-            cs_.set_z(i_, p_.z)
+            cs.set_z(i, p.z)
           elsif @has_m
-            cs_.set_z(i_, p_.m)
+            cs.set_z(i, p.m)
           end
         end
-        ::Geos::Utils.create_linear_ring(cs_)
+        ::Geos::Utils.create_linear_ring(cs)
       end
 
-      def _generate_wkt(geom_)  # :nodoc:
+      def _generate_wkt(geom)  # :nodoc:
         if @wkt_writer
-          @wkt_writer.write(geom_.fg_geom)
+          @wkt_writer.write(geom.fg_geom)
         else
-          @wkt_generator.generate(geom_)
+          @wkt_generator.generate(geom)
         end
       end
 
-      def _generate_wkb(geom_)  # :nodoc:
+      def _generate_wkb(geom)  # :nodoc:
         if @wkb_writer
-          @wkb_writer.write(geom_.fg_geom)
+          @wkb_writer.write(geom.fg_geom)
         else
-          @wkb_generator.generate(geom_)
+          @wkb_generator.generate(geom)
         end
       end
 
-      def _write_for_marshal(geom_) # :nodoc:
+      def _write_for_marshal(geom) # :nodoc:
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
           unless defined?(@marshal_wkb_writer)
             @marshal_wkb_writer = ::Geos::WkbWriter.new
             @marshal_wkb_writer.output_dimensions = 3 if @_has_3d
           end
-          @marshal_wkb_writer.write(geom_.fg_geom)
+          @marshal_wkb_writer.write(geom.fg_geom)
         else
-          Utils.marshal_wkb_generator.generate(geom_)
+          Utils.marshal_wkb_generator.generate(geom)
         end
       end
 
-      def _read_for_marshal(str_)  # :nodoc:
+      def _read_for_marshal(str)  # :nodoc:
         unless defined?(@marshal_wkb_reader)
           @marshal_wkb_reader = ::Geos::WkbReader.new
         end
-        @marshal_wkb_reader.read(str_)
+        @marshal_wkb_reader.read(str)
       end
 
-      def _write_for_psych(geom_)  # :nodoc:
+      def _write_for_psych(geom)  # :nodoc:
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
           unless defined?(@psych_wkt_writer)
             @psych_wkt_writer = ::Geos::WktWriter.new
             @psych_wkt_writer.output_dimensions = 3 if @_has_3d
           end
-          @psych_wkt_writer.write(geom_.fg_geom)
+          @psych_wkt_writer.write(geom.fg_geom)
         else
-          Utils.psych_wkt_generator.generate(geom_)
+          Utils.psych_wkt_generator.generate(geom)
         end
       end
 
-      def _read_for_psych(str_) # :nodoc:
+      def _read_for_psych(str) # :nodoc:
         unless defined?(@psych_wkt_reader)
           @psych_wkt_reader = ::Geos::WktReader.new
         end
-        @psych_wkt_reader.read(str_)
+        @psych_wkt_reader.read(str)
       end
     end
   end
