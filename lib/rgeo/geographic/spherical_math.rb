@@ -149,8 +149,8 @@ module RGeo
         alias == eql?
 
         def degenerate?
-          axis_ = axis
-          axis_.x == 0 && axis_.y == 0 && axis_.z == 0
+          my_axis = axis
+          my_axis.x == 0 && my_axis.y == 0 && my_axis.z == 0
         end
 
         def axis
@@ -159,20 +159,20 @@ module RGeo
         end
 
         def contains_point?(obj)
-          axis_ = axis
-          saxis_ = ArcXYZ.new(@s, obj).axis
-          eaxis_ = ArcXYZ.new(obj, @e).axis
-          !saxis_ || !eaxis_ || obj * axis_ == 0.0 && saxis_ * axis_ > 0 && eaxis_ * axis_ > 0
+          my_axis = axis
+          s_axis = ArcXYZ.new(@s, obj).axis
+          e_axis = ArcXYZ.new(obj, @e).axis
+          !s_axis || !e_axis || obj * my_axis == 0.0 && s_axis * my_axis > 0 && e_axis * my_axis > 0
         end
 
         def intersects_arc?(obj)
-          myaxis_ = axis
-          dot1 = myaxis_ * obj.s
-          dot2 = myaxis_ * obj.e
+          my_axis = axis
+          dot1 = my_axis * obj.s
+          dot2 = my_axis * obj.e
           if dot1 >= 0.0 && dot2 <= 0.0 || dot1 <= 0.0 && dot2 >= 0.0
-            ob_axis_ = obj.axis
-            dot1 = ob_axis_ * @s
-            dot2 = ob_axis_ * @e
+            ob_axis = obj.axis
+            dot1 = ob_axis * @s
+            dot2 = ob_axis * @e
             dot1 >= 0.0 && dot2 <= 0.0 || dot1 <= 0.0 && dot2 >= 0.0
           else
             false
