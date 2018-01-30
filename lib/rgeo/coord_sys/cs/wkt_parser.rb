@@ -70,9 +70,9 @@ module RGeo
             obj = Projection.create(name, name, args.find_all(ProjectionParameter), *args.create_optionals)
           when "DATUM"
             name = args.shift(QuotedString)
-            ellipsoid_ = args.find_first(Ellipsoid)
-            to_wgs84_ = args.find_first(WGS84ConversionInfo)
-            obj = HorizontalDatum.create(name, HD_GEOCENTRIC, ellipsoid_, to_wgs84_, *args.create_optionals)
+            ellipsoid = args.find_first(Ellipsoid)
+            to_wgs84 = args.find_first(WGS84ConversionInfo)
+            obj = HorizontalDatum.create(name, HD_GEOCENTRIC, ellipsoid, to_wgs84, *args.create_optionals)
           when "VERT_DATUM"
             obj = VerticalDatum.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
           when "LOCAL_DATUM"

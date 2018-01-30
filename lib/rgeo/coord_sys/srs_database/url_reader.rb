@@ -35,10 +35,10 @@ module RGeo
           return @cache[ident] if @cache && @cache.include?(ident)
           uri = ::URI.parse(ident)
           result = nil
-          ::Net::HTTP.start(uri.host, uri.port) do |http_|
+          ::Net::HTTP.start(uri.host, uri.port) do |http|
             request = uri.path
             request = "#{request}?#{uri.query}" if uri.query
-            response = http_.requestget(request)
+            response = http.requestget(request)
             if response.is_a?(::Net::HTTPSuccess)
               response = response.body.strip
               if response[0, 1] == "+"

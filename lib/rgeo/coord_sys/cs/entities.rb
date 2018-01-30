@@ -200,12 +200,12 @@ module RGeo
           to_wkt
         end
 
-        def marshal_load(data_) # :nodoc:
-          data_ = data_["wkt"] if data_.is_a?(::Hash)
-          temp_ = CS.create_from_wkt(data_)
-          if temp_.class == self.class
-            temp_.instance_variables.each do |iv|
-              instance_variable_set(iv, temp_.instance_variable_get(iv))
+        def marshal_load(data) # :nodoc:
+          data = data["wkt"] if data.is_a?(::Hash)
+          temp = CS.create_from_wkt(data)
+          if temp.class == self.class
+            temp.instance_variables.each do |iv|
+              instance_variable_set(iv, temp.instance_variable_get(iv))
             end
           else
             raise ::TypeError, "Bad Marshal data"
@@ -219,10 +219,10 @@ module RGeo
         end
 
         def init_with(coder) # :nodoc:
-          temp_ = CS.create_from_wkt(coder.type == :scalar ? coder.scalar : coder["wkt"])
-          if temp_.class == self.class
-            temp_.instance_variables.each do |iv|
-              instance_variable_set(iv, temp_.instance_variable_get(iv))
+          temp = CS.create_from_wkt(coder.type == :scalar ? coder.scalar : coder["wkt"])
+          if temp.class == self.class
+            temp.instance_variables.each do |iv|
+              instance_variable_set(iv, temp.instance_variable_get(iv))
             end
           else
             raise ::TypeError, "Bad YAML data"
@@ -792,9 +792,9 @@ module RGeo
         end
 
         def _wkt_content(open, close) # :nodoc:
-          array_ = [@ellipsoid._to_wkt(open, close)]
-          array_ << @wgs84_parameters._to_wkt(open, close) if @wgs84_parameters
-          array_
+          array = [@ellipsoid._to_wkt(open, close)]
+          array << @wgs84_parameters._to_wkt(open, close) if @wgs84_parameters
+          array
         end
 
         class << self
@@ -891,9 +891,9 @@ module RGeo
       # CompoundCoordinateSystem.
 
       class CoordinateSystem < Info
-        def initialize(name, dimension_, *optional) # :nodoc:
+        def initialize(name, dimension, *optional) # :nodoc:
           super(name, *optional)
-          @dimension = dimension_.to_i
+          @dimension = dimension.to_i
         end
 
         # Dimension of the coordinate system
@@ -1079,11 +1079,11 @@ module RGeo
         end
 
         def _wkt_content(open, close) # :nodoc:
-          arr_ = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @linear_unit._to_wkt(open, close)]
-          arr_ << @axis0._to_wkt(open, close) if @axis0
-          arr_ << @axis1._to_wkt(open, close) if @axis1
-          arr_ << @axis2._to_wkt(open, close) if @axis2
-          arr_
+          arr = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @linear_unit._to_wkt(open, close)]
+          arr << @axis0._to_wkt(open, close) if @axis0
+          arr << @axis1._to_wkt(open, close) if @axis1
+          arr << @axis2._to_wkt(open, close) if @axis2
+          arr
         end
 
         class << self
@@ -1136,9 +1136,9 @@ module RGeo
         end
 
         def _wkt_content(open, close) # :nodoc:
-          arr_ = [@vertical_datum._to_wkt(open, close), @vertical_unit._to_wkt(open, close)]
-          arr_ << @axis._to_wkt(open, close) if @axis
-          arr_
+          arr = [@vertical_datum._to_wkt(open, close), @vertical_unit._to_wkt(open, close)]
+          arr << @axis._to_wkt(open, close) if @axis
+          arr
         end
 
         class << self
@@ -1230,10 +1230,10 @@ module RGeo
         end
 
         def _wkt_content(open, close) # :nodoc:
-          arr_ = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @angular_unit._to_wkt(open, close)]
-          arr_ << @axis0._to_wkt(open, close) if @axis0
-          arr_ << @axis1._to_wkt(open, close) if @axis1
-          arr_
+          arr = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @angular_unit._to_wkt(open, close)]
+          arr << @axis0._to_wkt(open, close) if @axis0
+          arr << @axis1._to_wkt(open, close) if @axis1
+          arr
         end
 
         class << self
@@ -1290,12 +1290,12 @@ module RGeo
         end
 
         def _wkt_content(open, close) # :nodoc:
-          arr_ = [@geographic_coordinate_system._to_wkt(open, close), @projection._to_wkt(open, close)]
-          @projection.each_parameter { |param_| arr_ << param_._to_wkt(open, close) }
-          arr_ << @linear_unit._to_wkt(open, close)
-          arr_ << @axis0._to_wkt(open, close) if @axis0
-          arr_ << @axis1._to_wkt(open, close) if @axis1
-          arr_
+          arr = [@geographic_coordinate_system._to_wkt(open, close), @projection._to_wkt(open, close)]
+          @projection.each_parameter { |param_| arr << param_._to_wkt(open, close) }
+          arr << @linear_unit._to_wkt(open, close)
+          arr << @axis0._to_wkt(open, close) if @axis0
+          arr << @axis1._to_wkt(open, close) if @axis1
+          arr
         end
 
         class << self
