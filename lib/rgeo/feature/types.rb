@@ -56,17 +56,17 @@ module RGeo
       # Note that feature objects need not actually include this module.
       # Therefore, the is_a? method will generally not work.
 
-      def check_type(rhs_)
-        rhs_ = rhs_.geometry_type if rhs_.is_a?(Feature::Instance)
-        rhs_.is_a?(Type) && (rhs_ == self || rhs_.include?(self))
+      def check_type(rhs)
+        rhs = rhs.geometry_type if rhs.is_a?(Feature::Instance)
+        rhs.is_a?(Type) && (rhs == self || rhs.include?(self))
       end
       alias === check_type
 
       # Returns true if this type is the same type or a subtype of the
       # given type.
 
-      def subtype_of?(type_)
-        self == type_ || self.include?(type_)
+      def subtype_of?(type)
+        self == type || self.include?(type)
       end
 
       # Returns the supertype of this type. The supertype of Geometry
@@ -78,8 +78,8 @@ module RGeo
 
       # Iterates over the known immediate subtypes of this type.
 
-      def each_immediate_subtype(&block_)
-        @subtypes.each(&block_) if defined?(@subtypes) && @subtypes
+      def each_immediate_subtype(&block)
+        @subtypes.each(&block) if defined?(@subtypes) && @subtypes
       end
 
       # Returns the OpenGIS type name of this type. For example:
@@ -91,14 +91,14 @@ module RGeo
       end
       alias to_s type_name
 
-      def _add_subtype(type_) # :nodoc:
-        (@subtypes ||= []) << type_
+      def _add_subtype(type) # :nodoc:
+        (@subtypes ||= []) << type
       end
 
-      def self.extended(type_) # :nodoc:
-        supertype_ = type_.included_modules.find { |m_| m_.is_a?(self) }
-        type_.instance_variable_set(:@supertype, supertype_)
-        supertype_._add_subtype(type_) if supertype_
+      def self.extended(type) # :nodoc:
+        supertype = type.included_modules.find { |m| m.is_a?(self) }
+        type.instance_variable_set(:@supertype, supertype)
+        supertype._add_subtype(type) if supertype
       end
     end
 
@@ -155,123 +155,123 @@ module RGeo
       # casting behavior by defining the override_cast method. See
       # RGeo::Feature::Factory#override_cast for more details.
 
-      def cast(obj_, *params_)
+      def cast(obj, *params)
         # Interpret params
-        factory_ = obj_.factory
-        type_ = obj_.geometry_type
-        opts_ = {}
-        params_.each do |param_|
-          case param_
+        factory = obj.factory
+        type = obj.geometry_type
+        opts = {}
+        params.each do |param|
+          case param
           when Factory::Instance
-            opts_[:factory] = param_
+            opts[:factory] = param
           when Type
-            opts_[:type] = param_
+            opts[:type] = param
           when ::Symbol
-            opts_[param_] = true
+            opts[param] = true
           when ::Hash
-            opts_.merge!(param_)
+            opts.merge!(param)
           end
         end
-        force_new_ = opts_[:force_new]
-        keep_subtype_ = opts_[:keep_subtype]
-        project_ = opts_[:project]
-        nfactory_ = opts_.delete(:factory) || factory_
-        ntype_ = opts_.delete(:type) || type_
+        force_new = opts[:force_new]
+        keep_subtype = opts[:keep_subtype]
+        project = opts[:project]
+        nfactory = opts.delete(:factory) || factory
+        ntype = opts.delete(:type) || type
 
         # Let the factory override
-        if nfactory_.respond_to?(:override_cast)
-          override_ = nfactory_.override_cast(obj_, ntype_, opts_)
-          return override_ unless override_ == false
+        if nfactory.respond_to?(:override_cast)
+          override = nfactory.override_cast(obj, ntype, opts)
+          return override unless override == false
         end
 
         # Default algorithm
-        ntype_ = type_ if keep_subtype_ && type_.include?(ntype_)
-        if ntype_ == type_
+        ntype = type if keep_subtype && type.include?(ntype)
+        if ntype == type
           # Types are the same
-          if nfactory_ == factory_
-            force_new_ ? obj_.dup : obj_
+          if nfactory == factory
+            force_new ? obj.dup : obj
           else
-            if type_ == Point
-              proj_ = nproj_ = nil
-              if project_
-                proj_ = factory_.proj4
-                nproj_ = nfactory_.proj4
+            if type == Point
+              proj = nproj = nil
+              if project
+                proj = factory.proj4
+                nproj = nfactory.proj4
               end
-              hasz_ = factory_.property(:has_z_coordinate)
-              nhasz_ = nfactory_.property(:has_z_coordinate)
-              if proj_ && nproj_ && CoordSys.check!(:proj4)
-                coords_ = CoordSys::Proj4.transform_coords(proj_, nproj_, obj_.x, obj_.y, hasz_ ? obj_.z : nil)
-                coords_ << (hasz_ ? obj_.z : 0.0) if nhasz_ && coords_.size < 3
+              hasz = factory.property(:has_z_coordinate)
+              nhasz = nfactory.property(:has_z_coordinate)
+              if proj && nproj && CoordSys.check!(:proj4)
+                coords = CoordSys::Proj4.transform_coords(proj, nproj, obj.x, obj.y, hasz ? obj.z : nil)
+                coords << (hasz ? obj.z : 0.0) if nhasz && coords.size < 3
               else
-                coords_ = [obj_.x, obj_.y]
-                coords_ << (hasz_ ? obj_.z : 0.0) if nhasz_
+                coords = [obj.x, obj.y]
+                coords << (hasz ? obj.z : 0.0) if nhasz
               end
-              coords_ << (factory_.property(:has_m_coordinate) ? obj_.m : 0.0) if nfactory_.property(:has_m_coordinate)
-              nfactory_.point(*coords_)
-            elsif type_ == Line
-              nfactory_.line(cast(obj_.start_point, nfactory_, opts_), cast(obj_.end_point, nfactory_, opts_))
-            elsif type_ == LinearRing
-              nfactory_.linear_ring(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
-            elsif type_ == LineString
-              nfactory_.line_string(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
-            elsif type_ == Polygon
-              nfactory_.polygon(cast(obj_.exterior_ring, nfactory_, opts_),
-                                obj_.interior_rings.map { |r_| cast(r_, nfactory_, opts_) })
-            elsif type_ == MultiPoint
-              nfactory_.multi_point(obj_.map { |g_| cast(g_, nfactory_, opts_) })
-            elsif type_ == MultiLineString
-              nfactory_.multi_line_string(obj_.map { |g_| cast(g_, nfactory_, opts_) })
-            elsif type_ == MultiPolygon
-              nfactory_.multi_polygon(obj_.map { |g_| cast(g_, nfactory_, opts_) })
-            elsif type_ == GeometryCollection
-              nfactory_.collection(obj_.map { |g_| cast(g_, nfactory_, opts_) })
+              coords << (factory.property(:has_m_coordinate) ? obj.m : 0.0) if nfactory.property(:has_m_coordinate)
+              nfactory.point(*coords)
+            elsif type == Line
+              nfactory.line(cast(obj.start_point, nfactory, opts), cast(obj.end_point, nfactory, opts))
+            elsif type == LinearRing
+              nfactory.linear_ring(obj.points.map { |p| cast(p, nfactory, opts) })
+            elsif type == LineString
+              nfactory.line_string(obj.points.map { |p| cast(p, nfactory, opts) })
+            elsif type == Polygon
+              nfactory.polygon(cast(obj.exterior_ring, nfactory, opts),
+                                obj.interior_rings.map { |r| cast(r, nfactory, opts) })
+            elsif type == MultiPoint
+              nfactory.multi_point(obj.map { |g| cast(g, nfactory, opts) })
+            elsif type == MultiLineString
+              nfactory.multi_line_string(obj.map { |g| cast(g, nfactory, opts) })
+            elsif type == MultiPolygon
+              nfactory.multi_polygon(obj.map { |g| cast(g, nfactory, opts) })
+            elsif type == GeometryCollection
+              nfactory.collection(obj.map { |g| cast(g, nfactory, opts) })
             end
           end
         else
           # Types are different
-          if ntype_ == Point && (type_ == MultiPoint || type_ == GeometryCollection) ||
-              (ntype_ == Line || ntype_ == LineString || ntype_ == LinearRing) && (type_ == MultiLineString || type_ == GeometryCollection) ||
-              ntype_ == Polygon && (type_ == MultiPolygon || type_ == GeometryCollection)
-            if obj_.num_geometries == 1
-              cast(obj_.geometry_n(0), nfactory_, ntype_, opts_)
+          if ntype == Point && (type == MultiPoint || type == GeometryCollection) ||
+              (ntype == Line || ntype == LineString || ntype == LinearRing) && (type == MultiLineString || type == GeometryCollection) ||
+              ntype == Polygon && (type == MultiPolygon || type == GeometryCollection)
+            if obj.num_geometries == 1
+              cast(obj.geometry_n(0), nfactory, ntype, opts)
             end
-          elsif ntype_ == Point
+          elsif ntype == Point
             nil
-          elsif ntype_ == Line
-            if type_ == LineString && obj_.num_points == 2
-              nfactory_.line(cast(obj_.point_n(0), nfactory_, opts_), cast(obj_.point_n(1), nfactory_, opts_))
+          elsif ntype == Line
+            if type == LineString && obj.num_points == 2
+              nfactory.line(cast(obj.point_n(0), nfactory, opts), cast(obj.point_n(1), nfactory, opts))
             end
-          elsif ntype_ == LinearRing
-            if type_ == LineString
-              nfactory_.linear_ring(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
+          elsif ntype == LinearRing
+            if type == LineString
+              nfactory.linear_ring(obj.points.map { |p| cast(p, nfactory, opts) })
             end
-          elsif ntype_ == LineString
-            if type_ == Line || type_ == LinearRing
-              nfactory_.line_string(obj_.points.map { |p_| cast(p_, nfactory_, opts_) })
+          elsif ntype == LineString
+            if type == Line || type == LinearRing
+              nfactory.line_string(obj.points.map { |p| cast(p, nfactory, opts) })
             end
-          elsif ntype_ == MultiPoint
-            if type_ == Point
-              nfactory_.multi_point([cast(obj_, nfactory_, opts_)])
-            elsif type_ == GeometryCollection
-              nfactory_.multi_point(obj_.map { |p_| cast(p_, nfactory_, opts_) })
+          elsif ntype == MultiPoint
+            if type == Point
+              nfactory.multi_point([cast(obj, nfactory, opts)])
+            elsif type == GeometryCollection
+              nfactory.multi_point(obj.map { |p| cast(p, nfactory, opts) })
             end
-          elsif ntype_ == MultiLineString
-            if type_ == Line || type_ == LinearRing || type_ == LineString
-              nfactory_.multi_line_string([cast(obj_, nfactory_, opts_)])
-            elsif type_ == GeometryCollection
-              nfactory_.multi_line_string(obj_.map { |p_| cast(p_, nfactory_, opts_) })
+          elsif ntype == MultiLineString
+            if type == Line || type == LinearRing || type == LineString
+              nfactory.multi_line_string([cast(obj, nfactory, opts)])
+            elsif type == GeometryCollection
+              nfactory.multi_line_string(obj.map { |p| cast(p, nfactory, opts) })
             end
-          elsif ntype_ == MultiPolygon
-            if type_ == Polygon
-              nfactory_.multi_polygon([cast(obj_, nfactory_, opts_)])
-            elsif type_ == GeometryCollection
-              nfactory_.multi_polygon(obj_.map { |p_| cast(p_, nfactory_, opts_) })
+          elsif ntype == MultiPolygon
+            if type == Polygon
+              nfactory.multi_polygon([cast(obj, nfactory, opts)])
+            elsif type == GeometryCollection
+              nfactory.multi_polygon(obj.map { |p| cast(p, nfactory, opts) })
             end
-          elsif ntype_ == GeometryCollection
-            if type_ == MultiPoint || type_ == MultiLineString || type_ == MultiPolygon
-              nfactory_.collection(obj_.map { |p_| cast(p_, nfactory_, opts_) })
+          elsif ntype == GeometryCollection
+            if type == MultiPoint || type == MultiLineString || type == MultiPolygon
+              nfactory.collection(obj.map { |p| cast(p, nfactory, opts) })
             else
-              nfactory_.collection([cast(obj_, nfactory_, opts_)])
+              nfactory.collection([cast(obj, nfactory, opts)])
             end
           end
         end

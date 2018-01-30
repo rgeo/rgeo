@@ -56,7 +56,7 @@ module RGeo
       # Also note that this method is different from GeometryCollection#[]
       # in that it does not support negative indexes.
 
-      def geometry_n(_n_)
+      def geometry_n(n)
         raise Error::UnsupportedOperation, "Method GeometryCollection#geometry_n not defined."
       end
 
@@ -76,7 +76,7 @@ module RGeo
       # the same way Ruby's array indexing works. Hence, geometry_n(-1)
       # returns nil, where [-1] returns the last element of the collection.
 
-      def [](_n_)
+      def [](n)
         raise Error::UnsupportedOperation, "Method GeometryCollection#[] not defined."
       end
 
@@ -93,7 +93,7 @@ module RGeo
       # Note that all GeometryCollection implementations must also
       # include the Enumerable mixin.
 
-      def each(&_block_)
+      def each(&block)
         raise Error::UnsupportedOperation, "Method GeometryCollection#each not defined."
       end
     end

@@ -72,15 +72,15 @@ module RGeo
       # [<tt>:has_m_coordinate</tt>]
       #   Support M coordinates. Default is usually false.
 
-      def call(_config_ = {})
+      def call(config = {})
         nil
       end
 
       # Return a new FactoryGenerator that always returns the given
       # factory.
 
-      def self.single(factory_)
-        ::Proc.new { |_c_| factory_ }
+      def self.single(factory)
+        ::Proc.new { |c| factory }
       end
 
       # Return a new FactoryGenerator that calls the given delegate, but
@@ -88,8 +88,8 @@ module RGeo
       # for configuration values not explicitly specified, and you can
       # force certain values to override the given configuration.
 
-      def self.decorate(delegate_, default_config_ = {}, force_config_ = {})
-        ::Proc.new { |c_| delegate_.call(default_config_.merge(c_).merge(force_config_)) }
+      def self.decorate(delegate, default_config = {}, force_config = {})
+        ::Proc.new { |c| delegate_.call(default_config.merge(c).merge(force_config)) }
       end
     end
   end
