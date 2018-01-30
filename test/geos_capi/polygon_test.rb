@@ -14,25 +14,25 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_intersection
-    point1_ = @factory.point(0, 0)
-    point2_ = @factory.point(0, 2)
-    point3_ = @factory.point(2, 2)
-    point4_ = @factory.point(2, 0)
-    poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_]))
-    poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point4_]))
-    poly3_ = poly1_.intersection(poly2_)
-    assert_equal(poly2_, poly3_)
+    point1 = @factory.point(0, 0)
+    point2 = @factory.point(0, 2)
+    point3 = @factory.point(2, 2)
+    point4 = @factory.point(2, 0)
+    poly1 = @factory.polygon(@factory.linear_ring([point1, point2, point3, point4]))
+    poly2 = @factory.polygon(@factory.linear_ring([point1, point2, point4]))
+    poly3 = poly1.intersection(poly2)
+    assert_equal(poly2, poly3)
   end
 
   def test_union
-    point1_ = @factory.point(0, 0)
-    point2_ = @factory.point(0, 2)
-    point3_ = @factory.point(2, 2)
-    point4_ = @factory.point(2, 0)
-    poly1_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point3_, point4_]))
-    poly2_ = @factory.polygon(@factory.linear_ring([point1_, point2_, point4_]))
-    poly3_ = poly1_.union(poly2_)
-    assert_equal(poly1_, poly3_)
+    point1 = @factory.point(0, 0)
+    point2 = @factory.point(0, 2)
+    point3 = @factory.point(2, 2)
+    point4 = @factory.point(2, 0)
+    poly1 = @factory.polygon(@factory.linear_ring([point1, point2, point3, point4]))
+    poly2 = @factory.polygon(@factory.linear_ring([point1, point2, point4]))
+    poly3 = poly1.union(poly2)
+    assert_equal(poly1, poly3)
   end
 
   def test_simplify
