@@ -27,57 +27,57 @@ module RGeo
         @xyz ||= SphericalMath::PointXYZ.from_latlon(@y, @x)
       end
 
-      def distance(rhs_)
-        rhs_ = Feature.cast(rhs_, @factory)
-        case rhs_
+      def distance(rhs)
+        rhs = Feature.cast(rhs, @factory)
+        case rhs
         when SphericalPointImpl
-          _xyz.dist_to_point(rhs_._xyz) * SphericalMath::RADIUS
+          _xyz.dist_to_point(rhs._xyz) * SphericalMath::RADIUS
         else
           super
         end
       end
 
-      def equals?(rhs_)
-        return false unless rhs_.is_a?(self.class) && rhs_.factory == factory
-        case rhs_
+      def equals?(rhs)
+        return false unless rhs.is_a?(self.class) && rhs.factory == factory
+        case rhs
         when Feature::Point
           if @y == 90
-            rhs_.y == 90
+            rhs.y == 90
           elsif @y == -90
-            rhs_.y == -90
+            rhs.y == -90
           else
-            rhs_.x == @x && rhs_.y == @y
+            rhs.x == @x && rhs.y == @y
           end
         when Feature::LineString
-          rhs_.num_points > 0 && rhs_.points.all? { |elem_| equals?(elem_) }
+          rhs.num_points > 0 && rhs.points.all? { |elem| equals?(elem) }
         when Feature::GeometryCollection
-          rhs_.num_geometries > 0 && rhs_.all? { |elem_| equals?(elem_) }
+          rhs.num_geometries > 0 && rhs.all? { |elem| equals?(elem) }
         else
           false
         end
       end
 
-      def buffer(distance_)
-        radius_ = distance_ / SphericalMath::RADIUS
-        radius_ = 1.5 if radius_ > 1.5
-        cos_ = ::Math.cos(radius_)
-        sin_ = ::Math.sin(radius_)
-        point_count_ = factory.property(:buffer_resolution) * 4
-        p0_ = _xyz
-        p1_ = p0_.create_perpendicular
-        p2_ = p1_ % p0_
-        angle_ = ::Math::PI * 2.0 / point_count_
-        points_ = (0...point_count_).map do |i_|
-          r_ = angle_ * i_
-          pi_ = SphericalMath::PointXYZ.weighted_combination(p1_, ::Math.cos(r_), p2_, ::Math.sin(r_))
-          p_ = SphericalMath::PointXYZ.weighted_combination(p0_, cos_, pi_, sin_)
-          factory.point(*p_.lonlat)
+      def buffer(distance)
+        radius = distance / SphericalMath::RADIUS
+        radius = 1.5 if radius > 1.5
+        cos = ::Math.cos(radius)
+        sin = ::Math.sin(radius)
+        point_count = factory.property(:buffer_resolution) * 4
+        p0 = _xyz
+        p1 = p0.create_perpendicular
+        p2 = p1 % p0
+        angle = ::Math::PI * 2.0 / point_count
+        points = (0...point_count).map do |i|
+          r = angle * i
+          pi = SphericalMath::PointXYZ.weighted_combination(p1, ::Math.cos(r), p2, ::Math.sin(r))
+          p = SphericalMath::PointXYZ.weighted_combination(p0, cos, pi, sin)
+          factory.point(*p.lonlat)
         end
-        factory.polygon(factory.linear_ring(points_))
+        factory.polygon(factory.linear_ring(points))
       end
 
-      def self.included(klass_)
-        klass_.module_eval do
+      def self.included(klass)
+        klass.module_eval do
           alias_method :longitude, :x
           alias_method :lon, :x
           alias_method :latitude, :y
@@ -89,45 +89,45 @@ module RGeo
     module SphericalLineStringMethods # :nodoc:
       def _arcs
         unless defined?(@arcs)
-          @arcs = (0..num_points - 2).map do |i_|
-            SphericalMath::ArcXYZ.new(point_n(i_)._xyz, point_n(i_ + 1)._xyz)
+          @arcs = (0..num_points - 2).map do |i|
+            SphericalMath::ArcXYZ.new(point_n(i)._xyz, point_n(i + 1)._xyz)
           end
         end
         @arcs
       end
 
       def is_simple?
-        arcs_ = _arcs
-        len_ = arcs_.length
-        return false if arcs_.any?(&:degenerate?)
-        return true if len_ == 1
-        return arcs_[0].s != arcs_[1].e if len_ == 2
-        arcs_.each_with_index do |arc_, index_|
-          nindex_ = index_ + 1
-          nindex_ = nil if nindex_ == len_
-          return false if nindex_ && arc_.contains_point?(arcs_[nindex_].e)
-          pindex_ = index_ - 1
-          pindex_ = nil if pindex_ < 0
-          return false if pindex_ && arc_.contains_point?(arcs_[pindex_].s)
-          next unless nindex_
-          oindex_ = nindex_ + 1
-          while oindex_ < len_
-            oarc_ = arcs_[oindex_]
-            return false if !(index_ == 0 && oindex_ == len_ - 1 && arc_.s == oarc_.e) && arc_.intersects_arc?(oarc_)
-            oindex_ += 1
+        arcs = _arcs
+        len = arcs.length
+        return false if arcs.any?(&:degenerate?)
+        return true if len == 1
+        return arcs[0].s != arcs[1].e if len == 2
+        arcs.each_with_index do |arc, index|
+          nindex = index + 1
+          nindex = nil if nindex == len
+          return false if nindex && arc.contains_point?(arcs[nindex].e)
+          pindex = index - 1
+          pindex = nil if pindex < 0
+          return false if pindex && arc.contains_point?(arcs[pindex].s)
+          next unless nindex
+          oindex = nindex + 1
+          while oindex < len
+            oarc = arcs[oindex]
+            return false if !(index == 0 && oindex == len - 1 && arc.s == oarc.e) && arc.intersects_arc?(oarc)
+            oindex += 1
           end
         end
         true
       end
 
       def length
-        _arcs.inject(0.0) { |sum_, arc_| sum_ + arc_.length } * SphericalMath::RADIUS
+        _arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
       end
     end
 
     module SphericalMultiLineStringMethods # :nodoc:
       def length
-        inject(0.0) { |sum_, geom_| sum_ + geom_.length }
+        inject(0.0) { |sum, geom| sum + geom.length }
       end
     end
   end

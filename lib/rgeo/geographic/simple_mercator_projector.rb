@@ -9,76 +9,76 @@ module RGeo
     class SimpleMercatorProjector # :nodoc:
       EQUATORIAL_RADIUS = 6_378_137.0
 
-      def initialize(geography_factory_, opts_ = {})
-        @geography_factory = geography_factory_
+      def initialize(geography_factory, opts = {})
+        @geography_factory = geography_factory
         @projection_factory = Cartesian.preferred_factory(srid: 3857,
                                                           proj4: SimpleMercatorProjector._proj4_3857,
                                                           coord_sys: SimpleMercatorProjector._coordsys_3857,
-                                                          buffer_resolution: opts_[:buffer_resolution],
-                                                          lenient_multi_polygon_assertions: opts_[:lenient_multi_polygon_assertions],
-                                                          uses_lenient_assertions: opts_[:uses_lenient_assertions],
-                                                          has_z_coordinate: opts_[:has_z_coordinate],
-                                                          has_m_coordinate: opts_[:has_m_coordinate])
+                                                          buffer_resolution: opts[:buffer_resolution],
+                                                          lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
+                                                          uses_lenient_assertions: opts[:uses_lenient_assertions],
+                                                          has_z_coordinate: opts[:has_z_coordinate],
+                                                          has_m_coordinate: opts[:has_m_coordinate])
       end
 
-      def _set_factories(geography_factory_, projection_factory_) # :nodoc:
-        @geography_factory = geography_factory_
-        @projection_factory = projection_factory_
+      def _set_factories(geography_factory, projection_factory) # :nodoc:
+        @geography_factory = geography_factory
+        @projection_factory = projection_factory
       end
 
       attr_reader :projection_factory
 
-      def project(geometry_)
-        case geometry_
+      def project(geometry)
+        case geometry
         when Feature::Point
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          radius_ = EQUATORIAL_RADIUS
-          @projection_factory.point(geometry_.x * rpd_ * radius_,
-            ::Math.log(::Math.tan(::Math::PI / 4.0 + geometry_.y * rpd_ / 2.0)) * radius_)
+          radius = EQUATORIAL_RADIUS
+          @projection_factory.point(geometry.x * rpd_ * radius,
+            ::Math.log(::Math.tan(::Math::PI / 4.0 + geometry.y * rpd_ / 2.0)) * radius)
         when Feature::Line
-          @projection_factory.line(project(geometry_.start_point), project(geometry_.end_point))
+          @projection_factory.line(project(geometry.start_point), project(geometry.end_point))
         when Feature::LinearRing
-          @projection_factory.linear_ring(geometry_.points.map { |p_| project(p_) })
+          @projection_factory.linear_ring(geometry.points.map { |p| project(p) })
         when Feature::LineString
-          @projection_factory.line_string(geometry_.points.map { |p_| project(p_) })
+          @projection_factory.line_string(geometry.points.map { |p| project(p) })
         when Feature::Polygon
-          @projection_factory.polygon(project(geometry_.exterior_ring),
-                                      geometry_.interior_rings.map { |p_| project(p_) })
+          @projection_factory.polygon(project(geometry.exterior_ring),
+                                      geometry.interior_rings.map { |p| project(p) })
         when Feature::MultiPoint
-          @projection_factory.multi_point(geometry_.map { |p_| project(p_) })
+          @projection_factory.multi_point(geometry.map { |p| project(p) })
         when Feature::MultiLineString
-          @projection_factory.multi_line_string(geometry_.map { |p_| project(p_) })
+          @projection_factory.multi_line_string(geometry.map { |p| project(p) })
         when Feature::MultiPolygon
-          @projection_factory.multi_polygon(geometry_.map { |p_| project(p_) })
+          @projection_factory.multi_polygon(geometry.map { |p| project(p) })
         when Feature::GeometryCollection
-          @projection_factory.collection(geometry_.map { |p_| project(p_) })
+          @projection_factory.collection(geometry.map { |p| project(p) })
         end
       end
 
-      def unproject(geometry_)
-        case geometry_
+      def unproject(geometry)
+        case geometry
         when Feature::Point
-          dpr_ = ImplHelper::Math::DEGREES_PER_RADIAN
-          radius_ = EQUATORIAL_RADIUS
-          @geography_factory.point(geometry_.x / radius_ * dpr_,
-            (2.0 * ::Math.atan(::Math.exp(geometry_.y / radius_)) - ::Math::PI / 2.0) * dpr_)
+          dpr = ImplHelper::Math::DEGREES_PER_RADIAN
+          radius = EQUATORIAL_RADIUS
+          @geography_factory.point(geometry.x / radius * dpr,
+            (2.0 * ::Math.atan(::Math.exp(geometry.y / radius)) - ::Math::PI / 2.0) * dpr)
         when Feature::Line
-          @geography_factory.line(unproject(geometry_.start_point), unproject(geometry_.end_point))
+          @geography_factory.line(unproject(geometry.start_point), unproject(geometry.end_point))
         when Feature::LinearRing
-          @geography_factory.linear_ring(geometry_.points.map { |p_| unproject(p_) })
+          @geography_factory.linear_ring(geometry.points.map { |p| unproject(p) })
         when Feature::LineString
-          @geography_factory.line_string(geometry_.points.map { |p_| unproject(p_) })
+          @geography_factory.line_string(geometry.points.map { |p| unproject(p) })
         when Feature::Polygon
-          @geography_factory.polygon(unproject(geometry_.exterior_ring),
-            geometry_.interior_rings.map { |p_| unproject(p_) })
+          @geography_factory.polygon(unproject(geometry.exterior_ring),
+            geometry.interior_rings.map { |p| unproject(p) })
         when Feature::MultiPoint
-          @geography_factory.multi_point(geometry_.map { |p_| unproject(p_) })
+          @geography_factory.multi_point(geometry.map { |p| unproject(p) })
         when Feature::MultiLineString
-          @geography_factory.multi_line_string(geometry_.map { |p_| unproject(p_) })
+          @geography_factory.multi_line_string(geometry.map { |p| unproject(p) })
         when Feature::MultiPolygon
-          @geography_factory.multi_polygon(geometry_.map { |p_| unproject(p_) })
+          @geography_factory.multi_polygon(geometry.map { |p| unproject(p) })
         when Feature::GeometryCollection
-          @geography_factory.collection(geometry_.map { |p_| unproject(p_) })
+          @geography_factory.collection(geometry.map { |p| unproject(p) })
         end
       end
 
