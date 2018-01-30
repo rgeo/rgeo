@@ -43,8 +43,8 @@ module RGeo
           # Note angles are represented as cos/sin pairs so we don't
           # have to calculate any trig functions.
           angs = []
-          size.times do |i_|
-            x0, y0, x1, y1 = segs[i_ * 2, 4]
+          size.times do |i|
+            x0, y0, x1, y1 = segs[i * 2, 4]
             angs << x0 * x1 + y0 * y1 << x0 * y1 - x1 * y0
           end
 

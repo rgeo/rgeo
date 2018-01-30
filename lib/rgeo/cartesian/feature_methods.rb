@@ -31,9 +31,9 @@ module RGeo
 
       def buffer(distance)
         point_count = factory.property(:buffer_resolution) * 4
-        angle_ = -::Math::PI * 2.0 / point_count
+        angle = -::Math::PI * 2.0 / point_count
         points = (0...point_count).map do |i|
-          r = angle_ * i
+          r = angle * i
           factory.point(@x + distance * ::Math.cos(r), @y + distance * ::Math.sin(r))
         end
         factory.polygon(factory.linear_ring(points))

@@ -370,9 +370,9 @@ module RGeo
 
       def _add_point(point) # :nodoc:
         if @min_x
-          x_ = point.x
-          @min_x = x_ if x_ < @min_x
-          @max_x = x_ if x_ > @max_x
+          x = point.x
+          @min_x = x if x < @min_x
+          @max_x = x if x > @max_x
           y_ = point.y
           @min_y = y_ if y_ < @min_y
           @max_y = y_ if y_ > @max_y
