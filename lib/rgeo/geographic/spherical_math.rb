@@ -37,8 +37,8 @@ module RGeo
         attr_reader :y
         attr_reader :z
 
-        def eql?(rhs_)
-          rhs_.is_a?(PointXYZ) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z
+        def eql?(rhs)
+          rhs.is_a?(PointXYZ) && @x == rhs.x && @y == rhs.y && @z == rhs.z
         end
         alias == eql?
 
@@ -49,8 +49,8 @@ module RGeo
                      rescue
                        0.0
                      end
-          rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lat_rad / rpd_, lon_rad / rpd_]
+          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
+          [lat_rad / rpd, lon_rad / rpd]
         end
 
         def lonlat
@@ -60,21 +60,21 @@ module RGeo
                      rescue
                        0.0
                      end
-          rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lon_rad / rpd_, lat_rad / rpd_]
+          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
+          [lon_rad / rpd, lat_rad / rpd]
         end
 
-        def *(rhs_)
-          val_ = @x * rhs_.x + @y * rhs_.y + @z * rhs_.z
-          val_ = 1.0 if val_ > 1.0
-          val_ = -1.0 if val_ < -1.0
-          val_
+        def *(rhs)
+          val = @x * rhs.x + @y * rhs.y + @z * rhs.z
+          val = 1.0 if val > 1.0
+          val = -1.0 if val < -1.0
+          val
         end
 
-        def %(rhs_)
-          rx = rhs_.x
-          ry = rhs_.y
-          rz = rhs_.z
+        def %(rhs)
+          rx = rhs.x
+          ry = rhs.y
+          rz = rhs.z
           begin
             PointXYZ.new(@y * rz - @z * ry, @z * rx - @x * rz, @x * ry - @y * rx)
           rescue
@@ -82,36 +82,36 @@ module RGeo
           end
         end
 
-        def dist_to_point(rhs_)
-          rx = rhs_.x
-          ry = rhs_.y
-          rz = rhs_.z
-          dot_ = @x * rx + @y * ry + @z * rz
-          if dot_ > -0.8 && dot_ < 0.8
-            ::Math.acos(dot_)
+        def dist_to_point(rhs)
+          rx = rhs.x
+          ry = rhs.y
+          rz = rhs.z
+          dot = @x * rx + @y * ry + @z * rz
+          if dot > -0.8 && dot < 0.8
+            ::Math.acos(dot)
           else
             x = @y * rz - @z * ry
             y = @z * rx - @x * rz
             z = @x * ry - @y * rx
-            as_ = ::Math.asin(::Math.sqrt(x * x + y * y + z * z))
-            dot_ > 0.0 ? as_ : ::Math::PI - as_
+            as = ::Math.asin(::Math.sqrt(x * x + y * y + z * z))
+            dot > 0.0 ? as : ::Math::PI - as
           end
         end
 
         # Creates some point that is perpendicular to this point
 
         def create_perpendicular
-          p1dot_ = self * P1
-          p2dot_ = self * P2
-          p1dot_ = -p1dot_ if p1dot_ < 0
-          p2dot_ = -p2dot_ if p2dot_ < 0
-          p1dot_ < p2dot_ ? (self % P1) : (self % P2)
+          p1dot = self * P1
+          p2dot = self * P2
+          p1dot = -p1dot if p1dot < 0
+          p2dot = -p2dot if p2dot < 0
+          p1dot < p2dot ? (self % P1) : (self % P2)
         end
 
         def self.from_latlon(lat, lon)
-          rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
-          lat_rad = rpd_ * lat
-          lon_rad = rpd_ * lon
+          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
+          lat_rad = rpd * lat
+          lon_rad = rpd * lon
           z = ::Math.sin(lat_rad)
           r = ::Math.cos(lat_rad)
           x = ::Math.cos(lon_rad) * r
@@ -143,8 +143,8 @@ module RGeo
           "#{@s} - #{@e}"
         end
 
-        def eql?(rhs_)
-          rhs_.is_a?(ArcXYZ) && @s == rhs_.s && @e == rhs_.e
+        def eql?(rhs)
+          rhs.is_a?(ArcXYZ) && @s == rhs.s && @e == rhs.e
         end
         alias == eql?
 
@@ -158,22 +158,22 @@ module RGeo
           @axis
         end
 
-        def contains_point?(obj_)
+        def contains_point?(obj)
           axis_ = axis
-          saxis_ = ArcXYZ.new(@s, obj_).axis
-          eaxis_ = ArcXYZ.new(obj_, @e).axis
-          !saxis_ || !eaxis_ || obj_ * axis_ == 0.0 && saxis_ * axis_ > 0 && eaxis_ * axis_ > 0
+          saxis_ = ArcXYZ.new(@s, obj).axis
+          eaxis_ = ArcXYZ.new(obj, @e).axis
+          !saxis_ || !eaxis_ || obj * axis_ == 0.0 && saxis_ * axis_ > 0 && eaxis_ * axis_ > 0
         end
 
-        def intersects_arc?(obj_)
+        def intersects_arc?(obj)
           myaxis_ = axis
-          dot1_ = myaxis_ * obj_.s
-          dot2_ = myaxis_ * obj_.e
-          if dot1_ >= 0.0 && dot2_ <= 0.0 || dot1_ <= 0.0 && dot2_ >= 0.0
-            ob_axis_ = obj_.axis
-            dot1_ = ob_axis_ * @s
-            dot2_ = ob_axis_ * @e
-            dot1_ >= 0.0 && dot2_ <= 0.0 || dot1_ <= 0.0 && dot2_ >= 0.0
+          dot1 = myaxis_ * obj.s
+          dot2 = myaxis_ * obj.e
+          if dot1 >= 0.0 && dot2 <= 0.0 || dot1 <= 0.0 && dot2 >= 0.0
+            ob_axis_ = obj.axis
+            dot1 = ob_axis_ * @s
+            dot2 = ob_axis_ * @e
+            dot1 >= 0.0 && dot2 <= 0.0 || dot1 <= 0.0 && dot2 >= 0.0
           else
             false
           end
