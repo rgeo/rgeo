@@ -7,18 +7,18 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicPolygonMethods # :nodoc:
-      def initialize(factory_, exterior_ring_, interior_rings_)
-        _set_factory(factory_)
-        @exterior_ring = Feature.cast(exterior_ring_, factory_, Feature::LinearRing)
+      def initialize(factory, exterior_ring, interior_rings)
+        _set_factory(factory)
+        @exterior_ring = Feature.cast(exterior_ring, factory, Feature::LinearRing)
         unless @exterior_ring
-          raise Error::InvalidGeometry, "Failed to cast exterior ring #{exterior_ring_}"
+          raise Error::InvalidGeometry, "Failed to cast exterior ring #{exterior_ring}"
         end
-        @interior_rings = (interior_rings_ || []).map do |elem_|
-          elem_ = Feature.cast(elem_, factory_, Feature::LinearRing)
-          unless elem_
-            raise Error::InvalidGeometry, "Could not cast interior ring #{elem_}"
+        @interior_rings = (interior_rings || []).map do |elem|
+          elem = Feature.cast(elem, factory, Feature::LinearRing)
+          unless elem
+            raise Error::InvalidGeometry, "Could not cast interior ring #{elem}"
           end
-          elem_
+          elem
         end
         _validate_geometry
       end
@@ -31,8 +31,8 @@ module RGeo
         @interior_rings.size
       end
 
-      def interior_ring_n(n_)
-        n_ < 0 ? nil : @interior_rings[n_]
+      def interior_ring_n(n)
+        n < 0 ? nil : @interior_rings[n]
       end
 
       def interior_rings
@@ -52,15 +52,15 @@ module RGeo
       end
 
       def boundary
-        array_ = []
-        array_ << @exterior_ring unless @exterior_ring.is_empty?
-        array_.concat(@interior_rings)
-        factory.multi_line_string(array_)
+        array = []
+        array << @exterior_ring unless @exterior_ring.is_empty?
+        array.concat(@interior_rings)
+        factory.multiline_string(array)
       end
 
-      def rep_equals?(rhs_)
-        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @exterior_ring.rep_equals?(rhs_.exterior_ring) && @interior_rings.size == rhs_.num_interior_rings
-          rhs_.interior_rings.each_with_index { |r_, i_| return false unless @interior_rings[i_].rep_equals?(r_) }
+      def rep_equals?(rhs)
+        if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @exterior_ring.rep_equals?(rhs.exterior_ring) && @interior_rings.size == rhs.num_interior_rings
+          rhs.interior_rings.each_with_index { |r, i| return false unless @interior_rings[i].rep_equals?(r) }
         else
           false
         end
@@ -68,15 +68,15 @@ module RGeo
 
       def hash
         @hash ||= begin
-          hash_ = [geometry_type, @exterior_ring].hash
-          @interior_rings.inject(hash_) { |h_, r_| (1_664_525 * h_ + r_.hash).hash }
+          hash = [geometry_type, @exterior_ring].hash
+          @interior_rings.inject(hash) { |h, r| (1_664_525 * h + r.hash).hash }
         end
       end
 
-      def _copy_state_from(obj_) # :nodoc:
+      def _copy_state_from(obj) # :nodoc:
         super
-        @exterior_ring = obj_.exterior_ring
-        @interior_rings = obj_.interior_rings
+        @exterior_ring = obj.exterior_ring
+        @interior_rings = obj.interior_rings
       end
 
       def coordinates

@@ -8,20 +8,20 @@ module RGeo
   module ImplHelper # :nodoc:
     module Utils # :nodoc:
       class << self
-        def stringize_hash(hash_)
-          nhash_ = {}
-          hash_.each do |k_, v_|
-            nhash_[k_.is_a?(::Symbol) ? k_.to_s : k_] = v_.is_a?(::Symbol) ? v_.to_s : v_
+        def stringize_hash(hash)
+          nhash = {}
+          hash.each do |k, v|
+            nhash[k.is_a?(::Symbol) ? k.to_s : k] = v.is_a?(::Symbol) ? v.to_s : v
           end
-          nhash_
+          nhash
         end
 
-        def symbolize_hash(hash_)
-          nhash_ = {}
-          hash_.each do |k_, v_|
-            nhash_[k_.is_a?(::String) ? k_.to_sym : k_] = v_.is_a?(::String) ? v_.to_sym : v_
+        def symbolize_hash(hash)
+          nhash = {}
+          hash.each do |k, v|
+            nhash[k.is_a?(::String) ? k.to_sym : k] = v.is_a?(::String) ? v.to_sym : v
           end
-          nhash_
+          nhash
         end
       end
     end
