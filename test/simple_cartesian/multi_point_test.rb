@@ -9,8 +9,8 @@ require "test_helper"
 class CartesianMultiPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
-  def create_factory(opts_ = {})
-    @factory = RGeo::Cartesian.simple_factory(opts_)
+  def create_factory(opts = {})
+    @factory = RGeo::Cartesian.simple_factory(opts)
   end
 
   undef_method :test_fully_equal

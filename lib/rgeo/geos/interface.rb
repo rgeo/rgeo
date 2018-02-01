@@ -29,30 +29,30 @@ module RGeo
       # Returns true if the given feature is a CAPI GEOS feature, or if
       # the given factory is a CAPI GEOS factory.
 
-      def is_capi_geos?(object_)
+      def is_capi_geos?(object)
         CAPI_SUPPORTED &&
-          (CAPIFactory === object_ || CAPIGeometryMethods === object_ ||
-          ZMFactory === object_ && CAPIFactory === object_.z_factory ||
-          ZMGeometryMethods === object_ && CAPIGeometryMethods === object_.z_geometry)
+          (CAPIFactory === object || CAPIGeometryMethods === object ||
+          ZMFactory === object && CAPIFactory === object.z_factory ||
+          ZMGeometryMethods === object && CAPIGeometryMethods === object.z_geometry)
       end
 
       # Returns true if the given feature is an FFI GEOS feature, or if
       # the given factory is an FFI GEOS factory.
 
-      def is_ffi_geos?(object_)
+      def is_ffi_geos?(object)
         FFI_SUPPORTED &&
-          (FFIFactory === object_ || FFIGeometryMethods === object_ ||
-          ZMFactory === object_ && FFIFactory === object_.z_factory ||
-          ZMGeometryMethods === object_ && FFIGeometryMethods === object_.z_geometry)
+          (FFIFactory === object || FFIGeometryMethods === object ||
+          ZMFactory === object && FFIFactory === object.z_factory ||
+          ZMGeometryMethods === object && FFIGeometryMethods === object.z_geometry)
       end
 
       # Returns true if the given feature is a GEOS feature, or if the given
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
-      def is_geos?(object_)
-        CAPI_SUPPORTED && (CAPIFactory === object_ || CAPIGeometryMethods === object_) ||
-          FFI_SUPPORTED && (FFIFactory === object_ || FFIGeometryMethods === object_) ||
-          ZMFactory === object_ || ZMGeometryMethods === object_
+      def is_geos?(object)
+        CAPI_SUPPORTED && (CAPIFactory === object || CAPIGeometryMethods === object) ||
+          FFI_SUPPORTED && (FFIFactory === object || FFIGeometryMethods === object) ||
+          ZMFactory === object || ZMGeometryMethods === object
       end
 
       # Returns the GEOS library version as a string of the format "x.y.z".
@@ -173,15 +173,15 @@ module RGeo
       #   never automatically generates a prepared geometry (unless you
       #   generate one explicitly using the <tt>prepare!</tt> method).
 
-      def factory(opts_ = {})
+      def factory(opts = {})
         if supported?
-          native_interface_ = opts_[:native_interface] || Geos.preferred_native_interface
-          if opts_[:has_z_coordinate] && opts_[:has_m_coordinate]
-            ZMFactory.new(opts_)
-          elsif native_interface_ == :ffi
-            FFIFactory.new(opts_)
+          native_interface = opts[:native_interface] || Geos.preferred_native_interface
+          if opts[:has_z_coordinate] && opts[:has_m_coordinate]
+            ZMFactory.new(opts)
+          elsif native_interface == :ffi
+            FFIFactory.new(opts)
           else
-            CAPIFactory.create(opts_)
+            CAPIFactory.create(opts)
           end
         end
       end
@@ -194,8 +194,8 @@ module RGeo
       # an SRID and it will automatically fetch the appropriate Proj4
       # and CoordSys objects.
 
-      def factory_generator(defaults_ = {})
-        ::Proc.new { |c_| factory(defaults_.merge(c_)) }
+      def factory_generator(defaults = {})
+        ::Proc.new { |c| factory(defaults.merge(c)) }
       end
     end
   end

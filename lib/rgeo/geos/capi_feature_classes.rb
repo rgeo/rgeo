@@ -16,34 +16,34 @@ module RGeo
       # Marshal support
 
       def marshal_dump # :nodoc:
-        factory_ = factory
-        [factory_, factory_._write_for_marshal(self)]
+        my_factory = factory
+        [my_factory, my_factory._write_for_marshal(self)]
       end
 
       def marshal_load(data_) # :nodoc:
-        obj_ = data_[0]._read_for_marshal(data_[1])
-        _steal(obj_)
+        obj = data_[0]._read_for_marshal(data_[1])
+        _steal(obj)
       end
 
       # Psych support
 
-      def encode_with(coder_) # :nodoc:
-        factory_ = factory
-        coder_["factory"] = factory_
-        str_ = factory_._write_for_psych(self)
-        str_ = str_.encode("US-ASCII") if str_.respond_to?(:encode)
-        coder_["wkt"] = str_
+      def encode_with(coder) # :nodoc:
+        my_factory = factory
+        coder["factory"] = my_factory
+        str = my_factory._write_for_psych(self)
+        str = str.encode("US-ASCII") if str.respond_to?(:encode)
+        coder["wkt"] = str
       end
 
-      def init_with(coder_) # :nodoc:
-        obj_ = coder_["factory"]._read_for_psych(coder_["wkt"])
-        _steal(obj_)
+      def init_with(coder) # :nodoc:
+        obj = coder["factory"]._read_for_psych(coder["wkt"])
+        _steal(obj)
       end
 
       def as_text
-        str_ = _as_text
-        str_.force_encoding("US-ASCII") if str_.respond_to?(:force_encoding)
-        str_
+        str = _as_text
+        str.force_encoding("US-ASCII") if str.respond_to?(:force_encoding)
+        str
       end
       alias to_s as_text
     end

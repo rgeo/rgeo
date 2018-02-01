@@ -45,21 +45,21 @@ module RGeo
       # Create and configure a WKB parser. See the WKBParser
       # documentation for the options that can be passed.
 
-      def initialize(factory_generator_ = nil, opts_ = {})
-        if factory_generator_.is_a?(Feature::Factory::Instance)
-          @factory_generator = Feature::FactoryGenerator.single(factory_generator_)
-          @exact_factory = factory_generator_
-        elsif factory_generator_.respond_to?(:call)
-          @factory_generator = factory_generator_
+      def initialize(factory_generator = nil, opts = {})
+        if factory_generator.is_a?(Feature::Factory::Instance)
+          @factory_generator = Feature::FactoryGenerator.single(factory_generator)
+          @exact_factory = factory_generator
+        elsif factory_generator.respond_to?(:call)
+          @factory_generator = factory_generator
           @exact_factory = nil
         else
           @factory_generator = Cartesian.method(:preferred_factory)
           @exact_factory = nil
         end
-        @support_ewkb = opts_[:support_ewkb] ? true : false
-        @support_wkb12 = opts_[:support_wkb12] ? true : false
-        @ignore_extra_bytes = opts_[:ignore_extra_bytes] ? true : false
-        @default_srid = opts_[:default_srid]
+        @support_ewkb = opts[:support_ewkb] ? true : false
+        @support_wkb12 = opts[:support_wkb12] ? true : false
+        @ignore_extra_bytes = opts[:ignore_extra_bytes] ? true : false
+        @default_srid = opts[:default_srid]
       end
 
       # Returns the factory generator. See WKBParser for details.
@@ -102,73 +102,73 @@ module RGeo
       # The #parse_hex method is a synonym, present for historical
       # reasons but deprecated. Use #parse instead.
 
-      def parse(data_)
-        data_ = [data_].pack("H*") if data_[0, 1] =~ /[0-9a-fA-F]/
+      def parse(data)
+        data = [data].pack("H*") if data[0, 1] =~ /[0-9a-fA-F]/
         @cur_has_z = nil
         @cur_has_m = nil
         @cur_srid = nil
         @cur_dims = 2
         @cur_factory = nil
         begin
-          _start_scanner(data_)
-          obj_ = _parse_object(false)
+          _start_scanner(data)
+          obj = _parse_object(false)
           unless @ignore_extra_bytes
-            bytes_ = _bytes_remaining
-            if bytes_ > 0
-              raise Error::ParseError, "Found #{bytes_} extra bytes at the end of the stream."
+            bytes = _bytes_remaining
+            if bytes > 0
+              raise Error::ParseError, "Found #{bytes} extra bytes at the end of the stream."
             end
           end
         ensure
           _clean_scanner
         end
-        obj_
+        obj
       end
       alias parse_hex parse
 
-      def _parse_object(contained_) # :nodoc:
-        endian_value_ = _get_byte
-        case endian_value_
+      def _parse_object(contained) # :nodoc:
+        endian_value = _get_byte
+        case endian_value
         when 0
-          little_endian_ = false
+          little_endian = false
         when 1
-          little_endian_ = true
+          little_endian = true
         else
-          raise Error::ParseError, "Bad endian byte value: #{endian_value_}"
+          raise Error::ParseError, "Bad endian byte value: #{endian_value}"
         end
-        type_code_ = _get_integer(little_endian_)
-        has_z_ = false
-        has_m_ = false
-        srid_ = contained_ ? nil : @default_srid
+        type_code = _get_integer(little_endian)
+        has_z = false
+        has_m = false
+        srid = contained ? nil : @default_srid
         if @support_ewkb
-          has_z_ ||= type_code_ & 0x80000000 != 0
-          has_m_ ||= type_code_ & 0x40000000 != 0
-          srid_ = _get_integer(little_endian_) if type_code_ & 0x20000000 != 0
-          type_code_ &= 0x0fffffff
+          has_z ||= type_code & 0x80000000 != 0
+          has_m ||= type_code & 0x40000000 != 0
+          srid = _get_integer(little_endian) if type_code & 0x20000000 != 0
+          type_code &= 0x0fffffff
         end
         if @support_wkb12
-          has_z_ ||= (type_code_ / 1000) & 1 != 0
-          has_m_ ||= (type_code_ / 1000) & 2 != 0
-          type_code_ %= 1000
+          has_z ||= (type_code / 1000) & 1 != 0
+          has_m ||= (type_code / 1000) & 2 != 0
+          type_code %= 1000
         end
-        if contained_
-          if contained_ != true && contained_ != type_code_
-            raise Error::ParseError, "Enclosed type=#{type_code_} is different from container constraint #{contained_}"
+        if contained
+          if contained != true && contained != type_code
+            raise Error::ParseError, "Enclosed type=#{type_code} is different from container constraint #{contained}"
           end
-          if has_z_ != @cur_has_z
-            raise Error::ParseError, "Enclosed hasZ=#{has_z_} is different from toplevel hasZ=#{@cur_has_z}"
+          if has_z != @cur_has_z
+            raise Error::ParseError, "Enclosed hasZ=#{has_z} is different from toplevel hasZ=#{@cur_has_z}"
           end
-          if has_m_ != @cur_has_m
-            raise Error::ParseError, "Enclosed hasM=#{has_m_} is different from toplevel hasM=#{@cur_has_m}"
+          if has_m != @cur_has_m
+            raise Error::ParseError, "Enclosed hasM=#{has_m} is different from toplevel hasM=#{@cur_has_m}"
           end
-          if srid_ && srid_ != @cur_srid
-            raise Error::ParseError, "Enclosed SRID #{srid_} is different from toplevel srid #{@cur_srid || '(unspecified)'}"
+          if srid && srid != @cur_srid
+            raise Error::ParseError, "Enclosed SRID #{srid} is different from toplevel srid #{@cur_srid || '(unspecified)'}"
           end
         else
-          @cur_has_z = has_z_
-          @cur_has_m = has_m_
+          @cur_has_z = has_z
+          @cur_has_m = has_m
           @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
-          @cur_srid = srid_
-          @cur_factory = @factory_generator.call(srid: @cur_srid, has_z_coordinate: has_z_, has_m_coordinate: has_m_)
+          @cur_srid = srid
+          @cur_factory = @factory_generator.call(srid: @cur_srid, has_z_coordinate: has_z, has_m_coordinate: has_m)
           if @cur_has_z && !@cur_factory.property(:has_z_coordinate)
             raise Error::ParseError, "Data has Z coordinates but the factory doesn't have Z coordinates"
           end
@@ -176,75 +176,75 @@ module RGeo
             raise Error::ParseError, "Data has M coordinates but the factory doesn't have M coordinates"
           end
         end
-        case type_code_
+        case type_code
         when 1
-          coords_ = _get_doubles(little_endian_, @cur_dims)
-          @cur_factory.point(*coords_)
+          coords = _get_doubles(little_endian, @cur_dims)
+          @cur_factory.point(*coords)
         when 2
-          _parse_line_string(little_endian_)
+          _parse_line_string(little_endian)
         when 3
-          interior_rings_ = (1.._get_integer(little_endian_)).map { _parse_line_string(little_endian_) }
-          exterior_ring_ = interior_rings_.shift || @cur_factory.linear_ring([])
-          @cur_factory.polygon(exterior_ring_, interior_rings_)
+          interior_rings = (1.._get_integer(little_endian)).map { _parse_line_string(little_endian) }
+          exterior_ring = interior_rings.shift || @cur_factory.linear_ring([])
+          @cur_factory.polygon(exterior_ring, interior_rings)
         when 4
-          @cur_factory.multi_point((1.._get_integer(little_endian_)).map { _parse_object(1) })
+          @cur_factory.multi_point((1.._get_integer(little_endian)).map { _parse_object(1) })
         when 5
-          @cur_factory.multi_line_string((1.._get_integer(little_endian_)).map { _parse_object(2) })
+          @cur_factory.multi_line_string((1.._get_integer(little_endian)).map { _parse_object(2) })
         when 6
-          @cur_factory.multi_polygon((1.._get_integer(little_endian_)).map { _parse_object(3) })
+          @cur_factory.multi_polygon((1.._get_integer(little_endian)).map { _parse_object(3) })
         when 7
-          @cur_factory.collection((1.._get_integer(little_endian_)).map { _parse_object(true) })
+          @cur_factory.collection((1.._get_integer(little_endian)).map { _parse_object(true) })
         else
-          raise Error::ParseError, "Unknown type value: #{type_code_}."
+          raise Error::ParseError, "Unknown type value: #{type_code}."
         end
       end
 
-      def _parse_line_string(little_endian_) # :nodoc:
-        count_ = _get_integer(little_endian_)
-        coords_ = _get_doubles(little_endian_, @cur_dims * count_)
-        @cur_factory.line_string((0...count_).map { |i_| @cur_factory.point(*coords_[@cur_dims * i_, @cur_dims]) })
+      def _parse_line_string(little_endian) # :nodoc:
+        count = _get_integer(little_endian)
+        coords = _get_doubles(little_endian, @cur_dims * count)
+        @cur_factory.line_string((0...count).map { |i| @cur_factory.point(*coords[@cur_dims * i, @cur_dims]) })
       end
 
-      def _start_scanner(data_) # :nodoc:
-        @_data = data_
-        @_len = data_.length
-        @_pos = 0
+      def _start_scanner(data) # :nodoc:
+        @data = data
+        @len = data.length
+        @pos = 0
       end
 
       def _clean_scanner # :nodoc:
-        @_data = nil
+        @data = nil
       end
 
       def _bytes_remaining # :nodoc:
-        @_len - @_pos
+        @len - @pos
       end
 
       def _get_byte # :nodoc:
-        if @_pos + 1 > @_len
+        if @pos + 1 > @len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
         end
-        str_ = @_data[@_pos, 1]
-        @_pos += 1
-        str_.unpack("C").first
+        str = @data[@pos, 1]
+        @pos += 1
+        str.unpack("C").first
       end
 
-      def _get_integer(little_endian_) # :nodoc:
-        if @_pos + 4 > @_len
+      def _get_integer(little_endian) # :nodoc:
+        if @pos + 4 > @len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
         end
-        str_ = @_data[@_pos, 4]
-        @_pos += 4
-        str_.unpack("#{little_endian_ ? 'V' : 'N'}").first
+        str = @data[@pos, 4]
+        @pos += 4
+        str.unpack("#{little_endian ? 'V' : 'N'}").first
       end
 
-      def _get_doubles(little_endian_, count_) # :nodoc:
-        len_ = 8 * count_
-        if @_pos + len_ > @_len
-          raise Error::ParseError, "Not enough bytes left to fulfill #{count_} doubles"
+      def _get_doubles(little_endian, count) # :nodoc:
+        len = 8 * count
+        if @pos + len > @len
+          raise Error::ParseError, "Not enough bytes left to fulfill #{count} doubles"
         end
-        str_ = @_data[@_pos, len_]
-        @_pos += len_
-        str_.unpack("#{little_endian_ ? 'E' : 'G'}*")
+        str = @data[@pos, len]
+        @pos += len
+        str.unpack("#{little_endian ? 'E' : 'G'}*")
       end
     end
   end

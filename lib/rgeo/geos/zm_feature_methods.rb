@@ -9,10 +9,10 @@ module RGeo
     module ZMGeometryMethods # :nodoc:
       include Feature::Instance
 
-      def initialize(factory_, zgeometry_, mgeometry_)
-        @factory = factory_
-        @zgeometry = zgeometry_
-        @mgeometry = mgeometry_
+      def initialize(factory, zgeometry, mgeometry)
+        @factory = factory
+        @zgeometry = zgeometry
+        @mgeometry = mgeometry
       end
 
       def inspect # :nodoc:
@@ -75,45 +75,45 @@ module RGeo
         @factory._create_feature(nil, @zgeometry.boundary, @mgeometry.boundary)
       end
 
-      def equals?(rhs_)
-        @zgeometry.equals?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def equals?(rhs)
+        @zgeometry.equals?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def disjoint?(rhs_)
-        @zgeometry.disjoint?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def disjoint?(rhs)
+        @zgeometry.disjoint?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def intersects?(rhs_)
-        @zgeometry.intersects?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def intersects?(rhs)
+        @zgeometry.intersects?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def touches?(rhs_)
-        @zgeometry.touches?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def touches?(rhs)
+        @zgeometry.touches?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def crosses?(rhs_)
-        @zgeometry.crosses?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def crosses?(rhs)
+        @zgeometry.crosses?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def within?(rhs_)
-        @zgeometry.within?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def within?(rhs)
+        @zgeometry.within?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def contains?(rhs_)
-        @zgeometry.contains?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def contains?(rhs)
+        @zgeometry.contains?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def overlaps?(rhs_)
-        @zgeometry.overlaps?(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def overlaps?(rhs)
+        @zgeometry.overlaps?(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
-      def relate?(rhs_, pattern_)
-        @zgeometry.relate?(RGeo::Feature.cast(rhs_, self).z_geometry, pattern_)
+      def relate?(rhs, pattern)
+        @zgeometry.relate?(RGeo::Feature.cast(rhs, self).z_geometry, pattern)
       end
       alias relate relate? # DEPRECATED
 
-      def distance(rhs_)
-        @zgeometry.distance(RGeo::Feature.cast(rhs_, self).z_geometry)
+      def distance(rhs)
+        @zgeometry.distance(RGeo::Feature.cast(rhs, self).z_geometry)
       end
 
       def buffer(distance_)
@@ -124,29 +124,29 @@ module RGeo
         @factory._create_feature(nil, @zgeometry.convex_hull, @mgeometry.convex_hull)
       end
 
-      def intersection(rhs_)
-        rhs_ = RGeo::Feature.cast(rhs_, self)
-        @factory._create_feature(nil, @zgeometry.intersection(rhs_.z_geometry), @mgeometry.intersection(rhs_.m_geometry))
+      def intersection(rhs)
+        rhs = RGeo::Feature.cast(rhs, self)
+        @factory._create_feature(nil, @zgeometry.intersection(rhs.z_geometry), @mgeometry.intersection(rhs.m_geometry))
       end
 
-      def union(rhs_)
-        rhs_ = RGeo::Feature.cast(rhs_, self)
-        @factory._create_feature(nil, @zgeometry.union(rhs_.z_geometry), @mgeometry.union(rhs_.m_geometry))
+      def union(rhs)
+        rhs = RGeo::Feature.cast(rhs, self)
+        @factory._create_feature(nil, @zgeometry.union(rhs.z_geometry), @mgeometry.union(rhs.m_geometry))
       end
 
-      def difference(rhs_)
-        rhs_ = RGeo::Feature.cast(rhs_, self)
-        @factory._create_feature(nil, @zgeometry.difference(rhs_.z_geometry), @mgeometry.difference(rhs_.m_geometry))
+      def difference(rhs)
+        rhs = RGeo::Feature.cast(rhs, self)
+        @factory._create_feature(nil, @zgeometry.difference(rhs.z_geometry), @mgeometry.difference(rhs.m_geometry))
       end
 
-      def sym_difference(rhs_)
-        rhs_ = RGeo::Feature.cast(rhs_, self)
-        @factory._create_feature(nil, @zgeometry.sym_difference(rhs_.z_geometry), @mgeometry.sym_difference(rhs_.m_geometry))
+      def sym_difference(rhs)
+        rhs = RGeo::Feature.cast(rhs, self)
+        @factory._create_feature(nil, @zgeometry.sym_difference(rhs.z_geometry), @mgeometry.sym_difference(rhs.m_geometry))
       end
 
-      def rep_equals?(rhs_)
-        rhs_ = RGeo::Feature.cast(rhs_, self)
-        rhs_.is_a?(self.class) && @factory.eql?(rhs_.factory) && @zgeometry.rep_equals?(rhs_.z_geometry) && @mgeometry.rep_equals?(rhs_.m_geometry)
+      def rep_equals?(rhs)
+        rhs = RGeo::Feature.cast(rhs, self)
+        rhs.is_a?(self.class) && @factory.eql?(rhs.factory) && @zgeometry.rep_equals?(rhs.z_geometry) && @mgeometry.rep_equals?(rhs.m_geometry)
       end
 
       alias eql? rep_equals?
@@ -156,27 +156,27 @@ module RGeo
       alias + union
       alias * intersection
 
-      def _copy_state_from(obj_) # :nodoc:
-        @factory = obj_.factory
-        @zgeometry = obj_.z_geometry
-        @mgeometry = obj_.m_geometry
+      def _copy_state_from(obj) # :nodoc:
+        @factory = obj.factory
+        @zgeometry = obj.z_geometry
+        @mgeometry = obj.m_geometry
       end
 
       def marshal_dump # :nodoc:
         [@factory, @factory._marshal_wkb_generator.generate(self)]
       end
 
-      def marshal_load(data_)  # :nodoc:
-        _copy_state_from(data_[0]._marshal_wkb_parser.parse(data_[1]))
+      def marshal_load(data)  # :nodoc:
+        _copy_state_from(data[0]._marshal_wkb_parser.parse(data[1]))
       end
 
-      def encode_with(coder_)  # :nodoc:
-        coder_["factory"] = @factory
-        coder_["wkt"] = @factory._psych_wkt_generator.generate(self)
+      def encode_with(coder)  # :nodoc:
+        coder["factory"] = @factory
+        coder["wkt"] = @factory._psych_wkt_generator.generate(self)
       end
 
-      def init_with(coder_) # :nodoc:
-        _copy_state_from(coder_["factory"]._psych_wkt_parser.parse(coder_["wkt"]))
+      def init_with(coder) # :nodoc:
+        _copy_state_from(coder["factory"]._psych_wkt_parser.parse(coder["wkt"]))
       end
     end
 
@@ -230,8 +230,8 @@ module RGeo
         @zgeometry.num_points
       end
 
-      def point_n(n_)
-        @factory._create_feature(ZMPointImpl, @zgeometry.point_n(n_), @mgeometry.point_n(n_))
+      def point_n(n)
+        @factory._create_feature(ZMPointImpl, @zgeometry.point_n(n), @mgeometry.point_n(n))
       end
 
       def points
@@ -270,8 +270,8 @@ module RGeo
         @zgeometry.num_interior_rings
       end
 
-      def interior_ring_n(n_)
-        @factory._create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(n_), @mgeometry.interior_ring_n(n_))
+      def interior_ring_n(n)
+        @factory._create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(n), @mgeometry.interior_ring_n(n))
       end
 
       def interior_rings
@@ -295,15 +295,15 @@ module RGeo
       end
       alias size num_geometries
 
-      def geometry_n(n_)
-        @factory._create_feature(nil, @zgeometry.geometry_n(n_), @mgeometry.geometry_n(n_))
+      def geometry_n(n)
+        @factory._create_feature(nil, @zgeometry.geometry_n(n), @mgeometry.geometry_n(n))
       end
       alias [] geometry_n
 
       def each
         if block_given?
-          num_geometries.times do |i_|
-            yield geometry_n(i_)
+          num_geometries.times do |i|
+            yield geometry_n(i)
           end
           self
         else

@@ -22,34 +22,34 @@ module RGeo
         #   is requested again, the result is served from cache rather
         #   than issuing another HTTP request. Default is false.
 
-        def initialize(opts_ = {})
-          @cache = opts_[:cache] ? {} : nil
+        def initialize(opts = {})
+          @cache = opts[:cache] ? {} : nil
         end
 
         # Retrieve the given URL and return an Entry.
         # Returns nil if the URL cannot be read as an OGC WKT or Proj4
         # coordinate system
 
-        def get(ident_)
-          ident_ = ident_.to_s
-          return @cache[ident_] if @cache && @cache.include?(ident_)
-          uri_ = ::URI.parse(ident_)
-          result_ = nil
-          ::Net::HTTP.start(uri_.host, uri_.port) do |http_|
-            request_ = uri_.path
-            request_ = "#{request_}?#{uri_.query}" if uri_.query
-            response_ = http_.request_get(request_)
-            if response_.is_a?(::Net::HTTPSuccess)
-              response_ = response_.body.strip
-              if response_[0, 1] == "+"
-                result_ = Entry.new(ident_, proj4: response_)
+        def get(ident)
+          ident = ident.to_s
+          return @cache[ident] if @cache && @cache.include?(ident)
+          uri = ::URI.parse(ident)
+          result = nil
+          ::Net::HTTP.start(uri.host, uri.port) do |http|
+            request = uri.path
+            request = "#{request}?#{uri.query}" if uri.query
+            response = http.requestget(request)
+            if response.is_a?(::Net::HTTPSuccess)
+              response = response.body.strip
+              if response[0, 1] == "+"
+                result = Entry.new(ident, proj4: response)
               else
-                result_ = Entry.new(ident_, coord_sys: response_)
+                result = Entry.new(ident, coord_sys: response)
               end
             end
           end
-          @cache[ident_] = result_ if @cache
-          result_
+          @cache[ident] = result if @cache
+          result
         end
 
         # Clear the cache if one is present.

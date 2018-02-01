@@ -20,8 +20,8 @@ module RGeo
       def _validate_geometry # :nodoc:
       end
 
-      def _set_factory(factory_)  # :nodoc:
-        @factory = factory_
+      def _set_factory(factory)  # :nodoc:
+        @factory = factory
       end
 
       def factory
@@ -36,25 +36,25 @@ module RGeo
         @factory._generate_wkb(self)
       end
 
-      def _copy_state_from(obj_)  # :nodoc:
-        @factory = obj_.factory
+      def _copy_state_from(obj)  # :nodoc:
+        @factory = obj.factory
       end
 
       def marshal_dump # :nodoc:
         [@factory, @factory._marshal_wkb_generator.generate(self)]
       end
 
-      def marshal_load(data_)  # :nodoc:
-        _copy_state_from(data_[0]._marshal_wkb_parser.parse(data_[1]))
+      def marshal_load(data)  # :nodoc:
+        _copy_state_from(data[0]._marshal_wkb_parser.parse(data[1]))
       end
 
-      def encode_with(coder_)  # :nodoc:
-        coder_["factory"] = @factory
-        coder_["wkt"] = @factory._psych_wkt_generator.generate(self)
+      def encode_with(coder)  # :nodoc:
+        coder["factory"] = @factory
+        coder["wkt"] = @factory._psych_wkt_generator.generate(self)
       end
 
-      def init_with(coder_) # :nodoc:
-        _copy_state_from(coder_["factory"]._psych_wkt_parser.parse(coder_["wkt"]))
+      def init_with(coder) # :nodoc:
+        _copy_state_from(coder["factory"]._psych_wkt_parser.parse(coder["wkt"]))
       end
     end
   end

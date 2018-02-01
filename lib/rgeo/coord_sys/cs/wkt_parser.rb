@@ -8,141 +8,141 @@ module RGeo
   module CoordSys
     module CS
       class WKTParser # :nodoc:
-        def initialize(str_)
-          @scanner = ::StringScanner.new(str_)
+        def initialize(str)
+          @scanner = ::StringScanner.new(str)
           next_token
         end
 
-        def parse(containing_type_ = nil) # :nodoc:
+        def parse(containing_type = nil) # :nodoc:
           if @cur_token.is_a?(QuotedString) ||
             @cur_token.is_a?(::Numeric) ||
-            (containing_type_ == "AXIS" && @cur_token.is_a?(TypeString))
-            value_ = @cur_token
+            (containing_type == "AXIS" && @cur_token.is_a?(TypeString))
+            value = @cur_token
             next_token
-            return value_
+            return value
           end
           unless @cur_token.is_a?(TypeString)
             raise Error::ParseError("Found token #{@cur_token} when we expected a value")
           end
-          type_ = @cur_token
+          type = @cur_token
           next_token
-          consume_token_type(:begin)
-          args_ = ArgumentList.new
-          args_ << parse(type_)
+          consume_tokentype(:begin)
+          args = ArgumentList.new
+          args << parse(type)
           loop do
             break unless @cur_token == :comma
             next_token
-            args_ << parse(type_)
+            args << parse(type)
           end
-          consume_token_type(:end)
-          obj_ = nil
-          case type_
+          consume_tokentype(:end)
+          obj = nil
+          case type
           when "AUTHORITY"
-            obj_ = AuthorityClause.new(args_.shift(QuotedString), args_.shift(QuotedString))
+            obj = AuthorityClause.new(args.shift(QuotedString), args.shift(QuotedString))
           when "EXTENSION"
-            obj_ = ExtensionClause.new(args_.shift(QuotedString), args_.shift(QuotedString))
+            obj = ExtensionClause.new(args.shift(QuotedString), args.shift(QuotedString))
           when "AXIS"
-            obj_ = AxisInfo.create(args_.shift(QuotedString), args_.shift(TypeString))
+            obj = AxisInfo.create(args.shift(QuotedString), args.shift(TypeString))
           when "TOWGS84"
-            bursa_wolf_params_ = args_.find_all(::Numeric)
-            unless bursa_wolf_params_.size == 7
-              raise Error::ParseError("Expected 7 Bursa Wolf parameters but found #{bursa_wolf_params_.size}")
+            bursa_wolf_params = args.find_all(::Numeric)
+            unless bursa_wolf_params.size == 7
+              raise Error::ParseError("Expected 7 Bursa Wolf parameters but found #{bursa_wolf_params.size}")
             end
-            obj_ = WGS84ConversionInfo.create(*bursa_wolf_params_)
+            obj = WGS84ConversionInfo.create(*bursa_wolf_params)
           when "UNIT"
-            case containing_type_
+            case containing_type
             when "GEOCCS", "VERT_CS", "PROJCS", "SPHEROID"
-              klass_ = LinearUnit
+              klass = LinearUnit
             when "GEOGCS"
-              klass_ = AngularUnit
+              klass = AngularUnit
             else
-              klass_ = Unit
+              klass = Unit
             end
-            obj_ = klass_.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.create_optionals)
+            obj = klass.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
           when "PARAMETER"
-            obj_ = ProjectionParameter.create(args_.shift(QuotedString), args_.shift(::Numeric))
+            obj = ProjectionParameter.create(args.shift(QuotedString), args.shift(::Numeric))
           when "PRIMEM"
-            obj_ = PrimeMeridian.create(args_.shift(QuotedString), nil, args_.shift(::Numeric), *args_.create_optionals)
+            obj = PrimeMeridian.create(args.shift(QuotedString), nil, args.shift(::Numeric), *args.create_optionals)
           when "SPHEROID"
-            obj_ = Ellipsoid.create_flattened_sphere(args_.shift(QuotedString), args_.shift(::Numeric), args_.shift(::Numeric), args_.find_first(LinearUnit), *args_.create_optionals)
+            obj = Ellipsoid.create_flattened_sphere(args.shift(QuotedString), args.shift(::Numeric), args.shift(::Numeric), args.find_first(LinearUnit), *args.create_optionals)
           when "PROJECTION"
-            name_ = args_.shift(QuotedString)
-            obj_ = Projection.create(name_, name_, args_.find_all(ProjectionParameter), *args_.create_optionals)
+            name = args.shift(QuotedString)
+            obj = Projection.create(name, name, args.find_all(ProjectionParameter), *args.create_optionals)
           when "DATUM"
-            name_ = args_.shift(QuotedString)
-            ellipsoid_ = args_.find_first(Ellipsoid)
-            to_wgs84_ = args_.find_first(WGS84ConversionInfo)
-            obj_ = HorizontalDatum.create(name_, HD_GEOCENTRIC, ellipsoid_, to_wgs84_, *args_.create_optionals)
+            name = args.shift(QuotedString)
+            ellipsoid = args.find_first(Ellipsoid)
+            to_wgs84 = args.find_first(WGS84ConversionInfo)
+            obj = HorizontalDatum.create(name, HD_GEOCENTRIC, ellipsoid, to_wgs84, *args.create_optionals)
           when "VERT_DATUM"
-            obj_ = VerticalDatum.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.create_optionals)
+            obj = VerticalDatum.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
           when "LOCAL_DATUM"
-            obj_ = LocalDatum.create(args_.shift(QuotedString), args_.shift(::Numeric), *args_.create_optionals)
+            obj = LocalDatum.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
           when "COMPD_CS"
-            obj_ = CompoundCoordinateSystem.create(args_.shift(QuotedString), args_.shift(CoordinateSystem), args_.shift(CoordinateSystem), *args_.create_optionals)
+            obj = CompoundCoordinateSystem.create(args.shift(QuotedString), args.shift(CoordinateSystem), args.shift(CoordinateSystem), *args.create_optionals)
           when "LOCAL_CS"
-            name_ = args_.shift(QuotedString)
-            local_datum_ = args_.find_first(LocalDatum)
-            unit_ = args_.find_first(Unit)
-            axes_ = args_.find_all(AxisInfo)
-            unless axes_.size > 0
+            name = args.shift(QuotedString)
+            local_datum = args.find_first(LocalDatum)
+            unit = args.find_first(Unit)
+            axes = args.find_all(AxisInfo)
+            unless axes.size > 0
               raise Error::ParseError("Expected at least one AXIS in a LOCAL_CS")
             end
-            obj_ = LocalCoordinateSystem.create(name_, local_datum_, unit_, axes_, *args_.create_optionals)
+            obj = LocalCoordinateSystem.create(name, local_datum, unit, axes, *args.create_optionals)
           when "GEOCCS"
-            name_ = args_.shift(QuotedString)
-            horizontal_datum_ = args_.find_first(HorizontalDatum)
-            prime_meridian_ = args_.find_first(PrimeMeridian)
-            linear_unit_ = args_.find_first(LinearUnit)
-            axes_ = args_.find_all(AxisInfo)
-            unless axes_.size == 0 || axes_.size == 3
+            name = args.shift(QuotedString)
+            horizontal_datum = args.find_first(HorizontalDatum)
+            prime_meridian = args.find_first(PrimeMeridian)
+            linear_unit = args.find_first(LinearUnit)
+            axes = args.find_all(AxisInfo)
+            unless axes.size == 0 || axes.size == 3
               raise Error::ParseError("GEOCCS must contain either 0 or 3 AXIS parameters")
             end
-            obj_ = GeocentricCoordinateSystem.create(name_, horizontal_datum_, prime_meridian_, linear_unit_, axes_[0], axes_[1], axes_[2], *args_.create_optionals)
+            obj = GeocentricCoordinateSystem.create(name, horizontal_datum, prime_meridian, linear_unit, axes[0], axes[1], axes[2], *args.create_optionals)
           when "VERT_CS"
-            name_ = args_.shift(QuotedString)
-            vertical_datum_ = args_.find_first(VerticalDatum)
-            linear_unit_ = args_.find_first(LinearUnit)
-            axis_ = args_.find_first(AxisInfo)
-            obj_ = VerticalCoordinateSystem.create(name_, vertical_datum_, linear_unit_, axis_, *args_.create_optionals)
+            name = args.shift(QuotedString)
+            vertical_datum = args.find_first(VerticalDatum)
+            linear_unit = args.find_first(LinearUnit)
+            axis = args.find_first(AxisInfo)
+            obj = VerticalCoordinateSystem.create(name, vertical_datum, linear_unit, axis, *args.create_optionals)
           when "GEOGCS"
-            name_ = args_.shift(QuotedString)
-            horizontal_datum_ = args_.find_first(HorizontalDatum)
-            prime_meridian_ = args_.find_first(PrimeMeridian)
-            angular_unit_ = args_.find_first(AngularUnit)
-            axes_ = args_.find_all(AxisInfo)
-            unless axes_.size == 0 || axes_.size == 2
+            name = args.shift(QuotedString)
+            horizontal_datum = args.find_first(HorizontalDatum)
+            prime_meridian = args.find_first(PrimeMeridian)
+            angular_unit = args.find_first(AngularUnit)
+            axes = args.find_all(AxisInfo)
+            unless axes.size == 0 || axes.size == 2
               raise Error::ParseError("GEOGCS must contain either 0 or 2 AXIS parameters")
             end
-            obj_ = GeographicCoordinateSystem.create(name_, angular_unit_, horizontal_datum_, prime_meridian_, axes_[0], axes_[1], *args_.create_optionals)
+            obj = GeographicCoordinateSystem.create(name, angular_unit, horizontal_datum, prime_meridian, axes[0], axes[1], *args.create_optionals)
           when "PROJCS"
-            name_ = args_.shift(QuotedString)
-            geographic_coordinate_system_ = args_.find_first(GeographicCoordinateSystem)
-            projection_ = args_.find_first(Projection)
-            parameters_ = args_.find_all(ProjectionParameter)
-            projection_.instance_variable_get(:@parameters).concat(parameters_)
-            linear_unit_ = args_.find_first(LinearUnit)
-            axes_ = args_.find_all(AxisInfo)
-            unless axes_.size == 0 || axes_.size == 2
+            name = args.shift(QuotedString)
+            geographic_coordinate_system = args.find_first(GeographicCoordinateSystem)
+            projection = args.find_first(Projection)
+            parameters = args.find_all(ProjectionParameter)
+            projection.instance_variable_get(:@parameters).concat(parameters)
+            linear_unit = args.find_first(LinearUnit)
+            axes = args.find_all(AxisInfo)
+            unless axes.size == 0 || axes.size == 2
               raise Error::ParseError("PROJCS must contain either 0 or 2 AXIS parameters")
             end
-            obj_ = ProjectedCoordinateSystem.create(name_, geographic_coordinate_system_, projection_, linear_unit_, axes_[0], axes_[1], *args_.create_optionals)
+            obj = ProjectedCoordinateSystem.create(name, geographic_coordinate_system, projection, linear_unit, axes[0], axes[1], *args.create_optionals)
           else
-            raise Error::ParseError, "Unrecognized type: #{type_}"
+            raise Error::ParseError, "Unrecognized type: #{type}"
           end
-          args_.assert_empty
-          obj_
+          args.assert_empty
+          obj
         end
 
-        def consume_token_type(type_) # :nodoc:
-          expect_token_type(type_)
-          tok_ = @cur_token
+        def consume_tokentype(type) # :nodoc:
+          expect_tokentype(type)
+          tok = @cur_token
           next_token
-          tok_
+          tok
         end
 
-        def expect_token_type(type_) # :nodoc:
-          unless type_ === @cur_token
-            raise Error::ParseError, "#{type_.inspect} expected but #{@cur_token.inspect} found."
+        def expect_tokentype(type) # :nodoc:
+          unless type === @cur_token
+            raise Error::ParseError, "#{type.inspect} expected but #{@cur_token.inspect} found."
           end
         end
 
@@ -168,11 +168,11 @@ module RGeo
             @cur_token = nil
           else
             @scanner.scan_until(/[^\s\(\)\[\],"]+/)
-            token_ = @scanner.matched
-            if token_ =~ /^[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?$/
-              @cur_token = token_.to_f
+            token = @scanner.matched
+            if token =~ /^[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?$/
+              @cur_token = token.to_f
             else
-              raise Error::ParseError, "Bad token: #{token_.inspect}"
+              raise Error::ParseError, "Bad token: #{token.inspect}"
             end
           end
           @cur_token
@@ -187,9 +187,9 @@ module RGeo
         end
 
         class AuthorityClause # :nodoc:
-          def initialize(name_, code_) # :nodoc:
-            @name = name_
-            @code = code_
+          def initialize(name, code) # :nodoc:
+            @name = name
+            @code = code
           end
 
           def to_a # :nodoc:
@@ -198,9 +198,9 @@ module RGeo
         end
 
         class ExtensionClause # :nodoc:
-          def initialize(key_, value_) # :nodoc:
-            @key = key_
-            @value = value_
+          def initialize(key, value) # :nodoc:
+            @key = key
+            @value = value
           end
 
           attr_reader :key # :nodoc:
@@ -212,58 +212,58 @@ module RGeo
             @values = []
           end
 
-          def <<(value_)  # :nodoc:
-            @values << value_
+          def <<(value)  # :nodoc:
+            @values << value
           end
 
           def assert_empty # :nodoc:
             if @values.size > 0
-              names_ = @values.map do |val_|
-                val_.is_a?(Base) ? val_._wkt_typename : val_.inspect
+              names = @values.map do |val|
+                val.is_a?(Base) ? val._wkt_typename : val.inspect
               end
-              raise Error::ParseError, "#{@values.size} unexpected arguments: #{names_.join(', ')}"
+              raise Error::ParseError, "#{@values.size} unexpected arguments: #{names.join(', ')}"
             end
           end
 
-          def find_first(klass_) # :nodoc:
-            @values.each_with_index do |val_, index_|
-              if val_.is_a?(klass_)
-                @values.slice!(index_)
-                return val_
+          def find_first(klass) # :nodoc:
+            @values.each_with_index do |val, index|
+              if val.is_a?(klass)
+                @values.slice!(index)
+                return val
               end
             end
             nil
           end
 
-          def find_all(klass_)  # :nodoc:
-            results_ = []
-            nvalues_ = []
-            @values.each do |val_|
-              if val_.is_a?(klass_)
-                results_ << val_
+          def find_all(klass)  # :nodoc:
+            results = []
+            nvalues = []
+            @values.each do |val|
+              if val.is_a?(klass)
+                results << val
               else
-                nvalues_ << val_
+                nvalues << val
               end
             end
-            @values = nvalues_
-            results_
+            @values = nvalues
+            results
           end
 
           def create_optionals  # :nodoc:
-            hash_ = {}
-            find_all(ExtensionClause).each { |ec_| hash_[ec_.key] = ec_.value }
-            (find_first(AuthorityClause) || [nil, nil]).to_a + [nil, nil, nil, hash_]
+            hash = {}
+            find_all(ExtensionClause).each { |ec| hash[ec.key] = ec.value }
+            (find_first(AuthorityClause) || [nil, nil]).to_a + [nil, nil, nil, hash]
           end
 
-          def shift(klass_ = nil) # :nodoc:
-            val_ = @values.shift
-            unless val_
-              raise Error::ParseError, "No arguments left... expected #{klass_}"
+          def shift(klass = nil) # :nodoc:
+            val = @values.shift
+            unless val
+              raise Error::ParseError, "No arguments left... expected #{klass}"
             end
-            if klass_ && !val_.is_a?(klass_)
-              raise Error::ParseError, "Expected #{klass_} but got #{val_.class}"
+            if klass && !val.is_a?(klass)
+              raise Error::ParseError, "Expected #{klass} but got #{val.class}"
             end
-            val_
+            val
           end
         end
       end

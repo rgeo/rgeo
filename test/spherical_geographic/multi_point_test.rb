@@ -9,8 +9,8 @@ require "test_helper"
 class SphericalMultiPointTest < Test::Unit::TestCase # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
-  def create_factory(opts_ = {})
-    @factory = RGeo::Geographic.spherical_factory(opts_)
+  def create_factory(opts = {})
+    @factory = RGeo::Geographic.spherical_factory(opts)
   end
 
   undef_method :test_fully_equal

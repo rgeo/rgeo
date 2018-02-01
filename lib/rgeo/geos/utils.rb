@@ -8,14 +8,14 @@ module RGeo
   module Geos
     module Utils # :nodoc:
       class << self
-        def ffi_coord_seqs_equal?(cs1_, cs2_, check_z_)
-          len1_ = cs1_.length
-          len2_ = cs2_.length
-          if len1_ == len2_
-            (0...len1_).each do |i_|
-              return false unless cs1_.get_x(i_) == cs2_.get_x(i_) &&
-                cs1_.get_y(i_) == cs2_.get_y(i_) &&
-                (!check_z_ || cs1_.get_z(i_) == cs2_.get_z(i_))
+        def ffi_coord_seqs_equal?(cs1, cs2, check_z)
+          len1 = cs1.length
+          len2 = cs2.length
+          if len1 == len2
+            (0...len1).each do |i|
+              return false unless cs1.get_x(i) == cs2.get_x(i) &&
+                cs1.get_y(i) == cs2.get_y(i) &&
+                (!check_z || cs1.get_z(i) == cs2.get_z(i))
             end
             true
           else
@@ -23,33 +23,33 @@ module RGeo
           end
         end
 
-        def ffi_compute_dimension(geom_)
-          result_ = -1
-          case geom_.type_id
+        def ffi_compute_dimension(geom)
+          result = -1
+          case geom.type_id
           when ::Geos::GeomTypes::GEOS_POINT
-            result_ = 0
+            result = 0
           when ::Geos::GeomTypes::GEOS_MULTIPOINT
-            result_ = 0 unless geom_.empty?
+            result = 0 unless geom.empty?
           when ::Geos::GeomTypes::GEOS_LINESTRING, ::Geos::GeomTypes::GEOS_LINEARRING
-            result_ = 1
+            result = 1
           when ::Geos::GeomTypes::GEOS_MULTILINESTRING
-            result_ = 1 unless geom_.empty?
+            result = 1 unless geom.empty?
           when ::Geos::GeomTypes::GEOS_POLYGON
-            result_ = 2
+            result = 2
           when ::Geos::GeomTypes::GEOS_MULTIPOLYGON
-            result_ = 2 unless geom_.empty?
+            result = 2 unless geom.empty?
           when ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
-            geom_.each do |g_|
-              dim_ = ffi_compute_dimension(g_)
-              result_ = dim_ if result_ < dim_
+            geom.each do |g|
+              dim = ffi_compute_dimension(g)
+              result = dim if result < dim
             end
           end
-          result_
+          result
         end
 
-        def ffi_coord_seq_hash(cs_, hash_ = 0)
-          (0...cs_.length).inject(hash_) do |_h_, i_|
-            [hash_, cs_.get_x(i_), cs_.get_y(i_), cs_.get_z(i_)].hash
+        def ffi_coord_seq_hash(cs, hash = 0)
+          (0...cs.length).inject(hash) do |h, i|
+            [hash, cs.get_x(i), cs.get_y(i), cs.get_z(i)].hash
           end
         end
 

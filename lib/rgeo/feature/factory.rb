@@ -72,21 +72,21 @@ module RGeo
       #   information is present about whether the coordinate system is
       #   meant to be so interpreted.
 
-      def property(_name_)
+      def property(name)
         nil
       end
 
       # Parse the given string in well-known-text format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
 
-      def parse_wkt(_str_)
+      def parse_wkt(str)
         nil
       end
 
       # Parse the given string in well-known-binary format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
 
-      def parse_wkb(_str_)
+      def parse_wkb(str)
         nil
       end
 
@@ -97,7 +97,7 @@ module RGeo
       # supported. If both Z and M coordinates are supported, Z should
       # be passed first.
 
-      def point(_x_, _y_, *_extra_)
+      def point(x, y, *extra)
         nil
       end
 
@@ -110,7 +110,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def line_string(_points_)
+      def line_string(points)
         nil
       end
 
@@ -123,7 +123,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def line(_start_, _end_)
+      def line(start, stop)
         nil
       end
 
@@ -139,7 +139,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def linear_ring(_points_)
+      def linear_ring(points)
         nil
       end
 
@@ -155,7 +155,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def polygon(_outer_ring_, _inner_rings_ = nil)
+      def polygon(outer_ring, inner_rings = nil)
         nil
       end
 
@@ -167,7 +167,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def collection(_elems_)
+      def collection(elems)
         nil
       end
 
@@ -182,7 +182,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def multi_point(_elems_)
+      def multi_point(elems)
         nil
       end
 
@@ -197,7 +197,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def multi_line_string(_elems_)
+      def multi_line_string(elems)
         nil
       end
 
@@ -214,7 +214,7 @@ module RGeo
       # result of building geometries from objects of the wrong factory
       # is undefined.
 
-      def multi_polygon(_elems_)
+      def multi_polygon(elems)
         nil
       end
 
@@ -270,7 +270,7 @@ module RGeo
       # algorithm to cast the object. Therefore, by default, you should
       # return false.
 
-      def override_cast(_original_, _type_, _flags_)
+      def override_cast(original, type, flags)
         false
       end
     end

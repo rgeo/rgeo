@@ -112,30 +112,30 @@ module RGeo
       #   Default is the empty hash, indicating the default configuration
       #   for WKRep::WKBGenerator.
 
-      def spherical_factory(opts_ = {})
-        proj4_ = opts_[:proj4]
-        coord_sys_ = opts_[:coord_sys]
-        srid_ = opts_[:srid]
-        if (!proj4_ || !coord_sys_) && srid_ && (db_ = opts_[:srs_database])
-          entry_ = db_.get(srid_.to_i)
+      def spherical_factory(opts = {})
+        proj4 = opts[:proj4]
+        coord_sys = opts[:coord_sys]
+        srid = opts[:srid]
+        if (!proj4 || !coord_sys) && srid && (db_ = opts[:srs_database])
+          entry_ = db_.get(srid.to_i)
           if entry_
-            proj4_ ||= entry_.proj4
-            coord_sys_ ||= entry_.coord_sys
+            proj4 ||= entry_.proj4
+            coord_sys ||= entry_.coord_sys
           end
         end
-        srid_ ||= coord_sys_.authority_code if coord_sys_
+        srid ||= coord_sys.authority_code if coord_sys
         Geographic::Factory.new("Spherical",
-          has_z_coordinate: opts_[:has_z_coordinate],
-          has_m_coordinate: opts_[:has_m_coordinate],
-          proj4: proj4_ || _proj4_4055,
-          coord_sys: coord_sys_ || _coordsys_4055,
-          uses_lenient_assertions: opts_[:uses_lenient_assertions],
-          buffer_resolution: opts_[:buffer_resolution],
-          wkt_parser: opts_[:wkt_parser],
-          wkb_parser: opts_[:wkb_parser],
-          wkt_generator: opts_[:wkt_generator],
-          wkb_generator: opts_[:wkb_generator],
-          srid: (srid_ || 4055).to_i)
+          has_z_coordinate: opts[:has_z_coordinate],
+          has_m_coordinate: opts[:has_m_coordinate],
+          proj4: proj4 || _proj44055,
+          coord_sys: coord_sys || _coordsys_4055,
+          uses_lenient_assertions: opts[:uses_lenient_assertions],
+          buffer_resolution: opts[:buffer_resolution],
+          wkt_parser: opts[:wkt_parser],
+          wkb_parser: opts[:wkb_parser],
+          wkt_generator: opts[:wkt_generator],
+          wkb_generator: opts[:wkb_generator],
+          srid: (srid || 4055).to_i)
       end
 
       # Creates and returns a geographic factory that is designed for
@@ -210,25 +210,25 @@ module RGeo
       # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
 
-      def simple_mercator_factory(opts_ = {})
-        factory_ = Geographic::Factory.new("Projected",
-          proj4: _proj4_4326,
+      def simple_mercator_factory(opts = {})
+        factory = Geographic::Factory.new("Projected",
+          proj4: _proj44326,
           coord_sys: _coordsys_4326,
           srid: 4326,
-          wkt_parser: opts_[:wkt_parser],
-          wkb_parser: opts_[:wkb_parser],
-          wkt_generator: opts_[:wkt_generator],
-          wkb_generator: opts_[:wkb_generator],
-          has_z_coordinate: opts_[:has_z_coordinate],
-          has_m_coordinate: opts_[:has_m_coordinate])
-        projector_ = Geographic::SimpleMercatorProjector.new(factory_,
-          buffer_resolution: opts_[:buffer_resolution],
-          lenient_multi_polygon_assertions: opts_[:lenient_multi_polygon_assertions],
-          uses_lenient_assertions: opts_[:uses_lenient_assertions],
-          has_z_coordinate: opts_[:has_z_coordinate],
-          has_m_coordinate: opts_[:has_m_coordinate])
-        factory_._set_projector(projector_)
-        factory_
+          wkt_parser: opts[:wkt_parser],
+          wkb_parser: opts[:wkb_parser],
+          wkt_generator: opts[:wkt_generator],
+          wkb_generator: opts[:wkb_generator],
+          has_z_coordinate: opts[:has_z_coordinate],
+          has_m_coordinate: opts[:has_m_coordinate])
+        projector = Geographic::SimpleMercatorProjector.new(factory,
+          buffer_resolution: opts[:buffer_resolution],
+          lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
+          uses_lenient_assertions: opts[:uses_lenient_assertions],
+          has_z_coordinate: opts[:has_z_coordinate],
+          has_m_coordinate: opts[:has_m_coordinate])
+        factory._set_projector(projector)
+        factory
       end
 
       # Creates and returns a geographic factory that includes a
@@ -343,123 +343,123 @@ module RGeo
       # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
       # more details.
 
-      def projected_factory(opts_ = {})
+      def projected_factory(opts = {})
         CoordSys.check!(:proj4)
-        db_ = opts_[:srs_database]
-        if (projection_factory_ = opts_[:projection_factory])
+        db_ = opts[:srs_database]
+        if (projection_factory = opts[:projection_factory])
           # Get the projection coordinate systems from the given factory
-          projection_proj4_ = projection_factory_.proj4
-          unless projection_proj4_
+          projection_proj4 = projection_factory.proj4
+          unless projection_proj4
             raise ::ArgumentError, "The :projection_factory does not have a proj4."
           end
-          projection_coord_sys_ = projection_factory_.coord_sys
-          if projection_coord_sys_ && !projection_coord_sys_.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
+          projection_coord_sys = projection_factory.coord_sys
+          if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
             raise ::ArgumentError, 'The :projection_factory\'s coord_sys is not a ProjectedCoordinateSystem.'
           end
           # Determine geographic coordinate system. First check parameters.
-          proj4_ = opts_[:proj4]
-          coord_sys_ = opts_[:coord_sys]
-          srid_ = opts_[:srid]
+          proj4 = opts[:proj4]
+          coord_sys = opts[:coord_sys]
+          srid = opts[:srid]
           # Lookup srid from srs database if needed
-          if (!proj4_ || !coord_sys_) && srid_ && db_
-            entry_ = db_.get(srid_.to_i)
+          if (!proj4 || !coord_sys) && srid && db_
+            entry_ = db_.get(srid.to_i)
             if entry_
-              proj4_ ||= entry_.proj4
-              coord_sys_ ||= entry_.coord_sys
+              proj4 ||= entry_.proj4
+              coord_sys ||= entry_.coord_sys
             end
           end
           # Fall back to getting the values from the projection.
-          proj4_ ||= projection_proj4_.get_geographic || _proj4_4326
-          coord_sys_ ||= projection_coord_sys_.geographic_coordinate_system if projection_coord_sys_
-          srid_ ||= coord_sys_.authority_code if coord_sys_
-          srid_ ||= 4326
+          proj4 ||= projection_proj4.get_geographic || _proj44326
+          coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
+          srid ||= coord_sys.authority_code if coord_sys
+          srid ||= 4326
           # Now we should have all the coordinate system info.
-          factory_ = Geographic::Factory.new("Projected",
-            proj4: proj4_,
-            coord_sys: coord_sys_,
-            srid: srid_.to_i,
-            has_z_coordinate: projection_factory_.property(:has_z_coordinate),
-            has_m_coordinate: projection_factory_.property(:has_m_coordinate),
-            wkt_parser: opts_[:wkt_parser], wkt_generator: opts_[:wkt_generator],
-            wkb_parser: opts_[:wkb_parser], wkb_generator: opts_[:wkb_generator])
-          projector_ = Geographic::Proj4Projector.create_from_existing_factory(factory_,
-            projection_factory_)
+          factory = Geographic::Factory.new("Projected",
+            proj4: proj4,
+            coord_sys: coord_sys,
+            srid: srid.to_i,
+            has_z_coordinate: projection_factory.property(:has_z_coordinate),
+            has_m_coordinate: projection_factory.property(:has_m_coordinate),
+            wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
+          projector = Geographic::Proj4Projector.create_from_existing_factory(factory,
+            projection_factory)
         else
           # Determine projection coordinate system. First check the parameters.
-          projection_proj4_ = opts_[:projection_proj4]
-          projection_coord_sys_ = opts_[:projection_coord_sys]
-          projection_srid_ = opts_[:projection_srid]
+          projection_proj4 = opts[:projection_proj4]
+          projection_coord_sys = opts[:projection_coord_sys]
+          projection_srid = opts[:projection_srid]
           # Check the case where we need to look up a srid from an srs database.
-          if (!projection_proj4_ || !projection_coord_sys_) && projection_srid_ && db_
-            entry_ = db_.get(projection_srid_.to_i)
+          if (!projection_proj4 || !projection_coord_sys) && projection_srid && db_
+            entry_ = db_.get(projection_srid.to_i)
             if entry_
-              projection_proj4_ ||= entry_.proj4
-              projection_coord_sys_ ||= entry_.coord_sys
+              projection_proj4 ||= entry_.proj4
+              projection_coord_sys ||= entry_.coord_sys
             end
           end
           # A projection proj4 is absolutely required.
-          unless projection_proj4_
+          unless projection_proj4
             raise ::ArgumentError, "Unable to determine the Proj4 for the projected coordinate system."
           end
           # Check the projection coordinate systems, and parse if needed.
-          if projection_proj4_.is_a?(::String) || projection_proj4_.is_a?(::Hash)
-            actual_projection_proj4_ = CoordSys::Proj4.create(projection_proj4_)
-            unless actual_projection_proj4_
-              raise ::ArgumentError, "Bad proj4 syntax: #{projection_proj4_.inspect}"
+          if projection_proj4.is_a?(::String) || projection_proj4.is_a?(::Hash)
+            actual_projection_proj4 = CoordSys::Proj4.create(projection_proj4)
+            unless actual_projection_proj4
+              raise ::ArgumentError, "Bad proj4 syntax: #{projection_proj4.inspect}"
             end
-            projection_proj4_ = actual_projection_proj4_
+            projection_proj4 = actual_projection_proj4
           end
-          if projection_coord_sys_ && !projection_coord_sys_.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
+          if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
             raise ::ArgumentError, "The :projection_coord_sys is not a ProjectedCoordinateSystem."
           end
-          projection_srid_ ||= projection_coord_sys_.authority_code if projection_coord_sys_
+          projection_srid ||= projection_coord_sys.authority_code if projection_coord_sys
           # Determine geographic coordinate system. First check parameters.
-          proj4_ = opts_[:proj4]
-          coord_sys_ = opts_[:coord_sys]
-          srid_ = opts_[:srid]
+          proj4 = opts[:proj4]
+          coord_sys = opts[:coord_sys]
+          srid = opts[:srid]
           # Lookup srid from srs database if needed
-          if (!proj4_ || !coord_sys_) && srid_ && db_
-            entry_ = db_.get(srid_.to_i)
+          if (!proj4 || !coord_sys) && srid && db_
+            entry_ = db_.get(srid.to_i)
             if entry_
-              proj4_ ||= entry_.proj4
-              coord_sys_ ||= entry_.coord_sys
+              proj4 ||= entry_.proj4
+              coord_sys ||= entry_.coord_sys
             end
           end
           # Fall back to getting the values from the projection.
-          proj4_ ||= projection_proj4_.get_geographic || _proj4_4326
-          coord_sys_ ||= projection_coord_sys_.geographic_coordinate_system if projection_coord_sys_
-          srid_ ||= coord_sys_.authority_code if coord_sys_
-          srid_ ||= 4326
+          proj4 ||= projection_proj4.get_geographic || _proj44326
+          coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
+          srid ||= coord_sys.authority_code if coord_sys
+          srid ||= 4326
           # Now we should have all the coordinate system info.
-          factory_ = Geographic::Factory.new("Projected",
-            proj4: proj4_,
-            coord_sys: coord_sys_,
-            srid: srid_.to_i,
-            has_z_coordinate: opts_[:has_z_coordinate],
-            has_m_coordinate: opts_[:has_m_coordinate],
-            wkt_parser: opts_[:wkt_parser], wkt_generator: opts_[:wkt_generator],
-            wkb_parser: opts_[:wkb_parser], wkb_generator: opts_[:wkb_generator])
-          projector_ = Geographic::Proj4Projector.create_from_proj4(factory_,
-            projection_proj4_,
-            srid: projection_srid_,
-            coord_sys: projection_coord_sys_,
-            buffer_resolution: opts_[:buffer_resolution],
-            lenient_multi_polygon_assertions: opts_[:lenient_multi_polygon_assertions],
-            uses_lenient_assertions: opts_[:uses_lenient_assertions],
-            has_z_coordinate: opts_[:has_z_coordinate],
-            has_m_coordinate: opts_[:has_m_coordinate],
-            wkt_parser: opts_[:wkt_parser], wkt_generator: opts_[:wkt_generator],
-            wkb_parser: opts_[:wkb_parser], wkb_generator: opts_[:wkb_generator])
+          factory = Geographic::Factory.new("Projected",
+            proj4: proj4,
+            coord_sys: coord_sys,
+            srid: srid.to_i,
+            has_z_coordinate: opts[:has_z_coordinate],
+            has_m_coordinate: opts[:has_m_coordinate],
+            wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
+          projector = Geographic::Proj4Projector.create_from_proj4(factory,
+            projection_proj4,
+            srid: projection_srid,
+            coord_sys: projection_coord_sys,
+            buffer_resolution: opts[:buffer_resolution],
+            lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
+            uses_lenient_assertions: opts[:uses_lenient_assertions],
+            has_z_coordinate: opts[:has_z_coordinate],
+            has_m_coordinate: opts[:has_m_coordinate],
+            wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
         end
-        factory_._set_projector(projector_)
-        factory_
+        factory._set_projector(projector)
+        factory
       end
 
-      def _proj4_4055 # :nodoc:
-        unless defined?(@proj4_4055)
-          @proj4_4055 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
+      def _proj44055 # :nodoc:
+        unless defined?(@proj44055)
+          @proj44055 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
         end
-        @proj4_4055
+        @proj44055
       end
 
       def _coordsys_4055 # :nodoc:
@@ -469,11 +469,11 @@ module RGeo
         @coordsys_4055
       end
 
-      def _proj4_4326 # :nodoc:
-        unless defined?(@proj4_4326)
-          @proj4_4326 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+      def _proj44326 # :nodoc:
+        unless defined?(@proj44326)
+          @proj44326 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
         end
-        @proj4_4326
+        @proj44326
       end
 
       def _coordsys_4326 # :nodoc:

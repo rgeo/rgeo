@@ -7,12 +7,12 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicLineStringMethods # :nodoc:
-      def initialize(factory_, points_)
-        _set_factory(factory_)
-        @points = points_.map do |elem_|
-          elem_ = Feature.cast(elem_, factory_, Feature::Point)
-          raise Error::InvalidGeometry, "Could not cast #{elem_}" unless elem_
-          elem_
+      def initialize(factory, points)
+        _set_factory(factory)
+        @points = points.map do |elem|
+          elem = Feature.cast(elem, factory, Feature::Point)
+          raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
+          elem
         end
         _validate_geometry
       end
@@ -27,8 +27,8 @@ module RGeo
         @points.size
       end
 
-      def point_n(n_)
-        n_ < 0 ? nil : @points[n_]
+      def point_n(n)
+        n < 0 ? nil : @points[n]
       end
 
       def points
@@ -48,9 +48,9 @@ module RGeo
       end
 
       def boundary
-        array_ = []
-        array_ << @points.first << @points.last if !is_empty? && !is_closed?
-        factory.multi_point([array_])
+        array = []
+        array << @points.first << @points.last if !is_empty? && !is_closed?
+        factory.multipoint([array])
       end
 
       def start_point
@@ -72,9 +72,9 @@ module RGeo
         is_closed? && is_simple?
       end
 
-      def rep_equals?(rhs_)
-        if rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @points.size == rhs_.num_points
-          rhs_.points.each_with_index { |p_, i_| return false unless @points[i_].rep_equals?(p_) }
+      def rep_equals?(rhs)
+        if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @points.size == rhs.num_points
+          rhs.points.each_with_index { |p, i| return false unless @points[i].rep_equals?(p) }
         else
           false
         end
@@ -82,14 +82,14 @@ module RGeo
 
       def hash
         @hash ||= begin
-          hash_ = [factory, geometry_type].hash
-          @points.inject(hash_) { |h_, p_| (1_664_525 * h_ + p_.hash).hash }
+          hash = [factory, geometry_type].hash
+          @points.inject(hash) { |h, p| (1_664_525 * h + p.hash).hash }
         end
       end
 
-      def _copy_state_from(obj_) # :nodoc:
+      def _copy_state_from(obj) # :nodoc:
         super
-        @points = obj_.points
+        @points = obj.points
       end
 
       def coordinates
@@ -98,15 +98,15 @@ module RGeo
     end
 
     module BasicLineMethods # :nodoc:
-      def initialize(factory_, start_, end_)
-        _set_factory(factory_)
-        cstart_ = Feature.cast(start_, factory_, Feature::Point)
-        unless cstart_
-          raise Error::InvalidGeometry, "Could not cast start: #{start_}"
+      def initialize(factory, start, stop)
+        _set_factory(factory)
+        cstart = Feature.cast(start, factory, Feature::Point)
+        unless cstart
+          raise Error::InvalidGeometry, "Could not cast start: #{start}"
         end
-        cend_ = Feature.cast(end_, factory_, Feature::Point)
-        raise Error::InvalidGeometry, "Could not cast end: #{end_}" unless cend_
-        @points = [cstart_, cend_]
+        cstop = Feature.cast(stop, factory, Feature::Point)
+        raise Error::InvalidGeometry, "Could not cast end: #{stop}" unless cstop
+        @points = [cstart, cstop]
         _validate_geometry
       end
 

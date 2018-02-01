@@ -9,12 +9,12 @@ module RGeo
     module FFIGeometryMethods # :nodoc:
       include Feature::Instance
 
-      def initialize(factory_, fg_geom_, klasses_)
-        @factory = factory_
-        @fg_geom = fg_geom_
-        @_fg_prep = factory_._auto_prepare ? 1 : 0
-        @_klasses = klasses_
-        fg_geom_.srid = factory_.srid
+      def initialize(factory, fg_geom, klasses)
+        @factory = factory
+        @fg_geom = fg_geom
+        @_fg_prep = factory._auto_prepare ? 1 : 0
+        @_klasses = klasses
+        fg_geom.srid = factory.srid
       end
 
       def inspect
@@ -27,9 +27,9 @@ module RGeo
         [@factory, @factory._write_for_marshal(self)]
       end
 
-      def marshal_load(data_) # :nodoc:
-        @factory = data_[0]
-        @fg_geom = @factory._read_for_marshal(data_[1])
+      def marshal_load(data) # :nodoc:
+        @factory = data[0]
+        @fg_geom = @factory._read_for_marshal(data[1])
         @fg_geom.srid = @factory.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = nil
@@ -37,16 +37,16 @@ module RGeo
 
       # Psych support
 
-      def encode_with(coder_) # :nodoc:
-        coder_["factory"] = @factory
-        str_ = @factory._write_for_psych(self)
-        str_ = str_.encode("US-ASCII") if str_.respond_to?(:encode)
-        coder_["wkt"] = str_
+      def encode_with(coder) # :nodoc:
+        coder["factory"] = @factory
+        str = @factory._write_for_psych(self)
+        str = str.encode("US-ASCII") if str.respond_to?(:encode)
+        coder["wkt"] = str
       end
 
-      def init_with(coder_)  # :nodoc:
-        @factory = coder_["factory"]
-        @fg_geom = @factory._read_for_psych(coder_["wkt"])
+      def init_with(coder)  # :nodoc:
+        @factory = coder["factory"]
+        @fg_geom = @factory._read_for_psych(coder["wkt"])
         @fg_geom.srid = @factory.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = nil
@@ -57,12 +57,12 @@ module RGeo
 
       attr_reader :_klasses  # :nodoc:
 
-      def initialize_copy(orig_)
-        @factory = orig_.factory
-        @fg_geom = orig_.fg_geom.clone
-        @fg_geom.srid = orig_.fg_geom.srid
+      def initialize_copy(orig)
+        @factory = orig.factory
+        @fg_geom = orig.fg_geom.clone
+        @fg_geom.srid = orig.fg_geom.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
-        @_klasses = orig_._klasses
+        @_klasses = orig._klasses
       end
 
       def srid
@@ -101,9 +101,9 @@ module RGeo
       end
 
       def as_text
-        str_ = @factory._generate_wkt(self)
-        str_.force_encoding("US-ASCII") if str_.respond_to?(:force_encoding)
-        str_
+        str = @factory._generate_wkt(self)
+        str.force_encoding("US-ASCII") if str.respond_to?(:force_encoding)
+        str
       end
       alias to_s as_text
 
@@ -119,120 +119,120 @@ module RGeo
         @fg_geom.simple?
       end
 
-      def equals?(rhs_)
-        return false unless rhs_.is_a?(RGeo::Feature::Instance)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if !fg_
+      def equals?(rhs)
+        return false unless rhs.is_a?(RGeo::Feature::Instance)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if !fg
           false
         # GEOS has a bug where empty geometries are not spatially equal
         # to each other. Work around this case first.
-        elsif fg_.empty? && @fg_geom.empty?
+        elsif fg.empty? && @fg_geom.empty?
           true
         else
-          @fg_geom.eql?(fg_)
+          @fg_geom.eql?(fg)
         end
       end
       alias == equals?
 
-      def disjoint?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
-          prep_ ? prep_.disjoint?(fg_) : @fg_geom.disjoint?(fg_)
+      def disjoint?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep ? prep.disjoint?(fg) : @fg_geom.disjoint?(fg)
         else
           false
         end
       end
 
-      def intersects?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_1
-          prep_ ? prep_.intersects?(fg_) : @fg_geom.intersects?(fg_)
+      def intersects?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_1
+          prep ? prep.intersects?(fg) : @fg_geom.intersects?(fg)
         else
           false
         end
       end
 
-      def touches?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
-          prep_ ? prep_.touches?(fg_) : @fg_geom.touches?(fg_)
+      def touches?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep ? prep.touches?(fg) : @fg_geom.touches?(fg)
         else
           false
         end
       end
 
-      def crosses?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
-          prep_ ? prep_.crosses?(fg_) : @fg_geom.crosses?(fg_)
+      def crosses?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep ? prep.crosses?(fg) : @fg_geom.crosses?(fg)
         else
           false
         end
       end
 
-      def within?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
-          prep_ ? prep_.within?(fg_) : @fg_geom.within?(fg_)
+      def within?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep ? prep.within?(fg) : @fg_geom.within?(fg)
         else
           false
         end
       end
 
-      def contains?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_1
-          prep_ ? prep_.contains?(fg_) : @fg_geom.contains?(fg_)
+      def contains?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_1
+          prep ? prep.contains?(fg) : @fg_geom.contains?(fg)
         else
           false
         end
       end
 
-      def overlaps?(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        if fg_
-          prep_ = _request_prepared if Utils.ffi_supports_prepared_level_2
-          prep_ ? prep_.overlaps?(fg_) : @fg_geom.overlaps?(fg_)
+      def overlaps?(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        if fg
+          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep ? prep.overlaps?(fg) : @fg_geom.overlaps?(fg)
         else
           false
         end
       end
 
-      def relate?(rhs_, pattern_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.relate_pattern(fg_, pattern_) : nil
+      def relate?(rhs, pattern)
+        fg = factory._convert_to_fg_geometry(rhs)
+        fg ? @fg_geom.relate_pattern(fg, pattern) : nil
       end
       alias relate relate? # DEPRECATED
 
-      def distance(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @fg_geom.distance(fg_) : nil
+      def distance(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        fg ? @fg_geom.distance(fg) : nil
       end
 
-      def buffer(distance_)
-        @factory._wrap_fg_geom(@fg_geom.buffer(distance_, @factory.buffer_resolution), nil)
+      def buffer(distance)
+        @factory._wrap_fg_geom(@fg_geom.buffer(distance, @factory.buffer_resolution), nil)
       end
 
       def convex_hull
         @factory._wrap_fg_geom(@fg_geom.convex_hull, nil)
       end
 
-      def intersection(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory._wrap_fg_geom(@fg_geom.intersection(fg_), nil) : nil
+      def intersection(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        fg ? @factory._wrap_fg_geom(@fg_geom.intersection(fg), nil) : nil
       end
 
       alias * intersection
 
-      def union(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory._wrap_fg_geom(@fg_geom.union(fg_), nil) : nil
+      def union(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        fg ? @factory._wrap_fg_geom(@fg_geom.union(fg), nil) : nil
       end
 
       alias + union
@@ -242,26 +242,26 @@ module RGeo
         @factory.wrap_fg_geom(@fg_geom.unary_union)
       end
 
-      def difference(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory._wrap_fg_geom(@fg_geom.difference(fg_), nil) : nil
+      def difference(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        fg ? @factory._wrap_fg_geom(@fg_geom.difference(fg), nil) : nil
       end
 
       alias - difference
 
-      def sym_difference(rhs_)
-        fg_ = factory._convert_to_fg_geometry(rhs_)
-        fg_ ? @factory._wrap_fg_geom(@fg_geom.sym_difference(fg_), nil) : nil
+      def sym_difference(rhs)
+        fg = factory._convert_to_fg_geometry(rhs)
+        fg ? @factory._wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
       end
 
-      def eql?(rhs_)
-        rep_equals?(rhs_)
+      def eql?(rhs)
+        rep_equals?(rhs)
       end
 
       def _detach_fg_geom # :nodoc:
-        fg_ = @fg_geom
+        fg = @fg_geom
         @fg_geom = nil
-        fg_
+        fg
       end
 
       def _request_prepared # :nodoc:
@@ -300,9 +300,9 @@ module RGeo
         Feature::Point
       end
 
-      def rep_equals?(rhs_)
-        rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
-          Utils.ffi_coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
+      def rep_equals?(rhs)
+        rhs.class == self.class && rhs.factory.eql?(@factory) &&
+          Utils.ffi_coord_seqs_equal?(rhs.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
 
       def hash
@@ -330,13 +330,13 @@ module RGeo
         @fg_geom.num_points
       end
 
-      def point_n(n_)
-        if n_ >= 0 && n_ < @fg_geom.num_points
-          coord_seq_ = @fg_geom.coord_seq
-          x_ = coord_seq_.get_x(n_)
-          y_ = coord_seq_.get_y(n_)
-          extra_ = @factory._has_3d ? [coord_seq_.get_z(n_)] : []
-          @factory.point(x_, y_, *extra_)
+      def point_n(n)
+        if n >= 0 && n < @fg_geom.num_points
+          coord_seq = @fg_geom.coord_seq
+          x = coord_seq.get_x(n)
+          y = coord_seq.get_y(n)
+          extra = @factory._has_3d ? [coord_seq.get_z(n)] : []
+          @factory.point(x, y, *extra)
         end
       end
 
@@ -349,13 +349,13 @@ module RGeo
       end
 
       def points
-        coord_seq_ = @fg_geom.coord_seq
-        has_3d_ = @factory._has_3d
-        ::Array.new(@fg_geom.num_points) do |n_|
-          x_ = coord_seq_.get_x(n_)
-          y_ = coord_seq_.get_y(n_)
-          extra_ = has_3d_ ? [coord_seq_.get_z(n_)] : []
-          @factory.point(x_, y_, *extra_)
+        coord_seq = @fg_geom.coord_seq
+        has_3d = @factory._has_3d
+        ::Array.new(@fg_geom.num_points) do |n|
+          x = coord_seq.get_x(n)
+          y = coord_seq.get_y(n)
+          extra = has_3d ? [coord_seq.get_z(n)] : []
+          @factory.point(x, y, *extra)
         end
       end
 
@@ -367,9 +367,9 @@ module RGeo
         @fg_geom.ring?
       end
 
-      def rep_equals?(rhs_)
-        rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
-          Utils.ffi_coord_seqs_equal?(rhs_.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
+      def rep_equals?(rhs)
+        rhs.class == self.class && rhs.factory.eql?(@factory) &&
+          Utils.ffi_coord_seqs_equal?(rhs.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
 
       def hash
@@ -418,26 +418,26 @@ module RGeo
         @fg_geom.num_interior_rings
       end
 
-      def interior_ring_n(n_)
-        if n_ >= 0 && n_ < @fg_geom.num_interior_rings
-          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n_), FFILinearRingImpl)
+      def interior_ring_n(n)
+        if n >= 0 && n < @fg_geom.num_interior_rings
+          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
 
       def interior_rings
-        ::Array.new(@fg_geom.num_interior_rings) do |n_|
-          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n_), FFILinearRingImpl)
+        ::Array.new(@fg_geom.num_interior_rings) do |n|
+          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
 
-      def rep_equals?(rhs_)
-        if rhs_.class == self.class && rhs_.factory.eql?(@factory) &&
-          rhs_.exterior_ring.rep_equals?(exterior_ring)
-          sn_ = @fg_geom.num_interior_rings
-          rn_ = rhs_.num_interior_rings
-          if sn_ == rn_
-            sn_.times do |i_|
-              return false unless interior_ring_n(i_).rep_equals?(rhs_.interior_ring_n(i_))
+      def rep_equals?(rhs)
+        if rhs.class == self.class && rhs.factory.eql?(@factory) &&
+          rhs.exterior_ring.rep_equals?(exterior_ring)
+          sn = @fg_geom.num_interior_rings
+          rn = rhs.num_interior_rings
+          if sn == rn
+            sn.times do |i|
+              return false unless interior_ring_n(i).rep_equals?(rhs.interior_ring_n(i))
             end
             return true
           end
@@ -447,10 +447,10 @@ module RGeo
 
       def hash
         @hash ||= begin
-          hash_ = Utils.ffi_coord_seq_hash(@fg_geom.exterior_ring.coord_seq,
+          hash = Utils.ffi_coord_seq_hash(@fg_geom.exterior_ring.coord_seq,
             [@factory, geometry_type].hash)
-          @fg_geom.interior_rings.inject(hash_) do |h_, r_|
-            Utils.ffi_coord_seq_hash(r_.coord_seq, h_)
+          @fg_geom.interior_rings.inject(hash) do |h, r|
+            Utils.ffi_coord_seq_hash(r.coord_seq, h)
           end
         end
       end
@@ -465,12 +465,12 @@ module RGeo
         Feature::GeometryCollection
       end
 
-      def rep_equals?(rhs_)
-        if rhs_.class == self.class && rhs_.factory.eql?(@factory)
-          size_ = @fg_geom.num_geometries
-          if size_ == rhs_.num_geometries
-            size_.times do |n_|
-              return false unless geometry_n(n_).rep_equals?(rhs_.geometry_n(n_))
+      def rep_equals?(rhs)
+        if rhs.class == self.class && rhs.factory.eql?(@factory)
+          size = @fg_geom.num_geometries
+          if size == rhs.num_geometries
+            size.times do |n|
+              return false unless geometry_n(n).rep_equals?(rhs.geometry_n(n))
             end
             return true
           end
@@ -483,35 +483,35 @@ module RGeo
       end
       alias size num_geometries
 
-      def geometry_n(n_)
-        if n_ >= 0 && n_ < @fg_geom.num_geometries
-          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n_),
-            @_klasses ? @_klasses[n_] : nil)
+      def geometry_n(n)
+        if n >= 0 && n < @fg_geom.num_geometries
+          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+            @_klasses ? @_klasses[n] : nil)
         end
       end
 
-      def [](n_)
-        n_ += @fg_geom.num_geometries if n_ < 0
-        if n_ >= 0 && n_ < @fg_geom.num_geometries
-          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n_),
-            @_klasses ? @_klasses[n_] : nil)
+      def [](n)
+        n += @fg_geom.num_geometries if n < 0
+        if n >= 0 && n < @fg_geom.num_geometries
+          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+            @_klasses ? @_klasses[n] : nil)
         end
       end
 
       def hash
         @hash ||= begin
-          hash_ = [@factory, geometry_type].hash
-          (0...num_geometries).inject(hash_) do |h_, i_|
-            (1_664_525 * h_ + geometry_n(i_).hash).hash
+          hash = [@factory, geometry_type].hash
+          (0...num_geometries).inject(hash) do |h, i|
+            (1_664_525 * h + geometry_n(i).hash).hash
           end
         end
       end
 
       def each
         if block_given?
-          @fg_geom.num_geometries.times do |n_|
-            yield @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n_),
-              @_klasses ? @_klasses[n_] : nil)
+          @fg_geom.num_geometries.times do |n|
+            yield @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+              @_klasses ? @_klasses[n] : nil)
           end
           self
         else
@@ -542,9 +542,9 @@ module RGeo
       end
 
       def is_closed?
-        size_ = num_geometries
-        size_.times do |n_|
-          return false unless @fg_geom.get_geometry_n(n_).closed?
+        size = num_geometries
+        size.times do |n|
+          return false unless @fg_geom.get_geometry_n(n).closed?
         end
         true
       end

@@ -18,170 +18,170 @@ module RGeo
         end
 
         def test_creation_simple
-          geom_ = @factory.multi_point([@point1, @point2])
-          assert_not_nil(geom_)
-          assert(RGeo::Feature::MultiPoint === geom_)
-          assert_equal(RGeo::Feature::MultiPoint, geom_.geometry_type)
-          assert_equal(2, geom_.num_geometries)
-          assert(@point1.eql?(geom_[0]))
-          assert(@point2.eql?(geom_[1]))
+          geom = @factory.multi_point([@point1, @point2])
+          assert_not_nil(geom)
+          assert(RGeo::Feature::MultiPoint === geom)
+          assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
+          assert_equal(2, geom.num_geometries)
+          assert(@point1.eql?(geom[0]))
+          assert(@point2.eql?(geom[1]))
         end
 
         def test_creation_empty
-          geom_ = @factory.multi_point([])
-          assert_not_nil(geom_)
-          assert(RGeo::Feature::MultiPoint === geom_)
-          assert_equal(RGeo::Feature::MultiPoint, geom_.geometry_type)
-          assert_equal(0, geom_.num_geometries)
-          assert_equal([], geom_.to_a)
+          geom = @factory.multi_point([])
+          assert_not_nil(geom)
+          assert(RGeo::Feature::MultiPoint === geom)
+          assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
+          assert_equal(0, geom.num_geometries)
+          assert_equal([], geom.to_a)
         end
 
         def test_creation_casting
-          mp1_ = @factory.collection([@point3])
-          mp2_ = @factory.multi_point([@point4])
-          geom_ = @factory.multi_point([@point1, @point2, mp1_, mp2_])
-          assert_not_nil(geom_)
-          assert_equal(RGeo::Feature::MultiPoint, geom_.geometry_type)
-          assert_equal(4, geom_.num_geometries)
-          assert(@point1.eql?(geom_[0]))
-          assert(@point2.eql?(geom_[1]))
-          assert(@point3.eql?(geom_[2]))
-          assert(@point4.eql?(geom_[3]))
+          mp1 = @factory.collection([@point3])
+          mp2 = @factory.multi_point([@point4])
+          geom = @factory.multi_point([@point1, @point2, mp1, mp2])
+          assert_not_nil(geom)
+          assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
+          assert_equal(4, geom.num_geometries)
+          assert(@point1.eql?(geom[0]))
+          assert(@point2.eql?(geom[1]))
+          assert(@point3.eql?(geom[2]))
+          assert(@point4.eql?(geom[3]))
         end
 
         def test_creation_wrong_type
-          line_ = @factory.line_string([@point1, @point2])
-          geom_ = @factory.multi_point([@point3, line_])
-          assert_nil(geom_)
+          line = @factory.line_string([@point1, @point2])
+          geom = @factory.multi_point([@point3, line])
+          assert_nil(geom)
         end
 
         def test_required_equivalences
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1, @point2])
-          assert(geom1_.eql?(geom2_))
-          assert(geom1_ == geom2_)
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1, @point2])
+          assert(geom1.eql?(geom2))
+          assert(geom1 == geom2)
         end
 
         def test_fully_equal
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1, @point2])
-          assert(geom1_.rep_equals?(geom2_))
-          assert(geom1_.equals?(geom2_))
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1, @point2])
+          assert(geom1.rep_equals?(geom2))
+          assert(geom1.equals?(geom2))
         end
 
         def test_geometrically_equal
-          geom1_ = @factory.multi_point([@point1, @point4])
-          geom2_ = @factory.multi_point([@point1, @point4, @point5])
-          assert(!geom1_.rep_equals?(geom2_))
-          assert(geom1_.equals?(geom2_))
+          geom1 = @factory.multi_point([@point1, @point4])
+          geom2 = @factory.multi_point([@point1, @point4, @point5])
+          assert(!geom1.rep_equals?(geom2))
+          assert(geom1.equals?(geom2))
         end
 
         def test_not_equal
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1])
-          assert(!geom1_.rep_equals?(geom2_))
-          assert(!geom1_.equals?(geom2_))
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1])
+          assert(!geom1.rep_equals?(geom2))
+          assert(!geom1.equals?(geom2))
         end
 
         def test_hashes_equal_for_representationally_equivalent_objects
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1, @point2])
-          assert_equal(geom1_.hash, geom2_.hash)
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1, @point2])
+          assert_equal(geom1.hash, geom2.hash)
         end
 
         def test_wkt_creation_simple
-          parsed_geom_ = @factory.parse_wkt("MULTIPOINT((0 0), (-4 2), (-5 3))")
-          built_geom_ = @factory.multi_point([@point1, @point3, @point4])
-          assert(built_geom_.eql?(parsed_geom_))
+          parsed_geom = @factory.parse_wkt("MULTIPOINT((0 0), (-4 2), (-5 3))")
+          built_geom = @factory.multi_point([@point1, @point3, @point4])
+          assert(built_geom.eql?(parsed_geom))
         end
 
         def test_wkt_creation_empty
-          parsed_geom_ = @factory.parse_wkt("MULTIPOINT EMPTY")
-          assert(RGeo::Feature::MultiPoint === parsed_geom_)
-          assert_equal(0, parsed_geom_.num_geometries)
-          assert_equal([], parsed_geom_.to_a)
+          parsed_geom = @factory.parse_wkt("MULTIPOINT EMPTY")
+          assert(RGeo::Feature::MultiPoint === parsed_geom)
+          assert_equal(0, parsed_geom.num_geometries)
+          assert_equal([], parsed_geom.to_a)
         end
 
         def test_clone
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = geom1_.clone
-          assert(geom1_.eql?(geom2_))
-          assert_equal(RGeo::Feature::MultiPoint, geom2_.geometry_type)
-          assert_equal(2, geom2_.num_geometries)
-          assert(@point1.eql?(geom2_[0]))
-          assert(@point2.eql?(geom2_[1]))
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = geom1.clone
+          assert(geom1.eql?(geom2))
+          assert_equal(RGeo::Feature::MultiPoint, geom2.geometry_type)
+          assert_equal(2, geom2.num_geometries)
+          assert(@point1.eql?(geom2[0]))
+          assert(@point2.eql?(geom2[1]))
         end
 
         def test_type_check
-          geom1_ = @factory.multi_point([@point1, @point2])
-          assert(RGeo::Feature::Geometry.check_type(geom1_))
-          assert(!RGeo::Feature::Point.check_type(geom1_))
-          assert(RGeo::Feature::GeometryCollection.check_type(geom1_))
-          assert(RGeo::Feature::MultiPoint.check_type(geom1_))
-          assert(!RGeo::Feature::MultiLineString.check_type(geom1_))
-          geom2_ = @factory.multi_point([])
-          assert(RGeo::Feature::Geometry.check_type(geom2_))
-          assert(!RGeo::Feature::Point.check_type(geom2_))
-          assert(RGeo::Feature::GeometryCollection.check_type(geom2_))
-          assert(RGeo::Feature::MultiPoint.check_type(geom2_))
-          assert(!RGeo::Feature::MultiLineString.check_type(geom2_))
+          geom1 = @factory.multi_point([@point1, @point2])
+          assert(RGeo::Feature::Geometry.check_type(geom1))
+          assert(!RGeo::Feature::Point.check_type(geom1))
+          assert(RGeo::Feature::GeometryCollection.check_type(geom1))
+          assert(RGeo::Feature::MultiPoint.check_type(geom1))
+          assert(!RGeo::Feature::MultiLineString.check_type(geom1))
+          geom2 = @factory.multi_point([])
+          assert(RGeo::Feature::Geometry.check_type(geom2))
+          assert(!RGeo::Feature::Point.check_type(geom2))
+          assert(RGeo::Feature::GeometryCollection.check_type(geom2))
+          assert(RGeo::Feature::MultiPoint.check_type(geom2))
+          assert(!RGeo::Feature::MultiLineString.check_type(geom2))
         end
 
         def test_as_text_wkt_round_trip
-          geom1_ = @factory.multi_point([@point1, @point2])
-          text_ = geom1_.as_text
-          geom2_ = @factory.parse_wkt(text_)
-          assert(geom1_.eql?(geom2_))
+          geom1 = @factory.multi_point([@point1, @point2])
+          text = geom1.as_text
+          geom2 = @factory.parse_wkt(text)
+          assert(geom1.eql?(geom2))
         end
 
         def test_as_binary_wkb_round_trip
-          geom1_ = @factory.multi_point([@point1, @point2])
-          binary_ = geom1_.as_binary
-          geom2_ = @factory.parse_wkb(binary_)
-          assert(geom1_.eql?(geom2_))
+          geom1 = @factory.multi_point([@point1, @point2])
+          binary = geom1.as_binary
+          geom2 = @factory.parse_wkb(binary)
+          assert(geom1.eql?(geom2))
         end
 
         def test_dimension
-          geom1_ = @factory.multi_point([@point1, @point2])
-          assert_equal(0, geom1_.dimension)
-          geom2_ = @factory.multi_point([])
-          assert_equal(-1, geom2_.dimension)
+          geom1 = @factory.multi_point([@point1, @point2])
+          assert_equal(0, geom1.dimension)
+          geom2 = @factory.multi_point([])
+          assert_equal(-1, geom2.dimension)
         end
 
         def test_is_empty
-          geom1_ = @factory.multi_point([@point1, @point2])
-          assert(!geom1_.is_empty?)
-          geom2_ = @factory.multi_point([])
-          assert(geom2_.is_empty?)
+          geom1 = @factory.multi_point([@point1, @point2])
+          assert(!geom1.is_empty?)
+          geom2 = @factory.multi_point([])
+          assert(geom2.is_empty?)
         end
 
         def test_union
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1, @point3])
-          geom3_ = @factory.multi_point([@point1, @point2, @point3])
-          assert_equal(geom3_, geom1_.union(geom2_))
-          assert_equal(geom3_, geom1_ + geom2_)
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1, @point3])
+          geom3 = @factory.multi_point([@point1, @point2, @point3])
+          assert_equal(geom3, geom1.union(geom2))
+          assert_equal(geom3, geom1 + geom2)
         end
 
         def test_difference
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1, @point3])
-          assert_equal(@point2, geom1_.difference(geom2_))
-          assert_equal(@point2, geom1_ - geom2_)
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1, @point3])
+          assert_equal(@point2, geom1.difference(geom2))
+          assert_equal(@point2, geom1 - geom2)
         end
 
         def test_intersection
-          geom1_ = @factory.multi_point([@point1, @point2])
-          geom2_ = @factory.multi_point([@point1, @point3])
-          assert_equal(@point1, geom1_.intersection(geom2_))
-          assert_equal(@point1, geom1_ * geom2_)
+          geom1 = @factory.multi_point([@point1, @point2])
+          geom2 = @factory.multi_point([@point1, @point3])
+          assert_equal(@point1, geom1.intersection(geom2))
+          assert_equal(@point1, geom1 * geom2)
         end
 
         def test_zm
-          factory_ = create_factory(has_z_coordinate: true, has_m_coordinate: true)
-          p1_ = factory_.point(1, 2, 3, 4)
-          mp_ = factory_.multi_point([p1_])
-          assert_equal(p1_, mp_[0])
+          factory = create_factory(has_z_coordinate: true, has_m_coordinate: true)
+          p1 = factory.point(1, 2, 3, 4)
+          mp = factory.multi_point([p1])
+          assert_equal(p1, mp[0])
         end
 
         def test_coordinate

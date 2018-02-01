@@ -24,9 +24,9 @@ module RGeo
       # You may also provide the same options available to
       # BoundingBox.new.
 
-      def self.create_from_points(point1_, point2_, opts_ = {})
-        factory_ = point1_.factory
-        new(factory_, opts_)._add_geometry(point1_).add(point2_)
+      def self.create_from_points(point1, point2, opts = {})
+        factory = point1.factory
+        new(factory, opts)._add_geometry(point1).add(point2)
       end
 
       # Create a bounding box given a geometry to surround.
@@ -34,9 +34,9 @@ module RGeo
       # You may also provide the same options available to
       # BoundingBox.new.
 
-      def self.create_from_geometry(geom_, opts_ = {})
-        factory_ = geom_.factory
-        new(factory_, opts_)._add_geometry(geom_)
+      def self.create_from_geometry(geom, opts = {})
+        factory = geom.factory
+        new(factory, opts)._add_geometry(geom)
       end
 
       # Create a new empty bounding box with the given factory.
@@ -56,23 +56,23 @@ module RGeo
       #   If true, ignore m coordinates even if the factory supports them.
       #   Default is false.
 
-      def initialize(factory_, opts_ = {})
-        @factory = factory_
-        if (values_ = opts_[:raw])
-          @has_z, @has_m, @min_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m = values_
+      def initialize(factory, opts = {})
+        @factory = factory
+        if (values = opts[:raw])
+          @has_z, @has_m, @min_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m = values
         else
-          @has_z = !opts_[:ignore_z] && factory_.property(:has_z_coordinate) ? true : false
-          @has_m = !opts_[:ignore_m] && factory_.property(:has_m_coordinate) ? true : false
+          @has_z = !opts[:ignore_z] && factory.property(:has_z_coordinate) ? true : false
+          @has_m = !opts[:ignore_m] && factory.property(:has_m_coordinate) ? true : false
           @min_x = @max_x = @min_y = @max_y = @min_z = @max_z = @min_m = @max_m = nil
         end
       end
 
-      def eql?(rhs_) # :nodoc:
-        rhs_.is_a?(BoundingBox) && @factory == rhs_.factory &&
-          @min_x == rhs_.min_x && @max_x == rhs_.max_x &&
-          @min_y == rhs_.min_y && @max_y == rhs_.max_y &&
-          @min_z == rhs_.min_z && @max_z == rhs_.max_z &&
-          @min_m == rhs_.min_m && @max_m == rhs_.max_m
+      def eql?(rhs) # :nodoc:
+        rhs.is_a?(BoundingBox) && @factory == rhs.factory &&
+          @min_x == rhs.min_x && @max_x == rhs.max_x &&
+          @min_y == rhs.min_y && @max_y == rhs.max_y &&
+          @min_z == rhs.min_z && @max_z == rhs.max_z &&
+          @min_m == rhs.min_m && @max_m == rhs.max_m
       end
       alias == eql?
 
@@ -196,10 +196,10 @@ module RGeo
 
       def min_point
         if @min_x
-          extras_ = []
-          extras_ << @min_z if @has_z
-          extras_ << @min_m if @has_m
-          @factory.point(@min_x, @min_y, *extras_)
+          extras = []
+          extras << @min_z if @has_z
+          extras << @min_m if @has_m
+          @factory.point(@min_x, @min_y, *extras)
         end
       end
 
@@ -208,10 +208,10 @@ module RGeo
 
       def max_point
         if @min_x
-          extras_ = []
-          extras_ << @max_z if @has_z
-          extras_ << @max_m if @has_m
-          @factory.point(@max_x, @max_y, *extras_)
+          extras = []
+          extras << @max_z if @has_z
+          extras << @max_m if @has_m
+          @factory.point(@max_x, @max_y, *extras)
         end
       end
 
@@ -219,16 +219,16 @@ module RGeo
       # object, which may be a geometry or another bounding box.
       # Returns self.
 
-      def add(geometry_)
-        case geometry_
+      def add(geometry)
+        case geometry
         when BoundingBox
-          add(geometry_.min_point)
-          add(geometry_.max_point)
+          add(geometry.min_point)
+          add(geometry.max_point)
         when Feature::Geometry
-          if geometry_.factory == @factory
-            _add_geometry(geometry_)
+          if geometry.factory == @factory
+            _add_geometry(geometry)
           else
-            _add_geometry(Feature.cast(geometry_, @factory))
+            _add_geometry(Feature.cast(geometry, @factory))
           end
         end
         self
@@ -241,23 +241,23 @@ module RGeo
 
       def to_geometry
         if @min_x
-          extras_ = []
-          extras_ << @min_z if @has_z
-          extras_ << @min_m if @has_m
-          point_min_ = @factory.point(@min_x, @min_y, *extras_)
+          extras = []
+          extras << @min_z if @has_z
+          extras << @min_m if @has_m
+          point_min = @factory.point(@min_x, @min_y, *extras)
           if infinitesimal?
-            point_min_
+            point_min
           else
-            extras_ = []
-            extras_ << @max_z if @has_z
-            extras_ << @max_m if @has_m
-            point_max_ = @factory.point(@max_x, @max_y, *extras_)
+            extras = []
+            extras << @max_z if @has_z
+            extras << @max_m if @has_m
+            point_max = @factory.point(@max_x, @max_y, *extras)
             if degenerate?
-              @factory.line(point_min_, point_max_)
+              @factory.line(point_min, point_max)
             else
-              @factory.polygon(@factory.linear_ring([point_min_,
-                                                     @factory.point(@max_x, @min_y, *extras_), point_max_,
-                                                     @factory.point(@min_x, @max_y, *extras_), point_min_]))
+              @factory.polygon(@factory.linear_ring([point_min,
+                                                     @factory.point(@max_x, @min_y, *extras), point_max,
+                                                     @factory.point(@min_x, @max_y, *extras), point_min]))
             end
           end
         else
@@ -277,18 +277,18 @@ module RGeo
       #   Ignore the M coordinate when testing, even if both objects
       #   have M. Default is false.
 
-      def contains?(rhs_, opts_ = {})
-        if Feature::Geometry === rhs_
-          contains?(BoundingBox.new(@factory).add(rhs_))
-        elsif rhs_.empty?
+      def contains?(rhs, opts = {})
+        if Feature::Geometry === rhs
+          contains?(BoundingBox.new(@factory).add(rhs))
+        elsif rhs.empty?
           true
         elsif empty?
           false
-        elsif @min_x > rhs_.min_x || @max_x < rhs_.max_x || @min_y > rhs_.min_y || @max_y < rhs_.max_y
+        elsif @min_x > rhs.min_x || @max_x < rhs.max_x || @min_y > rhs.min_y || @max_y < rhs.max_y
           false
-        elsif @has_m && rhs_.has_m && !opts_[:ignore_m] && (@min_m > rhs_.min_m || @max_m < rhs_.max_m)
+        elsif @has_m && rhs.has_m && !opts[:ignore_m] && (@min_m > rhs.min_m || @max_m < rhs.max_m)
           false
-        elsif @has_z && rhs_.has_z && !opts_[:ignore_z] && (@min_z > rhs_.min_z || @max_z < rhs_.max_z)
+        elsif @has_z && rhs.has_z && !opts[:ignore_z] && (@min_z > rhs.min_z || @max_z < rhs.max_z)
           false
         else
           true
@@ -309,7 +309,7 @@ module RGeo
       #   greater than this factor, the bounding box is divided only in
       #   half instead of fourths.
 
-      def subdivide(opts_ = {})
+      def subdivide(opts = {})
         return [] if empty?
         if infinitesimal?
           return [
@@ -317,17 +317,17 @@ module RGeo
                                             @min_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m])
           ]
         end
-        factor_ = opts_[:bisect_factor]
-        factor_ ||= 1 if degenerate?
-        if factor_
-          if x_span > y_span * factor_
+        factor = opts[:bisect_factor]
+        factor ||= 1 if degenerate?
+        if factor
+          if x_span > y_span * factor
             return [
               BoundingBox.new(@factory, raw: [@has_z, @has_m,
                                               @min_x, center_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m]),
               BoundingBox.new(@factory, raw: [@has_z, @has_m,
                                               center_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m])
             ]
-          elsif y_span > x_span * factor_
+          elsif y_span > x_span * factor
             return [
               BoundingBox.new(@factory, raw: [@has_z, @has_m,
                                               @min_x, @max_x, @min_y, center_y, @min_z, @max_z, @min_m, @max_m]),
@@ -348,49 +348,49 @@ module RGeo
         ]
       end
 
-      def _add_geometry(geometry_) # :nodoc:
-        case geometry_
+      def _add_geometry(geometry) # :nodoc:
+        case geometry
         when Feature::Point
-          _add_point(geometry_)
+          _add_point(geometry)
         when Feature::LineString
-          geometry_.points.each { |p_| _add_point(p_) }
+          geometry.points.each { |p| _add_point(p) }
         when Feature::Polygon
-          geometry_.exterior_ring.points.each { |p_| _add_point(p_) }
+          geometry.exterior_ring.points.each { |p| _add_point(p) }
         when Feature::MultiPoint
-          geometry_.each { |p_| _add_point(p_) }
+          geometry.each { |p| _add_point(p) }
         when Feature::MultiLineString
-          geometry_.each { |line_| line_.points.each { |p_| _add_point(p_) } }
+          geometry.each { |line_| line_.points.each { |p| _add_point(p) } }
         when Feature::MultiPolygon
-          geometry_.each { |poly_| poly_.exterior_ring.points.each { |p_| _add_point(p_) } }
+          geometry.each { |poly| poly.exterior_ring.points.each { |p| _add_point(p) } }
         when Feature::GeometryCollection
-          geometry_.each { |g_| _add_geometry(g_) }
+          geometry.each { |g| _add_geometry(g) }
         end
         self
       end
 
-      def _add_point(point_) # :nodoc:
+      def _add_point(point) # :nodoc:
         if @min_x
-          x_ = point_.x
-          @min_x = x_ if x_ < @min_x
-          @max_x = x_ if x_ > @max_x
-          y_ = point_.y
+          x = point.x
+          @min_x = x if x < @min_x
+          @max_x = x if x > @max_x
+          y_ = point.y
           @min_y = y_ if y_ < @min_y
           @max_y = y_ if y_ > @max_y
           if @has_z
-            z_ = point_.z
+            z_ = point.z
             @min_z = z_ if z_ < @min_z
             @max_z = z_ if z_ > @max_z
           end
           if @has_m
-            m_ = point_.m
+            m_ = point.m
             @min_m = m_ if m_ < @min_m
             @max_m = m_ if m_ > @max_m
           end
         else
-          @min_x = @max_x = point_.x
-          @min_y = @max_y = point_.y
-          @min_z = @max_z = point_.z if @has_z
-          @min_m = @max_m = point_.m if @has_m
+          @min_x = @max_x = point.x
+          @min_y = @max_y = point.y
+          @min_z = @max_z = point.z if @has_z
+          @min_m = @max_m = point.m if @has_m
         end
       end
     end

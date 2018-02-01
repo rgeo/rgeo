@@ -17,14 +17,14 @@ class CartesianPointTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_srid
-    point_ = @factory.point(11, 12)
-    assert_equal(1, point_.srid)
+    point = @factory.point(11, 12)
+    assert_equal(1, point.srid)
   end
 
   def test_distance
-    point1_ = @factory.point(2, 2)
-    point2_ = @factory.point(7, 14)
-    assert_in_delta(13, point1_.distance(point2_), 0.0001)
+    point1 = @factory.point(2, 2)
+    point2 = @factory.point(7, 14)
+    assert_in_delta(13, point1.distance(point2), 0.0001)
   end
 
   undef_method :test_disjoint

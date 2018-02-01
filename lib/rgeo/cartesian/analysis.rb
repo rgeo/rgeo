@@ -19,57 +19,57 @@ module RGeo
         # The return value is undefined if the object is not a ring, or
         # is not in a Cartesian coordinate system.
 
-        def ring_direction(ring_)
-          size_ = ring_.num_points - 1
-          return 0 if size_ == 0
+        def ring_direction(ring)
+          size = ring.num_points - 1
+          return 0 if size == 0
 
           # Extract unit-length segments from the ring.
-          segs_ = []
-          size_.times do |i_|
-            p0_ = ring_.point_n(i_)
-            p1_ = ring_.point_n(i_ + 1)
-            x_ = p1_.x - p0_.x
-            y_ = p1_.y - p0_.y
-            r_ = ::Math.sqrt(x_ * x_ + y_ * y_)
-            if r_ > 0.0
-              segs_ << x_ / r_ << y_ / r_
+          segs = []
+          size.times do |i|
+            p0 = ring.point_n(i)
+            p1 = ring.point_n(i + 1)
+            x = p1.x - p0.x
+            y = p1.y - p0.y
+            r = ::Math.sqrt(x * x + y * y)
+            if r > 0.0
+              segs << x / r << y / r
             else
-              size_ -= 1
+              size -= 1
             end
           end
-          segs_ << segs_[0] << segs_[1]
+          segs << segs[0] << segs[1]
 
           # Extract angles from the segments by subtracting the segments.
           # Note angles are represented as cos/sin pairs so we don't
           # have to calculate any trig functions.
-          angs_ = []
-          size_.times do |i_|
-            x0_, y0_, x1_, y1_ = segs_[i_ * 2, 4]
-            angs_ << x0_ * x1_ + y0_ * y1_ << x0_ * y1_ - x1_ * y0_
+          angs = []
+          size.times do |i|
+            x0, y0, x1, y1 = segs[i * 2, 4]
+            angs << x0 * x1 + y0 * y1 << x0 * y1 - x1 * y0
           end
 
           # Now add the angles and count revolutions.
           # Again, our running sum is represented as a cos/sin pair.
-          revolutions_ = 0
-          sin_ = 0.0
-          cos_ = 1.0
-          angs_.each_slice(2) do |(x_, y_)|
-            ready_ = y_ > 0.0 && sin_ > 0.0 || y_ < 0.0 && sin_ < 0.0
-            if y_ != 0.0
-              s_ = sin_ * x_ + cos_ * y_
-              c_ = cos_ * x_ - sin_ * y_
-              r_ = ::Math.sqrt(s_ * s_ + c_ * c_)
-              sin_ = s_ / r_
-              cos_ = c_ / r_
+          revolutions = 0
+          sin = 0.0
+          cos = 1.0
+          angs.each_slice(2) do |(x, y)|
+            ready = y > 0.0 && sin > 0.0 || y < 0.0 && sin < 0.0
+            if y != 0.0
+              s = sin * x + cos * y
+              c = cos * x - sin * y
+              r = ::Math.sqrt(s * s + c * c)
+              sin = s / r
+              cos = c / r
             end
-            next unless ready_
-            if y_ > 0.0 && sin_ <= 0.0
-              revolutions_ += 1
-            elsif y_ < 0.0 && sin_ >= 0.0
-              revolutions_ -= 1
+            next unless ready
+            if y > 0.0 && sin <= 0.0
+              revolutions += 1
+            elsif y < 0.0 && sin >= 0.0
+              revolutions -= 1
             end
           end
-          revolutions_
+          revolutions
         end
       end
     end

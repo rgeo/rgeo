@@ -7,13 +7,13 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicPointMethods # :nodoc:
-      def initialize(factory_, x_, y_, *extra_)
-        _set_factory(factory_)
-        @x = x_.to_f
-        @y = y_.to_f
-        @z = factory_.property(:has_z_coordinate) ? extra_.shift.to_f : nil
-        @m = factory_.property(:has_m_coordinate) ? extra_.shift.to_f : nil
-        if extra_.size > 0
+      def initialize(factory, x, y, *extra)
+        _set_factory(factory)
+        @x = x.to_f
+        @y = y.to_f
+        @z = factory.property(:has_z_coordinate) ? extra.shift.to_f : nil
+        @m = factory.property(:has_m_coordinate) ? extra.shift.to_f : nil
+        if extra.size > 0
           raise ::ArgumentError, "Too many arguments for point initializer"
         end
         _validate_geometry
@@ -63,34 +63,34 @@ module RGeo
         self
       end
 
-      def equals?(rhs_)
-        return false unless rhs_.is_a?(self.class) && rhs_.factory == factory
-        case rhs_
+      def equals?(rhs)
+        return false unless rhs.is_a?(self.class) && rhs.factory == factory
+        case rhs
         when Feature::Point
-          rhs_.x == @x && rhs_.y == @y
+          rhs.x == @x && rhs.y == @y
         when Feature::LineString
-          rhs_.num_points > 0 && rhs_.points.all? { |elem_| equals?(elem_) }
+          rhs.num_points > 0 && rhs.points.all? { |elem| equals?(elem) }
         when Feature::GeometryCollection
-          rhs_.num_geometries > 0 && rhs_.all? { |elem_| equals?(elem_) }
+          rhs.num_geometries > 0 && rhs.all? { |elem| equals?(elem) }
         else
           false
         end
       end
 
-      def rep_equals?(rhs_)
-        rhs_.is_a?(self.class) && rhs_.factory.eql?(@factory) && @x == rhs_.x && @y == rhs_.y && @z == rhs_.z && @m == rhs_.m
+      def rep_equals?(rhs)
+        rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @x == rhs.x && @y == rhs.y && @z == rhs.z && @m == rhs.m
       end
 
       def hash
         @hash ||= [factory, geometry_type, @x, @y, @z, @m].hash
       end
 
-      def _copy_state_from(obj_) # :nodoc:
+      def _copy_state_from(obj) # :nodoc:
         super
-        @x = obj_.x
-        @y = obj_.y
-        @z = obj_.z
-        @m = obj_.m
+        @x = obj.x
+        @y = obj.y
+        @z = obj.z
+        @m = obj.m
       end
 
       def coordinates

@@ -56,12 +56,12 @@ module RGeo
       # Create and configure a WKB generator. See the WKBGenerator
       # documentation for the options that can be passed.
 
-      def initialize(opts_ = {})
-        @type_format = opts_[:type_format] || :wkb11
+      def initialize(opts = {})
+        @type_format = opts[:type_format] || :wkb11
         @emit_ewkb_srid = @type_format == :ewkb ?
-          (opts_[:emit_ewkb_srid] ? true : false) : nil
-        @hex_format = opts_[:hex_format] ? true : false
-        @little_endian = opts_[:little_endian] ? true : false
+          (opts[:emit_ewkb_srid] ? true : false) : nil
+        @hex_format = opts[:hex_format] ? true : false
+        @little_endian = opts[:little_endian] ? true : false
       end
 
       # Returns the format for type codes. See WKBGenerator for details.
@@ -96,105 +96,105 @@ module RGeo
       # Generate and return the WKB format for the given geometry object,
       # according to the current settings.
 
-      def generate(obj_)
-        factory_ = obj_.factory
+      def generate(obj)
+        factory = obj.factory
         if @type_format == :ewkb || @type_format == :wkb12
-          @cur_has_z = factory_.property(:has_z_coordinate)
-          @cur_has_m = factory_.property(:has_m_coordinate)
+          @cur_has_z = factory.property(:has_z_coordinate)
+          @cur_has_m = factory.property(:has_m_coordinate)
         else
           @cur_has_z = nil
           @cur_has_m = nil
         end
         @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
         _start_emitter
-        _generate_feature(obj_, true)
+        _generate_feature(obj, true)
         _finish_emitter
       end
 
-      def _generate_feature(obj_, toplevel_ = false) # :nodoc:
+      def _generate_feature(obj, toplevel = false) # :nodoc:
         _emit_byte(@little_endian ? 1 : 0)
-        type_ = obj_.geometry_type
-        type_code_ = TYPE_CODES[type_]
-        unless type_code_
-          raise Error::ParseError, "Unrecognized Geometry Type: #{type_}"
+        type = obj.geometry_type
+        type_code = TYPE_CODES[type]
+        unless type_code
+          raise Error::ParseError, "Unrecognized Geometry Type: #{type}"
         end
-        emit_srid_ = false
+        emit_srid = false
         if @type_format == :ewkb
-          type_code_ |= 0x80000000 if @cur_has_z
-          type_code_ |= 0x40000000 if @cur_has_m
-          if @emit_ewkb_srid && toplevel_
-            type_code_ |= 0x20000000
-            emit_srid_ = true
+          type_code |= 0x80000000 if @cur_has_z
+          type_code |= 0x40000000 if @cur_has_m
+          if @emit_ewkb_srid && toplevel
+            type_code |= 0x20000000
+            emit_srid = true
           end
         elsif @type_format == :wkb12
-          type_code_ += 1000 if @cur_has_z
-          type_code_ += 2000 if @cur_has_m
+          type_code += 1000 if @cur_has_z
+          type_code += 2000 if @cur_has_m
         end
-        _emit_integer(type_code_)
-        _emit_integer(obj_.srid) if emit_srid_
-        if type_ == Feature::Point
-          _emit_doubles(_point_coords(obj_))
-        elsif type_.subtype_of?(Feature::LineString)
-          _emit_line_string_coords(obj_)
-        elsif type_ == Feature::Polygon
-          exterior_ring_ = obj_.exterior_ring
-          if exterior_ring_.is_empty?
+        _emit_integer(type_code)
+        _emit_integer(obj.srid) if emit_srid
+        if type == Feature::Point
+          _emit_doubles(_point_coords(obj))
+        elsif type.subtype_of?(Feature::LineString)
+          _emit_line_string_coords(obj)
+        elsif type == Feature::Polygon
+          exterior_ring = obj.exterior_ring
+          if exterior_ring.is_empty?
             _emit_integer(0)
           else
-            _emit_integer(1 + obj_.num_interior_rings)
-            _emit_line_string_coords(exterior_ring_)
-            obj_.interior_rings.each { |r_| _emit_line_string_coords(r_) }
+            _emit_integer(1 + obj.num_interior_rings)
+            _emit_line_string_coords(exterior_ring)
+            obj.interior_rings.each { |r| _emit_line_string_coords(r) }
           end
-        elsif type_ == Feature::GeometryCollection
-          _emit_integer(obj_.num_geometries)
-          obj_.each { |g_| _generate_feature(g_) }
-        elsif type_ == Feature::MultiPoint
-          _emit_integer(obj_.num_geometries)
-          obj_.each { |g_| _generate_feature(g_) }
-        elsif type_ == Feature::MultiLineString
-          _emit_integer(obj_.num_geometries)
-          obj_.each { |g_| _generate_feature(g_) }
-        elsif type_ == Feature::MultiPolygon
-          _emit_integer(obj_.num_geometries)
-          obj_.each { |g_| _generate_feature(g_) }
+        elsif type == Feature::GeometryCollection
+          _emit_integer(obj.num_geometries)
+          obj.each { |g| _generate_feature(g) }
+        elsif type == Feature::MultiPoint
+          _emit_integer(obj.num_geometries)
+          obj.each { |g| _generate_feature(g) }
+        elsif type == Feature::MultiLineString
+          _emit_integer(obj.num_geometries)
+          obj.each { |g| _generate_feature(g) }
+        elsif type == Feature::MultiPolygon
+          _emit_integer(obj.num_geometries)
+          obj.each { |g| _generate_feature(g) }
         end
       end
 
-      def _point_coords(obj_, array_ = []) # :nodoc:
-        array_ << obj_.x
-        array_ << obj_.y
-        array_ << obj_.z if @cur_has_z
-        array_ << obj_.m if @cur_has_m
-        array_
+      def _point_coords(obj, array = []) # :nodoc:
+        array << obj.x
+        array << obj.y
+        array << obj.z if @cur_has_z
+        array << obj.m if @cur_has_m
+        array
       end
 
-      def _emit_line_string_coords(obj_) # :nodoc:
-        array_ = []
-        obj_.points.each { |p_| _point_coords(p_, array_) }
-        _emit_integer(obj_.num_points)
-        _emit_doubles(array_)
+      def _emit_line_string_coords(obj) # :nodoc:
+        array = []
+        obj.points.each { |p| _point_coords(p, array) }
+        _emit_integer(obj.num_points)
+        _emit_doubles(array)
       end
 
       def _start_emitter # :nodoc:
         @cur_array = []
       end
 
-      def _emit_byte(value_) # :nodoc:
-        @cur_array << [value_].pack("C")
+      def _emit_byte(value) # :nodoc:
+        @cur_array << [value].pack("C")
       end
 
-      def _emit_integer(value_)  # :nodoc:
-        @cur_array << [value_].pack(@little_endian ? "V" : "N")
+      def _emit_integer(value)  # :nodoc:
+        @cur_array << [value].pack(@little_endian ? "V" : "N")
       end
 
-      def _emit_doubles(array_)  # :nodoc:
-        @cur_array << array_.pack(@little_endian ? "E*" : "G*")
+      def _emit_doubles(array)  # :nodoc:
+        @cur_array << array.pack(@little_endian ? "E*" : "G*")
       end
 
       def _finish_emitter # :nodoc:
-        str_ = @cur_array.join
+        str = @cur_array.join
         @cur_array = nil
-        @hex_format ? str_.unpack("H*")[0] : str_
+        @hex_format ? str.unpack("H*")[0] : str
       end
     end
   end

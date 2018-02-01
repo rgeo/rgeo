@@ -46,12 +46,12 @@ module RGeo
       raise "Problem loading FFI" unless ::FFI::AutoPointer
       FFI_SUPPORTED = true
       FFI_SUPPORT_EXCEPTION = nil
-    rescue ::LoadError => ex_
+    rescue ::LoadError => ex
       FFI_SUPPORTED = false
-      FFI_SUPPORT_EXCEPTION = ex_
-    rescue => ex_
+      FFI_SUPPORT_EXCEPTION = ex
+    rescue => ex
       FFI_SUPPORTED = false
-      FFI_SUPPORT_EXCEPTION = ex_
+      FFI_SUPPORT_EXCEPTION = ex
     end
 
     # Default preferred native interface
