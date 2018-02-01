@@ -26,7 +26,7 @@ module RGeo
     # MixinCollection objects for mixins specific to objects created
     # by that factory.
     #
-    # Each mixin mixin_module added to a MixinCollection is connected to a
+    # Each mixin mixin added to a MixinCollection is connected to a
     # specific type, which controls to which objects that mixin is added.
     # For example, a mixin connected to Point is added only to Point
     # objects. A mixin connected to GeometryCollection is added to
@@ -55,10 +55,10 @@ module RGeo
 
         # Add a mixin to be included in implementations of this type.
 
-        def add(mixin_module)
-          @mixins << mixin_module
-          @classes.each { |k| k.class_eval { include(mixin_module) } }
-          _radd(mixin_module)
+        def add(mixin)
+          @mixins << mixin
+          @classes.each { |k| k.class_eval { include(mixin) } }
+          _radd(mixin)
         end
 
         # A class that implements this type should call this method to
@@ -82,10 +82,10 @@ module RGeo
           self
         end
 
-        def _radd(mixin_module) # :nodoc:
-          @rmixins << mixin_module
-          @rclasses.each { |k| k.class_eval { include(mixin_module) } }
-          @type.each_immediate_subtype { |t| @collection.for_type(t)._radd(mixin_module) }
+        def _radd(mixin) # :nodoc:
+          @rmixins << mixin
+          @rclasses.each { |k| k.class_eval { include(mixin) } }
+          @type.each_immediate_subtype { |t| @collection.for_type(t)._radd(mixin) }
           self
         end
       end
@@ -98,20 +98,20 @@ module RGeo
 
       # Returns a TypeData for the given type.
       #
-      # e.g. to add a mixin_module for point types, you can call:
-      #  for_type(RGeo::Feature::Point).add(mixin_module)
+      # e.g. to add a mixin for point types, you can call:
+      #  for_type(RGeo::Feature::Point).add(mixin)
 
       def for_type(type)
         (@types[type] ||= TypeData.new(self, type))
       end
 
-      # Add a mixin_module connected to the given type.
+      # Add a mixin connected to the given type.
       #
       # Shorthand for:
-      #  for_type(type).add(mixin_module)
+      #  for_type(type).add(mixin)
 
-      def add(type, mixin_module)
-        for_type(type).add(mixin_module)
+      def add(type, mixin)
+        for_type(type).add(mixin)
       end
 
       # A class that implements this type should call this method to

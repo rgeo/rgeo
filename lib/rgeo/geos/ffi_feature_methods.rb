@@ -406,8 +406,8 @@ module RGeo
         @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
-      def point_onsurface
-        @factory._wrap_fg_geom(@fg_geom.point_onsurface, FFIPointImpl)
+      def point_on_surface
+        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def exterior_ring
@@ -567,8 +567,8 @@ module RGeo
         @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
-      def point_onsurface
-        @factory._wrap_fg_geom(@fg_geom.point_onsurface, FFIPointImpl)
+      def point_on_surface
+        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def coordinates

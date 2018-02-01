@@ -29,30 +29,30 @@ module RGeo
       # Returns true if the given feature is a CAPI GEOS feature, or if
       # the given factory is a CAPI GEOS factory.
 
-      def is_capi_geos?(obj)
+      def is_capi_geos?(object)
         CAPI_SUPPORTED &&
-          (CAPIFactory === obj || CAPIGeometryMethods === obj ||
-          ZMFactory === obj && CAPIFactory === obj.z_factory ||
-          ZMGeometryMethods === obj && CAPIGeometryMethods === obj.z_geometry)
+          (CAPIFactory === object || CAPIGeometryMethods === object ||
+          ZMFactory === object && CAPIFactory === object.z_factory ||
+          ZMGeometryMethods === object && CAPIGeometryMethods === object.z_geometry)
       end
 
       # Returns true if the given feature is an FFI GEOS feature, or if
       # the given factory is an FFI GEOS factory.
 
-      def is_ffi_geos?(obj)
+      def is_ffi_geos?(object)
         FFI_SUPPORTED &&
-          (FFIFactory === obj || FFIGeometryMethods === obj ||
-          ZMFactory === obj && FFIFactory === obj.z_factory ||
-          ZMGeometryMethods === obj && FFIGeometryMethods === obj.z_geometry)
+          (FFIFactory === object || FFIGeometryMethods === object ||
+          ZMFactory === object && FFIFactory === object.z_factory ||
+          ZMGeometryMethods === object && FFIGeometryMethods === object.z_geometry)
       end
 
       # Returns true if the given feature is a GEOS feature, or if the given
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
-      def is_geos?(obj)
-        CAPI_SUPPORTED && (CAPIFactory === obj || CAPIGeometryMethods === obj) ||
-          FFI_SUPPORTED && (FFIFactory === obj || FFIGeometryMethods === obj) ||
-          ZMFactory === obj || ZMGeometryMethods === obj
+      def is_geos?(object)
+        CAPI_SUPPORTED && (CAPIFactory === object || CAPIGeometryMethods === object) ||
+          FFI_SUPPORTED && (FFIFactory === object || FFIGeometryMethods === object) ||
+          ZMFactory === object || ZMGeometryMethods === object
       end
 
       # Returns the GEOS library version as a string of the format "x.y.z".
@@ -89,7 +89,7 @@ module RGeo
       # Note that GEOS does not natively support 4-dimensional data
       # (i.e. both z and m values). However, RGeo's GEOS wrapper does
       # provide a 4-dimensional factory that utilizes an extra native
-      # GEOS obj to handle the extra coordinate. Hence, a factory
+      # GEOS object to handle the extra coordinate. Hence, a factory
       # configured with both Z and M support will work, but will be
       # slower than a 2-dimensional or 3-dimensional factory.
       #
@@ -101,7 +101,7 @@ module RGeo
       #   of the preferred_native_interface.
       # [<tt>:uses_lenient_multi_polygon_assertions</tt>]
       #   If set to true, assertion checking on MultiPolygon is disabled.
-      #   This may speed up creation of MultiPolygon objs, at the
+      #   This may speed up creation of MultiPolygon objects, at the
       #   expense of not doing the proper checking for OGC MultiPolygon
       #   compliance. See RGeo::Feature::MultiPolygon for details on
       #   the MultiPolygon assertions. Default is false. Also called
@@ -119,17 +119,17 @@ module RGeo
       #   Default is 0.
       # [<tt>:proj4</tt>]
       #   The coordinate system in Proj4 format, either as a
-      #   CoordSys::Proj4 obj or as a string or hash representing the
+      #   CoordSys::Proj4 object or as a string or hash representing the
       #   proj4 format. Optional.
       # [<tt>:coord_sys</tt>]
       #   The coordinate system in OGC form, either as a subclass of
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
       #   Optional.
       # [<tt>:srs_database</tt>]
-      #   Optional. If provided, the obj should respond to #get and
+      #   Optional. If provided, the object should respond to #get and
       #   #clear_cache. If both this and an SRID are
       #   provided, they are used to look up the proj4 and coord_sys
-      #   objs from a spatial reference system database.
+      #   objects from a spatial reference system database.
       # [<tt>:has_z_coordinate</tt>]
       #   Support <tt>z_coordinate</tt>. Default is false.
       # [<tt>:has_m_coordinate</tt>]
@@ -192,7 +192,7 @@ module RGeo
       # A common case for this is to provide the <tt>:srs_database</tt>
       # as a default. Then, the factory generator need only be passed
       # an SRID and it will automatically fetch the appropriate Proj4
-      # and CoordSys objs.
+      # and CoordSys objects.
 
       def factory_generator(defaults = {})
         ::Proc.new { |c| factory(defaults.merge(c)) }

@@ -20,7 +20,7 @@ module RGeo
         @linear_ring_class = Geographic.const_get("#{impl_prefix}LinearRingImpl")
         @line_class = Geographic.const_get("#{impl_prefix}LineImpl")
         @polygon_class = Geographic.const_get("#{impl_prefix}PolygonImpl")
-        @geometrycollection_class = Geographic.const_get("#{impl_prefix}GeometryCollectionImpl")
+        @geometry_collection_class = Geographic.const_get("#{impl_prefix}GeometryCollectionImpl")
         @multi_point_class = Geographic.const_get("#{impl_prefix}MultiPointImpl")
         @multi_line_string_class = Geographic.const_get("#{impl_prefix}MultiLineStringImpl")
         @multi_polygon_class = Geographic.const_get("#{impl_prefix}MultiPolygonImpl")
@@ -122,14 +122,14 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        if (proj4data = data_["proj4"]) && CoordSys.check!(:proj4)
+        if (proj4_data = data_["proj4"]) && CoordSys.check!(:proj4)
           proj4 = CoordSys::Proj4.allocate
-          proj4.marshal_load(proj4data)
+          proj4.marshal_load(proj4_data)
         else
           proj4 = nil
         end
-        if (coord_sysdata_ = data_["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata_)
+        if (coord_sys_data = data_["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
         else
           coord_sys = nil
         end
@@ -146,15 +146,15 @@ module RGeo
           proj4: proj4,
           coord_sys: coord_sys
                   )
-        if (projklass = data_["prjc"]) && (projfactory = data_["prjf"])
+        if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
           klass_ = begin
-                     RGeo::Geographic.const_get(projklass)
+                     RGeo::Geographic.const_get(proj_klass)
                    rescue
                      nil
                    end
           if klass_
             projector = klass_.allocate
-            projector._set_factories(self, projfactory)
+            projector._set_factories(self, proj_factory)
             _set_projector(projector)
           end
         end
@@ -185,18 +185,18 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        if (proj4data = coder["proj4"])
+        if (proj4_data = coder["proj4"])
           CoordSys.check!(:proj4)
-          if proj4data.is_a?(::Hash)
-            proj4 = CoordSys::Proj4.create(proj4data["proj4"], radians: proj4data["radians"])
+          if proj4_data.is_a?(::Hash)
+            proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
-            proj4 = CoordSys::Proj4.create(proj4data.to_s)
+            proj4 = CoordSys::Proj4.create(proj4_data.to_s)
           end
         else
           proj4 = nil
         end
-        if (coord_sysdata_ = coder["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata_.to_s)
+        if (coord_sys_data = coder["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
         else
           coord_sys = nil
         end
@@ -213,15 +213,15 @@ module RGeo
           proj4: proj4,
           coord_sys: coord_sys
                   )
-        if (projklass = coder["projectorclass"]) && (projfactory = coder["projection_factory"])
+        if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
           klass_ = begin
-                     RGeo::Geographic.const_get(projklass)
+                     RGeo::Geographic.const_get(proj_klass)
                    rescue
                      nil
                    end
           if klass_
             projector = klass_.allocate
-            projector._set_factories(self, projfactory)
+            projector._set_factories(self, proj_factory)
             _set_projector(projector)
           end
         end
@@ -368,7 +368,7 @@ module RGeo
       # See RGeo::Feature::Factory#collection
 
       def collection(elems)
-        @geometrycollection_class.new(self, elems)
+        @geometry_collection_class.new(self, elems)
       rescue
         nil
       end

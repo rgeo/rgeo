@@ -258,7 +258,7 @@ module RGeo
         @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
-      def point_onsurface
+      def point_on_surface
         @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
@@ -337,7 +337,7 @@ module RGeo
         @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
-      def point_onsurface
+      def point_on_surface
         @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 

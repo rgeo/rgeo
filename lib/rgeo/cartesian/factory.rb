@@ -41,7 +41,7 @@ module RGeo
             @coord_sys ||= entry.coord_sys
           end
         end
-        srid ||= @coord_sys.authoritycode if @coord_sys
+        srid ||= @coord_sys.authority_code if @coord_sys
         @srid = srid.to_i
         @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
         @buffer_resolution = opts[:buffer_resolution].to_i
@@ -113,14 +113,14 @@ module RGeo
       end
 
       def marshal_load(data) # :nodoc:
-        if (proj4data = data["proj4"]) && CoordSys.check!(:proj4)
+        if (proj4_data = data["proj4"]) && CoordSys.check!(:proj4)
           proj4 = CoordSys::Proj4.allocate
-          proj4.marshal_load(proj4data)
+          proj4.marshal_load(proj4_data)
         else
           proj4 = nil
         end
-        if (coord_sysdata = data["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata)
+        if (coord_sys_data = data["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
         else
           coord_sys = nil
         end
@@ -159,17 +159,17 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        if (proj4data = coder["proj4"]) && CoordSys.check!(:proj4)
-          if proj4data.is_a?(::Hash)
-            proj4 = CoordSys::Proj4.create(proj4data["proj4"], radians: proj4data["radians"])
+        if (proj4_data = coder["proj4"]) && CoordSys.check!(:proj4)
+          if proj4_data.is_a?(::Hash)
+            proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
-            proj4 = CoordSys::Proj4.create(proj4data.to_s)
+            proj4 = CoordSys::Proj4.create(proj4_data.to_s)
           end
         else
           proj4 = nil
         end
-        if (coord_sysdata = coder["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata.to_s)
+        if (coord_sys_data = coder["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
         else
           coord_sys = nil
         end

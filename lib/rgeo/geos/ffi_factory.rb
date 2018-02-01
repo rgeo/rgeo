@@ -161,8 +161,8 @@ module RGeo
         else
           proj4 = nil
         end
-        if (coord_sysdata = data["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata)
+        if (coord_sys_data = data["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
         else
           coord_sys = nil
         end
@@ -213,8 +213,8 @@ module RGeo
         else
           proj4 = nil
         end
-        if (coord_sysdata = coder["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sysdata.to_s)
+        if (coord_sys_data = coder["cs"])
+          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
         else
           coord_sys = nil
         end
