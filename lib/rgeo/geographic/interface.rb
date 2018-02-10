@@ -227,7 +227,7 @@ module RGeo
           uses_lenient_assertions: opts[:uses_lenient_assertions],
           has_z_coordinate: opts[:has_z_coordinate],
           has_m_coordinate: opts[:has_m_coordinate])
-        factory._set_projector(projector)
+        factory.projector = projector
         factory
       end
 
@@ -451,7 +451,7 @@ module RGeo
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
             wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
         end
-        factory._set_projector(projector)
+        factory.projector = projector
         factory
       end
 

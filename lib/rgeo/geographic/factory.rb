@@ -13,6 +13,8 @@ module RGeo
     class Factory
       include Feature::Factory::Instance
 
+      attr_writer :projector
+
       def initialize(impl_prefix, opts = {}) # :nodoc:
         @impl_prefix = impl_prefix
         @point_class = Geographic.const_get("#{impl_prefix}PointImpl")
@@ -74,10 +76,6 @@ module RGeo
           @wkb_parser = WKRep::WKBParser.new(self)
         end
         @projector = nil
-      end
-
-      def _set_projector(projector) # :nodoc:
-        @projector = projector
       end
 
       # Equivalence test.
@@ -155,7 +153,7 @@ module RGeo
           if klass_
             projector = klass_.allocate
             projector._set_factories(self, proj_factory)
-            _set_projector(projector)
+            @projector = projector
           end
         end
       end
@@ -222,7 +220,7 @@ module RGeo
           if klass_
             projector = klass_.allocate
             projector._set_factories(self, proj_factory)
-            _set_projector(projector)
+            @projector = projector
           end
         end
       end
