@@ -191,7 +191,7 @@ module RGeo
           else
             extensions = ""
           end
-          "#{_wkt_typename}#{open}#{@name.inspect}#{content}#{extensions}#{authority}#{close}"
+          "#{wkt_typename}#{open}#{@name.inspect}#{content}#{extensions}#{authority}#{close}"
         end
 
         # Marshal support
@@ -261,7 +261,7 @@ module RGeo
         # Gets enumerated value for orientation.
         attr_reader :orientation
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "AXIS"
         end
 
@@ -304,7 +304,7 @@ module RGeo
         # The parameter value.
         attr_reader :value
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PARAMETER"
         end
 
@@ -489,7 +489,7 @@ module RGeo
         # i.e. LinearUnit#meters_per_unit or AngularUnit#radians_per_unit.
         attr_reader :conversion_factor
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "UNIT"
         end
 
@@ -573,7 +573,7 @@ module RGeo
         # The longitude is expressed in this objects angular units.
         attr_reader :longitude
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PRIMEM"
         end
 
@@ -632,7 +632,7 @@ module RGeo
         # semi-minor axis values.
         attr_reader :axisunit
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "SPHEROID"
         end
 
@@ -721,7 +721,7 @@ module RGeo
       # Procedure used to measure vertical distances.
 
       class VerticalDatum < Datum
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "VERT_DATUM"
         end
 
@@ -749,7 +749,7 @@ module RGeo
       # datum.
 
       class LocalDatum < Datum
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "LOCAL_DATUM"
         end
 
@@ -787,7 +787,7 @@ module RGeo
         # (ex,ey,ez) in arc-seconds, and scaling in parts-per-million.
         attr_reader :wgs84_parameters
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "DATUM"
         end
 
@@ -842,7 +842,7 @@ module RGeo
           @parameters.each(&block)
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PROJECTION"
         end
 
@@ -949,7 +949,7 @@ module RGeo
           index < hd ? @head.get_units(index) : @tail.get_units(index - hd)
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "COMPD_CS"
         end
 
@@ -1010,7 +1010,7 @@ module RGeo
           @unit
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "LOCAL_CS"
         end
 
@@ -1074,7 +1074,7 @@ module RGeo
           [@axis0, @axis1, @axis2][index]
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "GEOCCS"
         end
 
@@ -1131,7 +1131,7 @@ module RGeo
           @axis
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "VERT_CS"
         end
 
@@ -1225,7 +1225,7 @@ module RGeo
           @horizontal_datum.wgs84_parameters
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "GEOGCS"
         end
 
@@ -1285,7 +1285,7 @@ module RGeo
           index == 1 ? @axis1 : @axis0
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PROJCS"
         end
 
