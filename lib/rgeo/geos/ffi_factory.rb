@@ -535,7 +535,7 @@ module RGeo
         ::Geos::Utils.create_linear_ring(cs)
       end
 
-      def _generate_wkt(geom)  # :nodoc:
+      def generate_wkt(geom)
         if @wkt_writer
           @wkt_writer.write(geom.fg_geom)
         else

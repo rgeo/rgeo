@@ -29,7 +29,7 @@ module RGeo
       end
 
       def as_text
-        @factory._generate_wkt(self)
+        @factory.generate_wkt(self)
       end
 
       def as_binary

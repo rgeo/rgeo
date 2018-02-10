@@ -405,7 +405,7 @@ module RGeo
 
       attr_reader :coord_sys
 
-      def _generate_wkt(obj)  # :nodoc:
+      def generate_wkt(obj)
         @wkt_generator.generate(obj)
       end
 

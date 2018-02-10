@@ -101,7 +101,7 @@ module RGeo
       end
 
       def as_text
-        str = @factory._generate_wkt(self)
+        str = @factory.generate_wkt(self)
         str.force_encoding("US-ASCII") if str.respond_to?(:force_encoding)
         str
       end
