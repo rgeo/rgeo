@@ -268,55 +268,55 @@ module RGeo
       # See RGeo::Feature::Factory#point
 
       def point(x, y, z = 0, m = 0)
-        _create_feature(ZMPointImpl, @zfactory.point(x, y, z), @mfactory.point(x, y, m))
+        create_feature(ZMPointImpl, @zfactory.point(x, y, z), @mfactory.point(x, y, m))
       end
 
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points)
-        _create_feature(ZMLineStringImpl, @zfactory.line_string(points), @mfactory.line_string(points))
+        create_feature(ZMLineStringImpl, @zfactory.line_string(points), @mfactory.line_string(points))
       end
 
       # See RGeo::Feature::Factory#line
 
       def line(start, stop)
-        _create_feature(ZMLineImpl, @zfactory.line(start, stop), @mfactory.line(start, stop))
+        create_feature(ZMLineImpl, @zfactory.line(start, stop), @mfactory.line(start, stop))
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points)
-        _create_feature(ZMLinearRingImpl, @zfactory.linear_ring(points), @mfactory.linear_ring(points))
+        create_feature(ZMLinearRingImpl, @zfactory.linear_ring(points), @mfactory.linear_ring(points))
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring, inner_rings = nil)
-        _create_feature(ZMPolygonImpl, @zfactory.polygon(outer_ring, inner_rings), @mfactory.polygon(outer_ring, inner_rings))
+        create_feature(ZMPolygonImpl, @zfactory.polygon(outer_ring, inner_rings), @mfactory.polygon(outer_ring, inner_rings))
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems)
-        _create_feature(ZMGeometryCollectionImpl, @zfactory.collection(elems), @mfactory.collection(elems))
+        create_feature(ZMGeometryCollectionImpl, @zfactory.collection(elems), @mfactory.collection(elems))
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems)
-        _create_feature(ZMMultiPointImpl, @zfactory.multi_point(elems), @mfactory.multi_point(elems))
+        create_feature(ZMMultiPointImpl, @zfactory.multi_point(elems), @mfactory.multi_point(elems))
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems)
-        _create_feature(ZMMultiLineStringImpl, @zfactory.multi_line_string(elems), @mfactory.multi_line_string(elems))
+        create_feature(ZMMultiLineStringImpl, @zfactory.multi_line_string(elems), @mfactory.multi_line_string(elems))
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems)
-        _create_feature(ZMMultiPolygonImpl, @zfactory.multi_polygon(elems), @mfactory.multi_polygon(elems))
+        create_feature(ZMMultiPolygonImpl, @zfactory.multi_polygon(elems), @mfactory.multi_polygon(elems))
       end
 
       # See RGeo::Feature::Factory#proj4
@@ -364,7 +364,7 @@ module RGeo
         false
       end
 
-      def _create_feature(klass, zgeometry, mgeometry) # :nodoc:
+      def create_feature(klass, zgeometry, mgeometry) # :nodoc:
         klass ||= TYPE_KLASSES[zgeometry.geometry_type] || ZMGeometryImpl
         zgeometry && mgeometry ? klass.new(self, zgeometry, mgeometry) : nil
       end
