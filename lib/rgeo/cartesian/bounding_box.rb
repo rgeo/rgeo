@@ -26,7 +26,7 @@ module RGeo
 
       def self.create_from_points(point1, point2, opts = {})
         factory = point1.factory
-        new(factory, opts)._add_geometry(point1).add(point2)
+        new(factory, opts).add_geometry(point1).add(point2)
       end
 
       # Create a bounding box given a geometry to surround.
@@ -36,7 +36,7 @@ module RGeo
 
       def self.create_from_geometry(geom, opts = {})
         factory = geom.factory
-        new(factory, opts)._add_geometry(geom)
+        new(factory, opts).add_geometry(geom)
       end
 
       # Create a new empty bounding box with the given factory.
@@ -226,9 +226,9 @@ module RGeo
           add(geometry.max_point)
         when Feature::Geometry
           if geometry.factory == @factory
-            _add_geometry(geometry)
+            add_geometry(geometry)
           else
-            _add_geometry(Feature.cast(geometry, @factory))
+            add_geometry(Feature.cast(geometry, @factory))
           end
         end
         self
@@ -348,7 +348,7 @@ module RGeo
         ]
       end
 
-      def _add_geometry(geometry) # :nodoc:
+      def add_geometry(geometry)
         case geometry
         when Feature::Point
           _add_point(geometry)
@@ -363,7 +363,7 @@ module RGeo
         when Feature::MultiPolygon
           geometry.each { |poly| poly.exterior_ring.points.each { |p| _add_point(p) } }
         when Feature::GeometryCollection
-          geometry.each { |g| _add_geometry(g) }
+          geometry.each { |g| add_geometry(g) }
         end
         self
       end
