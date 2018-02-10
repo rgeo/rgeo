@@ -41,32 +41,28 @@ module RGeo
     end
 
     module LineStringMethods # :nodoc:
-      def _segments
-        unless defined?(@segments)
-          @segments = (0..num_points - 2).map do |i|
-            Segment.new(point_n(i), point_n(i + 1))
-          end
+      def segments
+        @segments ||= (0..num_points - 2).map do |i|
+          Segment.new(point_n(i), point_n(i + 1))
         end
-        @segments
       end
 
       def is_simple?
-        segs = _segments
-        len = segs.length
-        return false if segs.any?(&:degenerate?)
+        len = segments.length
+        return false if segments.any?(&:degenerate?)
         return true if len == 1
-        return segs[0].s != segs[1].e if len == 2
-        segs.each_with_index do |seg, index|
+        return segments[0].s != segments[1].e if len == 2
+        segments.each_with_index do |seg, index|
           nindex = index + 1
           nindex = nil if nindex == len
-          return false if nindex && seg.contains_point?(segs[nindex].e)
+          return false if nindex && seg.contains_point?(segments[nindex].e)
           pindex = index - 1
           pindex = nil if pindex < 0
-          return false if pindex && seg.contains_point?(segs[pindex].s)
+          return false if pindex && seg.contains_point?(segments[pindex].s)
           next unless nindex
           oindex = nindex + 1
           while oindex < len
-            oseg = segs[oindex]
+            oseg = segments[oindex]
             return false if !(index == 0 && oindex == len - 1 && seg.s == oseg.e) && seg.intersects_segment?(oseg)
             oindex += 1
           end
@@ -75,7 +71,7 @@ module RGeo
       end
 
       def length
-        _segments.inject(0.0) { |sum, seg| sum + seg.length }
+        segments.inject(0.0) { |sum, seg| sum + seg.length }
       end
     end
 
