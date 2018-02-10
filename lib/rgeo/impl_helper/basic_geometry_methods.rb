@@ -50,7 +50,7 @@ module RGeo
 
       def encode_with(coder)  # :nodoc:
         coder["factory"] = @factory
-        coder["wkt"] = @factory._psych_wkt_generator.generate(self)
+        coder["wkt"] = @factory.psych_wkt_generator.generate(self)
       end
 
       def init_with(coder) # :nodoc:
