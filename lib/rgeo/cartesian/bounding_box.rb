@@ -351,24 +351,26 @@ module RGeo
       def add_geometry(geometry)
         case geometry
         when Feature::Point
-          _add_point(geometry)
+          add_point(geometry)
         when Feature::LineString
-          geometry.points.each { |p| _add_point(p) }
+          geometry.points.each { |p| add_point(p) }
         when Feature::Polygon
-          geometry.exterior_ring.points.each { |p| _add_point(p) }
+          geometry.exterior_ring.points.each { |p| add_point(p) }
         when Feature::MultiPoint
-          geometry.each { |p| _add_point(p) }
+          geometry.each { |p| add_point(p) }
         when Feature::MultiLineString
-          geometry.each { |line_| line_.points.each { |p| _add_point(p) } }
+          geometry.each { |line| line.points.each { |p| add_point(p) } }
         when Feature::MultiPolygon
-          geometry.each { |poly| poly.exterior_ring.points.each { |p| _add_point(p) } }
+          geometry.each { |poly| poly.exterior_ring.points.each { |p| add_point(p) } }
         when Feature::GeometryCollection
           geometry.each { |g| add_geometry(g) }
         end
         self
       end
 
-      def _add_point(point) # :nodoc:
+      private
+
+      def add_point(point)
         if @min_x
           x = point.x
           @min_x = x if x < @min_x
