@@ -381,12 +381,8 @@ module RGeo
         @psych_wkt_generator ||= RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
       end
 
-      def _psych_wkt_parser # :nodoc:
-        unless defined?(@psych_wkt_parser)
-          @psych_wkt_parser = RGeo::WKRep::WKTParser.new(self,
-            support_wkt12: true, support_ewkt: true)
-        end
-        @psych_wkt_parser
+      def psych_wkt_parser
+        @psych_wkt_parser ||= RGeo::WKRep::WKTParser.new(self, support_wkt12: true, support_ewkt: true)
       end
     end
   end

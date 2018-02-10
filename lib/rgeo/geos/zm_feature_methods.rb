@@ -176,7 +176,7 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        _copy_state_from(coder["factory"]._psych_wkt_parser.parse(coder["wkt"]))
+        _copy_state_from(coder["factory"].psych_wkt_parser.parse(coder["wkt"]))
       end
     end
 
