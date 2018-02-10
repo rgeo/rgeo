@@ -142,10 +142,10 @@ module RGeo
           "hasm" => (_flags & 0x4 != 0),
           "srid" => _srid,
           "bufr" => _buffer_resolution,
-          "wktg" => _wkt_generator ? _wkt_generator._properties : {},
-          "wkbg" => _wkb_generator ? _wkb_generator._properties : {},
-          "wktp" => _wkt_parser ? _wkt_parser._properties : {},
-          "wkbp" => _wkb_parser ? _wkb_parser._properties : {},
+          "wktg" => _wkt_generator ? _wkt_generator.properties : {},
+          "wkbg" => _wkb_generator ? _wkb_generator.properties : {},
+          "wktp" => _wkt_parser ? _wkt_parser.properties : {},
+          "wkbp" => _wkb_parser ? _wkb_parser.properties : {},
           "lmpa" => (_flags & 0x1 != 0),
           "apre" => ((_flags & 0x8) >> 3)
         }
@@ -194,10 +194,10 @@ module RGeo
         coder_["srid"] = _srid
         coder_["buffer_resolution"] = _buffer_resolution
         coder_["lenient_multi_polygon_assertions"] = (_flags & 0x1 != 0)
-        coder_["wkt_generator"] = _wkt_generator ? _wkt_generator._properties : {}
-        coder_["wkb_generator"] = _wkb_generator ? _wkb_generator._properties : {}
-        coder_["wkt_parser"] = _wkt_parser ? _wkt_parser._properties : {}
-        coder_["wkb_parser"] = _wkb_parser ? _wkb_parser._properties : {}
+        coder_["wkt_generator"] = _wkt_generator ? _wkt_generator.properties : {}
+        coder_["wkb_generator"] = _wkb_generator ? _wkb_generator.properties : {}
+        coder_["wkt_parser"] = _wkt_parser ? _wkt_parser.properties : {}
+        coder_["wkb_parser"] = _wkb_parser ? _wkb_parser.properties : {}
         coder_["auto_prepare"] = ((_flags & 0x8) == 0 ? "disabled" : "simple")
         if (proj4_ = _proj4)
           str_ = proj4_.originalstr || proj4_.canonical_str

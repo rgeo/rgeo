@@ -100,7 +100,7 @@ module RGeo
         @ignore_extra_tokens
       end
 
-      def _properties # :nodoc:
+      def properties
         {
           "support_ewkt" => @support_ewkt,
           "support_wkt12" => @support_wkt12,

@@ -100,10 +100,10 @@ module RGeo
           "hasz" => @has_z,
           "hasm" => @has_m,
           "srid" => @srid,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lena" => @lenient_assertions,
           "bufr" => @buffer_resolution
         }
@@ -147,10 +147,10 @@ module RGeo
         coder["srid"] = @srid
         coder["lenient_assertions"] = @lenient_assertions
         coder["buffer_resolution"] = @buffer_resolution
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str
           coder["proj4"] = @proj4.radians? ? { "proj4" => str, "radians" => true } : str

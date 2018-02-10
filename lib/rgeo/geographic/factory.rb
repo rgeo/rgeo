@@ -105,10 +105,10 @@ module RGeo
           "hasz" => @support_z,
           "hasm" => @support_m,
           "srid" => @srid,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lena" => @lenient_assertions,
           "bufr" => @buffer_resolution
         }
@@ -167,10 +167,10 @@ module RGeo
         coder["has_z_coordinate"] = @support_z
         coder["has_m_coordinate"] = @support_m
         coder["srid"] = @srid
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         coder["lenient_assertions"] = @lenient_assertions
         coder["buffer_resolution"] = @buffer_resolution
         if @proj4

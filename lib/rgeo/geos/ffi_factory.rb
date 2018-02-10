@@ -142,10 +142,10 @@ module RGeo
           "hasm" => @has_m,
           "srid" => @srid,
           "bufr" => @buffer_resolution,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lmpa" => @uses_lenient_multi_polygon_assertions,
           "apre" => @_auto_prepare
         }
@@ -190,10 +190,10 @@ module RGeo
         coder["srid"] = @srid
         coder["buffer_resolution"] = @buffer_resolution
         coder["lenient_multi_polygon_assertions"] = @uses_lenient_multi_polygon_assertions
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str

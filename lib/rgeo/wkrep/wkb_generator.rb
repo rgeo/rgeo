@@ -84,7 +84,7 @@ module RGeo
         @little_endian
       end
 
-      def _properties # :nodoc:
+      def properties
         {
           "type_format" => @type_format.to_s,
           "emit_ewkb_srid" => @emit_ewkb_srid,

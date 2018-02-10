@@ -74,7 +74,7 @@ module RGeo
       # Returns the case for output. See WKTGenerator for details.
       attr_reader :convert_case
 
-      def _properties # :nodoc:
+      def properties
         {
           "tag_format" => @tag_format.to_s,
           "emit_ewkt_srid" => @emit_ewkt_srid,

@@ -87,7 +87,7 @@ module RGeo
         @ignore_extra_bytes
       end
 
-      def _properties # :nodoc:
+      def properties
         {
           "support_ewkb" => @support_ewkb,
           "support_wkb12" => @support_wkb12,

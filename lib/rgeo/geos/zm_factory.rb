@@ -102,10 +102,10 @@ module RGeo
         hash = {
           "srid" => @zfactory.srid,
           "bufr" => @zfactory.buffer_resolution,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lmpa" => @zfactory.lenient_multi_polygon_assertions?,
           "apre" => @zfactory.property(:auto_prepare) == :simple,
           "nffi" => @zfactory.is_a?(FFIFactory)
@@ -152,10 +152,10 @@ module RGeo
         coder["srid"] = @zfactory.srid
         coder["buffer_resolution"] = @zfactory.buffer_resolution
         coder["lenient_multi_polygon_assertions"] = @zfactory.lenient_multi_polygon_assertions?
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @zfactory.property(:auto_prepare).to_s
         coder["native_interface"] = @zfactory.is_a?(FFIFactory) ? "ffi" : "capi"
         if (proj4 = @zfactory.proj4)
