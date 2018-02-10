@@ -167,7 +167,7 @@ module RGeo
       end
 
       def marshal_load(data)  # :nodoc:
-        _copy_state_from(data[0]._marshal_wkb_parser.parse(data[1]))
+        _copy_state_from(data[0].marshal_wkb_parser.parse(data[1]))
       end
 
       def encode_with(coder)  # :nodoc:
