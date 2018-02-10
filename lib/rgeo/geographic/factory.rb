@@ -152,7 +152,7 @@ module RGeo
                    end
           if klass_
             projector = klass_.allocate
-            projector._set_factories(self, proj_factory)
+            projector.set_factories(self, proj_factory)
             @projector = projector
           end
         end
@@ -219,7 +219,7 @@ module RGeo
                    end
           if klass_
             projector = klass_.allocate
-            projector._set_factories(self, proj_factory)
+            projector.set_factories(self, proj_factory)
             @projector = projector
           end
         end
