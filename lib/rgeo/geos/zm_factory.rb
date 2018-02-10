@@ -369,12 +369,8 @@ module RGeo
         zgeometry && mgeometry ? klass.new(self, zgeometry, mgeometry) : nil
       end
 
-      def _marshal_wkb_generator # :nodoc:
-        unless defined?(@marshal_wkb_generator)
-          @marshal_wkb_generator = RGeo::WKRep::WKBGenerator.new(
-            typeformat: :wkb12)
-        end
-        @marshal_wkb_generator
+      def marshal_wkb_generator
+        @marshal_wkb_generator ||= RGeo::WKRep::WKBGenerator.new(typeformat: :wkb12)
       end
 
       def _marshal_wkb_parser # :nodoc:

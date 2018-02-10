@@ -41,7 +41,7 @@ module RGeo
       end
 
       def marshal_dump # :nodoc:
-        [@factory, @factory._marshal_wkb_generator.generate(self)]
+        [@factory, @factory.marshal_wkb_generator.generate(self)]
       end
 
       def marshal_load(data)  # :nodoc:
