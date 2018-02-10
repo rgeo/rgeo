@@ -108,7 +108,7 @@ module RGeo
       alias to_s as_text
 
       def as_binary
-        @factory._generate_wkb(self)
+        @factory.generate_wkb(self)
       end
 
       def is_empty?

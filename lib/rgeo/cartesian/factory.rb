@@ -305,7 +305,7 @@ module RGeo
         @wkt_generator.generate(obj)
       end
 
-      def _generate_wkb(obj)  # :nodoc:
+      def generate_wkb(obj)
         @wkb_generator.generate(obj)
       end
 

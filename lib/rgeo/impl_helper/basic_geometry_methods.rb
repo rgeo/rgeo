@@ -33,7 +33,7 @@ module RGeo
       end
 
       def as_binary
-        @factory._generate_wkb(self)
+        @factory.generate_wkb(self)
       end
 
       def _copy_state_from(obj)  # :nodoc:

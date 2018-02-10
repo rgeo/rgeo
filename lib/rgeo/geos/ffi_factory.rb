@@ -543,7 +543,7 @@ module RGeo
         end
       end
 
-      def _generate_wkb(geom)  # :nodoc:
+      def generate_wkb(geom)
         if @wkb_writer
           @wkb_writer.write(geom.fg_geom)
         else
