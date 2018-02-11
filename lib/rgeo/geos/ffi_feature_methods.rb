@@ -29,7 +29,7 @@ module RGeo
 
       def marshal_load(data) # :nodoc:
         @factory = data[0]
-        @fg_geom = @factory._read_for_marshal(data[1])
+        @fg_geom = @factory.read_for_marshal(data[1])
         @fg_geom.srid = @factory.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = nil

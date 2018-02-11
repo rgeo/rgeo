@@ -533,11 +533,8 @@ module RGeo
         end
       end
 
-      def _read_for_marshal(str)  # :nodoc:
-        unless defined?(@marshal_wkb_reader)
-          @marshal_wkb_reader = ::Geos::WkbReader.new
-        end
-        @marshal_wkb_reader.read(str)
+      def read_for_marshal(str)
+        ::Geos::WkbReader.new.read(str)
       end
 
       def _write_for_psych(geom)  # :nodoc:

@@ -21,7 +21,7 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        obj = data_[0]._read_for_marshal(data_[1])
+        obj = data_[0].read_for_marshal(data_[1])
         _steal(obj)
       end
 
