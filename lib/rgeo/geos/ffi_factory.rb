@@ -342,7 +342,7 @@ module RGeo
 
       def linear_ring(points)
         points = points.to_a unless points.is_a?(::Array)
-        fg_geom = _create_fg_linear_ring(points)
+        fg_geom = create_fg_linear_ring(points)
         fg_geom ? FFILinearRingImpl.new(self, fg_geom, nil) : nil
       end
 
@@ -351,10 +351,10 @@ module RGeo
       def polygon(outer_ring, inner_rings = nil)
         inner_rings = inner_rings.to_a unless inner_rings.is_a?(::Array)
         return nil unless RGeo::Feature::LineString.check_type(outer_ring)
-        outer_ring = _create_fg_linear_ring(outer_ring.points)
+        outer_ring = create_fg_linear_ring(outer_ring.points)
         inner_rings = inner_rings.map do |r|
           return nil unless RGeo::Feature::LineString.check_type(r)
-          _create_fg_linear_ring(r.points)
+          create_fg_linear_ring(r.points)
         end
         inner_rings.compact!
         fg_geom = ::Geos::Utils.create_polygon(outer_ring, *inner_rings)
@@ -507,27 +507,6 @@ module RGeo
         obj && obj.fg_geom
       end
 
-      def _create_fg_linear_ring(points) # :nodoc:
-        size = points.size
-        return nil if size == 1 || size == 2
-        if size > 0 && points.first != points.last
-          points += [points.first]
-          size += 1
-        end
-        cs = ::Geos::CoordinateSequence.new(size, 3)
-        points.each_with_index do |p, i|
-          return nil unless RGeo::Feature::Point.check_type(p)
-          cs.set_x(i, p.x)
-          cs.set_y(i, p.y)
-          if @has_z
-            cs.set_z(i, p.z)
-          elsif @has_m
-            cs.set_z(i, p.m)
-          end
-        end
-        ::Geos::Utils.create_linear_ring(cs)
-      end
-
       def generate_wkt(geom)
         if @wkt_writer
           @wkt_writer.write(geom.fg_geom)
@@ -580,6 +559,29 @@ module RGeo
           @psych_wkt_reader = ::Geos::WktReader.new
         end
         @psych_wkt_reader.read(str)
+      end
+
+      private
+      
+      def create_fg_linear_ring(points)
+        size = points.size
+        return if size == 1 || size == 2
+        if size > 0 && points.first != points.last
+          points += [points.first]
+          size += 1
+        end
+        cs = ::Geos::CoordinateSequence.new(size, 3)
+        points.each_with_index do |p, i|
+          return unless RGeo::Feature::Point.check_type(p)
+          cs.set_x(i, p.x)
+          cs.set_y(i, p.y)
+          if @has_z
+            cs.set_z(i, p.z)
+          elsif @has_m
+            cs.set_z(i, p.m)
+          end
+        end
+        ::Geos::Utils.create_linear_ring(cs)
       end
     end
   end
