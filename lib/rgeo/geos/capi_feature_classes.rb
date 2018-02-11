@@ -36,7 +36,7 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        obj = coder["factory"]._read_for_psych(coder["wkt"])
+        obj = coder["factory"].read_for_psych(coder["wkt"])
         _steal(obj)
       end
 

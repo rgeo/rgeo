@@ -547,11 +547,8 @@ module RGeo
         end
       end
 
-      def _read_for_psych(str) # :nodoc:
-        unless defined?(@psych_wkt_reader)
-          @psych_wkt_reader = ::Geos::WktReader.new
-        end
-        @psych_wkt_reader.read(str)
+      def read_for_psych(str)
+        ::Geos::WktReader.new.read(str)
       end
 
       private

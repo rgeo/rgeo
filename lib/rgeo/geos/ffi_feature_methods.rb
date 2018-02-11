@@ -46,7 +46,7 @@ module RGeo
 
       def init_with(coder)  # :nodoc:
         @factory = coder["factory"]
-        @fg_geom = @factory._read_for_psych(coder["wkt"])
+        @fg_geom = @factory.read_for_psych(coder["wkt"])
         @fg_geom.srid = @factory.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = nil
