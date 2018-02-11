@@ -87,17 +87,13 @@ module RGeo
     end
 
     module SphericalLineStringMethods # :nodoc:
-      def _arcs
-        unless defined?(@arcs)
-          @arcs = (0..num_points - 2).map do |i|
-            SphericalMath::ArcXYZ.new(point_n(i).xyz, point_n(i + 1).xyz)
-          end
+      def arcs
+        @arcs ||= (0..num_points - 2).map do |i|
+          SphericalMath::ArcXYZ.new(point_n(i).xyz, point_n(i + 1).xyz)
         end
-        @arcs
       end
 
       def is_simple?
-        arcs = _arcs
         len = arcs.length
         return false if arcs.any?(&:degenerate?)
         return true if len == 1
@@ -121,7 +117,7 @@ module RGeo
       end
 
       def length
-        _arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
+        arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
       end
     end
 
