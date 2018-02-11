@@ -523,13 +523,11 @@ module RGeo
         end
       end
 
-      def _write_for_marshal(geom) # :nodoc:
+      def write_for_marshal(geom)
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
-          unless defined?(@marshal_wkb_writer)
-            @marshal_wkb_writer = ::Geos::WkbWriter.new
-            @marshal_wkb_writer.output_dimensions = 3 if @_has_3d
-          end
-          @marshal_wkb_writer.write(geom.fg_geom)
+          wkb_writer = ::Geos::WkbWriter.new
+          wkb_writer.output_dimensions = 3 if @_has_3d
+          wkb_writer.write(geom.fg_geom)
         else
           Utils.marshal_wkb_generator.generate(geom)
         end

@@ -24,7 +24,7 @@ module RGeo
       # Marshal support
 
       def marshal_dump # :nodoc:
-        [@factory, @factory._write_for_marshal(self)]
+        [@factory, @factory.write_for_marshal(self)]
       end
 
       def marshal_load(data) # :nodoc:

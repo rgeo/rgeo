@@ -17,7 +17,7 @@ module RGeo
 
       def marshal_dump # :nodoc:
         my_factory = factory
-        [my_factory, my_factory._write_for_marshal(self)]
+        [my_factory, my_factory.write_for_marshal(self)]
       end
 
       def marshal_load(data_) # :nodoc:
