@@ -268,17 +268,11 @@ module RGeo
         end
       end
 
-      # Create a feature that wraps the given ffi-geos geometry object
-
-      def wrap_fg_geom(fg_geom)
-        _wrap_fg_geom(fg_geom, nil)
-      end
-
       # See RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str)
         if @wkt_reader
-          _wrap_fg_geom(@wkt_reader.read(str), nil)
+          wrap_fg_geom(@wkt_reader.read(str), nil)
         else
           @wkt_parser.parse(str)
         end
@@ -288,7 +282,7 @@ module RGeo
 
       def parse_wkb(str)
         if @wkb_reader
-          _wrap_fg_geom(@wkb_reader.read(str), nil)
+          wrap_fg_geom(@wkb_reader.read(str), nil)
         else
           @wkb_parser.parse(str)
         end
@@ -460,10 +454,8 @@ module RGeo
         # TODO
       end
 
-      attr_reader :_has_3d # :nodoc:
-      attr_reader :_auto_prepare # :nodoc:
-
-      def _wrap_fg_geom(fg_geom, klass) # :nodoc:
+      # Create a feature that wraps the given ffi-geos geometry object
+      def wrap_fg_geom(fg_geom, klass = nil)
         klasses = nil
 
         # We don't allow "empty" points, so replace such objects with
@@ -504,6 +496,9 @@ module RGeo
         end
         klass.new(self, fg_geom, klasses)
       end
+
+      attr_reader :_has_3d # :nodoc:
+      attr_reader :_auto_prepare # :nodoc:
 
       def _convert_to_fg_geometry(obj, type = nil) # :nodoc:
         if type.nil? && obj.factory == self

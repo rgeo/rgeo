@@ -89,14 +89,14 @@ module RGeo
       end
 
       def envelope
-        @factory._wrap_fg_geom(@fg_geom.envelope, nil)
+        @factory.wrap_fg_geom(@fg_geom.envelope, nil)
       end
 
       def boundary
         if self.class == FFIGeometryCollectionImpl
           nil
         else
-          @factory._wrap_fg_geom(@fg_geom.boundary, nil)
+          @factory.wrap_fg_geom(@fg_geom.boundary, nil)
         end
       end
 
@@ -216,23 +216,23 @@ module RGeo
       end
 
       def buffer(distance)
-        @factory._wrap_fg_geom(@fg_geom.buffer(distance, @factory.buffer_resolution), nil)
+        @factory.wrap_fg_geom(@fg_geom.buffer(distance, @factory.buffer_resolution), nil)
       end
 
       def convex_hull
-        @factory._wrap_fg_geom(@fg_geom.convex_hull, nil)
+        @factory.wrap_fg_geom(@fg_geom.convex_hull, nil)
       end
 
       def intersection(rhs)
         fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.intersection(fg), nil) : nil
+        fg ? @factory.wrap_fg_geom(@fg_geom.intersection(fg), nil) : nil
       end
 
       alias * intersection
 
       def union(rhs)
         fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.union(fg), nil) : nil
+        fg ? @factory.wrap_fg_geom(@fg_geom.union(fg), nil) : nil
       end
 
       alias + union
@@ -244,14 +244,14 @@ module RGeo
 
       def difference(rhs)
         fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.difference(fg), nil) : nil
+        fg ? @factory.wrap_fg_geom(@fg_geom.difference(fg), nil) : nil
       end
 
       alias - difference
 
       def sym_difference(rhs)
         fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
+        fg ? @factory.wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
       end
 
       def eql?(rhs)
@@ -403,15 +403,15 @@ module RGeo
       end
 
       def centroid
-        @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
       def point_on_surface
-        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def exterior_ring
-        @factory._wrap_fg_geom(@fg_geom.exterior_ring, FFILinearRingImpl)
+        @factory.wrap_fg_geom(@fg_geom.exterior_ring, FFILinearRingImpl)
       end
 
       def num_interior_rings
@@ -420,13 +420,13 @@ module RGeo
 
       def interior_ring_n(n)
         if n >= 0 && n < @fg_geom.num_interior_rings
-          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
+          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
 
       def interior_rings
         ::Array.new(@fg_geom.num_interior_rings) do |n|
-          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
+          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
 
@@ -485,7 +485,7 @@ module RGeo
 
       def geometry_n(n)
         if n >= 0 && n < @fg_geom.num_geometries
-          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
             @_klasses ? @_klasses[n] : nil)
         end
       end
@@ -493,7 +493,7 @@ module RGeo
       def [](n)
         n += @fg_geom.num_geometries if n < 0
         if n >= 0 && n < @fg_geom.num_geometries
-          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
             @_klasses ? @_klasses[n] : nil)
         end
       end
@@ -510,7 +510,7 @@ module RGeo
       def each
         if block_given?
           @fg_geom.num_geometries.times do |n|
-            yield @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+            yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
               @_klasses ? @_klasses[n] : nil)
           end
           self
@@ -564,11 +564,11 @@ module RGeo
       end
 
       def centroid
-        @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
       def point_on_surface
-        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def coordinates
