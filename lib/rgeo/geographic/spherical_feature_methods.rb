@@ -23,7 +23,7 @@ module RGeo
         super
       end
 
-      def _xyz
+      def xyz
         @xyz ||= SphericalMath::PointXYZ.from_latlon(@y, @x)
       end
 
@@ -31,7 +31,7 @@ module RGeo
         rhs = Feature.cast(rhs, @factory)
         case rhs
         when SphericalPointImpl
-          _xyz.dist_to_point(rhs._xyz) * SphericalMath::RADIUS
+          xyz.dist_to_point(rhs.xyz) * SphericalMath::RADIUS
         else
           super
         end
@@ -63,7 +63,7 @@ module RGeo
         cos = ::Math.cos(radius)
         sin = ::Math.sin(radius)
         point_count = factory.property(:buffer_resolution) * 4
-        p0 = _xyz
+        p0 = xyz
         p1 = p0.create_perpendicular
         p2 = p1 % p0
         angle = ::Math::PI * 2.0 / point_count
@@ -90,7 +90,7 @@ module RGeo
       def _arcs
         unless defined?(@arcs)
           @arcs = (0..num_points - 2).map do |i|
-            SphericalMath::ArcXYZ.new(point_n(i)._xyz, point_n(i + 1)._xyz)
+            SphericalMath::ArcXYZ.new(point_n(i).xyz, point_n(i + 1).xyz)
           end
         end
         @arcs
