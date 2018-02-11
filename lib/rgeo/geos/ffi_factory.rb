@@ -500,13 +500,11 @@ module RGeo
       attr_reader :_has_3d # :nodoc:
       attr_reader :_auto_prepare # :nodoc:
 
-      def _convert_to_fg_geometry(obj, type = nil) # :nodoc:
-        if type.nil? && obj.factory == self
-          obj
-        else
+      def convert_to_fg_geometry(obj, type = nil)
+        if type && obj.factory != self
           obj = Feature.cast(obj, self, type)
         end
-        obj ? obj.fg_geom : nil
+        obj && obj.fg_geom
       end
 
       def _create_fg_linear_ring(points) # :nodoc:
