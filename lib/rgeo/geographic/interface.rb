@@ -127,8 +127,8 @@ module RGeo
         Geographic::Factory.new("Spherical",
           has_z_coordinate: opts[:has_z_coordinate],
           has_m_coordinate: opts[:has_m_coordinate],
-          proj4: proj4 || _proj44055,
-          coord_sys: coord_sys || _coordsys_4055,
+          proj4: proj4 || proj_4055,
+          coord_sys: coord_sys || coord_sys_4055,
           uses_lenient_assertions: opts[:uses_lenient_assertions],
           buffer_resolution: opts[:buffer_resolution],
           wkt_parser: opts[:wkt_parser],
@@ -212,8 +212,8 @@ module RGeo
 
       def simple_mercator_factory(opts = {})
         factory = Geographic::Factory.new("Projected",
-          proj4: _proj44326,
-          coord_sys: _coordsys_4326,
+          proj4: proj_4326,
+          coord_sys: coord_sys_4326,
           srid: 4326,
           wkt_parser: opts[:wkt_parser],
           wkb_parser: opts[:wkb_parser],
@@ -369,7 +369,7 @@ module RGeo
             end
           end
           # Fall back to getting the values from the projection.
-          proj4 ||= projection_proj4.get_geographic || _proj44326
+          proj4 ||= projection_proj4.get_geographic || _proj_4326
           coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
           srid ||= coord_sys.authority_code if coord_sys
           srid ||= 4326
@@ -426,7 +426,7 @@ module RGeo
             end
           end
           # Fall back to getting the values from the projection.
-          proj4 ||= projection_proj4.get_geographic || _proj44326
+          proj4 ||= projection_proj4.get_geographic || _proj_4326
           coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
           srid ||= coord_sys.authority_code if coord_sys
           srid ||= 4326
@@ -455,32 +455,34 @@ module RGeo
         factory
       end
 
-      def _proj44055 # :nodoc:
+      private
+
+      def proj_4055
         unless defined?(@proj44055)
           @proj44055 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
         end
         @proj44055
       end
 
-      def _coordsys_4055 # :nodoc:
-        unless defined?(@coordsys_4055)
-          @coordsys_4055 = CoordSys::CS.create_from_wkt('GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]]')
+      def coord_sys_4055
+        unless defined?(@coord_sys_4055)
+          @coord_sys_4055 = CoordSys::CS.create_from_wkt('GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]]')
         end
-        @coordsys_4055
+        @coord_sys_4055
       end
 
-      def _proj44326 # :nodoc:
-        unless defined?(@proj44326)
-          @proj44326 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+      def proj_4326
+        unless defined?(@proj_4326)
+          @proj_4326 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
         end
-        @proj44326
+        @proj_4326
       end
 
-      def _coordsys_4326 # :nodoc:
-        unless defined?(@coordsys_4326)
-          @coordsys_4326 = CoordSys::CS.create_from_wkt('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
+      def coord_sys_4326
+        unless defined?(@coord_sys_4326)
+          @coord_sys_4326 = CoordSys::CS.create_from_wkt('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
         end
-        @coordsys_4326
+        @coord_sys_4326
       end
     end
   end
