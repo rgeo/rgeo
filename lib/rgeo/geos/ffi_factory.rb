@@ -537,13 +537,11 @@ module RGeo
         ::Geos::WkbReader.new.read(str)
       end
 
-      def _write_for_psych(geom)  # :nodoc:
+      def write_for_psych(geom)
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
-          unless defined?(@psych_wkt_writer)
-            @psych_wkt_writer = ::Geos::WktWriter.new
-            @psych_wkt_writer.output_dimensions = 3 if @_has_3d
-          end
-          @psych_wkt_writer.write(geom.fg_geom)
+          wkt_writer = ::Geos::WktWriter.new
+          wkt_writer.output_dimensions = 3 if @_has_3d
+          wkt_writer.write(geom.fg_geom)
         else
           Utils.psych_wkt_generator.generate(geom)
         end

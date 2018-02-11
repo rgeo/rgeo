@@ -39,7 +39,7 @@ module RGeo
 
       def encode_with(coder) # :nodoc:
         coder["factory"] = @factory
-        str = @factory._write_for_psych(self)
+        str = @factory.write_for_psych(self)
         str = str.encode("US-ASCII") if str.respond_to?(:encode)
         coder["wkt"] = str
       end
