@@ -165,22 +165,14 @@ module RGeo
           to_wkt
         end
 
-        # Computes the WKT representation. Options include:
+        # Return the WKT representation.
         #
-        # [<tt>:standard_brackets</tt>]
-        #   If set to true, outputs parentheses rather than square
+        # <tt>:standard_brackets</tt>
+        #   If true, outputs parentheses rather than square
         #   brackets. Default is false.
-
-        def to_wkt(opts = {})
-          if opts[:standard_brackets]
-            @standard_wkt ||= _to_wkt("(", ")")
-          else
-            @square_wkt ||= _to_wkt("[", "]")
-          end
-        end
-
-        def _to_wkt(open, close) # :nodoc:
-          content = _wkt_content(open, close).map { |obj| ",#{obj}" }.join
+        def to_wkt(standard_brackets = false)
+          open, close = brackets(standard_brackets)
+          content = wkt_content(standard_brackets).map { |obj| ",#{obj}" }.join
           if defined?(@authority) && @authority
             authority = ",AUTHORITY#{open}#{@authority.inspect},#{@authority_code.inspect}#{close}"
           else
@@ -191,7 +183,7 @@ module RGeo
           else
             extensions = ""
           end
-          "#{_wkt_typename}#{open}#{@name.inspect}#{content}#{extensions}#{authority}#{close}"
+          "#{wkt_typename}#{open}#{@name.inspect}#{content}#{extensions}#{authority}#{close}"
         end
 
         # Marshal support
@@ -232,6 +224,12 @@ module RGeo
         class << self
           private :new
         end
+
+        private
+
+        def brackets(standard)
+          standard ? %w[( )] : %w([ ])
+        end
       end
 
       # == OGC spec description
@@ -261,12 +259,8 @@ module RGeo
         # Gets enumerated value for orientation.
         attr_reader :orientation
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "AXIS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [NAMES_BY_VALUE[@orientation]]
         end
 
         class << self
@@ -281,6 +275,13 @@ module RGeo
           def create(name, orientation)
             new(name, orientation)
           end
+
+        end
+
+        private
+
+        def wkt_content(_)
+          [NAMES_BY_VALUE[@orientation]]
         end
       end
 
@@ -304,12 +305,8 @@ module RGeo
         # The parameter value.
         attr_reader :value
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PARAMETER"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@value]
         end
 
         class << self
@@ -318,6 +315,12 @@ module RGeo
           def create(name, value)
             new(name, value)
           end
+        end
+
+        private
+
+        def wkt_content(_)
+          [@value]
         end
       end
 
@@ -360,7 +363,8 @@ module RGeo
         # Bursa Wolf scaling in in parts per million.
         attr_reader :ppm
 
-        def _to_wkt(open, close) # :nodoc:
+        def to_wkt(standard_brackets = false)
+          open, close = brackets(standard_brackets)
           "TOWGS84#{open}#{@dx},#{@dy},#{@dz},#{@ex},#{@ey},#{@ez},#{@ppm}#{close}"
         end
 
@@ -489,12 +493,8 @@ module RGeo
         # i.e. LinearUnit#meters_per_unit or AngularUnit#radians_per_unit.
         attr_reader :conversion_factor
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "UNIT"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@conversion_factor]
         end
 
         class << self
@@ -506,6 +506,12 @@ module RGeo
           def create(name, conversion_factor, *optional)
             new(name, conversion_factor, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(_)
+          [@conversion_factor]
         end
       end
 
@@ -573,12 +579,8 @@ module RGeo
         # The longitude is expressed in this objects angular units.
         attr_reader :longitude
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PRIMEM"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@longitude]
         end
 
         class << self
@@ -590,6 +592,12 @@ module RGeo
           def create(name, angular_unit, longitude, *optional)
             new(name, angular_unit, longitude, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(_)
+          [@longitude]
         end
       end
 
@@ -632,12 +640,8 @@ module RGeo
         # semi-minor axis values.
         attr_reader :axisunit
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "SPHEROID"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@semi_major_axis, @inverse_flattening]
         end
 
         class << self
@@ -680,6 +684,12 @@ module RGeo
             new(name, semi_major_axis, semi_minor_axis, inverse_flattening, true, linear_unit, *optional)
           end
         end
+
+        private
+
+        def wkt_content(_)
+          [@semi_major_axis, @inverse_flattening]
+        end
       end
 
       # == OGC spec description
@@ -711,7 +721,9 @@ module RGeo
         # Gets the type of the datum as an enumerated code.
         attr_reader :datum_type
 
-        def _wkt_content(open, close) # :nodoc:
+        private
+
+        def wkt_content(_)
           []
         end
       end
@@ -721,12 +733,8 @@ module RGeo
       # Procedure used to measure vertical distances.
 
       class VerticalDatum < Datum
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "VERT_DATUM"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@datum_type]
         end
 
         class << self
@@ -737,6 +745,12 @@ module RGeo
           def create(name, datum_type, *optional)
             new(name, datum_type, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(_)
+          [@datum_type]
         end
       end
 
@@ -749,12 +763,8 @@ module RGeo
       # datum.
 
       class LocalDatum < Datum
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "LOCAL_DATUM"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@datum_type]
         end
 
         class << self
@@ -765,6 +775,12 @@ module RGeo
           def create(name, datum_type, *optional)
             new(name, datum_type, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(_)
+          [@datum_type]
         end
       end
 
@@ -787,14 +803,8 @@ module RGeo
         # (ex,ey,ez) in arc-seconds, and scaling in parts-per-million.
         attr_reader :wgs84_parameters
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "DATUM"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          array = [@ellipsoid._to_wkt(open, close)]
-          array << @wgs84_parameters._to_wkt(open, close) if @wgs84_parameters
-          array
         end
 
         class << self
@@ -806,6 +816,14 @@ module RGeo
           def create(name, datum_type, ellipsoid, wgs84_parameters, *optional)
             new(name, datum_type, ellipsoid, wgs84_parameters, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          array = [@ellipsoid.to_wkt(standard_brackets)]
+          array << @wgs84_parameters.to_wkt(standard_brackets) if @wgs84_parameters
+          array
         end
       end
 
@@ -842,12 +860,8 @@ module RGeo
           @parameters.each(&block)
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PROJECTION"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          []
         end
 
         class << self
@@ -858,6 +872,12 @@ module RGeo
           def create(name, class_name, parameters, *optional)
             new(name, class_name, parameters, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(_)
+          []
         end
       end
 
@@ -949,12 +969,8 @@ module RGeo
           index < hd ? @head.get_units(index) : @tail.get_units(index - hd)
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "COMPD_CS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@head._to_wkt(open, close), @tail._to_wkt(open, close)]
         end
 
         class << self
@@ -965,6 +981,12 @@ module RGeo
           def create(name, head, tail, *optional)
             new(name, head, tail, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          [@head.to_wkt(standard_brackets), @tail.to_wkt(standard_brackets)]
         end
       end
 
@@ -1010,12 +1032,8 @@ module RGeo
           @unit
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "LOCAL_CS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          [@local_datum._to_wkt(open, close), @unit._to_wkt(open, close)] + @axes.map { |ax| ax._to_wkt(open, close) }
         end
 
         class << self
@@ -1027,6 +1045,15 @@ module RGeo
           def create(name, local_datum, unit, axes, *optional)
             new(name, local_datum, unit, axes, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          [
+            @local_datum.to_wkt(standard_brackets),
+            @unit.to_wkt(standard_brackets)
+          ] + @axes.map { |ax| ax.to_wkt(standard_brackets) }
         end
       end
 
@@ -1074,16 +1101,8 @@ module RGeo
           [@axis0, @axis1, @axis2][index]
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "GEOCCS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          arr = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @linear_unit._to_wkt(open, close)]
-          arr << @axis0._to_wkt(open, close) if @axis0
-          arr << @axis1._to_wkt(open, close) if @axis1
-          arr << @axis2._to_wkt(open, close) if @axis2
-          arr
         end
 
         class << self
@@ -1096,6 +1115,20 @@ module RGeo
           def create(name, horizontal_datum, prime_meridian, linear_unit, axis0, axis1, axis2, *optional)
             new(name, horizontal_datum, prime_meridian, linear_unit, axis0, axis1, axis2, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          arr = [
+            @horizontal_datum.to_wkt(standard_brackets),
+            @prime_meridian.to_wkt(standard_brackets),
+            @linear_unit.to_wkt(standard_brackets)
+          ]
+          arr << @axis0.to_wkt(standard_brackets) if @axis0
+          arr << @axis1.to_wkt(standard_brackets) if @axis1
+          arr << @axis2.to_wkt(standard_brackets) if @axis2
+          arr
         end
       end
 
@@ -1131,14 +1164,8 @@ module RGeo
           @axis
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "VERT_CS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          arr = [@vertical_datum._to_wkt(open, close), @vertical_unit._to_wkt(open, close)]
-          arr << @axis._to_wkt(open, close) if @axis
-          arr
         end
 
         class << self
@@ -1150,6 +1177,14 @@ module RGeo
           def create(name, vertical_datum, vertical_unit, axis, *optional)
             new(name, vertical_datum, vertical_unit, axis, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          arr = [@vertical_datum.to_wkt(standard_brackets), @vertical_unit.to_wkt(standard_brackets)]
+          arr << @axis.to_wkt(standard_brackets) if @axis
+          arr
         end
       end
 
@@ -1225,15 +1260,8 @@ module RGeo
           @horizontal_datum.wgs84_parameters
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "GEOGCS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          arr = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @angular_unit._to_wkt(open, close)]
-          arr << @axis0._to_wkt(open, close) if @axis0
-          arr << @axis1._to_wkt(open, close) if @axis1
-          arr
         end
 
         class << self
@@ -1246,6 +1274,19 @@ module RGeo
           def create(name, angular_unit, horizontal_datum, prime_meridian, axis0, axis1, *optional)
             new(name, angular_unit, horizontal_datum, prime_meridian, axis0, axis1, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          arr = [
+            @horizontal_datum.to_wkt(standard_brackets),
+            @prime_meridian.to_wkt(standard_brackets),
+            @angular_unit.to_wkt(standard_brackets)
+          ]
+          arr << @axis0.to_wkt(standard_brackets) if @axis0
+          arr << @axis1.to_wkt(standard_brackets) if @axis1
+          arr
         end
       end
 
@@ -1285,17 +1326,8 @@ module RGeo
           index == 1 ? @axis1 : @axis0
         end
 
-        def _wkt_typename # :nodoc:
+        def wkt_typename
           "PROJCS"
-        end
-
-        def _wkt_content(open, close) # :nodoc:
-          arr = [@geographic_coordinate_system._to_wkt(open, close), @projection._to_wkt(open, close)]
-          @projection.each_parameter { |param_| arr << param_._to_wkt(open, close) }
-          arr << @linear_unit._to_wkt(open, close)
-          arr << @axis0._to_wkt(open, close) if @axis0
-          arr << @axis1._to_wkt(open, close) if @axis1
-          arr
         end
 
         class << self
@@ -1308,6 +1340,17 @@ module RGeo
           def create(name, geographic_coordinate_system, projection, linear_unit, axis0, axis1, *optional)
             new(name, geographic_coordinate_system, projection, linear_unit, axis0, axis1, *optional)
           end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          arr = [@geographic_coordinate_system.to_wkt(standard_brackets), @projection.to_wkt(standard_brackets)]
+          @projection.each_parameter { |param| arr << param.to_wkt(standard_brackets) }
+          arr << @linear_unit.to_wkt(standard_brackets)
+          arr << @axis0.to_wkt(standard_brackets) if @axis0
+          arr << @axis1.to_wkt(standard_brackets) if @axis1
+          arr
         end
       end
     end

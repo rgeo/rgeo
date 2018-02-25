@@ -7,14 +7,16 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicGeometryCollectionMethods # :nodoc:
+      attr_reader :elements
+
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        _validate_geometry
+        validate_geometry
       end
 
       def num_geometries
@@ -67,25 +69,23 @@ module RGeo
         end
       end
 
-      def _copy_state_from(obj) # :nodoc:
-        super
-        @elements = obj._elements
-      end
+      private
 
-      def _elements # :nodoc:
-        @elements
+      def copy_state_from(obj)
+        super
+        @elements = obj.elements
       end
     end
 
     module BasicMultiLineStringMethods  # :nodoc:
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory, Feature::LineString, :keep_subtype)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        _validate_geometry
+        validate_geometry
       end
 
       def geometry_type
@@ -100,17 +100,12 @@ module RGeo
         @elements.inject(0.0) { |sum, obj| sum + obj.length }
       end
 
-      def _add_boundary(hash, point)  # :nodoc:
-        hval = [point.x, point.y].hash
-        (hash[hval] ||= [point, 0])[1] += 1
-      end
-
       def boundary
         hash = {}
         @elements.each do |line|
           if !line.is_empty? && !line.is_closed?
-            _add_boundary(hash, line.start_point)
-            _add_boundary(hash, line.end_point)
+            add_boundary(hash, line.start_point)
+            add_boundary(hash, line.end_point)
           end
         end
         array = []
@@ -123,17 +118,24 @@ module RGeo
       def coordinates
         @elements.map(&:coordinates)
       end
+
+      private
+
+      def add_boundary(hash, point)
+        hval = [point.x, point.y].hash
+        (hash[hval] ||= [point, 0])[1] += 1
+      end
     end
 
     module BasicMultiPointMethods # :nodoc:
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory, Feature::Point, :keep_subtype)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        _validate_geometry
+        validate_geometry
       end
 
       def geometry_type
@@ -151,13 +153,13 @@ module RGeo
 
     module BasicMultiPolygonMethods # :nodoc:
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory, Feature::Polygon, :keep_subtype)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        _validate_geometry
+        validate_geometry
       end
 
       def geometry_type

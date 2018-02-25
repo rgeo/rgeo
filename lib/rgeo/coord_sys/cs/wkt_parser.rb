@@ -219,7 +219,7 @@ module RGeo
           def assert_empty # :nodoc:
             if @values.size > 0
               names = @values.map do |val|
-                val.is_a?(Base) ? val._wkt_typename : val.inspect
+                val.is_a?(Base) ? val.wkt_typename : val.inspect
               end
               raise Error::ParseError, "#{@values.size} unexpected arguments: #{names.join(', ')}"
             end

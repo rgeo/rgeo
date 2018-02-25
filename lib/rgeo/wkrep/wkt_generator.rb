@@ -74,7 +74,7 @@ module RGeo
       # Returns the case for output. See WKTGenerator for details.
       attr_reader :convert_case
 
-      def _properties # :nodoc:
+      def properties
         {
           "tag_format" => @tag_format.to_s,
           "emit_ewkt_srid" => @emit_ewkt_srid,
@@ -97,7 +97,7 @@ module RGeo
           @cur_support_z = factory.property(:has_z_coordinate)
           @cur_support_m = factory.property(:has_m_coordinate)
         end
-        str = _generate_feature(obj, true)
+        str = generate_feature(obj, true)
         if @convert_case == :upper
           str.upcase
         elsif @convert_case == :lower
@@ -107,7 +107,9 @@ module RGeo
         end
       end
 
-      def _generate_feature(obj, toplevel = false) # :nodoc:
+      private
+
+      def generate_feature(obj, toplevel = false)
         type = obj.geometry_type
         type = Feature::LineString if type.subtype_of?(Feature::LineString)
         tag = type.type_name
@@ -126,80 +128,80 @@ module RGeo
           end
         end
         if type == Feature::Point
-          "#{tag} #{_generate_point(obj)}"
+          "#{tag} #{generate_point(obj)}"
         elsif type == Feature::LineString
-          "#{tag} #{_generate_line_string(obj)}"
+          "#{tag} #{generate_line_string(obj)}"
         elsif type == Feature::Polygon
-          "#{tag} #{_generate_polygon(obj)}"
+          "#{tag} #{generate_polygon(obj)}"
         elsif type == Feature::GeometryCollection
-          "#{tag} #{_generate_geometry_collection(obj)}"
+          "#{tag} #{generate_geometry_collection(obj)}"
         elsif type == Feature::MultiPoint
-          "#{tag} #{_generate_multi_point(obj)}"
+          "#{tag} #{generate_multi_point(obj)}"
         elsif type == Feature::MultiLineString
-          "#{tag} #{_generate_multi_line_string(obj)}"
+          "#{tag} #{generate_multi_line_string(obj)}"
         elsif type == Feature::MultiPolygon
-          "#{tag} #{_generate_multi_polygon(obj)}"
+          "#{tag} #{generate_multi_polygon(obj)}"
         else
           raise Error::ParseError, "Unrecognized geometry type: #{type}"
         end
       end
 
-      def _generate_coords(obj) # :nodoc:
+      def generate_coords(obj)
         str = "#{obj.x} #{obj.y}"
         str << " #{obj.z}" if @cur_support_z
         str << " #{obj.m}" if @cur_support_m
         str
       end
 
-      def _generate_point(obj) # :nodoc:
-        "#{@begin_bracket}#{_generate_coords(obj)}#{@end_bracket}"
+      def generate_point(obj)
+        "#{@begin_bracket}#{generate_coords(obj)}#{@end_bracket}"
       end
 
-      def _generate_line_string(obj) # :nodoc:
+      def generate_line_string(obj)
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.points.map { |p| _generate_coords(p) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.points.map { |p| generate_coords(p) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def _generate_polygon(obj) # :nodoc:
+      def generate_polygon(obj)
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{([_generate_line_string(obj.exterior_ring)] + obj.interior_rings.map { |r| _generate_line_string(r) }).join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{([generate_line_string(obj.exterior_ring)] + obj.interior_rings.map { |r| generate_line_string(r) }).join(', ')}#{@end_bracket}"
         end
       end
 
-      def _generate_geometry_collection(obj) # :nodoc:
+      def generate_geometry_collection(obj)
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| _generate_feature(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_feature(f) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def _generate_multi_point(obj) # :nodoc:
+      def generate_multi_point(obj)
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| _generate_point(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_point(f) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def _generate_multi_line_string(obj) # :nodoc:
+      def generate_multi_line_string(obj)
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| _generate_line_string(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_line_string(f) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def _generate_multi_polygon(obj) # :nodoc:
+      def generate_multi_polygon(obj)
         if obj.is_empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| _generate_polygon(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_polygon(f) }.join(', ')}#{@end_bracket}"
         end
       end
     end

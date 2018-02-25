@@ -17,11 +17,11 @@ module RGeo
 
       def marshal_dump # :nodoc:
         my_factory = factory
-        [my_factory, my_factory._write_for_marshal(self)]
+        [my_factory, my_factory.write_for_marshal(self)]
       end
 
       def marshal_load(data_) # :nodoc:
-        obj = data_[0]._read_for_marshal(data_[1])
+        obj = data_[0].read_for_marshal(data_[1])
         _steal(obj)
       end
 
@@ -30,13 +30,13 @@ module RGeo
       def encode_with(coder) # :nodoc:
         my_factory = factory
         coder["factory"] = my_factory
-        str = my_factory._write_for_psych(self)
+        str = my_factory.write_for_psych(self)
         str = str.encode("US-ASCII") if str.respond_to?(:encode)
         coder["wkt"] = str
       end
 
       def init_with(coder) # :nodoc:
-        obj = coder["factory"]._read_for_psych(coder["wkt"])
+        obj = coder["factory"].read_for_psych(coder["wkt"])
         _steal(obj)
       end
 

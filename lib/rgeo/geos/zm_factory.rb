@@ -102,10 +102,10 @@ module RGeo
         hash = {
           "srid" => @zfactory.srid,
           "bufr" => @zfactory.buffer_resolution,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lmpa" => @zfactory.lenient_multi_polygon_assertions?,
           "apre" => @zfactory.property(:auto_prepare) == :simple,
           "nffi" => @zfactory.is_a?(FFIFactory)
@@ -152,10 +152,10 @@ module RGeo
         coder["srid"] = @zfactory.srid
         coder["buffer_resolution"] = @zfactory.buffer_resolution
         coder["lenient_multi_polygon_assertions"] = @zfactory.lenient_multi_polygon_assertions?
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @zfactory.property(:auto_prepare).to_s
         coder["native_interface"] = @zfactory.is_a?(FFIFactory) ? "ffi" : "capi"
         if (proj4 = @zfactory.proj4)
@@ -268,55 +268,55 @@ module RGeo
       # See RGeo::Feature::Factory#point
 
       def point(x, y, z = 0, m = 0)
-        _create_feature(ZMPointImpl, @zfactory.point(x, y, z), @mfactory.point(x, y, m))
+        create_feature(ZMPointImpl, @zfactory.point(x, y, z), @mfactory.point(x, y, m))
       end
 
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points)
-        _create_feature(ZMLineStringImpl, @zfactory.line_string(points), @mfactory.line_string(points))
+        create_feature(ZMLineStringImpl, @zfactory.line_string(points), @mfactory.line_string(points))
       end
 
       # See RGeo::Feature::Factory#line
 
       def line(start, stop)
-        _create_feature(ZMLineImpl, @zfactory.line(start, stop), @mfactory.line(start, stop))
+        create_feature(ZMLineImpl, @zfactory.line(start, stop), @mfactory.line(start, stop))
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points)
-        _create_feature(ZMLinearRingImpl, @zfactory.linear_ring(points), @mfactory.linear_ring(points))
+        create_feature(ZMLinearRingImpl, @zfactory.linear_ring(points), @mfactory.linear_ring(points))
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring, inner_rings = nil)
-        _create_feature(ZMPolygonImpl, @zfactory.polygon(outer_ring, inner_rings), @mfactory.polygon(outer_ring, inner_rings))
+        create_feature(ZMPolygonImpl, @zfactory.polygon(outer_ring, inner_rings), @mfactory.polygon(outer_ring, inner_rings))
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems)
-        _create_feature(ZMGeometryCollectionImpl, @zfactory.collection(elems), @mfactory.collection(elems))
+        create_feature(ZMGeometryCollectionImpl, @zfactory.collection(elems), @mfactory.collection(elems))
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems)
-        _create_feature(ZMMultiPointImpl, @zfactory.multi_point(elems), @mfactory.multi_point(elems))
+        create_feature(ZMMultiPointImpl, @zfactory.multi_point(elems), @mfactory.multi_point(elems))
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems)
-        _create_feature(ZMMultiLineStringImpl, @zfactory.multi_line_string(elems), @mfactory.multi_line_string(elems))
+        create_feature(ZMMultiLineStringImpl, @zfactory.multi_line_string(elems), @mfactory.multi_line_string(elems))
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems)
-        _create_feature(ZMMultiPolygonImpl, @zfactory.multi_polygon(elems), @mfactory.multi_polygon(elems))
+        create_feature(ZMMultiPolygonImpl, @zfactory.multi_polygon(elems), @mfactory.multi_polygon(elems))
       end
 
       # See RGeo::Feature::Factory#proj4
@@ -346,9 +346,9 @@ module RGeo
           if original.factory != self && ntype == type &&
               (!project || original.factory.proj4 == @proj4)
             zresult = original.z_geometry.dup
-            zresult._set_factory(@zfactory)
+            zresult.factory = @zfactory
             mresult = original.m_geometry.dup
-            mresult._set_factory(@mfactory)
+            mresult.factory = @mfactory
             return original.class.create(self, zresult, mresult)
           end
           # LineString conversion optimization.
@@ -364,41 +364,25 @@ module RGeo
         false
       end
 
-      def _create_feature(klass, zgeometry, mgeometry) # :nodoc:
+      def create_feature(klass, zgeometry, mgeometry) # :nodoc:
         klass ||= TYPE_KLASSES[zgeometry.geometry_type] || ZMGeometryImpl
         zgeometry && mgeometry ? klass.new(self, zgeometry, mgeometry) : nil
       end
 
-      def _marshal_wkb_generator # :nodoc:
-        unless defined?(@marshal_wkb_generator)
-          @marshal_wkb_generator = RGeo::WKRep::WKBGenerator.new(
-            typeformat: :wkb12)
-        end
-        @marshal_wkb_generator
+      def marshal_wkb_generator
+        @marshal_wkb_generator ||= RGeo::WKRep::WKBGenerator.new(typeformat: :wkb12)
       end
 
-      def _marshal_wkb_parser # :nodoc:
-        unless defined?(@marshal_wkb_parser)
-          @marshal_wkb_parser = RGeo::WKRep::WKBParser.new(self,
-            support_wkb12: true)
-        end
-        @marshal_wkb_parser
+      def marshal_wkb_parser
+        @marshal_wkb_parser ||= RGeo::WKRep::WKBParser.new(self, support_wkb12: true)
       end
 
-      def _psych_wkt_generator # :nodoc:
-        unless defined?(@psych_wkt_generator)
-          @psych_wkt_generator = RGeo::WKRep::WKTGenerator.new(
-            tag_format: :wkt12)
-        end
-        @psych_wkt_generator
+      def psych_wkt_generator
+        @psych_wkt_generator ||= RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
       end
 
-      def _psych_wkt_parser # :nodoc:
-        unless defined?(@psych_wkt_parser)
-          @psych_wkt_parser = RGeo::WKRep::WKTParser.new(self,
-            support_wkt12: true, support_ewkt: true)
-        end
-        @psych_wkt_parser
+      def psych_wkt_parser
+        @psych_wkt_parser ||= RGeo::WKRep::WKTParser.new(self, support_wkt12: true, support_ewkt: true)
       end
     end
   end

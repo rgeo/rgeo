@@ -24,12 +24,12 @@ module RGeo
       # Marshal support
 
       def marshal_dump # :nodoc:
-        [@factory, @factory._write_for_marshal(self)]
+        [@factory, @factory.write_for_marshal(self)]
       end
 
       def marshal_load(data) # :nodoc:
         @factory = data[0]
-        @fg_geom = @factory._read_for_marshal(data[1])
+        @fg_geom = @factory.read_for_marshal(data[1])
         @fg_geom.srid = @factory.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = nil
@@ -39,14 +39,14 @@ module RGeo
 
       def encode_with(coder) # :nodoc:
         coder["factory"] = @factory
-        str = @factory._write_for_psych(self)
+        str = @factory.write_for_psych(self)
         str = str.encode("US-ASCII") if str.respond_to?(:encode)
         coder["wkt"] = str
       end
 
       def init_with(coder)  # :nodoc:
         @factory = coder["factory"]
-        @fg_geom = @factory._read_for_psych(coder["wkt"])
+        @fg_geom = @factory.read_for_psych(coder["wkt"])
         @fg_geom.srid = @factory.srid
         @_fg_prep = @factory._auto_prepare ? 1 : 0
         @_klasses = nil
@@ -89,26 +89,26 @@ module RGeo
       end
 
       def envelope
-        @factory._wrap_fg_geom(@fg_geom.envelope, nil)
+        @factory.wrap_fg_geom(@fg_geom.envelope, nil)
       end
 
       def boundary
         if self.class == FFIGeometryCollectionImpl
           nil
         else
-          @factory._wrap_fg_geom(@fg_geom.boundary, nil)
+          @factory.wrap_fg_geom(@fg_geom.boundary, nil)
         end
       end
 
       def as_text
-        str = @factory._generate_wkt(self)
+        str = @factory.generate_wkt(self)
         str.force_encoding("US-ASCII") if str.respond_to?(:force_encoding)
         str
       end
       alias to_s as_text
 
       def as_binary
-        @factory._generate_wkb(self)
+        @factory.generate_wkb(self)
       end
 
       def is_empty?
@@ -121,7 +121,7 @@ module RGeo
 
       def equals?(rhs)
         return false unless rhs.is_a?(RGeo::Feature::Instance)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if !fg
           false
         # GEOS has a bug where empty geometries are not spatially equal
@@ -135,9 +135,9 @@ module RGeo
       alias == equals?
 
       def disjoint?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.disjoint?(fg) : @fg_geom.disjoint?(fg)
         else
           false
@@ -145,9 +145,9 @@ module RGeo
       end
 
       def intersects?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_1
+          prep = request_prepared if Utils.ffi_supports_prepared_level_1
           prep ? prep.intersects?(fg) : @fg_geom.intersects?(fg)
         else
           false
@@ -155,9 +155,9 @@ module RGeo
       end
 
       def touches?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.touches?(fg) : @fg_geom.touches?(fg)
         else
           false
@@ -165,9 +165,9 @@ module RGeo
       end
 
       def crosses?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.crosses?(fg) : @fg_geom.crosses?(fg)
         else
           false
@@ -175,9 +175,9 @@ module RGeo
       end
 
       def within?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.within?(fg) : @fg_geom.within?(fg)
         else
           false
@@ -185,9 +185,9 @@ module RGeo
       end
 
       def contains?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_1
+          prep = request_prepared if Utils.ffi_supports_prepared_level_1
           prep ? prep.contains?(fg) : @fg_geom.contains?(fg)
         else
           false
@@ -195,9 +195,9 @@ module RGeo
       end
 
       def overlaps?(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.overlaps?(fg) : @fg_geom.overlaps?(fg)
         else
           false
@@ -205,34 +205,34 @@ module RGeo
       end
 
       def relate?(rhs, pattern)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         fg ? @fg_geom.relate_pattern(fg, pattern) : nil
       end
       alias relate relate? # DEPRECATED
 
       def distance(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
+        fg = factory.convert_to_fg_geometry(rhs)
         fg ? @fg_geom.distance(fg) : nil
       end
 
       def buffer(distance)
-        @factory._wrap_fg_geom(@fg_geom.buffer(distance, @factory.buffer_resolution), nil)
+        @factory.wrap_fg_geom(@fg_geom.buffer(distance, @factory.buffer_resolution), nil)
       end
 
       def convex_hull
-        @factory._wrap_fg_geom(@fg_geom.convex_hull, nil)
+        @factory.wrap_fg_geom(@fg_geom.convex_hull, nil)
       end
 
       def intersection(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.intersection(fg), nil) : nil
+        fg = factory.convert_to_fg_geometry(rhs)
+        fg ? @factory.wrap_fg_geom(@fg_geom.intersection(fg), nil) : nil
       end
 
       alias * intersection
 
       def union(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.union(fg), nil) : nil
+        fg = factory.convert_to_fg_geometry(rhs)
+        fg ? @factory.wrap_fg_geom(@fg_geom.union(fg), nil) : nil
       end
 
       alias + union
@@ -243,28 +243,30 @@ module RGeo
       end
 
       def difference(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.difference(fg), nil) : nil
+        fg = factory.convert_to_fg_geometry(rhs)
+        fg ? @factory.wrap_fg_geom(@fg_geom.difference(fg), nil) : nil
       end
 
       alias - difference
 
       def sym_difference(rhs)
-        fg = factory._convert_to_fg_geometry(rhs)
-        fg ? @factory._wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
+        fg = factory.convert_to_fg_geometry(rhs)
+        fg ? @factory.wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
       end
 
       def eql?(rhs)
         rep_equals?(rhs)
       end
 
-      def _detach_fg_geom # :nodoc:
+      def detach_fg_geom
         fg = @fg_geom
         @fg_geom = nil
         fg
       end
 
-      def _request_prepared # :nodoc:
+      private
+
+      def request_prepared
         case @_fg_prep
         when 0
           nil
@@ -403,15 +405,15 @@ module RGeo
       end
 
       def centroid
-        @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
       def point_on_surface
-        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def exterior_ring
-        @factory._wrap_fg_geom(@fg_geom.exterior_ring, FFILinearRingImpl)
+        @factory.wrap_fg_geom(@fg_geom.exterior_ring, FFILinearRingImpl)
       end
 
       def num_interior_rings
@@ -420,13 +422,13 @@ module RGeo
 
       def interior_ring_n(n)
         if n >= 0 && n < @fg_geom.num_interior_rings
-          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
+          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
 
       def interior_rings
         ::Array.new(@fg_geom.num_interior_rings) do |n|
-          @factory._wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
+          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
 
@@ -485,7 +487,7 @@ module RGeo
 
       def geometry_n(n)
         if n >= 0 && n < @fg_geom.num_geometries
-          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
             @_klasses ? @_klasses[n] : nil)
         end
       end
@@ -493,7 +495,7 @@ module RGeo
       def [](n)
         n += @fg_geom.num_geometries if n < 0
         if n >= 0 && n < @fg_geom.num_geometries
-          @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
             @_klasses ? @_klasses[n] : nil)
         end
       end
@@ -510,7 +512,7 @@ module RGeo
       def each
         if block_given?
           @fg_geom.num_geometries.times do |n|
-            yield @factory._wrap_fg_geom(@fg_geom.get_geometry_n(n),
+            yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
               @_klasses ? @_klasses[n] : nil)
           end
           self
@@ -564,11 +566,11 @@ module RGeo
       end
 
       def centroid
-        @factory._wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
       end
 
       def point_on_surface
-        @factory._wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def coordinates

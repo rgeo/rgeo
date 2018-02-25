@@ -52,7 +52,7 @@ module RGeo
       end
 
       def envelope
-        @factory._create_feature(nil, @zgeometry.envelope, @mgeometry.envelope)
+        @factory.create_feature(nil, @zgeometry.envelope, @mgeometry.envelope)
       end
 
       def as_text
@@ -72,7 +72,7 @@ module RGeo
       end
 
       def boundary
-        @factory._create_feature(nil, @zgeometry.boundary, @mgeometry.boundary)
+        @factory.create_feature(nil, @zgeometry.boundary, @mgeometry.boundary)
       end
 
       def equals?(rhs)
@@ -117,31 +117,31 @@ module RGeo
       end
 
       def buffer(distance_)
-        @factory._create_feature(nil, @zgeometry.buffer(distance_), @mgeometry.buffer(distance_))
+        @factory.create_feature(nil, @zgeometry.buffer(distance_), @mgeometry.buffer(distance_))
       end
 
       def convex_hull
-        @factory._create_feature(nil, @zgeometry.convex_hull, @mgeometry.convex_hull)
+        @factory.create_feature(nil, @zgeometry.convex_hull, @mgeometry.convex_hull)
       end
 
       def intersection(rhs)
         rhs = RGeo::Feature.cast(rhs, self)
-        @factory._create_feature(nil, @zgeometry.intersection(rhs.z_geometry), @mgeometry.intersection(rhs.m_geometry))
+        @factory.create_feature(nil, @zgeometry.intersection(rhs.z_geometry), @mgeometry.intersection(rhs.m_geometry))
       end
 
       def union(rhs)
         rhs = RGeo::Feature.cast(rhs, self)
-        @factory._create_feature(nil, @zgeometry.union(rhs.z_geometry), @mgeometry.union(rhs.m_geometry))
+        @factory.create_feature(nil, @zgeometry.union(rhs.z_geometry), @mgeometry.union(rhs.m_geometry))
       end
 
       def difference(rhs)
         rhs = RGeo::Feature.cast(rhs, self)
-        @factory._create_feature(nil, @zgeometry.difference(rhs.z_geometry), @mgeometry.difference(rhs.m_geometry))
+        @factory.create_feature(nil, @zgeometry.difference(rhs.z_geometry), @mgeometry.difference(rhs.m_geometry))
       end
 
       def sym_difference(rhs)
         rhs = RGeo::Feature.cast(rhs, self)
-        @factory._create_feature(nil, @zgeometry.sym_difference(rhs.z_geometry), @mgeometry.sym_difference(rhs.m_geometry))
+        @factory.create_feature(nil, @zgeometry.sym_difference(rhs.z_geometry), @mgeometry.sym_difference(rhs.m_geometry))
       end
 
       def rep_equals?(rhs)
@@ -156,27 +156,29 @@ module RGeo
       alias + union
       alias * intersection
 
-      def _copy_state_from(obj) # :nodoc:
-        @factory = obj.factory
-        @zgeometry = obj.z_geometry
-        @mgeometry = obj.m_geometry
-      end
-
       def marshal_dump # :nodoc:
-        [@factory, @factory._marshal_wkb_generator.generate(self)]
+        [@factory, @factory.marshal_wkb_generator.generate(self)]
       end
 
       def marshal_load(data)  # :nodoc:
-        _copy_state_from(data[0]._marshal_wkb_parser.parse(data[1]))
+        copy_state_from(data[0].marshal_wkb_parser.parse(data[1]))
       end
 
       def encode_with(coder)  # :nodoc:
         coder["factory"] = @factory
-        coder["wkt"] = @factory._psych_wkt_generator.generate(self)
+        coder["wkt"] = @factory.psych_wkt_generator.generate(self)
       end
 
       def init_with(coder) # :nodoc:
-        _copy_state_from(coder["factory"]._psych_wkt_parser.parse(coder["wkt"]))
+        copy_state_from(coder["factory"].psych_wkt_parser.parse(coder["wkt"]))
+      end
+
+      private
+
+      def copy_state_from(obj)
+        @factory = obj.factory
+        @zgeometry = obj.z_geometry
+        @mgeometry = obj.m_geometry
       end
     end
 
@@ -231,7 +233,7 @@ module RGeo
       end
 
       def point_n(n)
-        @factory._create_feature(ZMPointImpl, @zgeometry.point_n(n), @mgeometry.point_n(n))
+        @factory.create_feature(ZMPointImpl, @zgeometry.point_n(n), @mgeometry.point_n(n))
       end
 
       def points
@@ -239,7 +241,7 @@ module RGeo
         zpoints_ = @zgeometry.points
         mpoints_ = @mgeometry.points
         zpoints_.size.times do |i_|
-          result_ << @factory._create_feature(ZMPointImpl, zpoints_[i_], mpoints_[i_])
+          result_ << @factory.create_feature(ZMPointImpl, zpoints_[i_], mpoints_[i_])
         end
         result_
       end
@@ -255,15 +257,15 @@ module RGeo
       end
 
       def centroid
-        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
+        @factory.create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
       def point_on_surface
-        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
+        @factory.create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
       def exterior_ring
-        @factory._create_feature(ZMLineStringImpl, @zgeometry.exterior_ring, @mgeometry.exterior_ring)
+        @factory.create_feature(ZMLineStringImpl, @zgeometry.exterior_ring, @mgeometry.exterior_ring)
       end
 
       def num_interior_rings
@@ -271,7 +273,7 @@ module RGeo
       end
 
       def interior_ring_n(n)
-        @factory._create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(n), @mgeometry.interior_ring_n(n))
+        @factory.create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(n), @mgeometry.interior_ring_n(n))
       end
 
       def interior_rings
@@ -279,7 +281,7 @@ module RGeo
         zrings_ = @zgeometry.interior_rings
         mrings_ = @mgeometry.interior_rings
         zrings_.size.times do |i_|
-          result_ << @factory._create_feature(ZMLineStringImpl, zrings_[i_], mrings_[i_])
+          result_ << @factory.create_feature(ZMLineStringImpl, zrings_[i_], mrings_[i_])
         end
         result_
       end
@@ -296,7 +298,7 @@ module RGeo
       alias size num_geometries
 
       def geometry_n(n)
-        @factory._create_feature(nil, @zgeometry.geometry_n(n), @mgeometry.geometry_n(n))
+        @factory.create_feature(nil, @zgeometry.geometry_n(n), @mgeometry.geometry_n(n))
       end
       alias [] geometry_n
 
@@ -334,11 +336,11 @@ module RGeo
       end
 
       def centroid
-        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
+        @factory.create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
       def point_on_surface
-        @factory._create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
+        @factory.create_feature(ZMPointImpl, @zgeometry.centroid, @mgeometry.centroid)
       end
 
       def coordinates

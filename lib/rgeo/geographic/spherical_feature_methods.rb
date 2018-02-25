@@ -13,17 +13,7 @@ module RGeo
     end
 
     module SphericalPointMethods # :nodoc:
-      def _validate_geometry
-        if @x < -180.0 || @x > 180.0
-          @x = @x % 360.0
-          @x -= 360.0 if @x > 180.0
-        end
-        @y = 90.0 if @y > 90.0
-        @y = -90.0 if @y < -90.0
-        super
-      end
-
-      def _xyz
+      def xyz
         @xyz ||= SphericalMath::PointXYZ.from_latlon(@y, @x)
       end
 
@@ -31,7 +21,7 @@ module RGeo
         rhs = Feature.cast(rhs, @factory)
         case rhs
         when SphericalPointImpl
-          _xyz.dist_to_point(rhs._xyz) * SphericalMath::RADIUS
+          xyz.dist_to_point(rhs.xyz) * SphericalMath::RADIUS
         else
           super
         end
@@ -63,7 +53,7 @@ module RGeo
         cos = ::Math.cos(radius)
         sin = ::Math.sin(radius)
         point_count = factory.property(:buffer_resolution) * 4
-        p0 = _xyz
+        p0 = xyz
         p1 = p0.create_perpendicular
         p2 = p1 % p0
         angle = ::Math::PI * 2.0 / point_count
@@ -84,20 +74,28 @@ module RGeo
           alias_method :lat, :y
         end
       end
+
+      private
+
+      def validate_geometry
+        if @x < -180.0 || @x > 180.0
+          @x = @x % 360.0
+          @x -= 360.0 if @x > 180.0
+        end
+        @y = 90.0 if @y > 90.0
+        @y = -90.0 if @y < -90.0
+        super
+      end
     end
 
     module SphericalLineStringMethods # :nodoc:
-      def _arcs
-        unless defined?(@arcs)
-          @arcs = (0..num_points - 2).map do |i|
-            SphericalMath::ArcXYZ.new(point_n(i)._xyz, point_n(i + 1)._xyz)
-          end
+      def arcs
+        @arcs ||= (0..num_points - 2).map do |i|
+          SphericalMath::ArcXYZ.new(point_n(i).xyz, point_n(i + 1).xyz)
         end
-        @arcs
       end
 
       def is_simple?
-        arcs = _arcs
         len = arcs.length
         return false if arcs.any?(&:degenerate?)
         return true if len == 1
@@ -121,7 +119,7 @@ module RGeo
       end
 
       def length
-        _arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
+        arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
       end
     end
 

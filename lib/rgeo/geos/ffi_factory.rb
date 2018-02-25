@@ -142,10 +142,10 @@ module RGeo
           "hasm" => @has_m,
           "srid" => @srid,
           "bufr" => @buffer_resolution,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lmpa" => @uses_lenient_multi_polygon_assertions,
           "apre" => @_auto_prepare
         }
@@ -190,10 +190,10 @@ module RGeo
         coder["srid"] = @srid
         coder["buffer_resolution"] = @buffer_resolution
         coder["lenient_multi_polygon_assertions"] = @uses_lenient_multi_polygon_assertions
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str
@@ -268,17 +268,11 @@ module RGeo
         end
       end
 
-      # Create a feature that wraps the given ffi-geos geometry object
-
-      def wrap_fg_geom(fg_geom)
-        _wrap_fg_geom(fg_geom, nil)
-      end
-
       # See RGeo::Feature::Factory#parse_wkt
 
       def parse_wkt(str)
         if @wkt_reader
-          _wrap_fg_geom(@wkt_reader.read(str), nil)
+          wrap_fg_geom(@wkt_reader.read(str), nil)
         else
           @wkt_parser.parse(str)
         end
@@ -288,7 +282,7 @@ module RGeo
 
       def parse_wkb(str)
         if @wkb_reader
-          _wrap_fg_geom(@wkb_reader.read(str), nil)
+          wrap_fg_geom(@wkb_reader.read(str), nil)
         else
           @wkb_parser.parse(str)
         end
@@ -348,7 +342,7 @@ module RGeo
 
       def linear_ring(points)
         points = points.to_a unless points.is_a?(::Array)
-        fg_geom = _create_fg_linear_ring(points)
+        fg_geom = create_fg_linear_ring(points)
         fg_geom ? FFILinearRingImpl.new(self, fg_geom, nil) : nil
       end
 
@@ -357,10 +351,10 @@ module RGeo
       def polygon(outer_ring, inner_rings = nil)
         inner_rings = inner_rings.to_a unless inner_rings.is_a?(::Array)
         return nil unless RGeo::Feature::LineString.check_type(outer_ring)
-        outer_ring = _create_fg_linear_ring(outer_ring.points)
+        outer_ring = create_fg_linear_ring(outer_ring.points)
         inner_rings = inner_rings.map do |r|
           return nil unless RGeo::Feature::LineString.check_type(r)
-          _create_fg_linear_ring(r.points)
+          create_fg_linear_ring(r.points)
         end
         inner_rings.compact!
         fg_geom = ::Geos::Utils.create_polygon(outer_ring, *inner_rings)
@@ -378,7 +372,7 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, :force_new, :keep_subtype)
           if elem
             klasses << (k || elem.class)
-            my_fg_geoms << elem._detach_fg_geom
+            my_fg_geoms << elem.detach_fg_geom
           end
         end
         fg_geom = ::Geos::Utils.create_collection(
@@ -394,7 +388,7 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Point,
             :force_new, :keep_subtype)
           return nil unless elem
-          elem._detach_fg_geom
+          elem.detach_fg_geom
         end
         klasses = ::Array.new(elems.size, FFIPointImpl)
         fg_geom = ::Geos::Utils.create_collection(
@@ -412,7 +406,7 @@ module RGeo
             :force_new, :keep_subtype)
           return nil unless elem
           klasses << elem.class
-          elem._detach_fg_geom
+          elem.detach_fg_geom
         end
         fg_geom = ::Geos::Utils.create_collection(
           ::Geos::GeomTypes::GEOS_MULTILINESTRING, elems)
@@ -427,7 +421,7 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon,
             :force_new, :keep_subtype)
           return nil unless elem
-          elem._detach_fg_geom
+          elem.detach_fg_geom
         end
         unless @uses_lenient_multi_polygon_assertions
           (1...elems.size).each do |i|
@@ -460,10 +454,8 @@ module RGeo
         # TODO
       end
 
-      attr_reader :_has_3d # :nodoc:
-      attr_reader :_auto_prepare # :nodoc:
-
-      def _wrap_fg_geom(fg_geom, klass) # :nodoc:
+      # Create a feature that wraps the given ffi-geos geometry object
+      def wrap_fg_geom(fg_geom, klass = nil)
         klasses = nil
 
         # We don't allow "empty" points, so replace such objects with
@@ -505,25 +497,72 @@ module RGeo
         klass.new(self, fg_geom, klasses)
       end
 
-      def _convert_to_fg_geometry(obj, type = nil) # :nodoc:
-        if type.nil? && obj.factory == self
-          obj
-        else
+      attr_reader :_has_3d # :nodoc:
+      attr_reader :_auto_prepare # :nodoc:
+
+      def convert_to_fg_geometry(obj, type = nil)
+        if type && obj.factory != self
           obj = Feature.cast(obj, self, type)
         end
-        obj ? obj.fg_geom : nil
+        obj && obj.fg_geom
       end
 
-      def _create_fg_linear_ring(points) # :nodoc:
+      def generate_wkt(geom)
+        if @wkt_writer
+          @wkt_writer.write(geom.fg_geom)
+        else
+          @wkt_generator.generate(geom)
+        end
+      end
+
+      def generate_wkb(geom)
+        if @wkb_writer
+          @wkb_writer.write(geom.fg_geom)
+        else
+          @wkb_generator.generate(geom)
+        end
+      end
+
+      def write_for_marshal(geom)
+        if Utils.ffi_supports_set_output_dimension || !@_has_3d
+          wkb_writer = ::Geos::WkbWriter.new
+          wkb_writer.output_dimensions = 3 if @_has_3d
+          wkb_writer.write(geom.fg_geom)
+        else
+          Utils.marshal_wkb_generator.generate(geom)
+        end
+      end
+
+      def read_for_marshal(str)
+        ::Geos::WkbReader.new.read(str)
+      end
+
+      def write_for_psych(geom)
+        if Utils.ffi_supports_set_output_dimension || !@_has_3d
+          wkt_writer = ::Geos::WktWriter.new
+          wkt_writer.output_dimensions = 3 if @_has_3d
+          wkt_writer.write(geom.fg_geom)
+        else
+          Utils.psych_wkt_generator.generate(geom)
+        end
+      end
+
+      def read_for_psych(str)
+        ::Geos::WktReader.new.read(str)
+      end
+
+      private
+      
+      def create_fg_linear_ring(points)
         size = points.size
-        return nil if size == 1 || size == 2
+        return if size == 1 || size == 2
         if size > 0 && points.first != points.last
           points += [points.first]
           size += 1
         end
         cs = ::Geos::CoordinateSequence.new(size, 3)
         points.each_with_index do |p, i|
-          return nil unless RGeo::Feature::Point.check_type(p)
+          return unless RGeo::Feature::Point.check_type(p)
           cs.set_x(i, p.x)
           cs.set_y(i, p.y)
           if @has_z
@@ -533,60 +572,6 @@ module RGeo
           end
         end
         ::Geos::Utils.create_linear_ring(cs)
-      end
-
-      def _generate_wkt(geom)  # :nodoc:
-        if @wkt_writer
-          @wkt_writer.write(geom.fg_geom)
-        else
-          @wkt_generator.generate(geom)
-        end
-      end
-
-      def _generate_wkb(geom)  # :nodoc:
-        if @wkb_writer
-          @wkb_writer.write(geom.fg_geom)
-        else
-          @wkb_generator.generate(geom)
-        end
-      end
-
-      def _write_for_marshal(geom) # :nodoc:
-        if Utils.ffi_supports_set_output_dimension || !@_has_3d
-          unless defined?(@marshal_wkb_writer)
-            @marshal_wkb_writer = ::Geos::WkbWriter.new
-            @marshal_wkb_writer.output_dimensions = 3 if @_has_3d
-          end
-          @marshal_wkb_writer.write(geom.fg_geom)
-        else
-          Utils.marshal_wkb_generator.generate(geom)
-        end
-      end
-
-      def _read_for_marshal(str)  # :nodoc:
-        unless defined?(@marshal_wkb_reader)
-          @marshal_wkb_reader = ::Geos::WkbReader.new
-        end
-        @marshal_wkb_reader.read(str)
-      end
-
-      def _write_for_psych(geom)  # :nodoc:
-        if Utils.ffi_supports_set_output_dimension || !@_has_3d
-          unless defined?(@psych_wkt_writer)
-            @psych_wkt_writer = ::Geos::WktWriter.new
-            @psych_wkt_writer.output_dimensions = 3 if @_has_3d
-          end
-          @psych_wkt_writer.write(geom.fg_geom)
-        else
-          Utils.psych_wkt_generator.generate(geom)
-        end
-      end
-
-      def _read_for_psych(str) # :nodoc:
-        unless defined?(@psych_wkt_reader)
-          @psych_wkt_reader = ::Geos::WktReader.new
-        end
-        @psych_wkt_reader.read(str)
       end
     end
   end

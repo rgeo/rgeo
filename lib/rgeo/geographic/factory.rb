@@ -13,6 +13,8 @@ module RGeo
     class Factory
       include Feature::Factory::Instance
 
+      attr_writer :projector
+
       def initialize(impl_prefix, opts = {}) # :nodoc:
         @impl_prefix = impl_prefix
         @point_class = Geographic.const_get("#{impl_prefix}PointImpl")
@@ -76,10 +78,6 @@ module RGeo
         @projector = nil
       end
 
-      def _set_projector(projector) # :nodoc:
-        @projector = projector
-      end
-
       # Equivalence test.
 
       def eql?(rhs_)
@@ -105,10 +103,10 @@ module RGeo
           "hasz" => @support_z,
           "hasm" => @support_m,
           "srid" => @srid,
-          "wktg" => @wkt_generator._properties,
-          "wkbg" => @wkb_generator._properties,
-          "wktp" => @wkt_parser._properties,
-          "wkbp" => @wkb_parser._properties,
+          "wktg" => @wkt_generator.properties,
+          "wkbg" => @wkb_generator.properties,
+          "wktp" => @wkt_parser.properties,
+          "wkbp" => @wkb_parser.properties,
           "lena" => @lenient_assertions,
           "bufr" => @buffer_resolution
         }
@@ -154,8 +152,8 @@ module RGeo
                    end
           if klass_
             projector = klass_.allocate
-            projector._set_factories(self, proj_factory)
-            _set_projector(projector)
+            projector.set_factories(self, proj_factory)
+            @projector = projector
           end
         end
       end
@@ -167,10 +165,10 @@ module RGeo
         coder["has_z_coordinate"] = @support_z
         coder["has_m_coordinate"] = @support_m
         coder["srid"] = @srid
-        coder["wkt_generator"] = @wkt_generator._properties
-        coder["wkb_generator"] = @wkb_generator._properties
-        coder["wkt_parser"] = @wkt_parser._properties
-        coder["wkb_parser"] = @wkb_parser._properties
+        coder["wkt_generator"] = @wkt_generator.properties
+        coder["wkb_generator"] = @wkb_generator.properties
+        coder["wkt_parser"] = @wkt_parser.properties
+        coder["wkb_parser"] = @wkb_parser.properties
         coder["lenient_assertions"] = @lenient_assertions
         coder["buffer_resolution"] = @buffer_resolution
         if @proj4
@@ -221,8 +219,8 @@ module RGeo
                    end
           if klass_
             projector = klass_.allocate
-            projector._set_factories(self, proj_factory)
-            _set_projector(projector)
+            projector.set_factories(self, proj_factory)
+            @projector = projector
           end
         end
       end
@@ -405,44 +403,28 @@ module RGeo
 
       attr_reader :coord_sys
 
-      def _generate_wkt(obj)  # :nodoc:
+      def generate_wkt(obj)
         @wkt_generator.generate(obj)
       end
 
-      def _generate_wkb(obj)  # :nodoc:
+      def generate_wkb(obj)  # :nodoc:
         @wkb_generator.generate(obj)
       end
 
-      def _marshal_wkb_generator # :nodoc:
-        unless defined?(@marshal_wkb_generator)
-          @marshal_wkb_generator = RGeo::WKRep::WKBGenerator.new(
-            type_format: :wkb12)
-        end
-        @marshal_wkb_generator
+      def marshal_wkb_generator
+        @marshal_wkb_generator ||= RGeo::WKRep::WKBGenerator.new(type_format: :wkb12)
       end
 
-      def _marshal_wkb_parser # :nodoc:
-        unless defined?(@marshal_wkb_parser)
-          @marshal_wkb_parser = RGeo::WKRep::WKBParser.new(self,
-            support_wkb12: true)
-        end
-        @marshal_wkb_parser
+      def marshal_wkb_parser
+        @marshal_wkb_parser ||= RGeo::WKRep::WKBParser.new(self, support_wkb12: true)
       end
 
-      def _psych_wkt_generator # :nodoc:
-        unless defined?(@psych_wkt_generator)
-          @psych_wkt_generator = RGeo::WKRep::WKTGenerator.new(
-            tag_format: :wkt12)
-        end
-        @psych_wkt_generator
+      def psych_wkt_generator
+        @psych_wkt_generator ||= RGeo::WKRep::WKTGenerator.new(tag_format: :wkt12)
       end
 
-      def _psych_wkt_parser # :nodoc:
-        unless defined?(@psych_wkt_parser)
-          @psych_wkt_parser = RGeo::WKRep::WKTParser.new(self,
-            support_wkt12: true, support_ewkt: true)
-        end
-        @psych_wkt_parser
+      def psych_wkt_parser
+        @psych_wkt_parser ||= RGeo::WKRep::WKTParser.new(self, support_wkt12: true, support_ewkt: true)
       end
     end
   end
