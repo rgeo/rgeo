@@ -85,19 +85,21 @@ module RGeo
         @hash ||= [factory, geometry_type, @x, @y, @z, @m].hash
       end
 
-      def _copy_state_from(obj) # :nodoc:
-        super
-        @x = obj.x
-        @y = obj.y
-        @z = obj.z
-        @m = obj.m
-      end
-
       def coordinates
         [x, y].tap do |coords|
           coords << z if factory.property(:has_z_coordinate)
           coords << m if factory.property(:has_m_coordinate)
         end
+      end
+
+      private
+
+      def copy_state_from(obj)
+        super
+        @x = obj.x
+        @y = obj.y
+        @z = obj.z
+        @m = obj.m
       end
     end
   end

@@ -156,18 +156,12 @@ module RGeo
       alias + union
       alias * intersection
 
-      def _copy_state_from(obj) # :nodoc:
-        @factory = obj.factory
-        @zgeometry = obj.z_geometry
-        @mgeometry = obj.m_geometry
-      end
-
       def marshal_dump # :nodoc:
         [@factory, @factory.marshal_wkb_generator.generate(self)]
       end
 
       def marshal_load(data)  # :nodoc:
-        _copy_state_from(data[0].marshal_wkb_parser.parse(data[1]))
+        copy_state_from(data[0].marshal_wkb_parser.parse(data[1]))
       end
 
       def encode_with(coder)  # :nodoc:
@@ -176,7 +170,15 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        _copy_state_from(coder["factory"].psych_wkt_parser.parse(coder["wkt"]))
+        copy_state_from(coder["factory"].psych_wkt_parser.parse(coder["wkt"]))
+      end
+
+      private
+
+      def copy_state_from(obj)
+        @factory = obj.factory
+        @zgeometry = obj.z_geometry
+        @mgeometry = obj.m_geometry
       end
     end
 

@@ -67,13 +67,15 @@ module RGeo
         end
       end
 
-      def _copy_state_from(obj) # :nodoc:
-        super
-        @elements = obj._elements
-      end
-
       def _elements # :nodoc:
         @elements
+      end
+
+      private
+
+      def copy_state_from(obj)
+        super
+        @elements = obj._elements
       end
     end
 

@@ -73,14 +73,16 @@ module RGeo
         end
       end
 
-      def _copy_state_from(obj) # :nodoc:
+      def coordinates
+        ([@exterior_ring] + @interior_rings).map(&:coordinates)
+      end
+
+      private
+
+      def copy_state_from(obj)
         super
         @exterior_ring = obj.exterior_ring
         @interior_rings = obj.interior_rings
-      end
-
-      def coordinates
-        ([@exterior_ring] + @interior_rings).map(&:coordinates)
       end
     end
   end
