@@ -17,9 +17,6 @@ module RGeo
         as_text
       end
 
-      def _validate_geometry # :nodoc:
-      end
-
       def _set_factory(factory)  # :nodoc:
         @factory = factory
       end
@@ -57,6 +54,9 @@ module RGeo
 
       def copy_state_from(obj)
         @factory = obj.factory
+      end
+
+      def validate_geometry
       end
     end
   end

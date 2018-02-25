@@ -16,7 +16,7 @@ module RGeo
         if extra.size > 0
           raise ::ArgumentError, "Too many arguments for point initializer"
         end
-        _validate_geometry
+        validate_geometry
       end
 
       def x

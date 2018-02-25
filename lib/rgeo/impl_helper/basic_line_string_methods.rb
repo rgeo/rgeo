@@ -14,13 +14,7 @@ module RGeo
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        _validate_geometry
-      end
-
-      def _validate_geometry
-        if @points.size == 1
-          raise Error::InvalidGeometry, "LineString cannot have 1 point"
-        end
+        validate_geometry
       end
 
       def num_points
@@ -97,6 +91,12 @@ module RGeo
         super
         @points = obj.points
       end
+
+      def validate_geometry
+        if @points.size == 1
+          raise Error::InvalidGeometry, "LineString cannot have 1 point"
+        end
+      end
     end
 
     module BasicLineMethods # :nodoc:
@@ -109,14 +109,7 @@ module RGeo
         cstop = Feature.cast(stop, factory, Feature::Point)
         raise Error::InvalidGeometry, "Could not cast end: #{stop}" unless cstop
         @points = [cstart, cstop]
-        _validate_geometry
-      end
-
-      def _validate_geometry # :nodoc:
-        super
-        if @points.size > 2
-          raise Error::InvalidGeometry, "Line must have 0 or 2 points"
-        end
+        validate_geometry
       end
 
       def geometry_type
@@ -126,10 +119,25 @@ module RGeo
       def coordinates
         @points.map(&:coordinates)
       end
+
+      private
+
+      def validate_geometry
+        super
+        if @points.size > 2
+          raise Error::InvalidGeometry, "Line must have 0 or 2 points"
+        end
+      end
     end
 
     module BasicLinearRingMethods # :nodoc:
-      def _validate_geometry # :nodoc:
+      def geometry_type
+        Feature::LinearRing
+      end
+
+      private
+
+      def validate_geometry
         super
         if @points.size > 0
           @points << @points.first if @points.first != @points.last
@@ -138,10 +146,6 @@ module RGeo
             raise Error::InvalidGeometry, "LinearRing failed ring test"
           end
         end
-      end
-
-      def geometry_type
-        Feature::LinearRing
       end
     end
   end

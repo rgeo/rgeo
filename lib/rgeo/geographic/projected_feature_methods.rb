@@ -111,12 +111,6 @@ module RGeo
     end
 
     module ProjectedPointMethods # :nodoc:
-      def _validate_geometry
-        @y = 85.0511287 if @y > 85.0511287
-        @y = -85.0511287 if @y < -85.0511287
-        super
-      end
-
       def canonical_x
         x_ = @x % 360.0
         x_ -= 360.0 if x_ > 180.0
@@ -141,6 +135,14 @@ module RGeo
           alias_method :lat, :y
         end
       end
+
+      private
+
+      def validate_geometry
+        @y = 85.0511287 if @y > 85.0511287
+        @y = -85.0511287 if @y < -85.0511287
+        super
+      end
     end
 
     module ProjectedNCurveMethods # :nodoc:
@@ -150,7 +152,9 @@ module RGeo
     end
 
     module ProjectedLineStringMethods # :nodoc:
-      def _validate_geometry
+      private
+
+      def validate_geometry
         @points = @points.map(&:canonical_point)
         super
       end
@@ -171,7 +175,9 @@ module RGeo
     end
 
     module ProjectedPolygonMethods # :nodoc:
-      def _validate_geometry
+      private
+
+      def validate_geometry
         super
         unless projection
           raise Error::InvalidGeometry, "Polygon failed assertions"
@@ -180,7 +186,9 @@ module RGeo
     end
 
     module ProjectedMultiPolygonMethods # :nodoc:
-      def _validate_geometry
+      private
+
+      def validate_geometry
         super
         unless projection
           raise Error::InvalidGeometry, "MultiPolygon failed assertions"
