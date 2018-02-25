@@ -258,7 +258,7 @@ module RGeo
         rep_equals?(rhs)
       end
 
-      def _detach_fg_geom # :nodoc:
+      def detach_fg_geom
         fg = @fg_geom
         @fg_geom = nil
         fg

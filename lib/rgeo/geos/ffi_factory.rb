@@ -372,7 +372,7 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, :force_new, :keep_subtype)
           if elem
             klasses << (k || elem.class)
-            my_fg_geoms << elem._detach_fg_geom
+            my_fg_geoms << elem.detach_fg_geom
           end
         end
         fg_geom = ::Geos::Utils.create_collection(
@@ -388,7 +388,7 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Point,
             :force_new, :keep_subtype)
           return nil unless elem
-          elem._detach_fg_geom
+          elem.detach_fg_geom
         end
         klasses = ::Array.new(elems.size, FFIPointImpl)
         fg_geom = ::Geos::Utils.create_collection(
@@ -406,7 +406,7 @@ module RGeo
             :force_new, :keep_subtype)
           return nil unless elem
           klasses << elem.class
-          elem._detach_fg_geom
+          elem.detach_fg_geom
         end
         fg_geom = ::Geos::Utils.create_collection(
           ::Geos::GeomTypes::GEOS_MULTILINESTRING, elems)
@@ -421,7 +421,7 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon,
             :force_new, :keep_subtype)
           return nil unless elem
-          elem._detach_fg_geom
+          elem.detach_fg_geom
         end
         unless @uses_lenient_multi_polygon_assertions
           (1...elems.size).each do |i|
