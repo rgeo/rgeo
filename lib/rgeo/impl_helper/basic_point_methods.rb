@@ -8,7 +8,7 @@ module RGeo
   module ImplHelper # :nodoc:
     module BasicPointMethods # :nodoc:
       def initialize(factory, x, y, *extra)
-        _set_factory(factory)
+        self.factory = factory
         @x = x.to_f
         @y = y.to_f
         @z = factory.property(:has_z_coordinate) ? extra.shift.to_f : nil

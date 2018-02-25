@@ -8,7 +8,7 @@ module RGeo
   module ImplHelper # :nodoc:
     module BasicPolygonMethods # :nodoc:
       def initialize(factory, exterior_ring, interior_rings)
-        _set_factory(factory)
+        self.factory = factory
         @exterior_ring = Feature.cast(exterior_ring, factory, Feature::LinearRing)
         unless @exterior_ring
           raise Error::InvalidGeometry, "Failed to cast exterior ring #{exterior_ring}"

@@ -346,9 +346,9 @@ module RGeo
           if original.factory != self && ntype == type &&
               (!project || original.factory.proj4 == @proj4)
             zresult = original.z_geometry.dup
-            zresult._set_factory(@zfactory)
+            zresult.factory = @zfactory
             mresult = original.m_geometry.dup
-            mresult._set_factory(@mfactory)
+            mresult.factory = @mfactory
             return original.class.create(self, zresult, mresult)
           end
           # LineString conversion optimization.

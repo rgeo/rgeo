@@ -426,7 +426,7 @@ module RGeo
               original.factory._flags & 0x6 == _flags & 0x6 &&
               (!project || original.factory.proj4 == _proj4)
             result = original.dup
-            result._set_factory(self)
+            result.factory = self
             return result
           end
           # LineString conversion optimization.

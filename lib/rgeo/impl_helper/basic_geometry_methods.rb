@@ -9,20 +9,14 @@ module RGeo
     module BasicGeometryMethods # :nodoc:
       include Feature::Instance
 
+      attr_accessor :factory
+
       def inspect # :nodoc:
         "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
       end
 
       def to_s # :nodoc:
         as_text
-      end
-
-      def _set_factory(factory)  # :nodoc:
-        @factory = factory
-      end
-
-      def factory
-        @factory
       end
 
       def as_text

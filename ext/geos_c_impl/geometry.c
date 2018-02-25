@@ -1063,7 +1063,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
 
   geos_geometry_methods = rb_define_module_under(globals->geos_module, "CAPIGeometryMethods");
 
-  rb_define_method(geos_geometry_methods, "_set_factory", method_geometry_set_factory, 1);
+  rb_define_method(geos_geometry_methods, "factory=", method_geometry_set_factory, 1);
   rb_define_method(geos_geometry_methods, "initialize_copy", method_geometry_initialize_copy, 1);
   rb_define_method(geos_geometry_methods, "_steal", method_geometry_steal, 1);
   rb_define_method(geos_geometry_methods, "initialized?", method_geometry_initialized_p, 0);

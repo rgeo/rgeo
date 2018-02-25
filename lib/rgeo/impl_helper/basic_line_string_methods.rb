@@ -8,7 +8,7 @@ module RGeo
   module ImplHelper # :nodoc:
     module BasicLineStringMethods # :nodoc:
       def initialize(factory, points)
-        _set_factory(factory)
+        self.factory = factory
         @points = points.map do |elem|
           elem = Feature.cast(elem, factory, Feature::Point)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
@@ -101,7 +101,7 @@ module RGeo
 
     module BasicLineMethods # :nodoc:
       def initialize(factory, start, stop)
-        _set_factory(factory)
+        self.factory = factory
         cstart = Feature.cast(start, factory, Feature::Point)
         unless cstart
           raise Error::InvalidGeometry, "Could not cast start: #{start}"

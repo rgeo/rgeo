@@ -10,7 +10,7 @@ module RGeo
       attr_reader :elements
 
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
@@ -79,7 +79,7 @@ module RGeo
 
     module BasicMultiLineStringMethods  # :nodoc:
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory, Feature::LineString, :keep_subtype)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
@@ -129,7 +129,7 @@ module RGeo
 
     module BasicMultiPointMethods # :nodoc:
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory, Feature::Point, :keep_subtype)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
@@ -153,7 +153,7 @@ module RGeo
 
     module BasicMultiPolygonMethods # :nodoc:
       def initialize(factory, elements)
-        _set_factory(factory)
+        self.factory = factory
         @elements = elements.map do |elem|
           elem = Feature.cast(elem, factory, Feature::Polygon, :keep_subtype)
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
