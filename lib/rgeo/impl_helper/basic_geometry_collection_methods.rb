@@ -7,6 +7,8 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicGeometryCollectionMethods # :nodoc:
+      attr_reader :elements
+
       def initialize(factory, elements)
         _set_factory(factory)
         @elements = elements.map do |elem|
@@ -67,15 +69,11 @@ module RGeo
         end
       end
 
-      def _elements # :nodoc:
-        @elements
-      end
-
       private
 
       def copy_state_from(obj)
         super
-        @elements = obj._elements
+        @elements = obj.elements
       end
     end
 
