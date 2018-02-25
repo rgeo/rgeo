@@ -165,22 +165,14 @@ module RGeo
           to_wkt
         end
 
-        # Computes the WKT representation. Options include:
+        # Return the WKT representation.
         #
-        # [<tt>:standard_brackets</tt>]
-        #   If set to true, outputs parentheses rather than square
+        # <tt>:standard_brackets</tt>
+        #   If true, outputs parentheses rather than square
         #   brackets. Default is false.
-
-        def to_wkt(opts = {})
-          if opts[:standard_brackets]
-            @standard_wkt ||= _to_wkt("(", ")")
-          else
-            @square_wkt ||= _to_wkt("[", "]")
-          end
-        end
-
-        def _to_wkt(open, close) # :nodoc:
-          content = wkt_content(open, close).map { |obj| ",#{obj}" }.join
+        def to_wkt(standard_brackets = false)
+          open, close = brackets(standard_brackets)
+          content = wkt_content(standard_brackets).map { |obj| ",#{obj}" }.join
           if defined?(@authority) && @authority
             authority = ",AUTHORITY#{open}#{@authority.inspect},#{@authority_code.inspect}#{close}"
           else
@@ -232,6 +224,12 @@ module RGeo
         class << self
           private :new
         end
+
+        private
+
+        def brackets(standard)
+          standard ? %w[( )] : %w([ ])
+        end
       end
 
       # == OGC spec description
@@ -282,7 +280,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [NAMES_BY_VALUE[@orientation]]
         end
       end
@@ -321,7 +319,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [@value]
         end
       end
@@ -365,7 +363,8 @@ module RGeo
         # Bursa Wolf scaling in in parts per million.
         attr_reader :ppm
 
-        def _to_wkt(open, close) # :nodoc:
+        def to_wkt(standard_brackets = false)
+          open, close = brackets(standard_brackets)
           "TOWGS84#{open}#{@dx},#{@dy},#{@dz},#{@ex},#{@ey},#{@ez},#{@ppm}#{close}"
         end
 
@@ -511,7 +510,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [@conversion_factor]
         end
       end
@@ -597,7 +596,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [@longitude]
         end
       end
@@ -688,7 +687,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [@semi_major_axis, @inverse_flattening]
         end
       end
@@ -724,7 +723,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           []
         end
       end
@@ -750,7 +749,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [@datum_type]
         end
       end
@@ -780,7 +779,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           [@datum_type]
         end
       end
@@ -821,9 +820,9 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          array = [@ellipsoid._to_wkt(open, close)]
-          array << @wgs84_parameters._to_wkt(open, close) if @wgs84_parameters
+        def wkt_content(standard_brackets)
+          array = [@ellipsoid.to_wkt(standard_brackets)]
+          array << @wgs84_parameters.to_wkt(standard_brackets) if @wgs84_parameters
           array
         end
       end
@@ -877,7 +876,7 @@ module RGeo
 
         private
 
-        def wkt_content(_, _)
+        def wkt_content(_)
           []
         end
       end
@@ -986,8 +985,8 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          [@head._to_wkt(open, close), @tail._to_wkt(open, close)]
+        def wkt_content(standard_brackets)
+          [@head.to_wkt(standard_brackets), @tail.to_wkt(standard_brackets)]
         end
       end
 
@@ -1050,8 +1049,11 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          [@local_datum._to_wkt(open, close), @unit._to_wkt(open, close)] + @axes.map { |ax| ax._to_wkt(open, close) }
+        def wkt_content(standard_brackets)
+          [
+            @local_datum.to_wkt(standard_brackets),
+            @unit.to_wkt(standard_brackets)
+          ] + @axes.map { |ax| ax.to_wkt(standard_brackets) }
         end
       end
 
@@ -1117,11 +1119,15 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          arr = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @linear_unit._to_wkt(open, close)]
-          arr << @axis0._to_wkt(open, close) if @axis0
-          arr << @axis1._to_wkt(open, close) if @axis1
-          arr << @axis2._to_wkt(open, close) if @axis2
+        def wkt_content(standard_brackets)
+          arr = [
+            @horizontal_datum.to_wkt(standard_brackets),
+            @prime_meridian.to_wkt(standard_brackets),
+            @linear_unit.to_wkt(standard_brackets)
+          ]
+          arr << @axis0.to_wkt(standard_brackets) if @axis0
+          arr << @axis1.to_wkt(standard_brackets) if @axis1
+          arr << @axis2.to_wkt(standard_brackets) if @axis2
           arr
         end
       end
@@ -1175,9 +1181,9 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          arr = [@vertical_datum._to_wkt(open, close), @vertical_unit._to_wkt(open, close)]
-          arr << @axis._to_wkt(open, close) if @axis
+        def wkt_content(standard_brackets)
+          arr = [@vertical_datum.to_wkt(standard_brackets), @vertical_unit.to_wkt(standard_brackets)]
+          arr << @axis.to_wkt(standard_brackets) if @axis
           arr
         end
       end
@@ -1272,10 +1278,14 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          arr = [@horizontal_datum._to_wkt(open, close), @prime_meridian._to_wkt(open, close), @angular_unit._to_wkt(open, close)]
-          arr << @axis0._to_wkt(open, close) if @axis0
-          arr << @axis1._to_wkt(open, close) if @axis1
+        def wkt_content(standard_brackets)
+          arr = [
+            @horizontal_datum.to_wkt(standard_brackets),
+            @prime_meridian.to_wkt(standard_brackets),
+            @angular_unit.to_wkt(standard_brackets)
+          ]
+          arr << @axis0.to_wkt(standard_brackets) if @axis0
+          arr << @axis1.to_wkt(standard_brackets) if @axis1
           arr
         end
       end
@@ -1334,12 +1344,12 @@ module RGeo
 
         private
 
-        def wkt_content(open, close)
-          arr = [@geographic_coordinate_system._to_wkt(open, close), @projection._to_wkt(open, close)]
-          @projection.each_parameter { |param_| arr << param_._to_wkt(open, close) }
-          arr << @linear_unit._to_wkt(open, close)
-          arr << @axis0._to_wkt(open, close) if @axis0
-          arr << @axis1._to_wkt(open, close) if @axis1
+        def wkt_content(standard_brackets)
+          arr = [@geographic_coordinate_system.to_wkt(standard_brackets), @projection.to_wkt(standard_brackets)]
+          @projection.each_parameter { |param| arr << param.to_wkt(standard_brackets) }
+          arr << @linear_unit.to_wkt(standard_brackets)
+          arr << @axis0.to_wkt(standard_brackets) if @axis0
+          arr << @axis1.to_wkt(standard_brackets) if @axis1
           arr
         end
       end
