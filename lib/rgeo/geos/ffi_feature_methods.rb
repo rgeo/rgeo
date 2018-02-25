@@ -137,7 +137,7 @@ module RGeo
       def disjoint?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.disjoint?(fg) : @fg_geom.disjoint?(fg)
         else
           false
@@ -147,7 +147,7 @@ module RGeo
       def intersects?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_1
+          prep = request_prepared if Utils.ffi_supports_prepared_level_1
           prep ? prep.intersects?(fg) : @fg_geom.intersects?(fg)
         else
           false
@@ -157,7 +157,7 @@ module RGeo
       def touches?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.touches?(fg) : @fg_geom.touches?(fg)
         else
           false
@@ -167,7 +167,7 @@ module RGeo
       def crosses?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.crosses?(fg) : @fg_geom.crosses?(fg)
         else
           false
@@ -177,7 +177,7 @@ module RGeo
       def within?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.within?(fg) : @fg_geom.within?(fg)
         else
           false
@@ -187,7 +187,7 @@ module RGeo
       def contains?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_1
+          prep = request_prepared if Utils.ffi_supports_prepared_level_1
           prep ? prep.contains?(fg) : @fg_geom.contains?(fg)
         else
           false
@@ -197,7 +197,7 @@ module RGeo
       def overlaps?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
         if fg
-          prep = _request_prepared if Utils.ffi_supports_prepared_level_2
+          prep = request_prepared if Utils.ffi_supports_prepared_level_2
           prep ? prep.overlaps?(fg) : @fg_geom.overlaps?(fg)
         else
           false
@@ -264,7 +264,9 @@ module RGeo
         fg
       end
 
-      def _request_prepared # :nodoc:
+      private
+
+      def request_prepared
         case @_fg_prep
         when 0
           nil
