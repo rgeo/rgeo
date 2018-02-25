@@ -58,8 +58,7 @@ module RGeo
 
       def initialize(opts = {})
         @type_format = opts[:type_format] || :wkb11
-        @emit_ewkb_srid = @type_format == :ewkb ?
-          (opts[:emit_ewkb_srid] ? true : false) : nil
+        @emit_ewkb_srid = @type_format == :ewkb && opts[:emit_ewkb_srid]
         @hex_format = opts[:hex_format] ? true : false
         @little_endian = opts[:little_endian] ? true : false
       end
