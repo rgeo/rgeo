@@ -110,23 +110,25 @@ module RGeo
         @cur_dims = 2
         @cur_factory = nil
         begin
-          _start_scanner(data)
-          obj = _parse_object(false)
+          start_scanner(data)
+          obj = parse_object(false)
           unless @ignore_extra_bytes
-            bytes = _bytes_remaining
+            bytes = bytes_remaining
             if bytes > 0
               raise Error::ParseError, "Found #{bytes} extra bytes at the end of the stream."
             end
           end
         ensure
-          _clean_scanner
+          @data = nil
         end
         obj
       end
       alias parse_hex parse
 
-      def _parse_object(contained) # :nodoc:
-        endian_value = _get_byte
+      private
+
+      def parse_object(contained)
+        endian_value = get_byte
         case endian_value
         when 0
           little_endian = false
@@ -135,14 +137,14 @@ module RGeo
         else
           raise Error::ParseError, "Bad endian byte value: #{endian_value}"
         end
-        type_code = _get_integer(little_endian)
+        type_code = get_integer(little_endian)
         has_z = false
         has_m = false
         srid = contained ? nil : @default_srid
         if @support_ewkb
           has_z ||= type_code & 0x80000000 != 0
           has_m ||= type_code & 0x40000000 != 0
-          srid = _get_integer(little_endian) if type_code & 0x20000000 != 0
+          srid = get_integer(little_endian) if type_code & 0x20000000 != 0
           type_code &= 0x0fffffff
         end
         if @support_wkb12
@@ -178,48 +180,44 @@ module RGeo
         end
         case type_code
         when 1
-          coords = _get_doubles(little_endian, @cur_dims)
+          coords = get_doubles(little_endian, @cur_dims)
           @cur_factory.point(*coords)
         when 2
-          _parse_line_string(little_endian)
+          parse_line_string(little_endian)
         when 3
-          interior_rings = (1.._get_integer(little_endian)).map { _parse_line_string(little_endian) }
+          interior_rings = (1..get_integer(little_endian)).map { parse_line_string(little_endian) }
           exterior_ring = interior_rings.shift || @cur_factory.linear_ring([])
           @cur_factory.polygon(exterior_ring, interior_rings)
         when 4
-          @cur_factory.multi_point((1.._get_integer(little_endian)).map { _parse_object(1) })
+          @cur_factory.multi_point((1..get_integer(little_endian)).map { parse_object(1) })
         when 5
-          @cur_factory.multi_line_string((1.._get_integer(little_endian)).map { _parse_object(2) })
+          @cur_factory.multi_line_string((1..get_integer(little_endian)).map { parse_object(2) })
         when 6
-          @cur_factory.multi_polygon((1.._get_integer(little_endian)).map { _parse_object(3) })
+          @cur_factory.multi_polygon((1..get_integer(little_endian)).map { parse_object(3) })
         when 7
-          @cur_factory.collection((1.._get_integer(little_endian)).map { _parse_object(true) })
+          @cur_factory.collection((1..get_integer(little_endian)).map { parse_object(true) })
         else
           raise Error::ParseError, "Unknown type value: #{type_code}."
         end
       end
 
-      def _parse_line_string(little_endian) # :nodoc:
-        count = _get_integer(little_endian)
-        coords = _get_doubles(little_endian, @cur_dims * count)
+      def parse_line_string(little_endian)
+        count = get_integer(little_endian)
+        coords = get_doubles(little_endian, @cur_dims * count)
         @cur_factory.line_string((0...count).map { |i| @cur_factory.point(*coords[@cur_dims * i, @cur_dims]) })
       end
 
-      def _start_scanner(data) # :nodoc:
+      def start_scanner(data)
         @data = data
         @len = data.length
         @pos = 0
       end
 
-      def _clean_scanner # :nodoc:
-        @data = nil
-      end
-
-      def _bytes_remaining # :nodoc:
+      def bytes_remaining
         @len - @pos
       end
 
-      def _get_byte # :nodoc:
+      def get_byte
         if @pos + 1 > @len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
         end
@@ -228,7 +226,7 @@ module RGeo
         str.unpack("C").first
       end
 
-      def _get_integer(little_endian) # :nodoc:
+      def get_integer(little_endian)
         if @pos + 4 > @len
           raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
         end
@@ -237,7 +235,7 @@ module RGeo
         str.unpack("#{little_endian ? 'V' : 'N'}").first
       end
 
-      def _get_doubles(little_endian, count) # :nodoc:
+      def get_doubles(little_endian, count)
         len = 8 * count
         if @pos + len > @len
           raise Error::ParseError, "Not enough bytes left to fulfill #{count} doubles"
