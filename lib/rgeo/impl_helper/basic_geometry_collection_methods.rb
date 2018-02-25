@@ -100,17 +100,12 @@ module RGeo
         @elements.inject(0.0) { |sum, obj| sum + obj.length }
       end
 
-      def _add_boundary(hash, point)  # :nodoc:
-        hval = [point.x, point.y].hash
-        (hash[hval] ||= [point, 0])[1] += 1
-      end
-
       def boundary
         hash = {}
         @elements.each do |line|
           if !line.is_empty? && !line.is_closed?
-            _add_boundary(hash, line.start_point)
-            _add_boundary(hash, line.end_point)
+            add_boundary(hash, line.start_point)
+            add_boundary(hash, line.end_point)
           end
         end
         array = []
@@ -122,6 +117,13 @@ module RGeo
 
       def coordinates
         @elements.map(&:coordinates)
+      end
+
+      private
+
+      def add_boundary(hash, point)
+        hval = [point.x, point.y].hash
+        (hash[hval] ||= [point, 0])[1] += 1
       end
     end
 
