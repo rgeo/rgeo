@@ -53,23 +53,29 @@ module RGeo
           end
         end
 
-        def _init
-          if FFI_SUPPORTED
-            @ffi_supports_prepared_level_1 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)
-            @ffi_supports_prepared_level_2 = ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
-            @ffi_supports_set_output_dimension = ::Geos::FFIGeos.respond_to?(:GEOSWKTWriter_setOutputDimension_r)
-            @ffi_supports_unary_union = ::Geos::FFIGeos.respond_to?(:GEOSUnaryUnion_r)
-          end
-          @psych_wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
-          @marshal_wkb_generator = WKRep::WKBGenerator.new
+        def ffi_supports_prepared_level_1
+          FFI_SUPPORTED && ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)
         end
 
-        attr_reader :ffi_supports_prepared_level_1
-        attr_reader :ffi_supports_prepared_level_2
-        attr_reader :ffi_supports_set_output_dimension
-        attr_reader :ffi_supports_unary_union
-        attr_reader :psych_wkt_generator
-        attr_reader :marshal_wkb_generator
+        def ffi_supports_prepared_level_2
+          FFI_SUPPORTED && ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
+        end
+
+        def ffi_supports_set_output_dimension
+          FFI_SUPPORTED && ::Geos::FFIGeos.respond_to?(:GEOSWKTWriter_setOutputDimension_r)
+        end
+
+        def ffi_supports_unary_union
+          FFI_SUPPORTED && ::Geos::FFIGeos.respond_to?(:GEOSUnaryUnion_r)
+        end
+
+        def psych_wkt_generator
+          WKRep::WKTGenerator.new(convert_case: :upper)
+        end
+
+        def marshal_wkb_generator
+          WKRep::WKBGenerator.new
+        end
       end
     end
   end
