@@ -54,76 +54,56 @@ module RGeo
 
     class CAPIGeometryImpl # :nodoc:
       include CAPIGeometryMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Geometry).include_in_class(self, true)
     end
 
     class CAPIPointImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPIPointMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Point).include_in_class(self, true)
     end
 
     class CAPILineStringImpl  # :nodoc:
       include CAPIGeometryMethods
       include CAPILineStringMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::LineString).include_in_class(self, true)
     end
 
     class CAPILinearRingImpl  # :nodoc:
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILinearRingMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::LinearRing).include_in_class(self, true)
     end
 
     class CAPILineImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILineMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Line).include_in_class(self, true)
     end
 
     class CAPIPolygonImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPIPolygonMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::Polygon).include_in_class(self, true)
     end
 
     class CAPIGeometryCollectionImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::GeometryCollection).include_in_class(self, true)
     end
 
     class CAPIMultiPointImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPointMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPoint).include_in_class(self, true)
     end
 
     class CAPIMultiLineStringImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiLineStringMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiLineString).include_in_class(self, true)
     end
 
     class CAPIMultiPolygonImpl # :nodoc:
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPolygonMethods
-
-      Feature::MixinCollection::GLOBAL.for_type(Feature::MultiPolygon).include_in_class(self, true)
     end
   end
 end
