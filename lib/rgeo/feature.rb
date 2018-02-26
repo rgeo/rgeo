@@ -23,7 +23,6 @@
 # extensions that it may provide.
 
 require "rgeo/feature/factory"
-require "rgeo/feature/mixins"
 require "rgeo/feature/types"
 require "rgeo/feature/geometry"
 require "rgeo/feature/point"
