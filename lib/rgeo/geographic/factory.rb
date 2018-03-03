@@ -37,11 +37,7 @@ module RGeo
         end
         @coord_sys = opts[:coord_sys]
         if @coord_sys.is_a?(::String)
-          @coord_sys = begin
-                         CoordSys::CS.create_from_wkt(@coord_sys)
-                       rescue
-                         nil
-                       end
+          @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
         @buffer_resolution = opts[:buffer_resolution].to_i
