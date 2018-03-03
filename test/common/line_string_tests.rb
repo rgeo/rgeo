@@ -12,7 +12,6 @@ module RGeo
           point1 = @factory.point(0, 0)
           point2 = @factory.point(0, 1)
           line1 = @factory.line_string([point1, point2])
-          assert_not_nil(line1)
           assert_equal(RGeo::Feature::LineString, line1.geometry_type)
           assert_equal(2, line1.num_points)
           assert_equal(point1, line1.point_n(0))
@@ -101,10 +100,12 @@ module RGeo
         def test_creation_errors
           point1 = @factory.point(0, 0)
           collection = point1.boundary
-          line1 = @factory.line_string([point1])
-          assert_nil(line1)
-          line2 = @factory.line_string([point1, collection])
-          assert_nil(line2)
+          assert_raise(RGeo::Error::InvalidGeometry) do
+            @factory.line_string([point1])
+          end
+          assert_raise(RGeo::Error::InvalidGeometry) do
+            @factory.line_string([point1, collection])
+          end
         end
 
         def test_required_equivalences

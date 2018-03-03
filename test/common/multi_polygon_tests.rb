@@ -51,22 +51,25 @@ module RGeo
         end
 
         def test_creation_wrong_type
-          geom = @factory.multi_polygon([@poly1, @line1])
-          assert_nil(geom)
+          assert_raise(RGeo::Error::InvalidGeometry) do
+            @factory.multi_polygon([@poly1, @line1])
+          end
         end
 
         def test_creation_overlapping
-          geom = @factory.multi_polygon([@poly1, @poly1])
-          assert_nil(geom)
-          geom2 = @lenient_factory.multi_polygon([@poly1, @poly1])
-          assert_not_nil(geom2)
+          assert_raise(RGeo::Error::InvalidGeometry) do
+            @factory.multi_polygon([@poly1, @poly1])
+          end
+          geom = @lenient_factory.multi_polygon([@poly1, @poly1])
+          assert_equal RGeo::Feature::MultiPolygon, geom.geometry_type
         end
 
         def test_creation_connected
-          geom = @factory.multi_polygon([@poly3, @poly4])
-          assert_nil(geom)
-          geom2 = @lenient_factory.multi_polygon([@poly3, @poly4])
-          assert_not_nil(geom2)
+          assert_raise(RGeo::Error::InvalidGeometry) do
+            @factory.multi_polygon([@poly3, @poly4])
+          end
+          geom = @lenient_factory.multi_polygon([@poly3, @poly4])
+          assert_equal RGeo::Feature::MultiPolygon, geom.geometry_type
         end
 
         def test_required_equivalences

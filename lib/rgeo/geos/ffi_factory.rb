@@ -303,10 +303,10 @@ module RGeo
       def line_string(points)
         points = points.to_a unless points.is_a?(::Array)
         size = points.size
-        return nil if size == 1
+        raise(Error::InvalidGeometry, "Must have more than one point") if size == 1
         cs = ::Geos::CoordinateSequence.new(size, 3)
         points.each_with_index do |p, i|
-          return nil unless RGeo::Feature::Point.check_type(p)
+          raise(Error::InvalidGeometry, "Invalid point: #{p}") unless RGeo::Feature::Point.check_type(p)
           cs.set_x(i, p.x)
           cs.set_y(i, p.y)
           if @has_z
@@ -343,7 +343,7 @@ module RGeo
       def linear_ring(points)
         points = points.to_a unless points.is_a?(::Array)
         fg_geom = create_fg_linear_ring(points)
-        fg_geom ? FFILinearRingImpl.new(self, fg_geom, nil) : nil
+        FFILinearRingImpl.new(self, fg_geom, nil)
       end
 
       # See RGeo::Feature::Factory#polygon
@@ -358,7 +358,7 @@ module RGeo
         end
         inner_rings.compact!
         fg_geom = ::Geos::Utils.create_polygon(outer_ring, *inner_rings)
-        fg_geom ? FFIPolygonImpl.new(self, fg_geom, nil) : nil
+        FFIPolygonImpl.new(self, fg_geom, nil)
       end
 
       # See RGeo::Feature::Factory#collection
@@ -375,9 +375,8 @@ module RGeo
             my_fg_geoms << elem.detach_fg_geom
           end
         end
-        fg_geom = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION, my_fg_geoms)
-        fg_geom ? FFIGeometryCollectionImpl.new(self, fg_geom, klasses) : nil
+        fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION, my_fg_geoms)
+        FFIGeometryCollectionImpl.new(self, fg_geom, klasses)
       end
 
       # See RGeo::Feature::Factory#multi_point
@@ -391,9 +390,8 @@ module RGeo
           elem.detach_fg_geom
         end
         klasses = ::Array.new(elems.size, FFIPointImpl)
-        fg_geom = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_MULTIPOINT, elems)
-        fg_geom ? FFIMultiPointImpl.new(self, fg_geom, klasses) : nil
+        fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOINT, elems)
+        FFIMultiPointImpl.new(self, fg_geom, klasses)
       end
 
       # See RGeo::Feature::Factory#multi_line_string
@@ -402,15 +400,13 @@ module RGeo
         elems = elems.to_a unless elems.is_a?(::Array)
         klasses = []
         elems = elems.map do |elem|
-          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::LineString,
-            :force_new, :keep_subtype)
-          return nil unless elem
+          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::LineString, :force_new, :keep_subtype)
+          raise(RGeo::Error::InvalidGeometry, "Parse error") unless elem
           klasses << elem.class
           elem.detach_fg_geom
         end
-        fg_geom = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_MULTILINESTRING, elems)
-        fg_geom ? FFIMultiLineStringImpl.new(self, fg_geom, klasses) : nil
+        fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTILINESTRING, elems)
+        FFIMultiLineStringImpl.new(self, fg_geom, klasses)
       end
 
       # See RGeo::Feature::Factory#multi_polygon
@@ -418,9 +414,8 @@ module RGeo
       def multi_polygon(elems)
         elems = elems.to_a unless elems.is_a?(::Array)
         elems = elems.map do |elem|
-          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon,
-            :force_new, :keep_subtype)
-          return nil unless elem
+          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon, :force_new, :keep_subtype)
+          raise(RGeo::Error::InvalidGeometry, "Could not cast to polygon: #{elem}") unless elem
           elem.detach_fg_geom
         end
         unless @uses_lenient_multi_polygon_assertions
@@ -428,15 +423,15 @@ module RGeo
             (0...i).each do |j|
               igeom = elems[i]
               jgeom = elems[j]
-              return nil if igeom.relate_pattern(jgeom, "2********") ||
-                igeom.relate_pattern(jgeom, "****1****")
+              if igeom.relate_pattern(jgeom, "2********") || igeom.relate_pattern(jgeom, "****1****")
+                raise(RGeo::Error::InvalidGeometry, "Invalid relate pattern: #{jgeom}")
+              end
             end
           end
         end
         klasses = ::Array.new(elems.size, FFIPolygonImpl)
-        fg_geom = ::Geos::Utils.create_collection(
-          ::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems)
-        fg_geom ? FFIMultiPolygonImpl.new(self, fg_geom, klasses) : nil
+        fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems)
+        FFIMultiPolygonImpl.new(self, fg_geom, klasses)
       end
 
       # See RGeo::Feature::Factory#proj4

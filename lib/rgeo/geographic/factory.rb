@@ -327,72 +327,54 @@ module RGeo
 
       def point(x, y, *extra)
         @point_class.new(self, x, y, *extra)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points)
         @line_string_class.new(self, points)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#line
 
       def line(start, stop)
         @line_class.new(self, start, stop)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points)
         @linear_ring_class.new(self, points)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring, inner_rings = nil)
         @polygon_class.new(self, outer_ring, inner_rings)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems)
         @geometry_collection_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems)
         @multi_point_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems)
         @multi_line_string_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems)
         @multi_polygon_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#proj4

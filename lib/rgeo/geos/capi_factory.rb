@@ -302,13 +302,9 @@ module RGeo
 
       def point(x_, y_, *extra_)
         if extra_.length > (_flags & 6 == 0 ? 0 : 1)
-          nil
+          raise(RGeo::Error::InvalidGeometry, "Parse error")
         else
-          begin
-            CAPIPointImpl.create(self, x_, y_, extra_[0].to_f)
-          rescue
-            nil
-          end
+          CAPIPointImpl.create(self, x_, y_, extra_[0].to_f)
         end
       end
 
@@ -316,85 +312,57 @@ module RGeo
 
       def line_string(points_)
         points_ = points_.to_a unless points_.is_a?(::Array)
-        begin
-          CAPILineStringImpl.create(self, points_)
-        rescue
-          nil
-        end
+        CAPILineStringImpl.create(self, points_) ||
+          raise(RGeo::Error::InvalidGeometry, "Parse error")
       end
 
       # See RGeo::Feature::Factory#line
 
       def line(start_, end_)
         CAPILineImpl.create(self, start_, end_)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
         points_ = points_.to_a unless points_.is_a?(::Array)
-        begin
-          CAPILinearRingImpl.create(self, points_)
-        rescue
-          nil
-        end
+        CAPILinearRingImpl.create(self, points_)
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_ = nil)
         inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(::Array)
-        begin
-          CAPIPolygonImpl.create(self, outer_ring_, inner_rings_)
-        rescue
-          nil
-        end
+        CAPIPolygonImpl.create(self, outer_ring_, inner_rings_)
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        begin
-          CAPIGeometryCollectionImpl.create(self, elems_)
-        rescue
-          nil
-        end
+        CAPIGeometryCollectionImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        begin
-          CAPIMultiPointImpl.create(self, elems_)
-        rescue
-          nil
-        end
+        CAPIMultiPointImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        begin
-          CAPIMultiLineStringImpl.create(self, elems_)
-        rescue
-          nil
-        end
+        CAPIMultiLineStringImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
         elems_ = elems_.to_a unless elems_.is_a?(::Array)
-        begin
-          CAPIMultiPolygonImpl.create(self, elems_)
-        rescue
-          nil
-        end
+        CAPIMultiPolygonImpl.create(self, elems_) ||
+          raise(RGeo::Error::InvalidGeometry, "Parse error")
       end
 
       # See RGeo::Feature::Factory#proj4

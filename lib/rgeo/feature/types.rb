@@ -236,7 +236,7 @@ module RGeo
               cast(obj.geometry_n(0), nfactory, ntype, opts)
             end
           elsif ntype == Point
-            nil
+            raise(Error::InvalidGeometry, "Cannot cast to Point")
           elsif ntype == Line
             if type == LineString && obj.num_points == 2
               nfactory.line(cast(obj.point_n(0), nfactory, opts), cast(obj.point_n(1), nfactory, opts))
@@ -273,6 +273,8 @@ module RGeo
             else
               nfactory.collection([cast(obj, nfactory, opts)])
             end
+          else
+            raise(RGeo::Error::InvalidGeometry, "Undefined type cast from #{type.name} to #{ntype.name}")
           end
         end
       end
