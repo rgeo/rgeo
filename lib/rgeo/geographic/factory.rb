@@ -141,11 +141,7 @@ module RGeo
           coord_sys: coord_sys
                   )
         if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
-          klass_ = begin
-                     RGeo::Geographic.const_get(proj_klass)
-                   rescue
-                     nil
-                   end
+          klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
             projector = klass_.allocate
             projector.set_factories(self, proj_factory)
@@ -208,11 +204,7 @@ module RGeo
           coord_sys: coord_sys
                   )
         if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
-          klass_ = begin
-                     RGeo::Geographic.const_get(proj_klass)
-                   rescue
-                     nil
-                   end
+          klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
             projector = klass_.allocate
             projector.set_factories(self, proj_factory)
