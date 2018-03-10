@@ -159,7 +159,7 @@ module RGeo
         coder["auto_prepare"] = @zfactory.property(:auto_prepare).to_s
         coder["native_interface"] = @zfactory.is_a?(FFIFactory) ? "ffi" : "capi"
         if (proj4 = @zfactory.proj4)
-          str = proj4.originalstr || proj4.canonical_str
+          str = proj4.original_str || proj4.canonical_str
           coder["proj4"] = proj4.radians? ? { "proj4" => str, "radians" => true } : str
         end
         if (coord_sys = @zfactory.coord_sys)

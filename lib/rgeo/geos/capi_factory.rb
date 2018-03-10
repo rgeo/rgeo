@@ -200,7 +200,7 @@ module RGeo
         coder_["wkb_parser"] = _wkb_parser ? _wkb_parser.properties : {}
         coder_["auto_prepare"] = ((_flags & 0x8) == 0 ? "disabled" : "simple")
         if (proj4_ = _proj4)
-          str_ = proj4_.originalstr || proj4_.canonical_str
+          str_ = proj4_.original_str || proj4_.canonical_str
           coder_["proj4"] = proj4_.radians? ? { "proj4" => str_, "radians" => true } : str_
         end
         if (coord_sys_ = _coord_sys)
