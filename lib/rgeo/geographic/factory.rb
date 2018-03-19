@@ -37,11 +37,7 @@ module RGeo
         end
         @coord_sys = opts[:coord_sys]
         if @coord_sys.is_a?(::String)
-          @coord_sys = begin
-                         CoordSys::CS.create_from_wkt(@coord_sys)
-                       rescue
-                         nil
-                       end
+          @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
         @buffer_resolution = opts[:buffer_resolution].to_i
@@ -145,11 +141,7 @@ module RGeo
           coord_sys: coord_sys
                   )
         if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
-          klass_ = begin
-                     RGeo::Geographic.const_get(proj_klass)
-                   rescue
-                     nil
-                   end
+          klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
             projector = klass_.allocate
             projector.set_factories(self, proj_factory)
@@ -212,11 +204,7 @@ module RGeo
           coord_sys: coord_sys
                   )
         if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
-          klass_ = begin
-                     RGeo::Geographic.const_get(proj_klass)
-                   rescue
-                     nil
-                   end
+          klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
             projector = klass_.allocate
             projector.set_factories(self, proj_factory)
@@ -327,72 +315,54 @@ module RGeo
 
       def point(x, y, *extra)
         @point_class.new(self, x, y, *extra)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points)
         @line_string_class.new(self, points)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#line
 
       def line(start, stop)
         @line_class.new(self, start, stop)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points)
         @linear_ring_class.new(self, points)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring, inner_rings = nil)
         @polygon_class.new(self, outer_ring, inner_rings)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems)
         @geometry_collection_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems)
         @multi_point_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems)
         @multi_line_string_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems)
         @multi_polygon_class.new(self, elems)
-      rescue
-        nil
       end
 
       # See RGeo::Feature::Factory#proj4

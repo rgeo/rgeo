@@ -51,8 +51,9 @@ module RGeo
 
         def test_creation_wrong_type
           line = @factory.line_string([@point1, @point2])
-          geom = @factory.multi_point([@point3, line])
-          assert_nil(geom)
+          assert_raise(RGeo::Error::InvalidGeometry) do
+            @factory.multi_point([@point3, line])
+          end
         end
 
         def test_required_equivalences
