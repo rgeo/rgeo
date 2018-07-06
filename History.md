@@ -1,4 +1,8 @@
-### 1.1.0 / 2018-7-6
+### 1.1.1 / 2018-7-6
+
+* Fix RGeo::CoordSys.supported? (cherry-pick 68a0434234)
+
+### 1.1.0 / 2018-7-6 (yanked)
 
 * Qualify RGeo::Proj4.supported? check #192 / #193
 * Require ruby 2.2.2+
