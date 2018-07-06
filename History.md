@@ -1,3 +1,9 @@
+### 1.1.0 / 2018-7-6
+
+* Qualify RGeo::Proj4.supported? check #192 / #193
+* Require ruby 2.2.2+
+* Code style improvements
+
 ### 1.0.0 / 2017-12-2
 
 * rgeo-proj4 is a now separate gem, and not included in the rgeo gem
