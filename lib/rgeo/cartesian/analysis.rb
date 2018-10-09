@@ -50,26 +50,29 @@ module RGeo
 
           # Now add the angles and count revolutions.
           # Again, our running sum is represented as a cos/sin pair.
-          revolutions_ = 0
-          sin_ = 0.0
-          cos_ = 1.0
-          angs_.each_slice(2) do |(x_, y_)|
-            ready_ = y_ > 0.0 && sin_ > 0.0 || y_ < 0.0 && sin_ < 0.0
-            if y_ != 0.0
-              s_ = sin_ * x_ + cos_ * y_
-              c_ = cos_ * x_ - sin_ * y_
-              r_ = ::Math.sqrt(s_ * s_ + c_ * c_)
-              sin_ = s_ / r_
-              cos_ = c_ / r_
+          revolutions = 0
+          direction = nil
+          sin = 0.0
+          cos = 1.0
+          angs_.each_slice(2) do |(x, y)|
+            ready = y > 0.0 && (sin > 0.0 || sin == 0.0 && direction == -1) || y < 0.0 && (sin < 0.0 || sin == 0.0 && direction == 1)
+            if y != 0.0
+              s = sin * x + cos * y
+              c = cos * x - sin * y
+              r = ::Math.sqrt(s * s + c * c)
+              sin = s / r
+              cos = c / r
             end
-            next unless ready_
-            if y_ > 0.0 && sin_ <= 0.0
-              revolutions_ += 1
-            elsif y_ < 0.0 && sin_ >= 0.0
-              revolutions_ -= 1
+            next unless ready
+            if y > 0.0 && sin <= 0.0
+              revolutions += 1
+              direction = 1
+            elsif y < 0.0 && sin >= 0.0
+              revolutions -= 1
+              direction = -1
             end
           end
-          revolutions_
+          revolutions
         end
       end
     end
