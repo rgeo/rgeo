@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.author = "Daniel Azuma, Tee Parham"
   spec.email = "dazuma@gmail.com, parhameter@gmail.com"
   spec.homepage = "https://github.com/rgeo/rgeo"
-  spec.required_ruby_version = ">= 2.2.2"
+  spec.required_ruby_version = ">= 2.3.0"
 
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
   spec.extensions = Dir["ext/*/extconf.rb"]
