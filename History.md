@@ -1,3 +1,21 @@
+### 2.0.0 / 2018-10-10
+
+Breaking changes
+* Make undocumented methods private #184
+* Raise InvalidGeometry on parse errors #183
+* Remove MixinCollection module #182
+
+Fixes
+* Fix Cartesian::Analysis.ring_direction (bakineggs) #196
+* Proj4 fixes #187
+* Rename variables ending in `_` (fergyfresh) #181
+
+
+### 1.1.2 / 2018-10-10
+
+* Fix Cartesian::Analysis.ring_direction (bakineggs) (back-port #196)
+
+
 ### 1.1.1 / 2018-7-6
 
 * Fix RGeo::CoordSys.supported? (cherry-pick 68a0434234)
