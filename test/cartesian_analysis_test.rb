@@ -45,6 +45,28 @@ class CartesianAnalysisTest < Test::Unit::TestCase # :nodoc:
     assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
+  def test_ring_direction_clockwise_hat
+    p1 = @factory.point(1, 2)
+    p2 = @factory.point(2, 3)
+    p3 = @factory.point(3, 2)
+    p4 = @factory.point(2, 1)
+    p5 = @factory.point(2, 0)
+    p6 = @factory.point(0, 2)
+    ring = @factory.line_string([p1, p2, p3, p4, p5, p6, p1])
+    assert_equal(-1, RGeo::Cartesian::Analysis.ring_direction(ring))
+  end
+
+  def test_ring_direction_counterclockwise_hat
+    p1 = @factory.point(2, 1)
+    p2 = @factory.point(3, 2)
+    p3 = @factory.point(2, 3)
+    p4 = @factory.point(1, 2)
+    p5 = @factory.point(0, 2)
+    p6 = @factory.point(2, 0)
+    ring = @factory.line_string([p1, p2, p3, p4, p5, p6, p1])
+    assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring))
+  end
+
   def test_ring_direction_counterclockwise_near_circle
     p1 = @factory.point(0, -3)
     p2 = @factory.point(2, -2)
