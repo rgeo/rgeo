@@ -1,6 +1,7 @@
 ### 2.0.0 / 2018-10-10
 
 Breaking changes
+* Require ruby 2.3+
 * Make undocumented methods private #184
 * Raise InvalidGeometry on parse errors #183
 * Remove MixinCollection module #182
