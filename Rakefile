@@ -1,6 +1,5 @@
 require "rake/testtask"
 require "rake/extensiontask"
-require "rdoc/task"
 # Load config if present
 
 config_path = ::File.expand_path("rakefile_config.rb", ::File.dirname(__FILE__))
@@ -42,16 +41,6 @@ clean_files = [doc_directory, pkg_directory, tmp_directory] +
 
 task :clean do
   clean_files.each { |path| rm_rf path }
-end
-#
-# RDoc tasks
-
-
-RDoc::Task.new do |rdoc|
-  rdoc.rdoc_files.include("lib/**/*.rb")
-  # rdoc.options << "--all"
-  rdoc.title = "#{::RAKEFILE_CONFIG[:product_visible_name] || gemspec.name.capitalize} #{release_gemspec.version} Documentation"
-  rdoc.rdoc_dir = "doc"
 end
 
 task build_other: [:build]
