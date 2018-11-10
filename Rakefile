@@ -17,7 +17,7 @@ tmp_directory = RAKEFILE_CONFIG[:tmp_directory] || "tmp"
 
 # Build tasks
 
-if RUBY_DESCRIPTION.match /^jruby/
+if RUBY_DESCRIPTION.match(/^jruby/)
   task :compile
 else
   Rake::ExtensionTask.new "geos_c_impl" do |ext|

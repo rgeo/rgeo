@@ -104,11 +104,6 @@ Layout/SpaceInsideBlockBraces:
     - 'lib/rgeo/impl_helper/basic_line_string_methods.rb'
     - 'test/geos_capi/polygon_test.rb'
 
-# Offense count: 1
-Lint/AmbiguousRegexpLiteral:
-  Exclude:
-    - 'Rakefile'
-
 # Offense count: 3
 Lint/EmptyWhen:
   Exclude:
