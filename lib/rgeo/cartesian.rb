@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Cartesian module is a gateway to implementations that use the
 # Cartesian (i.e. flat) coordinate system. It provides convenient
 # access to Cartesian factories such as the Geos implementation and

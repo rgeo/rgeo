@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # RGeo is a spatial data library for Ruby. It focuses on the storage and
 # manipulation of spatial data types such as points, lines, and polygons.
 #

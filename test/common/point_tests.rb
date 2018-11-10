@@ -1,3 +1,5 @@
+# frozen_string_literal: false
+
 # -----------------------------------------------------------------------------
 #
 # Common tests for point implementations

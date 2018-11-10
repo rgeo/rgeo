@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Geos module provides general tools for creating and manipulating
 # a GEOS-backed implementation of the SFS. This is a full implementation
 # of the SFS using a Cartesian coordinate system. It uses the GEOS C++
