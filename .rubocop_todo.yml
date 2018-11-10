@@ -6,16 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/wkt_parser.rb'
-    - 'lib/rgeo/geographic/factory.rb'
-    - 'lib/rgeo/geos/ffi_feature_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_geometry_collection_methods.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.

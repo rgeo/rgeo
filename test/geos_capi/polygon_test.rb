@@ -118,7 +118,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
 
     assert_equal(polygon.valid?, true)
 
-    polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+    polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
     points_arr = polygon_coordinates.map{|v| @factory.point(v[0], v[1])}
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
@@ -127,7 +127,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_invalid_reason
-    polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+    polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
     points_arr = polygon_coordinates.map{|v| @factory.point(v[0], v[1])}
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)

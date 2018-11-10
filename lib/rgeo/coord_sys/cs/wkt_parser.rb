@@ -208,11 +208,11 @@ module RGeo
         end
 
         class ArgumentList # :nodoc:
-          def initialize  # :nodoc:
+          def initialize # :nodoc:
             @values = []
           end
 
-          def <<(value)  # :nodoc:
+          def <<(value) # :nodoc:
             @values << value
           end
 
@@ -235,7 +235,7 @@ module RGeo
             nil
           end
 
-          def find_all(klass)  # :nodoc:
+          def find_all(klass) # :nodoc:
             results = []
             nvalues = []
             @values.each do |val|
@@ -249,7 +249,7 @@ module RGeo
             results
           end
 
-          def create_optionals  # :nodoc:
+          def create_optionals # :nodoc:
             hash = {}
             find_all(ExtensionClause).each { |ec| hash[ec.key] = ec.value }
             (find_first(AuthorityClause) || [nil, nil]).to_a + [nil, nil, nil, hash]

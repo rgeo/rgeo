@@ -44,7 +44,7 @@ module RGeo
         coder["wkt"] = str
       end
 
-      def init_with(coder)  # :nodoc:
+      def init_with(coder) # :nodoc:
         @factory = coder["factory"]
         @fg_geom = @factory.read_for_psych(coder["wkt"])
         @fg_geom.srid = @factory.srid
@@ -55,7 +55,7 @@ module RGeo
       attr_reader :factory
       attr_reader :fg_geom
 
-      attr_reader :_klasses  # :nodoc:
+      attr_reader :_klasses # :nodoc:
 
       def initialize_copy(orig)
         @factory = orig.factory
