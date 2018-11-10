@@ -498,12 +498,6 @@ Style/StringLiterals:
 Style/SymbolArray:
   EnforcedStyle: brackets
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/UnneededInterpolation:
-  Exclude:
-    - 'lib/rgeo/wkrep/wkb_parser.rb'
-
 # Offense count: 11
 # Cop supports --auto-correct.
 Style/ZeroLengthPredicate:
