@@ -6,6 +6,9 @@ AllCops:
 Layout/AlignParameters:
   Enabled: false
 
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
 Layout/MultilineOperationIndentation:
   Enabled: false
 

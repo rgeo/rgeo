@@ -25,11 +25,6 @@ Layout/ClosingParenthesisIndentation:
     - 'lib/rgeo/geographic/factory.rb'
     - 'lib/rgeo/geos/capi_factory.rb'
 
-# Offense count: 75
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Layout/EmptyLines:
