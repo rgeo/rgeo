@@ -166,20 +166,22 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize_copy(CAPIFactory.create(
-                          has_z_coordinate: data_["hasz"],
-                          has_m_coordinate: data_["hasm"],
-                          srid: data_["srid"],
-                          buffer_resolution: data_["bufr"],
-                          wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
-                          wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
-                          wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
-                          wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
-                          uses_lenient_multi_polygon_assertions: data_["lmpa"],
-                          auto_prepare: (data_["apre"] == 0 ? :disabled : :simple),
-                          proj4: proj4_,
-                          coord_sys: coord_sys_
-        ))
+        initialize_copy(
+          CAPIFactory.create(
+            has_z_coordinate: data_["hasz"],
+            has_m_coordinate: data_["hasm"],
+            srid: data_["srid"],
+            buffer_resolution: data_["bufr"],
+            wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
+            wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
+            wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
+            wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
+            uses_lenient_multi_polygon_assertions: data_["lmpa"],
+            auto_prepare: (data_["apre"] == 0 ? :disabled : :simple),
+            proj4: proj4_,
+            coord_sys: coord_sys_
+          )
+        )
       end
 
       # Psych support

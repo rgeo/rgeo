@@ -139,7 +139,7 @@ module RGeo
           buffer_resolution: data_["bufr"],
           proj4: proj4,
           coord_sys: coord_sys
-                  )
+        )
         if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
           klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
