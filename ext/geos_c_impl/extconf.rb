@@ -17,7 +17,7 @@ else
   geosconfig = with_config("geos-config") || find_executable("geos-config")
 
   if geosconfig
-    puts "Using GEOS compile configuration from %s" [geosconfig]
+    puts "Using GEOS compile configuration from #{geosconfig}"
     $INCFLAGS << " " << `#{geosconfig} --cflags`.strip
     geos_libs = `#{geosconfig} --clibs`.tr("\n", " ")
     geos_libs.split(/\s+/).each do |flag|
