@@ -27,12 +27,6 @@ Layout/ClosingParenthesisIndentation:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'Rakefile'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
 Layout/EmptyLinesAroundClassBody:
