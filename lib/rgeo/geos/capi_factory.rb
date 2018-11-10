@@ -313,7 +313,7 @@ module RGeo
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points_)
-        points_ = points_.to_a unless points_.is_a?(::Array)
+        points_ = points_.to_a unless points_.is_a?(Array)
         CAPILineStringImpl.create(self, points_) ||
           raise(RGeo::Error::InvalidGeometry, "Parse error")
       end
@@ -327,42 +327,42 @@ module RGeo
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
-        points_ = points_.to_a unless points_.is_a?(::Array)
+        points_ = points_.to_a unless points_.is_a?(Array)
         CAPILinearRingImpl.create(self, points_)
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_ = nil)
-        inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(::Array)
+        inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(Array)
         CAPIPolygonImpl.create(self, outer_ring_, inner_rings_)
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIGeometryCollectionImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIMultiPointImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIMultiLineStringImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIMultiPolygonImpl.create(self, elems_) ||
           raise(RGeo::Error::InvalidGeometry, "Parse error")
       end

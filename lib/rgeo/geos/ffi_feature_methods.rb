@@ -355,7 +355,7 @@ module RGeo
       def points
         coord_seq = @fg_geom.coord_seq
         has_3d = @factory._has_3d
-        ::Array.new(@fg_geom.num_points) do |n|
+        Array.new(@fg_geom.num_points) do |n|
           x = coord_seq.get_x(n)
           y = coord_seq.get_y(n)
           extra = has_3d ? [coord_seq.get_z(n)] : []
@@ -429,7 +429,7 @@ module RGeo
       end
 
       def interior_rings
-        ::Array.new(@fg_geom.num_interior_rings) do |n|
+        Array.new(@fg_geom.num_interior_rings) do |n|
           @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
