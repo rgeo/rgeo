@@ -70,7 +70,7 @@ module RGeo
           end
           @proj4 = data[:proj4]
           if @proj4 && CoordSys.check!(:proj4)
-            if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
+            if @proj4.is_a?(::String) || @proj4.is_a?(Hash)
               @proj4 = Proj4.create(@proj4)
             end
           end

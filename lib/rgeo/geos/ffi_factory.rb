@@ -38,7 +38,7 @@ module RGeo
         when :geos
           @wkt_writer = ::Geos::WktWriter.new
           @wkt_generator = nil
-        when ::Hash
+        when Hash
           @wkt_generator = WKRep::WKTGenerator.new(wkt_generator_)
           @wkt_writer = nil
         else
@@ -50,7 +50,7 @@ module RGeo
         when :geos
           @wkb_writer = ::Geos::WkbWriter.new
           @wkb_generator = nil
-        when ::Hash
+        when Hash
           @wkb_generator = WKRep::WKBGenerator.new(wkb_generator_)
           @wkb_writer = nil
         else
@@ -62,7 +62,7 @@ module RGeo
         @srid = opts[:srid]
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
+          if @proj4.is_a?(::String) || @proj4.is_a?(Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         else
@@ -88,7 +88,7 @@ module RGeo
         when :geos
           @wkt_reader = ::Geos::WktReader.new
           @wkt_parser = nil
-        when ::Hash
+        when Hash
           @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
           @wkt_reader = nil
         else
@@ -100,7 +100,7 @@ module RGeo
         when :geos
           @wkb_reader = ::Geos::WkbReader.new
           @wkb_parser = nil
-        when ::Hash
+        when Hash
           @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
           @wkb_reader = nil
         else
@@ -203,7 +203,7 @@ module RGeo
       def init_with(coder) # :nodoc:
         if (proj4_data = coder["proj4"])
           CoordSys.check!(:proj4)
-          if proj4_data.is_a?(::Hash)
+          if proj4_data.is_a?(Hash)
             proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
             proj4 = CoordSys::Proj4.create(proj4_data.to_s)

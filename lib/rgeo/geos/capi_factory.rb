@@ -42,7 +42,7 @@ module RGeo
           case wkt_generator_
           when :geos
             wkt_generator_ = nil
-          when ::Hash
+          when Hash
             wkt_generator_ = WKRep::WKTGenerator.new(wkt_generator_)
           else
             wkt_generator_ = WKRep::WKTGenerator.new(convert_case: :upper)
@@ -51,7 +51,7 @@ module RGeo
           case wkb_generator_
           when :geos
             wkb_generator_ = nil
-          when ::Hash
+          when Hash
             wkb_generator_ = WKRep::WKBGenerator.new(wkb_generator_)
           else
             wkb_generator_ = WKRep::WKBGenerator.new
@@ -61,7 +61,7 @@ module RGeo
           srid_ = opts_[:srid]
           proj4_ = opts_[:proj4]
           if proj4_ && CoordSys.check!(:proj4)
-            if proj4_.is_a?(::String) || proj4_.is_a?(::Hash)
+            if proj4_.is_a?(::String) || proj4_.is_a?(Hash)
               proj4_ = CoordSys::Proj4.create(proj4_)
             end
           else
@@ -89,7 +89,7 @@ module RGeo
           case wkt_parser_
           when :geos
             wkt_parser_ = nil
-          when ::Hash
+          when Hash
             wkt_parser_ = WKRep::WKTParser.new(result, wkt_parser_)
           else
             wkt_parser_ = WKRep::WKTParser.new(result)
@@ -98,7 +98,7 @@ module RGeo
           case wkb_parser_
           when :geos
             wkb_parser_ = nil
-          when ::Hash
+          when Hash
             wkb_parser_ = WKRep::WKBParser.new(result, wkb_parser_)
           else
             wkb_parser_ = WKRep::WKBParser.new(result)
@@ -211,7 +211,7 @@ module RGeo
       def init_with(coder_) # :nodoc:
         if (proj4_data_ = coder_["proj4"])
           CoordSys.check!(:proj4)
-          if proj4_data_.is_a?(::Hash)
+          if proj4_data_.is_a?(Hash)
             proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
           else
             proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)

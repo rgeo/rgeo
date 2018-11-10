@@ -162,7 +162,7 @@ module RGeo
       end
 
       def parse_type_tag
-        expect_token_type(::String)
+        expect_token_type(String)
         if @support_ewkt && @cur_token =~ /^(.+)(m)$/
           type = Regexp.last_match(1)
           zm = Regexp.last_match(2)
@@ -171,7 +171,7 @@ module RGeo
           zm = ""
         end
         next_token
-        if zm.length == 0 && @support_wkt12 && @cur_token.is_a?(::String) && @cur_token =~ /^z?m?$/
+        if zm.length == 0 && @support_wkt12 && @cur_token.is_a?(String) && @cur_token =~ /^z?m?$/
           zm = @cur_token
           next_token
         end
@@ -218,15 +218,15 @@ module RGeo
       end
 
       def parse_coords
-        expect_token_type(::Numeric)
+        expect_token_type(Numeric)
         x = @cur_token
         next_token
-        expect_token_type(::Numeric)
+        expect_token_type(Numeric)
         y = @cur_token
         next_token
         extra = []
         if @cur_expect_z.nil?
-          while ::Numeric === @cur_token
+          while Numeric === @cur_token
             extra << @cur_token
             next_token
           end
@@ -242,14 +242,14 @@ module RGeo
         else
           val = 0
           if @cur_expect_z
-            expect_token_type(::Numeric)
+            expect_token_type(Numeric)
             val = @cur_token
             next_token
           end
           extra << val if @cur_factory_support_z
           val = 0
           if @cur_expect_m
-            expect_token_type(::Numeric)
+            expect_token_type(Numeric)
             val = @cur_token
             next_token
           end
@@ -377,7 +377,7 @@ module RGeo
       end
 
       def start_scanner(str)
-        @_scanner = ::StringScanner.new(str)
+        @_scanner = StringScanner.new(str)
         next_token
       end
 

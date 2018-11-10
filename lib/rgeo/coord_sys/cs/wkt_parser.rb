@@ -11,13 +11,13 @@ module RGeo
     module CS
       class WKTParser # :nodoc:
         def initialize(str)
-          @scanner = ::StringScanner.new(str)
+          @scanner = StringScanner.new(str)
           next_token
         end
 
         def parse(containing_type = nil) # :nodoc:
           if @cur_token.is_a?(QuotedString) ||
-            @cur_token.is_a?(::Numeric) ||
+            @cur_token.is_a?(Numeric) ||
             (containing_type == "AXIS" && @cur_token.is_a?(TypeString))
             value = @cur_token
             next_token
@@ -46,7 +46,7 @@ module RGeo
           when "AXIS"
             obj = AxisInfo.create(args.shift(QuotedString), args.shift(TypeString))
           when "TOWGS84"
-            bursa_wolf_params = args.find_all(::Numeric)
+            bursa_wolf_params = args.find_all(Numeric)
             unless bursa_wolf_params.size == 7
               raise Error::ParseError("Expected 7 Bursa Wolf parameters but found #{bursa_wolf_params.size}")
             end
@@ -60,13 +60,13 @@ module RGeo
             else
               klass = Unit
             end
-            obj = klass.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
+            obj = klass.create(args.shift(QuotedString), args.shift(Numeric), *args.create_optionals)
           when "PARAMETER"
-            obj = ProjectionParameter.create(args.shift(QuotedString), args.shift(::Numeric))
+            obj = ProjectionParameter.create(args.shift(QuotedString), args.shift(Numeric))
           when "PRIMEM"
-            obj = PrimeMeridian.create(args.shift(QuotedString), nil, args.shift(::Numeric), *args.create_optionals)
+            obj = PrimeMeridian.create(args.shift(QuotedString), nil, args.shift(Numeric), *args.create_optionals)
           when "SPHEROID"
-            obj = Ellipsoid.create_flattened_sphere(args.shift(QuotedString), args.shift(::Numeric), args.shift(::Numeric), args.find_first(LinearUnit), *args.create_optionals)
+            obj = Ellipsoid.create_flattened_sphere(args.shift(QuotedString), args.shift(Numeric), args.shift(Numeric), args.find_first(LinearUnit), *args.create_optionals)
           when "PROJECTION"
             name = args.shift(QuotedString)
             obj = Projection.create(name, name, args.find_all(ProjectionParameter), *args.create_optionals)
@@ -76,9 +76,9 @@ module RGeo
             to_wgs84 = args.find_first(WGS84ConversionInfo)
             obj = HorizontalDatum.create(name, HD_GEOCENTRIC, ellipsoid, to_wgs84, *args.create_optionals)
           when "VERT_DATUM"
-            obj = VerticalDatum.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
+            obj = VerticalDatum.create(args.shift(QuotedString), args.shift(Numeric), *args.create_optionals)
           when "LOCAL_DATUM"
-            obj = LocalDatum.create(args.shift(QuotedString), args.shift(::Numeric), *args.create_optionals)
+            obj = LocalDatum.create(args.shift(QuotedString), args.shift(Numeric), *args.create_optionals)
           when "COMPD_CS"
             obj = CompoundCoordinateSystem.create(args.shift(QuotedString), args.shift(CoordinateSystem), args.shift(CoordinateSystem), *args.create_optionals)
           when "LOCAL_CS"
@@ -182,10 +182,10 @@ module RGeo
 
         attr_reader :cur_token
 
-        class QuotedString < ::String # :nodoc:
+        class QuotedString < String # :nodoc:
         end
 
-        class TypeString < ::String # :nodoc:
+        class TypeString < String # :nodoc:
         end
 
         class AuthorityClause # :nodoc:

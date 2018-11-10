@@ -170,7 +170,7 @@ module RGeo
             opts[:type] = param
           when ::Symbol
             opts[param] = true
-          when ::Hash
+          when Hash
             opts.merge!(param)
           end
         end
