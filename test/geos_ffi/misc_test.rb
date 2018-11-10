@@ -39,8 +39,8 @@ class GeosFFIMiscTest < Test::Unit::TestCase # :nodoc:
     polygon.intersects?(p2)
     assert_equal(true, polygon.prepared?)
 
-    factory_no_auto_prepare = RGeo::Geos.factory(srid: 4326,
-                                                  native_interface: :ffi, auto_prepare: :disabled)
+    factory_no_auto_prepare =
+      RGeo::Geos.factory(srid: 4326, native_interface: :ffi, auto_prepare: :disabled)
     polygon2 = factory_no_auto_prepare.polygon(
       factory_no_auto_prepare.linear_ring([p1, p2, p3, p1]))
     assert_equal(false, polygon2.prepared?)

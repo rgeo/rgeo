@@ -6,18 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
-# SupportedHashRocketStyles: key, separator, table
-# SupportedColonStyles: key, separator, table
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/AlignHash:
-  Exclude:
-    - 'lib/rgeo/geographic/proj4_projector.rb'
-    - 'test/geos_ffi/misc_test.rb'
-    - 'test/geos_ffi/parsing_unparsing_test.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 Layout/ClosingParenthesisIndentation:
