@@ -33,14 +33,6 @@ Layout/EmptyLinesAroundClassBody:
   Exclude:
     - 'lib/rgeo/coord_sys/cs/entities.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'test/common/polygon_tests.rb'
-
 # Offense count: 10
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
@@ -50,7 +42,6 @@ Layout/ExtraSpacing:
     - 'lib/rgeo/geographic/factory.rb'
     - 'lib/rgeo/geos/ffi_feature_methods.rb'
     - 'lib/rgeo/impl_helper/basic_geometry_collection_methods.rb'
-    - 'test/geos_capi/polygon_test.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -59,14 +50,6 @@ Layout/ExtraSpacing:
 Layout/IndentArray:
   Exclude:
     - 'test/geos_capi/geometry_collection_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, rails
-Layout/IndentationConsistency:
-  Exclude:
-    - 'test/common/polygon_tests.rb'
 
 # Offense count: 5
 # Cop supports --auto-correct.

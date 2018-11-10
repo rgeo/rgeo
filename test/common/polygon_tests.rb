@@ -237,22 +237,21 @@ module RGeo
 
           line_string = poly1.exterior_ring
 
-            case line_string.class.name
-            when "GeosPolygonTest"
-            when "RGeo::Geos::FFILinearRingImpl"
-            when "RGeo::Geos::CAPILinearRingImpl"
-            when "GeosFFIPolygonTest"
-              assert(line_string.points.count == 9)
-            else
-              assert(line_string.num_points == 4)
-            end
+          case line_string.class.name
+          when "GeosPolygonTest"
+          when "RGeo::Geos::FFILinearRingImpl"
+          when "RGeo::Geos::CAPILinearRingImpl"
+          when "GeosFFIPolygonTest"
+            assert(line_string.points.count == 9)
+          else
+            assert(line_string.num_points == 4)
+          end
 
           points = line_string.points
           assert(points.first.x == points.last.x)
           assert(points.first.y == points.last.y)
           assert(points.first.z == points.last.z)
         end
-
       end
     end
   end
