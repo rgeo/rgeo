@@ -453,16 +453,6 @@ Style/SafeNavigation:
 Style/SymbolArray:
   EnforcedStyle: brackets
 
-# Offense count: 11
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/wkt_parser.rb'
-    - 'lib/rgeo/impl_helper/basic_geometry_collection_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_line_string_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_point_methods.rb'
-    - 'lib/rgeo/wkrep/wkt_parser.rb'
-
 # Offense count: 680
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
