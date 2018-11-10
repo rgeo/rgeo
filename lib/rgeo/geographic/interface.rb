@@ -350,11 +350,11 @@ module RGeo
           # Get the projection coordinate systems from the given factory
           projection_proj4 = projection_factory.proj4
           unless projection_proj4
-            raise ::ArgumentError, "The :projection_factory does not have a proj4."
+            raise ArgumentError, "The :projection_factory does not have a proj4."
           end
           projection_coord_sys = projection_factory.coord_sys
           if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
-            raise ::ArgumentError, "The :projection_factory's coord_sys is not a ProjectedCoordinateSystem."
+            raise ArgumentError, "The :projection_factory's coord_sys is not a ProjectedCoordinateSystem."
           end
           # Determine geographic coordinate system. First check parameters.
           proj4 = opts[:proj4]
@@ -399,18 +399,18 @@ module RGeo
           end
           # A projection proj4 is absolutely required.
           unless projection_proj4
-            raise ::ArgumentError, "Unable to determine the Proj4 for the projected coordinate system."
+            raise ArgumentError, "Unable to determine the Proj4 for the projected coordinate system."
           end
           # Check the projection coordinate systems, and parse if needed.
-          if projection_proj4.is_a?(::String) || projection_proj4.is_a?(::Hash)
+          if projection_proj4.is_a?(String) || projection_proj4.is_a?(Hash)
             actual_projection_proj4 = CoordSys::Proj4.create(projection_proj4)
             unless actual_projection_proj4
-              raise ::ArgumentError, "Bad proj4 syntax: #{projection_proj4.inspect}"
+              raise ArgumentError, "Bad proj4 syntax: #{projection_proj4.inspect}"
             end
             projection_proj4 = actual_projection_proj4
           end
           if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
-            raise ::ArgumentError, "The :projection_coord_sys is not a ProjectedCoordinateSystem."
+            raise ArgumentError, "The :projection_coord_sys is not a ProjectedCoordinateSystem."
           end
           projection_srid ||= projection_coord_sys.authority_code if projection_coord_sys
           # Determine geographic coordinate system. First check parameters.
