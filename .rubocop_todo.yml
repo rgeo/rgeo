@@ -41,15 +41,6 @@ Layout/RescueEnsureAlignment:
 
 # Offense count: 4
 # Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment.
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'lib/rgeo/wkrep/wkt_parser.rb'
-    - 'test/geos_capi/polygon_test.rb'
-    - 'test/simple_mercator/window_test.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
 # SupportedStyles: space, no_space
 # SupportedStylesForEmptyBraces: space, no_space

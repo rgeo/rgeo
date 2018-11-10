@@ -167,7 +167,7 @@ class MercatorWindowTest < Test::Unit::TestCase # :nodoc:
   def test_random_point_not_crossing_seam
     point_ = @factory.point(-74, 40.7)
     max_distance_mercator_ = 1000
-    max_distance_hypotenuse_ = Math.sqrt(max_distance_mercator_ ** 2 * 2)
+    max_distance_hypotenuse_ = Math.sqrt(max_distance_mercator_**2 * 2)
     window1_ = RGeo::Geographic::ProjectedWindow.surrounding_point(point_, max_distance_mercator_)
     10.times { |i|
       actual_distance_ = window1_.random_point.distance(point_)

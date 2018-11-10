@@ -321,7 +321,7 @@ module RGeo
       end
 
       def parse_multi_point
-        points= []
+        points = []
         if @cur_token != "empty"
           expect_token_type(:begin)
           next_token
