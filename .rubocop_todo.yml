@@ -224,12 +224,6 @@ Style/AccessModifierDeclarations:
     - 'lib/rgeo/coord_sys/cs/entities.rb'
 
 # Offense count: 1
-# Configuration parameters: AllowedChars.
-Style/AsciiComments:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-
-# Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, IgnoredMethods.
 # SupportedStyles: line_count_based, semantic, braces_for_chaining

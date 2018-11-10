@@ -384,7 +384,7 @@ module RGeo
       # A base interface for metadata applicable to coordinate system
       # objects.
       #
-      # The metadata items "Abbreviation"’, "Alias", "Authority",
+      # The metadata items "Abbreviation", "Alias", "Authority",
       # "AuthorityCode", "Name" and "Remarks" were specified in the Simple
       # Features interfaces, so they have been kept here.
       #
