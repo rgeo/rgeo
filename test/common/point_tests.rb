@@ -295,22 +295,22 @@ module RGeo
 
         def test_marshal_roundtrip
           point = @factory.point(11, 12)
-          data = ::Marshal.dump(point)
-          point2 = ::Marshal.load(data)
+          data = Marshal.dump(point)
+          point2 = Marshal.load(data)
           assert_equal(point, point2)
         end
 
         def test_marshal_roundtrip_3d
           point = @zfactory.point(11, 12, 13)
-          data = ::Marshal.dump(point)
-          point2 = ::Marshal.load(data)
+          data = Marshal.dump(point)
+          point2 = Marshal.load(data)
           assert_equal(point, point2)
         end
 
         def test_marshal_roundtrip_4d
           point = @zmfactory.point(11, 12, 13, 14)
-          data = ::Marshal.dump(point)
-          point2 = ::Marshal.load(data)
+          data = Marshal.dump(point)
+          point2 = Marshal.load(data)
           assert_equal(point, point2)
         end
 

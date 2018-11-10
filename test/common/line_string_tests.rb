@@ -303,8 +303,8 @@ module RGeo
           point1 = @factory.point(0, 0)
           point2 = @factory.point(0, 1)
           line1 = @factory.line_string([point1, point2])
-          data = ::Marshal.dump(line1)
-          line2 = ::Marshal.load(data)
+          data = Marshal.dump(line1)
+          line2 = Marshal.load(data)
           assert_equal(line1, line2)
         end
 
