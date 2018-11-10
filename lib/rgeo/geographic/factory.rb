@@ -202,7 +202,7 @@ module RGeo
           buffer_resolution: coder["buffer_resolution"],
           proj4: proj4,
           coord_sys: coord_sys
-                  )
+        )
         if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
           klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_

@@ -222,20 +222,22 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize_copy(CAPIFactory.create(
-                          has_z_coordinate: coder_["has_z_coordinate"],
-                          has_m_coordinate: coder_["has_m_coordinate"],
-                          srid: coder_["srid"],
-                          buffer_resolution: coder_["buffer_resolution"],
-                          wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
-                          wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
-                          wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
-                          wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
-                          auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
-                          uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
-                          proj4: proj4_,
-                          coord_sys: coord_sys_
-        ))
+        initialize_copy(
+          CAPIFactory.create(
+            has_z_coordinate: coder_["has_z_coordinate"],
+            has_m_coordinate: coder_["has_m_coordinate"],
+            srid: coder_["srid"],
+            buffer_resolution: coder_["buffer_resolution"],
+            wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
+            wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
+            wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
+            wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
+            auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
+            uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
+            proj4: proj4_,
+            coord_sys: coord_sys_
+          )
+        )
       end
 
       # Returns the SRID of geometries created by this factory.
