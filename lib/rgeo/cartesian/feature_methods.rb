@@ -25,7 +25,7 @@ module RGeo
         when PointImpl
           dx = @x - rhs.x
           dy = @y - rhs.y
-          ::Math.sqrt(dx * dx + dy * dy)
+          Math.sqrt(dx * dx + dy * dy)
         else
           super
         end
@@ -36,7 +36,7 @@ module RGeo
         angle = -::Math::PI * 2.0 / point_count
         points = (0...point_count).map do |i|
           r = angle * i
-          factory.point(@x + distance * ::Math.cos(r), @y + distance * ::Math.sin(r))
+          factory.point(@x + distance * Math.cos(r), @y + distance * Math.sin(r))
         end
         factory.polygon(factory.linear_ring(points))
       end

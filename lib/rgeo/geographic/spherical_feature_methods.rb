@@ -52,16 +52,16 @@ module RGeo
       def buffer(distance)
         radius = distance / SphericalMath::RADIUS
         radius = 1.5 if radius > 1.5
-        cos = ::Math.cos(radius)
-        sin = ::Math.sin(radius)
+        cos = Math.cos(radius)
+        sin = Math.sin(radius)
         point_count = factory.property(:buffer_resolution) * 4
         p0 = xyz
         p1 = p0.create_perpendicular
         p2 = p1 % p0
-        angle = ::Math::PI * 2.0 / point_count
+        angle = Math::PI * 2.0 / point_count
         points = (0...point_count).map do |i|
           r = angle * i
-          pi = SphericalMath::PointXYZ.weighted_combination(p1, ::Math.cos(r), p2, ::Math.sin(r))
+          pi = SphericalMath::PointXYZ.weighted_combination(p1, Math.cos(r), p2, Math.sin(r))
           p = SphericalMath::PointXYZ.weighted_combination(p0, cos, pi, sin)
           factory.point(*p.lonlat)
         end

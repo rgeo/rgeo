@@ -36,7 +36,7 @@ module RGeo
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           radius = EQUATORIAL_RADIUS
           @projection_factory.point(geometry.x * rpd_ * radius,
-            ::Math.log(::Math.tan(::Math::PI / 4.0 + geometry.y * rpd_ / 2.0)) * radius)
+            Math.log(Math.tan(Math::PI / 4.0 + geometry.y * rpd_ / 2.0)) * radius)
         when Feature::Line
           @projection_factory.line(project(geometry.start_point), project(geometry.end_point))
         when Feature::LinearRing
@@ -63,7 +63,7 @@ module RGeo
           dpr = ImplHelper::Math::DEGREES_PER_RADIAN
           radius = EQUATORIAL_RADIUS
           @geography_factory.point(geometry.x / radius * dpr,
-            (2.0 * ::Math.atan(::Math.exp(geometry.y / radius)) - ::Math::PI / 2.0) * dpr)
+            (2.0 * Math.atan(Math.exp(geometry.y / radius)) - Math::PI / 2.0) * dpr)
         when Feature::Line
           @geography_factory.line(unproject(geometry.start_point), unproject(geometry.end_point))
         when Feature::LinearRing

@@ -24,7 +24,7 @@ module RGeo
 
       class PointXYZ # :nodoc:
         def initialize(x, y, z)
-          r = ::Math.sqrt(x * x + y * y + z * z)
+          r = Math.sqrt(x * x + y * y + z * z)
           @x = (x / r).to_f
           @y = (y / r).to_f
           @z = (z / r).to_f
@@ -45,9 +45,9 @@ module RGeo
         alias == eql?
 
         def latlon
-          lat_rad = ::Math.asin(@z)
+          lat_rad = Math.asin(@z)
           lon_rad = begin
-                       ::Math.atan2(@y, @x)
+                       Math.atan2(@y, @x)
                      rescue
                        0.0
                      end
@@ -56,9 +56,9 @@ module RGeo
         end
 
         def lonlat
-          lat_rad = ::Math.asin(@z)
+          lat_rad = Math.asin(@z)
           lon_rad = begin
-                       ::Math.atan2(@y, @x)
+                       Math.atan2(@y, @x)
                      rescue
                        0.0
                      end
@@ -90,13 +90,13 @@ module RGeo
           rz = rhs.z
           dot = @x * rx + @y * ry + @z * rz
           if dot > -0.8 && dot < 0.8
-            ::Math.acos(dot)
+            Math.acos(dot)
           else
             x = @y * rz - @z * ry
             y = @z * rx - @x * rz
             z = @x * ry - @y * rx
-            as = ::Math.asin(::Math.sqrt(x * x + y * y + z * z))
-            dot > 0.0 ? as : ::Math::PI - as
+            as = Math.asin(Math.sqrt(x * x + y * y + z * z))
+            dot > 0.0 ? as : Math::PI - as
           end
         end
 
@@ -114,10 +114,10 @@ module RGeo
           rpd = ImplHelper::Math::RADIANS_PER_DEGREE
           lat_rad = rpd * lat
           lon_rad = rpd * lon
-          z = ::Math.sin(lat_rad)
-          r = ::Math.cos(lat_rad)
-          x = ::Math.cos(lon_rad) * r
-          y = ::Math.sin(lon_rad) * r
+          z = Math.sin(lat_rad)
+          r = Math.cos(lat_rad)
+          x = Math.cos(lon_rad) * r
+          y = Math.sin(lon_rad) * r
           new(x, y, z)
         end
 

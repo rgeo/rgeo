@@ -32,7 +32,7 @@ module RGeo
             p1 = ring.point_n(i + 1)
             x = p1.x - p0.x
             y = p1.y - p0.y
-            r = ::Math.sqrt(x * x + y * y)
+            r = Math.sqrt(x * x + y * y)
             if r > 0.0
               segs << x / r << y / r
             else
@@ -61,7 +61,7 @@ module RGeo
             if y != 0.0
               s = sin * x + cos * y
               c = cos * x - sin * y
-              r = ::Math.sqrt(s * s + c * c)
+              r = Math.sqrt(s * s + c * c)
               sin = s / r
               cos = c / r
             end
