@@ -41,7 +41,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
     poly = @factory.polygon(@factory.linear_ring(points))
     simplified = poly.simplify(0.3)
     new_points = simplified.exterior_ring.points
-    extra = new_points.reject { |p| [0, 10].include?(p.x) and [0, 10].include?(p.y) }
+    extra = new_points.reject { |p| [0, 10].include?(p.x) && [0, 10].include?(p.y) }
     assert_equal 5, new_points.length, "Closed ring of the square should have 5 points"
     assert_equal 0, extra.length, "Should only have x/y's on 0 and 10"
   end

@@ -224,14 +224,6 @@ Style/AccessModifierDeclarations:
     - 'lib/rgeo/coord_sys/cs/entities.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, conditionals
-Style/AndOr:
-  Exclude:
-    - 'test/geos_capi/polygon_test.rb'
-
-# Offense count: 1
 # Configuration parameters: AllowedChars.
 Style/AsciiComments:
   Exclude:
