@@ -14,17 +14,17 @@ class GeosGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_collection_node
-    lines = [ [[0, 0], [0, 2]], [[-1, 1], [1, 1]] ]
+    lines = [[[0, 0], [0, 2]], [[-1, 1], [1, 1]]]
       .map { |p1, p2| [@factory.point(*p1), @factory.point(*p2)] }
       .map { |p1, p2| @factory.line(p1, p2) }
 
     multi = @factory.multi_line_string(lines)
 
     expected_lines = [
-        [ [0, 0],  [0, 1] ],
-        [ [0, 1],  [0, 2] ],
-        [ [-1, 1], [0, 1] ],
-        [ [0, 1],  [1, 1] ]
+        [[0, 0],  [0, 1]],
+        [[0, 1],  [0, 2]],
+        [[-1, 1], [0, 1]],
+        [[0, 1],  [1, 1]]
       ].map { |p1, p2| @factory.line(@factory.point(*p1), @factory.point(*p2)) }
 
     noded = multi.node

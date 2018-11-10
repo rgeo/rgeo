@@ -94,16 +94,6 @@ Layout/SpaceBeforeBlockBraces:
   Exclude:
     - 'test/geos_capi/polygon_test.rb'
 
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBrackets: space, no_space
-Layout/SpaceInsideArrayLiteralBrackets:
-  Exclude:
-    - 'test/geos_capi/geometry_collection_test.rb'
-    - 'test/geos_capi/line_string_test.rb'
-
 # Offense count: 10
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
