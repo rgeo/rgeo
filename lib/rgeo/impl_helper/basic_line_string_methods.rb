@@ -141,7 +141,7 @@ module RGeo
         super
         if @points.size > 0
           @points << @points.first if @points.first != @points.last
-          @points = @points.chunk {|x| x}.map(&:first)
+          @points = @points.chunk { |x| x }.map(&:first)
           if !@factory.property(:uses_lenient_assertions) && !is_ring?
             raise Error::InvalidGeometry, "LinearRing failed ring test"
           end
