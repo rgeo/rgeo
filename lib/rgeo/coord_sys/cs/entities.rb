@@ -275,7 +275,6 @@ module RGeo
           def create(name, orientation)
             new(name, orientation)
           end
-
         end
 
         private
