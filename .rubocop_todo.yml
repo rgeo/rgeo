@@ -76,14 +76,6 @@ Layout/RescueEnsureAlignment:
   Exclude:
     - 'lib/rgeo/geographic/spherical_math.rb'
 
-# Offense count: 27
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'test/geos_capi/geometry_collection_test.rb'
-    - 'test/geos_capi/line_string_test.rb'
-    - 'test/geos_capi/polygon_test.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.

@@ -71,13 +71,13 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
     xys1 = [[0.0, 0.0], [5.0, 0.0], [10.0, 0.0], [10.0, 10.0], [5.0, 12.0], [0.0, 10.0], [0.0, 0.0]]
     xys2 = [[0.1, 0.1], [0.1, 0.6], [0.3, 0.8],  [0.5, 0.5],   [0.7, 0.3],  [0.3, 0.1],  [0.1, 0.1]]
 
-    points1 = xys1.collect { |x,y| @factory.point(x, y) }
-    points2 = xys2.collect { |x,y| @factory.point(x, y) }
+    points1 = xys1.collect { |x, y| @factory.point(x, y) }
+    points2 = xys2.collect { |x, y| @factory.point(x, y) }
 
     ln1 = @factory.line_string(points1)
     ln2 = @factory.line_string(points2)
 
-    poly = @factory.polygon(ln1,[ln2])
+    poly = @factory.polygon(ln1, [ln2])
 
     simplified = poly.simplify_preserve_topology(1)
     interior_points = simplified.interior_rings[0].points
@@ -112,14 +112,14 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
 
   def test_is_valid_polygon
     polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    points_arr = polygon_coordinates.map{|v| @factory.point(v[0], v[1])}
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
     assert_equal(polygon.valid?, true)
 
     polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    points_arr = polygon_coordinates.map{|v| @factory.point(v[0], v[1])}
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -128,7 +128,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
 
   def test_invalid_reason
     polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    points_arr = polygon_coordinates.map{|v| @factory.point(v[0], v[1])}
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -137,7 +137,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
 
   def test_invalid_reason_with_valid_polygon
     polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    points_arr = polygon_coordinates.map{|v| @factory.point(v[0], v[1])}
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
     polygon.invalid_reason
