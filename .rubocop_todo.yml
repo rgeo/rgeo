@@ -264,12 +264,6 @@ Style/ConditionalAssignment:
     - 'lib/rgeo/geos/zm_factory.rb'
     - 'lib/rgeo/wkrep/wkt_generator.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/DefWithParentheses:
-  Exclude:
-    - 'test/geos_capi/polygon_test.rb'
-
 # Offense count: 64
 Style/Documentation:
   Enabled: false

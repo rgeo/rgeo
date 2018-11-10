@@ -67,7 +67,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
     assert_equal polygon, polygon2
   end
 
-  def test_simplify_preserve_topology()
+  def test_simplify_preserve_topology
     xys1 = [[0.0, 0.0], [5.0, 0.0], [10.0, 0.0], [10.0, 10.0], [5.0, 12.0], [0.0, 10.0], [0.0, 0.0]]
     xys2 = [[0.1, 0.1], [0.1, 0.6], [0.3, 0.8],  [0.5, 0.5],   [0.7, 0.3],  [0.3, 0.1],  [0.1, 0.1]]
 
