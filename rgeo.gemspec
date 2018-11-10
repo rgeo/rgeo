@@ -20,9 +20,9 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
-  spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "ffi-geos", "~> 1.2"
-  spec.add_development_dependency "test-unit", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 0.51"
+  spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rake-compiler", "~> 1.0"
+  spec.add_development_dependency "rubocop", "~> 0.51"
+  spec.add_development_dependency "test-unit", "~> 3.0"
 end
