@@ -105,13 +105,6 @@ Layout/SpaceInsideBlockBraces:
     - 'test/geos_capi/polygon_test.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'lib/rgeo/geos/ffi_factory.rb'
-
-# Offense count: 1
 Lint/AmbiguousRegexpLiteral:
   Exclude:
     - 'Rakefile'

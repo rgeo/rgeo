@@ -543,7 +543,7 @@ module RGeo
       end
 
       private
-      
+
       def create_fg_linear_ring(points)
         size = points.size
         return if size == 1 || size == 2
