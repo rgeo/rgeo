@@ -485,14 +485,6 @@ Style/SafeNavigation:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'lib/rgeo/geographic/interface.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: MinSize.
 # SupportedStyles: percent, brackets
 Style/SymbolArray:
