@@ -12,6 +12,7 @@ module RGeo
 
     class ZMFactory
       include Feature::Factory::Instance
+      include ImplHelper::Utils
 
       # :stopdoc:
 
@@ -137,10 +138,10 @@ module RGeo
           has_m_coordinate: data["hasm"],
           srid: data["srid"],
           buffer_resolution: data["bufr"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(data["wktg"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(data["wkbg"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(data["wktp"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(data["wkbp"]),
+          wkt_generator: symbolize_hash(data["wktg"]),
+          wkb_generator: symbolize_hash(data["wkbg"]),
+          wkt_parser: symbolize_hash(data["wktp"]),
+          wkb_parser: symbolize_hash(data["wkbp"]),
           uses_lenient_multi_polygon_assertions: data["lmpa"],
           auto_prepare: (data["apre"] ? :simple : :disabled),
           proj4: proj4,
@@ -191,10 +192,10 @@ module RGeo
           has_m_coordinate: coder["has_m_coordinate"],
           srid: coder["srid"],
           buffer_resolution: coder["buffer_resolution"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(coder["wkt_generator"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(coder["wkb_generator"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(coder["wkt_parser"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(coder["wkb_parser"]),
+          wkt_generator: symbolize_hash(coder["wkt_generator"]),
+          wkb_generator: symbolize_hash(coder["wkb_generator"]),
+          wkt_parser: symbolize_hash(coder["wkt_parser"]),
+          wkb_parser: symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
           uses_lenient_multi_polygon_assertions: coder["lenient_multi_polygon_assertions"],
           proj4: proj4,

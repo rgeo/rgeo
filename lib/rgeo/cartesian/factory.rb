@@ -13,6 +13,7 @@ module RGeo
 
     class Factory
       include Feature::Factory::Instance
+      include ImplHelper::Utils
 
       # Create a new simple cartesian factory.
       #
@@ -126,10 +127,10 @@ module RGeo
           has_z_coordinate: data["hasz"],
           has_m_coordinate: data["hasm"],
           srid: data["srid"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(data["wktg"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(data["wkbg"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(data["wktp"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(data["wkbp"]),
+          wkt_generator: symbolize_hash(data["wktg"]),
+          wkb_generator: symbolize_hash(data["wkbg"]),
+          wkt_parser: symbolize_hash(data["wktp"]),
+          wkb_parser: symbolize_hash(data["wkbp"]),
           uses_lenient_assertions: data["lena"],
           buffer_resolution: data["bufr"],
           proj4: proj4,
@@ -175,10 +176,10 @@ module RGeo
           has_z_coordinate: coder["has_z_coordinate"],
           has_m_coordinate: coder["has_m_coordinate"],
           srid: coder["srid"],
-          wkt_generator: ImplHelper::Utils.symbolize_hash(coder["wkt_generator"]),
-          wkb_generator: ImplHelper::Utils.symbolize_hash(coder["wkb_generator"]),
-          wkt_parser: ImplHelper::Utils.symbolize_hash(coder["wkt_parser"]),
-          wkb_parser: ImplHelper::Utils.symbolize_hash(coder["wkb_parser"]),
+          wkt_generator: symbolize_hash(coder["wkt_generator"]),
+          wkb_generator: symbolize_hash(coder["wkb_generator"]),
+          wkt_parser: symbolize_hash(coder["wkt_parser"]),
+          wkb_parser: symbolize_hash(coder["wkb_parser"]),
           uses_lenient_assertions: coder["lenient_assertions"],
           buffer_resolution: coder["buffer_resolution"],
           proj4: proj4,
