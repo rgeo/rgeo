@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Well-known text generator for RGeo
@@ -112,7 +114,7 @@ module RGeo
       def generate_feature(obj, toplevel = false)
         type = obj.geometry_type
         type = Feature::LineString if type.subtype_of?(Feature::LineString)
-        tag = type.type_name
+        tag = type.type_name.dup
         if @tag_format == :ewkt
           tag << "M" if @cur_support_m && !@cur_support_z
           tag = "SRID=#{obj.srid};#{tag}" if toplevel && @emit_ewkt_srid
@@ -147,7 +149,7 @@ module RGeo
       end
 
       def generate_coords(obj)
-        str = "#{obj.x} #{obj.y}"
+        str = +"#{obj.x} #{obj.y}"
         str << " #{obj.z}" if @cur_support_z
         str << " #{obj.m}" if @cur_support_m
         str

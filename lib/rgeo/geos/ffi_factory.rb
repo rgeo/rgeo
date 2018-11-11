@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # FFI-GEOS factory implementation
@@ -36,7 +38,7 @@ module RGeo
         when :geos
           @wkt_writer = ::Geos::WktWriter.new
           @wkt_generator = nil
-        when ::Hash
+        when Hash
           @wkt_generator = WKRep::WKTGenerator.new(wkt_generator_)
           @wkt_writer = nil
         else
@@ -48,7 +50,7 @@ module RGeo
         when :geos
           @wkb_writer = ::Geos::WkbWriter.new
           @wkb_generator = nil
-        when ::Hash
+        when Hash
           @wkb_generator = WKRep::WKBGenerator.new(wkb_generator_)
           @wkb_writer = nil
         else
@@ -60,14 +62,14 @@ module RGeo
         @srid = opts[:srid]
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
+          if @proj4.is_a?(String) || @proj4.is_a?(Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         else
           @proj4 = nil
         end
         @coord_sys = opts[:coord_sys]
-        if @coord_sys.is_a?(::String)
+        if @coord_sys.is_a?(String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         if (!@proj4 || !@coord_sys) && @srid && (db = opts[:srs_database])
@@ -86,7 +88,7 @@ module RGeo
         when :geos
           @wkt_reader = ::Geos::WktReader.new
           @wkt_parser = nil
-        when ::Hash
+        when Hash
           @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
           @wkt_reader = nil
         else
@@ -98,7 +100,7 @@ module RGeo
         when :geos
           @wkb_reader = ::Geos::WkbReader.new
           @wkb_parser = nil
-        when ::Hash
+        when Hash
           @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
           @wkb_reader = nil
         else
@@ -201,7 +203,7 @@ module RGeo
       def init_with(coder) # :nodoc:
         if (proj4_data = coder["proj4"])
           CoordSys.check!(:proj4)
-          if proj4_data.is_a?(::Hash)
+          if proj4_data.is_a?(Hash)
             proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
             proj4 = CoordSys::Proj4.create(proj4_data.to_s)
@@ -297,7 +299,7 @@ module RGeo
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points)
-        points = points.to_a unless points.is_a?(::Array)
+        points = points.to_a unless points.is_a?(Array)
         size = points.size
         raise(Error::InvalidGeometry, "Must have more than one point") if size == 1
         cs = ::Geos::CoordinateSequence.new(size, 3)
@@ -337,7 +339,7 @@ module RGeo
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points)
-        points = points.to_a unless points.is_a?(::Array)
+        points = points.to_a unless points.is_a?(Array)
         fg_geom = create_fg_linear_ring(points)
         FFILinearRingImpl.new(self, fg_geom, nil)
       end
@@ -345,7 +347,7 @@ module RGeo
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring, inner_rings = nil)
-        inner_rings = inner_rings.to_a unless inner_rings.is_a?(::Array)
+        inner_rings = inner_rings.to_a unless inner_rings.is_a?(Array)
         return nil unless RGeo::Feature::LineString.check_type(outer_ring)
         outer_ring = create_fg_linear_ring(outer_ring.points)
         inner_rings = inner_rings.map do |r|
@@ -360,7 +362,7 @@ module RGeo
       # See RGeo::Feature::Factory#collection
 
       def collection(elems)
-        elems = elems.to_a unless elems.is_a?(::Array)
+        elems = elems.to_a unless elems.is_a?(Array)
         klasses = []
         my_fg_geoms = []
         elems.each do |elem|
@@ -378,14 +380,14 @@ module RGeo
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems)
-        elems = elems.to_a unless elems.is_a?(::Array)
+        elems = elems.to_a unless elems.is_a?(Array)
         elems = elems.map do |elem|
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Point,
             :force_new, :keep_subtype)
           return nil unless elem
           elem.detach_fg_geom
         end
-        klasses = ::Array.new(elems.size, FFIPointImpl)
+        klasses = Array.new(elems.size, FFIPointImpl)
         fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOINT, elems)
         FFIMultiPointImpl.new(self, fg_geom, klasses)
       end
@@ -393,7 +395,7 @@ module RGeo
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems)
-        elems = elems.to_a unless elems.is_a?(::Array)
+        elems = elems.to_a unless elems.is_a?(Array)
         klasses = []
         elems = elems.map do |elem|
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::LineString, :force_new, :keep_subtype)
@@ -408,7 +410,7 @@ module RGeo
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems)
-        elems = elems.to_a unless elems.is_a?(::Array)
+        elems = elems.to_a unless elems.is_a?(Array)
         elems = elems.map do |elem|
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon, :force_new, :keep_subtype)
           raise(RGeo::Error::InvalidGeometry, "Could not cast to polygon: #{elem}") unless elem
@@ -425,7 +427,7 @@ module RGeo
             end
           end
         end
-        klasses = ::Array.new(elems.size, FFIPolygonImpl)
+        klasses = Array.new(elems.size, FFIPolygonImpl)
         fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems)
         FFIMultiPolygonImpl.new(self, fg_geom, klasses)
       end
@@ -482,7 +484,7 @@ module RGeo
           else
             inferred_klass = FFIGeometryImpl
           end
-          klasses = klass if is_collection && klass.is_a?(::Array)
+          klasses = klass if is_collection && klass.is_a?(Array)
           klass = inferred_klass
         end
         klass.new(self, fg_geom, klasses)
@@ -543,7 +545,7 @@ module RGeo
       end
 
       private
-      
+
       def create_fg_linear_ring(points)
         size = points.size
         return if size == 1 || size == 2

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Core calculations in the plane
@@ -106,7 +108,7 @@ module RGeo
       end
 
       def length
-        ::Math.sqrt(@lensq)
+        Math.sqrt(@lensq)
       end
     end
   end

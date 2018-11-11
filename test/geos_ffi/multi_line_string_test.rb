@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Tests for the GEOS multi line string implementation

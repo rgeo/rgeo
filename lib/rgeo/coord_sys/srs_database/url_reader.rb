@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # SRS database interface
@@ -33,13 +35,13 @@ module RGeo
         def get(ident)
           ident = ident.to_s
           return @cache[ident] if @cache && @cache.include?(ident)
-          uri = ::URI.parse(ident)
+          uri = URI.parse(ident)
           result = nil
-          ::Net::HTTP.start(uri.host, uri.port) do |http|
+          Net::HTTP.start(uri.host, uri.port) do |http|
             request = uri.path
             request = "#{request}?#{uri.query}" if uri.query
             response = http.requestget(request)
-            if response.is_a?(::Net::HTTPSuccess)
+            if response.is_a?(Net::HTTPSuccess)
               response = response.body.strip
               if response[0, 1] == "+"
                 result = Entry.new(ident, proj4: response)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # GEOS toplevel interface
@@ -195,7 +197,7 @@ module RGeo
       # and CoordSys objects.
 
       def factory_generator(defaults = {})
-        ::Proc.new { |c| factory(defaults.merge(c)) }
+        proc { |c| factory(defaults.merge(c)) }
       end
     end
   end

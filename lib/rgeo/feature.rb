@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Feature module contains interfaces and general tools for
 # implementations of the Open Geospatial Consortium Simple Features
 # Specification (SFS), version 1.1.0.

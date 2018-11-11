@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Feature type management and casting
@@ -166,9 +168,9 @@ module RGeo
             opts[:factory] = param
           when Type
             opts[:type] = param
-          when ::Symbol
+          when Symbol
             opts[param] = true
-          when ::Hash
+          when Hash
             opts.merge!(param)
           end
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Geographic data factory implementation
@@ -21,13 +23,13 @@ module RGeo
         @has_m = opts[:has_m_coordinate] ? true : false
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
+          if @proj4.is_a?(String) || @proj4.is_a?(Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         end
         srid = opts[:srid]
         @coord_sys = opts[:coord_sys]
-        if @coord_sys.is_a?(::String)
+        if @coord_sys.is_a?(String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         if (!@proj4 || !@coord_sys) && srid && (db = opts[:srs_database])
@@ -45,28 +47,28 @@ module RGeo
 
         wkt_generator = opts[:wkt_generator]
         case wkt_generator
-        when ::Hash
+        when Hash
           @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
         else
           @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
         end
         wkb_generator = opts[:wkb_generator]
         case wkb_generator
-        when ::Hash
+        when Hash
           @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
         else
           @wkb_generator = WKRep::WKBGenerator.new
         end
         wkt_parser = opts[:wkt_parser]
         case wkt_parser
-        when ::Hash
+        when Hash
           @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
         else
           @wkt_parser = WKRep::WKTParser.new(self)
         end
         wkb_parser = opts[:wkb_parser]
         case wkb_parser
-        when ::Hash
+        when Hash
           @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
         else
           @wkb_parser = WKRep::WKBParser.new(self)
@@ -156,7 +158,7 @@ module RGeo
 
       def init_with(coder) # :nodoc:
         if (proj4_data = coder["proj4"]) && CoordSys.check!(:proj4)
-          if proj4_data.is_a?(::Hash)
+          if proj4_data.is_a?(Hash)
             proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
             proj4 = CoordSys::Proj4.create(proj4_data.to_s)

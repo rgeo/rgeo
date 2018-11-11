@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Makefile builder for GEOS wrapper
 #
 # -----------------------------------------------------------------------------
 def create_dummy_makefile
-  ::File.open("Makefile", "w") { |f_| f_.write(".PHONY: install\ninstall:\n") }
+  File.open("Makefile", "w") { |f_| f_.write(".PHONY: install\ninstall:\n") }
 end
 
-if ::RUBY_DESCRIPTION =~ /^jruby\s/
+if RUBY_DESCRIPTION =~ /^jruby\s/
   create_dummy_makefile
 else
   require "mkmf"
@@ -15,7 +17,7 @@ else
   geosconfig = with_config("geos-config") || find_executable("geos-config")
 
   if geosconfig
-    puts "Using GEOS compile configuration from %s" [geosconfig]
+    puts "Using GEOS compile configuration from #{geosconfig}"
     $INCFLAGS << " " << `#{geosconfig} --cflags`.strip
     geos_libs = `#{geosconfig} --clibs`.tr("\n", " ")
     geos_libs.split(/\s+/).each do |flag|

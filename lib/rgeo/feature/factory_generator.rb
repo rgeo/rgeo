@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Feature factory interface
@@ -80,7 +82,7 @@ module RGeo
       # factory.
 
       def self.single(factory)
-        ::Proc.new { |c| factory }
+        proc { |c| factory }
       end
 
       # Return a new FactoryGenerator that calls the given delegate, but
@@ -89,7 +91,7 @@ module RGeo
       # force certain values to override the given configuration.
 
       def self.decorate(delegate, default_config = {}, force_config = {})
-        ::Proc.new { |c| delegate_.call(default_config.merge(c).merge(force_config)) }
+        proc { |c| delegate_.call(default_config.merge(c).merge(force_config)) }
       end
     end
   end

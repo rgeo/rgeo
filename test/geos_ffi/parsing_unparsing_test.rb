@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Tests for the GEOS point implementation
@@ -15,8 +17,7 @@ class GeosFFIParsingUnparsingTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_wkt_generator_downcase
-    factory = RGeo::Geos.factory(wkt_generator: { convert_case: :lower },
-                                  native_interface: :ffi)
+    factory = RGeo::Geos.factory(wkt_generator: { convert_case: :lower }, native_interface: :ffi)
     point = factory.point(1, 1)
     assert_equal("point (1.0 1.0)", point.as_text)
   end

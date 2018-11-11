@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Common methods for Point features
@@ -14,7 +16,7 @@ module RGeo
         @z = factory.property(:has_z_coordinate) ? extra.shift.to_f : nil
         @m = factory.property(:has_m_coordinate) ? extra.shift.to_f : nil
         if extra.size > 0
-          raise ::ArgumentError, "Too many arguments for point initializer"
+          raise ArgumentError, "Too many arguments for point initializer"
         end
         validate_geometry
       end

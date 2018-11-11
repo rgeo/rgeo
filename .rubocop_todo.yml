@@ -6,71 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: TreatCommentsAsGroupSeparators, Include.
-# Include: **/*.gemspec
-Gemspec/OrderedDependencies:
-  Exclude:
-    - 'rgeo.gemspec'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
-# SupportedHashRocketStyles: key, separator, table
-# SupportedColonStyles: key, separator, table
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/AlignHash:
-  Exclude:
-    - 'lib/rgeo/geographic/proj4_projector.rb'
-    - 'test/geos_ffi/misc_test.rb'
-    - 'test/geos_ffi/parsing_unparsing_test.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-Layout/ClosingParenthesisIndentation:
-  Exclude:
-    - 'lib/rgeo/geographic/factory.rb'
-    - 'lib/rgeo/geos/capi_factory.rb'
-
-# Offense count: 75
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'Rakefile'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'test/common/polygon_tests.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Layout/ExtraSpacing:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/wkt_parser.rb'
-    - 'lib/rgeo/geographic/factory.rb'
-    - 'lib/rgeo/geos/ffi_feature_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_geometry_collection_methods.rb'
-    - 'test/geos_capi/polygon_test.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
@@ -78,14 +13,6 @@ Layout/ExtraSpacing:
 Layout/IndentArray:
   Exclude:
     - 'test/geos_capi/geometry_collection_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: normal, rails
-Layout/IndentationConsistency:
-  Exclude:
-    - 'test/common/polygon_tests.rb'
 
 # Offense count: 5
 # Cop supports --auto-correct.
@@ -112,23 +39,6 @@ Layout/RescueEnsureAlignment:
   Exclude:
     - 'lib/rgeo/geographic/spherical_math.rb'
 
-# Offense count: 27
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'test/geos_capi/geometry_collection_test.rb'
-    - 'test/geos_capi/line_string_test.rb'
-    - 'test/geos_capi/polygon_test.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment.
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'lib/rgeo/wkrep/wkt_parser.rb'
-    - 'test/geos_capi/polygon_test.rb'
-    - 'test/simple_mercator/window_test.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.
@@ -137,38 +47,6 @@ Layout/SpaceAroundOperators:
 Layout/SpaceBeforeBlockBraces:
   Exclude:
     - 'test/geos_capi/polygon_test.rb'
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBrackets: space, no_space
-Layout/SpaceInsideArrayLiteralBrackets:
-  Exclude:
-    - 'test/geos_capi/geometry_collection_test.rb'
-    - 'test/geos_capi/line_string_test.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideBlockBraces:
-  Exclude:
-    - 'lib/rgeo/impl_helper/basic_line_string_methods.rb'
-    - 'test/geos_capi/polygon_test.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'lib/rgeo/geos/ffi_factory.rb'
-
-# Offense count: 1
-Lint/AmbiguousRegexpLiteral:
-  Exclude:
-    - 'Rakefile'
 
 # Offense count: 3
 Lint/EmptyWhen:
@@ -347,20 +225,6 @@ Style/AccessModifierDeclarations:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, conditionals
-Style/AndOr:
-  Exclude:
-    - 'test/geos_capi/polygon_test.rb'
-
-# Offense count: 1
-# Configuration parameters: AllowedChars.
-Style/AsciiComments:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, IgnoredMethods.
 # SupportedStyles: line_count_based, semantic, braces_for_chaining
 # ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
@@ -400,12 +264,6 @@ Style/ConditionalAssignment:
     - 'lib/rgeo/geos/zm_factory.rb'
     - 'lib/rgeo/wkrep/wkt_generator.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/DefWithParentheses:
-  Exclude:
-    - 'test/geos_capi/polygon_test.rb'
-
 # Offense count: 64
 Style/Documentation:
   Enabled: false
@@ -417,13 +275,6 @@ Style/Documentation:
 Style/EmptyMethod:
   Exclude:
     - 'lib/rgeo/impl_helper/basic_geometry_methods.rb'
-
-# Offense count: 144
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: when_needed, always, never
-Style/FrozenStringLiteralComment:
-  Enabled: false
 
 # Offense count: 3
 # Configuration parameters: AllowedVariables.
@@ -551,34 +402,10 @@ Style/SafeNavigation:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Exclude:
-    - 'lib/rgeo/geographic/interface.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: MinSize.
 # SupportedStyles: percent, brackets
 Style/SymbolArray:
   EnforcedStyle: brackets
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/UnneededInterpolation:
-  Exclude:
-    - 'lib/rgeo/wkrep/wkb_parser.rb'
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/wkt_parser.rb'
-    - 'lib/rgeo/impl_helper/basic_geometry_collection_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_line_string_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_point_methods.rb'
-    - 'lib/rgeo/wkrep/wkt_parser.rb'
 
 # Offense count: 680
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.

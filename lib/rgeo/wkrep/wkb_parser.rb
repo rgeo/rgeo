@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Well-known binary parser for RGeo
@@ -232,7 +234,7 @@ module RGeo
         end
         str = @data[@pos, 4]
         @pos += 4
-        str.unpack("#{little_endian ? 'V' : 'N'}").first
+        str.unpack(little_endian ? "V" : "N").first
       end
 
       def get_doubles(little_endian, count)

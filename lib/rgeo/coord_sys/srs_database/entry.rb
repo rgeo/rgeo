@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # SRS database interface
@@ -63,12 +65,12 @@ module RGeo
           @name = data[:name]
           @description = data[:description]
           @coord_sys = data[:coord_sys]
-          if @coord_sys.is_a?(::String)
+          if @coord_sys.is_a?(String)
             @coord_sys = CS.create_from_wkt(@coord_sys)
           end
           @proj4 = data[:proj4]
           if @proj4 && CoordSys.check!(:proj4)
-            if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
+            if @proj4.is_a?(String) || @proj4.is_a?(Hash)
               @proj4 = Proj4.create(@proj4)
             end
           end

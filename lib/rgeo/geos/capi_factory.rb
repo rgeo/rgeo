@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # GEOS factory implementation
@@ -40,7 +42,7 @@ module RGeo
           case wkt_generator_
           when :geos
             wkt_generator_ = nil
-          when ::Hash
+          when Hash
             wkt_generator_ = WKRep::WKTGenerator.new(wkt_generator_)
           else
             wkt_generator_ = WKRep::WKTGenerator.new(convert_case: :upper)
@@ -49,7 +51,7 @@ module RGeo
           case wkb_generator_
           when :geos
             wkb_generator_ = nil
-          when ::Hash
+          when Hash
             wkb_generator_ = WKRep::WKBGenerator.new(wkb_generator_)
           else
             wkb_generator_ = WKRep::WKBGenerator.new
@@ -59,14 +61,14 @@ module RGeo
           srid_ = opts_[:srid]
           proj4_ = opts_[:proj4]
           if proj4_ && CoordSys.check!(:proj4)
-            if proj4_.is_a?(::String) || proj4_.is_a?(::Hash)
+            if proj4_.is_a?(String) || proj4_.is_a?(Hash)
               proj4_ = CoordSys::Proj4.create(proj4_)
             end
           else
             proj4_ = nil
           end
           coord_sys_ = opts_[:coord_sys]
-          if coord_sys_.is_a?(::String)
+          if coord_sys_.is_a?(String)
             coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_)
           end
           if (!proj4_ || !coord_sys_) && srid_ && (db_ = opts_[:srs_database])
@@ -87,7 +89,7 @@ module RGeo
           case wkt_parser_
           when :geos
             wkt_parser_ = nil
-          when ::Hash
+          when Hash
             wkt_parser_ = WKRep::WKTParser.new(result, wkt_parser_)
           else
             wkt_parser_ = WKRep::WKTParser.new(result)
@@ -96,7 +98,7 @@ module RGeo
           case wkb_parser_
           when :geos
             wkb_parser_ = nil
-          when ::Hash
+          when Hash
             wkb_parser_ = WKRep::WKBParser.new(result, wkb_parser_)
           else
             wkb_parser_ = WKRep::WKBParser.new(result)
@@ -166,20 +168,22 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize_copy(CAPIFactory.create(
-                          has_z_coordinate: data_["hasz"],
-                          has_m_coordinate: data_["hasm"],
-                          srid: data_["srid"],
-                          buffer_resolution: data_["bufr"],
-                          wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
-                          wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
-                          wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
-                          wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
-                          uses_lenient_multi_polygon_assertions: data_["lmpa"],
-                          auto_prepare: (data_["apre"] == 0 ? :disabled : :simple),
-                          proj4: proj4_,
-                          coord_sys: coord_sys_
-        ))
+        initialize_copy(
+          CAPIFactory.create(
+            has_z_coordinate: data_["hasz"],
+            has_m_coordinate: data_["hasm"],
+            srid: data_["srid"],
+            buffer_resolution: data_["bufr"],
+            wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
+            wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
+            wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
+            wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
+            uses_lenient_multi_polygon_assertions: data_["lmpa"],
+            auto_prepare: (data_["apre"] == 0 ? :disabled : :simple),
+            proj4: proj4_,
+            coord_sys: coord_sys_
+          )
+        )
       end
 
       # Psych support
@@ -207,7 +211,7 @@ module RGeo
       def init_with(coder_) # :nodoc:
         if (proj4_data_ = coder_["proj4"])
           CoordSys.check!(:proj4)
-          if proj4_data_.is_a?(::Hash)
+          if proj4_data_.is_a?(Hash)
             proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
           else
             proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
@@ -220,20 +224,22 @@ module RGeo
         else
           coord_sys_ = nil
         end
-        initialize_copy(CAPIFactory.create(
-                          has_z_coordinate: coder_["has_z_coordinate"],
-                          has_m_coordinate: coder_["has_m_coordinate"],
-                          srid: coder_["srid"],
-                          buffer_resolution: coder_["buffer_resolution"],
-                          wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
-                          wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
-                          wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
-                          wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
-                          auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
-                          uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
-                          proj4: proj4_,
-                          coord_sys: coord_sys_
-        ))
+        initialize_copy(
+          CAPIFactory.create(
+            has_z_coordinate: coder_["has_z_coordinate"],
+            has_m_coordinate: coder_["has_m_coordinate"],
+            srid: coder_["srid"],
+            buffer_resolution: coder_["buffer_resolution"],
+            wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
+            wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
+            wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
+            wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
+            auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
+            uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
+            proj4: proj4_,
+            coord_sys: coord_sys_
+          )
+        )
       end
 
       # Returns the SRID of geometries created by this factory.
@@ -307,7 +313,7 @@ module RGeo
       # See RGeo::Feature::Factory#line_string
 
       def line_string(points_)
-        points_ = points_.to_a unless points_.is_a?(::Array)
+        points_ = points_.to_a unless points_.is_a?(Array)
         CAPILineStringImpl.create(self, points_) ||
           raise(RGeo::Error::InvalidGeometry, "Parse error")
       end
@@ -321,42 +327,42 @@ module RGeo
       # See RGeo::Feature::Factory#linear_ring
 
       def linear_ring(points_)
-        points_ = points_.to_a unless points_.is_a?(::Array)
+        points_ = points_.to_a unless points_.is_a?(Array)
         CAPILinearRingImpl.create(self, points_)
       end
 
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring_, inner_rings_ = nil)
-        inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(::Array)
+        inner_rings_ = inner_rings_.to_a unless inner_rings_.is_a?(Array)
         CAPIPolygonImpl.create(self, outer_ring_, inner_rings_)
       end
 
       # See RGeo::Feature::Factory#collection
 
       def collection(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIGeometryCollectionImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_point
 
       def multi_point(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIMultiPointImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_line_string
 
       def multi_line_string(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIMultiLineStringImpl.create(self, elems_)
       end
 
       # See RGeo::Feature::Factory#multi_polygon
 
       def multi_polygon(elems_)
-        elems_ = elems_.to_a unless elems_.is_a?(::Array)
+        elems_ = elems_.to_a unless elems_.is_a?(Array)
         CAPIMultiPolygonImpl.create(self, elems_) ||
           raise(RGeo::Error::InvalidGeometry, "Parse error")
       end

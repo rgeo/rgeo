@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Tests for the GEOS polygon implementation
@@ -41,7 +43,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
     poly = @factory.polygon(@factory.linear_ring(points))
     simplified = poly.simplify(0.3)
     new_points = simplified.exterior_ring.points
-    extra = new_points.reject { |p| [0, 10].include?(p.x) and [0, 10].include?(p.y) }
+    extra = new_points.reject { |p| [0, 10].include?(p.x) && [0, 10].include?(p.y) }
     assert_equal 5, new_points.length, "Closed ring of the square should have 5 points"
     assert_equal 0, extra.length, "Should only have x/y's on 0 and 10"
   end
@@ -67,17 +69,17 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
     assert_equal polygon, polygon2
   end
 
-  def test_simplify_preserve_topology()
+  def test_simplify_preserve_topology
     xys1 = [[0.0, 0.0], [5.0, 0.0], [10.0, 0.0], [10.0, 10.0], [5.0, 12.0], [0.0, 10.0], [0.0, 0.0]]
     xys2 = [[0.1, 0.1], [0.1, 0.6], [0.3, 0.8],  [0.5, 0.5],   [0.7, 0.3],  [0.3, 0.1],  [0.1, 0.1]]
 
-    points1 = xys1.collect { |x,y| @factory.point(x, y) }
-    points2 = xys2.collect { |x,y| @factory.point(x, y) }
+    points1 = xys1.collect { |x, y| @factory.point(x, y) }
+    points2 = xys2.collect { |x, y| @factory.point(x, y) }
 
     ln1 = @factory.line_string(points1)
     ln2 = @factory.line_string(points2)
 
-    poly = @factory.polygon(ln1,[ln2])
+    poly = @factory.polygon(ln1, [ln2])
 
     simplified = poly.simplify_preserve_topology(1)
     interior_points = simplified.interior_rings[0].points
@@ -112,14 +114,14 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
 
   def test_is_valid_polygon
     polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
     assert_equal(polygon.valid?, true)
 
-    polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -127,8 +129,8 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_invalid_reason
-    polygon_coordinates  = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -137,7 +139,7 @@ class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
 
   def test_invalid_reason_with_valid_polygon
     polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{|v| @factory.point(v[0],v[1])}
+    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
     polygon.invalid_reason

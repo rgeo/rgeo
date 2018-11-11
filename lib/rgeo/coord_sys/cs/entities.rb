@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # OGC CS objects for RGeo
@@ -193,14 +195,14 @@ module RGeo
         end
 
         def marshal_load(data) # :nodoc:
-          data = data["wkt"] if data.is_a?(::Hash)
+          data = data["wkt"] if data.is_a?(Hash)
           temp = CS.create_from_wkt(data)
           if temp.class == self.class
             temp.instance_variables.each do |iv|
               instance_variable_set(iv, temp.instance_variable_get(iv))
             end
           else
-            raise ::TypeError, "Bad Marshal data"
+            raise TypeError, "Bad Marshal data"
           end
         end
 
@@ -217,7 +219,7 @@ module RGeo
               instance_variable_set(iv, temp.instance_variable_get(iv))
             end
           else
-            raise ::TypeError, "Bad YAML data"
+            raise TypeError, "Bad YAML data"
           end
         end
 
@@ -245,7 +247,7 @@ module RGeo
         def initialize(name, orientation) # :nodoc:
           @name = name
           case orientation
-          when ::String, ::Symbol
+          when String, Symbol
             @orientation = NAMES_BY_VALUE.index(orientation.to_s.upcase).to_i
           else
             @orientation = orientation.to_i
@@ -275,7 +277,6 @@ module RGeo
           def create(name, orientation)
             new(name, orientation)
           end
-
         end
 
         private
@@ -385,7 +386,7 @@ module RGeo
       # A base interface for metadata applicable to coordinate system
       # objects.
       #
-      # The metadata items "Abbreviation"’, "Alias", "Authority",
+      # The metadata items "Abbreviation", "Alias", "Authority",
       # "AuthorityCode", "Name" and "Remarks" were specified in the Simple
       # Features interfaces, so they have been kept here.
       #

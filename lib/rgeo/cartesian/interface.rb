@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Cartesian toplevel interface
@@ -115,7 +117,7 @@ module RGeo
       # and CoordSys objects.
 
       def preferred_factory_generator(defaults = {})
-        ::Proc.new { |c| preferred_factory(defaults.merge(c)) }
+        proc { |c| preferred_factory(defaults.merge(c)) }
       end
       alias factory_generator preferred_factory_generator
 
@@ -128,7 +130,7 @@ module RGeo
       # and CoordSys objects.
 
       def simple_factory_generator(defaults = {})
-        ::Proc.new { |c| simple_factory(defaults.merge(c)) }
+        proc { |c| simple_factory(defaults.merge(c)) }
       end
     end
   end

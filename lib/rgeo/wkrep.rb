@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The WKRep module contains implementations of the OpenGIS well-known
 # representations: the WKT (well-known text representation) and the
 # WKB (well-known binary representation), as defined in the Simple

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # GEOS implementation additions written in Ruby
@@ -313,7 +315,7 @@ module RGeo
         end
       end
 
-      include ::Enumerable
+      include Enumerable
     end
 
     module ZMMultiLineStringMethods # :nodoc:

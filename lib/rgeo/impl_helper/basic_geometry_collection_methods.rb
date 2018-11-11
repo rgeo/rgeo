@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Common methods for GeometryCollection features
@@ -77,7 +79,7 @@ module RGeo
       end
     end
 
-    module BasicMultiLineStringMethods  # :nodoc:
+    module BasicMultiLineStringMethods # :nodoc:
       def initialize(factory, elements)
         self.factory = factory
         @elements = elements.map do |elem|

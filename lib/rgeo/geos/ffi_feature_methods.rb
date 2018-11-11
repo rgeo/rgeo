@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # FFI-GEOS geometry implementation
@@ -44,7 +46,7 @@ module RGeo
         coder["wkt"] = str
       end
 
-      def init_with(coder)  # :nodoc:
+      def init_with(coder) # :nodoc:
         @factory = coder["factory"]
         @fg_geom = @factory.read_for_psych(coder["wkt"])
         @fg_geom.srid = @factory.srid
@@ -55,7 +57,7 @@ module RGeo
       attr_reader :factory
       attr_reader :fg_geom
 
-      attr_reader :_klasses  # :nodoc:
+      attr_reader :_klasses # :nodoc:
 
       def initialize_copy(orig)
         @factory = orig.factory
@@ -78,11 +80,11 @@ module RGeo
       end
 
       def prepared?
-        !@_fg_prep.is_a?(::Integer)
+        !@_fg_prep.is_a?(Integer)
       end
 
       def prepare!
-        if @_fg_prep.is_a?(::Integer)
+        if @_fg_prep.is_a?(Integer)
           @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
         end
         self
@@ -353,7 +355,7 @@ module RGeo
       def points
         coord_seq = @fg_geom.coord_seq
         has_3d = @factory._has_3d
-        ::Array.new(@fg_geom.num_points) do |n|
+        Array.new(@fg_geom.num_points) do |n|
           x = coord_seq.get_x(n)
           y = coord_seq.get_y(n)
           extra = has_3d ? [coord_seq.get_z(n)] : []
@@ -427,7 +429,7 @@ module RGeo
       end
 
       def interior_rings
-        ::Array.new(@fg_geom.num_interior_rings) do |n|
+        Array.new(@fg_geom.num_interior_rings) do |n|
           @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
         end
       end
@@ -521,7 +523,7 @@ module RGeo
         end
       end
 
-      include ::Enumerable
+      include Enumerable
     end
 
     module FFIMultiPointMethods # :nodoc:

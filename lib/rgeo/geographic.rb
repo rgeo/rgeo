@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Geographic module includes a suite of
 # implementations with one common feature: they represent geographic
 # latitude/longitude coordinates measured in degrees. The "x"

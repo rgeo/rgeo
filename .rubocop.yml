@@ -6,6 +6,9 @@ AllCops:
 Layout/AlignParameters:
   Enabled: false
 
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
 Layout/MultilineOperationIndentation:
   Enabled: false
 
@@ -14,3 +17,6 @@ Style/SignalException:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/ZeroLengthPredicate:
+  Enabled: false

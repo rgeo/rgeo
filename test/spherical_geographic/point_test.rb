@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Tests for the simple spherical point implementation
@@ -44,7 +46,7 @@ class SphericalPointTest < Test::Unit::TestCase # :nodoc:
     point2 = @factory.point(0, 10)
     point3 = @factory.point(0, 40)
     assert_in_delta(0, point1.distance(point2), 0.0001)
-    assert_in_delta(::Math::PI / 6.0 * RGeo::Geographic::SphericalMath::RADIUS, point1.distance(point3), 0.0001)
+    assert_in_delta(Math::PI / 6.0 * RGeo::Geographic::SphericalMath::RADIUS, point1.distance(point3), 0.0001)
   end
 
   def test_floating_point_perturbation

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Tests for the internal calculations for simple spherical
@@ -24,7 +26,7 @@ class SphericalCalculationsTest < Test::Unit::TestCase # :nodoc:
     point1 = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(45, -45)
     assert_close_enough(0.5, point1.x)
     assert_close_enough(-0.5, point1.y)
-    assert_close_enough(::Math.sqrt(2) * 0.5, point1.z)
+    assert_close_enough(Math.sqrt(2) * 0.5, point1.z)
   end
 
   def test_point_dot_one
@@ -72,13 +74,13 @@ class SphericalCalculationsTest < Test::Unit::TestCase # :nodoc:
   def test_distance_opposite
     point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
     point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(-1, 0, 0)
-    assert_close_enough(::Math::PI, point1.dist_to_point(point2))
+    assert_close_enough(Math::PI, point1.dist_to_point(point2))
   end
 
   def test_distance_right_angle
     point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
     point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(0, -1, 0)
-    assert_close_enough(::Math::PI / 2, point1.dist_to_point(point2))
+    assert_close_enough(Math::PI / 2, point1.dist_to_point(point2))
   end
 
   def test_arc_axis

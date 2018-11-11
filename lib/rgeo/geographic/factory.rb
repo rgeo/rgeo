@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # Geographic data factory implementation
@@ -31,12 +33,12 @@ module RGeo
         @srid = (opts[:srid] || 4326).to_i
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(::String) || @proj4.is_a?(::Hash)
+          if @proj4.is_a?(String) || @proj4.is_a?(Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         end
         @coord_sys = opts[:coord_sys]
-        if @coord_sys.is_a?(::String)
+        if @coord_sys.is_a?(String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
@@ -45,28 +47,28 @@ module RGeo
 
         wkt_generator = opts[:wkt_generator]
         case wkt_generator
-        when ::Hash
+        when Hash
           @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
         else
           @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
         end
         wkb_generator = opts[:wkb_generator]
         case wkb_generator
-        when ::Hash
+        when Hash
           @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
         else
           @wkb_generator = WKRep::WKBGenerator.new
         end
         wkt_parser = opts[:wkt_parser]
         case wkt_parser
-        when ::Hash
+        when Hash
           @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
         else
           @wkt_parser = WKRep::WKTParser.new(self)
         end
         wkb_parser = opts[:wkb_parser]
         case wkb_parser
-        when ::Hash
+        when Hash
           @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
         else
           @wkb_parser = WKRep::WKBParser.new(self)
@@ -139,7 +141,7 @@ module RGeo
           buffer_resolution: data_["bufr"],
           proj4: proj4,
           coord_sys: coord_sys
-                  )
+        )
         if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
           klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
@@ -177,7 +179,7 @@ module RGeo
       def init_with(coder) # :nodoc:
         if (proj4_data = coder["proj4"])
           CoordSys.check!(:proj4)
-          if proj4_data.is_a?(::Hash)
+          if proj4_data.is_a?(Hash)
             proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
           else
             proj4 = CoordSys::Proj4.create(proj4_data.to_s)
@@ -202,7 +204,7 @@ module RGeo
           buffer_resolution: coder["buffer_resolution"],
           proj4: proj4,
           coord_sys: coord_sys
-                  )
+        )
         if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
           klass_ = RGeo::Geographic.const_get(proj_klass)
           if klass_
@@ -377,7 +379,7 @@ module RGeo
         @wkt_generator.generate(obj)
       end
 
-      def generate_wkb(obj)  # :nodoc:
+      def generate_wkb(obj) # :nodoc:
         @wkb_generator.generate(obj)
       end
 

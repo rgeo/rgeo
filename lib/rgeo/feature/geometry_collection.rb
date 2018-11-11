@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # -----------------------------------------------------------------------------
 #
 # GeometryCollection feature interface
@@ -31,7 +33,7 @@ module RGeo
       include Geometry
       extend Type
 
-      include ::Enumerable
+      include Enumerable
 
       # === SFS 1.1 Description
       #
