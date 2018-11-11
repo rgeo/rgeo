@@ -197,7 +197,7 @@ module RGeo
       # and CoordSys objects.
 
       def factory_generator(defaults = {})
-        ::Proc.new { |c| factory(defaults.merge(c)) }
+        Proc.new { |c| factory(defaults.merge(c)) }
       end
     end
   end

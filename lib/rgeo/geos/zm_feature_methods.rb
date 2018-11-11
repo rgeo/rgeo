@@ -315,7 +315,7 @@ module RGeo
         end
       end
 
-      include ::Enumerable
+      include Enumerable
     end
 
     module ZMMultiLineStringMethods # :nodoc:

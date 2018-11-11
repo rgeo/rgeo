@@ -11,7 +11,7 @@ module RGeo
 
   module Error
     # Base class for all RGeo-related exceptions
-    class RGeoError < ::RuntimeError
+    class RGeoError < RuntimeError
     end
 
     # The specified geometry is invalid

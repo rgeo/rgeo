@@ -23,13 +23,13 @@ module RGeo
         @has_m = opts[:has_m_coordinate] ? true : false
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(::String) || @proj4.is_a?(Hash)
+          if @proj4.is_a?(String) || @proj4.is_a?(Hash)
             @proj4 = CoordSys::Proj4.create(@proj4)
           end
         end
         srid = opts[:srid]
         @coord_sys = opts[:coord_sys]
-        if @coord_sys.is_a?(::String)
+        if @coord_sys.is_a?(String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         if (!@proj4 || !@coord_sys) && srid && (db = opts[:srs_database])

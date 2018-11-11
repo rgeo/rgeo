@@ -61,14 +61,14 @@ module RGeo
           srid_ = opts_[:srid]
           proj4_ = opts_[:proj4]
           if proj4_ && CoordSys.check!(:proj4)
-            if proj4_.is_a?(::String) || proj4_.is_a?(Hash)
+            if proj4_.is_a?(String) || proj4_.is_a?(Hash)
               proj4_ = CoordSys::Proj4.create(proj4_)
             end
           else
             proj4_ = nil
           end
           coord_sys_ = opts_[:coord_sys]
-          if coord_sys_.is_a?(::String)
+          if coord_sys_.is_a?(String)
             coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_)
           end
           if (!proj4_ || !coord_sys_) && srid_ && (db_ = opts_[:srs_database])

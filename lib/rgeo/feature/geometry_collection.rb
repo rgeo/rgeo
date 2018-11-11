@@ -33,7 +33,7 @@ module RGeo
       include Geometry
       extend Type
 
-      include ::Enumerable
+      include Enumerable
 
       # === SFS 1.1 Description
       #

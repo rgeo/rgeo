@@ -80,11 +80,11 @@ module RGeo
       end
 
       def prepared?
-        !@_fg_prep.is_a?(::Integer)
+        !@_fg_prep.is_a?(Integer)
       end
 
       def prepare!
-        if @_fg_prep.is_a?(::Integer)
+        if @_fg_prep.is_a?(Integer)
           @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
         end
         self
@@ -523,7 +523,7 @@ module RGeo
         end
       end
 
-      include ::Enumerable
+      include Enumerable
     end
 
     module FFIMultiPointMethods # :nodoc:

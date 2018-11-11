@@ -51,7 +51,7 @@ module RGeo
     end
 
     module CAPIGeometryCollectionMethods # :nodoc:
-      include ::Enumerable
+      include Enumerable
     end
 
     class CAPIGeometryImpl # :nodoc:

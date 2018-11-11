@@ -21,7 +21,7 @@ module RGeo
         def symbolize_hash(hash)
           nhash = {}
           hash.each do |k, v|
-            nhash[k.is_a?(::String) ? k.to_sym : k] = v.is_a?(::String) ? v.to_sym : v
+            nhash[k.is_a?(String) ? k.to_sym : k] = v.is_a?(String) ? v.to_sym : v
           end
           nhash
         end

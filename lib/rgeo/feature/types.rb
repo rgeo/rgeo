@@ -168,7 +168,7 @@ module RGeo
             opts[:factory] = param
           when Type
             opts[:type] = param
-          when ::Symbol
+          when Symbol
             opts[param] = true
           when Hash
             opts.merge!(param)
