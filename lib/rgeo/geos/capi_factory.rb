@@ -12,6 +12,7 @@ module RGeo
 
     class CAPIFactory
       include Feature::Factory::Instance
+      include ImplHelper::Utils
 
       class << self
         # Create a new factory. Returns nil if the GEOS CAPI implementation
@@ -174,10 +175,10 @@ module RGeo
             has_m_coordinate: data_["hasm"],
             srid: data_["srid"],
             buffer_resolution: data_["bufr"],
-            wkt_generator: ImplHelper::Utils.symbolize_hash(data_["wktg"]),
-            wkb_generator: ImplHelper::Utils.symbolize_hash(data_["wkbg"]),
-            wkt_parser: ImplHelper::Utils.symbolize_hash(data_["wktp"]),
-            wkb_parser: ImplHelper::Utils.symbolize_hash(data_["wkbp"]),
+            wkt_generator: symbolize_hash(data_["wktg"]),
+            wkb_generator: symbolize_hash(data_["wkbg"]),
+            wkt_parser: symbolize_hash(data_["wktp"]),
+            wkb_parser: symbolize_hash(data_["wkbp"]),
             uses_lenient_multi_polygon_assertions: data_["lmpa"],
             auto_prepare: (data_["apre"] == 0 ? :disabled : :simple),
             proj4: proj4_,
@@ -230,10 +231,10 @@ module RGeo
             has_m_coordinate: coder_["has_m_coordinate"],
             srid: coder_["srid"],
             buffer_resolution: coder_["buffer_resolution"],
-            wkt_generator: ImplHelper::Utils.symbolize_hash(coder_["wkt_generator"]),
-            wkb_generator: ImplHelper::Utils.symbolize_hash(coder_["wkb_generator"]),
-            wkt_parser: ImplHelper::Utils.symbolize_hash(coder_["wkt_parser"]),
-            wkb_parser: ImplHelper::Utils.symbolize_hash(coder_["wkb_parser"]),
+            wkt_generator: symbolize_hash(coder_["wkt_generator"]),
+            wkb_generator: symbolize_hash(coder_["wkb_generator"]),
+            wkt_parser: symbolize_hash(coder_["wkt_parser"]),
+            wkb_parser: symbolize_hash(coder_["wkb_parser"]),
             auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
             uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
             proj4: proj4_,
