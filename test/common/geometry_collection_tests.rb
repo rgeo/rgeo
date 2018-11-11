@@ -23,7 +23,6 @@ module RGeo
 
         def test_creation_simple
           geom = @factory.collection([@point1, @line1])
-          assert_not_nil(geom)
           assert(RGeo::Feature::GeometryCollection === geom)
           assert_equal(RGeo::Feature::GeometryCollection, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -33,7 +32,6 @@ module RGeo
 
         def test_creation_empty
           geom = @factory.collection([])
-          assert_not_nil(geom)
           assert(RGeo::Feature::GeometryCollection === geom)
           assert_equal(RGeo::Feature::GeometryCollection, geom.geometry_type)
           assert_equal(0, geom.num_geometries)
@@ -49,7 +47,6 @@ module RGeo
 
         def test_creation_save_klass
           geom = @factory.collection([@point1, @line3])
-          assert_not_nil(geom)
           assert(RGeo::Feature::GeometryCollection === geom)
           assert_equal(RGeo::Feature::GeometryCollection, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -59,7 +56,6 @@ module RGeo
         def test_creation_compound
           geom1 = @factory.collection([@point1, @line1])
           geom2 = @factory.collection([@point2, geom1])
-          assert_not_nil(geom2)
           assert(RGeo::Feature::GeometryCollection === geom2)
           assert_equal(RGeo::Feature::GeometryCollection, geom2.geometry_type)
           assert_equal(2, geom2.num_geometries)
@@ -69,8 +65,6 @@ module RGeo
         def test_creation_compound_save_klass
           geom1 = @factory.collection([@point1, @line3])
           geom2 = @factory.collection([@point2, geom1])
-          ::GC.start
-          assert_not_nil(geom2)
           assert(RGeo::Feature::GeometryCollection === geom2)
           assert_equal(RGeo::Feature::GeometryCollection, geom2.geometry_type)
           assert_equal(2, geom2.num_geometries)
