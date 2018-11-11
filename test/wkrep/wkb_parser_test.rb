@@ -104,7 +104,7 @@ class WKBParserTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_point_with_ewkb_z_and_srid
-    factory_generator_ = Proc.new do |config_|
+    factory_generator_ = proc do |config_|
       RGeo::Cartesian.preferred_factory(has_z_coordinate: true, srid: config_[:srid])
     end
     parser = RGeo::WKRep::WKBParser.new(factory_generator_, support_ewkb: true)
@@ -135,7 +135,7 @@ class WKBParserTest < Test::Unit::TestCase # :nodoc:
   end
 
   def test_linestring_with_ewkb_z_and_srid
-    factory_generator_ = Proc.new do |config_|
+    factory_generator_ = proc do |config_|
       RGeo::Cartesian.preferred_factory(has_z_coordinate: true, srid: config_[:srid])
     end
     parser = RGeo::WKRep::WKBParser.new(factory_generator_, support_ewkb: true)
