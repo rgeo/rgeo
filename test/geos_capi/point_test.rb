@@ -47,18 +47,18 @@ class GeosPointTest < Test::Unit::TestCase # :nodoc:
     assert_equal(2, point1.distance(point3))
   end
 
-  if defined?(::Encoding)
+  if defined?(Encoding)
 
     def test_as_text_encoding
       factory = RGeo::Geos.factory(wkt_generator: :geos)
       point = factory.point(11, 12)
-      assert_equal(::Encoding::US_ASCII, point.as_text.encoding)
+      assert_equal(Encoding::US_ASCII, point.as_text.encoding)
     end
 
     def test_as_binary_encoding
       factory = RGeo::Geos.factory(wkb_generator: :geos)
       point = factory.point(11, 12)
-      assert_equal(::Encoding::ASCII_8BIT, point.as_binary.encoding)
+      assert_equal(Encoding::ASCII_8BIT, point.as_binary.encoding)
     end
 
   end
