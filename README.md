@@ -27,26 +27,11 @@ Use the core **rgeo** gem to:
     spatial databases.
 
 
-Several optional modules are currently available:
-
-*   Generate and interpret GeoJSON data for communication with common
-    location-based web services using the **rgeo-geojson** gem.
-*   Read GIS datasets from ESRI shapefiles using the **rgeo-shapefile** gem.
-*   Extend ActiveRecord to handle spatial data in MySQL Spatial, SpatiaLite,
-    and PostGIS using RGeo's spatial ActiveRecord adapters. These are
-    available via the gems:
-    *   **activerecord-postgis-adapter**
-    *   **activerecord-mysql2spatial-adapter**
-    *   **activerecord-spatialite-adapter**
-
-Need help? Join the rgeo-users google group at:
-http://groups.google.com/group/rgeo-users
-
 ### Dependencies
 
 RGeo works with the following Ruby implementations:
 
-*   Ruby 2.2.2 or later.
+*   MRI Ruby 2.3.0 or later.
 *   Partial support for JRuby 9.0 or later. The FFI implementation of GEOS
     is available (ffi-geos gem required) but CAPI is not.
 *   See earlier versions for support for older ruby versions.
@@ -58,11 +43,6 @@ Some features also require the following:
     available via your operating system's package manager (`sudo aptitude
     install libgeos-dev` for debian based Linux distributions, `yum install geos geos-devel` for redhat based Linux distributions), or you can
     download it from http://trac.osgeo.org/geos
-*   Proj 4.7 or later is optional. This library is needed if you want
-    to translate coordinates between geographic projections. It also may be
-    available via your operating system's package manager (`sudo aptitude
-    install libproj-dev` for debian based Linux distributions, `yum install proj proj-devel` for redhat based Linux distributions), or from
-    http://proj4.org/
 *   On some platforms, you should install the ffi-geos gem (version 1.2.0 or
     later recommended.) JRuby requires this gem to link properly with Geos,
     and Windows builds probably do as well.
@@ -89,18 +69,48 @@ gem "rgeo-proj4"
 
 See https://github.com/rgeo/rgeo-proj4
 
+
+### Extensions
+
+The [RGeo project](https://github.com/rgeo) provides several optional modules
+available as separate gems:
+
+#### [`rgeo-proj4`](https://github.com/rgeo/rgeo-proj4)
+
+Proj4 extensions
+
+#### [`rgeo-geojson`](https://github.com/rgeo/rgeo-geojson)
+
+Read and write GeoJSON
+
+#### [`rgeo-shapefile`](https://github.com/rgeo/rgeo-shapefile)
+
+Read ESRI shapefiles
+
+#### [`activerecord-postgis-adapter`](https://github.com/rgeo/activerecord-postgis-adapter)
+
+ActiveRecord connection adapter for PostGIS, based on postgresql (pg gem)
+
+#### [`activerecord-mysql2spatial-adapter`](https://github.com/rgeo/activerecord-mysql2spatial-adapter)
+
+ActiveRecord connection adapter for MySQL Spatial Extensions, based on mysql2
+
+#### [`activerecord-spatialite-adapter`](https://github.com/rgeo/activerecord-spatialite-adapter)
+
+ActiveRecord connection adapter for SpatiaLite, based on sqlite3 (*not maintained)
+
+
 ### Development and support
 
-RDoc Documentation is available at http://rdoc.info/gems/rgeo
+RDoc Documentation is available at https://www.rubydoc.info/gems/rgeo
 
-Source code is hosted on Github at https://github.com/rgeo/rgeo
+Contributions are welcome. Please read the 
+[Contributing guidelines](https://github.com/rgeo/rgeo/blob/master/CONTRIBUTING.md).
 
-Contributions are welcome. Fork the project on Github.
+Support may be available on the 
+[rgeo-users google group](https://groups.google.com/forum/#!forum/rgeo-users)
+or on [Stack Overflow](https://stackoverflow.com/questions/tagged/rgeo).
 
-Report bugs on Github issues at https://github.com/rgeo/rgeo/issues
-
-Support available on the rgeo-users google group at
-http://groups.google.com/group/rgeo-users
 
 ### Acknowledgments
 
@@ -119,6 +129,7 @@ information is available on OSGeo's web site (http://www.osgeo.org).
 
 JRuby support is made possible by the ffi-geos (and upcoming ffi-proj4) gems,
 by J Smith (https://github.com/dark-panda).
+
 
 ### License
 
