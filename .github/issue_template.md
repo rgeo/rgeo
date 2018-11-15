@@ -1,6 +1,7 @@
-# Bug Report
+_Github Issues are used to track bugs and feature requests.
+Ask general usage questions on Stack Overflow._
 
-Be sure to include a title and clear description,
+Please include a title and clear description,
 as much relevant information as possible,
 and a code sample demonstrating the expected behavior that is not occurring.
 
@@ -11,5 +12,7 @@ and a code sample demonstrating the expected behavior that is not occurring.
 ### Actual behavior
 
 ### System configuration
+
 **Ruby version**:
+
 **OS**:
