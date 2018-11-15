@@ -72,8 +72,7 @@ See https://github.com/rgeo/rgeo-proj4
 
 ### Extensions
 
-The [RGeo project](https://github.com/rgeo) provides several optional modules
-available as separate gems:
+The [RGeo organization](https://github.com/rgeo) provides several gems that extend RGeo:
 
 #### [`rgeo-proj4`](https://github.com/rgeo/rgeo-proj4)
 
@@ -120,19 +119,19 @@ RGeo was created by [Daniel Azuma](http://www.daniel-azuma.com).
 Thanks to [Pirq](http://www.pirq.com) and [Neighborland](https://neighborland.com)
 for development support.
 
-Continuous integration service provided by Travis-CI (http://travis-ci.org).
+Continuous integration service provided by [Travis-CI](http://travis-ci.org).
 
 RGeo calls the GEOS library to handle most Cartesian geometric calculations,
 and the Proj4 library to handle projections and coordinate transformations.
 These libraries are maintained by the Open Source Geospatial Foundation; more
-information is available on OSGeo's web site (http://www.osgeo.org).
+information is available on [OSGeo's web site](http://www.osgeo.org).
 
 JRuby support is made possible by the ffi-geos (and upcoming ffi-proj4) gems,
-by J Smith (https://github.com/dark-panda).
+by [J Smith](https://github.com/dark-panda).
 
 
 ### License
 
 Copyright (c) Daniel Azuma, Tee Parham
 
-https://github.com/rgeo/rgeo/blob/master/LICENSE.txt
+[License](https://github.com/rgeo/rgeo/blob/master/LICENSE.txt)
