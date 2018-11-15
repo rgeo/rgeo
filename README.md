@@ -61,13 +61,12 @@ or include it in your Gemfile:
 gem "rgeo"
 ```
 
-If you are using proj.4 extensions, include the `rgeo-proj4` gem:
+If you are using proj.4 extensions, include  
+[`rgeo-proj4`](https://github.com/rgeo/rgeo-proj4):
 
 ```ruby
 gem "rgeo-proj4"
 ```
-
-See https://github.com/rgeo/rgeo-proj4
 
 
 ### Extensions
