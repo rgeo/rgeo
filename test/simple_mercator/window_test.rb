@@ -171,7 +171,7 @@ class MercatorWindowTest < Test::Unit::TestCase # :nodoc:
     max_distance_mercator_ = 1000
     max_distance_hypotenuse_ = Math.sqrt(max_distance_mercator_**2 * 2)
     window1_ = RGeo::Geographic::ProjectedWindow.surrounding_point(point_, max_distance_mercator_)
-    10.times { |i|
+    10.times {
       actual_distance_ = window1_.random_point.distance(point_)
       assert_in_delta(0, actual_distance_, max_distance_hypotenuse_)
     }
