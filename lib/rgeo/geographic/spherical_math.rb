@@ -46,22 +46,14 @@ module RGeo
 
         def latlon
           lat_rad = Math.asin(@z)
-          lon_rad = begin
-                       Math.atan2(@y, @x)
-                     rescue
-                       0.0
-                     end
+          lon_rad = Math.atan2(@y, @x)
           rpd = ImplHelper::Math::RADIANS_PER_DEGREE
           [lat_rad / rpd, lon_rad / rpd]
         end
 
         def lonlat
           lat_rad = Math.asin(@z)
-          lon_rad = begin
-                       Math.atan2(@y, @x)
-                     rescue
-                       0.0
-                     end
+          lon_rad = Math.atan2(@y, @x)
           rpd = ImplHelper::Math::RADIANS_PER_DEGREE
           [lon_rad / rpd, lat_rad / rpd]
         end

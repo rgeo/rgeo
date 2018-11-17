@@ -330,15 +330,6 @@ Style/RedundantSelf:
   Exclude:
     - 'lib/rgeo/feature/types.rb'
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, explicit
-Style/RescueStandardError:
-  Exclude:
-    - 'lib/rgeo/geographic/spherical_math.rb'
-    - 'lib/rgeo/geos.rb'
-
 # Offense count: 7
 # Cop supports --auto-correct.
 # Configuration parameters: ConvertCodeThatCanStartToReturnNil, Whitelist.
