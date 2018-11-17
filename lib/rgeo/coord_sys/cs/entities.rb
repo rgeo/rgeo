@@ -241,7 +241,7 @@ module RGeo
 
       class AxisInfo < Base
         # :stopdoc:
-        NAMES_BY_VALUE = %w(OTHER NORTH SOUTH EAST WEST UP DOWN)
+        NAMES_BY_VALUE = %w[OTHER NORTH SOUTH EAST WEST UP DOWN].freeze
         # :startdoc:
 
         def initialize(name, orientation) # :nodoc:
