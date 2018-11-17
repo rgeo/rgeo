@@ -103,33 +103,10 @@ Metrics/AbcSize:
 Metrics/BlockNesting:
   Max: 6
 
-# Offense count: 22
-# Configuration parameters: CountComments.
-Metrics/ClassLength:
-  Max: 453
-
-# Offense count: 55
-Metrics/CyclomaticComplexity:
-  Max: 71
-
-# Offense count: 137
-# Configuration parameters: CountComments, ExcludedMethods.
-Metrics/MethodLength:
-  Max: 117
-
-# Offense count: 12
-# Configuration parameters: CountComments.
-Metrics/ModuleLength:
-  Max: 302
-
 # Offense count: 14
 # Configuration parameters: CountKeywordArgs.
 Metrics/ParameterLists:
   Max: 8
-
-# Offense count: 48
-Metrics/PerceivedComplexity:
-  Max: 78
 
 # Offense count: 1
 Naming/AccessorMethodName:
@@ -167,7 +144,7 @@ Naming/MemoizedInstanceVariableName:
 # MethodDefinitionMacros: define_method, define_singleton_method
 Naming/PredicateName:
   Exclude:
-    - 'spec/**/*'
+    - 'test/**/*'
     - 'lib/rgeo/cartesian/feature_methods.rb'
     - 'lib/rgeo/feature/curve.rb'
     - 'lib/rgeo/feature/geometry.rb'
@@ -331,27 +308,12 @@ Style/MultipleComparison:
     - 'lib/rgeo/feature/types.rb'
     - 'lib/rgeo/geos/ffi_factory.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/MutableConstant:
-  Exclude:
-    - 'Rakefile'
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-    - 'rakefile_config.rb'
-
 # Offense count: 4
 Style/NestedTernaryOperator:
   Exclude:
     - 'lib/rgeo/cartesian/bounding_box.rb'
     - 'lib/rgeo/wkrep/wkt_generator.rb'
     - 'lib/rgeo/wkrep/wkt_parser.rb'
-
-# Offense count: 48
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, EnforcedStyle, IgnoredMethods.
-# SupportedStyles: predicate, comparison
-Style/NumericPredicate:
-  Enabled: false
 
 # Offense count: 3
 # Cop supports --auto-correct.
