@@ -68,7 +68,7 @@ module RGeo
       # given type.
 
       def subtype_of?(type)
-        self == type || self.include?(type)
+        self == type || include?(type)
       end
 
       # Returns the supertype of this type. The supertype of Geometry
