@@ -71,7 +71,7 @@ module RGeo
           rz = rhs.z
           begin
             PointXYZ.new(@y * rz - @z * ry, @z * rx - @x * rz, @x * ry - @y * rx)
-          rescue
+          rescue StandardError
             nil
           end
         end

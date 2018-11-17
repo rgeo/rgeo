@@ -51,7 +51,7 @@ module RGeo
     rescue LoadError => ex
       FFI_SUPPORTED = false
       FFI_SUPPORT_EXCEPTION = ex
-    rescue => ex
+    rescue StandardError => ex
       FFI_SUPPORTED = false
       FFI_SUPPORT_EXCEPTION = ex
     end
