@@ -93,14 +93,14 @@ module RGeo
       end
       alias to_s type_name
 
-      def _add_subtype(type) # :nodoc:
+      def add_subtype(type) # :nodoc:
         (@subtypes ||= []) << type
       end
 
       def self.extended(type) # :nodoc:
         supertype = type.included_modules.find { |m| m.is_a?(self) }
         type.instance_variable_set(:@supertype, supertype)
-        supertype&._add_subtype(type)
+        supertype&.add_subtype(type)
       end
     end
 
