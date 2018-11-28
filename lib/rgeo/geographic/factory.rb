@@ -230,7 +230,7 @@ module RGeo
       # or nil if this factory does not support a projection.
 
       def projection_factory
-        @projector ? @projector.projection_factory : nil
+        @projector&.projection_factory
       end
 
       # Projects the given geometry into the projected coordinate space,
