@@ -38,14 +38,7 @@ module RGeo
       end
 
       def dimension
-        unless defined?(@dimension)
-          @dimension = -1
-          @elements.each do |elem|
-            dim = elem.dimension
-            @dimension = dim if @dimension < dim
-          end
-        end
-        @dimension
+        @dimension ||= @elements.map(&:dimension).max || -1
       end
 
       def geometry_type
