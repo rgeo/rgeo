@@ -200,20 +200,6 @@ Style/AccessModifierDeclarations:
   Exclude:
     - 'lib/rgeo/coord_sys/cs/entities.rb'
 
-# Offense count: 43
-Style/CaseEquality:
-  Exclude:
-    - 'lib/rgeo/cartesian/bounding_box.rb'
-    - 'lib/rgeo/coord_sys/cs/wkt_parser.rb'
-    - 'lib/rgeo/geos/interface.rb'
-    - 'lib/rgeo/wkrep/wkt_parser.rb'
-    - 'test/common/geometry_collection_tests.rb'
-    - 'test/common/line_string_tests.rb'
-    - 'test/common/multi_line_string_tests.rb'
-    - 'test/common/multi_point_tests.rb'
-    - 'test/common/multi_polygon_tests.rb'
-    - 'test/common/polygon_tests.rb'
-
 # Offense count: 36
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
