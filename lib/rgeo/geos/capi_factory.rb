@@ -22,7 +22,7 @@ module RGeo
 
         def create(opts_ = {})
           # Make sure GEOS is available
-          return nil unless respond_to?(:_create)
+          return unless respond_to?(:_create)
 
           # Get flags to pass to the C extension
           flags = 0
@@ -383,7 +383,7 @@ module RGeo
       # See RGeo::Feature::Factory#override_cast
 
       def override_cast(original, ntype, flags)
-        return nil unless Geos.supported?
+        return unless Geos.supported?
         keep_subtype = flags[:keep_subtype]
         # force_new_ = flags[:force_new]
         project = flags[:project]

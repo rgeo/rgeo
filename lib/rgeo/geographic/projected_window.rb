@@ -214,7 +214,7 @@ module RGeo
       # this window.
 
       def contains_window?(window_)
-        return nil if window_.factory != @factory
+        return if window_.factory != @factory
         if window_.y_max <= @y_max && window_.y_min >= @y_min
           if (@x_max < @x_min) == window_.crosses_seam?
             window_.x_max <= @x_max && window_.x_min >= @x_min
@@ -356,7 +356,7 @@ module RGeo
             y_max_ = y_ if !y_max_ || y_max_ < y_
             y_min_ = y_ if !y_min_ || y_min_ > y_
           end
-          return nil unless factory_
+          return unless factory_
           if x_array_
             x_array_.sort!
             largest_span_ = nil

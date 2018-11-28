@@ -35,7 +35,7 @@ module RGeo
         # not supported.
 
         def create(opts = {})
-          return nil unless Geos.supported?
+          return unless Geos.supported?
           new(opts)
         end
       end
@@ -337,7 +337,7 @@ module RGeo
       # See RGeo::Feature::Factory#override_cast
 
       def override_cast(original, ntype, flags)
-        return nil unless Geos.supported?
+        return unless Geos.supported?
         keep_subtype = flags[:keep_subtype]
         project = flags[:project]
         type = original.geometry_type

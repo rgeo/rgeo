@@ -320,7 +320,7 @@ module RGeo
       # See RGeo::Feature::Factory#line
 
       def line(start, stop)
-        return nil unless RGeo::Feature::Point.check_type(start) &&
+        return unless RGeo::Feature::Point.check_type(start) &&
           RGeo::Feature::Point.check_type(stop)
         cs = ::Geos::CoordinateSequence.new(2, 3)
         cs.set_x(0, start.x)
@@ -349,10 +349,10 @@ module RGeo
 
       def polygon(outer_ring, inner_rings = nil)
         inner_rings = inner_rings.to_a unless inner_rings.is_a?(Array)
-        return nil unless RGeo::Feature::LineString.check_type(outer_ring)
+        return unless RGeo::Feature::LineString.check_type(outer_ring)
         outer_ring = create_fg_linear_ring(outer_ring.points)
         inner_rings = inner_rings.map do |r|
-          return nil unless RGeo::Feature::LineString.check_type(r)
+          return unless RGeo::Feature::LineString.check_type(r)
           create_fg_linear_ring(r.points)
         end
         inner_rings.compact!
@@ -385,7 +385,7 @@ module RGeo
         elems = elems.map do |elem|
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Point,
             :force_new, :keep_subtype)
-          return nil unless elem
+          return unless elem
           elem.detach_fg_geom
         end
         klasses = Array.new(elems.size, FFIPointImpl)
