@@ -118,7 +118,9 @@ RGeo was created by [Daniel Azuma](http://www.daniel-azuma.com).
 Thanks to [Pirq](http://www.pirq.com) and [Neighborland](https://neighborland.com)
 for development support.
 
-Continuous integration service provided by [Travis-CI](http://travis-ci.org).
+Thanks to [Travis-CI](https://travis-ci.org) for CI testing.
+
+Thanks to [JetBrains](https://www.jetbrains.com/?from=rgeo) for RubyMine license.
 
 RGeo calls the GEOS library to handle most Cartesian geometric calculations,
 and the Proj4 library to handle projections and coordinate transformations.
