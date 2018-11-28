@@ -377,12 +377,12 @@ module RGeo
       end
 
       def start_scanner(str)
-        @_scanner = StringScanner.new(str)
+        @scanner = StringScanner.new(str)
         next_token
       end
 
       def clean_scanner
-        @_scanner = nil
+        @scanner = nil
         @cur_token = nil
       end
 
@@ -393,8 +393,8 @@ module RGeo
       end
 
       def next_token
-        if @_scanner.scan_until(/\(|\)|\[|\]|,|[^\s\(\)\[\],]+/)
-          token = @_scanner.matched
+        if @scanner.scan_until(/\(|\)|\[|\]|,|[^\s\(\)\[\],]+/)
+          token = @scanner.matched
           case token
           when /^[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?$/
             @cur_token = token.to_f
