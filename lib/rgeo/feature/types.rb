@@ -81,7 +81,7 @@ module RGeo
       # Iterates over the known immediate subtypes of this type.
 
       def each_immediate_subtype(&block)
-        @subtypes.each(&block) if defined?(@subtypes) && @subtypes
+        @subtypes&.each(&block)
       end
 
       # Returns the OpenGIS type name of this type. For example:
