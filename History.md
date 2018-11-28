@@ -1,4 +1,4 @@
-### 2.0.0 / 2018-10-10
+### 2.0.0 / 2018-11-27
 
 Breaking changes
 * Require ruby 2.3+
@@ -10,6 +10,7 @@ Fixes
 * Fix Cartesian::Analysis.ring_direction (bakineggs) #196
 * Proj4 fixes #187
 * Rename variables ending in `_` (fergyfresh) #181
+* Rubocop style corrections
 
 
 ### 1.1.2 / 2018-10-10
