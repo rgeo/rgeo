@@ -100,7 +100,7 @@ module RGeo
       def self.extended(type) # :nodoc:
         supertype = type.included_modules.find { |m| m.is_a?(self) }
         type.instance_variable_set(:@supertype, supertype)
-        supertype._add_subtype(type) if supertype
+        supertype&._add_subtype(type)
       end
     end
 

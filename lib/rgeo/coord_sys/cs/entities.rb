@@ -429,9 +429,7 @@ module RGeo
           @alias = init_alias ? init_alias.to_s : nil
           @remarks = remarks ? remarks.to_s : nil
           @extensions = {}
-          if extensions
-            extensions.each { |k, v| @extensions[k.to_s] = v.to_s }
-          end
+          extensions&.each { |k, v| @extensions[k.to_s] = v.to_s }
         end
 
         # Gets the abbreviation.

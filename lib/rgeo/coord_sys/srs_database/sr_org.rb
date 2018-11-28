@@ -39,7 +39,7 @@ module RGeo
 
         def get(ident)
           ident = ident.to_s
-          return @cache[ident] if @cache && @cache.include?(ident)
+          return @cache[ident] if @cache&.include?(ident)
           coord_sys = nil
           proj4 = nil
           Net::HTTP.start("spatialreference.org") do |http|
@@ -56,7 +56,7 @@ module RGeo
         # Clear the cache if one exists.
 
         def clear_cache
-          @cache.clear if @cache
+          @cache&.clear
         end
       end
     end

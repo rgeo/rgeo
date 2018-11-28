@@ -34,7 +34,7 @@ module RGeo
 
         def get(ident)
           ident = ident.to_s
-          return @cache[ident] if @cache && @cache.include?(ident)
+          return @cache[ident] if @cache&.include?(ident)
           uri = URI.parse(ident)
           result = nil
           Net::HTTP.start(uri.host, uri.port) do |http|
@@ -57,7 +57,7 @@ module RGeo
         # Clear the cache if one is present.
 
         def clear_cache
-          @cache.clear if @cache
+          @cache&.clear
         end
       end
     end

@@ -498,7 +498,7 @@ module RGeo
         if type && obj.factory != self
           obj = Feature.cast(obj, self, type)
         end
-        obj && obj.fg_geom
+        obj&.fg_geom
       end
 
       def generate_wkt(geom)

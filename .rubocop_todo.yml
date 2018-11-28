@@ -310,18 +310,6 @@ Style/RedundantConditional:
     - 'lib/rgeo/geos/ffi_factory.rb'
     - 'lib/rgeo/wkrep/wkt_parser.rb'
 
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, Whitelist.
-# Whitelist: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-    - 'lib/rgeo/coord_sys/srs_database/sr_org.rb'
-    - 'lib/rgeo/coord_sys/srs_database/url_reader.rb'
-    - 'lib/rgeo/feature/types.rb'
-    - 'lib/rgeo/geos/ffi_factory.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize.
