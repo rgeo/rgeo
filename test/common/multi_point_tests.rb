@@ -21,7 +21,7 @@ module RGeo
 
         def test_creation_simple
           geom = @factory.multi_point([@point1, @point2])
-          assert_not_nil(geom)
+          assert(geom)
           assert(RGeo::Feature::MultiPoint === geom)
           assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -31,7 +31,7 @@ module RGeo
 
         def test_creation_empty
           geom = @factory.multi_point([])
-          assert_not_nil(geom)
+          assert(geom)
           assert(RGeo::Feature::MultiPoint === geom)
           assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
           assert_equal(0, geom.num_geometries)
@@ -42,7 +42,7 @@ module RGeo
           mp1 = @factory.collection([@point3])
           mp2 = @factory.multi_point([@point4])
           geom = @factory.multi_point([@point1, @point2, mp1, mp2])
-          assert_not_nil(geom)
+          assert(geom)
           assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
           assert_equal(4, geom.num_geometries)
           assert(@point1.eql?(geom[0]))
@@ -53,7 +53,7 @@ module RGeo
 
         def test_creation_wrong_type
           line = @factory.line_string([@point1, @point2])
-          assert_raise(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::InvalidGeometry) do
             @factory.multi_point([@point3, line])
           end
         end

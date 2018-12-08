@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosPolygonTest < Test::Unit::TestCase # :nodoc:
+class GeosPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup

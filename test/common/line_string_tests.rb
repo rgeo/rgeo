@@ -29,7 +29,7 @@ module RGeo
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 0)
           line2 = @factory.line_string([point1, point2, point3])
-          assert_not_nil(line2)
+          assert(line2)
           assert_equal(RGeo::Feature::LineString, line2.geometry_type)
           assert_equal(3, line2.num_points)
           assert_equal(point1, line2.point_n(0))
@@ -43,7 +43,7 @@ module RGeo
         def test_creation_points2_degenerate
           point1 = @factory.point(0, 0)
           line3 = @factory.line_string([point1, point1])
-          assert_not_nil(line3)
+          assert(line3)
           assert_equal(RGeo::Feature::LineString, line3.geometry_type)
           assert_equal(2, line3.num_points)
           assert_equal(point1, line3.point_n(0))
@@ -54,7 +54,7 @@ module RGeo
 
         def test_creation_points_empty
           line4 = @factory.line_string([])
-          assert_not_nil(line4)
+          assert(line4)
           assert_equal(RGeo::Feature::LineString, line4.geometry_type)
           assert_equal(0, line4.num_points)
           assert_nil(line4.start_point)
@@ -66,7 +66,7 @@ module RGeo
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 1)
           line1 = @factory.line_string([point1, point2, point3])
-          assert_not_nil(line1)
+          assert(line1)
           assert(RGeo::Feature::LineString === line1)
           assert(!(RGeo::Feature::LinearRing === line1))
           assert(!(RGeo::Feature::Line === line1))
@@ -78,12 +78,12 @@ module RGeo
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 0)
           line1 = @factory.linear_ring([point1, point2, point3, point1])
-          assert_not_nil(line1)
+          assert(line1)
           assert(line1.is_ring?)
           assert(RGeo::Feature::LinearRing === line1)
           assert_equal(RGeo::Feature::LinearRing, line1.geometry_type)
           line2 = @factory.linear_ring([point1, point2, point3])
-          assert_not_nil(line2)
+          assert(line2)
           assert(line2.is_ring?)
           assert(RGeo::Feature::LinearRing === line2)
           assert_equal(4, line2.num_points)
@@ -94,7 +94,7 @@ module RGeo
           point1 = @factory.point(0, 0)
           point2 = @factory.point(0, 1)
           line1 = @factory.line(point1, point2)
-          assert_not_nil(line1)
+          assert(line1)
           assert(RGeo::Feature::Line === line1)
           assert_equal(RGeo::Feature::Line, line1.geometry_type)
         end
@@ -102,10 +102,10 @@ module RGeo
         def test_creation_errors
           point1 = @factory.point(0, 0)
           collection = point1.boundary
-          assert_raise(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::InvalidGeometry) do
             @factory.line_string([point1])
           end
-          assert_raise(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::InvalidGeometry) do
             @factory.line_string([point1, collection])
           end
         end
@@ -212,7 +212,7 @@ module RGeo
           point5 = @factory.point(0, 0)
           line2 = @factory.line_string([point4, point5])
           assert(!line1.rep_equals?(line2))
-          assert_not_equal(line1.hash, line2.hash)
+          refute_equal(line1.hash, line2.hash)
         end
 
         def test_wkt_creation

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class WKTParserTest < Test::Unit::TestCase # :nodoc:
+class WKTParserTest < Minitest::Test # :nodoc:
   def test_point_2d
     parser = RGeo::WKRep::WKTParser.new
     obj = parser.parse("POINT(1 2)")
@@ -79,7 +79,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_point_with_too_many_coords
     factory = RGeo::Cartesian.preferred_factory
     parser = RGeo::WKRep::WKTParser.new(factory)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("POINT(1 2 3)")
     end
   end
@@ -96,7 +96,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_point_wkt12_z_unsupported_factory
     factory = RGeo::Cartesian.preferred_factory
     parser = RGeo::WKRep::WKTParser.new(factory, support_wkt12: true)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("POINT Z(1 2 3)")
     end
   end
@@ -122,7 +122,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_point_wkt12_m_too_many_coords
     factory = RGeo::Cartesian.preferred_factory(has_m_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory, support_wkt12: true)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("POINT M(1 2 3 4)")
     end
   end
@@ -139,7 +139,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_point_wkt12_zm_not_enough_coords
     factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true, has_m_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory, support_wkt12: true)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("POINT ZM(1 2 3)")
     end
   end
@@ -174,7 +174,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_point_ewkt_m_too_many_coords
     factory = RGeo::Cartesian.preferred_factory(has_m_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory, support_ewkt: true)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("POINTM(1 2 3 4)")
     end
   end
@@ -182,14 +182,14 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_point_strict_wkt11_with_z
     factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory, strict_wkt11: true)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("POINT(1 2 3)")
     end
   end
 
   def test_point_non_ewkt_with_srid
     parser = RGeo::WKRep::WKTParser.new(RGeo::Cartesian.method(:preferred_factory))
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("SRID=1000;POINT(1 2)")
     end
   end
@@ -217,7 +217,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_linestring_with_inconsistent_coords
     factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("LINESTRING(1 2 3, 4 5,7 8 9)")
     end
   end
@@ -384,7 +384,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_collection_dimension_mismatch
     factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("GEOMETRYCOLLECTION(POINT(-1 -2),LINESTRING(1 2 0, 3 4 0, 5 6 0))")
     end
   end
@@ -392,7 +392,7 @@ class WKTParserTest < Test::Unit::TestCase # :nodoc:
   def test_collection_wkt12_type_mismatch
     factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true, has_m_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory, support_wkt12: true)
-    assert_raise(RGeo::Error::ParseError) do
+    assert_raises(RGeo::Error::ParseError) do
       parser.parse("GEOMETRYCOLLECTION Z(POINT Z(-1 -2 0),LINESTRING M(1 2 0, 3 4 0, 5 6 0))")
     end
   end

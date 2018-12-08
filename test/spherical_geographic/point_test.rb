@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalPointTest < Test::Unit::TestCase # :nodoc:
+class SphericalPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup

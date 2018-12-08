@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianFactoryTest < Test::Unit::TestCase # :nodoc:
+class CartesianFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup

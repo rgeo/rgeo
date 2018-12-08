@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianMultiLineStringTest < Test::Unit::TestCase # :nodoc:
+class CartesianMultiLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiLineStringTests
 
   def create_factory

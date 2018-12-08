@@ -8,15 +8,15 @@
 
 require "test_helper"
 
-class OgcCsTest < Test::Unit::TestCase # :nodoc:
+class OgcCsTest < Minitest::Test # :nodoc:
   # Handle differences in floating-point output.
 
   def lenient_regex_for(str)
-    ::Regexp.new(str.gsub(/(\d)\.(\d{10,})/) do |m|
+    Regexp.new(str.gsub(/(\d)\.(\d{10,})/) do
       before = Regexp.last_match(1)
       after = Regexp.last_match(2)[0, 10]
       "#{before}.#{after}\\d*"
-    end.gsub(/(\.|\[|\]|\(|\)|\$|\^|\||\+)/) { |m| "\\#{Regexp.last_match(1)}" })
+    end.gsub(/(\.|\[|\]|\(|\)|\$|\^|\||\+)/) { "\\#{Regexp.last_match(1)}" })
   end
 
   def test_axis_info_by_value

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class WKTGeneratorTest < Test::Unit::TestCase # :nodoc:
+class WKTGeneratorTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Cartesian.preferred_factory(srid: 1000)
     @factoryz = RGeo::Cartesian.preferred_factory(srid: 1000, has_z_coordinate: true)

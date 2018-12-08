@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosMiscTest < Test::Unit::TestCase # :nodoc:
+class GeosMiscTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Geos.factory(srid: 4326)
   end
@@ -22,8 +22,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
       wkb_parser: :geos
     )
 
-    dump = nil
-    assert_nothing_raised { dump = @factory.marshal_dump }
+    dump = @factory.marshal_dump
     assert_equal({}, dump["wktg"])
     assert_equal({}, dump["wkbg"])
     assert_equal({}, dump["wktp"])
@@ -40,7 +39,7 @@ class GeosMiscTest < Test::Unit::TestCase # :nodoc:
     )
     coder = Psych::Coder.new("test")
 
-    assert_nothing_raised { @factory.encode_with(coder) }
+    @factory.encode_with(coder)
     assert_equal({}, coder["wkt_generator"])
     assert_equal({}, coder["wkb_generator"])
     assert_equal({}, coder["wkt_parser"])

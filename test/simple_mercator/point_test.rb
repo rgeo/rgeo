@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorPointTest < Test::Unit::TestCase # :nodoc:
+class MercatorPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup

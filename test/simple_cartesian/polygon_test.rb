@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianPolygonTest < Test::Unit::TestCase # :nodoc:
+class CartesianPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup

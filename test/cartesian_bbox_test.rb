@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianBBoxTest < Test::Unit::TestCase # :nodoc:
+class CartesianBBoxTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Cartesian.factory
   end

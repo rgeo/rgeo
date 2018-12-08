@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianLineStringTest < Test::Unit::TestCase # :nodoc:
+class CartesianLineStringTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Cartesian.simple_factory
   end

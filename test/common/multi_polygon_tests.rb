@@ -35,7 +35,7 @@ module RGeo
 
         def test_creation_simple
           geom = @factory.multi_polygon([@poly1, @poly2])
-          assert_not_nil(geom)
+          assert(geom)
           assert(RGeo::Feature::MultiPolygon === geom)
           assert_equal(RGeo::Feature::MultiPolygon, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -45,7 +45,7 @@ module RGeo
 
         def test_creation_empty
           geom = @factory.multi_polygon([])
-          assert_not_nil(geom)
+          assert(geom)
           assert(RGeo::Feature::MultiPolygon === geom)
           assert_equal(RGeo::Feature::MultiPolygon, geom.geometry_type)
           assert_equal(0, geom.num_geometries)
@@ -53,13 +53,13 @@ module RGeo
         end
 
         def test_creation_wrong_type
-          assert_raise(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::InvalidGeometry) do
             @factory.multi_polygon([@poly1, @line1])
           end
         end
 
         def test_creation_overlapping
-          assert_raise(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::InvalidGeometry) do
             @factory.multi_polygon([@poly1, @poly1])
           end
           geom = @lenient_factory.multi_polygon([@poly1, @poly1])
@@ -67,7 +67,7 @@ module RGeo
         end
 
         def test_creation_connected
-          assert_raise(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::InvalidGeometry) do
             @factory.multi_polygon([@poly3, @poly4])
           end
           geom = @lenient_factory.multi_polygon([@poly3, @poly4])

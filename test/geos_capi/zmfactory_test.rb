@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosZMFactoryTest < Test::Unit::TestCase # :nodoc:
+class GeosZMFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup

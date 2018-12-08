@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorFactoryTest < Test::Unit::TestCase # :nodoc:
+class MercatorFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup

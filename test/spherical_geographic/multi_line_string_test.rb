@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalMultiLineStringTest < Test::Unit::TestCase # :nodoc:
+class SphericalMultiLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiLineStringTests
 
   def create_factory

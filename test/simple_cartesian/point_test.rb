@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianPointTest < Test::Unit::TestCase # :nodoc:
+class CartesianPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup

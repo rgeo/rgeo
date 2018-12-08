@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class UrlReaderTest < Test::Unit::TestCase # :nodoc:
+class UrlReaderTest < Minitest::Test # :nodoc:
   def test_sr_org_epsg_4326_ogcwkt
     db = RGeo::CoordSys::SRSDatabase::UrlReader.new
     entry = db.get("http://spatialreference.org/ref/epsg/4326/ogcwkt/")

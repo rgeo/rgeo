@@ -123,7 +123,7 @@ module RGeo
           geom1 = @factory.collection([@line1, @point2])
           geom2 = @factory.collection([@point2, @line1])
           assert(!geom1.rep_equals?(geom2))
-          assert_not_equal(geom1.hash, geom2.hash)
+          refute_equal(geom1.hash, geom2.hash)
         end
 
         def test_wkt_creation_simple
@@ -221,7 +221,7 @@ module RGeo
           enum = geom1.each
           assert_equal(@point1, enum.next)
           assert_equal(@line1, enum.next)
-          assert_raise(::StopIteration) do
+          assert_raises(::StopIteration) do
             enum.next
           end
         end

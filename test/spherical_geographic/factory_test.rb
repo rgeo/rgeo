@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalFactoryTest < Test::Unit::TestCase # :nodoc:
+class SphericalFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup

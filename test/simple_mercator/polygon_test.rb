@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorPolygonTest < Test::Unit::TestCase # :nodoc:
+class MercatorPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup

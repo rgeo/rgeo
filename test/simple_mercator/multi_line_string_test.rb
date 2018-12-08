@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorMultiLineStringTest < Test::Unit::TestCase # :nodoc:
+class MercatorMultiLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiLineStringTests
 
   def create_factory

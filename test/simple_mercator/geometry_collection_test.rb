@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
+class MercatorGeometryCollectionTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory

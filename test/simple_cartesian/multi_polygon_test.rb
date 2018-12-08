@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianMultiPolygonTest < Test::Unit::TestCase # :nodoc:
+class CartesianMultiPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
   def create_factories

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
+class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory
@@ -32,6 +32,6 @@ class GeosGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
     noded = multi.node
 
     assert_equal(noded.count, 4)
-    assert_true(expected_lines.all? { |line| noded.include? line })
+    assert(expected_lines.all? { |line| noded.include? line })
   end
 end if RGeo::Geos.capi_supported?
