@@ -35,7 +35,6 @@ module RGeo
 
         def test_creation_simple
           geom = @factory.multi_polygon([@poly1, @poly2])
-          assert(geom)
           assert(RGeo::Feature::MultiPolygon === geom)
           assert_equal(RGeo::Feature::MultiPolygon, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -45,7 +44,6 @@ module RGeo
 
         def test_creation_empty
           geom = @factory.multi_polygon([])
-          assert(geom)
           assert(RGeo::Feature::MultiPolygon === geom)
           assert_equal(RGeo::Feature::MultiPolygon, geom.geometry_type)
           assert_equal(0, geom.num_geometries)

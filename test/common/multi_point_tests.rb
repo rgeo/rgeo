@@ -21,7 +21,6 @@ module RGeo
 
         def test_creation_simple
           geom = @factory.multi_point([@point1, @point2])
-          assert(geom)
           assert(RGeo::Feature::MultiPoint === geom)
           assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -31,7 +30,6 @@ module RGeo
 
         def test_creation_empty
           geom = @factory.multi_point([])
-          assert(geom)
           assert(RGeo::Feature::MultiPoint === geom)
           assert_equal(RGeo::Feature::MultiPoint, geom.geometry_type)
           assert_equal(0, geom.num_geometries)
