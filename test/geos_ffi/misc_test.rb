@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosFFIMiscTest < Test::Unit::TestCase # :nodoc:
+class GeosFFIMiscTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Geos.factory(srid: 4326, native_interface: :ffi)
   end

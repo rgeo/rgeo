@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalCalculationsTest < Test::Unit::TestCase # :nodoc:
+class SphericalCalculationsTest < Minitest::Test # :nodoc:
   def assert_close_enough(v1, v2)
     diff = (v1 - v2).abs
     # denom = (v1 + v2).abs

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorWindowTest < Test::Unit::TestCase # :nodoc:
+class MercatorWindowTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Geographic.simple_mercator_factory
   end

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalLineStringTest < Test::Unit::TestCase # :nodoc:
+class SphericalLineStringTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Geographic.spherical_factory
   end

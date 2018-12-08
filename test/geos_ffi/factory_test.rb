@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosFFIFactoryTest < Test::Unit::TestCase # :nodoc:
+class GeosFFIFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup

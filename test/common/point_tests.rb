@@ -37,7 +37,7 @@ module RGeo
           point3 = @factory.point(13, 12)
           point4 = point3.dup
           assert_equal(point3, point4)
-          assert_not_equal(point2, point4)
+          refute_equal(point2, point4)
         end
 
         def test_type_check
@@ -94,8 +94,7 @@ module RGeo
 
         def test_boundary
           point = @factory.point(11, 12)
-          boundary_ = point.boundary
-          assert(boundary_.is_empty?)
+          assert point.boundary.is_empty?
         end
 
         def test_equals
@@ -117,8 +116,8 @@ module RGeo
         def test_out_of_order_is_not_equal
           point1 = @factory.point(11, 12)
           point2 = @factory.point(12, 11)
-          assert_not_equal(point1, point2)
-          assert_not_equal(point1.hash, point2.hash)
+          refute_equal(point1, point2)
+          refute_equal(point1.hash, point2.hash)
         end
 
         def test_hashes_equal_for_representationally_equivalent_objects
@@ -198,20 +197,19 @@ module RGeo
           point2 = @factory.point(11, 12)
           point3 = @factory.point(12, 12)
           assert_close_enough(point1, point1.intersection(point2))
-          int13_ = point1.intersection(point3)
-          assert(int13_.is_empty?)
+          assert point1.intersection(point3).is_empty?
         end
 
         def test_union
           point1 = @factory.point(11, 12)
           point2 = @factory.point(11, 12)
           point3 = @factory.point(12, 12)
-          union12_ = point1.union(point2)
-          union13_ = point1.union(point3)
-          assert_close_enough(point1, union12_)
-          assert_equal(RGeo::Feature::MultiPoint, union13_.geometry_type)
-          assert_contains_approx(point1, union13_)
-          assert_contains_approx(point3, union13_)
+          union12 = point1.union(point2)
+          union13 = point1.union(point3)
+          assert_close_enough(point1, union12)
+          assert_equal(RGeo::Feature::MultiPoint, union13.geometry_type)
+          assert_contains_approx(point1, union13)
+          assert_contains_approx(point3, union13)
         end
 
         def test_difference

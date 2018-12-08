@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianMultiPointTest < Test::Unit::TestCase # :nodoc:
+class CartesianMultiPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
   def create_factory(opts = {})

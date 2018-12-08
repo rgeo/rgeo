@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalPolygonTest < Test::Unit::TestCase # :nodoc:
+class SphericalPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup

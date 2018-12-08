@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorLineStringTest < Test::Unit::TestCase # :nodoc:
+class MercatorLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::LineStringTests
 
   def setup

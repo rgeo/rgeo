@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosPointTest < Test::Unit::TestCase # :nodoc:
+class GeosPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup

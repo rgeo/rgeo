@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
+class SphericalGeometryCollectionTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory

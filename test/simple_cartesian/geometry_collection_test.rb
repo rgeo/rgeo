@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class CartesianGeometryCollectionTest < Test::Unit::TestCase # :nodoc:
+class CartesianGeometryCollectionTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
 
   def create_factory

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosFFIPolygonTest < Test::Unit::TestCase # :nodoc:
+class GeosFFIPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup

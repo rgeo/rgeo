@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalMultiPolygonTest < Test::Unit::TestCase # :nodoc:
+class SphericalMultiPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
   def create_factories

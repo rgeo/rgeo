@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class SphericalMultiPointTest < Test::Unit::TestCase # :nodoc:
+class SphericalMultiPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
   def create_factory(opts = {})

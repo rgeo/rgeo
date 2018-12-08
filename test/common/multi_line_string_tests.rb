@@ -25,7 +25,7 @@ module RGeo
 
         def test_creation_simple
           geom = @factory.multi_line_string([@linestring1, @linestring2])
-          assert_not_nil(geom)
+          assert(geom)
           assert(RGeo::Feature::MultiLineString === geom)
           assert_equal(RGeo::Feature::MultiLineString, geom.geometry_type)
           assert_equal(2, geom.num_geometries)
@@ -35,7 +35,6 @@ module RGeo
 
         def test_creation_empty
           geom = @factory.multi_line_string([])
-          assert_not_nil(geom)
           assert(RGeo::Feature::MultiLineString === geom)
           assert_equal(RGeo::Feature::MultiLineString, geom.geometry_type)
           assert_equal(0, geom.num_geometries)
@@ -44,7 +43,6 @@ module RGeo
 
         def test_creation_save_types
           geom = @factory.multi_line_string([@linestring1, @linearring1, @line1])
-          assert_not_nil(geom)
           assert(RGeo::Feature::MultiLineString === geom)
           assert_equal(RGeo::Feature::MultiLineString, geom.geometry_type)
           assert_equal(3, geom.num_geometries)
@@ -56,7 +54,6 @@ module RGeo
           mls1 = @factory.collection([@line1])
           mls2 = @factory.multi_line_string([@linearring1])
           geom = @factory.multi_line_string([@linestring1, @linestring2, mls1, mls2])
-          assert_not_nil(geom)
           assert_equal(RGeo::Feature::MultiLineString, geom.geometry_type)
           assert_equal(4, geom.num_geometries)
           assert(@linestring1.eql?(geom[0]))

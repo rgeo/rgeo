@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class GeosFFIParsingUnparsingTest < Test::Unit::TestCase # :nodoc:
+class GeosFFIParsingUnparsingTest < Minitest::Test # :nodoc:
   def test_wkt_generator_default_floating_point
     # Bug report GH-4
     factory = RGeo::Geos.factory(native_interface: :ffi)
@@ -30,6 +30,6 @@ class GeosFFIParsingUnparsingTest < Test::Unit::TestCase # :nodoc:
 
   def test_wkt_parser_default_with_non_geosable_input
     factory = RGeo::Geos.factory(native_interface: :ffi)
-    assert_not_nil(factory.parse_wkt("Point (1 1)"))
+    assert(factory.parse_wkt("Point (1 1)"))
   end
 end if RGeo::Geos.ffi_supported?

@@ -8,7 +8,7 @@
 
 require "test_helper"
 
-class MercatorMultiPointTest < Test::Unit::TestCase # :nodoc:
+class MercatorMultiPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
   def create_factory(opts_ = {})
