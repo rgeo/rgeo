@@ -1,3 +1,9 @@
+### 2.0.1 / 2019-3-7
+
+* Use ProjectedPointImpl in #canonical_point (copiousfreetime) #202
+* Use minitest #201
+
+
 ### 2.0.0 / 2018-11-27
 
 Breaking changes
