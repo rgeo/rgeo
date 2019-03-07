@@ -125,7 +125,7 @@ module RGeo
         if @x >= -180.0 && @x < 180.0
           self
         else
-          PointImpl.new(@factory, canonical_x, @y)
+          ProjectedPointImpl.new(@factory, canonical_x, @y)
         end
       end
 
