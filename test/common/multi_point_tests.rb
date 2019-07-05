@@ -193,6 +193,11 @@ module RGeo
           mp = @factory.multi_point(points)
           assert_equal(mp.coordinates, points.map(&:coordinates))
         end
+
+        def test_point_on_surface
+          geom = @factory.multi_point([@point1, @point2, @point3])
+          assert_equal(geom.point_on_surface, @point1)
+        end
       end
     end
   end

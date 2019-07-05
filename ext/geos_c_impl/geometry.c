@@ -1053,6 +1053,21 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   return result;
 }
 
+static VALUE method_geometry_point_on_surface(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSPointOnSurface_r(self_data->geos_context, self_geom), Qnil);
+  }
+  return result;
+}
+
 
 /**** INITIALIZATION FUNCTION ****/
 
@@ -1107,6 +1122,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_methods, "sym_difference", method_geometry_sym_difference, 1);
   rb_define_method(geos_geometry_methods, "valid?", method_geometry_is_valid, 0);
   rb_define_method(geos_geometry_methods, "invalid_reason", method_geometry_invalid_reason, 0);
+  rb_define_method(geos_geometry_methods, "point_on_surface", method_geometry_point_on_surface, 0);
 }
 
 

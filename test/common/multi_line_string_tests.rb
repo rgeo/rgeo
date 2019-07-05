@@ -173,6 +173,11 @@ module RGeo
           ml = @factory.multi_line_string([@linestring1, @linestring2])
           assert_equal(ml.coordinates, [@linestring1, @linestring2].map(&:coordinates))
         end
+
+        def test_point_on_surface
+          ml = @factory.multi_line_string([@linestring1, @linestring2])
+          assert_equal(ml.point_on_surface, @factory.point(-7, 6))
+        end
       end
     end
   end

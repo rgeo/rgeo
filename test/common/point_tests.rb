@@ -358,6 +358,11 @@ module RGeo
           point2 = Psych.load(data)
           assert_equal(point, point2)
         end
+
+        def test_point_on_surface
+          point = @factory.point(11, 12)
+          assert_equal(point.point_on_surface, point)
+        end
       end
     end
   end

@@ -559,22 +559,6 @@ static VALUE method_multi_polygon_centroid(VALUE self)
 }
 
 
-static VALUE method_multi_polygon_point_on_surface(VALUE self)
-{
-  VALUE result;
-  RGeo_GeometryData* self_data;
-  const GEOSGeometry* self_geom;
-
-  result = Qnil;
-  self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  self_geom = self_data->geom;
-  if (self_geom) {
-    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSPointOnSurface_r(self_data->geos_context, self_geom), Qnil);
-  }
-  return result;
-}
-
-
 static VALUE cmethod_geometry_collection_create(VALUE module, VALUE factory, VALUE array)
 {
   return create_geometry_collection(module, GEOS_GEOMETRYCOLLECTION, factory, array);
@@ -648,7 +632,6 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_multi_polygon_methods, "geometry_type", method_multi_polygon_geometry_type, 0);
   rb_define_method(geos_multi_polygon_methods, "area", method_multi_polygon_area, 0);
   rb_define_method(geos_multi_polygon_methods, "centroid", method_multi_polygon_centroid, 0);
-  rb_define_method(geos_multi_polygon_methods, "point_on_surface", method_multi_polygon_point_on_surface, 0);
   rb_define_method(geos_multi_polygon_methods, "hash", method_multi_polygon_hash, 0);
   rb_define_method(geos_multi_polygon_methods, "coordinates", method_multi_polygon_coordinates, 0);
 }

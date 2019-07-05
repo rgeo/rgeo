@@ -252,6 +252,16 @@ module RGeo
           assert(points.first.y == points.last.y)
           assert(points.first.z == points.last.z)
         end
+
+        def test_point_on_surface
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(0, 10)
+          point3 = @factory.point(10, 10)
+          point4 = @factory.point(10, 0)
+          exterior = @factory.linear_ring([point1, point2, point3, point4, point1])
+          polygon = @factory.polygon(exterior)
+          assert_equal(polygon.point_on_surface, @factory.point(5.0, 5.0))
+        end
       end
     end
   end

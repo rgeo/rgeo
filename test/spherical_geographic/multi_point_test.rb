@@ -21,4 +21,5 @@ class SphericalMultiPointTest < Minitest::Test # :nodoc:
   undef_method :test_union
   undef_method :test_difference
   undef_method :test_intersection
+  undef_method :test_point_on_surface
 end

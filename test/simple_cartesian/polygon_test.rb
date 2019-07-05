@@ -18,4 +18,5 @@ class CartesianPolygonTest < Minitest::Test # :nodoc:
   undef_method :test_fully_equal
   undef_method :test_geometrically_equal_but_ordered_different
   undef_method :test_geometrically_equal_but_different_directions
+  undef_method :test_point_on_surface
 end

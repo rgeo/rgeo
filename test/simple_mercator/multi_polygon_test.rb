@@ -15,4 +15,7 @@ class MercatorMultiPolygonTest < Minitest::Test # :nodoc:
     @factory = RGeo::Geographic.simple_mercator_factory
     @lenient_factory = RGeo::Geographic.simple_mercator_factory(lenient_multi_polygon_assertions: true)
   end
+
+  # These tests suffer from floating point issues
+  undef_method :test_point_on_surface
 end

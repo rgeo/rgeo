@@ -110,6 +110,10 @@ module RGeo
       def sym_difference(rhs)
         factory.unproject(projection.sym_difference(Feature.cast(rhs, factory).projection))
       end
+
+      def point_on_surface
+        factory.unproject(projection.point_on_surface)
+      end
     end
 
     module ProjectedPointMethods # :nodoc:
@@ -169,10 +173,6 @@ module RGeo
 
       def centroid
         factory.unproject(projection.centroid)
-      end
-
-      def point_on_surface
-        factory.unproject(projection.point_on_surface)
       end
     end
 
