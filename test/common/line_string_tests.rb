@@ -325,11 +325,11 @@ module RGeo
         end
 
         def test_point_on_surface
-          point1 = @factory.point(-7, 6)
-          point2 = @factory.point(-7, 6)
+          point1 = @factory.point(1, 0)
+          point2 = @factory.point(-4, 2)
           point3 = @factory.point(-7, 6)
           line = @factory.line_string([point1, point2, point3])
-          assert_equal(line.point_on_surface, @factory.point(-7, 6))
+          assert_equal(line.point_on_surface, point2)
         end
       end
     end
