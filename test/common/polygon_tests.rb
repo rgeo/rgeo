@@ -209,6 +209,31 @@ module RGeo
           assert(poly2.is_empty?)
         end
 
+        def test_boundary_simple
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(0, 1)
+          point3 = @factory.point(1, 0)
+          exterior = @factory.linear_ring([point1, point2, point3, point1])
+          boundary =  @factory.multi_line_string([exterior])
+          polygon = @factory.polygon(exterior)
+          assert_equal(boundary, polygon.boundary)
+        end
+
+        def test_boundary_one_hole
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(0, 10)
+          point3 = @factory.point(10, 10)
+          point4 = @factory.point(10, 0)
+          point5 = @factory.point(4, 4)
+          point6 = @factory.point(5, 6)
+          point7 = @factory.point(6, 4)
+          exterior = @factory.linear_ring([point1, point2, point3, point4, point1])
+          interior = @factory.linear_ring([point5, point6, point7, point5])
+          boundary =  @factory.multi_line_string([exterior, interior])
+          polygon = @factory.polygon(exterior, [interior])
+          assert_equal(boundary, polygon.boundary)
+        end
+
         def test_polygon_coordinates
           coordinates = [
             [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0]],
