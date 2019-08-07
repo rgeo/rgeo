@@ -63,15 +63,13 @@ module RGeo
       self.preferred_native_interface = :ffi
     end
 
-    # There is some trouble with END_CAP in GEOS
-    # In docs CAP_ROUND = 1, but it's work properly with 0
-    CAP_ROUND  = 0
-    CAP_FLAT   = 1
-    CAP_SQUARE = 2
+    CAP_ROUND  = 1
+    CAP_FLAT   = 2
+    CAP_SQUARE = 3
 
-    JOIN_ROUND = 0
-    JOIN_MITRE = 1
-    JOIN_BEVEL = 2
+    JOIN_ROUND = 1
+    JOIN_MITRE = 2
+    JOIN_BEVEL = 3
   end
 end
 
