@@ -758,7 +758,7 @@ static VALUE method_geometry_buffer_with_style(VALUE self, VALUE distance, VALUE
                                                            RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution,
                                                            rb_num2int(endCapStyle),
                                                            rb_num2int(joinStyle),
-                                                           rb_num2int(mitreLimit)),
+                                                           rb_num2dbl(mitreLimit)),
                                      Qnil);
   }
   return result;
