@@ -88,13 +88,15 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
   end
 
   def test_buffer_with_style
-    polygon_coordinates = [[0.7316718427000253, 3.865835921350013],
-                           [1.0, 4.3], [6.0, 4.3], [6.3, 4.3],
-                           [6.3, 3.7], [1.4854101966249682, 3.7],
+    polygon_coordinates = [[0.514589803375032, 4.299999999999999],
+                           [6.0, 4.3],
+                           [6.3, 4.3],
+                           [6.3, 3.7],
+                           [1.4854101966249682, 3.7],
                            [2.2683281572999747, 2.134164078649987],
                            [2.4024922359499623, 1.8658359213500124],
                            [1.8658359213500126, 1.597507764050038],
-                           [0.7316718427000253, 3.865835921350013]]
+                           [0.514589803375032, 4.299999999999999]]
 
     points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
@@ -104,10 +106,8 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     point2 = @factory.point(1, 4)
     point3 = @factory.point(6, 4)
     line_string = @factory.line_string([point1, point2, point3])
-    buffered_line_string = line_string.buffer_with_style(0.3,
-                                                           RGeo::Geos::CAP_FLAT,
-                                                           RGeo::Geos::JOIN_ROUND,
-                                                           0.0)
+    buffered_line_string =
+      line_string.buffer_with_style(0.3, RGeo::Geos::CAP_SQUARE, RGeo::Geos::JOIN_MITRE, 5)
 
     assert_equal polygon, buffered_line_string
   end
