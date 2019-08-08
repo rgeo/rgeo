@@ -1,3 +1,9 @@
+### 2.1.0 / 2019-8-8
+
+* Fix #buffer_with_style style values for Geos (ynelin) #207
+  (fix values of RGeo::Geos::CAP_* and RGeo::Geos::JOIN_* constants)
+* Add geometry point_on_surface method (andrejreznik) #205
+
 ### 2.0.1 / 2019-3-7
 
 * Use ProjectedPointImpl in #canonical_point (copiousfreetime) #202
