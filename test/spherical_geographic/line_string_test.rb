@@ -21,4 +21,5 @@ class SphericalLineStringTest < Minitest::Test # :nodoc:
   undef_method :test_geometrically_equal_but_different_overlap
   undef_method :test_empty_equal
   undef_method :test_not_equal
+  undef_method :test_point_on_surface
 end

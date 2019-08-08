@@ -52,4 +52,5 @@ class CartesianPointTest < Minitest::Test # :nodoc:
   undef_method :test_union
   undef_method :test_difference
   undef_method :test_sym_difference
+  undef_method :test_point_on_surface
 end

@@ -186,6 +186,10 @@ module RGeo
           multi_polygon = @factory.multi_polygon [poly1, poly2]
           assert_equal(multi_polygon.coordinates, [poly1_coordinates, poly2_coordinates])
         end
+
+        def test_point_on_surface
+          assert_equal(@poly4.point_on_surface, @factory.point(7.5, 5.0))
+        end
       end
     end
   end

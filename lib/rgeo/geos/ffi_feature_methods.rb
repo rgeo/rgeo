@@ -266,6 +266,10 @@ module RGeo
         fg
       end
 
+      def point_on_surface
+        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
+      end
+
       private
 
       def request_prepared
@@ -569,10 +573,6 @@ module RGeo
 
       def centroid
         @factory.wrap_fg_geom(@fg_geom.centroid, FFIPointImpl)
-      end
-
-      def point_on_surface
-        @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
       def coordinates

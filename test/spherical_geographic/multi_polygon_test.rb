@@ -21,4 +21,5 @@ class SphericalMultiPolygonTest < Minitest::Test # :nodoc:
   undef_method :test_creation_connected
   undef_method :test_equal
   undef_method :test_not_equal
+  undef_method :test_point_on_surface
 end

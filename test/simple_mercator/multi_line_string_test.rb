@@ -16,4 +16,5 @@ class MercatorMultiLineStringTest < Minitest::Test # :nodoc:
   end
 
   undef_method :test_length
+  undef_method :test_point_on_surface
 end
