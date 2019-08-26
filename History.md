@@ -1,3 +1,8 @@
+### 2.1.1 / 2019-8-26
+
+* Fix BasicPolygonMethods#boundary #206 (ans82)
+* Support hexadecimal string input in Geos #parse_wkb #203 (chrisjwu)
+
 ### 2.1.0 / 2019-8-8
 
 * Fix #buffer_with_style style values for Geos (ynelin) #207
