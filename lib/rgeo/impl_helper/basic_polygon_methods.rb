@@ -57,7 +57,7 @@ module RGeo
         array = []
         array << @exterior_ring unless @exterior_ring.is_empty?
         array.concat(@interior_rings)
-        factory.multiline_string(array)
+        factory.multi_line_string(array)
       end
 
       def rep_equals?(rhs)
