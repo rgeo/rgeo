@@ -12,8 +12,4 @@ require "common/multi_polygon_tests"
 require "common/point_tests"
 require "common/polygon_tests"
 
-begin
-  require "pry-byebug"
-rescue LoadError
-  # ok
-end
+require "pry-byebug" if ENV["BYEBUG"]
