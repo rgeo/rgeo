@@ -135,23 +135,15 @@ module RGeo
       def centroid
         return super unless num_interior_rings == 0
 
-        points = coordinates.first
-
         centroid_lat = 0.0
         centroid_lng = 0.0
         signed_area = 0.0
 
-        # Iterate over each element in the list but the last item as it's
-        # calculated by the i+1 logic
-        points[0...-1].each_index do |i|
-          x0 = points[i][0]
-          y0 = points[i][1]
-          x1 = points[i + 1][0]
-          y1 = points[i + 1][1]
-          a = (x0 * y1) - (x1 * y0)
-          signed_area += a
-          centroid_lat += (x0 + x1) * a
-          centroid_lng += (y0 + y1) * a
+        exterior_ring.points.each_cons(2) do |p0, p1|
+          area = (p0.x * p1.y) - (p1.x * p0.y)
+          signed_area += area
+          centroid_lat += (p0.x + p1.x) * area
+          centroid_lng += (p0.y + p1.y) * area
         end
 
         signed_area *= 0.5
