@@ -47,6 +47,7 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPolygonMethods
       include SphericalGeometryMethods
+      include SphericalPolygonMethods
     end
 
     class SphericalGeometryCollectionImpl # :nodoc:

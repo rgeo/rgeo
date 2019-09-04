@@ -130,5 +130,28 @@ module RGeo
         inject(0.0) { |sum, geom| sum + geom.length }
       end
     end
+
+    module SphericalPolygonMethods # :nodoc:
+      def centroid
+        return super unless num_interior_rings == 0
+
+        centroid_lat = 0.0
+        centroid_lng = 0.0
+        signed_area = 0.0
+
+        exterior_ring.points.each_cons(2) do |p0, p1|
+          area = (p0.x * p1.y) - (p1.x * p0.y)
+          signed_area += area
+          centroid_lat += (p0.x + p1.x) * area
+          centroid_lng += (p0.y + p1.y) * area
+        end
+
+        signed_area *= 0.5
+        centroid_lat /= (6.0 * signed_area)
+        centroid_lng /= (6.0 * signed_area)
+
+        RGeo::Geographic.spherical_factory.point(centroid_lat, centroid_lng)
+      end
+    end
   end
 end
