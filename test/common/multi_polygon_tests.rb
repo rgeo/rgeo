@@ -190,6 +190,21 @@ module RGeo
         def test_point_on_surface
           assert_equal(@poly4.point_on_surface, @factory.point(7.5, 5.0))
         end
+
+        def test_boundary
+          parsed_geom = @factory.parse_wkt("MULTILINESTRING ((0.0 0.0, 0.0 -10.0, -10.0 0.0, 0.0 0.0), (0.0 0.0, 0.0 10.0, 10.0 10.0, 10.0 0.0, 0.0 0.0), (4.0 4.0, 5.0 6.0, 6.0 4.0, 4.0 4.0))")
+          built_geom = @factory.multi_polygon([@poly1, @poly2])
+          boundary_geom = built_geom.boundary
+          parsed_coordinates = parsed_geom.coordinates
+          boundary_coordinates = boundary_geom.coordinates
+          parsed_coordinates.zip(boundary_coordinates).each do |parsed_line, boundary_line|
+            parsed_line.zip(boundary_line).each do |p_coord, b_coord|
+              p_coord.zip(b_coord).each do |p_val, b_val|
+                assert_in_delta(p_val, b_val, 0.00000000000001)
+              end
+            end
+          end
+        end
       end
     end
   end

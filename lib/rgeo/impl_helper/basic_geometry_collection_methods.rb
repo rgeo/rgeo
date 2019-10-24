@@ -171,7 +171,7 @@ module RGeo
           array << poly.exterior_ring unless poly.is_empty?
           array.concat(poly.interior_rings)
         end
-        factory.multilinestring(array)
+        factory.multi_line_string(array)
       end
 
       def coordinates
