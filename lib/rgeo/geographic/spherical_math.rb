@@ -5,6 +5,9 @@
 # Core calculations on the sphere
 #
 # -----------------------------------------------------------------------------
+require "bigdecimal"
+require "bigdecimal/util"
+require "bigdecimal/math"
 
 module RGeo
   module Geographic
@@ -24,10 +27,14 @@ module RGeo
 
       class PointXYZ # :nodoc:
         def initialize(x, y, z)
+          x = x.to_d
+          y = y.to_d
+          z = z.to_d
+
           r = Math.sqrt(x * x + y * y + z * z)
-          @x = (x / r).to_f
-          @y = (y / r).to_f
-          @z = (z / r).to_f
+          @x = (x / r)
+          @y = (y / r)
+          @z = (z / r)
           raise "Not a number" if @x.nan? || @y.nan? || @z.nan?
         end
 
@@ -103,6 +110,9 @@ module RGeo
         end
 
         def self.from_latlon(lat, lon)
+          lat = lat.to_d
+          lon = lon.to_d
+
           rpd = ImplHelper::Math::RADIANS_PER_DEGREE
           lat_rad = rpd * lat
           lon_rad = rpd * lon
