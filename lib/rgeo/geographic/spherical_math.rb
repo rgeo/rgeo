@@ -5,6 +5,7 @@
 # Core calculations on the sphere
 #
 # -----------------------------------------------------------------------------
+require "bigdecimal"
 require "bigdecimal/util"
 
 module RGeo
