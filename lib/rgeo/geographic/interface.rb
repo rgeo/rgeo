@@ -9,7 +9,7 @@
 module RGeo
   module Geographic
     class << self
-      # Creates and returns a geographic factory that does not include a
+      # Creates and returns a geographic factory that does not include
       # a projection, and which performs calculations assuming a
       # spherical earth. In other words, geodesics are treated as great
       # circle arcs, and geometric calculations are handled accordingly.
