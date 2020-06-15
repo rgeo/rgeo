@@ -782,7 +782,7 @@ static VALUE method_geometry_offset_curve(VALUE self, VALUE distance, VALUE join
                                                        rb_num2dbl(distance),
                                                        RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution,
                                                        rb_num2int(joinStyle),
-                                                       rb_num2dbl(mitreLimit));,
+                                                       rb_num2dbl(mitreLimit)),
                                      Qnil);
   }
 
