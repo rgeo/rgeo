@@ -83,6 +83,10 @@ module RGeo
         factory.unproject(projection.buffer_with_style(distance, end_cap_style, join_style, mitre_limit))
       end
 
+      def offset_curve(distance, join_style, mitre_limit)
+        factory.unproject(projection.offset_curve(distance, join_style, mitre_limit))
+      end
+
       def simplify(tolerance)
         factory.unproject(projection.simplify(tolerance))
       end
