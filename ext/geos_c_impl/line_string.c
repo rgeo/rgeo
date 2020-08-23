@@ -124,6 +124,33 @@ static VALUE method_line_string_coordinates(VALUE self)
 }
 
 
+static VALUE method_line_string_polygonize(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* geos_polygon_collection;
+  VALUE factory;
+
+  result = Qnil;
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    factory = self_data->factory;
+    geos_polygon_collection = GEOSPolygonize_r(self_data->geos_context, &self_geom, 1);
+
+    result = rgeo_wrap_geos_geometry(
+        factory,
+        geos_polygon_collection,
+        Qnil
+      );
+  }
+
+  return result;
+}
+
 
 static VALUE get_point_from_coordseq(VALUE self, const GEOSCoordSequence* coord_seq, unsigned int i, char has_z)
 {
@@ -666,6 +693,7 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
   rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
   rb_define_method(geos_line_string_methods, "coordinates", method_line_string_coordinates, 0);
+  rb_define_method(geos_line_string_methods, "polygonize", method_line_string_polygonize, 0);
 
   // CAPILinearRingMethods module
   geos_linear_ring_methods = rb_define_module_under(globals->geos_module, "CAPILinearRingMethods");
