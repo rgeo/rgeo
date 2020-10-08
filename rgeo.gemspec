@@ -14,10 +14,11 @@ Gem::Specification.new do |spec|
     "location-based applications using Ruby-based frameworks such as Ruby On Rails."
 
   spec.version = RGeo::VERSION
-  spec.author = "Daniel Azuma, Tee Parham"
-  spec.email = "dazuma@gmail.com, parhameter@gmail.com"
+  spec.authors = ["Daniel Azuma", "Tee Parham"]
+  spec.email = ["dazuma@gmail.com", "parhameter@gmail.com", "kfdoggett@gmail.com"]
   spec.homepage = "https://github.com/rgeo/rgeo"
-  spec.required_ruby_version = ">= 2.3.0"
+  spec.required_ruby_version = ">= 2.4.0"
+  spec.license = "BSD-3-Clause"
 
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
   spec.extensions = Dir["ext/*/extconf.rb"]
