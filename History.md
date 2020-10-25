@@ -1,3 +1,8 @@
+### Current
+* Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
+* Expand gemspec
+* Drop Ruby 2.3 support
+
 ### 2.1.1 / 2019-8-26
 
 * Fix BasicPolygonMethods#boundary #206 (ans82)
