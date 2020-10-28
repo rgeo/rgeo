@@ -331,6 +331,16 @@ module RGeo
           line = @factory.line_string([point1, point2, point3])
           assert_equal(line.point_on_surface, point2)
         end
+
+        def test_contains_point
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(1, 2)
+          point3 = @factory.point(3, 9)
+          line_string = @factory.line_string([point1, point2, point3, point1])
+
+          assert_equal(true, line_string.contains?(@factory.point(0.5, 1)))
+          assert_equal(false, line_string.contains?(@factory.point(-1, -1)))
+        end
       end
     end
   end
