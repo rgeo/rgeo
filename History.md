@@ -1,4 +1,5 @@
 ### Current
+
 * Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
 * Expand gemspec
 * Drop Ruby 2.3 support
