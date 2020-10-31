@@ -33,6 +33,7 @@ module RGeo
       include ProjectedGeometryMethods
       include ProjectedNCurveMethods
       include ProjectedLineStringMethods
+      include ProjectedLinearRingMethods
     end
 
     class ProjectedLineImpl # :nodoc:

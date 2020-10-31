@@ -176,6 +176,12 @@ module RGeo
       end
     end
 
+    module ProjectedLinearRingMethods # :nodoc:
+      def is_simple?
+        projection.valid?
+      end
+    end
+
     module ProjectedNSurfaceMethods # :nodoc:
       def area
         projection.area
