@@ -11,10 +11,6 @@ require "test_helper"
 class GeosPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
-  def assert_close_enough(p1, p2)
-    assert((p1.x - p2.x).abs < 0.00000001 && (p1.y - p2.y).abs < 0.00000001)
-  end
-
   def setup
     @factory = RGeo::Geos.factory
   end
@@ -117,9 +113,12 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     # 4.3 -> 4.29999999999999, for example, and throws an error
     # iterating through points and using assert_in_delta instead
     # of assert_equal
-    buffered_points = buffered_line_string.exterior_ring.points
-    polygon.exterior_ring.points.each_with_index do |pt, idx|
-      assert_close_enough(pt, buffered_points[idx])
+    b_coords = buffered_line_string.exterior_ring.coordinates
+    p_coords = polygon.exterior_ring.coordinates
+    p_coords.zip(b_coords).each do |p_coord, b_coord|
+      p_coord.zip(b_coord).each do |pt1, pt2|
+        assert_in_delta(pt1, pt2, 1e-7)
+      end
     end
   end
 
@@ -154,15 +153,5 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
     polygon.invalid_reason
-  end
-
-  def test_self_intersecting_polygon
-    # issue 218
-    polygon_coordinates = [[0, 0], [1, 1], [0, 1], [1, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
-    outer_ring = @factory.linear_ring(points_arr)
-    polygon = @factory.polygon(outer_ring)
-
-    refute(polygon.is_simple?)
   end
 end if RGeo::Geos.capi_supported?
