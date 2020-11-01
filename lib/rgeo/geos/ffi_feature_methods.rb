@@ -121,6 +121,10 @@ module RGeo
         @fg_geom.simple?
       end
 
+      def valid?
+        @fg_geom.valid?
+      end
+
       def equals?(rhs)
         return false unless rhs.is_a?(RGeo::Feature::Instance)
         fg = factory.convert_to_fg_geometry(rhs)
