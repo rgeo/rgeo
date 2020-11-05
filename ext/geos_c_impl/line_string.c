@@ -123,7 +123,29 @@ static VALUE method_line_string_coordinates(VALUE self)
   return result;
 }
 
+static VALUE method_line_string_offset_curve(VALUE self, VALUE distance, VALUE joinStyle, VALUE mitreLimit)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  VALUE factory;
 
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    factory = self_data->factory;
+    result = rgeo_wrap_geos_geometry(factory,
+                                     GEOSOffsetCurve_r(self_data->geos_context, self_geom,
+                                                       rb_num2dbl(distance),
+                                                       RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution,
+                                                       rb_num2int(joinStyle),
+                                                       rb_num2dbl(mitreLimit)),
+                                     Qnil);
+  }
+
+  return result;
+}
 
 static VALUE get_point_from_coordseq(VALUE self, const GEOSCoordSequence* coord_seq, unsigned int i, char has_z)
 {
@@ -666,6 +688,7 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
   rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
   rb_define_method(geos_line_string_methods, "coordinates", method_line_string_coordinates, 0);
+  rb_define_method(geos_line_string_methods, "offset_curve", method_line_string_offset_curve, 3);
 
   // CAPILinearRingMethods module
   geos_linear_ring_methods = rb_define_module_under(globals->geos_module, "CAPILinearRingMethods");
