@@ -113,6 +113,14 @@ typedef struct {
 typedef struct {
   GEOSContextHandle_t geos_context;
   GEOSGeometry* geom;
+  /*
+    A geometry might be self intersescting. In which case,
+    some computation functions do not behave correctly.
+    Hence we store the simplified version to do these
+    functions with a geometry that will process correct
+    results.
+  */
+  GEOSGeometry* valid_geom;
   const GEOSPreparedGeometry* prep;
   VALUE factory;
   VALUE klasses;

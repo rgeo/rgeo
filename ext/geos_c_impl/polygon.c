@@ -67,12 +67,12 @@ static VALUE method_polygon_geometry_type(VALUE self)
 static VALUE method_polygon_area(VALUE self)
 {
   RGeo_GeometryData* self_data;
-  const GEOSGeometry* self_geom;
+  const GEOSGeometry* self_valid_geom;
   double area;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  self_geom = self_data->geom;
-  if (self_geom && GEOSArea_r(self_data->geos_context, GEOSMakeValid_r(self_data->geos_context, self_geom), &area)) {
+  self_valid_geom = self_data->valid_geom;
+  if (self_valid_geom && GEOSArea_r(self_data->geos_context, self_data->valid_geom, &area)) {
     return rb_float_new(area);
   }
   return Qnil;

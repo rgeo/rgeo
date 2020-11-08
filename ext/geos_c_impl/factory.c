@@ -743,7 +743,8 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       data->geos_context = factory_context;
       data->geom = geom;
-      data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
+      data->valid_geom = GEOSMakeValid_r(factory_context, geom);
+      data->prep = factory_data && factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC ?
         (GEOSPreparedGeometry*)1 : NULL;
       data->factory = factory;
       data->klasses = klasses;
