@@ -29,4 +29,19 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
     mp = f.multi_polygon([p2, p1])
     mp.centroid.as_text
   end
+
+  def test_area
+    twisted = [[10, 10], [12, 12], [12, 10], [10, 12], [10, 10]]
+    simple = [[0, 0], [1, 1], [2, 0], [2, 2], [1, 1], [0, 2], [0, 0]]
+    invalid_poly = @factory.polygon(
+      @factory.line_string(twisted.map { |x, y| @factory.point(x, y) })
+    )
+    valid_poly = @factory.polygon(
+      @factory.line_string(simple.map { |x, y| @factory.point(x, y) })
+    )
+
+    multi_polygon = @factory.multi_polygon([valid_poly, invalid_poly])
+
+    assert_equal(4.0, multi_polygon.area, "Lol")
+  end
 end if RGeo::Geos.capi_supported?

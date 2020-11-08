@@ -375,7 +375,7 @@ static VALUE method_multi_line_string_coordinates(VALUE self)
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
-  
+
   if(self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
@@ -487,7 +487,7 @@ static VALUE method_multi_polygon_coordinates(VALUE self)
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
-  
+
   if(self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
@@ -505,20 +505,16 @@ static VALUE method_multi_polygon_coordinates(VALUE self)
 
 static VALUE method_multi_polygon_area(VALUE self)
 {
-  VALUE result;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   double area;
 
-  result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
-  if (self_geom) {
-    if (GEOSArea_r(self_data->geos_context, self_geom, &area)) {
-      result = rb_float_new(area);
-    }
+  if (self_geom && GEOSArea_r(self_data->geos_context, GEOSMakeValid_r(self_data->geos_context, self_geom), &area)) {
+    return rb_float_new(area);
   }
-  return result;
+  return Qnil;
 }
 
 

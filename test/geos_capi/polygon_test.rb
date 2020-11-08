@@ -138,6 +138,20 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     assert_equal(polygon.valid?, false)
   end
 
+  def test_area
+    twisted = [[0, 0], [2, 2], [2, 0], [0, 2], [0, 0]]
+    simple = [[0, 0], [1, 1], [2, 0], [2, 2], [1, 1], [0, 2], [0, 0]]
+    invalid_poly = @factory.polygon(
+      @factory.line_string(twisted.map { |x, y| @factory.point(x, y) })
+    )
+    valid_poly = @factory.polygon(
+      @factory.line_string(simple.map { |x, y| @factory.point(x, y) })
+    )
+
+    assert_equal(2.0, valid_poly.area, "A simple polygon should have no issues")
+    assert_equal(2.0, invalid_poly.area, "A twisted polygon should be treated as a simple one")
+  end
+
   def test_invalid_reason
     polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
     points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
