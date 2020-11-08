@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
   def setup

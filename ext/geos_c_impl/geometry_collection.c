@@ -88,7 +88,7 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
       // Check if MultiPolygon is valid.
       if (collection
           && type == GEOS_MULTIPOLYGON
-          && !(factory_data->flags & 1)
+          && !(factory_data->flags & RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON)
           && !GEOSisValid_r(geos_context, collection)) {
         GEOSGeom_destroy_r(geos_context, collection);
         collection = NULL;

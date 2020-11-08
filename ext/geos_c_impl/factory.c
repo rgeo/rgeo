@@ -743,7 +743,9 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       data->geos_context = factory_context;
       data->geom = geom;
-      data->valid_geom = GEOSMakeValid_r(factory_context, geom);
+      // Computing a valid geometry has a cost. Hence it will only
+      // be done if mandatory.
+      data->valid_geom = NULL;
       data->prep = factory_data && factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC ?
         (GEOSPreparedGeometry*)1 : NULL;
       data->factory = factory;

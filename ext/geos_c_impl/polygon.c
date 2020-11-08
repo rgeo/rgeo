@@ -63,6 +63,11 @@ static VALUE method_polygon_geometry_type(VALUE self)
   return result;
 }
 
+static void rgeo_set_valid_geom(RGeo_GeometryData *data) {
+  if (!data->valid_geom) {
+    data->valid_geom = GEOSMakeValid_r(data->geos_context, data->geom);
+  }
+}
 
 static VALUE method_polygon_area(VALUE self)
 {
@@ -71,6 +76,8 @@ static VALUE method_polygon_area(VALUE self)
   double area;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
+
+  rgeo_set_valid_geom(self_data);
   self_valid_geom = self_data->valid_geom;
   if (self_valid_geom && GEOSArea_r(self_data->geos_context, self_data->valid_geom, &area)) {
     return rb_float_new(area);
