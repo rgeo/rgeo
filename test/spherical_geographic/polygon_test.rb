@@ -19,6 +19,9 @@ class SphericalPolygonTest < Minitest::Test # :nodoc:
   undef_method :test_geometrically_equal_but_ordered_different
   undef_method :test_geometrically_equal_but_different_directions
   undef_method :test_point_on_surface
+  undef_method :test_touches_shared_edge
+  undef_method :test_difference_overlapping_touches
+  undef_method :test_intersection_touches
 
   def test_centroid
     point1 = @factory.point(0, 0)

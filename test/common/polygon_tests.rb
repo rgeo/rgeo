@@ -331,6 +331,96 @@ module RGeo
           assert_equal(false, polygon.contains?(@factory.point(5, 5)))
           assert_equal(false, polygon.contains?(@factory.point(4, 4)))
         end
+
+        def test_touches_shared_edge
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(1, 0)
+          point3 = @factory.point(1, 1)
+          point4 = @factory.point(0, 1)
+          point5 = @factory.point(2, 0)
+          point6 = @factory.point(2, 1)
+
+          exterior1 = @factory.linear_ring([point1, point2, point3, point4, point1])
+          exterior2 = @factory.linear_ring([point2, point5, point6, point3, point2])
+
+          poly1 = @factory.polygon(exterior1)
+          poly2 = @factory.polygon(exterior2)
+
+          assert_equal(true, poly1.touches?(poly2))
+          assert_equal(false, poly1.overlaps?(poly2))
+        end
+
+        def test_difference_overlapping_touches
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(2, 0)
+          point3 = @factory.point(2, 1)
+          point4 = @factory.point(0, 1)
+          point5 = @factory.point(1, 0)
+          point6 = @factory.point(3, 0)
+          point7 = @factory.point(3, 1)
+          point8 = @factory.point(1, 1)
+
+          exterior1 = @factory.linear_ring([point1, point2, point3, point4, point1])
+          exterior2 = @factory.linear_ring([point5, point6, point7, point8, point5])
+
+          poly1 = @factory.polygon(exterior1)
+          poly2 = @factory.polygon(exterior2)
+
+          diff1 = poly1.difference(poly2)
+          diff2 = poly2.difference(poly1)
+
+          assert_equal(true, diff2.touches?(poly1))
+          assert_equal(false, diff2.overlaps?(poly1))
+
+          assert_equal(true, diff1.touches?(poly2))
+          assert_equal(false, diff1.overlaps?(poly2))
+        end
+
+        def test_intersection_touches
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(2, 0)
+          point3 = @factory.point(2, 1)
+          point4 = @factory.point(0, 1)
+          point5 = @factory.point(1, 0)
+          point6 = @factory.point(3, 0)
+          point7 = @factory.point(3, 1)
+          point8 = @factory.point(1, 1)
+
+          exterior1 = @factory.linear_ring([point1, point2, point3, point4, point1])
+          exterior2 = @factory.linear_ring([point5, point6, point7, point8, point5])
+
+          poly1 = @factory.polygon(exterior1)
+          poly2 = @factory.polygon(exterior2)
+
+          diff1 = poly1.difference(poly2)
+
+          intersection = poly1.intersection(poly2)
+
+          assert(true, diff1.touches?(poly2))
+          assert(true, diff1.touches?(intersection))
+
+          int_line = @factory.line_string([point5, point8])
+
+          assert_equal(diff1.intersection(poly2), int_line)
+          assert_equal(diff1.intersection(intersection), int_line)
+        end
+
+        # def test_touches
+        #   point1 = @factory.point(0, 0)
+        #   point2 = @factory.point(1, 0)
+        #   point3 = @factory.point(1, 1)
+        #   point4 = @factory.point(0, 1)
+        #   point5 = @factory.point(2, 0)
+        #   point6 = @factory.point(2, 1)
+
+        #   exterior1 = @factory.linear_ring([point1, point2, point3, point4, point1])
+        #   exterior2 = @factory.linear_ring([point2, point5, point6, point3, point2])
+
+        #   poly1 = @factory.polygon(exterior1)
+        #   poly2 = @factory.polygon(exterior2)
+
+        #   assert_equal(true, poly1.touches?(poly2))
+        # end
       end
     end
   end
