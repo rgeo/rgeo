@@ -1,3 +1,7 @@
+### Current
+
+* Change `ProjectedLinearRing#is_simple?` method to be uniform across geos versions #228
+
 ### 2.3.1 / 2021-11-30
 
 * Fix core dump when cast returns a non Geos object #261
@@ -18,7 +22,6 @@
 * Add a simple fallback for `Polygon#contains?` (Quiwin) #224
 * Add `ccw?` method for linear rings, with geos support #229
 * Add a simple fallback for `MultiPolygon/LineString#contains?` (Quiwin) #230 #232
-
 ### 2.1.1 / 2019-8-26
 
 * Fix BasicPolygonMethods#boundary #206 (ans82)
