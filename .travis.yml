@@ -1,11 +1,67 @@
-dist: trusty
+language: ruby
+
+os:
+  - linux
+dist: xenial
+
 addons:
   apt:
     packages:
-      - libgeos-3.4.2
-language: ruby
+    - libgeos-dev
+    - libgeos-3.5.0
+
+jobs:
+  include:
+    - os: linux
+      dist: trusty
+      addons:
+        apt:
+          packages:
+          - libgeos-dev
+          - libgeos-3.4.2
+
+    - os: linux
+      dist: xenial
+      addons:
+        apt:
+          packages:
+          - libgeos-dev
+          - libgeos-3.5.0
+
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          packages:
+          - libgeos-dev
+          - libgeos-3.6.2
+
+    - os: linux
+      dist: eoan
+      addons:
+        apt:
+          packages:
+          - libgeos-dev
+          - libgeos-3.7.2
+
+    - os: linux
+      dist: focal
+      addons:
+        apt:
+          packages:
+          - libgeos-dev
+          - libgeos-3.8.0
+
+    - os: osx
+      addons:
+        homebrew:
+          packages:
+          - geos
+          update: true
+
 rvm:
+  - 2.7
   - 2.6
   - 2.5
   - 2.4
-  - jruby-9.2.6.0
+  - jruby-9.2.13.0
