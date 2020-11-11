@@ -3,6 +3,7 @@
 * Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
 * Expand gemspec
 * Drop Ruby 2.3 support
+* Change ProjectedLinearRing #is_simple? method to be uniform across geos versions #228
 
 ### 2.1.1 / 2019-8-26
 

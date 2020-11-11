@@ -16,7 +16,7 @@ class MercatorPolygonTest < Minitest::Test # :nodoc:
   end
 
   def test_is_simple_validation_behavior
-    # issue 218
+    # See https://github.com/rgeo/rgeo/issues/218
     assert_raises RGeo::Error::InvalidGeometry do
       wkt = "POLYGON((0 0, 1 1, 1 0, 0 1, 0 0))"
       @factory.parse_wkt(wkt)
