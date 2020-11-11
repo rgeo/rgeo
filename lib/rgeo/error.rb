@@ -14,6 +14,10 @@ module RGeo
     class RGeoError < RuntimeError
     end
 
+    # RGeo error specific to the GEOS implementation.
+    class GeosError < RGeoError
+    end
+
     # The specified geometry is invalid
     class InvalidGeometry < RGeoError
     end

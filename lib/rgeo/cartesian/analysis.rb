@@ -13,6 +13,20 @@ module RGeo
 
     module Analysis
       class << self
+        # Check orientation of a ring, returns `true` if it is counter-clockwise
+        # and false otherwise.
+        #
+        # If the factory used is GEOS based, use the GEOS implementation to
+        # check that. Otherwise, this methods falls back to `ring_direction`.
+        def ccw?(ring)
+          if RGeo::Geos.is_capi_geos?(ring)
+            RGeo::Geos::Analysis.ccw?(ring)
+          else
+            RGeo::Cartesian::Analysis.ring_direction(ring) == 1
+          end
+        end
+        alias counter_clockwise? ccw?
+
         # Given a LineString, which must be a ring, determine whether the
         # ring proceeds clockwise or counterclockwise.
         # Returns 1 for counterclockwise, or -1 for clockwise.

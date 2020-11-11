@@ -6,79 +6,165 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "test_helper"
 
 class CartesianAnalysisTest < Minitest::Test # :nodoc:
-  def setup
-    @factory = RGeo::Cartesian.simple_factory
+  class Fixtures
+    def initialize(factory)
+      @factory = factory
+    end
+
+    def clockwise_triangle
+      p1 = @factory.point(1, 1)
+      p2 = @factory.point(2, 4)
+      p3 = @factory.point(5, 2)
+      @factory.line_string([p1, p2, p3, p1])
+    end
+
+    def counterclockwise_triangle
+      p1 = @factory.point(1, 1)
+      p2 = @factory.point(2, 4)
+      p3 = @factory.point(5, 2)
+      @factory.line_string([p1, p3, p2, p1])
+    end
+
+    def clockwise_puckered_quad
+      p1 = @factory.point(1, 1)
+      p2 = @factory.point(2, 6)
+      p3 = @factory.point(3, 3)
+      p4 = @factory.point(5, 2)
+      @factory.line_string([p1, p2, p3, p4, p1])
+    end
+
+    def counterclockwise_puckered_quad
+      p1 = @factory.point(1, 1)
+      p2 = @factory.point(2, 6)
+      p3 = @factory.point(3, 3)
+      p4 = @factory.point(5, 2)
+      @factory.line_string([p1, p4, p3, p2, p1])
+    end
+
+    def clockwise_hat
+      p1 = @factory.point(1, 2)
+      p2 = @factory.point(2, 3)
+      p3 = @factory.point(3, 2)
+      p4 = @factory.point(2, 1)
+      p5 = @factory.point(2, 0)
+      p6 = @factory.point(0, 2)
+      @factory.line_string([p1, p2, p3, p4, p5, p6, p1])
+    end
+
+    def counterclockwise_hat
+      p1 = @factory.point(2, 1)
+      p2 = @factory.point(3, 2)
+      p3 = @factory.point(2, 3)
+      p4 = @factory.point(1, 2)
+      p5 = @factory.point(0, 2)
+      p6 = @factory.point(2, 0)
+      @factory.line_string([p1, p2, p3, p4, p5, p6, p1])
+    end
+
+    def counterclockwise_near_circle
+      p1 = @factory.point(0, -3)
+      p2 = @factory.point(2, -2)
+      p3 = @factory.point(3, 0)
+      p4 = @factory.point(2, 2)
+      p5 = @factory.point(0, 3)
+      p6 = @factory.point(-2, 2)
+      p7 = @factory.point(-3, 0)
+      p8 = @factory.point(-2, -2)
+      @factory.line_string([p1, p2, p3, p4, p5, p6, p7, p8, p1])
+    end
   end
 
+  def setup
+    @fixtures = Fixtures.new(RGeo::Cartesian.simple_factory)
+    @cfixtures = Fixtures.new(RGeo::Geos.factory) if RGeo::Geos.supported?
+  end
+
+  # --------------------------------------------- RGeo::Cartesian::Analysis.ccw?
+
+  def test_ccw_p_clockwise_triangle
+    ring = @cfixtures.clockwise_triangle
+    assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
+    ring = @fixtures.clockwise_triangle
+    assert_equal(
+      false,
+      RGeo::Cartesian::Analysis.ccw?(ring),
+      "falls back to ring_direction"
+    )
+  end
+
+  def test_ccw_p_counterclockwise_triangle
+    ring = @cfixtures.counterclockwise_triangle
+    assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
+    ring = @fixtures.counterclockwise_triangle
+    assert_equal(
+      true,
+      RGeo::Cartesian::Analysis.ccw?(ring),
+      "falls back to ring_direction"
+    )
+  end
+
+  def test_ccw_p_clockwise_puckered_quad
+    ring = @cfixtures.clockwise_puckered_quad
+    assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
+  end
+
+  def test_ccw_p_counterclockwise_puckered_quad
+    ring = @cfixtures.counterclockwise_puckered_quad
+    assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
+  end
+
+  def test_ccw_p_clockwise_hat
+    ring = @cfixtures.clockwise_hat
+    assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
+  end
+
+  def test_ccw_p_counterclockwise_hat
+    ring = @cfixtures.counterclockwise_hat
+    assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
+  end
+
+  def test_ccw_p_counterclockwise_near_circle
+    ring = @cfixtures.counterclockwise_near_circle
+    assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
+  end
+
+  # ----------------------------------- RGeo::Cartesian::Analysis.ring_direction
+
   def test_ring_direction_clockwise_triangle
-    p1 = @factory.point(1, 1)
-    p2 = @factory.point(2, 4)
-    p3 = @factory.point(5, 2)
-    ring = @factory.line_string([p1, p2, p3, p1])
+    ring = @fixtures.clockwise_triangle
     assert_equal(-1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
   def test_ring_direction_counterclockwise_triangle
-    p1 = @factory.point(1, 1)
-    p2 = @factory.point(2, 4)
-    p3 = @factory.point(5, 2)
-    ring = @factory.line_string([p1, p3, p2, p1])
+    ring = @fixtures.counterclockwise_triangle
     assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
   def test_ring_direction_clockwise_puckered_quad
-    p1 = @factory.point(1, 1)
-    p2 = @factory.point(2, 6)
-    p3 = @factory.point(3, 3)
-    p4 = @factory.point(5, 2)
-    ring = @factory.line_string([p1, p2, p3, p4, p1])
+    ring = @fixtures.clockwise_puckered_quad
     assert_equal(-1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
   def test_ring_direction_counterclockwise_puckered_quad
-    p1 = @factory.point(1, 1)
-    p2 = @factory.point(2, 6)
-    p3 = @factory.point(3, 3)
-    p4 = @factory.point(5, 2)
-    ring = @factory.line_string([p1, p4, p3, p2, p1])
+    ring = @fixtures.counterclockwise_puckered_quad
     assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
   def test_ring_direction_clockwise_hat
-    p1 = @factory.point(1, 2)
-    p2 = @factory.point(2, 3)
-    p3 = @factory.point(3, 2)
-    p4 = @factory.point(2, 1)
-    p5 = @factory.point(2, 0)
-    p6 = @factory.point(0, 2)
-    ring = @factory.line_string([p1, p2, p3, p4, p5, p6, p1])
+    ring = @fixtures.clockwise_hat
     assert_equal(-1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
   def test_ring_direction_counterclockwise_hat
-    p1 = @factory.point(2, 1)
-    p2 = @factory.point(3, 2)
-    p3 = @factory.point(2, 3)
-    p4 = @factory.point(1, 2)
-    p5 = @factory.point(0, 2)
-    p6 = @factory.point(2, 0)
-    ring = @factory.line_string([p1, p2, p3, p4, p5, p6, p1])
+    ring = @fixtures.counterclockwise_hat
     assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 
   def test_ring_direction_counterclockwise_near_circle
-    p1 = @factory.point(0, -3)
-    p2 = @factory.point(2, -2)
-    p3 = @factory.point(3, 0)
-    p4 = @factory.point(2, 2)
-    p5 = @factory.point(0, 3)
-    p6 = @factory.point(-2, 2)
-    p7 = @factory.point(-3, 0)
-    p8 = @factory.point(-2, -2)
-    ring = @factory.line_string([p1, p2, p3, p4, p5, p6, p7, p8, p1])
+    ring = @fixtures.counterclockwise_near_circle
     assert_equal(1, RGeo::Cartesian::Analysis.ring_direction(ring))
   end
 end
