@@ -18,13 +18,13 @@
 # See the various class methods of Geographic for more information on
 # the behaviors of the factories they generate.
 
-require "rgeo/geographic/factory"
-require "rgeo/geographic/projected_window"
-require "rgeo/geographic/interface"
-require "rgeo/geographic/spherical_math"
-require "rgeo/geographic/spherical_feature_methods"
-require "rgeo/geographic/spherical_feature_classes"
-require "rgeo/geographic/proj4_projector"
-require "rgeo/geographic/simple_mercator_projector"
-require "rgeo/geographic/projected_feature_methods"
-require "rgeo/geographic/projected_feature_classes"
+require_relative "geographic/factory"
+require_relative "geographic/projected_window"
+require_relative "geographic/interface"
+require_relative "geographic/spherical_math"
+require_relative "geographic/spherical_feature_methods"
+require_relative "geographic/spherical_feature_classes"
+require_relative "geographic/proj4_projector"
+require_relative "geographic/simple_mercator_projector"
+require_relative "geographic/projected_feature_methods"
+require_relative "geographic/projected_feature_classes"
