@@ -19,7 +19,7 @@ module RGeo
         # If the factory used is GEOS based, use the GEOS implementation to
         # check that. Otherwise, this methods falls back to `ring_direction`.
         def ccw?(ring)
-          if RGeo::Geos.is_capi_geos?(ring)
+          if RGeo::Geos.is_capi_geos?(ring) && RGeo::Geos::Analysis.ccw_supported?
             RGeo::Geos::Analysis.ccw?(ring)
           else
             RGeo::Cartesian::Analysis.ring_direction(ring) == 1

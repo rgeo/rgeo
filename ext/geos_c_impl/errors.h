@@ -8,7 +8,7 @@
 
 RGEO_BEGIN_C
 
-// Anay error relative to RGeo.
+// Any error relative to RGeo.
 extern VALUE rgeo_error;
 // RGeo error specific to the GEOS implementation.
 extern VALUE geos_error;

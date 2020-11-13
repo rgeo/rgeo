@@ -3,12 +3,14 @@
 require_relative "../test_helper"
 
 module GeosCapi
-  class AnalysisTest < Minitest::Test
+  class AnalysisTest < CartesianAnalysisTest
     def setup
       skip "Needs GEOS." unless RGeo::Geos.capi_supported?
+      @fixtures = Fixtures.new(RGeo::Geos.factory)
     end
 
     def test_ccw_p_raises_if_not_a_geos_object
+      skip "Needs GEOS 3.7+" unless RGeo::Geos::Analysis.ccw_supported?
       factory = RGeo::Cartesian.simple_factory
       pt1 = factory.point(1, 0)
       pt2 = factory.point(2, 0)
@@ -18,12 +20,14 @@ module GeosCapi
     end
 
     def test_ccw_p_raises_if_no_coordseq
+      skip "Needs GEOS 3.7+" unless RGeo::Geos::Analysis.ccw_supported?
       factory = RGeo::Geos.factory(native_interface: :capi)
       point = factory.point(1, 2)
       assert_raises(RGeo::Error::GeosError) { RGeo::Geos::Analysis.ccw?(point) }
     end
 
     def test_ccw_p_returns_true_if_ccw
+      skip "Needs GEOS 3.7+" unless RGeo::Geos::Analysis.ccw_supported?
       factory = RGeo::Geos.factory(native_interface: :capi)
       pt1 = factory.point(1, 0)
       pt2 = factory.point(2, 0)
@@ -34,5 +38,14 @@ module GeosCapi
       assert_equal(false, RGeo::Geos::Analysis.ccw?(ring_cw))
       assert_equal(true, RGeo::Geos::Analysis.ccw?(ring_ccw))
     end
+
+    # no need to re-test the ruby implementation
+    undef :test_ring_direction_clockwise_triangle
+    undef :test_ring_direction_counterclockwise_triangle
+    undef :test_ring_direction_clockwise_puckered_quad
+    undef :test_ring_direction_counterclockwise_puckered_quad
+    undef :test_ring_direction_clockwise_hat
+    undef :test_ring_direction_counterclockwise_hat
+    undef :test_ring_direction_counterclockwise_near_circle
   end
 end

@@ -79,14 +79,11 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
 
   def setup
     @fixtures = Fixtures.new(RGeo::Cartesian.simple_factory)
-    @cfixtures = Fixtures.new(RGeo::Geos.factory) if RGeo::Geos.supported?
   end
 
   # --------------------------------------------- RGeo::Cartesian::Analysis.ccw?
 
   def test_ccw_p_clockwise_triangle
-    ring = @cfixtures.clockwise_triangle
-    assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
     ring = @fixtures.clockwise_triangle
     assert_equal(
       false,
@@ -96,8 +93,6 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
   end
 
   def test_ccw_p_counterclockwise_triangle
-    ring = @cfixtures.counterclockwise_triangle
-    assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
     ring = @fixtures.counterclockwise_triangle
     assert_equal(
       true,
@@ -107,27 +102,27 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
   end
 
   def test_ccw_p_clockwise_puckered_quad
-    ring = @cfixtures.clockwise_puckered_quad
+    ring = @fixtures.clockwise_puckered_quad
     assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
   end
 
   def test_ccw_p_counterclockwise_puckered_quad
-    ring = @cfixtures.counterclockwise_puckered_quad
+    ring = @fixtures.counterclockwise_puckered_quad
     assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
   end
 
   def test_ccw_p_clockwise_hat
-    ring = @cfixtures.clockwise_hat
+    ring = @fixtures.clockwise_hat
     assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
   end
 
   def test_ccw_p_counterclockwise_hat
-    ring = @cfixtures.counterclockwise_hat
+    ring = @fixtures.counterclockwise_hat
     assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
   end
 
   def test_ccw_p_counterclockwise_near_circle
-    ring = @cfixtures.counterclockwise_near_circle
+    ring = @fixtures.counterclockwise_near_circle
     assert_equal(true, RGeo::Cartesian::Analysis.ccw?(ring))
   end
 

@@ -24,9 +24,11 @@ RGEO_BEGIN_C
  */
 VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
 {
+  char is_ccw = 0;
+  #ifdef RGEO_GEOS_SUPPORTS_ISCCW
+
   const RGeo_GeometryData* ring_data;
   const GEOSCoordSequence* coord_seq;
-  char is_ccw;
 
   rgeo_check_geos_object(ring);
 
@@ -37,9 +39,19 @@ VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
   if (!GEOSCoordSeq_isCCW_r(ring_data->geos_context, coord_seq, &is_ccw)) {
     rb_raise(geos_error, "Could not determine if the CoordSeq is CCW.");
   }
+  #endif // RGEO_GEOS_SUPPORTS_ISCCW
 
   return is_ccw ? Qtrue : Qfalse;
 };
+
+static VALUE rgeo_geos_analysis_supports_ccw(VALUE self)
+{
+  #ifdef RGEO_GEOS_SUPPORTS_ISCCW
+    return Qtrue;
+  #else
+    return Qfalse;
+  #endif
+}
 
 
 void rgeo_init_geos_analysis(RGeo_Globals* globals)
@@ -48,6 +60,7 @@ void rgeo_init_geos_analysis(RGeo_Globals* globals)
 
   geos_analysis_module = rb_define_module_under(globals->geos_module, "Analysis");
   rb_define_singleton_method(geos_analysis_module, "ccw?", rgeo_geos_analysis_ccw_p, 1);
+  rb_define_singleton_method(geos_analysis_module, "ccw_supported?", rgeo_geos_analysis_supports_ccw, 0);
 }
 
 RGEO_END_C

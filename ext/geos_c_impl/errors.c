@@ -12,7 +12,7 @@
 
 RGEO_BEGIN_C
 
-// Anay error relative to RGeo.
+// Any error relative to RGeo.
 VALUE rgeo_error;
 // RGeo error specific to the GEOS implementation.
 VALUE geos_error;
