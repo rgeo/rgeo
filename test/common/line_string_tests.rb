@@ -341,6 +341,17 @@ module RGeo
           assert_equal(true, line_string.contains?(@factory.point(0.5, 1)))
           assert_equal(false, line_string.contains?(@factory.point(-1, -1)))
         end
+
+        def test_linear_ring_ccw
+          point1 = @factory.point(1, 1)
+          point2 = @factory.point(2, 0)
+          point3 = @factory.point(0, 0)
+          cw_ring = @factory.linear_ring([point1, point2, point3, point1])
+          ccw_ring = @factory.linear_ring([point3, point2, point1, point3])
+
+          assert_equal(false, cw_ring.ccw?)
+          assert_equal(true, ccw_ring.ccw?)
+        end
       end
     end
   end

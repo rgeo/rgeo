@@ -22,13 +22,13 @@ RGEO_BEGIN_C
  * Checks direction for a ring, returns +true+ if counter-clockwise, +false+
  * otherwise.
  */
+#ifdef RGEO_GEOS_SUPPORTS_ISCCW
 VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
 {
-  char is_ccw = 0;
-  #ifdef RGEO_GEOS_SUPPORTS_ISCCW
 
   const RGeo_GeometryData* ring_data;
   const GEOSCoordSequence* coord_seq;
+  char is_ccw;
 
   rgeo_check_geos_object(ring);
 
@@ -39,12 +39,20 @@ VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
   if (!GEOSCoordSeq_isCCW_r(ring_data->geos_context, coord_seq, &is_ccw)) {
     rb_raise(geos_error, "Could not determine if the CoordSeq is CCW.");
   }
-  #endif // RGEO_GEOS_SUPPORTS_ISCCW
 
   return is_ccw ? Qtrue : Qfalse;
 };
+#endif // RGEO_GEOS_SUPPORTS_ISCCW
 
-static VALUE rgeo_geos_analysis_supports_ccw(VALUE self)
+
+/**
+ * call-seq:
+ *   RGeo::Geos::Analysis.ccw_supported? -> true or false 
+ * 
+ * Checks if the RGEO_GEOS_SUPPORTS_ISCCW macro is defined, returns +true+
+ * if it is, +false+ otherwise
+ */
+VALUE rgeo_geos_analysis_supports_ccw(VALUE self)
 {
   #ifdef RGEO_GEOS_SUPPORTS_ISCCW
     return Qtrue;
@@ -59,8 +67,10 @@ void rgeo_init_geos_analysis(RGeo_Globals* globals)
   VALUE geos_analysis_module;
 
   geos_analysis_module = rb_define_module_under(globals->geos_module, "Analysis");
-  rb_define_singleton_method(geos_analysis_module, "ccw?", rgeo_geos_analysis_ccw_p, 1);
   rb_define_singleton_method(geos_analysis_module, "ccw_supported?", rgeo_geos_analysis_supports_ccw, 0);
+  #ifdef RGEO_GEOS_SUPPORTS_ISCCW
+  rb_define_singleton_method(geos_analysis_module, "ccw?", rgeo_geos_analysis_ccw_p, 1);
+  #endif // RGEO_GEOS_SUPPORTS_ISCCW
 }
 
 RGEO_END_C

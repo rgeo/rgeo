@@ -89,14 +89,12 @@ module RGeo
 
       def contains?(rhs)
         if Feature::Point === rhs
-          return contains_point?(rhs)
+          contains_point?(rhs)
         else
           raise(Error::UnsupportedOperation,
-            "Method LineString#contains? is only defined for Point"
-          )
+                "Method LineString#contains? is only defined for Point")
         end
       end
-
 
       private
 
@@ -172,6 +170,10 @@ module RGeo
     module BasicLinearRingMethods # :nodoc:
       def geometry_type
         Feature::LinearRing
+      end
+
+      def ccw?
+        RGeo::Cartesian::Analysis.ccw?(self)
       end
 
       private
