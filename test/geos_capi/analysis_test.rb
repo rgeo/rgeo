@@ -40,12 +40,6 @@ module GeosCapi
     end
 
     # no need to re-test the ruby implementation
-    undef :test_ring_direction_clockwise_triangle
-    undef :test_ring_direction_counterclockwise_triangle
-    undef :test_ring_direction_clockwise_puckered_quad
-    undef :test_ring_direction_counterclockwise_puckered_quad
-    undef :test_ring_direction_clockwise_hat
-    undef :test_ring_direction_counterclockwise_hat
-    undef :test_ring_direction_counterclockwise_near_circle
+    methods.grep(/\Atest_ring_direction/).each { |meth| undef_method meth }
   end
 end

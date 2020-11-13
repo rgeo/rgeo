@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.4.0"
   spec.license = "BSD-3-Clause"
 
-  spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
+  spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt", "README.md"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
   spec.add_development_dependency "ffi-geos", "~> 1.2"

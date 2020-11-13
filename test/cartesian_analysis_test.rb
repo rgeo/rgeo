@@ -14,6 +14,13 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
       @factory = factory
     end
 
+    def line
+      p1 = @factory.point(1, 1)
+      p2 = @factory.point(2, 1)
+      p3 = @factory.point(5, 1)
+      @factory.line_string([p1, p2, p3, p1])
+    end
+
     def clockwise_triangle
       p1 = @factory.point(1, 1)
       p2 = @factory.point(2, 4)
@@ -83,6 +90,11 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
 
   # --------------------------------------------- RGeo::Cartesian::Analysis.ccw?
 
+  def test_ccw_p_line
+    ring = @fixtures.line
+    assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
+  end
+
   def test_ccw_p_clockwise_triangle
     ring = @fixtures.clockwise_triangle
     assert_equal(
@@ -127,6 +139,11 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
   end
 
   # ----------------------------------- RGeo::Cartesian::Analysis.ring_direction
+
+  def test_ring_direction_line
+    ring = @fixtures.line
+    assert_equal(0, RGeo::Cartesian::Analysis.ring_direction(ring))
+  end
 
   def test_ring_direction_clockwise_triangle
     ring = @fixtures.clockwise_triangle
