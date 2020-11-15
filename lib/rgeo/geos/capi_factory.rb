@@ -137,16 +137,17 @@ module RGeo
 
       def marshal_dump # :nodoc:
         hash_ = {
-          "hasz" => (_flags & 0x2 != 0),
-          "hasm" => (_flags & 0x4 != 0),
+          "hasz" => supports_z?,
+          "hasm" => supports_m?,
           "srid" => _srid,
           "bufr" => _buffer_resolution,
           "wktg" => _wkt_generator ? _wkt_generator.properties : {},
           "wkbg" => _wkb_generator ? _wkb_generator.properties : {},
           "wktp" => _wkt_parser ? _wkt_parser.properties : {},
           "wkbp" => _wkb_parser ? _wkb_parser.properties : {},
-          "lmpa" => (_flags & 0x1 != 0),
-          "apre" => ((_flags & 0x8) >> 3)
+          "lmpa" => lenient_multi_polygon_assertions?,
+          "la" => lenient_assertions?,
+          "apre" => auto_prepare
         }
         if (proj4_ = _proj4)
           hash_["proj4"] = proj4_.marshal_dump
@@ -179,8 +180,9 @@ module RGeo
             wkb_generator: symbolize_hash(data_["wkbg"]),
             wkt_parser: symbolize_hash(data_["wktp"]),
             wkb_parser: symbolize_hash(data_["wkbp"]),
+            uses_lenient_assertions: data_["la"],
             uses_lenient_multi_polygon_assertions: data_["lmpa"],
-            auto_prepare: (data_["apre"] == 0 ? :disabled : :simple),
+            auto_prepare: data_["apre"],
             proj4: proj4_,
             coord_sys: coord_sys_
           )
@@ -190,16 +192,16 @@ module RGeo
       # Psych support
 
       def encode_with(coder_) # :nodoc:
-        coder_["has_z_coordinate"] = (_flags & 0x2 != 0)
-        coder_["has_m_coordinate"] = (_flags & 0x4 != 0)
+        coder_["has_z_coordinate"] = supports_z?
+        coder_["has_m_coordinate"] = supports_m?
         coder_["srid"] = _srid
         coder_["buffer_resolution"] = _buffer_resolution
-        coder_["lenient_multi_polygon_assertions"] = (_flags & 0x1 != 0)
+        coder_["lenient_multi_polygon_assertions"] = lenient_multi_polygon_assertions?
         coder_["wkt_generator"] = _wkt_generator ? _wkt_generator.properties : {}
         coder_["wkb_generator"] = _wkb_generator ? _wkb_generator.properties : {}
         coder_["wkt_parser"] = _wkt_parser ? _wkt_parser.properties : {}
         coder_["wkb_parser"] = _wkb_parser ? _wkb_parser.properties : {}
-        coder_["auto_prepare"] = ((_flags & 0x8) == 0 ? "disabled" : "simple")
+        coder_["auto_prepare"] = auto_prepare
         if (proj4_ = _proj4)
           str_ = proj4_.original_str || proj4_.canonical_str
           coder_["proj4"] = proj4_.radians? ? { "proj4" => str_, "radians" => true } : str_
@@ -256,28 +258,21 @@ module RGeo
         _buffer_resolution
       end
 
-      # Returns true if this factory is lenient with MultiPolygon assertions
-
-      def lenient_multi_polygon_assertions?
-        _flags & 0x1 != 0
-      end
-
       # See RGeo::Feature::Factory#property
-
       def property(name_)
         case name_
         when :has_z_coordinate
-          _flags & 0x2 != 0
+          supports_z?
         when :has_m_coordinate
-          _flags & 0x4 != 0
+          supports_m?
         when :is_cartesian
           true
         when :uses_lenient_multi_polygon_assertions
-          _flags & 0x1 != 0
+          lenient_multi_polygon_assertions?
         when :buffer_resolution
           _buffer_resolution
         when :auto_prepare
-          _flags & 0x8 != 0 ? :simple : :disabled
+          prepare_heuristic? ? :simple : :disabled
         end
       end
 
@@ -307,11 +302,11 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_, y_, *extra_)
-        if extra_.length > (_flags & 6 == 0 ? 0 : 1)
+      def point(x, y, *extra)
+        if extra.length > (supports_z_or_m? ? 1 : 0)
           raise(RGeo::Error::InvalidGeometry, "Parse error")
         else
-          CAPIPointImpl.create(self, x_, y_, extra_[0].to_f)
+          CAPIPointImpl.create(self, x, y, extra[0].to_f)
         end
       end
 
@@ -398,7 +393,7 @@ module RGeo
           # Optimization if we're just changing factories, but the
           # factories are zm-compatible and proj4-compatible.
           if original.factory != self && ntype == type &&
-              original.factory._flags & 0x6 == _flags & 0x6 &&
+              original.factory._flags & FLAG_SUPPORTS_Z_OR_M == _flags & FLAG_SUPPORTS_Z_OR_M &&
               (!project || original.factory.proj4 == _proj4)
             result = original.dup
             result.factory = self
@@ -406,7 +401,7 @@ module RGeo
           end
           # LineString conversion optimization.
           if (original.factory != self || ntype != type) &&
-              original.factory._flags & 0x6 == _flags & 0x6 &&
+              original.factory._flags & FLAG_SUPPORTS_Z_OR_M == _flags & FLAG_SUPPORTS_Z_OR_M &&
               (!project || original.factory.proj4 == _proj4) &&
               type.subtype_of?(Feature::LineString) && ntype.subtype_of?(Feature::LineString)
             return IMPL_CLASSES[ntype]._copy_from(self, original)
@@ -414,14 +409,20 @@ module RGeo
         when ZMGeometryMethods
           # Optimization for just removing a coordinate from an otherwise
           # compatible factory
-          if _flags & 0x6 == 0x2 && self == original.factory.z_factory
+          if supports_z? && !supports_m? && self == original.factory.z_factory
             return Feature.cast(original.z_geometry, ntype, flags)
-          elsif _flags & 0x6 == 0x4 && self == original.factory.m_factory
+          elsif supports_m? && !supports_z? && self == original.factory.m_factory
             return Feature.cast(original.m_geometry, ntype, flags)
           end
         end
         false
       end
+
+      def auto_prepare # :nodoc:
+        prepare_heuristic? ? :simple : :disabled
+      end
+
+      alias lenient_multi_polygon_assertions? lenient_multipolygon_assertions?
 
       # :stopdoc:
 

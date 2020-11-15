@@ -82,12 +82,44 @@ typedef struct {
   int buffer_resolution;
 } RGeo_FactoryData;
 
-#define RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON 1
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z 2
-#define RGEO_FACTORYFLAGS_SUPPORTS_M 4
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M 6
-#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC 8
+/*
+  Flags that are used to pass options when creating a factory.
+  They are available in ruby under RGeo::Geos::CAPIFactory::FLAG_name
+  where name is the name below without the RGEO_FACTORYFLAGS_ prefix.
+ */
+#define RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON_ASSERTIONS 0b00001
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z                      0b00010
+#define RGEO_FACTORYFLAGS_SUPPORTS_M                      0b00100
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M                 RGEO_FACTORYFLAGS_SUPPORTS_Z | RGEO_FACTORYFLAGS_SUPPORTS_M
+#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC               0b01000
+#define RGEO_FACTORYFLAGS_LENIENT_ASSERTIONS              0b10000
 
+
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.lenient_multipolygon_assertions? -> true or false
+ */
+VALUE method_factory_lenient_multipolygon_assertions_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.supports_z? -> true or false
+ */
+VALUE method_factory_supports_z_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.supports_m? -> true or false
+ */
+VALUE method_factory_supports_m_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.supports_z_or_m? -> true or false
+ */
+VALUE method_factory_supports_z_or_m_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.prepare_heuristic? -> true or false
+ */
+VALUE method_factory_prepare_heuristic_p(VALUE self);
 
 /*
   Wrapped structure for Geometry objects.
