@@ -18,6 +18,14 @@ module RGeo
         #
         # If the factory used is GEOS based, use the GEOS implementation to
         # check that. Otherwise, this methods falls back to `ring_direction`.
+        #
+        # == Note
+        #
+        # This method does not ensure a correct result for an invalid geometry.
+        # You should make sure your ring is valid beforehand using `is_ring?`
+        # if you are using a LineString, or directly `valid?` for a
+        # `linear_ring?`.
+        # This will be subject to changes in v3.
         def ccw?(ring)
           if RGeo::Geos.is_capi_geos?(ring) && RGeo::Geos::Analysis.ccw_supported?
             RGeo::Geos::Analysis.ccw?(ring)
