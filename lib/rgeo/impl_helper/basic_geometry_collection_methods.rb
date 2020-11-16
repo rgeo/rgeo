@@ -177,6 +177,12 @@ module RGeo
       def coordinates
         @elements.map(&:coordinates)
       end
+
+      def contains?(rhs)
+        return super unless Feature::Point === rhs
+
+        @elements.any? { |poly| poly.contains?(rhs) }
+      end
     end
   end
 end
