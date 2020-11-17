@@ -90,11 +90,6 @@ class CartesianAnalysisTest < Minitest::Test # :nodoc:
 
   # --------------------------------------------- RGeo::Cartesian::Analysis.ccw?
 
-  def test_ccw_p_line
-    ring = @fixtures.line
-    assert_equal(false, RGeo::Cartesian::Analysis.ccw?(ring))
-  end
-
   def test_ccw_p_clockwise_triangle
     ring = @fixtures.clockwise_triangle
     assert_equal(
