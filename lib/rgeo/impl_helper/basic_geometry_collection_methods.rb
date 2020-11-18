@@ -114,6 +114,12 @@ module RGeo
         @elements.map(&:coordinates)
       end
 
+      def contains?(rhs)
+        return super unless Feature::Point === rhs
+
+        @elements.any? { |line| line.contains?(rhs) }
+      end
+
       private
 
       def add_boundary(hash, point)

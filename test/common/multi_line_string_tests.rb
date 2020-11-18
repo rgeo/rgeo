@@ -178,6 +178,12 @@ module RGeo
           ml = @factory.multi_line_string([@linestring1, @linestring2])
           assert_equal(ml.point_on_surface, @factory.point(-7, 6))
         end
+
+        def test_contains_point
+          ml = @factory.multi_line_string([@linestring1, @linestring2])
+          pt = @factory.point(-7, 6) # point4
+          assert_equal(true, ml.contains?(pt))
+        end
       end
     end
   end
