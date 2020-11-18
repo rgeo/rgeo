@@ -200,7 +200,7 @@ module RGeo
           parsed_coordinates.zip(boundary_coordinates).each do |parsed_line, boundary_line|
             parsed_line.zip(boundary_line).each do |p_coord, b_coord|
               p_coord.zip(b_coord).each do |p_val, b_val|
-                assert_in_delta(p_val, b_val, 0.00000000000001)
+                assert_in_delta(p_val, b_val, 1e-13)
               end
             end
           end

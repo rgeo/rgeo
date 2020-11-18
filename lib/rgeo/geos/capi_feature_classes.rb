@@ -72,6 +72,10 @@ module RGeo
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILinearRingMethods
+
+      def ccw?
+        RGeo::Cartesian::Analysis.ccw?(self)
+      end
     end
 
     class CAPILineImpl # :nodoc:

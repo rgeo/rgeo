@@ -393,6 +393,10 @@ module RGeo
       def geometry_type
         Feature::LinearRing
       end
+
+      def ccw?
+        RGeo::Cartesian::Analysis.ccw?(self)
+      end
     end
 
     module FFILineMethods # :nodoc:

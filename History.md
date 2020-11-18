@@ -2,6 +2,8 @@
 * Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
 * Expand gemspec
 * Drop Ruby 2.3 support
+* Add a simple fallback for `Polygon#contains?` (Quiwin) #224
+* Add `ccw?` method for linear rings, with geos support #229
 
 ### 2.1.1 / 2019-8-26
 

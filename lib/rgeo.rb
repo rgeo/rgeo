@@ -75,12 +75,12 @@
 #   database, and based on the postgresql adapter. Available as the
 #   activerecord-postgis-adapter gem.
 
-require "rgeo/version"
-require "rgeo/error"
-require "rgeo/feature"
-require "rgeo/coord_sys"
-require "rgeo/impl_helper"
-require "rgeo/wkrep"
-require "rgeo/geos"
-require "rgeo/cartesian"
-require "rgeo/geographic"
+require_relative "rgeo/version"
+require_relative "rgeo/error"
+require_relative "rgeo/feature"
+require_relative "rgeo/coord_sys"
+require_relative "rgeo/impl_helper"
+require_relative "rgeo/wkrep"
+require_relative "rgeo/geos"
+require_relative "rgeo/cartesian"
+require_relative "rgeo/geographic"
