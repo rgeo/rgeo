@@ -1,4 +1,4 @@
-### Current
+### 2.2.0 / 2020-11-18
 
 * Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
 * Expand gemspec
