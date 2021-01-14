@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - github_actions
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - ruby-head
+          - 3.0
+          - 2.7
+          - 2.6
+          - 2.5
+          - jruby
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.ruby == 'ruby-head' || matrix.os == 'windows-latest' || matrix.os == 'macos-latest' }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Install Geos (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install libgeos-dev -y
+      - name: Install Geos (Mac)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install geos
+      - name: Install Geos (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          exit 1 # FIXME
+      - run: |
+          bundle exec rake
