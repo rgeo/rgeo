@@ -1,5 +1,3 @@
-# An Introduction to Spatial Programming With RGeo
-
 *   by Daniel Azuma
 *   version 0.4 (23 May 2011)
 
