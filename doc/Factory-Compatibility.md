@@ -1,8 +1,8 @@
-## Factory Compatibility
+# Factory Compatibility
 
 RGeo defines multiple factories that can be used to create geometries, but not all factories implement the same methods. This is important to note because it can help you determine if a certain factory is appropriate for your application.
 
-### Creating the Factories
+## Creating the Factories
 
 There are 7 factories shown in the table which are representative of the different types of factories a user can create with RGeo. The following are included:
 
@@ -18,13 +18,13 @@ There are 7 factories shown in the table which are representative of the differe
 
 For more information about choosing a factory, see the [Choosing a Fatory doc](https://github.com/rgeo/rgeo/wiki/Which-factory-should-I-use%3F-(draft)).
 
-### Tested Methods
+## Tested Methods
 
 The table tests all of the methods defined in the [OGC SFA v1.1](https://www.ogc.org/standards/sfa) for each geometry type. In the case of methods that require another geometry (ex. `LineString#interects?(Polygon)`), all geometry types will be tested as the parameter.
 
 _Note: This list is not exhaustive of all the methods defined by each factory. The geos factory in particular has a good amount of non-standard methods implemented. These can be found in the YARD docs._
 
-### Compatibility Table
+## Compatibility Table
 
 <table>
   <tr>

@@ -1,3 +1,5 @@
+# Which factory should I use?
+
 ## What is a factory?
 
 When doing geometric computations, you need to consider not only the shapes that you're working with but also what domain the geometries exist in. For example, you could be working on an infinite 2D or 3D cartesian space, a spherical model of the earth, or a projection of the earth onto a bounded plane. For geometries to be compared with each other, they have to exist in the same domain, so they must all be created with the same "configuration." RGeo uses the [Factory method design pattern][factory_pattern-wikipedia] ([ELI5][factory_pattern-reddit]) to abstract this complexity. Using this OOP pattern, you can just choose the factory you want once, and every object created from it will have the same configuration. For example, if you're coding a standard Rails application, you could define a global factory like this:

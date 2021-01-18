@@ -1,6 +1,8 @@
+# Enable GEOS and Proj4 on Heroku
+
 If you need GEOS and PROJ extensions on Heroku, you need to install those libraries through a buildpack.
 
-### Option 1: Use [heroku-buildpack-apt]
+## Option 1: Use [heroku-buildpack-apt]
 
 **TL;DR**
 
@@ -54,7 +56,7 @@ You can finally deploy to heroku and check if everything is alright!
 
 Ref: http://www.diowa.com/blog/heroku/2017/08/01/using-rgeo-with-geos-on-heroku-with-apt-get
 
-### Option 2: Use [heroku-buildpack-vendorbinaries]
+## Option 2: Use [heroku-buildpack-vendorbinaries]
 
 Apt packages often contain older version of the libraries, so you may be interested in something
 newer or in compiling the master branch by yourself.
@@ -67,7 +69,7 @@ The example provided at [heroku-buildpack-vendorbinaries' readme](https://github
 
 Ref: http://www.diowa.com/blog/heroku/2017/08/01/compile-libraries-on-heroku-with-vesuvius
 
-### Option 3: Use [heroku-geo-buildpack]
+## Option 3: Use [heroku-geo-buildpack]
 
 This is the simplest method, but it also installs `gdal`, which is not used by RGeo. Just install the buildpack as usual and purge your repo if RGeo was already installed.
 
@@ -77,7 +79,7 @@ heroku plugins:install heroku-repo
 heroku repo:purge_cache
 ```
 
-### Check that geos is correctly installed
+## Check that geos is correctly installed
 
 ```bash
 heroku console <<< 'puts "RGeo is configured with Geos !" if RGeo::Geos.capi_supported?;exit'

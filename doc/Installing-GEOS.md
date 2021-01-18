@@ -1,3 +1,5 @@
+# Installing GEOS
+
 The best way to use RGeo is with [GEOS] installed. It is a fairly simple process, and this guide will help you walk through the installation.
 
 ## What is [GEOS]?
@@ -6,7 +8,7 @@ The best way to use RGeo is with [GEOS] installed. It is a fairly simple process
 
 ## Why do I need it, since I use RGeo?
 
-RGeo has implemented a lot of the specs in the [SFS], however, the [GEOS] library has many more features. Moreover, the C extension is much faster than pure Ruby implementations. Here are some benchmarks for reference: 
+RGeo has implemented a lot of the specs in the [SFS], however, the [GEOS] library has many more features. Moreover, the C extension is much faster than pure Ruby implementations. Here are some benchmarks for reference:
 
 ```ruby
 # frozen_string_literal: true
@@ -45,7 +47,9 @@ end
 
 <summary> Result for a MacBook pro 1,4 GHz Quad-Core Intel Core i5 </summary>
 
-```
+
+<!-- Mixing markdown and html syntax renders poorly with yard. -->
+<pre class="code">
 Warming up --------------------------------------
       with CAPI GEOS   567.300k i/100ms
        with FFI GEOS    73.764k i/100ms
@@ -59,7 +63,8 @@ Comparison:
       with CAPI GEOS:  5670783.7 i/s
        with FFI GEOS:   732589.6 i/s - 7.74x  (± 0.00) slower
          simple ruby:      963.7 i/s - 5884.37x  (± 0.00) slower
-```
+</pre>
+
 </details>
 
 ## How do I install GEOS ?

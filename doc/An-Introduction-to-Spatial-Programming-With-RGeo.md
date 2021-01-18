@@ -1,3 +1,5 @@
+# An introduction to Spatial Programming With RGeo
+
 *   by Daniel Azuma
 *   version 0.4 (23 May 2011)
 
@@ -1122,4 +1124,3 @@ towards supporting the next generation of geospatial applications.
 *   Version 0.3 / 17 Feb 2011: Further minor clarifications and fixes, and
     coverage of features in newer RGeo releases
 *   Version 0.4 / 23 May 2011: Minor updates to keep up with new releases
-
