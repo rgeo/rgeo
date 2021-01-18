@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "./lib/rgeo/version"
+require_relative "lib/rgeo/version"
 
 Gem::Specification.new do |spec|
   spec.name = "rgeo"
@@ -14,17 +14,18 @@ Gem::Specification.new do |spec|
     "location-based applications using Ruby-based frameworks such as Ruby On Rails."
 
   spec.version = RGeo::VERSION
-  spec.author = "Daniel Azuma, Tee Parham"
-  spec.email = "dazuma@gmail.com, parhameter@gmail.com"
+  spec.authors = ["Daniel Azuma", "Tee Parham"]
+  spec.email = ["dazuma@gmail.com", "parhameter@gmail.com", "kfdoggett@gmail.com"]
   spec.homepage = "https://github.com/rgeo/rgeo"
-  spec.required_ruby_version = ">= 2.3.0"
+  spec.required_ruby_version = ">= 2.5.0"
+  spec.license = "BSD-3-Clause"
 
-  spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt"]
+  spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt", "README.md"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
   spec.add_development_dependency "ffi-geos", "~> 1.2"
   spec.add_development_dependency "minitest", "~> 5.11"
-  spec.add_development_dependency "rake", "~> 12.0"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rake-compiler", "~> 1.0"
   spec.add_development_dependency "rubocop", "~> 0.51"
 end

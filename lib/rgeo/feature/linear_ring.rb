@@ -23,6 +23,16 @@ module RGeo
     module LinearRing
       include LineString
       extend Type
+
+      # Returns +true+ if the ring is oriented in a counter clockwise direction
+      # otherwise returns +false+.
+      #
+      # == Notes
+      #
+      # Not a standard SFS method for linear rings, but added for convenience.
+      def ccw?
+        raise Error::UnsupportedOperation, "Method LinearRing#ccw? not defined."
+      end
     end
   end
 end

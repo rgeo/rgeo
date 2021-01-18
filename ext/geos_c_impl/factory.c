@@ -16,6 +16,7 @@
 #include "line_string.h"
 #include "polygon.h"
 #include "geometry_collection.h"
+#include "errors.h"
 
 RGEO_BEGIN_C
 
@@ -576,10 +577,11 @@ RGeo_Globals* rgeo_init_geos_factory()
   VALUE wrapped_globals;
   VALUE feature_module;
 
+  rgeo_module = rb_define_module("RGeo");
+
   globals = ALLOC(RGeo_Globals);
 
   // Cache some modules so we don't have to look them up by name every time
-  rgeo_module = rb_define_module("RGeo");
   feature_module = rb_define_module_under(rgeo_module, "Feature");
   globals->feature_module = feature_module;
   globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
@@ -829,6 +831,13 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
 char rgeo_is_geos_object(VALUE obj)
 {
   return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? 1 : 0;
+}
+
+void rgeo_check_geos_object(VALUE obj)
+{
+  if (!rgeo_is_geos_object(obj)) {
+    rb_raise(rgeo_error, "Not a GEOS Geometry object.");
+  }
 }
 
 

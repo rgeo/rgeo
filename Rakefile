@@ -4,10 +4,6 @@ require "rake/testtask"
 require "rake/extensiontask"
 require "bundler/gem_tasks"
 
-gemspec = eval(File.read(Dir.glob("*.gemspec").first))
-release_gemspec = eval(File.read(Dir.glob("*.gemspec").first))
-release_gemspec.version = gemspec.version.to_s.sub(/\.nonrelease$/, "")
-
 # Build tasks
 
 if RUBY_DESCRIPTION.match(/^jruby/)

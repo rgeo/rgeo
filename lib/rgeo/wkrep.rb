@@ -21,7 +21,7 @@
 # To parse a byte string in WKB (well-known binary) format back into a
 # geometry object, use the WKRep::WKBParser class.
 
-require "rgeo/wkrep/wkt_parser"
-require "rgeo/wkrep/wkt_generator"
-require "rgeo/wkrep/wkb_parser"
-require "rgeo/wkrep/wkb_generator"
+require_relative "wkrep/wkt_parser"
+require_relative "wkrep/wkt_generator"
+require_relative "wkrep/wkb_parser"
+require_relative "wkrep/wkb_generator"

@@ -10,7 +10,6 @@
 
 RGEO_BEGIN_C
 
-
 /*
   Per-interpreter globals.
   Most of these are cached references to commonly used classes, modules,
@@ -186,6 +185,11 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
   or 0 if not.
 */
 char rgeo_is_geos_object(VALUE obj);
+
+/*
+  Raises a rgeo error if the object is not a GEOS Geometry implementation.
+*/
+void rgeo_check_geos_object(VALUE obj);
 
 /*
   Gets the underlying GEOS geometry for a given ruby object. Returns NULL

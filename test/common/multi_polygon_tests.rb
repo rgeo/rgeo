@@ -200,10 +200,65 @@ module RGeo
           parsed_coordinates.zip(boundary_coordinates).each do |parsed_line, boundary_line|
             parsed_line.zip(boundary_line).each do |p_coord, b_coord|
               p_coord.zip(b_coord).each do |p_val, b_val|
-                assert_in_delta(p_val, b_val, 0.00000000000001)
+                assert_in_delta(p_val, b_val, 1e-13)
               end
             end
           end
+        end
+
+        def test_contains_point
+          geom1 = @factory.multi_polygon([@poly1, @poly2])
+
+          assert_equal(true, geom1.contains?(@factory.point(9, 9)))
+          assert_equal(false, geom1.contains?(@factory.point(6, 4)))
+          assert_equal(false, geom1.contains?(@factory.point(11, 11)))
+        end
+
+        def test_triangle_contains_point
+          point1 = @factory.point(4, 4)
+          point2 = @factory.point(5, 6)
+          point3 = @factory.point(6, 4)
+          line_string1 = @factory.line_string([point1, point2, point3, point1])
+          poly1 = @factory.polygon(line_string1)
+          point4 = @factory.point(14, 14)
+          point5 = @factory.point(15, 16)
+          point6 = @factory.point(16, 14)
+          line_string2 = @factory.linear_ring([point4, point5, point6, point4])
+          poly2 = @factory.polygon(line_string2)
+          multi_polygon = @factory.multi_polygon([poly1, poly2])
+          assert_equal(true, multi_polygon.contains?(@factory.point(5, 5)))
+          assert_equal(true, multi_polygon.contains?(@factory.point(15, 15)))
+          assert_equal(false, multi_polygon.contains?(@factory.point(0, 0)))
+        end
+
+        def test_one_hole_contains_point
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(0, 10)
+          point3 = @factory.point(10, 10)
+          point4 = @factory.point(10, 0)
+          point5 = @factory.point(4, 4)
+          point6 = @factory.point(5, 6)
+          point7 = @factory.point(6, 4)
+          exterior1 = @factory.linear_ring([point1, point2, point3, point4, point1])
+          interior1 = @factory.linear_ring([point5, point6, point7, point5])
+          poly1 = @factory.polygon(exterior1, [interior1])
+          point8 = @factory.point(50, 50)
+          point9 = @factory.point(50, 60)
+          point10 = @factory.point(60, 60)
+          point11 = @factory.point(60, 50)
+          point12 = @factory.point(54, 54)
+          point13 = @factory.point(55, 56)
+          point14 = @factory.point(56, 54)
+          exterior2 = @factory.linear_ring([point8, point9, point10, point11, point8])
+          interior2 = @factory.linear_ring([point12, point13, point14, point12])
+          poly2 = @factory.polygon(exterior2, [interior2])
+          multi_polygon = @factory.multi_polygon([poly1, poly2])
+          assert_equal(true, multi_polygon.contains?(@factory.point(2, 3)))
+          assert_equal(false, multi_polygon.contains?(@factory.point(5, 5)))
+          assert_equal(false, multi_polygon.contains?(@factory.point(4, 4)))
+          assert_equal(true, multi_polygon.contains?(@factory.point(52, 53)))
+          assert_equal(false, multi_polygon.contains?(@factory.point(55, 55)))
+          assert_equal(false, multi_polygon.contains?(@factory.point(54, 54)))
         end
       end
     end

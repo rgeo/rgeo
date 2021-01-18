@@ -87,7 +87,42 @@ module RGeo
         @points.map(&:coordinates)
       end
 
+      def contains?(rhs)
+        if Feature::Point === rhs
+          contains_point?(rhs)
+        else
+          raise(Error::UnsupportedOperation,
+                "Method LineString#contains? is only defined for Point")
+        end
+      end
+
       private
+
+      def contains_point?(point)
+        @points.each_cons(2) do |start_point, end_point|
+          return true if point_intersect_segment?(point, start_point, end_point)
+        end
+        false
+      end
+
+      def point_intersect_segment?(point, start_point, end_point)
+        return false unless point_collinear?(point, start_point, end_point)
+
+        if start_point.x != end_point.x
+          between_coordinate?(point.x, start_point.x, end_point.x)
+        else
+          between_coordinate?(point.y, start_point.y, end_point.y)
+        end
+      end
+
+      def point_collinear?(a, b, c)
+        (b.x - a.x) * (c.y - a.y) == (c.x - a.x) * (b.y - a.y)
+      end
+
+      def between_coordinate?(coord, start_coord, end_coord)
+        end_coord >= coord && coord >= start_coord ||
+          start_coord >= coord && coord >= end_coord
+      end
 
       def copy_state_from(obj)
         super
@@ -135,6 +170,10 @@ module RGeo
     module BasicLinearRingMethods # :nodoc:
       def geometry_type
         Feature::LinearRing
+      end
+
+      def ccw?
+        RGeo::Cartesian::Analysis.ccw?(self)
       end
 
       private
