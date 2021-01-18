@@ -42,6 +42,6 @@ jobs:
       - name: Install Geos (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          exit 1 # FIXME
+          vcpkg install geos
       - run: |
           bundle exec rake
