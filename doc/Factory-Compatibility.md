@@ -23,3184 +23,746 @@ For more information about choosing a factory, see the [Choosing a Fatory doc](h
 The table tests all of the methods defined in the [OGC SFA v1.1](https://www.ogc.org/standards/sfa) for each geometry type. In the case of methods that require another geometry (ex. `LineString#interects?(Polygon)`), all geometry types will be tested as the parameter.
 
 _Note: This list is not exhaustive of all the methods defined by each factory. The geos factory in particular has a good amount of non-standard methods implemented. These can be found in the YARD docs._
+<!-- TODO: this is not true, C methods are not listed in documentation, we should do something about it. -->
 
 ## Compatibility Table
 
-<!-- AUTO-GENERATED (do not manually edit this line or below, see test/factory_compatibility_table_test.rb) -->
-<table>
-	<tr>
-		<th></th>
-		<th>geos</th>
-		<th>geos_zm</th>
-		<th>ffi</th>
-		<th>ffi_zm</th>
-		<th>cartesian</th>
-		<th>projection</th>
-		<th>spherical</th>
-	</tr>
-	<tr>
-		<td>`Point#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Point#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Point#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LineString#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LineString#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LineString#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LineString#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LineString#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LineString#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`LinearRing#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>LinearRing#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Polygon#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Polygon#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Polygon#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Polygon#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Polygon#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Polygon#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Collection#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Collection#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`Collection#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Collection#boundary`</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Collection#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`Collection#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>Collection#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPoint#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPoint#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiLineString#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#factory`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#dimension`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#geometry_type`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#srid`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#envelope`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#as_text`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#as_binary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#is_empty?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#is_simple?`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#boundary`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#convex_hull`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#buffer`</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(Point)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(LineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(LinearRing)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(Polygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(Collection)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(MultiPoint)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(MultiLineString)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(MultiPolygon)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
-	</tr>
-</table>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiLineString#relate?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#factory`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#dimension`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#geometry_type`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#srid`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#envelope`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#as_text`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#as_binary`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#is_empty?`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#is_simple?`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#boundary`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#convex_hull`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>`MultiPolygon#buffer`</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#equals?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#eql?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#disjoint?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#intersects?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#touches?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#crosses?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#within?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#contains?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#overlaps?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>✅</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(Point)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(LineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(LinearRing)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(Polygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(Collection)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(MultiPoint)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(MultiLineString)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-	<tr>
-		<td>MultiPolygon#relate?(MultiPolygon)</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>✅</td>
-		<td>❌</td>
-		<td>❌</td>
-		<td>❌</td>
-	</tr>
-</table>
+<!-- AUTO-GENERATED (do not manually edit this line or any below, see test/factory_compatibility_table_test.rb) -->
+|                                                | geos | geos_zm | ffi | ffi_zm | cartesian | projection | spherical |
+| ---------------------------------------------: | :--: | :-----: | :-: | :----: | :-------: | :--------: | :-------: |
+|                                `Point#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `Point#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `Point#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                                   `Point#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                               `Point#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                                `Point#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `Point#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `Point#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                             `Point#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                               `Point#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `Point#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                                 `Point#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `Point#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `Point#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `Point#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `Point#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `Point#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `Point#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|               `Point#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Point#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `Point#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `Point#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `Point#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `Point#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `Point#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `Point#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Point#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Point#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `Point#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Point#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Point#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Point#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Point#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Point#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                        `Point#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                      `Point#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Point#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Point#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                        `Point#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                      `Point#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Point#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Point#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Point#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                         `Point#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Point#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Point#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Point#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Point#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Point#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Point#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Point#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Point#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Point#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Point#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Point#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Point#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Point#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Point#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                         `Point#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                    `Point#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                    `Point#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                       `Point#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                    `Point#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                    `Point#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `Point#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `Point#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                           `LineString#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `LineString#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `LineString#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `LineString#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `LineString#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                           `LineString#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `LineString#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `LineString#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `LineString#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `LineString#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `LineString#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                            `LineString#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `LineString#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LineString#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `LineString#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `LineString#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LineString#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LineString#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `LineString#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LineString#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LineString#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `LineString#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `LineString#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LineString#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LineString#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `LineString#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LineString#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `LineString#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `LineString#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `LineString#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `LineString#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `LineString#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `LineString#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `LineString#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `LineString#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `LineString#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `LineString#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `LineString#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LineString#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LineString#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `LineString#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LineString#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `LineString#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LineString#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `LineString#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LineString#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LineString#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LineString#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `LineString#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `LineString#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LineString#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LineString#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `LineString#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LineString#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LineString#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `LineString#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `LineString#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                           `LinearRing#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `LinearRing#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `LinearRing#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `LinearRing#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `LinearRing#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                           `LinearRing#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `LinearRing#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `LinearRing#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `LinearRing#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `LinearRing#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `LinearRing#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                            `LinearRing#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `LinearRing#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LinearRing#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `LinearRing#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `LinearRing#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LinearRing#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LinearRing#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `LinearRing#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LinearRing#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LinearRing#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `LinearRing#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `LinearRing#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `LinearRing#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LinearRing#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `LinearRing#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LinearRing#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `LinearRing#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `LinearRing#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `LinearRing#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `LinearRing#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `LinearRing#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `LinearRing#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `LinearRing#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `LinearRing#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `LinearRing#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `LinearRing#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `LinearRing#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LinearRing#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `LinearRing#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `LinearRing#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LinearRing#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `LinearRing#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LinearRing#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `LinearRing#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `LinearRing#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `LinearRing#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `LinearRing#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `LinearRing#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `LinearRing#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LinearRing#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LinearRing#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `LinearRing#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LinearRing#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `LinearRing#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `LinearRing#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `LinearRing#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                              `Polygon#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `Polygon#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `Polygon#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                                 `Polygon#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                             `Polygon#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                              `Polygon#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `Polygon#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `Polygon#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                           `Polygon#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                             `Polygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `Polygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                               `Polygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Polygon#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Polygon#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Polygon#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                          `Polygon#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Polygon#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Polygon#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `Polygon#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Polygon#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Polygon#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `Polygon#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                   `Polygon#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Polygon#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Polygon#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Polygon#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Polygon#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `Polygon#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `Polygon#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                      `Polygon#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Polygon#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `Polygon#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Polygon#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                      `Polygon#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Polygon#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Polygon#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `Polygon#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Polygon#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Polygon#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Polygon#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Polygon#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Polygon#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Polygon#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `Polygon#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Polygon#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Polygon#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `Polygon#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Polygon#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Polygon#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Polygon#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Polygon#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Polygon#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `Polygon#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `Polygon#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                     `Polygon#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `Polygon#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `Polygon#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `Polygon#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                `Polygon#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                           `Collection#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `Collection#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Collection#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `Collection#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `Collection#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                           `Collection#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `Collection#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `Collection#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `Collection#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                          `Collection#boundary` |  ✅   |    ❌    |  ✅  |   ❌    |     ❌     |     ✅      |     ❌     |
+|                       `Collection#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                            `Collection#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Collection#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Collection#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `Collection#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `Collection#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Collection#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Collection#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `Collection#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Collection#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Collection#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `Collection#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `Collection#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `Collection#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Collection#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `Collection#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Collection#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `Collection#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `Collection#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Collection#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Collection#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `Collection#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `Collection#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `Collection#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `Collection#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `Collection#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `Collection#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `Collection#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Collection#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Collection#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `Collection#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `Collection#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Collection#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Collection#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `Collection#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `Collection#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `Collection#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `Collection#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `Collection#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `Collection#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `Collection#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `Collection#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `Collection#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `Collection#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `Collection#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `Collection#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `Collection#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `Collection#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                           `MultiPoint#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `MultiPoint#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `MultiPoint#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                              `MultiPoint#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `MultiPoint#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                           `MultiPoint#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `MultiPoint#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `MultiPoint#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `MultiPoint#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                          `MultiPoint#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `MultiPoint#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                            `MultiPoint#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `MultiPoint#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPoint#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiPoint#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `MultiPoint#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `MultiPoint#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `MultiPoint#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `MultiPoint#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `MultiPoint#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `MultiPoint#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `MultiPoint#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiPoint#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                  `MultiPoint#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPoint#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiPoint#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPoint#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiPoint#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPoint#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `MultiPoint#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `MultiPoint#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPoint#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPoint#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                   `MultiPoint#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `MultiPoint#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPoint#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPoint#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPoint#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `MultiPoint#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPoint#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPoint#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiPoint#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPoint#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPoint#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiPoint#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPoint#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPoint#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPoint#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiPoint#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPoint#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                    `MultiPoint#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `MultiPoint#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `MultiPoint#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                  `MultiPoint#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `MultiPoint#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|               `MultiPoint#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `MultiPoint#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `MultiPoint#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                      `MultiLineString#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `MultiLineString#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiLineString#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                         `MultiLineString#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `MultiLineString#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                      `MultiLineString#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `MultiLineString#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                    `MultiLineString#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                   `MultiLineString#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `MultiLineString#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiLineString#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                       `MultiLineString#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiLineString#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiLineString#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|     `MultiLineString#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiLineString#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `MultiLineString#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `MultiLineString#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiLineString#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `MultiLineString#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `MultiLineString#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|        `MultiLineString#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|           `MultiLineString#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|             `MultiLineString#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiLineString#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|   `MultiLineString#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiLineString#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+| `MultiLineString#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|    `MultiLineString#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiLineString#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiLineString#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|    `MultiLineString#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|       `MultiLineString#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiLineString#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiLineString#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiLineString#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|    `MultiLineString#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|       `MultiLineString#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiLineString#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiLineString#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiLineString#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|     `MultiLineString#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiLineString#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiLineString#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|   `MultiLineString#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiLineString#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiLineString#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiLineString#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|   `MultiLineString#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiLineString#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiLineString#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `MultiLineString#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `MultiLineString#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `MultiLineString#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `MultiLineString#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|          `MultiLineString#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|     `MultiLineString#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|        `MultiLineString#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                         `MultiPolygon#factory` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `MultiPolygon#dimension` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                   `MultiPolygon#geometry_type` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `MultiPolygon#srid` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                        `MultiPolygon#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|                         `MultiPolygon#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `MultiPolygon#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `MultiPolygon#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                      `MultiPolygon#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                        `MultiPolygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                     `MultiPolygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                          `MultiPolygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPolygon#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPolygon#equals?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#equals?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#equals?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiPolygon#equals?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#equals?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                     `MultiPolygon#eql?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiPolygon#eql?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiPolygon#eql?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                   `MultiPolygon#eql?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiPolygon#eql?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiPolygon#eql?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|           `MultiPolygon#eql?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|              `MultiPolygon#eql?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                `MultiPolygon#disjoint?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#disjoint?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#disjoint?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPolygon#disjoint?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#disjoint?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#disjoint?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiPolygon#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPolygon#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|    `MultiPolygon#intersects?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|       `MultiPolygon#intersects?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `MultiPolygon#touches?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#touches?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#touches?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPolygon#touches?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#touches?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#touches?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|       `MultiPolygon#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiPolygon#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                 `MultiPolygon#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|               `MultiPolygon#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|            `MultiPolygon#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|       `MultiPolygon#crosses?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|          `MultiPolygon#crosses?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPolygon#within?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#within?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#within?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPolygon#within?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#within?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiPolygon#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|        `MultiPolygon#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPolygon#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPolygon#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#contains?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#contains?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiPolygon#contains?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#contains?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPolygon#overlaps?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#overlaps?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#overlaps?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `MultiPolygon#overlaps?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#overlaps?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `MultiPolygon#overlaps?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|      `MultiPolygon#overlaps?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|         `MultiPolygon#overlaps?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                  `MultiPolygon#relate?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `MultiPolygon#relate?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `MultiPolygon#relate?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|                `MultiPolygon#relate?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `MultiPolygon#relate?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|             `MultiPolygon#relate?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|        `MultiPolygon#relate?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |
+|           `MultiPolygon#relate?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ❌      |     ❌     |

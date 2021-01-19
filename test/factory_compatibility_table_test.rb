@@ -8,7 +8,7 @@ require_relative "test_helper"
 class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
   def test_table_ok
     update_table_file(
-      generate_html(
+      generate_markdown(
         compute_handled_methods_per_factory
       )
     )
@@ -76,7 +76,7 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
       results[factory_key] = {}
       geometries_per_factory(factory).each do |geometry_key, geometry|
         basic_methods.each do |method_sym|
-          description = "`#{classify_sym(geometry_key)}##{method_sym}`"
+          description = "#{classify_sym(geometry_key)}##{method_sym}"
           results[factory_key][description] = basic_method_handled?(geometry, method_sym, description)
         end
 
@@ -107,28 +107,31 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
     }.freeze
   end
 
-  def generate_html(handled_methods_per_factory)
-    descriptions = handled_methods_per_factory.first.last.keys
-    factories = handled_methods_per_factory.keys
+  def generate_markdown(handled_per_factory_per_description)
+    descriptions = handled_per_factory_per_description.first.last.keys
+    factories = handled_per_factory_per_description.keys
 
-    html = "<table>\n"
-    html += "\t<tr>\n"
-    html += "\t\t<th></th>\n"
-    factories.each do |factory|
-      html += "\t\t<th>#{factory}</th>\n"
-    end
-    html += "\t</tr>\n"
+    sizes = [
+      descriptions.max_by(&:size).size + 2,
+      *factories.map(&:size)
+    ]
 
-    descriptions.each do |description|
-      html += "\t<tr>\n"
-      html += "\t\t<td>#{description}</td>"
-      factories.each do |factory|
-        html += "<td>#{handled_methods_per_factory[factory][description] ? '✅' : '❌'}</td>"
-      end
-      html += "\n\t</tr>\n"
+    titles = ["", *factories]
+    rows = descriptions.map do |description|
+      [
+        "`#{description}`",
+        *factories.map { |factory| handled_per_factory_per_description[factory][description] ? "✅" : "❌" }
+      ]
     end
-    html += "</table>"
-    html
+
+    markdown = ""
+    markdown += "| #{titles.zip(sizes).map { |title, size| title.to_s.center(size) } * ' | '} |\n"
+    markdown += "| #{ '-' * (sizes.first - 1) + ':' } | #{sizes[1..].map { |size| ':' + '-' * (size - 2) + ':' } * ' | '} |\n"
+    rows.each do |row|
+      markdown += "| #{row.first.rjust(sizes.first)} | #{row[1..].zip(sizes[1..]).map { |cell, size| cell.center(size) } * ' | '} |\n"
+    end
+
+    markdown
   end
 
   def geometries_per_factory(a_factory)
@@ -218,6 +221,8 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
     File.open(compatility_table_path, "r+") do |file|
       file.take_while { |line| !line.start_with?("<!-- AUTO-GENERATED") }
       file.puts html
+      # Remove lines below.
+      file.truncate file.pos
     end
 
     debug "doc/Factory-compatibility.md edited."
