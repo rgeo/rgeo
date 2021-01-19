@@ -1,7 +1,7 @@
 ## RGeo
 
 [![Gem Version](https://badge.fury.io/rb/rgeo.svg)](http://badge.fury.io/rb/rgeo)
-[![Build Status](https://travis-ci.org/rgeo/rgeo.svg?branch=master)](https://travis-ci.org/rgeo/rgeo)
+[![CI](https://github.com/rgeo/rgeo/workflows/CI/badge.svg)](https://github.com/rgeo/rgeo/actions?query=workflow%3ACI+branch%3Amaster)
 
 RGeo is a geospatial data library for Ruby.
 
