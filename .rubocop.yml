@@ -1,7 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
+  NewCops: enable
 
 Layout/ParameterAlignment:
   Enabled: false
@@ -41,3 +42,7 @@ Style/StringLiterals:
 
 Style/ZeroLengthPredicate:
   Enabled: false
+
+Metrics/ParameterLists:
+  Max: 8
+  MaxOptionalParameters: 6
