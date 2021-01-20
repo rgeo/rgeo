@@ -126,9 +126,9 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
 
     markdown = ""
     markdown += "| #{titles.zip(sizes).map { |title, size| title.to_s.center(size) } * ' | '} |\n"
-    markdown += "| #{ '-' * (sizes.first - 1) + ':' } | #{sizes[1..].map { |size| ':' + '-' * (size - 2) + ':' } * ' | '} |\n"
+    markdown += "| #{ '-' * (sizes.first - 1) + ':' } | #{sizes[1..-1].map { |size| ':' + '-' * (size - 2) + ':' } * ' | '} |\n"
     rows.each do |row|
-      markdown += "| #{row.first.rjust(sizes.first)} | #{row[1..].zip(sizes[1..]).map { |cell, size| cell.center(size) } * ' | '} |\n"
+      markdown += "| #{row.first.rjust(sizes.first)} | #{row[1..-1].zip(sizes[1..-1]).map { |cell, size| cell.center(size) } * ' | '} |\n"
     end
 
     markdown
