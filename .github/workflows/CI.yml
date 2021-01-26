@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - master
-      - github_actions
   pull_request:
 
 jobs:
-  build:
+  Build:
     strategy:
       fail-fast: false
       matrix:
@@ -45,3 +44,13 @@ jobs:
           exit 1 # FIXME
       - run: |
           bundle exec rake
+  Rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+      - run: |
+          bundle exec rubocop --color --parallel
