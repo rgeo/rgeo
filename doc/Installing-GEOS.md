@@ -89,7 +89,7 @@ require "rgeo"
 puts "Yay" if RGeo::Geos.capi_supported?
 ```
 
-If you need to install it on heroku, [there is a dedicated wiki page](https://github.com/rgeo/rgeo/wiki/Enable-GEOS-and-Proj4-on-Heroku).
+If you need to install it on heroku, [there is a dedicated documentation](https://github.com/rgeo/rgeo/blob/master/doc/Enable-GEOS-and-Proj4-on-Heroku.md).
 
 [geos]: https://trac.osgeo.org/geos
 [jts]: https://www.tsusiatsoftware.net/jts/main.html
