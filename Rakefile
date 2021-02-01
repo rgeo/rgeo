@@ -27,15 +27,8 @@ end
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
-  t.test_files = FileList["test/**/*_test.rb"].exclude("test/factory_compatibility_table_test.rb")
-end
-
-Rake::TestTask.new(:test_factory_compatibility) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList["test/factory_compatibility_table_test.rb"]
+  t.test_files = FileList["test/**/*_test.rb"]
 end
 
 task test: :compile
-task test_factory_compatibility: :compile
-task default: [:clean, :test, :test_factory_compatibility]
+task default: [:clean, :test]

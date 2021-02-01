@@ -7,6 +7,10 @@ require_relative "test_helper"
 # that feature ! Otherwise, please take a look at your contribution.
 class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
   def test_table_ok
+    unless RGeo::Geos.ffi_supported? && RGeo::Geos.capi_supported?
+      skip "Factory Compatibility table can only be generated with FFI and CAPI support"
+    end
+
     update_table_file(
       generate_markdown(
         compute_handled_methods_per_factory
