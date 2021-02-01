@@ -9,7 +9,7 @@ class DocumentationLinksTest < MiniTest::Test # :nodoc:
   def test_every_markdown_documents_linked
     root_path = File.join(__dir__, "..")
     by_files = Dir[File.join(root_path, "doc", "*.md")]
-               .map { |path| Pathname.new(path).relative_path_from(root_path) }
+               .map { |path| Pathname.new(path).relative_path_from(Pathname.new(root_path)) }
                .map { |file| "https://github.com/rgeo/rgeo/blob/master/#{file}" }
                .to_set
 
