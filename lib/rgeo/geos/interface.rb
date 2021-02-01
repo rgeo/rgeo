@@ -174,7 +174,6 @@ module RGeo
       #   operation that would benefit from it is called. The latter
       #   never automatically generates a prepared geometry (unless you
       #   generate one explicitly using the <tt>prepare!</tt> method).
-
       def factory(opts = {})
         if supported?
           native_interface = opts[:native_interface] || Geos.preferred_native_interface
