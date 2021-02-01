@@ -1,4 +1,4 @@
---markup markdown
+--markup rdoc
 --output-dir ./yardoc
 lib/**/*.rb
 -
