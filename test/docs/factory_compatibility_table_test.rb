@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "test_helper"
+require_relative "../test_helper"
 
 # Ensure that compatiblity table stays up to date. If this test fails
 # and your diff shows a checkmark instead of a red X, thanks for adding
@@ -71,7 +71,7 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
   end
 
   def compatility_table_path
-    "#{__dir__}/../doc/Factory-Compatibility.md"
+    "#{__dir__}/../../doc/Factory-Compatibility.md"
   end
 
   def compute_handled_methods_per_factory
