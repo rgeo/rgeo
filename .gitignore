@@ -12,4 +12,5 @@ tmp
 Makefile*
 mkmf.log
 Gemfile.lock
-yardoc
+/yardoc
+/.yardoc
