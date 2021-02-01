@@ -124,22 +124,14 @@ generate documentation locally if you're working on RGeo: `yardoc server`.
 
 Here's the current list of available topics:
 
-- [An introduction to Spatial Programming With RGeo](/docs/file/doc/An-Introduction-to-Spatial-Programming-With-RGeo.md)
-- [Enable GEOS and Proj4 on Heroku](/docs/file/doc/Enable-GEOS-and-Proj4-on-Heroku.md)
-- [Installing GEOS](/docs/file/doc/Installing-GEOS.md)
-- [Factory Compatibility](/docs/file/doc/Factory-Compatibility.md)
-- [Which factory should I use?](/docs/file/doc/Which-factory-should-I-use.md)
-- [Who uses `rgeo`?](/docs/file/doc/Gallery.md)
+- [An introduction to Spatial Programming With RGeo](https://github.com/rgeo/rgeo/blob/master/doc/An-Introduction-to-Spatial-Programming-With-RGeo.md)
+- [Enable GEOS and Proj4 on Heroku](https://github.com/rgeo/rgeo/blob/master/doc/Enable-GEOS-and-Proj4-on-Heroku.md)
+- [Installing GEOS](https://github.com/rgeo/rgeo/blob/master/doc/Installing-GEOS.md)
+- [Factory Compatibility](https://github.com/rgeo/rgeo/blob/master/doc/Factory-Compatibility.md)
+- [Which factory should I use?](https://github.com/rgeo/rgeo/blob/master/doc/Which-factory-should-I-use.md)
+- [Who uses `rgeo`?](https://github.com/rgeo/rgeo/blob/master/doc/Gallery.md)
 
-<!-- NOTE: this list was generated with ruby.
-
-```
-puts Dir["doc/*"].
-  map { |name| [name, IO.foreach(name, chomp: true).first[2..]] }.
-  map { |file, title| "- [#{title}](/docs/file/#{file})" }
-```
--->
-
+You can see an exhaustive and up to date list at https://rubydoc.info/gems/rgeo/index.
 ### Acknowledgments
 
 [Daniel Azuma](http://www.daniel-azuma.com) created RGeo.
