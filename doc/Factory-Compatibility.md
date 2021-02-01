@@ -650,7 +650,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |          `MultiLineString#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |     `MultiLineString#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |        `MultiLineString#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|             `MultiLineString#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|             `MultiLineString#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |        `MultiLineString#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |        `MultiLineString#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `MultiLineString#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -742,7 +742,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |             `MultiPolygon#within?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |        `MultiPolygon#within?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `MultiPolygon#within?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|                `MultiPolygon#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                `MultiPolygon#contains?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |           `MultiPolygon#contains?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `MultiPolygon#contains?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `MultiPolygon#contains?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
