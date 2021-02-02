@@ -331,7 +331,7 @@ p linearring2
 p linearring == linearring2
 # => true
 
-p intermediate_linestring == linearrring2
+p intermediate_linestring == linearring2
 # => true
 ```
 
@@ -422,6 +422,7 @@ p interior_rings
 
 # get array of point arrays
 interior_points = interior_rings.map(&:points)
+p interior_points
 # => [[#<RGeo::Geos::CAPIPointImpl "POINT (0.5 0.5)">, #<RGeo::Geos::CAPIPointImpl "POINT (1.5 0.5)">, #<RGeo::Geos::CAPIPointImpl "POINT (1.5 1.5)">, #<RGeo::Geos::CAPIPointImpl "POINT (0.5 1.5)">, #<RGeo::Geos::CAPIPointImpl "POINT (0.5 0.5)">]]
 ```
 
