@@ -9,6 +9,10 @@ require 'tempfile'
 
 class ExamplesTest < MiniTest::Test
   def test_examples
+    unless RGeo::Geos.ffi_supported? && RGeo::Geos.capi_supported?
+      skip 'Examples can only be run with FFI and CAPI support'
+    end
+
     file = Tempfile.new('examples.rb')
     original_stdout = $stdout
     $stdout = File.open(File::NULL, 'w')
