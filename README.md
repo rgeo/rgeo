@@ -129,6 +129,7 @@ Here's the current list of available topics:
 - [Installing GEOS](https://github.com/rgeo/rgeo/blob/master/doc/Installing-GEOS.md)
 - [Factory Compatibility](https://github.com/rgeo/rgeo/blob/master/doc/Factory-Compatibility.md)
 - [Which factory should I use?](https://github.com/rgeo/rgeo/blob/master/doc/Which-factory-should-I-use.md)
+- [Examples](https://github.com/rgeo/rgeo/blob/master/doc/Examples.md)
 - [Who uses `rgeo`?](https://github.com/rgeo/rgeo/blob/master/doc/Gallery.md)
 
 You can see an exhaustive and up to date list at https://rubydoc.info/gems/rgeo/index.
