@@ -13,9 +13,7 @@ class ExamplesTest < MiniTest::Test
     end
     read_examples do |example, line_no|
       _out, err = capture_io do
-        # rubocop:disable Security/Eval
-        eval example
-        # rubocop:enable Security/Eval
+        eval example # rubocop:disable Security/Eval
       rescue StandardError => e
         warn e
       end
