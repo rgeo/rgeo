@@ -251,6 +251,7 @@ A LineString is a Curve with linear interpolation between points. Each pair of p
 This creates a simple LineString.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 pt1 = factory.point(0, 0)
 pt2 = factory.point(2, 0)
 pt3 = factory.point(2, 2)
@@ -267,10 +268,11 @@ p linestring
 This creates the same LineString as above.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 linestring2 = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring2
 # => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)"> 
-p linestring == linestring2
+# p linestring == linestring2
 # => true
 ```
 
@@ -278,6 +280,8 @@ p linestring == linestring2
 ### Get the length of a LineString
 
 ```ruby
+factory = RGeo::Cartesian.factory
+linestring = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring.length
 # => 4.0
 ```
@@ -287,6 +291,8 @@ p linestring.length
 The boundary of a LineString is the MultiPoint containing the `start_point` and `end_point` of the LineString.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+linestring = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring.boundary
 #  => #<RGeo::Geos::CAPIMultiPointImpl "MULTIPOINT ((0.0 0.0), (2.0 2.0))">
 ```
@@ -304,6 +310,7 @@ _Note: Some factories may prevent the creation of invalid LinearRings and raise 
 ### Create a LinearRing with Points
 
 ```ruby
+factory = RGeo::Cartesian.factory
 pt1 = factory.point(2, 2)
 pt2 = factory.point(4, 2)
 pt3 = factory.point(4, 4)
@@ -322,13 +329,14 @@ p linearring.is_simple?
 Since LinearRings are just a specific case of LineStrings, they cannot be created directly with WKT, and a LineString with the same points as a LinearRing are considered equal. If you need a LinearRing type for whatever reason, this method will work to create it using WKT.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 intermediate_linestring = factory.parse_wkt("LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)")
 linearring2 = factory.linear_ring(intermediate_linestring.points)
 
 p linearring2
 # => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)">
 
-p linearring == linearring2
+# p linearring == linearring2
 # => true
 
 p intermediate_linestring == linearring2
@@ -338,6 +346,14 @@ p intermediate_linestring == linearring2
 ### Check if a LinearRing is valid
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
+pt1 = factory.point(2, 2)
+pt2 = factory.point(4, 2)
+pt3 = factory.point(4, 4)
+pt4 = factory.point(2, 6)
+linearring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
+
 linearring.valid?
 # => true
 ```
@@ -364,6 +380,7 @@ The following are examples of invalid Polygons.
 ### Creating a Polygon with RGeo Features
 
 ```ruby
+factory = RGeo::Cartesian.factory
 pt1 = factory.point(0, 0)
 pt2 = factory.point(2, 0)
 pt3 = factory.point(2, 2)
@@ -391,16 +408,33 @@ p square_with_hole.area
 ### Creating a Polygon with WKT
 
 ```ruby
+factory = RGeo::Cartesian.factory
 square_with_hole2 = factory.parse_wkt("POLYGON ((0.0 0.0, 2.0 0.0, 2.0 2.0, 0.0 2.0, 0.0 0.0), (0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5))")
 p square_with_hole2
 # => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 2.0 0.0, 2.0 2.0, 0.0 2.0, 0.0 0.0), (0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5))">
-p square_with_hole2 == square_with_hole
+# p square_with_hole2 == square_with_hole
 # => true
 ```
 
 ### Check if a Polygon is valid
 
 ```ruby
+factory = RGeo::Cartesian.factory
+pt1 = factory.point(0, 0)
+pt2 = factory.point(2, 0)
+pt3 = factory.point(2, 2)
+pt4 = factory.point(0, 2)
+outerring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
+square = factory.polygon(outerring)
+
+
+pt5 = factory.point(0.5, 0.5)
+pt6 = factory.point(1.5, 0.5)
+pt7 = factory.point(1.5, 1.5)
+pt8 = factory.point(0.5, 1.5)
+interiorring = factory.linear_ring([pt5, pt6, pt7, pt8, pt5])
+square_with_hole = factory.polygon(outerring, [interiorring])
+
 square_with_hole.valid?
 # => true
 ```
@@ -410,6 +444,21 @@ square_with_hole.valid?
 It is a common operation to get the points that make up a Polygon directly. Since a Polygon is made up of an exterior ring and multiple interior rings, the points from these need to be extracted separately.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+pt1 = factory.point(0, 0)
+pt2 = factory.point(2, 0)
+pt3 = factory.point(2, 2)
+pt4 = factory.point(0, 2)
+outerring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
+square = factory.polygon(outerring)
+
+pt5 = factory.point(0.5, 0.5)
+pt6 = factory.point(1.5, 0.5)
+pt7 = factory.point(1.5, 1.5)
+pt8 = factory.point(0.5, 1.5)
+interiorring = factory.linear_ring([pt5, pt6, pt7, pt8, pt5])
+square_with_hole = factory.polygon(outerring, [interiorring])
+
 exterior = square_with_hole.exterior_ring
 p exterior
 # => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0, 0.0 2.0, 0.0 0.0)">
@@ -437,6 +486,8 @@ A generic GeometryCollection places no other constraints what can be contained i
 ### Creating a GeometryCollection with RGeo Features
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
@@ -457,10 +508,12 @@ end
 ### Creating a GeometryCollection with WKT
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 collection2 = factory.parse_wkt("GEOMETRYCOLLECTION (POINT (0.0 0.0), POINT (1.0 0.0), POINT (1.0 1.0), LINESTRING (0.0 0.0, 1.0 0.0, 1.0 1.0))")
 p collection2
 # => #<RGeo::Geos::CAPIGeometryCollectionImpl "GEOMETRYCOLLECTION (POINT (0.0 0.0), POINT (1.0 0.0), POINT (1.0 1.0), LINESTRING (0.0 0.0, 1.0 0.0, 1.0 1.0))">
-p collection == collection2
+# p collection == collection2
 # => true
 ```
 
@@ -471,6 +524,8 @@ A MultiPoint is a collection of Point objects. A MultiPoint is simple if no two 
 ### Create a MultiPoint with RGeo Features
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 1)
 multipoint = factory.multi_point([pt1, pt2])
@@ -481,11 +536,13 @@ p multipoint
 ### Create a MultiPoint with WKT
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 multipoint2 = factory.parse_wkt("MULTIPOINT ((0.0 0.0), (1.0 1.0))")
 p multipoint2
 # => #<RGeo::Geos::CAPIMultiPointImpl "MULTIPOINT ((0.0 0.0), (1.0 1.0))">
 
-p multipoint == multipoint2
+# p multipoint == multipoint2
 # => true
 ```
 
@@ -507,6 +564,8 @@ The following are examples of non-simple MultiLineStrings.
 ### Create a MultiLineString with RGeo Features
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(2, 4)
 pt2 = factory.point(2, 3)
 pt3 = factory.point(2, 2)
@@ -528,10 +587,12 @@ p multi_linestring.boundary
 ### Create a MultiLineString with WKT
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 multi_linestring2 = factory.parse_wkt("MULTILINESTRING ((2.0 4.0, 2.0 3.0, 2.0 2.0, 3.0 2.0), (3.0 2.0, 2.0 1.0, 1.0 1.0))")
 p multi_linestring2
 # => #<RGeo::Geos::CAPIMultiLineStringImpl "MULTILINESTRING ((2.0 4.0, 2.0 3.0, 2.0 2.0, 3.0 2.0), (3.0 2.0, 2.0 1.0, 1.0 1.0))">
-p multi_linestring == multi_linestring2
+# p multi_linestring == multi_linestring2
 # => true
 ```
 
@@ -554,6 +615,8 @@ The following are examples of non-simple MultiPolygons.
 ### Creating a MultiPolygon with RGeo Features
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(2, 0)
 pt3 = factory.point(2, 2)
@@ -589,12 +652,14 @@ This creates the following MultiPolygon.
 ### Creating a MultiPolygon with WKT
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 multipolygon2 = factory.parse_wkt("MULTIPOLYGON (((0.0 0.0, 2.0 0.0, 2.0 2.0, 0.0 2.0, 0.0 0.0), (0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5)), ((3.0 3.0, 4.0 3.0, 4.0 4.0, 3.0 4.0, 3.0 3.0)))")
 
 p multipolygon2
 # => #<RGeo::Geos::CAPIMultiPolygonImpl "MULTIPOLYGON (((0.0 0.0, 2.0 0.0, 2.0 2.0, 0.0 2.0, 0.0 0.0), (0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5)), ((3.0 3.0, 4.0 3.0, 4.0 4.0, 3.0 4.0, 3.0 3.0)))">
 
-p multipolygon == multipolygon2
+# p multipolygon == multipolygon2
 # => true
 ```
 
@@ -605,6 +670,7 @@ p multipolygon == multipolygon2
 All RGeo Features will return their geometry type.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 p factory.parse_wkt("POINT (0 0)").geometry_type
 # => RGeo::Feature::Point
 ```
@@ -614,6 +680,7 @@ p factory.parse_wkt("POINT (0 0)").geometry_type
 The case equality operator can be used to check the type of an RGeo Feature.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 pt = factory.point(0, 0)
 linestring = factory.line_string([pt, factory.point(0, 1)])
 
@@ -645,6 +712,8 @@ is_point?(linestring)
 RGeo has a special object for BoundingBoxes: `RGeo:: Cartesian::BoundingBox`. BoundingBoxes can be created from a geometry or two corner Points.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 1)
 p RGeo::Cartesian::BoundingBox.create_from_points(pt1, pt2)
@@ -660,6 +729,7 @@ p RGeo::Cartesian::BoundingBox.create_from_geometry(polygon)
 Get the WKT representation of a geometry.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 p factory.point(1, 1).as_text
 # => "POINT (1.0 1.0)" 
 ```
@@ -669,6 +739,7 @@ p factory.point(1, 1).as_text
 Get the WKB representation of a geometry.
 
 ```ruby
+factory = RGeo::Cartesian.factory
 p factory.point(1, 1).as_binary
 # => "\x00\x00\x00\x00\x01?\xF0\x00\x00\x00\x00\x00\x00?\xF0\x00\x00\x00\x00\x00\x00" 
 ```
@@ -683,7 +754,10 @@ The following are unary predicates.
 
 `#ccw?` is implemented on LinearRings and returns true if the Points that form the LinearRing are ordered in a counter-clockwise fashion.
 
+_Note: You need to use LinearRings for `ccw?` LineStrings will not work._
+
 ```ruby
+factory = RGeo::Cartesian.factory
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
@@ -696,6 +770,8 @@ p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).ccw?
 ### is_simple?
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
@@ -710,6 +786,8 @@ p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).is_simple?
 Returns `true` if the object is the empty set.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
@@ -729,6 +807,8 @@ The following are binary predicates.
 Returns `true` if the caller contains the other geometry.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 polygon = factory.parse_wkt("POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))")
 pt1 = factory.point(0.5, 0.5)
 p polygon.contains?(pt1)
@@ -749,6 +829,8 @@ p polygon.contains?(linestring)
 Returns `true` if the caller spatially crosses the other geometry
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 other_geom = factory.parse_wkt("POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))")
 pt1 = factory.point(0.5, 0.5)
 pt2 = factory.point(0.75, 0.75)
@@ -768,6 +850,8 @@ p linestring2.crosses?(other_geom)
 Returns `true` if the caller and the other geometry are spatially disjoint. This means that the two geometries do not overlap, touch, or contain each other.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 polygon = factory.parse_wkt("POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))")
 pt1 = factory.point(0.5, 0.5)
 p polygon.disjoint?(pt1)
@@ -788,6 +872,8 @@ p polygon.disjoint?(linestring)
 Return `true` if the caller and the other geometry spatially intersect. This means that the two geometries overlap, touch, or contain one another. This is the opposite of `disjoint?`.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 polygon = factory.parse_wkt("POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))")
 pt1 = factory.point(0.5, 0.5)
 p polygon.intersects?(pt1)
@@ -808,6 +894,8 @@ p polygon.intersects?(linestring)
 Return `true` if the caller overlaps the other geometry. Two geometries overlap if they intersect but one does not completely contain another.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 1)
 pt3 = factory.point(2, 1)
@@ -828,6 +916,8 @@ p linestring1.overlaps?(linestring2)
 Return `true` if the only points in common between the caller and the other geometry lie in the union of the boundaries of both.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 linestring = factory.parse_wkt("LINESTRING (0 0, 1 1, 0 2)")
 pt1 = factory.point(1, 1)
 pt2 = factory.point(0, 2)
@@ -845,6 +935,8 @@ p linestring.touches?(pt2)
 Return `true` if the caller is completely inside the other geometry.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt = factory.point(1, 1)
 polygon = factory.parse_wkt("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 p pt.within?(polygon)
@@ -856,6 +948,8 @@ p pt.within?(polygon)
 Return `true` if the caller and the other geometry are related by the given [DE-9IM](http://en.wikipedia.org/wiki/DE-9IM). The DE-9IM is specified as a 9-element matrix indicating the dimension of the intersections between the Interior, Boundary, and Exterior of two geometries. It is represented by a 9-character text string using the symbols 'F', '0', '1', '2', 'T', '*'.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 # contains relationship
 intersection_matrix = 'T*****FF*'
 pt = factory.point(1, 1)
@@ -866,13 +960,15 @@ p polygon.relate?(pt, intersection_matrix)
 
 ## Analysis
 
-These methods return geometries and may require another geometry as input.
+These methods return geometries or numerics and may require another geometry as input.
 
 ### Distance
 
 Get the shortest distance between any two Points in the two geometric objects as calculated in the spatial reference system of the geometric object.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 # distance between two Points
 pt1 = factory.point(0, 0)
 pt2 = factory.point(0, 2)
@@ -893,6 +989,8 @@ pt3.distance(linestring)
 Returns a geometry that represents all points whose distance from the caller is less than or equal to the distance passed into the method. The shape of the buffer is dependent on the `buffer_resolution` property of the factory. The default value is 1 which will create a 4-sided polygon, 2 will create an 8-sided polygon, 3 will create a 12-sided polygon, and continue this pattern as `buffer_resolution` increases.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt = factory.point(0, 0)
 square = pt.buffer(10)
 
@@ -912,6 +1010,8 @@ p buffer
 Returns the minimum bounding box for the geometry as a Polygon. The polygon is defined by the corner points of the bounding box [(MINX, MINY), (MAXX, MINY), (MAXX, MAXY), (MINX, MAXY), (MINX, MINY)].
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 linestring = factory.line_string([factory.point(0, 0), factory.point(1, 3)])
 envelope = linestring.envelope
 
@@ -924,6 +1024,8 @@ p envelope
 Returns the convex hull of a geometry. The convex hull is the smallest convex geometry that encloses all geometries of the caller. The convex hull is usually a Polygon, but in some cases, it can be a LineString or a Point.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 pt1 = factory.point(0, 0)
 pt2 = factory.point(1, 1)
 pt3 = factory.point(1, -1)
@@ -939,6 +1041,8 @@ p c_hull
 Returns the intersection of the caller and the other geometry. The intersection is the portion of the caller and the other geometry that is shared between the two. If the geometries are disjoint, then an empty geometry collection is returned.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 square1 = factory.parse_wkt("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 intersection = square1.intersection(square2)
@@ -952,6 +1056,8 @@ p intersection
 Merges the input geometries to produce a result with no overlaps.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 square1 = factory.parse_wkt("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 union = square1.union(square2)
@@ -965,6 +1071,8 @@ p union
 Creates a union from a GeometryCollection. If using GEOS this will be faster than calling union on many geometries, so prefer this.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 square1 = factory.parse_wkt("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 squares = factory.collection([square1, square2])
@@ -979,6 +1087,8 @@ p union
 Returns a geometry representing the part of the caller that does not intersect the other geometry.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 square1 = factory.parse_wkt("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 diff = square1.difference(square2)
@@ -992,6 +1102,8 @@ p diff
 Returns a geometry representing the portions of the caller and the other geometry that do not intersect. This is the same as `geom.union(oth) - geom.intersection(oth)`.
 
 ```ruby
+factory = RGeo::Cartesian.factory
+
 square1 = factory.parse_wkt("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 sdiff = square1.sym_difference(square2)
