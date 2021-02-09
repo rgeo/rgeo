@@ -12,18 +12,19 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - ruby-head
-          - 3.0
-          - 2.7
-          - 2.6
-          - 2.5
+          - head
+          - '3.0'
+          - '2.7'
+          - '2.6'
+          - '2.5'
           - jruby
         os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.ruby == 'ruby-head' || matrix.os == 'windows-latest' || matrix.os == 'macos-latest' }}
+          - ubuntu
+          - windows
+          - macos
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
+    name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
@@ -31,23 +32,23 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - name: Install Geos (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu'
         run: sudo apt-get install libgeos-dev -y
       - name: Install Geos (Mac)
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos'
         run: brew install geos
       - name: Install Geos (Windows)
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows'
         run: exit 1 # FIXME
       - name: Test
         run: bundle exec rake
-  Rubocop:
+  RuboCop:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0
+          ruby-version: '3.0'
           bundler-cache: true
       - run: |
           bundle exec rubocop --color --parallel
