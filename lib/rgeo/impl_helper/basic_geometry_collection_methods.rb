@@ -9,6 +9,8 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicGeometryCollectionMethods # :nodoc:
+      include Enumerable
+
       attr_reader :elements
 
       def initialize(factory, elements)
@@ -35,6 +37,10 @@ module RGeo
 
       def each(&block)
         @elements.each(&block)
+      end
+
+      def geometries
+        @elements
       end
 
       def dimension
