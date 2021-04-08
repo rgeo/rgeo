@@ -41,9 +41,6 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
   VALUE cast_type;
   GEOSGeometry* geom;
   GEOSGeometry* collection;
-  char problem;
-  GEOSGeometry* igeom;
-  GEOSGeometry* jgeom;
 
   result = Qnil;
   Check_Type(array, T_ARRAY);

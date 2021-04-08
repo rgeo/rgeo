@@ -1,6 +1,7 @@
 ### Current
 
 * Change ProjectedLinearRing #is_simple? method to be uniform across geos versions #228
+* Improve large MultiPolygon creation performance (Quiwin) #251
 
 ### 2.2.0 / 2020-11-18
 
