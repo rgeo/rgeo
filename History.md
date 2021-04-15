@@ -1,3 +1,8 @@
+### Unreleased
+
+* Fix a memory leak in CAPI's `#invalid_reason`
+* `#invalid_reason` now must return `nil` if polygon is valid.
+
 ### 2.2.0 / 2020-11-18
 
 * Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
