@@ -2,10 +2,11 @@
 
 * Fix a memory leak in CAPI's `#invalid_reason`
 * `#invalid_reason` now must return `nil` if polygon is valid.
+* Add #geometries and utilize #each for Enumerable (mylesboone) #248
 
 ### 2.2.0 / 2020-11-18
 
-* Add SphericalPolygonMethods#centroid #208 (allknowingfrog)
+* Add SphericalPolygonMethods#centroid (allknowingfrog) #208
 * Expand gemspec
 * Drop Ruby 2.3 support
 * Add a simple fallback for `Polygon#contains?` (Quiwin) #224
