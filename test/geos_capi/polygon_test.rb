@@ -142,6 +142,6 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
-    assert_equal(nil, polygon.invalid_reason)
+    assert_nil(polygon.invalid_reason)
   end
 end if RGeo::Geos.capi_supported?

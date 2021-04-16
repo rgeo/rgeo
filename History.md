@@ -1,4 +1,4 @@
-### Unreleased
+### 2.3.0 / 2021-04-16
 
 * Fix a memory leak in CAPI's `#invalid_reason`
 * `#invalid_reason` now must return `nil` if polygon is valid.
