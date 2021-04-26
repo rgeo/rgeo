@@ -479,9 +479,9 @@ p interior_points
 
 The following types are GeometryCollections.
 
-A GeometryCollection is a geometric object this is a collection of one or more geometric objects. All the elements in a GeometryCollection shall be in the same Spatial Reference. This is also the Spatial Reference for the GeometryCollection.
+A GeometryCollection is a geometric object that is a collection of one or more geometric objects. All the elements in a GeometryCollection shall be in the same Spatial Reference. This is also the Spatial Reference for the GeometryCollection.
 
-A generic GeometryCollection places no other constraints what can be contained in the collection, but this limits the types of operations that can be performed on a GeometryCollection. For this reason, you should always prefer MultiPoint, MultiLineString, and MultiPolygon to GeometryCollection when possible.
+A generic GeometryCollection places no other constraints on what can be contained in the collection, but this limits the types of operations that can be performed on a GeometryCollection. For this reason, you should always prefer MultiPoint, MultiLineString, and MultiPolygon to GeometryCollection when possible.
 
 ### Creating a GeometryCollection with RGeo Features
 
@@ -548,7 +548,7 @@ p multipoint2
 
 ## MultiLineStrings
 
-A MultiLineString is a collection of LineString objects. A MultiLineString is simple if and only if all of its elements are simple and the only intersections betwen any two elements occur at Points that are on the boundaries (`start_point` or `end_point`) of both elements.
+A MultiLineString is a collection of LineString objects. A MultiLineString is simple if and only if all of its elements are simple and the only intersections between any two elements occur at Points that are on the boundaries (`start_point` or `end_point`) of both elements.
 
 A MultiLineString is closed if all of its elements are closed.
 
