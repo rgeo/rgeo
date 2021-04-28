@@ -109,7 +109,13 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     buffered_line_string =
       line_string.buffer_with_style(0.3, RGeo::Geos::CAP_SQUARE, RGeo::Geos::JOIN_MITRE, 5)
 
-    assert_equal polygon, buffered_line_string
+    b_coords = buffered_line_string.exterior_ring.coordinates
+    p_coords = polygon.exterior_ring.coordinates
+    p_coords.zip(b_coords).each do |p_coord, b_coord|
+      p_coord.zip(b_coord).each do |pt1, pt2|
+        assert_in_delta(pt1, pt2, 1e-7)
+      end
+    end
   end
 
   def test_is_valid_polygon
