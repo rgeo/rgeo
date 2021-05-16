@@ -41,9 +41,6 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
   VALUE cast_type;
   GEOSGeometry* geom;
   GEOSGeometry* collection;
-  char problem;
-  GEOSGeometry* igeom;
-  GEOSGeometry* jgeom;
 
   result = Qnil;
   Check_Type(array, T_ARRAY);
@@ -88,31 +85,13 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
     }
     else {
       collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
-      // Due to a limitation of GEOS, the MultiPolygon assertions are not checked.
-      // We do that manually here.
-      if (collection && type == GEOS_MULTIPOLYGON && (factory_data->flags & 1) == 0) {
-        problem = 0;
-        for (i=1; i<len; ++i) {
-          for (j=0; j<i; ++j) {
-            igeom = geoms[i];
-            jgeom = geoms[j];
-            problem = GEOSRelatePattern_r(geos_context, igeom, jgeom, "2********");
-            if (problem) {
-              break;
-            }
-            problem = GEOSRelatePattern_r(geos_context, igeom, jgeom, "****1****");
-            if (problem) {
-              break;
-            }
-          }
-          if (problem) {
-            break;
-          }
-        }
-        if (problem) {
-          GEOSGeom_destroy_r(geos_context, collection);
-          collection = NULL;
-        }
+      // Check if MultiPolygon is valid.
+      if (collection
+          && type == GEOS_MULTIPOLYGON
+          && !(factory_data->flags & 1)
+          && !GEOSisValid_r(geos_context, collection)) {
+        GEOSGeom_destroy_r(geos_context, collection);
+        collection = NULL;
       }
       if (collection) {
         result = rgeo_wrap_geos_geometry(factory, collection, module);

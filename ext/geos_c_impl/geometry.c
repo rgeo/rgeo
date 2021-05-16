@@ -1045,12 +1045,13 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   self_geom = self_data->geom;
   if (self_geom) {
     str = GEOSisValidReason_r(self_data->geos_context, self_geom);
-    if (str) {
-      result = rb_str_new2(str);
-    }
-    else {
-      result = rb_str_new2("Exception");
-    }
+    // Per documentation, a valid geometry should give an empty string.
+    // However it seems not to be the case. Hence the comparison against
+    // the string that is really given: `"Valid Geometry"`.
+    // See https://github.com/libgeos/geos/issues/431.
+    if (str) result = (str[0] == '\0' || !strcmp(str, "Valid Geometry")) ? Qnil : rb_str_new2(str);
+    else result = rb_str_new2("Exception");
+    GEOSFree_r(self_data->geos_context, str);
   }
   return result;
 }
