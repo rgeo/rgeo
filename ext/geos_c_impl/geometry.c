@@ -11,6 +11,7 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "errors.h"
 #include "factory.h"
 #include "geometry.h"
 
@@ -1044,14 +1045,22 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    str = GEOSisValidReason_r(self_data->geos_context, self_geom);
-    // Per documentation, a valid geometry should give an empty string.
-    // However it seems not to be the case. Hence the comparison against
-    // the string that is really given: `"Valid Geometry"`.
-    // See https://github.com/libgeos/geos/issues/431.
-    if (str) result = (str[0] == '\0' || !strcmp(str, "Valid Geometry")) ? Qnil : rb_str_new2(str);
-    else result = rb_str_new2("Exception");
-    GEOSFree_r(self_data->geos_context, str);
+    // Calling GEOSisValidDetail_r with a NULL location avoid having to retrieve it
+    // and handle its lifecycle. This is OK since GEOS 1.0.
+    // See https://github.com/libgeos/geos/commit/665431df5.
+    switch(GEOSisValidDetail_r(self_data->geos_context, self_geom, 0, &str, NULL)) {
+      case 0: // invalid geometry
+        result = rb_str_new_cstr(str);
+        break;
+      case 1: // valid geometry
+        result = Qnil;
+        break;
+      case 2: // exception
+        if (str) GEOSFree_r(self_data->geos_context, str);
+        rb_raise(geos_error, "Could not assert validity, bailing out.");
+        break;
+    }
+    if (str) GEOSFree_r(self_data->geos_context, str);
   }
   return result;
 }

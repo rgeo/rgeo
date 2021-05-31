@@ -11,6 +11,13 @@ module RGeo
     module CAPIGeometryMethods # :nodoc:
       include Feature::Instance
 
+      def check_validity!
+        @invalid_reason ||= invalid_reason
+        return unless @invalid_reason
+
+        raise Error::InvalidGeometry, @invalid_reason
+      end
+
       def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
       end
@@ -110,6 +117,24 @@ module RGeo
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPolygonMethods
+    end
+
+    OGC_METHODS = %i(contains? intersection area).freeze
+
+    ObjectSpace.each_object(Class) do |impl|
+      next unless impl < CAPIGeometryMethods
+
+      impl.class_eval do
+        (OGC_METHODS & instance_methods).each do |method_sym|
+          copy = "unsafe_#{method_sym}".to_sym
+          alias_method copy, method_sym
+          undef_method method_sym
+          define_method(method_sym) do |*args|
+            check_validity!
+            method(copy).call(*args)
+          end
+        end
+      end
     end
   end
 end
