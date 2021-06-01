@@ -6,57 +6,9 @@
 #
 # -----------------------------------------------------------------------------
 
+require_relative "../impl_helper/validity_check"
+
 module RGeo
-  module ValidityCheck
-    OGC_METHODS = %i(contains? intersection area).freeze
-    class << self
-      def override_classes
-        override(classes.pop) until classes.empty?
-      end
-
-      def included(klass)
-        classes << klass
-      end
-
-      private
-
-      def classes
-        @classes ||= Queue.new
-      end
-
-      def override(klass)
-        klass.class_eval do
-          (OGC_METHODS & instance_methods).each do |method_sym|
-            copy = "unsafe_#{method_sym}".to_sym
-            alias_method copy, method_sym
-            undef_method method_sym
-            define_method(method_sym) do |*args|
-              check_validity!
-              method(copy).call(*args)
-            end
-          end
-        end
-      end
-    end
-
-    def check_validity!
-      if defined?(@invalid_reason)
-        return unless @invalid_reason
-
-        raise Error::InvalidGeometry, @invalid_reason
-      end
-
-      unless respond_to?(:invalid_reason)
-        raise Error::UnsupportedOperation, "Method #{self.class}#invalid_reason not defined."
-      end
-
-      @invalid_reason = invalid_reason
-      return unless @invalid_reason
-
-      raise Error::InvalidGeometry, @invalid_reason
-    end
-  end
-
   module Geos
     module CAPIGeometryMethods # :nodoc:
       include Feature::Instance
@@ -106,24 +58,24 @@ module RGeo
 
     # TODO: is this any useful?
     class CAPIGeometryImpl # :nodoc:
-      include ValidityCheck
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
     end
 
     class CAPIPointImpl # :nodoc:
-      include ValidityCheck
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIPointMethods
     end
 
     class CAPILineStringImpl  # :nodoc:
-      include ValidityCheck
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
     end
 
     class CAPILinearRingImpl  # :nodoc:
-      include ValidityCheck
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILinearRingMethods
@@ -134,64 +86,45 @@ module RGeo
     end
 
     class CAPILineImpl # :nodoc:
-      include ValidityCheck
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILineMethods
     end
 
-    class CAPIPolygonImpl # :nodoc:
-      include ValidityCheck
+    class CAPIPolygonImpl
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIPolygonMethods
     end
 
-    class CAPIGeometryCollectionImpl # :nodoc:
-      include ValidityCheck
+    class CAPIGeometryCollectionImpl
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
     end
 
-    class CAPIMultiPointImpl # :nodoc:
-      include ValidityCheck
+    class CAPIMultiPointImpl
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPointMethods
     end
 
-    class CAPIMultiLineStringImpl # :nodoc:
-      include ValidityCheck
+    class CAPIMultiLineStringImpl
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiLineStringMethods
     end
 
-    class CAPIMultiPolygonImpl # :nodoc:
-      include ValidityCheck
+    class CAPIMultiPolygonImpl
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPolygonMethods
     end
 
-    OGC_METHODS = %i(contains? intersection area).freeze
-
-    puts("objspace: " + Benchmark.measure do
-      ValidityCheck.override_classes
-      # ObjectSpace.each_object(Class) do |impl|
-      #   next unless impl < CAPIGeometryMethods
-
-      #   impl.class_eval do
-      #     (OGC_METHODS & instance_methods).each do |method_sym|
-      #       copy = "unsafe_#{method_sym}".to_sym
-      #       alias_method copy, method_sym
-      #       undef_method method_sym
-      #       define_method(method_sym) do |*args|
-      #         check_validity!
-      #         method(copy).call(*args)
-      #       end
-      #     end
-      #   end
-      # end
-    end.real.to_s)
+    ImplHelper::ValidityCheck.override_classes
   end
 end
