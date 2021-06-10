@@ -166,7 +166,7 @@ module RGeo
       # truly proper intersection does not include colinear intersections and
       # the intersection must lie in the interior of both segments.
       #
-      # @return [Array]
+      # @return [Array<RGeo::Cartesian::SweeplineIntersector::Intersection>]
       def proper_intersections
         return @proper_intersections if @proper_intersections.size.positive?
 
@@ -192,7 +192,7 @@ module RGeo
       # then adds it to +observed_segments+. Records any intersections in to the
       # returned array.
       #
-      # @return [Array]
+      # @return [Array<RGeo::Cartesian::SweeplineIntersector::Intersection>]
       def intersections
         return @intersections if @intersections.size.positive?
 
