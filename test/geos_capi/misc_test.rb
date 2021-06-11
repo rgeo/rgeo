@@ -7,8 +7,11 @@
 # -----------------------------------------------------------------------------
 
 require_relative "../test_helper"
+require_relative "../common/validity_tests"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::ValidityTests
+
   def setup
     @factory = RGeo::Geos.factory(srid: 4326)
   end
@@ -44,13 +47,6 @@ class GeosMiscTest < Minitest::Test # :nodoc:
     assert_equal({}, coder["wkb_generator"])
     assert_equal({}, coder["wkt_parser"])
     assert_equal({}, coder["wkb_parser"])
-  end
-
-  def test_validity_checks
-    assert(
-      RGeo::ValidityCheck.send(:classes).empty?,
-      "`ValidityCheck.override_classes` was not called correctly"
-    )
   end
 
   def test_uninitialized
