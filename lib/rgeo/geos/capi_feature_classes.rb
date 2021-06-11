@@ -10,7 +10,7 @@ require_relative "../impl_helper/validity_check"
 
 module RGeo
   module Geos
-    module CAPIGeometryMethods # :nodoc:
+    module CAPIGeometryMethods
       include Feature::Instance
 
       def inspect
@@ -52,29 +52,33 @@ module RGeo
       alias to_s as_text
     end
 
-    module CAPIGeometryCollectionMethods # :nodoc:
+    module CAPIGeometryCollectionMethods
       include Enumerable
     end
 
     # TODO: is this any useful?
-    class CAPIGeometryImpl # :nodoc:
+    class CAPIGeometryImpl
+      include Feature::Geometry
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
     end
 
-    class CAPIPointImpl # :nodoc:
+    class CAPIPointImpl
+      include Feature::Point
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIPointMethods
     end
 
-    class CAPILineStringImpl  # :nodoc:
+    class CAPILineStringImpl
+      include Feature::LineString
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
     end
 
-    class CAPILinearRingImpl  # :nodoc:
+    class CAPILinearRingImpl
+      include Feature::LinearRing
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
@@ -85,7 +89,8 @@ module RGeo
       end
     end
 
-    class CAPILineImpl # :nodoc:
+    class CAPILineImpl
+      include Feature::Line
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
@@ -93,18 +98,21 @@ module RGeo
     end
 
     class CAPIPolygonImpl
+      include Feature::Polygon
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIPolygonMethods
     end
 
     class CAPIGeometryCollectionImpl
+      include Feature::GeometryCollection
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
     end
 
     class CAPIMultiPointImpl
+      include Feature::MultiPoint
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
@@ -112,6 +120,7 @@ module RGeo
     end
 
     class CAPIMultiLineStringImpl
+      include Feature::MultiLineString
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
@@ -119,6 +128,7 @@ module RGeo
     end
 
     class CAPIMultiPolygonImpl
+      include Feature::MultiPolygon
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
