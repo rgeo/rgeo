@@ -8,7 +8,8 @@ If you need GEOS and PROJ extensions on Heroku, you need to install those librar
 
 ```bash
 echo 'libgeos-dev=3.7.1-1~pgdg18.04+1' > Aptfile # Use the version you want here
-echo 'libproj-dev' >> Aptfile                    # Same here, you can not pin any version as well.
+echo 'libproj-dev' >> Aptfile                    # Same here, you can pin any version as well.
+echo 'proj-bin' >> Aptfile                       # Necessary if using rgeo-proj4 
 echo >> Aptfile
 git add Aptfile
 git commit -m 'Add Aptfile'
@@ -29,6 +30,7 @@ You need to create a file called `Aptfile` at the root of your repository with t
 ```
 libproj-dev
 libgeos-dev
+proj-bin
 ```
 
 You should also consider specifying the version to make sure it changes only if you want it. For instance for libgeos:
@@ -44,6 +46,8 @@ $ heroku buildpacks:add --index 1 heroku-community/apt
 ```
 
 If your Heroku environment has a config variable named `LD_LIBRARY_PATH`, please unset that.
+
+If you plan on using [rgeo-proj4](https://github.com/rgeo/rgeo-proj4) you must set the config variable named `PROJ_LIB` to `/app/.apt/usr/share/proj`
 
 It is also really likely that you have the rgeo gem beforehand, in which case you will need to purge your application cache:
 
@@ -78,6 +82,8 @@ heroku buildpacks:add --index=1 https://github.com/heroku/heroku-geo-buildpack.g
 heroku plugins:install heroku-repo
 heroku repo:purge_cache
 ```
+
+**Note** This option will NOT work with [rgeo-proj4](https://github.com/rgeo/rgeo-proj4). 
 
 ## Check that geos is correctly installed
 
