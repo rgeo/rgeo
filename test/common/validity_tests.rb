@@ -33,6 +33,11 @@ module RGeo
           assert_equal(0.5, bowtie_polygon.make_valid.area)
         end
 
+        def test_validity_invalid_reason
+          assert_nil(square_polygon.invalid_reason)
+          assert_equal("Self-intersection", bowtie_polygon.invalid_reason)
+        end
+
         def implements_make_valid?
           square_polygon.method(:make_valid).owner != RGeo::ImplHelper::ValidityCheck
         end

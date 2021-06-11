@@ -1060,7 +1060,7 @@ static VALUE method_geometry_make_valid(VALUE self)
 {
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  const GEOSGeometry* valid_geom;
+  GEOSGeometry* valid_geom;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (!self_geom) return Qnil;

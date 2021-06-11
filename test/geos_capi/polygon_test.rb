@@ -137,21 +137,4 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
 
     assert_equal(polygon.valid?, false)
   end
-
-  def test_invalid_reason
-    polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
-    outer_ring = @factory.linear_ring(points_arr)
-    polygon = @factory.polygon(outer_ring)
-
-    assert_equal("Self-intersection[0 0 0]", polygon.invalid_reason)
-  end
-
-  def test_invalid_reason_with_valid_polygon
-    polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
-    outer_ring = @factory.linear_ring(points_arr)
-    polygon = @factory.polygon(outer_ring)
-    assert_nil(polygon.invalid_reason)
-  end
 end if RGeo::Geos.capi_supported?
