@@ -6,9 +6,11 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
+require_relative "../common/validity_tests"
 
 class GeosFFIMiscTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::ValidityTests
   def setup
     @factory = RGeo::Geos.factory(srid: 4326, native_interface: :ffi)
   end

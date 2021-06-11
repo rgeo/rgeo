@@ -6,6 +6,8 @@
 #
 # -----------------------------------------------------------------------------
 
+require "ffi-geos"
+
 module RGeo
   module Geos
     module FFIGeometryMethods # :nodoc:
@@ -126,13 +128,16 @@ module RGeo
       end
 
       def invalid_reason
-        str = @fg_geom.valid_reason
-        if str == "Valid Geometry"
-          nil
-        else
-          str
-        end
+        # valid_detail gives solely the reason, or nil if valid, which is
+        # what we want.
+        fg_geom.valid_detail&.dig(:detail)
       end
+
+      # (see RGeo::ImplHelper::ValidityCheck#make_valid)
+      # Only available since GEOS 3.8+
+      def make_valid
+        @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
+      end if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
 
       def equals?(rhs)
         return false unless rhs.is_a?(RGeo::Feature::Instance)
