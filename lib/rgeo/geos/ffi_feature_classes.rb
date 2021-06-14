@@ -6,6 +6,8 @@
 #
 # -----------------------------------------------------------------------------
 
+require_relative "../impl_helper/validity_check"
+
 module RGeo
   module Geos
     class FFIGeometryImpl
