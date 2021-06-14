@@ -84,6 +84,34 @@ class CartesianPlanarGraphTest < Minitest::Test
     assert_equal([e5, e6, e1, e2, e3, e4], edges)
   end
 
+  def test_half_edge_each
+    seg = RGeo::Cartesian::Segment.new(@point1, @point3)
+    e1, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(seg)
+    res = e1.each
+    assert_equal(1, res.size)
+    assert_equal(e1, res.first)
+  end
+
+  def test_half_edge_each_loop
+    s1, s2, s3, s4 = @big_sq_ring.segments
+
+    e11, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(s1)
+    e21, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(s2)
+    e31, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(s3)
+    e41, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(s4)
+
+    e11.next = e21
+    e21.next = e31
+    e31.next = e41
+    e41.next = e11
+
+    edges = e11.each do |e|
+      refute(nil, e.next)
+    end
+
+    assert_equal(4, edges.size)
+  end
+
   def test_create_planar_graph
     graph_shapes = [@big_sq_ring, @hourglass]
     graph_shapes.each do |shape|
@@ -246,5 +274,95 @@ class CartesianPlanarGraphTest < Minitest::Test
 
       assert_equal(origin, n.origin)
     end
+  end
+
+  def test_create_geometry_graph_linear_ring
+    geom = @big_sq_ring
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(geom)
+
+    assert_equal(geom, graph.parent_geometry)
+    assert_equal(4, graph.edges.size)
+    assert_equal(4, graph.incident_edges.size)
+    assert_equal(1, graph.geom_edges.size)
+    assert_equal(@point1, graph.geom_edges.first.exterior_edge.origin)
+    assert_nil(graph.geom_edges.first.interior_edges)
+  end
+
+  def test_create_geometry_graph_polygon
+    poly = @factory.polygon(@big_sq_ring)
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(poly)
+
+    assert_equal(poly, graph.parent_geometry)
+    assert_equal(4, graph.edges.size)
+    assert_equal(4, graph.incident_edges.size)
+    assert_equal(1, graph.geom_edges.size)
+    assert_equal(@point1, graph.geom_edges.first.exterior_edge.origin)
+    assert_equal(0, graph.geom_edges.first.interior_edges.size)
+  end
+
+  def test_create_geometry_graph_polygon_with_hole
+    poly = @factory.polygon(@big_sq_ring, [@little_sq_ring])
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(poly)
+
+    assert_equal(poly, graph.parent_geometry)
+    assert_equal(8, graph.edges.size)
+    assert_equal(8, graph.incident_edges.size)
+    assert_equal(1, graph.geom_edges.size)
+    assert_equal(@point1, graph.geom_edges.first.exterior_edge.origin)
+    assert_equal(1, graph.geom_edges.first.interior_edges.size)
+    refute_nil(graph.geom_edges.first.interior_edges.first)
+  end
+
+  def test_create_geometry_graph_polygon_with_intersecting_hole
+    poly = @factory.polygon(@big_sq_ring, [@incscribed_diamond_ring])
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(poly)
+
+    assert_equal(poly, graph.parent_geometry)
+    assert_equal(12, graph.edges.size)
+    assert_equal(8, graph.incident_edges.size)
+    assert_equal(1, graph.geom_edges.size)
+    assert_equal(@point1, graph.geom_edges.first.exterior_edge.origin)
+    assert_equal(1, graph.geom_edges.first.interior_edges.size)
+
+    # Check that the exterior pointer is in one of the triangles
+    # and that the interior pointers is nil because no valid loops exist
+    # from this start point (disconnected interior).
+    geom_edge = graph.geom_edges.first
+    assert_equal(3, geom_edge.exterior_edge.each.size)
+    assert_nil(geom_edge.interior_edges.first)
+  end
+
+  def test_create_geometry_graph_multi_polygon
+    pt1 = @factory.point(5, 5)
+    pt2 = @factory.point(6, 5)
+    pt3 = @factory.point(6, 6)
+    pt4 = @factory.point(5, 6)
+
+    pt5 = @factory.point(5.33, 5.33)
+    pt6 = @factory.point(5.66, 5.33)
+    pt7 = @factory.point(5.66, 5.66)
+    pt8 = @factory.point(5.33, 5.66)
+
+    shifted_big_sq_ring = @factory.linear_ring([pt1, pt2, pt3, pt4])
+    shifted_little_sq_ring = @factory.linear_ring([pt5, pt6, pt7, pt8])
+    shifted_poly = @factory.polygon(shifted_big_sq_ring, [shifted_little_sq_ring])
+    poly = @factory.polygon(@big_sq_ring, [@little_sq_ring])
+
+    # mp is two squares with nested squares shifted by 5,5
+    mp = @factory.multi_polygon([poly, shifted_poly])
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(mp)
+
+    assert_equal(mp, graph.parent_geometry)
+    assert_equal(16, graph.edges.size)
+    assert_equal(16, graph.incident_edges.size)
+    assert_equal(2, graph.geom_edges.size)
+
+    assert_equal(@point1, graph.geom_edges.first.exterior_edge.origin)
+    assert_equal(1, graph.geom_edges.first.interior_edges.size)
+    refute_nil(graph.geom_edges.first.interior_edges.first)
+
+    assert_equal(pt1, graph.geom_edges.last.exterior_edge.origin)
+    assert_equal(1, graph.geom_edges.last.interior_edges.size)
+    refute_nil(graph.geom_edges.last.interior_edges.first)
   end
 end

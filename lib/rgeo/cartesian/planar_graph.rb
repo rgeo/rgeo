@@ -47,6 +47,24 @@ module RGeo
           angle <=> other.angle
         end
 
+        # Will keep following next in a half-edge until it returns to itself
+        # or hits a half-edge without a next edge.
+        #
+        # @return [Array]
+        def each
+          hedges = []
+          yield(self) if block_given?
+          hedges << self
+
+          n = self.next
+          until n.eql?(self) || n.nil?
+            yield(n) if block_given?
+            hedges << n
+            n = n.next
+          end
+          hedges
+        end
+
         # Return the destination of the half edge
         #
         # @return [RGeo::Feature::Point]
@@ -60,6 +78,17 @@ module RGeo
         # @return [Float]
         def angle
           @angle ||= Math.atan2(destination.y - origin.y, destination.x - origin.x)
+        end
+
+        def inspect
+          "#<#{self.class}:0x#{object_id.to_s(16)} #{self}>"
+        end
+
+        def to_s
+          dst = twin.nil? ? nil : destination
+          pr = prev.nil? ? nil : prev.origin
+          n = @next.nil? ? nil : @next.origin
+          "HalfEdge(#{origin}, #{dst}), Prev: #{pr},  Next: #{n}"
         end
       end
 
@@ -76,7 +105,8 @@ module RGeo
         # Create a new PlanarGraph
         #
         # @param edges [Array<RGeo::Cartesian::Segment>] of Segments
-        def initialize(edges)
+        def initialize(edges = nil)
+          edges = [] if edges.nil?
           @edges = []
           @incident_edges = {}
 
@@ -174,7 +204,7 @@ module RGeo
         end
 
         def insert_half_edge(he)
-          unless @incident_edges[he.origin.coordinates]
+          unless incident_edges[he.origin.coordinates]
             @incident_edges[he.origin.coordinates] = []
           end
           @incident_edges[he.origin.coordinates] << he
@@ -188,7 +218,7 @@ module RGeo
         # half-edges (e1, e2) can be linked by saying e1.prev = e2.twin
         # and e2.twin.next = e1.
         def link_half_edges
-          @incident_edges.each_value do |hedges|
+          incident_edges.each_value do |hedges|
             hedges.sort!
             if hedges.size > 1
               (0..hedges.size - 2).each do |i|
@@ -224,8 +254,9 @@ module RGeo
               b.y <=> a.y
             end
           end
-          he_start = @incident_edges[points.first.coordinates].find { |he| he.destination == points.last }
-          he_end = @incident_edges[points.last.coordinates].find { |he| he.destination == points.first }
+
+          he_start = incident_edges[points.first.coordinates].find { |he| he.destination == points.last }
+          he_end = incident_edges[points.last.coordinates].find { |he| he.destination == points.first }
 
           points.each_cons(2) do |s, e|
             edge = Segment.new(s, e)
@@ -248,7 +279,137 @@ module RGeo
         end
       end
 
+      # GeometryGraph is a PlanarGraph that is built by adding
+      # geometries instead of edges. The GeometryGraph will
+      # hold a reference to an arbitrary HalfEdge on the
+      # interior of the geometry for every boundary in the geometry.
+      # For example, a polygon will have a reference to a HalfEdge for its
+      # exterior shell and one for every hole.
       class GeometryGraph < PlanarGraph
+        # GeomEdge will be used to store the references to the HalfEdges
+        GeomEdge = Struct.new(:exterior_edge, :interior_edges)
+
+        def initialize(geom)
+          super()
+          @parent_geometry = geom
+          @geom_edges = []
+          add_geometry(geom)
+        end
+        attr_reader :parent_geometry, :geom_edges
+
+        private
+
+        # Adds a geometry to the graph and finds its
+        # reference HalfEdge(s).
+        #
+        # @param geom [RGeo::Feature::Instance]
+        def add_geometry(geom)
+          case geom
+          when Feature::Point
+            # Can't handle points yet, so just add an empty entry for them
+            @geom_edges << GeomEdge.new
+          when Feature::LineString, Feature::LinearRing
+            add_line_string(geom)
+          when Feature::Polygon
+            add_polygon(geom)
+          when Feature::GeometryCollection
+            add_collection(geom)
+          end
+        end
+
+        # Adds a LineString or LinearRing
+        # to the graph.
+        #
+        # @param geom [RGeo::Feature::LineString]
+        def add_line_string(geom)
+          # TODO: should we handle empty linestrings?
+          add_edges(geom.segments)
+
+          # linestrings and linearrings do not have exterior
+          # and interior sides so we can just pick a half-edge
+          # from the start of the linestring
+          hedge = unless geom.is_empty?
+                    @incident_edges[geom.start_point.coordinates].first
+                  end
+
+          @geom_edges << GeomEdge.new(hedge, nil)
+        end
+
+        # Adds a Polygon to the graph.
+        #
+        # @param geom [RGeo::Feature::Polygon]
+        def add_polygon(geom)
+          # TODO: Need to think about this more, there
+          # may be a strategy to make this more reliable.
+          #
+          # Strategy here is to add each shell separately.
+          # To find the proper half-edge, look through incident_edges
+          # at a point in the ring until it finds a CCW (for exterior or
+          # CW for interior because that is the interior of the polygon) rotation.
+          # Note: This half-edge may be nil if a valid loop isn't found. This
+          # likely indicates validity issues with the holes.
+          exterior = geom.exterior_ring
+          add_edges(exterior.segments)
+
+          hedge = find_hedge(exterior)
+
+          interior_hedges = []
+          geom.interior_rings.each do |interior|
+            add_edges(interior.segments)
+            interior_hedges << find_hedge(interior, ccw: false)
+          end
+
+          @geom_edges << GeomEdge.new(hedge, interior_hedges)
+        end
+
+        # Adds a GeometryCollection to the graph.
+        #
+        # @param col [RGeo::Feature::GeometryCollection]
+        def add_collection(col)
+          col.each do |geom|
+            add_geometry(geom)
+          end
+        end
+
+        # Finds a Half-Edge that is part of a CCW or CW rotation
+        # from the input ring. Returns nil if none found.
+        #
+        # Will only consider half-edges that are colinear with
+        # the first or last segments of the ring.
+        #
+        # @param ring [RGeo::Feature::LinearRing]
+        # @param ccw [Boolean] true for CCW, false for CW
+        # @return [HalfEdge, nil]
+        def find_hedge(ring, ccw: true)
+          return nil if ring.num_points.zero?
+          ccw_target = ccw ? 1 : -1
+
+          coords = ring.start_point.coordinates
+          hedges = incident_edges[coords]
+
+          # find half-edges that are colinear to the start or end
+          # segment of the ring.
+          start_seg = Segment.new(ring.start_point, ring.point_n(1))
+          end_seg = Segment.new(ring.point_n(ring.num_points - 2), ring.end_point)
+          colinear_hedges = hedges.select do |he|
+            start_seg.side(he.destination).zero? || end_seg.side(he.destination).zero?
+          end
+
+          colinear_hedges.each do |hedge|
+            pts = [hedge.origin]
+
+            n = hedge.next
+            until n.eql? hedge
+              pts << n.origin
+              n = n.next
+            end
+            pts << n.origin
+
+            lr = parent_geometry.factory.line_string(pts)
+            return hedge if Analysis.ring_direction(lr) == ccw_target
+          end
+          nil
+        end
       end
     end
   end
