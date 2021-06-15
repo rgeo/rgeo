@@ -83,7 +83,7 @@ heroku plugins:install heroku-repo
 heroku repo:purge_cache
 ```
 
-**Note** This option will NOT work with [rgeo-proj4].
+**Note** In order for this to work [rgeo-proj4] you will need to use ENV vars to update to PROJ 6.2.
 
 ## Check that geos is correctly installed
 
