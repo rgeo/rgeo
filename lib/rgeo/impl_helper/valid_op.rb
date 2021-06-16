@@ -55,10 +55,10 @@ module RGeo
         case self
         when Feature::Point
           check_valid_point
-        when Feature::LineString
-          check_valid_line_string
         when Feature::LinearRing
           check_valid_linear_ring
+        when Feature::LineString
+          check_valid_line_string
         when Feature::Polygon
           check_valid_polygon
         when Feature::MultiPoint
@@ -101,8 +101,8 @@ module RGeo
         # check closed
         return TopologyErrors::UNCLOSED_RING unless is_closed?
 
-        # check more than 1 point
-        return TopologyErrors::TOO_FEW_POINTS unless num_points > 1
+        # check more than 3 points
+        return TopologyErrors::TOO_FEW_POINTS unless num_points > 3
 
         # check no self-intersections
         check = check_no_self_intersections(self)
@@ -132,21 +132,27 @@ module RGeo
         return TopologyErrors::TOO_FEW_POINTS unless exterior_ring.num_points > 3
         return TopologyErrors::TOO_FEW_POINTS unless interior_rings.all? { |r| r.num_points > 3 }
 
-        check = check_consistent_area(self)
-        return check unless check.nil?
+        # can skip this check if there's no holes
+        if interior_rings.size.positive?
+          check = check_consistent_area(self)
+          return check unless check.nil?
+        end
 
         # check that there are no self-intersections
         check = check_no_self_intersecting_rings(self)
         return check unless check.nil?
 
-        check = check_holes_in_shell(self)
-        return check unless check.nil?
+        # can skip these checks if there's no holes
+        if interior_rings.size.positive?
+          check = check_holes_in_shell(self)
+          return check unless check.nil?
 
-        check = check_holes_not_nested(self)
-        return check unless check.nil?
+          check = check_holes_not_nested(self)
+          return check unless check.nil?
 
-        check = check_connected_interiors(self)
-        return check unless check.nil?
+          check = check_connected_interiors(self)
+          return check unless check.nil?
+        end
 
         nil
       end
@@ -163,6 +169,9 @@ module RGeo
         geometries.each do |poly|
           return poly.invalid_reason unless poly.invalid_reason.nil?
         end
+
+        check = check_consistent_area_mp(self)
+        return check unless check.nil?
 
         # check no shells are nested
         check = check_shells_not_nested(self)
@@ -201,9 +210,6 @@ module RGeo
       # @return [String] invalid_reason
       def check_consistent_area(poly)
         # Holes don't intersect exterior check.
-        # TODO: possibly make this a cross since one point of the interior
-        # lying on the boundary is valid.
-        # Also this can probably be handled in a planar graph later.
         exterior = poly.exterior_ring
         poly.interior_rings.each do |ring|
           return TopologyErrors::SELF_INTERSECTION if ring.intersects?(exterior)
@@ -278,20 +284,18 @@ module RGeo
       # @return [String] invalid_reason
       def check_holes_not_nested(poly)
         # convert holes from linear_rings to polygons
+        # Same logic that applies to check_holes_in_shell applies here
+        # since we've already passed the consistent area test, we just
+        # have to check if one point from each hole is contained in the other.
         holes = poly.interior_rings
         holes = holes.map { |v| v.factory.polygon(v) }
-
-        i = 0
-        while i < holes.size
-          j = i
-          h1 = holes[i]
-          while j < holes.size
-            h2 = holes[j]
-
-            return TopologyErrors::NESTED_HOLES if h1.contains?(h2) || h2.contains?(h1)
-            j += 1
+        holes.combination(2).each do |h1, h2|
+          # convert to polygons because we are checking the interiors of the rings
+          p1 = h1.factory.polygon(h1)
+          p2 = h2.factory.polygon(h2)
+          if p1.contains?(p2.exterior_ring.start_point) || p2.contains?(p1.exterior_ring.start_point)
+            return TopologyErrors::NESTED_HOLES
           end
-          i += 1
         end
 
         nil
@@ -306,8 +310,24 @@ module RGeo
       # @param poly [RGeo::Feature::Polygon]
       #
       # @return [String] invalid_reason
-      def check_connected_interiors(_poly)
-        raise NotImplementedError, "#{__method__} not yet implemented"
+      def check_connected_interiors(poly)
+        # TODO: Maybe a way to estimate this with basic geometric predicates
+        # and individual implementations can override it and use graph?
+        return TopologyErrors::DISCONNECTED_INTERIOR unless poly.connected_interior?
+      end
+
+      # Checks that polygons do not intersect in a multipolygon.
+      #
+      # @param mp [RGeo::Feature::MultiPolygon]
+      #
+      # @return [String] invalid_reason
+      def check_consistent_area_mp(mp)
+        mp.geometries.combination(2) do |p1, p2|
+          if p1.exterior_ring.intersects?(p2.exterior_ring)
+            return TopologyErrors::SELF_INTERSECTION
+          end
+        end
+        nil
       end
 
       # Checks that individual polygons within a multipolygon are not nested.
@@ -316,7 +336,14 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_shells_not_nested(_mp)
-        raise NotImplementedError, "#{__method__} not yet implemented"
+        # Since we've passed the consistent area test, we can just check
+        # that one point lies in the other.
+        mp.geometries.combination(2) do |p1, p2|
+          if p1.contains?(p2.exterior_ring.start_point) || p2.contains?(p1.exterior_ring.start_point)
+            return TopologyErrors::NESTED_SHELLS
+          end
+        end
+        nil
       end
     end
   end
