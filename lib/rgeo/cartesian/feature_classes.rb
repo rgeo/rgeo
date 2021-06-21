@@ -52,6 +52,7 @@ module RGeo
       include RGeo::ImplHelper::BasicPolygonMethods
       include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
+      include RGeo::Cartesian::PolygonMethods
     end
 
     class GeometryCollectionImpl # :nodoc:

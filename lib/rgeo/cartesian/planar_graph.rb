@@ -246,14 +246,10 @@ module RGeo
         # the existing half-edges when possible since geometries may reference
         # them.
         def compute_split_edges(seg, ints)
-          points = ints.concat([seg.s, seg.e])
-          points = points.uniq.sort do |a, b|
-            if a.y == b.y
-              a.x <=> b.x
-            else
-              b.y <=> a.y
-            end
+          points = ints.uniq.sort do |a, b|
+            a.distance(seg.s) <=> b.distance(seg.s)
           end
+          points = [seg.s] + points + [seg.e]
 
           he_start = incident_edges[points.first.coordinates].find { |he| he.destination == points.last }
           he_end = incident_edges[points.last.coordinates].find { |he| he.destination == points.first }
@@ -339,9 +335,6 @@ module RGeo
         #
         # @param geom [RGeo::Feature::Polygon]
         def add_polygon(geom)
-          # TODO: Need to think about this more, there
-          # may be a strategy to make this more reliable.
-          #
           # Strategy here is to add each shell separately.
           # To find the proper half-edge, look through incident_edges
           # at a point in the ring until it finds a CCW (for exterior or
