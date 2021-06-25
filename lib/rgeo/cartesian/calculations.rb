@@ -125,7 +125,21 @@ module RGeo
             x = @sx + (cross1 * @dx)
             y = @sy + (cross1 * @dy)
 
-            @s.factory.point(x, y)
+            # Check if this segment contains the point.
+            # Sometimes round-off errors occur and intersections
+            # are recorded as off the line segments.
+            #
+            # If this is the case, return the closest point from
+            # either segment.
+            int_pt = @s.factory.point(x, y)
+            if contains_point?(int_pt)
+              int_pt
+            else
+              # find closest of @s, @e, seg.s, seg.e
+              [@e, seg.s, seg.e].reduce(@s) do |closest, pt|
+                int_pt.distance(pt) < int_pt.distance(closest) ? pt : closest
+              end
+            end
           end
         end
       end

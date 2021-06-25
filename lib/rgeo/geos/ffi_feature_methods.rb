@@ -125,6 +125,15 @@ module RGeo
         @fg_geom.valid?
       end
 
+      def invalid_reason
+        str = @fg_geom.valid_reason
+        if str.include?("Valid Geometry")
+          nil
+        else
+          str
+        end
+      end
+
       def equals?(rhs)
         return false unless rhs.is_a?(RGeo::Feature::Instance)
         fg = factory.convert_to_fg_geometry(rhs)

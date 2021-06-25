@@ -129,6 +129,13 @@ class CartesianCalculationsTest < Minitest::Test # :nodoc:
     assert_equal(@point1, @vert_seg.segment_intersection(@horiz_seg))
   end
 
+  def test_segment_intersection_floating_point_miss
+    poly = @factory.point(0, 0).buffer(1)
+    poly.exterior_ring.segments.each_cons(2) do |seg1, seg2|
+      assert_equal(seg1.e, seg1.segment_intersection(seg2))
+    end
+  end
+
   def test_sweepline_create_events
     segs = [@li_seg1, @li_seg2]
     li = RGeo::Cartesian::SweeplineIntersector.new(segs)

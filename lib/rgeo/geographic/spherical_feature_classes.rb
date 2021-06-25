@@ -12,6 +12,7 @@ module RGeo
       include Feature::Point
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPointMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
       include SphericalPointMethods
     end
@@ -20,6 +21,7 @@ module RGeo
       include Feature::LineString
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
       include SphericalLineStringMethods
     end
@@ -29,6 +31,7 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::BasicLineMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
       include SphericalLineStringMethods
     end
@@ -38,6 +41,7 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::BasicLinearRingMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
       include SphericalLineStringMethods
     end
@@ -46,6 +50,7 @@ module RGeo
       include Feature::Polygon
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPolygonMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
       include SphericalPolygonMethods
     end
@@ -54,6 +59,7 @@ module RGeo
       include Feature::GeometryCollection
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
     end
 
@@ -62,6 +68,7 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPointMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
     end
 
@@ -70,6 +77,7 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiLineStringMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
       include SphericalMultiLineStringMethods
     end
@@ -79,6 +87,7 @@ module RGeo
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPolygonMethods
+      include ImplHelper::ValidOp
       include SphericalGeometryMethods
     end
   end

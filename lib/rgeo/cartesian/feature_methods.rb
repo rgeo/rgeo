@@ -80,8 +80,7 @@ module RGeo
       #
       # @return [Boolean]
       def crosses_line_string?(rhs)
-        self_ints = []
-        self_ints += SweeplineIntersector.new(segments).proper_intersections
+        self_ints = SweeplineIntersector.new(segments).proper_intersections
         self_ints += SweeplineIntersector.new(rhs.segments).proper_intersections
         overlay_ints = SweeplineIntersector.new(segments + rhs.segments).proper_intersections
 

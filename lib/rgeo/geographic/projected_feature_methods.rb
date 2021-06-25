@@ -30,6 +30,14 @@ module RGeo
         projection.is_simple?
       end
 
+      def valid?
+        projection.valid?
+      end
+
+      def invalid_reason
+        projection.invalid_reason
+      end
+
       def boundary
         boundary = projection.boundary
         boundary ? factory.unproject(boundary) : nil
@@ -144,7 +152,7 @@ module RGeo
 
       private
 
-      def validate_geometry
+      def prepare_geometry
         @y = 85.0511287 if @y > 85.0511287
         @y = -85.0511287 if @y < -85.0511287
         super
@@ -160,7 +168,7 @@ module RGeo
     module ProjectedLineStringMethods # :nodoc:
       private
 
-      def validate_geometry
+      def prepare_geometry
         @points = @points.map(&:canonical_point)
         super
       end
@@ -185,7 +193,7 @@ module RGeo
     module ProjectedPolygonMethods # :nodoc:
       private
 
-      def validate_geometry
+      def prepare_geometry
         super
         unless projection
           raise Error::InvalidGeometry, "Polygon failed assertions"
@@ -196,7 +204,7 @@ module RGeo
     module ProjectedMultiPolygonMethods # :nodoc:
       private
 
-      def validate_geometry
+      def prepare_geometry
         super
         unless projection
           raise Error::InvalidGeometry, "MultiPolygon failed assertions"
