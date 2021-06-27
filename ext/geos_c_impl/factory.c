@@ -773,7 +773,6 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
 {
   VALUE object;
-  const GEOSGeometry* geom;
   RGeo_Globals* globals;
 
   if (NIL_P(type) && TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
@@ -783,11 +782,11 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
     globals = RGEO_FACTORY_DATA_PTR(factory)->globals;
     object = rb_funcall(globals->feature_module, globals->id_cast, 3, obj, factory, type);
   }
-  geom = NULL;
-  if (!NIL_P(object)) {
-    geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;
-  }
-  return geom;
+  if (NIL_P(object))
+    return NULL;
+
+  Check_Type(object, T_DATA);
+  return RGEO_GEOMETRY_DATA_PTR(object)->geom;
 }
 
 

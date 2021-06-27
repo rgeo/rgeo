@@ -6,7 +6,8 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require "ostruct"
+require_relative "../test_helper"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
   def setup
@@ -135,6 +136,12 @@ class GeosMiscTest < Minitest::Test # :nodoc:
       assert(geom.eql?(expected))
     else
       assert_equal(nil, geom)
+    end
+  end
+
+  def test_casting_dumb_objects
+    assert_raises(TypeError) do
+      RGeo::Geos.factory.point(1, 1).contains?(OpenStruct.new(factory: RGeo::Geos.factory))
     end
   end
 end if RGeo::Geos.capi_supported?
