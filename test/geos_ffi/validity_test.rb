@@ -12,7 +12,7 @@ class GeosFFIValidityTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::ValidityTests
 
   def setup
-    @factory = RGeo::Geos.factory(native_interface: :ffi)
+    @factory = RGeo::Geos.factory(native_interface: :ffi, uses_lenient_multi_polygon_assertions: true)
     @invalid_point = @factory.point(Float::INFINITY, 0)
     @point1 = @factory.point(0, 0)
     @point2 = @factory.point(1, 1)

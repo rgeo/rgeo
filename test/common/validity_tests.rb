@@ -17,7 +17,7 @@ module RGeo
 
         def test_invalid_line_string_invalid_coord
           ls = @factory.line_string([@invalid_point, @point1])
-          assert(ls.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE))
+          assert_includes(ls.invalid_reason, RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE)
           assert_equal(false, ls.valid?)
         end
 
@@ -28,14 +28,14 @@ module RGeo
         end
 
         def test_invalid_linear_ring_invalid_coordinate
-          lr = @factory.linear_ring([@invalid_point, @point1, @point2, @invalid_point])
-          assert(lr.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE))
+          lr = @factory.linear_ring([@point1, @invalid_point, @point2, @invalid_point, @point1])
+          assert_includes(lr.invalid_reason, RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE)
           assert_equal(false, lr.valid?)
         end
 
         def test_invalid_linear_ring_self_intersection
           lr = @factory.linear_ring([@point1, @point2, @point3, @point4])
-          assert(lr.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION))
+          assert_includes(lr.invalid_reason, RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION)
           assert_equal(false, lr.valid?)
         end
 
@@ -48,12 +48,12 @@ module RGeo
         def test_invalid_polygon_invalid_coord
           lr = @factory.linear_ring([@point1, @invalid_point, @point2, @point4, @point1])
           poly1 = @factory.polygon(lr)
-          assert(poly1.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE))
+          assert_includes(poly1.invalid_reason, RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE)
           assert_equal(false, poly1.valid?)
 
           # test in hole
           poly2 = @factory.polygon(@big_square, [lr])
-          assert(poly2.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE))
+          assert_includes(poly2.invalid_reason, RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE)
           assert_equal(false, poly2.valid?)
         end
 
@@ -64,7 +64,7 @@ module RGeo
           lr = @factory.linear_ring([pt1, pt2, pt3, pt1])
           poly = @factory.polygon(@big_square, [lr])
 
-          assert(poly.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION))
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION)
           assert_equal(false, poly.valid?)
 
           # intersecting holes
@@ -80,20 +80,20 @@ module RGeo
           hole2 = @factory.linear_ring([pt7, pt8, pt9, pt7])
           poly2 = @factory.polygon(@big_square, [hole1, hole2])
 
-          assert(poly2.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION))
+          assert_includes(poly2.invalid_reason, RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION)
           assert_equal(false, poly2.valid?)
         end
 
         def test_invalid_polygon_duplicate_rings
           poly = @factory.polygon(@big_square, [@little_square, @little_square])
-          assert(poly.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::DUPLICATE_RINGS))
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::DUPLICATE_RINGS)
           assert_equal(false, poly.valid?)
         end
 
         def test_invalid_polygon_self_intersecting_ring
           hourglass = @factory.linear_ring([@point1, @point2, @point3, @point4, @point1])
           poly = @factory.polygon(hourglass)
-          assert(poly.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION))
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION)
           assert_equal(false, poly.valid?)
         end
 
@@ -105,12 +105,12 @@ module RGeo
           disjoint_hole = @factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 
           poly = @factory.polygon(@little_square, [disjoint_hole])
-          assert(poly.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::HOLE_OUTSIDE_SHELL))
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::HOLE_OUTSIDE_SHELL)
           assert_equal(false, poly.valid?)
 
           # test a containing hole
           poly2 = @factory.polygon(@little_square, [@big_square])
-          assert(poly2.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::HOLE_OUTSIDE_SHELL))
+          assert_includes(poly2.invalid_reason, RGeo::ImplHelper::TopologyErrors::HOLE_OUTSIDE_SHELL)
           assert_equal(false, poly2.valid?)
         end
 
@@ -122,7 +122,7 @@ module RGeo
           nested_hole = @factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 
           poly = @factory.polygon(@big_square, [@little_square, nested_hole])
-          assert(poly.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::NESTED_HOLES))
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::NESTED_HOLES)
           assert_equal(false, poly.valid?)
         end
 
@@ -134,7 +134,7 @@ module RGeo
           inscribed_diamond = @factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 
           poly = @factory.polygon(@little_square, [inscribed_diamond])
-          assert(poly.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR))
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR)
           assert_equal(false, poly.valid?)
 
           # test with touching triangles
@@ -147,7 +147,7 @@ module RGeo
           triangle1 = @factory.linear_ring([pt5, pt6, pt7, pt5])
           triangle2 = @factory.linear_ring([pt7, pt8, pt9, pt7])
           poly2 = @factory.polygon(@little_square, [triangle1, triangle2])
-          assert(poly2.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR))
+          assert_includes(poly2.invalid_reason, RGeo::ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR)
           assert_equal(false, poly2.valid?)
         end
 
@@ -168,7 +168,7 @@ module RGeo
 
         def test_invalid_multi_point_invalid_coordinate
           mp = @factory.multi_point([@invalid_point, @point1])
-          assert(mp.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE))
+          assert_includes(mp.invalid_reason, RGeo::ImplHelper::TopologyErrors::INVALID_COORDINATE)
           assert_equal(false, mp.valid?)
         end
 
@@ -187,7 +187,7 @@ module RGeo
           shell1 = @little_square
           shell2 = @factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
           mp = @factory.multi_polygon([@factory.polygon(shell1), @factory.polygon(shell2)])
-          assert(mp.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION))
+          assert_includes(mp.invalid_reason, RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION)
           assert_equal(false, mp.valid?)
         end
 
@@ -195,7 +195,7 @@ module RGeo
           shell1 = @little_square
           shell2 = @big_square
           mp = @factory.multi_polygon([@factory.polygon(shell1), @factory.polygon(shell2)])
-          assert(mp.invalid_reason.include?(RGeo::ImplHelper::TopologyErrors::NESTED_SHELLS))
+          assert_includes(mp.invalid_reason, RGeo::ImplHelper::TopologyErrors::NESTED_SHELLS)
           assert_equal(false, mp.valid?)
         end
 
