@@ -16,7 +16,7 @@ module RGeo
 
     module SphericalPointMethods # :nodoc:
       def xyz
-        @xyz ||= SphericalMath::PointXYZ.from_latlon(@y, @x)
+        @xyz ||= SphericalMath::PointXYZ.from_latlon(@y, @x, uses_decimals?)
       end
 
       def distance(rhs)
@@ -61,8 +61,8 @@ module RGeo
         angle = Math::PI * 2.0 / point_count
         points = (0...point_count).map do |i|
           r = angle * i
-          pi = SphericalMath::PointXYZ.weighted_combination(p1, Math.cos(r), p2, Math.sin(r))
-          p = SphericalMath::PointXYZ.weighted_combination(p0, cos, pi, sin)
+          pi = SphericalMath::PointXYZ.weighted_combination(p1, Math.cos(r), p2, Math.sin(r), uses_decimals?)
+          p = SphericalMath::PointXYZ.weighted_combination(p0, cos, pi, sin, uses_decimals?)
           factory.point(*p.lonlat)
         end
         factory.polygon(factory.linear_ring(points))
@@ -87,6 +87,10 @@ module RGeo
         @y = 90.0 if @y > 90.0
         @y = -90.0 if @y < -90.0
         super
+      end
+
+      def uses_decimals?
+        factory.property(:uses_decimals)
       end
     end
 

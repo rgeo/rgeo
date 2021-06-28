@@ -159,4 +159,14 @@ class SphericalCalculationsTest < Minitest::Test # :nodoc:
     arc2 = RGeo::Geographic::SphericalMath::ArcXYZ.new(point3, point4)
     assert_equal(true, arc1.intersects_arc?(arc2))
   end
+
+  def test_arc_intersects_decimal_precision
+    point1 = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(37.58168793850955, 126.96804356077827, true)
+    point2 = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(37.5816870915542, 126.96804348189114, true)
+    point3 = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(37.58168238826706, 126.96804311029837, true)
+    point4 = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(37.581642824769546, 126.96803990177084, true)
+    arc1 = RGeo::Geographic::SphericalMath::ArcXYZ.new(point1, point2)
+    arc2 = RGeo::Geographic::SphericalMath::ArcXYZ.new(point3, point4)
+    assert_equal(false, arc1.intersects_arc?(arc2))
+  end
 end

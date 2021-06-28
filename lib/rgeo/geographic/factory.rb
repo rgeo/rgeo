@@ -43,6 +43,7 @@ module RGeo
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
         @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
+        @uses_decimals = opts[:uses_decimals] ? true : false
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
 
@@ -107,6 +108,7 @@ module RGeo
           "wktp" => @wkt_parser.properties,
           "wkbp" => @wkb_parser.properties,
           "lena" => @lenient_assertions,
+          "decm" => @uses_decimals,
           "bufr" => @buffer_resolution
         }
         hash_["proj4"] = @proj4.marshal_dump if @proj4
@@ -139,6 +141,7 @@ module RGeo
           wkt_parser: symbolize_hash(data_["wktp"]),
           wkb_parser: symbolize_hash(data_["wkbp"]),
           uses_lenient_assertions: data_["lena"],
+          uses_decimals: data_["decm"],
           buffer_resolution: data_["bufr"],
           proj4: proj4,
           coord_sys: coord_sys
@@ -165,6 +168,7 @@ module RGeo
         coder["wkt_parser"] = @wkt_parser.properties
         coder["wkb_parser"] = @wkb_parser.properties
         coder["lenient_assertions"] = @lenient_assertions
+        coder["uses_decimals"] = @uses_decimals
         coder["buffer_resolution"] = @buffer_resolution
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str
@@ -202,6 +206,7 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           uses_lenient_assertions: coder["lenient_assertions"],
+          uses_decimals: coder["uses_decimals"],
           buffer_resolution: coder["buffer_resolution"],
           proj4: proj4,
           coord_sys: coord_sys
@@ -295,6 +300,8 @@ module RGeo
           @support_m
         when :uses_lenient_assertions
           @lenient_assertions
+        when :uses_decimals
+          @uses_decimals
         when :buffer_resolution
           @buffer_resolution
         when :is_geographic

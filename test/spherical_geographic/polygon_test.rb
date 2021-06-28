@@ -26,6 +26,6 @@ class SphericalPolygonTest < Minitest::Test # :nodoc:
     point3 = @factory.point(1, 0)
     exterior = @factory.linear_ring([point1, point2, point3, point1])
     polygon = @factory.polygon(exterior)
-    assert_equal @factory.point(1.0/3.0, 1.0/3.0), polygon.centroid
+    assert_equal @factory.point(1.0 / 3.0, 1.0 / 3.0), polygon.centroid
   end
 end

@@ -5,6 +5,8 @@
 # Core calculations on the sphere
 #
 # -----------------------------------------------------------------------------
+require "bigdecimal"
+require "bigdecimal/util"
 
 module RGeo
   module Geographic
@@ -23,11 +25,17 @@ module RGeo
       # of rotation.
 
       class PointXYZ # :nodoc:
-        def initialize(x, y, z)
+        def initialize(x, y, z, uses_decimals = false)
+          if uses_decimals
+            x = x.to_d
+            y = y.to_d
+            z = z.to_d
+          end
+
           r = Math.sqrt(x * x + y * y + z * z)
-          @x = (x / r).to_f
-          @y = (y / r).to_f
-          @z = (z / r).to_f
+          @x = (x / r)
+          @y = (y / r)
+          @z = (z / r)
           raise "Not a number" if @x.nan? || @y.nan? || @z.nan?
         end
 
@@ -102,7 +110,7 @@ module RGeo
           p1dot < p2dot ? (self % P1) : (self % P2)
         end
 
-        def self.from_latlon(lat, lon)
+        def self.from_latlon(lat, lon, uses_decimals = false)
           rpd = ImplHelper::Math::RADIANS_PER_DEGREE
           lat_rad = rpd * lat
           lon_rad = rpd * lon
@@ -110,11 +118,11 @@ module RGeo
           r = Math.cos(lat_rad)
           x = Math.cos(lon_rad) * r
           y = Math.sin(lon_rad) * r
-          new(x, y, z)
+          new(x, y, z, uses_decimals)
         end
 
-        def self.weighted_combination(p1, w1, p2, w2)
-          new(p1.x * w1 + p2.x * w2, p1.y * w1 + p2.y * w2, p1.z * w1 + p2.z * w2)
+        def self.weighted_combination(p1, w1, p2, w2, uses_decimals = false)
+          new(p1.x * w1 + p2.x * w2, p1.y * w1 + p2.y * w2, p1.z * w1 + p2.z * w2, uses_decimals)
         end
 
         P1 = new(1, 0, 0)

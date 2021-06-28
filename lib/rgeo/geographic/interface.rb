@@ -60,6 +60,11 @@ module RGeo
       #   Polygon and MultiPolygon. This may speed up creation of certain
       #   objects, at the expense of not doing the proper checking for
       #   OGC compliance. Default is false.
+      # [<tt>:uses_decimals</tt>]
+      #   If set to true, spherical calculations will be performed using
+      #   BigDecimals instead of Floats. This creates more overhead,
+      #   but will mitigate floating-point rounding errors. Returned
+      #   features still use Floats to represent points. Default is false.
       # [<tt>:buffer_resolution</tt>]
       #   The resolution of buffers around geometries created by this
       #   factory. This controls the number of line segments used to
@@ -132,6 +137,7 @@ module RGeo
           proj4: proj4 || proj_4055,
           coord_sys: coord_sys || coord_sys_4055,
           uses_lenient_assertions: opts[:uses_lenient_assertions],
+          uses_decimals: opts[:uses_decimals],
           buffer_resolution: opts[:buffer_resolution],
           wkt_parser: opts[:wkt_parser],
           wkb_parser: opts[:wkb_parser],
