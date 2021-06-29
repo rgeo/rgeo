@@ -210,18 +210,14 @@ module RGeo
       # @return [String] invalid_reason
       def check_consistent_area(poly)
         # Holes don't intersect exterior check.
-        if defined?(poly.consistent_area?)
-          return TopologyErrors::SELF_INTERSECTION unless poly.consistent_area?
-        else
-          exterior = poly.exterior_ring
-          poly.interior_rings.each do |ring|
-            return TopologyErrors::SELF_INTERSECTION if ring.intersects?(exterior)
-          end
+        exterior = poly.exterior_ring
+        poly.interior_rings.each do |ring|
+          return TopologyErrors::SELF_INTERSECTION if ring.intersects?(exterior)
+        end
 
-          # check interiors do not intersect
-          poly.interior_rings.combination(2).each do |ring1, ring2|
-            return TopologyErrors::SELF_INTERSECTION if ring1.intersects?(ring2)
-          end
+        # check interiors do not intersect
+        poly.interior_rings.combination(2).each do |ring1, ring2|
+          return TopologyErrors::SELF_INTERSECTION if ring1.intersects?(ring2)
         end
 
         # Duplicate rings check
@@ -314,20 +310,16 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_connected_interiors(poly)
-        if defined?(poly.connected_interior?)
-          return TopologyErrors::DISCONNECTED_INTERIOR unless poly.connected_interior?
-        else
-          # This is not proper and will flag valid geometries as invalid, but
-          # is an ok approximation.
-          # Idea is to check if a single hole has multiple points on the
-          # exterior ring.
-          poly.interior_rings.each do |ring|
-            counter = 0
-            ring.points.each do |pt|
-              counter += 1 if ring.contains?(pt)
-            end
-            return TopologyErrors::DISCONNECTED_INTERIOR if counter > 1
+        # This is not proper and will flag valid geometries as invalid, but
+        # is an ok approximation.
+        # Idea is to check if a single hole has multiple points on the
+        # exterior ring.
+        poly.interior_rings.each do |ring|
+          counter = 0
+          ring.points.each do |pt|
+            counter += 1 if ring.contains?(pt)
           end
+          return TopologyErrors::DISCONNECTED_INTERIOR if counter > 1
         end
       end
 
