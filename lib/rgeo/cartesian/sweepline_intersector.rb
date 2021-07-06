@@ -82,7 +82,7 @@ module RGeo
             end
             observed_segments << seg
           else
-            observed_segments.delete_if { |oseg| oseg == seg }
+            observed_segments.delete(seg)
           end
         end
         @intersections
