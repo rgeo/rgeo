@@ -87,9 +87,9 @@ module RGeo
           assert(!point1.empty?)
         end
 
-        def test_is_simple
+        def test_simple
           point1 = @factory.point(0, 0)
-          assert(point1.is_simple?)
+          assert(point1.simple?)
         end
 
         def test_boundary

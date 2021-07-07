@@ -69,8 +69,8 @@ module RGeo
         @zgeometry.empty?
       end
 
-      def is_simple?
-        @zgeometry.is_simple?
+      def simple?
+        @zgeometry.simple?
       end
 
       def boundary

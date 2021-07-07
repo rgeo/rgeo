@@ -208,8 +208,8 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
-      def is_simple?
-        raise Error::UnsupportedOperation, "Method Geometry#is_simple? not defined."
+      def simple?
+        raise Error::UnsupportedOperation, "Method Geometry#simple? not defined."
       end
 
       # === SFS 1.1 Description

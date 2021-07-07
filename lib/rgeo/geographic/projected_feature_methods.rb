@@ -26,8 +26,8 @@ module RGeo
         projection.empty?
       end
 
-      def is_simple?
-        projection.is_simple?
+      def simple?
+        projection.simple?
       end
 
       def boundary

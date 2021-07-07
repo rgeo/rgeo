@@ -402,7 +402,7 @@ means the geometry doesn't intersect or repeat itself. For example, a
 LineString that intersects itself is not simple, nor is a MultiPoint that
 contains the same point more than once. Sometimes, a geometric analysis
 algorithm will have simplicity as a precondition. This property is indicated
-by the `Geometry#is_simple?` method.
+by the `Geometry#simple?` method.
 
     factory = RGeo::Cartesian.preferred_factory
     p00 = factory.point(0, 0)
@@ -410,9 +410,9 @@ by the `Geometry#is_simple?` method.
     p11 = factory.point(1, 1)
     p10 = factory.point(1, 0)
     zigzag_line = factory.line_string([p00, p10, p01, p11])
-    zigzag_line.is_simple?         # returns true
+    zigzag_line.simple?         # returns true
     self_crossing_line = factory.line_string([p00, p11, p01, p10])
-    self_crossing_line.is_simple?  # returns false
+    self_crossing_line.simple?  # returns false
 
 All geometry objects also contain a "spatial reference ID", returned by the
 `Geometry#srid` method. This is an external ID reference indicating the

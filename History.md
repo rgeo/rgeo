@@ -692,7 +692,7 @@ planned is the 0.2 alpha release.
     the final name for this function.
 *   Some new tests and a lot of fixes in SimpleMercator and SimpleSpherical.
 *   Implemented a few more pieces of SimpleSpherical. Notably,
-    LineString#is_simple? (which should now allow LinearRing to work).
+    LineString#simple? (which should now allow LinearRing to work).
 *   Classes that included Features::Geometry had their === operator
     erroneously overridden. Fixed.
 *   A few more documentation updates.

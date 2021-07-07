@@ -65,7 +65,7 @@ module RGeo
       end
 
       def is_ring?
-        is_closed? && is_simple?
+        is_closed? && simple?
       end
 
       def rep_equals?(rhs)

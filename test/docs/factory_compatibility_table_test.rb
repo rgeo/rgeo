@@ -59,7 +59,7 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
       :as_text,
       :as_binary,
       :empty?,
-      :is_simple?,
+      :simple?,
       :boundary,
       :convex_hull,
       :buffer

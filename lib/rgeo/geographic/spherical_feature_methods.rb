@@ -97,7 +97,7 @@ module RGeo
         end
       end
 
-      def is_simple?
+      def simple?
         len = arcs.length
         return false if arcs.any?(&:degenerate?)
         return true if len == 1

@@ -117,7 +117,7 @@ module RGeo
         @fg_geom.empty?
       end
 
-      def is_simple?
+      def simple?
         @fg_geom.simple?
       end
 

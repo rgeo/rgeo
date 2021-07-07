@@ -49,7 +49,7 @@
     - [as_binary](#as_binary)
   - [Predicates and Relationships](#predicates-and-relationships)
     - [ccw?](#ccw)
-    - [is_simple?](#is_simple)
+    - [simple?](#simple)
     - [empty?](#empty)
     - [contains?](#contains)
     - [crosses?](#crosses)
@@ -320,7 +320,7 @@ p linearring
 # => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)"> 
 p linearring.is_closed?
 #=> true
-p linearring.is_simple?
+p linearring.simple?
 #=> true
 ```
 
@@ -767,7 +767,7 @@ p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).ccw?
 # => true
 ```
 
-### is_simple?
+### simple?
 
 ```ruby
 factory = RGeo::Cartesian.factory
@@ -777,7 +777,7 @@ pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
 pt4 = factory.point(0, 1)
 
-p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).is_simple?
+p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).simple?
 # => true
 ```
 

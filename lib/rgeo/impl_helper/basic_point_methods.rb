@@ -49,7 +49,7 @@ module RGeo
         false
       end
 
-      def is_simple?
+      def simple?
         true
       end
 

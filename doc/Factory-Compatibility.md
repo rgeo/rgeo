@@ -38,7 +38,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                                `Point#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                              `Point#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                                 `Point#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                             `Point#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                                `Point#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                               `Point#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `Point#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                                 `Point#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
@@ -130,7 +130,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                           `LineString#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `LineString#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `LineString#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                        `LineString#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                           `LineString#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `LineString#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `LineString#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                            `LineString#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -222,7 +222,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                           `LinearRing#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `LinearRing#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `LinearRing#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                        `LinearRing#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                           `LinearRing#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `LinearRing#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `LinearRing#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                            `LinearRing#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -314,7 +314,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                              `Polygon#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `Polygon#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                               `Polygon#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                           `Polygon#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                              `Polygon#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                             `Polygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `Polygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                               `Polygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -406,7 +406,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                           `Collection#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `Collection#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `Collection#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                        `Collection#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                           `Collection#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `Collection#boundary` |  ✅   |    ❌    |  ✅  |   ❌    |     ❌     |     ✅      |     ❌     |
 |                       `Collection#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                            `Collection#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -498,7 +498,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                           `MultiPoint#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `MultiPoint#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `MultiPoint#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                        `MultiPoint#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                           `MultiPoint#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `MultiPoint#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                       `MultiPoint#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                            `MultiPoint#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -590,7 +590,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                      `MultiLineString#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                    `MultiLineString#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                       `MultiLineString#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                   `MultiLineString#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                      `MultiLineString#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                     `MultiLineString#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `MultiLineString#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `MultiLineString#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -682,7 +682,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                         `MultiPolygon#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                       `MultiPolygon#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `MultiPolygon#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                      `MultiPolygon#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                         `MultiPolygon#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                        `MultiPolygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                     `MultiPolygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `MultiPolygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
