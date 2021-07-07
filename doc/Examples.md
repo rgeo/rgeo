@@ -689,7 +689,7 @@ p RGeo::Feature::Point.check_type(pt)
 p RGeo::Feature::Point.check_type(linestring)
 # => false
 
-def is_point?(feature)
+def point?(feature)
   case feature
   when RGeo::Feature::Point
     p "It's a Point!"
@@ -700,10 +700,10 @@ def is_point?(feature)
   end
 end
 
-is_point?(pt)
+point?(pt)
 # => "It's a Point!"
 
-is_point?(linestring)
+point?(linestring)
 # => "It's not a Point"
 ```
 
