@@ -19,7 +19,7 @@ class GeosZMFactoryTest < Minitest::Test # :nodoc:
   def test_is_geos_factory
     assert_equal(true, RGeo::Geos.is_geos?(@factory))
     assert_equal(true, RGeo::Geos.capi_geos?(@factory))
-    assert_equal(false, RGeo::Geos.is_ffi_geos?(@factory))
+    assert_equal(false, RGeo::Geos.ffi_geos?(@factory))
   end
 
   def test_factory_parts

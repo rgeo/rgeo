@@ -41,7 +41,7 @@ module RGeo
       # Returns true if the given feature is an FFI GEOS feature, or if
       # the given factory is an FFI GEOS factory.
 
-      def is_ffi_geos?(object)
+      def ffi_geos?(object)
         FFI_SUPPORTED &&
           (FFIFactory === object || FFIGeometryMethods === object ||
           ZMFactory === object && FFIFactory === object.z_factory ||
