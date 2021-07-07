@@ -318,7 +318,7 @@ pt4 = factory.point(2, 6)
 linearring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 p linearring
 # => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)"> 
-p linearring.is_closed?
+p linearring.closed?
 #=> true
 p linearring.simple?
 #=> true

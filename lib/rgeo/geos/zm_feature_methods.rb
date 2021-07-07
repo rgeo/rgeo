@@ -222,8 +222,8 @@ module RGeo
         point_n(num_points - 1)
       end
 
-      def is_closed?
-        @zgeometry.is_closed?
+      def closed?
+        @zgeometry.closed?
       end
 
       def is_ring?
@@ -323,8 +323,8 @@ module RGeo
         @zgeometry.length
       end
 
-      def is_closed?
-        @zgeometry.is_closed?
+      def closed?
+        @zgeometry.closed?
       end
 
       def coordinates

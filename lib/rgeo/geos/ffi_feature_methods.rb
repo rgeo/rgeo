@@ -367,7 +367,7 @@ module RGeo
         end
       end
 
-      def is_closed?
+      def closed?
         @fg_geom.closed?
       end
 
@@ -553,7 +553,7 @@ module RGeo
         @fg_geom.length
       end
 
-      def is_closed?
+      def closed?
         size = num_geometries
         size.times do |n|
           return false unless @fg_geom.get_geometry_n(n).closed?

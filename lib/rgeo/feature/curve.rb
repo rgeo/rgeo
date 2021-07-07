@@ -90,8 +90,8 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
-      def is_closed?
-        raise Error::UnsupportedOperation, "Method Curve#is_closed? not defined."
+      def closed?
+        raise Error::UnsupportedOperation, "Method Curve#closed? not defined."
       end
 
       # === SFS 1.1 Description

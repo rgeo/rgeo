@@ -45,7 +45,7 @@ module RGeo
 
       def boundary
         array = []
-        array << @points.first << @points.last if !empty? && !is_closed?
+        array << @points.first << @points.last if !empty? && !closed?
         factory.multipoint([array])
       end
 
@@ -57,15 +57,15 @@ module RGeo
         @points.last
       end
 
-      def is_closed?
-        unless defined?(@is_closed)
-          @is_closed = @points.size > 2 && @points.first == @points.last
+      def closed?
+        unless defined?(@closed)
+          @closed = @points.size > 2 && @points.first == @points.last
         end
-        @is_closed
+        @closed
       end
 
       def is_ring?
-        is_closed? && simple?
+        closed? && simple?
       end
 
       def rep_equals?(rhs)

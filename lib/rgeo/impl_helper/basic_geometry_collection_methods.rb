@@ -93,8 +93,8 @@ module RGeo
         Feature::MultiLineString
       end
 
-      def is_closed?
-        all?(&:is_closed?)
+      def closed?
+        all?(&:closed?)
       end
 
       def length
@@ -104,7 +104,7 @@ module RGeo
       def boundary
         hash = {}
         @elements.each do |line|
-          if !line.empty? && !line.is_closed?
+          if !line.empty? && !line.closed?
             add_boundary(hash, line.start_point)
             add_boundary(hash, line.end_point)
           end
