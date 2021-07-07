@@ -45,11 +45,11 @@ module RGeo
         Feature::Point
       end
 
-      def is_empty?
+      def empty?
         false
       end
 
-      def is_simple?
+      def simple?
         true
       end
 

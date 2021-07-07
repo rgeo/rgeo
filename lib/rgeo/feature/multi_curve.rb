@@ -65,8 +65,8 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
-      def is_closed?
-        raise Error::UnsupportedOperation, "Method MultiCurve#is_closed? not defined."
+      def closed?
+        raise Error::UnsupportedOperation, "Method MultiCurve#closed? not defined."
       end
     end
   end

@@ -65,12 +65,12 @@ module RGeo
         @factory.instance_variable_get(:@wkb_generator).generate(self)
       end
 
-      def is_empty?
-        @zgeometry.is_empty?
+      def empty?
+        @zgeometry.empty?
       end
 
-      def is_simple?
-        @zgeometry.is_simple?
+      def simple?
+        @zgeometry.simple?
       end
 
       def boundary
@@ -222,12 +222,12 @@ module RGeo
         point_n(num_points - 1)
       end
 
-      def is_closed?
-        @zgeometry.is_closed?
+      def closed?
+        @zgeometry.closed?
       end
 
-      def is_ring?
-        @zgeometry.is_ring?
+      def ring?
+        @zgeometry.ring?
       end
 
       def num_points
@@ -323,8 +323,8 @@ module RGeo
         @zgeometry.length
       end
 
-      def is_closed?
-        @zgeometry.is_closed?
+      def closed?
+        @zgeometry.closed?
       end
 
       def coordinates

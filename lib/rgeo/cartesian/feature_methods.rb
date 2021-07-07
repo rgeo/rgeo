@@ -49,7 +49,7 @@ module RGeo
         end
       end
 
-      def is_simple?
+      def simple?
         len = segments.length
         return false if segments.any?(&:degenerate?)
         return true if len == 1

@@ -178,7 +178,7 @@ module RGeo
           emit_line_string_coords(obj)
         elsif type == Feature::Polygon
           exterior_ring = obj.exterior_ring
-          if exterior_ring.is_empty?
+          if exterior_ring.empty?
             emit_integer(0)
           else
             emit_integer(1 + obj.num_interior_rings)

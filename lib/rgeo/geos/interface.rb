@@ -31,7 +31,7 @@ module RGeo
       # Returns true if the given feature is a CAPI GEOS feature, or if
       # the given factory is a CAPI GEOS factory.
 
-      def is_capi_geos?(object)
+      def capi_geos?(object)
         CAPI_SUPPORTED &&
           (CAPIFactory === object || CAPIGeometryMethods === object ||
           ZMFactory === object && CAPIFactory === object.z_factory ||
@@ -41,7 +41,7 @@ module RGeo
       # Returns true if the given feature is an FFI GEOS feature, or if
       # the given factory is an FFI GEOS factory.
 
-      def is_ffi_geos?(object)
+      def ffi_geos?(object)
         FFI_SUPPORTED &&
           (FFIFactory === object || FFIGeometryMethods === object ||
           ZMFactory === object && FFIFactory === object.z_factory ||
@@ -51,7 +51,7 @@ module RGeo
       # Returns true if the given feature is a GEOS feature, or if the given
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
-      def is_geos?(object)
+      def geos?(object)
         CAPI_SUPPORTED && (CAPIFactory === object || CAPIGeometryMethods === object) ||
           FFI_SUPPORTED && (FFIFactory === object || FFIGeometryMethods === object) ||
           ZMFactory === object || ZMGeometryMethods === object

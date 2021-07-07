@@ -22,12 +22,12 @@ module RGeo
         factory.unproject(projection.envelope)
       end
 
-      def is_empty?
-        projection.is_empty?
+      def empty?
+        projection.empty?
       end
 
-      def is_simple?
-        projection.is_simple?
+      def simple?
+        projection.simple?
       end
 
       def boundary

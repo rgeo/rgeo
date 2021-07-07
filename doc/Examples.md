@@ -49,8 +49,8 @@
     - [as_binary](#as_binary)
   - [Predicates and Relationships](#predicates-and-relationships)
     - [ccw?](#ccw)
-    - [is_simple?](#is_simple)
-    - [is_empty?](#is_empty)
+    - [simple?](#simple)
+    - [empty?](#empty)
     - [contains?](#contains)
     - [crosses?](#crosses)
     - [disjoint?](#disjoint)
@@ -318,9 +318,9 @@ pt4 = factory.point(2, 6)
 linearring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 p linearring
 # => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)"> 
-p linearring.is_closed?
+p linearring.closed?
 #=> true
-p linearring.is_simple?
+p linearring.simple?
 #=> true
 ```
 
@@ -689,7 +689,7 @@ p RGeo::Feature::Point.check_type(pt)
 p RGeo::Feature::Point.check_type(linestring)
 # => false
 
-def is_point?(feature)
+def point?(feature)
   case feature
   when RGeo::Feature::Point
     p "It's a Point!"
@@ -700,10 +700,10 @@ def is_point?(feature)
   end
 end
 
-is_point?(pt)
+point?(pt)
 # => "It's a Point!"
 
-is_point?(linestring)
+point?(linestring)
 # => "It's not a Point"
 ```
 
@@ -767,7 +767,7 @@ p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).ccw?
 # => true
 ```
 
-### is_simple?
+### simple?
 
 ```ruby
 factory = RGeo::Cartesian.factory
@@ -777,11 +777,11 @@ pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
 pt4 = factory.point(0, 1)
 
-p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).is_simple?
+p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).simple?
 # => true
 ```
 
-### is_empty?
+### empty?
 
 Returns `true` if the object is the empty set.
 
@@ -793,10 +793,10 @@ pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
 pt4 = factory.point(0, 1)
 
-p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).is_empty?
+p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).empty?
 # => false
 
-p factory.multi_point([]).is_empty?
+p factory.multi_point([]).empty?
 # => true
 ```
 

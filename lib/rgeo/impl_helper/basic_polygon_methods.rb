@@ -49,13 +49,13 @@ module RGeo
         Feature::Polygon
       end
 
-      def is_empty?
-        @exterior_ring.is_empty?
+      def empty?
+        @exterior_ring.empty?
       end
 
       def boundary
         array = []
-        array << @exterior_ring unless @exterior_ring.is_empty?
+        array << @exterior_ring unless @exterior_ring.empty?
         array.concat(@interior_rings)
         factory.multi_line_string(array)
       end
