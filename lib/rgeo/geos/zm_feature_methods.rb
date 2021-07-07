@@ -226,8 +226,8 @@ module RGeo
         @zgeometry.closed?
       end
 
-      def is_ring?
-        @zgeometry.is_ring?
+      def ring?
+        @zgeometry.ring?
       end
 
       def num_points

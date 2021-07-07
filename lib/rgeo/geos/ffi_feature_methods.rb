@@ -371,7 +371,7 @@ module RGeo
         @fg_geom.closed?
       end
 
-      def is_ring?
+      def ring?
         @fg_geom.ring?
       end
 

@@ -105,8 +105,8 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
-      def is_ring?
-        raise Error::UnsupportedOperation, "Method Curve#is_ring? not defined."
+      def ring?
+        raise Error::UnsupportedOperation, "Method Curve#ring? not defined."
       end
     end
   end

@@ -22,7 +22,7 @@ module RGeo
         # == Note
         #
         # This method does not ensure a correct result for an invalid geometry.
-        # You should make sure your ring is valid beforehand using `is_ring?`
+        # You should make sure your ring is valid beforehand using `ring?`
         # if you are using a LineString, or directly `valid?` for a
         # `linear_ring?`.
         # This will be subject to changes in v3.
