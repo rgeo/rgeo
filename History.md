@@ -161,7 +161,7 @@ Fixes
 
 ### 0.3.15 / 2012-08-02
 
-*   The class shuffle in 0.3.14 broke RGeo::Geos.is_geos? and similar. Fixed.
+*   The class shuffle in 0.3.14 broke RGeo::Geos.geos? and similar. Fixed.
 
 
 ### 0.3.14 / 2012-07-08

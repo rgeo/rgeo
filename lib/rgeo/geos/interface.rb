@@ -51,7 +51,7 @@ module RGeo
       # Returns true if the given feature is a GEOS feature, or if the given
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
-      def is_geos?(object)
+      def geos?(object)
         CAPI_SUPPORTED && (CAPIFactory === object || CAPIGeometryMethods === object) ||
           FFI_SUPPORTED && (FFIFactory === object || FFIGeometryMethods === object) ||
           ZMFactory === object || ZMGeometryMethods === object
