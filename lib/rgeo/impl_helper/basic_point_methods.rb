@@ -45,7 +45,7 @@ module RGeo
         Feature::Point
       end
 
-      def is_empty?
+      def empty?
         false
       end
 

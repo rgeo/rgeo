@@ -149,11 +149,11 @@ module RGeo
           assert_equal(-1, geom2.dimension)
         end
 
-        def test_is_empty
+        def test_empty
           geom1 = @factory.multi_point([@point1, @point2])
-          assert(!geom1.is_empty?)
+          assert(!geom1.empty?)
           geom2 = @factory.multi_point([])
-          assert(geom2.is_empty?)
+          assert(geom2.empty?)
         end
 
         def test_union

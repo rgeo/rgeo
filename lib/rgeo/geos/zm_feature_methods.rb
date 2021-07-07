@@ -65,8 +65,8 @@ module RGeo
         @factory.instance_variable_get(:@wkb_generator).generate(self)
       end
 
-      def is_empty?
-        @zgeometry.is_empty?
+      def empty?
+        @zgeometry.empty?
       end
 
       def is_simple?

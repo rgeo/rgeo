@@ -58,7 +58,7 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
       :envelope,
       :as_text,
       :as_binary,
-      :is_empty?,
+      :empty?,
       :is_simple?,
       :boundary,
       :convex_hull,

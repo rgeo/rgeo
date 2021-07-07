@@ -37,7 +37,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                               `Point#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                                `Point#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                              `Point#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                              `Point#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                                 `Point#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                             `Point#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                               `Point#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `Point#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
@@ -129,7 +129,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                          `LineString#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                           `LineString#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `LineString#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                         `LineString#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `LineString#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                        `LineString#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `LineString#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `LineString#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -221,7 +221,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                          `LinearRing#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                           `LinearRing#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `LinearRing#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                         `LinearRing#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `LinearRing#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                        `LinearRing#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `LinearRing#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `LinearRing#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -313,7 +313,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                             `Polygon#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                              `Polygon#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `Polygon#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                            `Polygon#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                               `Polygon#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                           `Polygon#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                             `Polygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `Polygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -405,7 +405,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                          `Collection#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                           `Collection#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `Collection#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                         `Collection#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `Collection#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                        `Collection#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `Collection#boundary` |  ✅   |    ❌    |  ✅  |   ❌    |     ❌     |     ✅      |     ❌     |
 |                       `Collection#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -497,7 +497,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                          `MultiPoint#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                           `MultiPoint#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                         `MultiPoint#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                         `MultiPoint#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                            `MultiPoint#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                        `MultiPoint#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `MultiPoint#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                       `MultiPoint#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -589,7 +589,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                     `MultiLineString#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                      `MultiLineString#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                    `MultiLineString#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                    `MultiLineString#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                       `MultiLineString#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                   `MultiLineString#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                     `MultiLineString#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `MultiLineString#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -681,7 +681,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                        `MultiPolygon#envelope` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                         `MultiPolygon#as_text` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                       `MultiPolygon#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
-|                       `MultiPolygon#is_empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|                          `MultiPolygon#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                      `MultiPolygon#is_simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                        `MultiPolygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                     `MultiPolygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |

@@ -51,7 +51,7 @@ module RGeo
         Feature::GeometryCollection
       end
 
-      def is_empty?
+      def empty?
         @elements.size == 0
       end
 
@@ -104,7 +104,7 @@ module RGeo
       def boundary
         hash = {}
         @elements.each do |line|
-          if !line.is_empty? && !line.is_closed?
+          if !line.empty? && !line.is_closed?
             add_boundary(hash, line.start_point)
             add_boundary(hash, line.end_point)
           end
@@ -180,7 +180,7 @@ module RGeo
       def boundary
         array = []
         @elements.each do |poly|
-          array << poly.exterior_ring unless poly.is_empty?
+          array << poly.exterior_ring unless poly.empty?
           array.concat(poly.interior_rings)
         end
         factory.multi_line_string(array)

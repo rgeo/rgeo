@@ -267,14 +267,14 @@ module RGeo
           line1 = @factory.line_string([])
           text = line1.as_text
           line2 = @factory.parse_wkt(text)
-          assert(line2.is_empty?)
+          assert(line2.empty?)
         end
 
         def test_empty_as_binary_wkb_round_trip
           line1 = @factory.line_string([])
           binary = line1.as_binary
           line2 = @factory.parse_wkb(binary)
-          assert(line2.is_empty?)
+          assert(line2.empty?)
         end
 
         def test_dimension
@@ -284,13 +284,13 @@ module RGeo
           assert_equal(1, line1.dimension)
         end
 
-        def test_is_empty
+        def test_empty
           point1 = @factory.point(-42, 0)
           point2 = @factory.point(0, 193)
           line1 = @factory.line_string([point1, point2])
-          assert(!line1.is_empty?)
+          assert(!line1.empty?)
           line2 = @factory.line_string([])
-          assert(line2.is_empty?)
+          assert(line2.empty?)
         end
 
         def test_marshal_roundtrip

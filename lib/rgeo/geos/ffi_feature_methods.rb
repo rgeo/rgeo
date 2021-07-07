@@ -113,7 +113,7 @@ module RGeo
         @factory.generate_wkb(self)
       end
 
-      def is_empty?
+      def empty?
         @fg_geom.empty?
       end
 

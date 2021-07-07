@@ -191,8 +191,8 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
-      def is_empty?
-        raise Error::UnsupportedOperation, "Method Geometry#is_empty? not defined."
+      def empty?
+        raise Error::UnsupportedOperation, "Method Geometry#empty? not defined."
       end
 
       # === SFS 1.1 Description

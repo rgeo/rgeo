@@ -50,7 +50,7 @@
   - [Predicates and Relationships](#predicates-and-relationships)
     - [ccw?](#ccw)
     - [is_simple?](#is_simple)
-    - [is_empty?](#is_empty)
+    - [empty?](#empty)
     - [contains?](#contains)
     - [crosses?](#crosses)
     - [disjoint?](#disjoint)
@@ -781,7 +781,7 @@ p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).is_simple?
 # => true
 ```
 
-### is_empty?
+### empty?
 
 Returns `true` if the object is the empty set.
 
@@ -793,10 +793,10 @@ pt2 = factory.point(1, 0)
 pt3 = factory.point(1, 1)
 pt4 = factory.point(0, 1)
 
-p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).is_empty?
+p factory.linear_ring([pt1, pt2, pt3, pt4, pt1]).empty?
 # => false
 
-p factory.multi_point([]).is_empty?
+p factory.multi_point([]).empty?
 # => true
 ```
 

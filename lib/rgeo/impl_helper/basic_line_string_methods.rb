@@ -39,13 +39,13 @@ module RGeo
         Feature::LineString
       end
 
-      def is_empty?
+      def empty?
         @points.size == 0
       end
 
       def boundary
         array = []
-        array << @points.first << @points.last if !is_empty? && !is_closed?
+        array << @points.first << @points.last if !empty? && !is_closed?
         factory.multipoint([array])
       end
 

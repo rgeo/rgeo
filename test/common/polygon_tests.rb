@@ -198,15 +198,15 @@ module RGeo
           assert_equal(2, poly.dimension)
         end
 
-        def test_is_empty
+        def test_empty
           point1 = @factory.point(0, 0)
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 0)
           exterior = @factory.linear_ring([point1, point2, point3, point1])
           poly1 = @factory.polygon(exterior)
-          assert(!poly1.is_empty?)
+          assert(!poly1.empty?)
           poly2 = @factory.polygon(@factory.linear_ring([]))
-          assert(poly2.is_empty?)
+          assert(poly2.empty?)
         end
 
         def test_boundary_simple

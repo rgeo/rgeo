@@ -1095,7 +1095,7 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_methods, "boundary", method_geometry_boundary, 0);
   rb_define_method(geos_geometry_methods, "_as_text", method_geometry_as_text, 0);
   rb_define_method(geos_geometry_methods, "as_binary", method_geometry_as_binary, 0);
-  rb_define_method(geos_geometry_methods, "is_empty?", method_geometry_is_empty, 0);
+  rb_define_method(geos_geometry_methods, "empty?", method_geometry_is_empty, 0);
   rb_define_method(geos_geometry_methods, "is_simple?", method_geometry_is_simple, 0);
   rb_define_method(geos_geometry_methods, "equals?", method_geometry_equals, 1);
   rb_define_method(geos_geometry_methods, "==", method_geometry_equals, 1);

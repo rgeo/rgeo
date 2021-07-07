@@ -390,12 +390,12 @@ defined functions.
 
 Most geometry types have a "degenerate" form representing no geometry. For
 example, a GeometryCollection may contain no items, or a LineString may
-contain no points. This state is indicated by the `Geometry#is_empty?` method.
+contain no points. This state is indicated by the `Geometry#empty?` method.
 In RGeo, any geometry type except Point may be empty.
 
     factory = RGeo::Cartesian.preferred_factory
-    factory.point(1, 2).is_empty?     # returns false
-    factory.collection([]).is_empty?  # returns true
+    factory.point(1, 2).empty?     # returns false
+    factory.collection([]).empty?  # returns true
 
 A second common property of geometry objects is "simplicity", which basically
 means the geometry doesn't intersect or repeat itself. For example, a
@@ -485,7 +485,7 @@ interfaces, RGeo provides operators for some of these calculations.
     union.geometry_type       # returns RGeo::Feature::MultiPoint
     union.num_geometries      # returns 2
     diff = p1.difference(p2)  # or p1 - p2
-    diff.is_empty?            # returns true
+    diff.empty?            # returns true
 
 ### 3.4. Unary Spatial Operations
 
