@@ -198,7 +198,7 @@ module RGeo
           assert_equal(2, poly.dimension)
         end
 
-        def test_empty
+        def test_is_empty
           point1 = @factory.point(0, 0)
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 0)

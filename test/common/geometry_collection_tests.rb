@@ -191,7 +191,7 @@ module RGeo
           assert_equal(-1, geom3.dimension)
         end
 
-        def test_empty
+        def test_is_empty
           geom1 = @factory.collection([@point1, @line1])
           assert(!geom1.empty?)
           geom2 = @factory.collection([])

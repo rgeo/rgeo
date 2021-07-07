@@ -284,7 +284,7 @@ module RGeo
           assert_equal(1, line1.dimension)
         end
 
-        def test_empty
+        def test_is_empty
           point1 = @factory.point(-42, 0)
           point2 = @factory.point(0, 193)
           line1 = @factory.line_string([point1, point2])

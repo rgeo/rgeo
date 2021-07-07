@@ -82,12 +82,12 @@ module RGeo
           assert_equal(point2, point1)
         end
 
-        def test_empty
+        def test_is_empty
           point1 = @factory.point(0, 0)
           assert(!point1.empty?)
         end
 
-        def test_simple
+        def test_is_simple
           point1 = @factory.point(0, 0)
           assert(point1.simple?)
         end
