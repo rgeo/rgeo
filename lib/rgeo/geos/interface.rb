@@ -31,7 +31,7 @@ module RGeo
       # Returns true if the given feature is a CAPI GEOS feature, or if
       # the given factory is a CAPI GEOS factory.
 
-      def is_capi_geos?(object)
+      def capi_geos?(object)
         CAPI_SUPPORTED &&
           (CAPIFactory === object || CAPIGeometryMethods === object ||
           ZMFactory === object && CAPIFactory === object.z_factory ||

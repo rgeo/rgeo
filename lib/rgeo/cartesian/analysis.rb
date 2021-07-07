@@ -27,7 +27,7 @@ module RGeo
         # `linear_ring?`.
         # This will be subject to changes in v3.
         def ccw?(ring)
-          if RGeo::Geos.is_capi_geos?(ring) && RGeo::Geos::Analysis.ccw_supported?
+          if RGeo::Geos.capi_geos?(ring) && RGeo::Geos::Analysis.ccw_supported?
             RGeo::Geos::Analysis.ccw?(ring)
           else
             RGeo::Cartesian::Analysis.ring_direction(ring) == 1

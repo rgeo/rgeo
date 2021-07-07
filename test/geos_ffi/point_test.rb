@@ -22,11 +22,11 @@ class GeosFFIPointTest < Minitest::Test # :nodoc:
   def test_is_geos
     point = @factory.point(21, -22)
     assert_equal(true, RGeo::Geos.is_geos?(point))
-    assert_equal(false, RGeo::Geos.is_capi_geos?(point))
+    assert_equal(false, RGeo::Geos.capi_geos?(point))
     assert_equal(true, RGeo::Geos.is_ffi_geos?(point))
     point2 = @zmfactory.point(21, -22, 0, 0)
     assert_equal(true, RGeo::Geos.is_geos?(point2))
-    assert_equal(false, RGeo::Geos.is_capi_geos?(point2))
+    assert_equal(false, RGeo::Geos.capi_geos?(point2))
     assert_equal(true, RGeo::Geos.is_ffi_geos?(point2))
   end
 
