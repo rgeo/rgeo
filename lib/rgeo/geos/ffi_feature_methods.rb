@@ -117,8 +117,18 @@ module RGeo
         @fg_geom.empty?
       end
 
+      def is_empty?
+        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        empty?
+      end
+
       def simple?
         @fg_geom.simple?
+      end
+
+      def is_simple?
+        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        simple?
       end
 
       def equals?(rhs)
@@ -371,8 +381,18 @@ module RGeo
         @fg_geom.closed?
       end
 
+      def is_closed?
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
+      end
+
       def ring?
         @fg_geom.ring?
+      end
+
+      def is_ring?
+        warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        ring?
       end
 
       def rep_equals?(rhs)
@@ -559,6 +579,11 @@ module RGeo
           return false unless @fg_geom.get_geometry_n(n).closed?
         end
         true
+      end
+
+      def is_closed?
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
       end
 
       def coordinates

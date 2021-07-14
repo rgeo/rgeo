@@ -94,6 +94,11 @@ module RGeo
         raise Error::UnsupportedOperation, "Method Curve#closed? not defined."
       end
 
+      def is_closed?
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
+      end
+
       # === SFS 1.1 Description
       #
       # Returns true if this Curve is closed [StartPoint() = EndPoint()]
@@ -107,6 +112,11 @@ module RGeo
 
       def ring?
         raise Error::UnsupportedOperation, "Method Curve#ring? not defined."
+      end
+
+      def is_ring?
+        warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        ring?
       end
     end
   end
