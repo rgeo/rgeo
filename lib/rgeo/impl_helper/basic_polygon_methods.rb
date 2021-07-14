@@ -53,6 +53,11 @@ module RGeo
         @exterior_ring.empty?
       end
 
+      def is_empty?
+        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        empty?
+      end
+
       def boundary
         array = []
         array << @exterior_ring unless @exterior_ring.empty?

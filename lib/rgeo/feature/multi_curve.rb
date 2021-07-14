@@ -68,6 +68,11 @@ module RGeo
       def closed?
         raise Error::UnsupportedOperation, "Method MultiCurve#closed? not defined."
       end
+
+      def is_closed?
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
+      end
     end
   end
 end
