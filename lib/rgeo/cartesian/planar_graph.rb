@@ -47,17 +47,20 @@ module RGeo
           angle <=> other.angle
         end
 
-        # Will keep following next in a half-edge until it returns to itself
-        # or hits a half-edge without a next edge.
+        # Will find attempt to find a cycle starting at this
+        # HalfEdge. Will end upon finding the first repeated HalfEdge
+        # or a HalfEdge where +next+ is nil.
         #
-        # @return [Array]
-        def each
-          hedges = []
+        # If a block is given, each HalfEdge seen will be yielded to the block.
+        #
+        # @return [Set]
+        def cycle
+          hedges = Set.new
           yield(self) if block_given?
           hedges << self
 
           n = self.next
-          until n.eql?(self) || n.nil?
+          until hedges.include?(n) || n.nil?
             yield(n) if block_given?
             hedges << n
             n = n.next
@@ -69,7 +72,7 @@ module RGeo
         #
         # @return [RGeo::Feature::Point]
         def destination
-          twin.origin
+          twin&.origin
         end
 
         # Compute the angle from the positive x-axis.
@@ -85,9 +88,9 @@ module RGeo
         end
 
         def to_s
-          dst = twin.nil? ? nil : destination
-          pr = prev.nil? ? nil : prev.origin
-          n = @next.nil? ? nil : @next.origin
+          dst = destination
+          pr = prev&.origin
+          n = @next&.origin
           "HalfEdge(#{origin}, #{dst}), Prev: #{pr},  Next: #{n}"
         end
       end
@@ -105,18 +108,11 @@ module RGeo
         # Create a new PlanarGraph
         #
         # @param edges [Array<RGeo::Cartesian::Segment>] of Segments
-        def initialize(edges = nil)
-          edges = [] if edges.nil?
+        def initialize(edges = [])
           @edges = []
           @incident_edges = {}
 
-          # this could be less efficient than computing the splits, then
-          # adding adding them and linking them since this ends up creating
-          # half edges that are potentially immediately split,
-          # but this creates a more consistent flow for adding edges.
-          create_half_edges
           add_edges(edges)
-          link_half_edges
         end
         attr_reader :edges, :incident_edges
 
@@ -216,23 +212,9 @@ module RGeo
         def link_half_edges
           incident_edges.each_value do |hedges|
             hedges.sort!
-            if hedges.size > 1
-              (0..hedges.size - 2).each do |i|
-                e1 = hedges[i]
-                e2 = hedges[i + 1]
-
-                e1.prev = e2.twin
-                e2.twin.next = e1
-              end
-
-              hedges[-1].prev = hedges[0].twin
-              hedges[0].twin.next = hedges[-1]
-
-            # handle case of dangling line
-            else
-              e = hedges[0]
-              e.twin.next = e
-              e.prev = e.twin
+            [*hedges, hedges.first].each_cons(2) do |e1, e2|
+              e1.prev = e2.twin
+              e2.twin.next = e1
             end
           end
         end
@@ -306,6 +288,8 @@ module RGeo
             add_polygon(geom)
           when Feature::GeometryCollection
             add_collection(geom)
+          else
+            raise ArgumentError, "Invalid Geometry Type: #{geom.class}"
           end
         end
 
@@ -382,17 +366,15 @@ module RGeo
             start_seg.side(he.destination).zero? || end_seg.side(he.destination).zero?
           end
 
-          colinear_hedges.each do |hedge|
+          colinear_hedges.find do |hedge|
             pts = []
-            hedge.each do |he|
+            hedge.cycle do |he|
               pts << he.origin
             end
             pts << hedge.origin
-
             lr = parent_geometry.factory.line_string(pts)
-            return hedge if Analysis.ring_direction(lr) == ccw_target
+            Analysis.ring_direction(lr) == ccw_target
           end
-          nil
         end
       end
     end
