@@ -324,6 +324,26 @@ class CartesianPlanarGraphTest < Minitest::Test
     end
   end
 
+  def test_create_geometry_graph_point
+    geom = @point1
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(geom)
+
+    assert_equal(geom, graph.parent_geometry)
+    assert_equal(0, graph.edges.size)
+    assert_equal(1, graph.geom_edges.size)
+    assert_nil(graph.geom_edges.first.exterior_edge)
+  end
+
+  def test_create_geometry_graph_empty_linestring
+    geom = @factory.line_string([])
+    graph = RGeo::Cartesian::Graphs::GeometryGraph.new(geom)
+
+    assert_equal(geom, graph.parent_geometry)
+    assert_equal(0, graph.edges.size)
+    assert_equal(1, graph.geom_edges.size)
+    assert_nil(graph.geom_edges.first.exterior_edge)
+  end
+
   def test_create_geometry_graph_linear_ring
     geom = @big_sq_ring
     graph = RGeo::Cartesian::Graphs::GeometryGraph.new(geom)
