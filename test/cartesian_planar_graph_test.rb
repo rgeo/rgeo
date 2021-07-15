@@ -84,15 +84,15 @@ class CartesianPlanarGraphTest < Minitest::Test
     assert_equal([e5, e6, e1, e2, e3, e4], edges)
   end
 
-  def test_half_edge_each
+  def test_half_edge_cycle
     seg = RGeo::Cartesian::Segment.new(@point1, @point3)
     e1, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(seg)
-    res = e1.each
+    res = e1.cycle
     assert_equal(1, res.size)
     assert_equal(e1, res.first)
   end
 
-  def test_half_edge_each_loop
+  def test_half_edge_cycle_loop
     s1, s2, s3, s4 = @big_sq_ring.segments
 
     e11, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(s1)
@@ -105,7 +105,7 @@ class CartesianPlanarGraphTest < Minitest::Test
     e31.next = e41
     e41.next = e11
 
-    edges = e11.each do |e|
+    edges = e11.cycle do |e|
       refute(nil, e.next)
     end
 
@@ -238,6 +238,54 @@ class CartesianPlanarGraphTest < Minitest::Test
     end
   end
 
+  def test_planar_graph_add_edge_disconnected_degenerate_edge
+    e = RGeo::Cartesian::Segment.new(@point10, @point10)
+    graph = RGeo::Cartesian::Graphs::PlanarGraph.new(@big_sq_ring.segments)
+    exp_vertices = 5
+    exp_edges = 5
+
+    graph.add_edge(e)
+    assert_equal(exp_vertices, graph.incident_edges.size)
+    assert_equal(exp_edges, graph.edges.size)
+
+    assert_equal(2, graph.incident_edges[@point10.coordinates].size)
+    assert_equal(1, graph.incident_edges[@point10.coordinates].first.cycle.size)
+
+    graph.incident_edges.each_value do |hedges|
+      hedges.each do |hedge|
+        assert_equal(hedge.destination, hedge.next.origin)
+        assert_equal(hedge.origin, hedge.prev.destination)
+      end
+    end
+  end
+
+  def test_planar_graph_add_edge_disconnected_degenerate_end
+    e1 = RGeo::Cartesian::Segment.new(@point9, @point10)
+    e2 = RGeo::Cartesian::Segment.new(@point10, @point10)
+    graph = RGeo::Cartesian::Graphs::PlanarGraph.new(@big_sq_ring.segments)
+    exp_vertices = 6
+    exp_edges = 6
+
+    graph.add_edge(e1)
+    graph.add_edge(e2)
+    assert_equal(exp_vertices, graph.incident_edges.size)
+    assert_equal(exp_edges, graph.edges.size)
+
+    assert_equal(1, graph.incident_edges[@point9.coordinates].size)
+    assert_equal(3, graph.incident_edges[@point10.coordinates].size)
+
+    graph.incident_edges[@point10.coordinates].each do |hedge|
+      assert hedge.cycle.size <= 3
+    end
+
+    graph.incident_edges.each_value do |hedges|
+      hedges.each do |hedge|
+        assert_equal(hedge.destination, hedge.next.origin)
+        assert_equal(hedge.origin, hedge.prev.destination)
+      end
+    end
+  end
+
   def test_planar_graph_add_edges_multiple_ints
     graph = RGeo::Cartesian::Graphs::PlanarGraph.new(@big_sq_ring.segments)
     graph.add_edges(@intersecting_triangle_ring.segments)
@@ -328,7 +376,7 @@ class CartesianPlanarGraphTest < Minitest::Test
     # and that the interior pointers is nil because no valid loops exist
     # from this start point (disconnected interior).
     geom_edge = graph.geom_edges.first
-    assert_equal(3, geom_edge.exterior_edge.each.size)
+    assert_equal(3, geom_edge.exterior_edge.cycle.size)
     assert_nil(geom_edge.interior_edges.first)
   end
 
@@ -364,5 +412,11 @@ class CartesianPlanarGraphTest < Minitest::Test
     assert_equal(pt1, graph.geom_edges.last.exterior_edge.origin)
     assert_equal(1, graph.geom_edges.last.interior_edges.size)
     refute_nil(graph.geom_edges.last.interior_edges.first)
+  end
+
+  def test_create_geometry_graph_invalid_class
+    assert_raises(ArgumentError) do
+      RGeo::Cartesian::Graphs::GeometryGraph.new(1)
+    end
   end
 end
