@@ -624,6 +624,7 @@ void rgeo_init_geos_geometry_collection(RGeo_Globals* globals)
   rb_define_method(geos_multi_line_string_methods, "geometry_type", method_multi_line_string_geometry_type, 0);
   rb_define_method(geos_multi_line_string_methods, "length", method_multi_line_string_length, 0);
   rb_define_method(geos_multi_line_string_methods, "closed?", method_multi_line_string_is_closed, 0);
+  rb_define_method(geos_multi_line_string_methods, "is_closed?", method_multi_line_string_is_closed, 0);
   rb_define_method(geos_multi_line_string_methods, "hash", method_multi_line_string_hash, 0);
   rb_define_method(geos_multi_line_string_methods, "coordinates", method_multi_line_string_coordinates, 0);
 
