@@ -90,8 +90,13 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
+      def closed?
+        raise Error::UnsupportedOperation, "Method Curve#closed? not defined."
+      end
+
       def is_closed?
-        raise Error::UnsupportedOperation, "Method Curve#is_closed? not defined."
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
       end
 
       # === SFS 1.1 Description
@@ -105,8 +110,13 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
+      def ring?
+        raise Error::UnsupportedOperation, "Method Curve#ring? not defined."
+      end
+
       def is_ring?
-        raise Error::UnsupportedOperation, "Method Curve#is_ring? not defined."
+        warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        ring?
       end
     end
   end

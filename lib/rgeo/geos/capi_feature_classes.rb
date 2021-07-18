@@ -11,6 +11,16 @@ module RGeo
     module CAPIGeometryMethods # :nodoc:
       include Feature::Instance
 
+      def is_empty?
+        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        empty?
+      end
+
+      def is_simple?
+        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        simple?
+      end
+
       def inspect
         "#<#{self.class}:0x#{object_id.to_s(16)} #{as_text.inspect}>"
       end
@@ -48,6 +58,25 @@ module RGeo
         str
       end
       alias to_s as_text
+    end
+
+    module CAPIMultiLineStringMethods # :nodoc:
+      def is_closed?
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
+      end
+    end
+
+    module CAPILineStringMethods # :nodoc:
+      def is_closed?
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
+      end
+
+      def is_ring?
+        warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        ring?
+      end
     end
 
     module CAPIGeometryCollectionMethods # :nodoc:

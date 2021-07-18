@@ -51,8 +51,13 @@ module RGeo
         Feature::GeometryCollection
       end
 
-      def is_empty?
+      def empty?
         @elements.size == 0
+      end
+
+      def is_empty?
+        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        empty?
       end
 
       def rep_equals?(rhs)
@@ -93,8 +98,13 @@ module RGeo
         Feature::MultiLineString
       end
 
+      def closed?
+        all?(&:closed?)
+      end
+
       def is_closed?
-        all?(&:is_closed?)
+        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        closed?
       end
 
       def length
@@ -104,7 +114,7 @@ module RGeo
       def boundary
         hash = {}
         @elements.each do |line|
-          if !line.is_empty? && !line.is_closed?
+          if !line.empty? && !line.closed?
             add_boundary(hash, line.start_point)
             add_boundary(hash, line.end_point)
           end
@@ -180,7 +190,7 @@ module RGeo
       def boundary
         array = []
         @elements.each do |poly|
-          array << poly.exterior_ring unless poly.is_empty?
+          array << poly.exterior_ring unless poly.empty?
           array.concat(poly.interior_rings)
         end
         factory.multi_line_string(array)

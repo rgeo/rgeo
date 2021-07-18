@@ -663,8 +663,8 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_methods, "end_point", method_line_string_end_point, 0);
   rb_define_method(geos_line_string_methods, "project_point", method_line_string_project_point, 1);
   rb_define_method(geos_line_string_methods, "interpolate_point", method_line_string_interpolate_point, 1);
-  rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
-  rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
+  rb_define_method(geos_line_string_methods, "closed?", method_line_string_is_closed, 0);
+  rb_define_method(geos_line_string_methods, "ring?", method_line_string_is_ring, 0);
   rb_define_method(geos_line_string_methods, "coordinates", method_line_string_coordinates, 0);
 
   // CAPILinearRingMethods module

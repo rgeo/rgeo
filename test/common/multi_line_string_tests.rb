@@ -157,9 +157,9 @@ module RGeo
 
         def test_is_empty
           geom1 = @factory.multi_line_string([@linestring1, @linestring2])
-          assert(!geom1.is_empty?)
+          assert(!geom1.empty?)
           geom2 = @factory.multi_line_string([])
-          assert(geom2.is_empty?)
+          assert(geom2.empty?)
         end
 
         def test_length

@@ -160,9 +160,9 @@ module RGeo
 
         def test_is_empty
           geom1 = @factory.multi_polygon([@poly1, @poly2])
-          assert(!geom1.is_empty?)
+          assert(!geom1.empty?)
           geom2 = @factory.multi_polygon([])
-          assert(geom2.is_empty?)
+          assert(geom2.empty?)
         end
 
         def test_multi_polygon_coordinates
