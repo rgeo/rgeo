@@ -2,15 +2,15 @@
 
 module RGeo
   module Cartesian
-      # A Doubly Connected Edge List (DCEL) implementation of a Planar Graph.
-      # It represents geometries as vertices and half-edges.
-      #
-      # It includes an incident_edges hash that maps vertices to an array
-      # of half-edges whose origins are that vertex.
-      #
-      # Upon instantiation, the graph will compute the intersections using
-      # the SweeplineIntersector, populate the incident_edges map, and
-      # link all cyclic edges.
+    # A Doubly Connected Edge List (DCEL) implementation of a Planar Graph.
+    # It represents geometries as vertices and half-edges.
+    #
+    # It includes an incident_edges hash that maps vertices to an array
+    # of half-edges whose origins are that vertex.
+    #
+    # Upon instantiation, the graph will compute the intersections using
+    # the SweeplineIntersector, populate the incident_edges map, and
+    # link all cyclic edges.
     class PlanarGraph
       # HalfEdge represents an edge as 2 directed edges.
       # One half-edge will have it's origin at edge.s, the other
