@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "test_helper"
 
 class CartesianPlanarGraphTest < Minitest::Test
   def setup
@@ -84,15 +84,15 @@ class CartesianPlanarGraphTest < Minitest::Test
     assert_equal([e5, e6, e1, e2, e3, e4], edges)
   end
 
-  def test_half_edge_cycle
+  def test_half_edge_and_connected
     seg = RGeo::Cartesian::Segment.new(@point1, @point3)
     e1, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(seg)
-    res = e1.cycle
+    res = e1.and_connected
     assert_equal(1, res.size)
     assert_equal(e1, res.first)
   end
 
-  def test_half_edge_cycle_loop
+  def test_half_edge_and_connected_loop
     s1, s2, s3, s4 = @big_sq_ring.segments
 
     e11, = RGeo::Cartesian::Graphs::HalfEdge.from_edge(s1)
@@ -105,7 +105,7 @@ class CartesianPlanarGraphTest < Minitest::Test
     e31.next = e41
     e41.next = e11
 
-    edges = e11.cycle do |e|
+    edges = e11.and_connected do |e|
       refute(nil, e.next)
     end
 
@@ -249,7 +249,7 @@ class CartesianPlanarGraphTest < Minitest::Test
     assert_equal(exp_edges, graph.edges.size)
 
     assert_equal(2, graph.incident_edges[@point10.coordinates].size)
-    assert_equal(1, graph.incident_edges[@point10.coordinates].first.cycle.size)
+    assert_equal(1, graph.incident_edges[@point10.coordinates].first.and_connected.size)
 
     graph.incident_edges.each_value do |hedges|
       hedges.each do |hedge|
@@ -275,7 +275,7 @@ class CartesianPlanarGraphTest < Minitest::Test
     assert_equal(3, graph.incident_edges[@point10.coordinates].size)
 
     graph.incident_edges[@point10.coordinates].each do |hedge|
-      assert hedge.cycle.size <= 3
+      assert hedge.and_connected.size <= 3
     end
 
     graph.incident_edges.each_value do |hedges|
@@ -396,7 +396,7 @@ class CartesianPlanarGraphTest < Minitest::Test
     # and that the interior pointers is nil because no valid loops exist
     # from this start point (disconnected interior).
     geom_edge = graph.geom_edges.first
-    assert_equal(3, geom_edge.exterior_edge.cycle.size)
+    assert_equal(3, geom_edge.exterior_edge.and_connected.size)
     assert_nil(geom_edge.interior_edges.first)
   end
 
@@ -435,7 +435,7 @@ class CartesianPlanarGraphTest < Minitest::Test
   end
 
   def test_create_geometry_graph_invalid_class
-    assert_raises(ArgumentError) do
+    assert_raises(RGeo::Error::RGeoError) do
       RGeo::Cartesian::Graphs::GeometryGraph.new(1)
     end
   end
