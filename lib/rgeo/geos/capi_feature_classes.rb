@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Naming/PredicateName
-
 # -----------------------------------------------------------------------------
 #
 # GEOS implementation additions written in Ruby
@@ -13,12 +11,12 @@ module RGeo
     module CAPIGeometryMethods # :nodoc:
       include Feature::Instance
 
-      def is_empty?
+      def is_empty? # rubocop:disable Naming/PredicateName
         warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         empty?
       end
 
-      def is_simple?
+      def is_simple? # rubocop:disable Naming/PredicateName
         warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         simple?
       end
@@ -63,25 +61,23 @@ module RGeo
     end
 
     module CAPIMultiLineStringMethods # :nodoc:
-      def is_closed?
+      def is_closed? # rubocop:disable Naming/PredicateName
         warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         closed?
       end
     end
 
     module CAPILineStringMethods # :nodoc:
-      def is_closed?
+      def is_closed? # rubocop:disable Naming/PredicateName
         warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         closed?
       end
 
-      def is_ring?
+      def is_ring? # rubocop:disable Naming/PredicateName
         warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         ring?
       end
     end
-
-    # rubocop:enable Naming/PredicateName
 
     module CAPIGeometryCollectionMethods # :nodoc:
       include Enumerable
