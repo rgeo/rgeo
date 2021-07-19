@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Naming/PredicateName
+
 # -----------------------------------------------------------------------------
 #
 # GEOS implementation additions written in Ruby
@@ -78,6 +80,8 @@ module RGeo
         ring?
       end
     end
+
+    # rubocop:enable Naming/PredicateName
 
     module CAPIGeometryCollectionMethods # :nodoc:
       include Enumerable
