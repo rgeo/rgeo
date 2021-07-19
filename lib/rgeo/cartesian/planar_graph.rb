@@ -22,7 +22,6 @@ module RGeo
         #
         # @return [Array]
         def self.from_edge(edge)
-          # TODO: should we raise an error if the edge is degenerate?
           e1 = new(edge.s)
           e2 = new(edge.e)
 
@@ -54,7 +53,7 @@ module RGeo
         # If a block is given, each HalfEdge seen will be yielded to the block.
         #
         # @return [Set]
-        def cycle
+        def and_connected
           hedges = Set.new
           yield(self) if block_given?
           hedges << self
@@ -289,7 +288,7 @@ module RGeo
           when Feature::GeometryCollection
             add_collection(geom)
           else
-            raise ArgumentError, "Invalid Geometry Type: #{geom.class}"
+            raise Error::RGeoError, "Invalid Geometry Type: #{geom.class}"
           end
         end
 
@@ -298,7 +297,6 @@ module RGeo
         #
         # @param geom [RGeo::Feature::LineString]
         def add_line_string(geom)
-          # TODO: should we handle empty linestrings?
           add_edges(geom.segments)
 
           hedge = unless geom.is_empty?
@@ -368,7 +366,7 @@ module RGeo
 
           colinear_hedges.find do |hedge|
             pts = []
-            hedge.cycle do |he|
+            hedge.and_connected do |he|
               pts << he.origin
             end
             pts << hedge.origin
