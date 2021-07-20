@@ -74,12 +74,12 @@ module RGeo
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 0)
           line1 = @factory.linear_ring([point1, point2, point3, point1])
-          assert(line1.is_ring?)
+          assert(line1.ring?)
           assert(RGeo::Feature::LinearRing === line1)
           assert_equal(RGeo::Feature::LinearRing, line1.geometry_type)
           line2 = @factory.linear_ring([point1, point2, point3])
           assert(line2)
-          assert(line2.is_ring?)
+          assert(line2.ring?)
           assert(RGeo::Feature::LinearRing === line2)
           assert_equal(4, line2.num_points)
           assert_equal(RGeo::Feature::LinearRing, line2.geometry_type)
@@ -267,14 +267,14 @@ module RGeo
           line1 = @factory.line_string([])
           text = line1.as_text
           line2 = @factory.parse_wkt(text)
-          assert(line2.is_empty?)
+          assert(line2.empty?)
         end
 
         def test_empty_as_binary_wkb_round_trip
           line1 = @factory.line_string([])
           binary = line1.as_binary
           line2 = @factory.parse_wkb(binary)
-          assert(line2.is_empty?)
+          assert(line2.empty?)
         end
 
         def test_dimension
@@ -288,9 +288,9 @@ module RGeo
           point1 = @factory.point(-42, 0)
           point2 = @factory.point(0, 193)
           line1 = @factory.line_string([point1, point2])
-          assert(!line1.is_empty?)
+          assert(!line1.empty?)
           line2 = @factory.line_string([])
-          assert(line2.is_empty?)
+          assert(line2.empty?)
         end
 
         def test_marshal_roundtrip
