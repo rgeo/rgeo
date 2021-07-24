@@ -61,19 +61,20 @@ module RGeo
         #
         # If a block is given, each HalfEdge seen will be yielded to the block.
         #
-        # @return [Set]
+        # @return [Enumerator]
         def and_connected
+          return to_enum(__method__) unless block_given?
+
           hedges = Set.new
-          yield(self) if block_given?
+          yield(self)
           hedges << self
 
           n = self.next
           until hedges.include?(n) || n.nil?
-            yield(n) if block_given?
+            yield(n)
             hedges << n
             n = n.next
           end
-          hedges
         end
 
         # Return the destination of the half edge
