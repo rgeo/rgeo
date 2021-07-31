@@ -13,6 +13,7 @@
 
 #include "globals.h"
 
+#include "errors.h"
 #include "factory.h"
 #include "geometry.h"
 
@@ -863,24 +864,21 @@ static VALUE method_geometry_union(VALUE self, VALUE rhs)
 
 static VALUE method_geometry_unary_union(VALUE self)
 {
-  VALUE result;
+#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
 
-  result = Qnil;
-
-#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
     GEOSContextHandle_t self_context = self_data->geos_context;
-    result = rgeo_wrap_geos_geometry(self_data->factory,
+    return rgeo_wrap_geos_geometry(self_data->factory,
       GEOSUnaryUnion_r(self_context, self_geom),
       Qnil);
   }
 #endif
 
-  return result;
+  return Qnil;
 }
 
 
@@ -1071,6 +1069,18 @@ static VALUE method_geometry_point_on_surface(VALUE self)
   return result;
 }
 
+VALUE rgeo_geos_geometries_strict_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2)
+{
+  switch (GEOSEqualsExact_r(context, geom1, geom2, 0.0)) {
+  case 0:
+    return Qfalse;
+  case 1:
+    return Qtrue;
+  case 2:
+  default:
+    rb_raise(geos_error, "Cannot test equality.");
+  }
+}
 
 /**** INITIALIZATION FUNCTION ****/
 
