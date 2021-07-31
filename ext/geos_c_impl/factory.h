@@ -165,15 +165,6 @@ void rgeo_check_geos_object(VALUE obj);
 const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj);
 
 /*
-  Compares the coordinate sequences for two given GEOS geometries.
-  The two given geometries MUST be of types backed directly by
-  coordinate sequences-- i.e. points or line strings.
-  Returns Qtrue if the two coordinate sequences are equal, Qfalse
-  if they are inequal, or Qnil if an error occurs.
-*/
-VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z);
-
-/*
   Compares the ruby classes and geometry factories of the two given ruby
   objects. Returns Qtrue if everything is equal (that is, the two objects
   are of the same type and factory), or Qfalse otherwise.

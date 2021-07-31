@@ -30,7 +30,7 @@ static VALUE method_polygon_eql(VALUE self, VALUE rhs)
   result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
     self_data = RGEO_GEOMETRY_DATA_PTR(self);
-    result = rgeo_geos_polygons_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom, RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+    result = rgeo_geos_geometries_strict_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom);
   }
   return result;
 }
@@ -298,42 +298,6 @@ void rgeo_init_geos_polygon()
   rb_define_method(geos_polygon_methods, "interior_rings", method_polygon_interior_rings, 0);
   rb_define_method(geos_polygon_methods, "coordinates", method_polygon_coordinates, 0);
 }
-
-
-VALUE rgeo_geos_polygons_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z)
-{
-  VALUE result;
-  int len1;
-  int len2;
-  int i;
-
-  result = Qnil;
-  if (geom1 && geom2) {
-    result = rgeo_geos_coordseqs_eql(context, GEOSGetExteriorRing_r(context, geom1), GEOSGetExteriorRing_r(context, geom2), check_z);
-    if (RTEST(result)) {
-      len1 = GEOSGetNumInteriorRings_r(context, geom1);
-      len2 = GEOSGetNumInteriorRings_r(context, geom2);
-      if (len1 >= 0 && len2 >= 0) {
-        if (len1 == len2) {
-          for (i=0; i<len1; ++i) {
-            result = rgeo_geos_coordseqs_eql(context, GEOSGetInteriorRingN_r(context, geom1, i), GEOSGetInteriorRingN_r(context, geom2, i), check_z);
-            if (!RTEST(result)) {
-              break;
-            }
-          }
-        }
-        else {
-          result = Qfalse;
-        }
-      }
-      else {
-        result = Qnil;
-      }
-    }
-  }
-  return result;
-}
-
 
 st_index_t rgeo_geos_polygon_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash)
 {
