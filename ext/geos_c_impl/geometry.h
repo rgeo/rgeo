@@ -18,6 +18,13 @@ RGEO_BEGIN_C
 void rgeo_init_geos_geometry(RGeo_Globals* globals);
 
 
+/*
+  Compares two geometries using strict GEOS comparison. return Qtrue
+  if they are equal, Qfalse otherwise.
+  May raise a `RGeo::Error::GeosError`.
+*/
+VALUE rgeo_geos_geometries_strict_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2);
+
 RGEO_END_C
 
 #endif

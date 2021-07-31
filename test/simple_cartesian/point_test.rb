@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class CartesianPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests

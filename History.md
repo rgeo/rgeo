@@ -2,6 +2,7 @@
 
 * Change ProjectedLinearRing #is_simple? method to be uniform across geos versions #228
 * Improve large MultiPolygon creation performance (Quiwin) #251
+* Fix CAPI equality (`==`) comparison on macos by using `GEOSEqualsExact_r` #270
 
 ### 2.3.0 / 2021-04-16
 

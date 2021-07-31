@@ -83,7 +83,9 @@ module RGeo
           exterior2 = @factory.linear_ring([point2, point3, point1, point2])
           poly2 = @factory.polygon(exterior2)
           assert(!poly1.rep_equals?(poly2))
+          assert(!poly1.eql?(poly2))
           assert(poly1.equals?(poly2))
+          assert(poly1 == poly2)
         end
 
         def test_geometrically_equal_but_different_directions
@@ -95,7 +97,9 @@ module RGeo
           exterior2 = @factory.linear_ring([point1, point3, point2, point1])
           poly2 = @factory.polygon(exterior2)
           assert(!poly1.rep_equals?(poly2))
+          assert(!poly1.eql?(poly2))
           assert(poly1.equals?(poly2))
+          assert(poly1 == poly2)
         end
 
         def test_hashes_equal_for_representationally_equivalent_objects

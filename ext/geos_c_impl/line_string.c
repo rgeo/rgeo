@@ -343,7 +343,7 @@ static VALUE method_line_string_eql(VALUE self, VALUE rhs)
   result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
     self_data = RGEO_GEOMETRY_DATA_PTR(self);
-    result = rgeo_geos_coordseqs_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom, RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+    result = rgeo_geos_geometries_strict_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom);
   }
   return result;
 }
