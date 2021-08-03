@@ -22,7 +22,7 @@ module RGeo
           end
           elem
         end
-        validate_geometry
+        prepare_geometry
       end
 
       def exterior_ring

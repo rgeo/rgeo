@@ -20,7 +20,7 @@ module RGeo
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        validate_geometry
+        prepare_geometry
       end
 
       def num_geometries
@@ -91,7 +91,7 @@ module RGeo
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        validate_geometry
+        prepare_geometry
       end
 
       def geometry_type
@@ -152,7 +152,7 @@ module RGeo
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        validate_geometry
+        prepare_geometry
       end
 
       def geometry_type
@@ -176,7 +176,7 @@ module RGeo
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        validate_geometry
+        prepare_geometry
       end
 
       def geometry_type

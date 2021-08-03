@@ -16,7 +16,13 @@ module RGeo
           raise Error::InvalidGeometry, "Could not cast #{elem}" unless elem
           elem
         end
-        validate_geometry
+        # LineStrings in general need to check that there's not one point
+        # GEOS doesn't allow instantiation of single point LineStrings so
+        # we should handle it.
+        if @points.size == 1
+          raise Error::InvalidGeometry, "LineString Cannot Have 1 Point"
+        end
+        prepare_geometry
       end
 
       def num_points
@@ -143,12 +149,6 @@ module RGeo
         super
         @points = obj.points
       end
-
-      def validate_geometry
-        if @points.size == 1
-          raise Error::InvalidGeometry, "LineString cannot have 1 point"
-        end
-      end
     end
 
     module BasicLineMethods # :nodoc:
@@ -161,7 +161,7 @@ module RGeo
         cstop = Feature.cast(stop, factory, Feature::Point)
         raise Error::InvalidGeometry, "Could not cast end: #{stop}" unless cstop
         @points = [cstart, cstop]
-        validate_geometry
+        prepare_geometry
       end
 
       def geometry_type
@@ -171,18 +171,16 @@ module RGeo
       def coordinates
         @points.map(&:coordinates)
       end
-
-      private
-
-      def validate_geometry
-        super
-        if @points.size > 2
-          raise Error::InvalidGeometry, "Line must have 0 or 2 points"
-        end
-      end
     end
 
     module BasicLinearRingMethods # :nodoc:
+      def initialize(factory, points)
+        super
+        unless @points.size >= 4 || @points.size == 0
+          raise Error::InvalidGeometry, "LinearRings must have 0 or >= 4 points"
+        end
+      end
+
       def geometry_type
         Feature::LinearRing
       end
@@ -191,16 +189,13 @@ module RGeo
         RGeo::Cartesian::Analysis.ccw?(self)
       end
 
-      private
+      # private
 
-      def validate_geometry
+      def prepare_geometry
         super
         if @points.size > 0
           @points << @points.first if @points.first != @points.last
           @points = @points.chunk { |x| x }.map(&:first)
-          if !@factory.property(:uses_lenient_assertions) && !ring?
-            raise Error::InvalidGeometry, "LinearRing failed ring test"
-          end
         end
       end
     end
