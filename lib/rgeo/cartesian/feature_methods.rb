@@ -50,30 +50,160 @@ module RGeo
       end
 
       def is_simple?
-        len = segments.length
-        return false if segments.any?(&:degenerate?)
-        return true if len == 1
-        return segments[0].s != segments[1].e if len == 2
-        segments.each_with_index do |seg, index|
-          nindex = index + 1
-          nindex = nil if nindex == len
-          return false if nindex && seg.contains_point?(segments[nindex].e)
-          pindex = index - 1
-          pindex = nil if pindex < 0
-          return false if pindex && seg.contains_point?(segments[pindex].s)
-          next unless nindex
-          oindex = nindex + 1
-          while oindex < len
-            oseg = segments[oindex]
-            return false if !(index == 0 && oindex == len - 1 && seg.s == oseg.e) && seg.intersects_segment?(oseg)
-            oindex += 1
-          end
-        end
-        true
+        # TODO: should we replace with graph.incident_edges.length == segments.length
+        # since graph isn't used elsewhere yet it might be more overhead.
+        li = SweeplineIntersector.new(segments)
+        li.proper_intersections.size.zero?
       end
 
       def length
         segments.inject(0.0) { |sum, seg| sum + seg.length }
+      end
+
+      def crosses?(rhs)
+        case rhs
+        when Feature::LineString
+          crosses_line_string?(rhs)
+        else
+          super
+        end
+      end
+
+      private
+
+      # Determines if a cross occurs with another linestring.
+      # Process is to get the number of proper intersections in each geom
+      # then overlay and get the number of proper intersections from that.
+      # If the overlaid number is higher than the sum of individual self-ints
+      # then there is an intersection. Finally, we need to check the intersection
+      # to see that it is not a boundary point of either segment.
+      #
+      # @param rhs [Feature::LineString]
+      #
+      # @return [Boolean]
+      def crosses_line_string?(rhs)
+        self_ints = SweeplineIntersector.new(segments).proper_intersections
+        self_ints += SweeplineIntersector.new(rhs.segments).proper_intersections
+        overlay_ints = SweeplineIntersector.new(segments + rhs.segments).proper_intersections
+
+        (overlay_ints - self_ints).each do |int|
+          s1s = int.s1.s
+          s1e = int.s1.e
+          s2s = int.s2.s
+          s2e = int.s2.e
+          return true unless [s1s, s1e, s2s, s2e].include?(int.point)
+        end
+
+        false
+      end
+    end
+
+    module PolygonMethods
+      def graph
+        @graph ||= GeometryGraph.new(self)
+      end
+
+      private
+
+      # Similar implementation to the default version from the ValidOp
+      # module, but it overrides a few methods in favor of a graph for
+      # easier checks. Eventually most of these checks can be overriden
+      # and rely on the graph.
+      #
+      # TODO: will update these with more checks once we decide
+      # if this structure makes sense or if there's more metaprogramming
+      # we could do.
+      def check_valid_polygon
+        # check coordinates are all valid
+        exterior_ring.points.each do |pt|
+          check = check_invalid_coordinate(pt)
+          return check unless check.nil?
+        end
+        interior_rings.each do |ring|
+          ring.points.each do |pt|
+            check = check_invalid_coordinate(pt)
+            return check unless check.nil?
+          end
+        end
+
+        # check closed
+        return ImplHelper::TopologyErrors::UNCLOSED_RING unless exterior_ring.is_closed?
+        return ImplHelper::TopologyErrors::UNCLOSED_RING unless interior_rings.all?(&:is_closed?)
+
+        # check more than 3 points in each ring
+        return ImplHelper::TopologyErrors::TOO_FEW_POINTS unless exterior_ring.num_points > 3
+        return ImplHelper::TopologyErrors::TOO_FEW_POINTS unless interior_rings.all? { |r| r.num_points > 3 }
+
+        # can skip this check if there's no holes
+        if interior_rings.size.positive?
+          check = check_consistent_area
+          return check unless check.nil?
+        end
+
+        # check that there are no self-intersections
+        check = check_no_self_intersecting_rings(self)
+        return check unless check.nil?
+
+        # can skip these checks if there's no holes
+        if interior_rings.size.positive?
+          check = check_holes_in_shell(self)
+          return check unless check.nil?
+
+          check = check_holes_not_nested(self)
+          return check unless check.nil?
+
+          check = check_connected_interiors
+          return check unless check.nil?
+        end
+
+        nil
+      end
+
+      # Checks that there are no invalid intersections between the components
+      # of a polygon.
+      #
+      # @return [String] invalid_reason
+      def check_consistent_area
+        # Get set of unique coords
+        pts = exterior_ring.coordinates.to_set
+        interior_rings.each do |ring|
+          pts += ring.coordinates
+        end
+        num_points = pts.size
+
+        # if additional nodes were added, there must be an intersection
+        # through a boundary.
+        if graph.incident_edges.size > num_points
+          return ImplHelper::TopologyErrors::SELF_INTERSECTION
+        end
+
+        rings = [exterior_ring] + interior_rings
+        return ImplHelper::TopologyErrors::DUPLICATE_RINGS if rings.uniq.size != rings.size
+
+        nil
+      end
+
+      # Checks that the interior of a polygon is connected.
+      #
+      # Process to do this is to walk around an interior cycle of the
+      # exterior shell in the polygon's geometry graph. It will keep track
+      # of all the nodes it visited and if that set is a superset of the
+      # coordinates in the exterior_ring, the interior is connected, otherwise
+      # it is split somewhere.
+      #
+      # @return [String] invalid_reason
+      def check_connected_interiors
+        exterior_coords = exterior_ring.coordinates.to_set
+
+        visited = []
+        graph.geom_edges.first.exterior_edge.and_connected do |hedge|
+          visited << hedge.origin.coordinates
+        end
+        visited = visited.to_set
+
+        return ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR unless exterior_coords.subset?(visited)
+
+        nil
       end
     end
 

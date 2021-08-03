@@ -175,8 +175,8 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |         `LineString#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |            `LineString#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                   `LineString#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LineString#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LineString#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|              `LineString#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                 `LineString#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LineString#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LineString#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -267,8 +267,8 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |         `LinearRing#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |            `LinearRing#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                   `LinearRing#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LinearRing#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LinearRing#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ❌     |
 |                 `LinearRing#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LinearRing#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LinearRing#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
