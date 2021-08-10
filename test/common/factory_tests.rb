@@ -64,7 +64,7 @@ module RGeo
 
         def test_psych_dump_load_factory
           data = Psych.dump(@factory)
-          factory2 = Psych.load(data)
+          factory2 = psych_load(data)
           assert_equal(@factory, factory2)
           assert_equal(srid, factory2.srid)
         end
