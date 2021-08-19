@@ -189,7 +189,7 @@ module RGeo
         RGeo::Cartesian::Analysis.ccw?(self)
       end
 
-      # private
+      private
 
       def prepare_geometry
         super
