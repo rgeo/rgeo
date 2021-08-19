@@ -105,10 +105,7 @@ module RGeo
         return TopologyErrors::TOO_FEW_POINTS unless num_points > 3
 
         # check no self-intersections
-        check = check_no_self_intersections(self)
-        return check unless check.nil?
-
-        nil
+        check_no_self_intersections(self)
       end
 
       def check_valid_polygon
@@ -133,7 +130,7 @@ module RGeo
         return TopologyErrors::TOO_FEW_POINTS unless interior_rings.all? { |r| r.num_points > 3 }
 
         # can skip this check if there's no holes
-        if interior_rings.size.positive?
+        unless interior_rings.empty?
           check = check_consistent_area(self)
           return check unless check.nil?
         end
@@ -143,7 +140,7 @@ module RGeo
         return check unless check.nil?
 
         # can skip these checks if there's no holes
-        if interior_rings.size.positive?
+        unless interior_rings.empty?
           check = check_holes_in_shell(self)
           return check unless check.nil?
 
@@ -193,7 +190,7 @@ module RGeo
       ##
 
       def check_invalid_coordinate(pt)
-        return unless pt.x.nan? || pt.x.infinite? || pt.y.nan? || pt.y.infinite?
+        return if pt.x.finite? && pt.y.finite? && pt.x.real? && pt.y.real?
 
         TopologyErrors::INVALID_COORDINATE
       end

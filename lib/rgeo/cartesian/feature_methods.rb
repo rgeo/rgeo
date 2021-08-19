@@ -16,6 +16,12 @@ module RGeo
       def envelope
         BoundingBox.new(factory).add(self).to_geometry
       end
+
+      private
+
+      def graph
+        @graph ||= GeometryGraph.new(self)
+      end
     end
 
     module PointMethods # :nodoc:
@@ -53,7 +59,7 @@ module RGeo
         # TODO: should we replace with graph.incident_edges.length == segments.length
         # since graph isn't used elsewhere yet it might be more overhead.
         li = SweeplineIntersector.new(segments)
-        li.proper_intersections.size.zero?
+        li.proper_intersections.empty?
       end
 
       def length
@@ -99,10 +105,6 @@ module RGeo
     end
 
     module PolygonMethods
-      def graph
-        @graph ||= GeometryGraph.new(self)
-      end
-
       private
 
       # Similar implementation to the default version from the ValidOp
@@ -195,11 +197,10 @@ module RGeo
       def check_connected_interiors
         exterior_coords = exterior_ring.coordinates.to_set
 
-        visited = []
+        visited = Set.new
         graph.geom_edges.first.exterior_edge.and_connected do |hedge|
           visited << hedge.origin.coordinates
         end
-        visited = visited.to_set
 
         return ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR unless exterior_coords.subset?(visited)
 

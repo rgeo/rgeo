@@ -127,7 +127,7 @@ module RGeo
 
       def invalid_reason
         str = @fg_geom.valid_reason
-        if str.include?("Valid Geometry")
+        if str == "Valid Geometry"
           nil
         else
           str
