@@ -43,6 +43,10 @@ module RGeo
 
       private
 
+      def validity_helper
+        ValidOpHelpers
+      end
+
       # Method that performs validity checking. Just checks the type of geometry
       # and delegates to the proper validity checker.
       #
@@ -75,13 +79,13 @@ module RGeo
       end
 
       def check_valid_point
-        check_invalid_coordinate(self)
+        validity_helper.check_invalid_coordinate(self)
       end
 
       def check_valid_line_string
         # check coordinates are all valid
         points.each do |pt|
-          check = check_invalid_coordinate(pt)
+          check = validity_helper.check_invalid_coordinate(pt)
           return check unless check.nil?
         end
 
@@ -94,7 +98,7 @@ module RGeo
       def check_valid_linear_ring
         # check coordinates are all valid
         points.each do |pt|
-          check = check_invalid_coordinate(pt)
+          check = validity_helper.check_invalid_coordinate(pt)
           return check unless check.nil?
         end
 
@@ -105,18 +109,18 @@ module RGeo
         return TopologyErrors::TOO_FEW_POINTS unless num_points > 3
 
         # check no self-intersections
-        check_no_self_intersections(self)
+        validity_helper.check_no_self_intersections(self)
       end
 
       def check_valid_polygon
         # check coordinates are all valid
         exterior_ring.points.each do |pt|
-          check = check_invalid_coordinate(pt)
+          check = validity_helper.check_invalid_coordinate(pt)
           return check unless check.nil?
         end
         interior_rings.each do |ring|
           ring.points.each do |pt|
-            check = check_invalid_coordinate(pt)
+            check = validity_helper.check_invalid_coordinate(pt)
             return check unless check.nil?
           end
         end
@@ -131,23 +135,23 @@ module RGeo
 
         # can skip this check if there's no holes
         unless interior_rings.empty?
-          check = check_consistent_area(self)
+          check = validity_helper.check_consistent_area(self)
           return check unless check.nil?
         end
 
         # check that there are no self-intersections
-        check = check_no_self_intersecting_rings(self)
+        check = validity_helper.check_no_self_intersecting_rings(self)
         return check unless check.nil?
 
         # can skip these checks if there's no holes
         unless interior_rings.empty?
-          check = check_holes_in_shell(self)
+          check = validity_helper.check_holes_in_shell(self)
           return check unless check.nil?
 
-          check = check_holes_not_nested(self)
+          check = validity_helper.check_holes_not_nested(self)
           return check unless check.nil?
 
-          check = check_connected_interiors(self)
+          check = validity_helper.check_connected_interiors(self)
           return check unless check.nil?
         end
 
@@ -156,7 +160,7 @@ module RGeo
 
       def check_valid_multi_point
         geometries.each do |pt|
-          check = check_invalid_coordinate(pt)
+          check = validity_helper.check_invalid_coordinate(pt)
           return check unless check.nil?
         end
         nil
@@ -167,11 +171,11 @@ module RGeo
           return poly.invalid_reason unless poly.invalid_reason.nil?
         end
 
-        check = check_consistent_area_mp(self)
+        check = validity_helper.check_consistent_area_mp(self)
         return check unless check.nil?
 
         # check no shells are nested
-        check = check_shells_not_nested(self)
+        check = validity_helper.check_shells_not_nested(self)
         return check unless check.nil?
 
         nil
@@ -184,11 +188,19 @@ module RGeo
 
         nil
       end
+    end
 
-      ##
-      # Helper functions for specific validity checks
-      ##
+    ##
+    # Helper functions for specific validity checks
+    ##
+    module ValidOpHelpers
+      extend self
 
+      # Checks that the given point has valid coordinates.
+      #
+      # @param poly [RGeo::Feature::Point]
+      #
+      # @return [String] invalid_reason
       def check_invalid_coordinate(pt)
         return if pt.x.finite? && pt.y.finite? && pt.x.real? && pt.y.real?
 
