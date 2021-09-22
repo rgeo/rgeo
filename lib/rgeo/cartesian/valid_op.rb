@@ -12,7 +12,10 @@ module RGeo
 
     module ValidOpHelpers
       include ImplHelper::ValidOpHelpers
-      extend self
+
+      module_function(*ImplHelper::ValidOpHelpers.singleton_methods) # rubocop:disable Style/AccessModifierDeclarations
+
+      module_function
 
       # Checks that there are no invalid intersections between the components
       # of a polygon.
