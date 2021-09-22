@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module RGeo
   module ImplHelper
     module TopologyErrors
@@ -218,20 +220,20 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_consistent_area(poly)
-        # Holes don't intersect exterior check.
+        # Holes don't cross exterior check.
         exterior = poly.exterior_ring
         poly.interior_rings.each do |ring|
-          return TopologyErrors::SELF_INTERSECTION if ring.intersects?(exterior)
-        end
-
-        # check interiors do not intersect
-        poly.interior_rings.combination(2).each do |ring1, ring2|
-          return TopologyErrors::SELF_INTERSECTION if ring1.intersects?(ring2)
+          return TopologyErrors::SELF_INTERSECTION if ring.crosses?(exterior)
         end
 
         # Duplicate rings check
         rings = [exterior] + poly.interior_rings
         return TopologyErrors::DUPLICATE_RINGS if rings.uniq.size != rings.size
+
+        # check interiors do not cross
+        poly.interior_rings.combination(2).each do |ring1, ring2|
+          return TopologyErrors::SELF_INTERSECTION if ring1.crosses?(ring2)
+        end
 
         nil
       end
@@ -324,12 +326,15 @@ module RGeo
         # Idea is to check if a single hole has multiple points on the
         # exterior ring.
         poly.interior_rings.each do |ring|
-          counter = 0
+          touches = Set.new
           ring.points.each do |pt|
-            counter += 1 if ring.contains?(pt)
+            touches.add(pt) if poly.exterior_ring.contains?(pt)
           end
-          return TopologyErrors::DISCONNECTED_INTERIOR if counter > 1
+
+          return TopologyErrors::DISCONNECTED_INTERIOR if touches.size > 1
         end
+
+        nil
       end
 
       # Checks that polygons do not intersect in a multipolygon.
