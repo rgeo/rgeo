@@ -194,7 +194,7 @@ module RGeo
     # Helper functions for specific validity checks
     ##
     module ValidOpHelpers
-      extend self
+      module_function
 
       # Checks that the given point has valid coordinates.
       #
