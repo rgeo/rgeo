@@ -12,6 +12,7 @@ module RGeo
       include RGeo::Feature::Point
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicPointMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
       include RGeo::Cartesian::PointMethods
     end
@@ -20,6 +21,7 @@ module RGeo
       include RGeo::Feature::LineString
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicLineStringMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
       include RGeo::Cartesian::LineStringMethods
     end
@@ -29,6 +31,7 @@ module RGeo
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicLineStringMethods
       include RGeo::ImplHelper::BasicLineMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
       include RGeo::Cartesian::LineStringMethods
     end
@@ -38,6 +41,7 @@ module RGeo
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicLineStringMethods
       include RGeo::ImplHelper::BasicLinearRingMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
       include RGeo::Cartesian::LineStringMethods
     end
@@ -46,6 +50,7 @@ module RGeo
       include RGeo::Feature::Polygon
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicPolygonMethods
+      include RGeo::Cartesian::ValidOp
       include RGeo::Cartesian::GeometryMethods
     end
 
@@ -53,6 +58,7 @@ module RGeo
       include RGeo::Feature::GeometryCollection
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicGeometryCollectionMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
     end
 
@@ -61,6 +67,7 @@ module RGeo
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicGeometryCollectionMethods
       include RGeo::ImplHelper::BasicMultiPointMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
     end
 
@@ -69,6 +76,7 @@ module RGeo
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicGeometryCollectionMethods
       include RGeo::ImplHelper::BasicMultiLineStringMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
       include RGeo::Cartesian::MultiLineStringMethods
     end
@@ -78,6 +86,7 @@ module RGeo
       include RGeo::ImplHelper::BasicGeometryMethods
       include RGeo::ImplHelper::BasicGeometryCollectionMethods
       include RGeo::ImplHelper::BasicMultiPolygonMethods
+      include RGeo::ImplHelper::ValidOp
       include RGeo::Cartesian::GeometryMethods
     end
   end

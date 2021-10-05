@@ -8,6 +8,7 @@
 
 require_relative "cartesian/calculations"
 require_relative "cartesian/feature_methods"
+require_relative "cartesian/valid_op"
 require_relative "cartesian/feature_classes"
 require_relative "cartesian/factory"
 require_relative "cartesian/interface"
