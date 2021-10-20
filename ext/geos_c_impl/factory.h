@@ -94,13 +94,6 @@ typedef struct {
 #define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC               0b01000
 #define RGEO_FACTORYFLAGS_LENIENT_ASSERTIONS              0b10000
 
-
-
-/* call-seq:
- *   RGeo::Geos::CAPIFactory.lenient_multipolygon_assertions? -> true or false
- */
-VALUE method_factory_lenient_multipolygon_assertions_p(VALUE self);
-
 /* call-seq:
  *   RGeo::Geos::CAPIFactory.supports_z? -> true or false
  */

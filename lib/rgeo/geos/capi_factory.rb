@@ -26,7 +26,6 @@ module RGeo
 
           # Get flags to pass to the C extension
           flags = 0
-          flags |= 1 if opts_[:uses_lenient_assertions] || opts_[:lenient_multi_polygon_assertions] || opts_[:uses_lenient_multi_polygon_assertions]
           flags |= 2 if opts_[:has_z_coordinate]
           flags |= 4 if opts_[:has_m_coordinate]
           if flags & 6 == 6
@@ -145,8 +144,6 @@ module RGeo
           "wkbg" => _wkb_generator ? _wkb_generator.properties : {},
           "wktp" => _wkt_parser ? _wkt_parser.properties : {},
           "wkbp" => _wkb_parser ? _wkb_parser.properties : {},
-          "lmpa" => lenient_multi_polygon_assertions?,
-          "la" => lenient_assertions?,
           "apre" => auto_prepare
         }
         if (proj4_ = _proj4)
@@ -180,8 +177,6 @@ module RGeo
             wkb_generator: symbolize_hash(data_["wkbg"]),
             wkt_parser: symbolize_hash(data_["wktp"]),
             wkb_parser: symbolize_hash(data_["wkbp"]),
-            uses_lenient_assertions: data_["la"],
-            uses_lenient_multi_polygon_assertions: data_["lmpa"],
             auto_prepare: data_["apre"],
             proj4: proj4_,
             coord_sys: coord_sys_
@@ -196,7 +191,6 @@ module RGeo
         coder_["has_m_coordinate"] = supports_m?
         coder_["srid"] = _srid
         coder_["buffer_resolution"] = _buffer_resolution
-        coder_["lenient_multi_polygon_assertions"] = lenient_multi_polygon_assertions?
         coder_["wkt_generator"] = _wkt_generator ? _wkt_generator.properties : {}
         coder_["wkb_generator"] = _wkb_generator ? _wkb_generator.properties : {}
         coder_["wkt_parser"] = _wkt_parser ? _wkt_parser.properties : {}
@@ -238,7 +232,6 @@ module RGeo
             wkt_parser: symbolize_hash(coder_["wkt_parser"]),
             wkb_parser: symbolize_hash(coder_["wkb_parser"]),
             auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
-            uses_lenient_multi_polygon_assertions: coder_["lenient_multi_polygon_assertions"],
             proj4: proj4_,
             coord_sys: coord_sys_
           )
@@ -267,8 +260,6 @@ module RGeo
           supports_m?
         when :is_cartesian
           true
-        when :uses_lenient_multi_polygon_assertions
-          lenient_multi_polygon_assertions?
         when :buffer_resolution
           _buffer_resolution
         when :auto_prepare
@@ -421,8 +412,6 @@ module RGeo
       def auto_prepare # :nodoc:
         prepare_heuristic? ? :simple : :disabled
       end
-
-      alias lenient_multi_polygon_assertions? lenient_multipolygon_assertions?
 
       # :stopdoc:
 

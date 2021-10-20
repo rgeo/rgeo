@@ -20,9 +20,6 @@ module RGeo
       # See RGeo::Geos.factory for a list of supported options.
 
       def initialize(opts = {})
-        # Main flags
-        @uses_lenient_multi_polygon_assertions = opts[:uses_lenient_assertions] ||
-          opts[:lenient_multi_polygon_assertions] || opts[:uses_lenient_multi_polygon_assertions]
         @has_z = opts[:has_z_coordinate] ? true : false
         @has_m = opts[:has_m_coordinate] ? true : false
         if @has_z && @has_m
@@ -145,7 +142,6 @@ module RGeo
           "wkbg" => @wkb_generator.properties,
           "wktp" => @wkt_parser.properties,
           "wkbp" => @wkb_parser.properties,
-          "lmpa" => @uses_lenient_multi_polygon_assertions,
           "apre" => @_auto_prepare
         }
         hash["proj4"] = @proj4.marshal_dump if @proj4
@@ -174,7 +170,6 @@ module RGeo
           wkb_generator: symbolize_hash(data["wkbg"]),
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
-          uses_lenient_multi_polygon_assertions: data["lmpa"],
           auto_prepare: (data["apre"] ? :simple : :disabled),
           proj4: proj4,
           coord_sys: coord_sys
@@ -188,7 +183,6 @@ module RGeo
         coder["has_m_coordinate"] = @has_m
         coder["srid"] = @srid
         coder["buffer_resolution"] = @buffer_resolution
-        coder["lenient_multi_polygon_assertions"] = @uses_lenient_multi_polygon_assertions
         coder["wkt_generator"] = @wkt_generator.properties
         coder["wkb_generator"] = @wkb_generator.properties
         coder["wkt_parser"] = @wkt_parser.properties
@@ -227,7 +221,6 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
-          uses_lenient_multi_polygon_assertions: coder["lenient_multi_polygon_assertions"],
           proj4: proj4,
           coord_sys: coord_sys
         )
@@ -242,14 +235,7 @@ module RGeo
 
       attr_reader :buffer_resolution
 
-      # Returns true if this factory is lenient with MultiPolygon assertions
-
-      def lenient_multi_polygon_assertions?
-        @uses_lenient_multi_polygon_assertions
-      end
-
       # See RGeo::Feature::Factory#property
-
       def property(name_)
         case name_
         when :has_z_coordinate
@@ -260,15 +246,12 @@ module RGeo
           true
         when :buffer_resolution
           @buffer_resolution
-        when :uses_lenient_multi_polygon_assertions
-          @uses_lenient_multi_polygon_assertions
         when :auto_prepare
           @_auto_prepare ? :simple : :disabled
         end
       end
 
       # See RGeo::Feature::Factory#parse_wkt
-
       def parse_wkt(str)
         if @wkt_reader
           wrap_fg_geom(@wkt_reader.read(str), nil)
@@ -416,17 +399,6 @@ module RGeo
           elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Polygon, :force_new, :keep_subtype)
           raise(RGeo::Error::InvalidGeometry, "Could not cast to polygon: #{elem}") unless elem
           elem.detach_fg_geom
-        end
-        unless @uses_lenient_multi_polygon_assertions
-          (1...elems.size).each do |i|
-            (0...i).each do |j|
-              igeom = elems[i]
-              jgeom = elems[j]
-              if igeom.relate_pattern(jgeom, "2********") || igeom.relate_pattern(jgeom, "****1****")
-                raise(RGeo::Error::InvalidGeometry, "Invalid relate pattern: #{jgeom}")
-              end
-            end
-          end
         end
         klasses = Array.new(elems.size, FFIPolygonImpl)
         fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems)

@@ -54,12 +54,6 @@ module RGeo
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
       #   Support an M coordinate. Default is false.
-      # [<tt>:uses_lenient_assertions</tt>]
-      #   If set to true, assertion checking is disabled. This includes
-      #   simplicity checking on LinearRing, and validity checks on
-      #   Polygon and MultiPolygon. This may speed up creation of certain
-      #   objects, at the expense of not doing the proper checking for
-      #   OGC compliance. Default is false.
       # [<tt>:buffer_resolution</tt>]
       #   The resolution of buffers around geometries created by this
       #   factory. This controls the number of line segments used to
@@ -131,7 +125,6 @@ module RGeo
           has_m_coordinate: opts[:has_m_coordinate],
           proj4: proj4 || proj_4055,
           coord_sys: coord_sys || coord_sys_4055,
-          uses_lenient_assertions: opts[:uses_lenient_assertions],
           buffer_resolution: opts[:buffer_resolution],
           wkt_parser: opts[:wkt_parser],
           wkb_parser: opts[:wkb_parser],
@@ -207,10 +200,8 @@ module RGeo
       #
       # You may also provide options understood by the underlying
       # projected Cartesian factory. For example, if GEOS is used for the
-      # projected factory, you may also set the
-      # <tt>:lenient_multi_polygon_assertions</tt> and
-      # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
-      # more details.
+      # projected factory, you may also set the <tt>:buffer_resolution</tt>
+      # options. See RGeo::Geos.factory for more details.
 
       def simple_mercator_factory(opts = {})
         factory = Geographic::Factory.new("Projected",
@@ -225,8 +216,6 @@ module RGeo
           has_m_coordinate: opts[:has_m_coordinate])
         projector = Geographic::SimpleMercatorProjector.new(factory,
           buffer_resolution: opts[:buffer_resolution],
-          lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
-          uses_lenient_assertions: opts[:uses_lenient_assertions],
           has_z_coordinate: opts[:has_z_coordinate],
           has_m_coordinate: opts[:has_m_coordinate])
         factory.projector = projector
@@ -341,9 +330,8 @@ module RGeo
       # If a <tt>:projection_factory</tt> is _not_ provided, you may also
       # provide options for configuring the projected Cartesian factory.
       # For example, if GEOS is used for the projected factory, you may
-      # also set the <tt>:lenient_multi_polygon_assertions</tt> and
-      # <tt>:buffer_resolution</tt> options. See RGeo::Geos.factory for
-      # more details.
+      # also set the <tt>:buffer_resolution</tt> option. See RGeo::Geos.factory
+      # for more details.
 
       def projected_factory(opts = {})
         CoordSys.check!(:proj4)
@@ -446,8 +434,6 @@ module RGeo
             srid: projection_srid,
             coord_sys: projection_coord_sys,
             buffer_resolution: opts[:buffer_resolution],
-            lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
-            uses_lenient_assertions: opts[:uses_lenient_assertions],
             has_z_coordinate: opts[:has_z_coordinate],
             has_m_coordinate: opts[:has_m_coordinate],
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],

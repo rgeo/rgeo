@@ -167,11 +167,6 @@ static VALUE method_factory_flags(VALUE self)
   return INT2NUM(RGEO_FACTORY_DATA_PTR(self)->flags);
 }
 
-VALUE method_factory_lenient_multipolygon_assertions_p(VALUE self)
-{
-  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON_ASSERTIONS ? Qtrue : Qfalse;
-}
-
 VALUE method_factory_supports_z_p(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z ? Qtrue : Qfalse;
@@ -191,13 +186,6 @@ VALUE method_factory_prepare_heuristic_p(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC ? Qtrue : Qfalse;
 }
-
-VALUE method_factory_lenient_assertions_p(VALUE self)
-{
-  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_LENIENT_ASSERTIONS ? Qtrue : Qfalse;
-}
-
-
 
 static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
 {
@@ -656,12 +644,10 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_method(geos_factory_class, "_srid", method_factory_srid, 0);
   rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
-  rb_define_method(geos_factory_class, "lenient_multipolygon_assertions?", method_factory_lenient_multipolygon_assertions_p, 0);
   rb_define_method(geos_factory_class, "supports_z?", method_factory_supports_z_p, 0);
   rb_define_method(geos_factory_class, "supports_m?", method_factory_supports_m_p, 0);
   rb_define_method(geos_factory_class, "supports_z_or_m?", method_factory_supports_z_or_m_p, 0);
   rb_define_method(geos_factory_class, "prepare_heuristic?", method_factory_prepare_heuristic_p, 0);
-  rb_define_method(geos_factory_class, "lenient_assertions?", method_factory_lenient_assertions_p, 0);
   rb_define_method(geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
   rb_define_method(geos_factory_class, "_proj4", method_get_proj4, 0);
   rb_define_method(geos_factory_class, "_coord_sys", method_get_coord_sys, 0);

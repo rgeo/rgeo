@@ -85,14 +85,6 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
     }
     else {
       collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
-      // Check if MultiPolygon is valid.
-      if (collection
-          && type == GEOS_MULTIPOLYGON
-          && !(factory_data->flags & 1)
-          && !GEOSisValid_r(geos_context, collection)) {
-        GEOSGeom_destroy_r(geos_context, collection);
-        collection = NULL;
-      }
       if (collection) {
         result = rgeo_wrap_geos_geometry(factory, collection, module);
         RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
@@ -375,7 +367,7 @@ static VALUE method_multi_line_string_coordinates(VALUE self)
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
-  
+
   if(self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;
@@ -487,7 +479,7 @@ static VALUE method_multi_polygon_coordinates(VALUE self)
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
-  
+
   if(self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
     context = self_data->geos_context;

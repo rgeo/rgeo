@@ -12,6 +12,6 @@ class MercatorValidityTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::ValidityTests
 
   def setup
-    @factory = RGeo::Geographic.simple_mercator_factory(lenient_multi_polygon_assertions: true)
+    @factory = RGeo::Geographic.simple_mercator_factory
   end
 end

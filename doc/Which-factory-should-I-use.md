@@ -65,8 +65,6 @@ Once you've selected what type of factory you want from the list above, you need
 
 `has_m_coordinate` -- Gives all geometries created with the factory an M-coordinate.
 
-`uses_lenient_assertions`: Specify that invalid geometries may be instantiated if set to `true`.
-
 See the documentation for a complete list for each factory.
 
 Now you can create your factory:
@@ -74,8 +72,8 @@ Now you can create your factory:
 ```rb
 require 'rgeo'
 
-# Create a 3D Cartesian factory that allows for invalid geometries to be created. Specify that geometries exist in a mercator project (srid: 3857).
-factory = RGeo::Cartesian.preferred_factory(uses_lenient_assertions: true, has_z_coordinate: true, srid: 3857)
+# Create a 3D Cartesian factory. Specify that geometries exist in a mercator project (srid: 3857).
+factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true, srid: 3857)
 ```
 
 To create geometries, using the factory design pattern is quite straightforward: just do never instantiate your objects with `new`, but rather use your factory to create an object.

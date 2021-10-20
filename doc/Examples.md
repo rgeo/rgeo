@@ -76,7 +76,7 @@ This guide shows examples of different operations that can be performed with RGe
 
 ## Creating a Factory
 
-The examples below will show different methods for creating a factory with certain properties. 
+The examples below will show different methods for creating a factory with certain properties.
 
 _Note that these are not exhaustive and you should refer to the docs for a complete list of options._
 
@@ -87,7 +87,7 @@ Create a 2D Cartesian factory using a GEOS integration, if available, otherwise 
 ```ruby
 factory = RGeo::Cartesian.factory
 p factory
-#=> #<RGeo::Geos::CAPIFactory srid=0 bufres=1 flags=8> 
+#=> #<RGeo::Geos::CAPIFactory srid=0 bufres=1 flags=8>
 ```
 
 ### Ruby Cartesian Factory
@@ -97,7 +97,7 @@ Create a 2D Cartesian factory using a Ruby implementation.
 ```ruby
 factory = RGeo::Cartesian.simple_factory
 p factory
-#=> #<RGeo::Cartesian::Factory @has_z=false, @has_m=false, @proj4=nil, @coord_sys=nil, @srid=0, @lenient_assertions=false, @buffer_resolution=1>
+#=> #<RGeo::Cartesian::Factory @has_z=false, @has_m=false, @proj4=nil, @coord_sys=nil, @srid=0, @buffer_resolution=1>
 ```
 
 ### Spherical Factory
@@ -164,7 +164,7 @@ p factory
 
 simple_factory = RGeo::Cartesian.simple_factory(has_z_coordinate: true, has_m_coordinate: true)
 p simple_factory
-#=> #<RGeo::Cartesian::Factory @has_z=true, @has_m=true, @proj4=nil, @coord_sys=nil, @srid=0, @lenient_assertions=false, @buffer_resolution=1>
+#=> #<RGeo::Cartesian::Factory @has_z=true, @has_m=true, @proj4=nil, @coord_sys=nil, @srid=0, @buffer_resolution=1>
 ```
 
 ### Specify an SRID
@@ -177,19 +177,6 @@ _Note: This does not specify how data should be converted between coordinate sys
 factory = RGeo::Geos.factory(srid: 3857)
 p factory
 #=> #<RGeo::Geos::CAPIFactory:0x2ad702f454bc srid=3857 bufres=1 flags=8>
-```
-
-### Factory that Allows Invalid Geometries
-
-By default, most factories will not allow the creation of invalid geometries and will raise an `RGeo::Error::InvalidGeometry` exception. This can be set with the `:uses_lenient_assertions` parameter.
-
-```ruby
-factory = RGeo::Geographic.spherical_factory(uses_lenient_assertions: true)
-p factory
-#=> #<RGeo::Geographic::Factory:0x000055ae05d98150 @impl_prefix="Spherical", @point_class=RGeo::Geographic::SphericalPointImpl, @line_string_class=RGeo::Geographic::SphericalLineStringImpl, @linear_ring_class=RGeo::Geographic::SphericalLinearRingImpl, @line_class=RGeo::Geographic::SphericalLineImpl, @polygon_class=RGeo::Geographic::SphericalPolygonImpl, @geometry_collection_class=RGeo::Geographic::SphericalGeometryCollectionImpl, @multi_point_class=RGeo::Geographic::SphericalMultiPointImpl, @multi_line_string_class=RGeo::Geographic::SphericalMultiLineStringImpl, @multi_polygon_class=RGeo::Geographic::SphericalMultiPolygonImpl, @support_z=false, @support_m=false, @srid=4055, @proj4=nil>
-
-p factory.property(:uses_lenient_assertions)
-#=> true
 ```
 
 ## Points
@@ -257,7 +244,7 @@ pt2 = factory.point(2, 0)
 pt3 = factory.point(2, 2)
 linestring = factory.line_string([pt1, pt2, pt3])
 p linestring
-# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)"> 
+# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)">
 ```
 
 
@@ -271,7 +258,7 @@ This creates the same LineString as above.
 factory = RGeo::Cartesian.factory
 linestring2 = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring2
-# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)"> 
+# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)">
 # p linestring == linestring2
 # => true
 ```
@@ -317,7 +304,7 @@ pt3 = factory.point(4, 4)
 pt4 = factory.point(2, 6)
 linearring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 p linearring
-# => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)"> 
+# => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)">
 p linearring.is_closed?
 #=> true
 p linearring.is_simple?
@@ -731,7 +718,7 @@ Get the WKT representation of a geometry.
 ```ruby
 factory = RGeo::Cartesian.factory
 p factory.point(1, 1).as_text
-# => "POINT (1.0 1.0)" 
+# => "POINT (1.0 1.0)"
 ```
 
 ### as_binary
@@ -741,7 +728,7 @@ Get the WKB representation of a geometry.
 ```ruby
 factory = RGeo::Cartesian.factory
 p factory.point(1, 1).as_binary
-# => "\x00\x00\x00\x00\x01?\xF0\x00\x00\x00\x00\x00\x00?\xF0\x00\x00\x00\x00\x00\x00" 
+# => "\x00\x00\x00\x00\x01?\xF0\x00\x00\x00\x00\x00\x00?\xF0\x00\x00\x00\x00\x00\x00"
 ```
 
 ## Predicates and Relationships
@@ -1048,7 +1035,7 @@ square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 intersection = square1.intersection(square2)
 
 p intersection
-# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((1.0 2.0, 2.0 2.0, 2.0 0.0, 1.0 0.0, 1.0 2.0))"> 
+# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((1.0 2.0, 2.0 2.0, 2.0 0.0, 1.0 0.0, 1.0 2.0))">
 ```
 
 ### Union
@@ -1079,7 +1066,7 @@ squares = factory.collection([square1, square2])
 union = squares.unary_union
 
 p union
-# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 2.0 2.0, 3.0 2.0, 3.0 0.0, 2.0 0.0, 1.0 0.0, 0.0 0.0))"> 
+# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 2.0 2.0, 3.0 2.0, 3.0 0.0, 2.0 0.0, 1.0 0.0, 0.0 0.0))">
 ```
 
 ### Difference
@@ -1094,7 +1081,7 @@ square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 diff = square1.difference(square2)
 
 p diff
-# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 1.0 0.0, 0.0 0.0))"> 
+# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 1.0 0.0, 0.0 0.0))">
 ```
 
 ### SymDifference
