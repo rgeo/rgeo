@@ -5,6 +5,8 @@ module RGeo
     module Common # :nodoc:
       module ValidityTests # :nodoc:
         def test_validity_correct_implementation
+          skip "Implementation #{@factory.class} does not implement ValidityCheck" unless implements_validity_check?
+
           assert(
             RGeo::ImplHelper::ValidityCheck.send(:classes).empty?,
             "`ValidityCheck.override_classes` was not called correctly"
@@ -20,6 +22,9 @@ module RGeo
         end
 
         def test_validity_unsafe_area
+          skip "Implementation #{@factory.class} does not implement ValidityCheck" unless implements_validity_check?
+          skip "#area not handled by current implementation" unless implements_area?
+
           assert_equal(0, bowtie_polygon.unsafe_area)
           assert_raises(RGeo::Error::InvalidGeometry) do
             bowtie_polygon.area
@@ -28,7 +33,8 @@ module RGeo
         end
 
         def test_validity_make_valid
-          skip "make_valid not handled by current implementation" unless implements_make_valid?
+          skip "Implementation #{@factory.class} does not implement ValidityCheck" unless implements_validity_check?
+          skip "#make_valid not handled by current implementation" unless implements_make_valid?
 
           assert_equal(0.5, bowtie_polygon.make_valid.area)
         end
@@ -38,8 +44,26 @@ module RGeo
           assert_equal("Self-intersection", bowtie_polygon.invalid_reason)
         end
 
+        def implements_validity_check?
+          square_polygon.is_a? RGeo::ImplHelper::ValidityCheck
+        end
+
         def implements_make_valid?
           square_polygon.method(:make_valid).owner != RGeo::ImplHelper::ValidityCheck
+        rescue NameError
+          false
+        end
+
+        def implements_area?
+          return @implements_area_p if defined?(@implements_area_p)
+
+          begin
+            square_polygon.unsafe_area
+          rescue RGeo::Error::UnsupportedOperation
+            @implements_area_p = false
+          else
+            @implements_area_p = true
+          end
         end
 
         def square_polygon
