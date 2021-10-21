@@ -44,7 +44,9 @@ jobs:
         run: exit 1 # FIXME
       - name: Fix FFI requirement
         if: matrix.ruby != 'jruby'
-        run: gem install ffi --platform=ruby
+        run: |
+          gem install ffi --platform=ruby
+          sudo ln -s /usr/lib/x86_64-linux-gnu/libffi.so.7 /usr/lib/x86_64-linux-gnu/libffi.so.6
       - name: Test
         run: bundle exec rake
   RuboCop:
