@@ -46,7 +46,7 @@ jobs:
         if: matrix.ruby != 'jruby'
         run: |
           gem install ffi --platform=ruby
-          sudo ln -s /usr/lib/x86_64-linux-gnu/libffi.so.7 /usr/lib/x86_64-linux-gnu/libffi.so.6
+          sudo ln -s /usr/lib/x86_64-linux/libffi.so.7 /usr/lib/x86_64-linux/libffi.so.6
       - name: Test
         run: bundle exec rake
   RuboCop:
