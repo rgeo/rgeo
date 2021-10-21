@@ -17,7 +17,19 @@ module RGeo
     module ValidityCheck
       # Every method that need to be valid to give a correct result.
       # TODO: list all methods that need valid geometries here.
-      CHECKED_METHODS = [:area].freeze
+      UNCHECKED_METHODS = [
+        # Basic methods
+        :factory, :geometry_type, :as_test, :as_binary, :srid,
+        # Tests
+        :simple?, :is_simple?, :is_closed?,
+        # Accessors
+        :exterior_ring, :interior_rings, :[], :num_geometries, :geometry_n,
+        :each, :points, :point_n, :x, :y, :z, :m,
+        # Trivial methods
+        :num_points,
+        # Comparison
+        :equals?, :rep_equals?, :eql?, :==, :'!='
+      ].freeze
 
       class << self
         # Note for contributors: this should be called after all methods
@@ -41,8 +53,16 @@ module RGeo
         end
 
         def override(klass)
+          methods_to_check = feature_methods(klass)
+          # if klass.name == "RGeo::Cartesian::PointImpl"
+          #   methods_to_check = methods_to_check.to_a[11, 1]
+          #   1000.times { p methods_to_check}
+          # end
+
+          # binding.irb unless methods_to_check.grep(/valid/).empty?
+
           klass.class_eval do
-            (CHECKED_METHODS & instance_methods).each do |method_sym|
+            methods_to_check.each do |method_sym|
               copy = "unsafe_#{method_sym}".to_sym
               alias_method copy, method_sym
               undef_method method_sym
@@ -52,6 +72,16 @@ module RGeo
               end
             end
           end
+
+        end
+
+        def feature_methods(klass)
+          feature_defs = Set.new
+          klass
+            .ancestors
+            .select { |ancestor| ancestor <= RGeo::Feature::Geometry }
+            .each { |ancestor| feature_defs.merge(ancestor.instance_methods(false)) }
+          feature_defs & klass.instance_methods - UNCHECKED_METHODS
         end
       end
 

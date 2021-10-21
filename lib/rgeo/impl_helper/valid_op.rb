@@ -77,6 +77,7 @@ module RGeo
           raise NotImplementedError, "check_valid is not implemented for #{self}"
         end
       rescue RGeo::Error::UnsupportedOperation, NoMethodError
+        p $!
         "Unkown Validity"
       end
 
