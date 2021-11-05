@@ -222,7 +222,8 @@ module RGeo
           wkt_generator: opts[:wkt_generator],
           wkb_generator: opts[:wkb_generator],
           has_z_coordinate: opts[:has_z_coordinate],
-          has_m_coordinate: opts[:has_m_coordinate])
+          has_m_coordinate: opts[:has_m_coordinate],
+          uses_lenient_assertions: opts[:uses_lenient_assertions])
         projector = Geographic::SimpleMercatorProjector.new(factory,
           buffer_resolution: opts[:buffer_resolution],
           lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
