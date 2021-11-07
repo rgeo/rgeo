@@ -19,12 +19,12 @@ module RGeo
       # TODO: list all methods that need valid geometries here.
       UNCHECKED_METHODS = [
         # Basic methods
-        :factory, :geometry_type, :as_test, :as_binary, :srid,
+        :factory, :geometry_type, :as_text, :as_binary, :srid,
         # Tests
-        :simple?, :is_simple?, :is_closed?,
+        :simple?, :is_simple?, :is_closed?, :is_empty?,
         # Accessors
-        :exterior_ring, :interior_rings, :[], :num_geometries, :geometry_n,
-        :each, :points, :point_n, :x, :y, :z, :m,
+        :exterior_ring, :interior_rings, :[], :num_geometries, :num_interior_rings,
+        :geometry_n, :each, :points, :point_n, :start_point, :end_point, :x, :y, :z, :m,
         # Trivial methods
         :num_points,
         # Comparison
@@ -72,7 +72,6 @@ module RGeo
               end
             end
           end
-
         end
 
         def feature_methods(klass)
