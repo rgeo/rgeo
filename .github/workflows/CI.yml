@@ -19,11 +19,11 @@ jobs:
           - '2.5'
           - jruby
         os:
-          - ubuntu
-          - windows
-          - macos
-    runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
+          - ubuntu-18.04
+          # - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows-latest' || matrix.os == 'macos-latest' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v2
@@ -37,17 +37,17 @@ jobs:
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get install libgeos-dev -y
       - name: Install Geos (Mac)
-        if: matrix.os == 'macos'
+        if: matrix.os == 'macos-latest'
         run: brew install geos
       - name: Install Geos (Windows)
-        if: matrix.os == 'windows'
+        if: matrix.os == 'windows-latest'
         run: exit 1 # FIXME
-      - name: Fix FFI requirement
-        if: matrix.ruby != 'jruby'
-        run: |
-          gem install ffi --platform=ruby
-          gem pristine ffi # https://github.com/ffi/ffi/issues/773#issuecomment-720394940
-          # sudo ln -s /usr/lib/x86_64-linux/libffi.so.7 /usr/lib/x86_64-linux/libffi.so.6
+      # - name: Fix FFI requirement
+      #   if: matrix.ruby != 'jruby'
+      #   run: |
+      #     gem install ffi --platform=ruby
+      #     # gem pristine ffi # https://github.com/ffi/ffi/issues/773#issuecomment-720394940
+      #     # sudo ln -s /usr/lib/x86_64-linux/libffi.so.7 /usr/lib/x86_64-linux/libffi.so.6
       - name: Test
         run: bundle exec rake
   RuboCop:
