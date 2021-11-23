@@ -21,4 +21,19 @@ class MercatorFactoryTest < Minitest::Test # :nodoc:
 
     assert_equal(true, factory.property(:uses_lenient_assertions))
   end
+
+  def test_ring_has_lenient_assertions
+    ring = -> (factory) {
+      factory.linear_ring([
+        factory.point(0, 0),
+        factory.point(1, 1),
+        factory.point(0, 1),
+        factory.point(1, 0)
+      ])
+    }
+
+    assert_raises { ring.call RGeo::Geographic.simple_mercator_factory }
+
+    ring.call RGeo::Geographic.simple_mercator_factory(uses_lenient_assertions: true)
+  end
 end
