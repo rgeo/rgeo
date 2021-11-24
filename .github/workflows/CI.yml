@@ -19,11 +19,11 @@ jobs:
           - '2.5'
           - jruby
         os:
-          - ubuntu-18.04
-          # - windows-latest
-          - macos-latest
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows-latest' || matrix.os == 'macos-latest' }}
+          - ubuntu
+          # - windows
+          - macos
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v2
@@ -37,10 +37,10 @@ jobs:
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get install libgeos-dev -y
       - name: Install Geos (Mac)
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos'
         run: brew install geos
       - name: Install Geos (Windows)
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows'
         run: exit 1 # FIXME
       # - name: Fix FFI requirement
       #   if: matrix.ruby != 'jruby'
