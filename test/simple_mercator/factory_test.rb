@@ -23,14 +23,14 @@ class MercatorFactoryTest < Minitest::Test # :nodoc:
   end
 
   def test_ring_has_lenient_assertions
-    ring = -> (factory) {
+    ring = lambda do |factory|
       factory.linear_ring([
-        factory.point(0, 0),
-        factory.point(1, 1),
-        factory.point(0, 1),
-        factory.point(1, 0)
-      ])
-    }
+                            factory.point(0, 0),
+                            factory.point(1, 1),
+                            factory.point(0, 1),
+                            factory.point(1, 0)
+                          ])
+    end
 
     assert_raises { ring.call RGeo::Geographic.simple_mercator_factory }
 
