@@ -1,3 +1,9 @@
+### 2.3.1 / 2021-11-30
+
+* Fix core dump when cast returns a non Geos object #261
+* Change all `is_*?` method names to `*?` (stephenandersondev) #268
+* Fix lenient_assertion flags for `simple_mercator_factory` (thestelz) #278
+
 ### 2.3.0 / 2021-04-16
 
 * Fix a memory leak in CAPI's `#invalid_reason`
