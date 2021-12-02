@@ -119,11 +119,54 @@ typedef struct {
 } RGeo_GeometryData;
 
 
+// Data types which indicate how RGeo types should be managed by Ruby.
+static void destroy_globals_func(RGeo_Globals* data);
+
+static void mark_globals_func(RGeo_Globals* data);
+
+static const rb_data_type_t rgeo_globals_type = {
+  .wrap_struct_name = "RGeo/Globals",
+  .function = {
+    .dmark = mark_globals_func,
+    .dfree = destroy_globals_func
+  }
+};
+
+static void destroy_factory_func(RGeo_FactoryData* data);
+
+static void mark_factory_func(RGeo_FactoryData* data);
+
+static const rb_data_type_t rgeo_factory_type = {
+  .wrap_struct_name = "RGeo/Factory",
+  .function = {
+    .dmark = mark_factory_func,
+    .dfree = destroy_factory_func
+  }
+};
+
+static void destroy_geometry_func(RGeo_GeometryData* data);
+
+static void mark_geometry_func(RGeo_GeometryData* data);
+
+static const rb_data_type_t rgeo_geometry_type = {
+  .wrap_struct_name = "RGeo/Geometry",
+  .function = {
+    .dmark = mark_geometry_func,
+    .dfree = destroy_geometry_func
+  }
+};
+
+// Convenient macros for checking the type of data from Ruby
+#define RGEO_FACTORY_TYPEDDATA_P(object) (_RGEO_TYPEDDATA_P(object, &rgeo_factory_type))
+#define RGEO_GEOMETRY_TYPEDDATA_P(object) (_RGEO_TYPEDDATA_P(object, &rgeo_geometry_type))
+
+#define _RGEO_TYPEDDATA_P(object, data_type) (TYPE(object) == T_DATA && RTYPEDDATA(object)->typed_flag == 1 && RTYPEDDATA(object)->type == data_type)
+
 // Returns the RGeo_FactoryData* given a ruby Factory object
-#define RGEO_FACTORY_DATA_PTR(factory) ((RGeo_FactoryData*)DATA_PTR(factory))
+#define RGEO_FACTORY_DATA_PTR(factory) ((RGeo_FactoryData*)RTYPEDDATA_DATA(factory))
 
 // Returns the RGeo_GeometryData* given a ruby Geometry object
-#define RGEO_GEOMETRY_DATA_PTR(geometry) ((RGeo_GeometryData*)DATA_PTR(geometry))
+#define RGEO_GEOMETRY_DATA_PTR(geometry) ((RGeo_GeometryData*)RTYPEDDATA_DATA(geometry))
 
 
 /*
