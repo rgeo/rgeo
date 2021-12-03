@@ -54,12 +54,6 @@ module RGeo
 
         def override(klass)
           methods_to_check = feature_methods(klass)
-          # if klass.name == "RGeo::Cartesian::PointImpl"
-          #   methods_to_check = methods_to_check.to_a[11, 1]
-          #   1000.times { p methods_to_check}
-          # end
-
-          # binding.irb unless methods_to_check.grep(/valid/).empty?
 
           klass.class_eval do
             methods_to_check.each do |method_sym|
@@ -98,10 +92,10 @@ module RGeo
       def invalid_reason
         if defined?(super) == "super"
           raise Error::RGeoError, "ValidityCheck MUST be loaded before " \
-            "definition of #{self.class}#invalid_reason."
+            "definition of #{self.class}##{__method__}."
         end
 
-        raise Error::UnsupportedOperation, "Method #{self.class}#invalid_reason not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Try and make the geometry valid, this may change its shape.
@@ -109,16 +103,16 @@ module RGeo
       def make_valid
         if defined?(super) == "super"
           raise Error::RGeoError, "ValidityCheck MUST be loaded before " \
-            "definition of #{self.class}#invalid_reason."
+            "definition of #{self.class}##{__method__}."
         end
 
-        raise Error::UnsupportedOperation, "Method #{self.class}#make_valid not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       private
 
       def invalid_reason_memo
-        # `defined?`` is a bit faster than `instance_variable_defined?`.
+        # `defined?` is a bit faster than `instance_variable_defined?`.
         return @invalid_reason_memo if defined?(@invalid_reason_memo)
 
         @invalid_reason_memo = invalid_reason

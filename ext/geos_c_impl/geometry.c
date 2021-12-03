@@ -1039,14 +1039,15 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   char* str;
-  GEOSGeometry* loc;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
     // TODO: should we consider using the flag GEOSVALID_ALLOW_SELFTOUCHING_RING_FORMING_HOLE?
-    switch(GEOSisValidDetail_r(self_data->geos_context, self_geom, 0, &str, &loc)) {
+
+    // We use NULL there to tell GEOS that we don't care about the position.
+    switch(GEOSisValidDetail_r(self_data->geos_context, self_geom, 0, &str, NULL)) {
       case 0: // invalid
         result = rb_str_new2(str);
       case 1: // valid
@@ -1057,7 +1058,6 @@ static VALUE method_geometry_invalid_reason(VALUE self)
         break;
     };
     if (str) GEOSFree_r(self_data->geos_context, str);
-    if (loc) GEOSGeom_destroy_r(self_data->geos_context, loc);
   }
   return result;
 }

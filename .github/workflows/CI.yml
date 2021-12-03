@@ -20,6 +20,7 @@ jobs:
           - jruby
         os:
           - ubuntu
+          # Windows users, feel free to open a PR :)
           # - windows
           - macos
     runs-on: ${{ matrix.os }}-latest
@@ -41,13 +42,7 @@ jobs:
         run: brew install geos
       - name: Install Geos (Windows)
         if: matrix.os == 'windows'
-        run: exit 1 # FIXME
-      # - name: Fix FFI requirement
-      #   if: matrix.ruby != 'jruby'
-      #   run: |
-      #     gem install ffi --platform=ruby
-      #     # gem pristine ffi # https://github.com/ffi/ffi/issues/773#issuecomment-720394940
-      #     # sudo ln -s /usr/lib/x86_64-linux/libffi.so.7 /usr/lib/x86_64-linux/libffi.so.6
+        run: exit 1
       - name: Bundle Install
         run: bundle install
       - name: Test
