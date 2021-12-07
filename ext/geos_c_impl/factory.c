@@ -431,7 +431,7 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       data->wkrep_wkb_parser = Qnil;
       data->proj4_obj = proj4_obj;
       data->coord_sys_obj = coord_sys_obj;
-      result = Data_Wrap_Struct(klass, mark_factory_func, destroy_factory_func, data);
+      result = TypedData_Wrap_Struct(klass, &rgeo_factory_type, data);
     }
     else {
       free(data);
@@ -496,7 +496,7 @@ static VALUE method_factory_initialize_copy(VALUE self, VALUE orig)
   self_data->coord_sys_obj = Qnil;
 
   // Copy new data from original object
-  if (TYPE(orig) == T_DATA && RDATA(orig)->dfree == (RUBY_DATA_FUNC)destroy_factory_func) {
+  if (RGEO_FACTORY_TYPEDDATA_P(orig)) {
     orig_data = RGEO_FACTORY_DATA_PTR(orig);
     self_data->flags = orig_data->flags;
     self_data->srid = orig_data->srid;
@@ -657,7 +657,7 @@ RGeo_Globals* rgeo_init_geos_factory()
 
   // Wrap the globals in a Ruby object and store it off so we have access
   // to it later. Each factory instance will reference it internally.
-  wrapped_globals = Data_Wrap_Struct(rb_cObject, mark_globals_func, destroy_globals_func, globals);
+  wrapped_globals = TypedData_Wrap_Struct(rb_cObject, &rgeo_globals_type, globals);
   rb_define_const(geos_factory_class, "INTERNAL_CGLOBALS", wrapped_globals);
 
   return globals;
@@ -747,12 +747,11 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
         (GEOSPreparedGeometry*)1 : NULL;
       data->factory = factory;
       data->klasses = klasses;
-      result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
+      result = TypedData_Wrap_Struct(klass, &rgeo_geometry_type, data);
     }
   }
   return result;
 }
-
 
 VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VALUE klass)
 {
@@ -775,7 +774,7 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   VALUE object;
   RGeo_Globals* globals;
 
-  if (NIL_P(type) && TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
+  if (NIL_P(type) && RGEO_GEOMETRY_TYPEDDATA_P(obj) && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
     object = obj;
   }
   else {
@@ -785,7 +784,7 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   if (NIL_P(object))
     return NULL;
 
-  Check_Type(object, T_DATA);
+  Check_TypedStruct(object, &rgeo_geometry_type);
   return RGEO_GEOMETRY_DATA_PTR(object)->geom;
 }
 
@@ -829,7 +828,7 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
 
 char rgeo_is_geos_object(VALUE obj)
 {
-  return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? 1 : 0;
+  return RGEO_GEOMETRY_TYPEDDATA_P(obj) ? 1 : 0;
 }
 
 void rgeo_check_geos_object(VALUE obj)
@@ -842,7 +841,7 @@ void rgeo_check_geos_object(VALUE obj)
 
 const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj)
 {
-  return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom) : NULL;
+  return RGEO_GEOMETRY_TYPEDDATA_P(obj) ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom) : NULL;
 }
 
 
