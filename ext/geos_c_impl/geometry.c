@@ -1049,12 +1049,12 @@ static VALUE method_geometry_invalid_reason(VALUE self)
     // We use NULL there to tell GEOS that we don't care about the position.
     switch(GEOSisValidDetail_r(self_data->geos_context, self_geom, 0, &str, NULL)) {
       case 0: // invalid
-        result = rb_str_new2(str);
+        result = rb_utf8_str_new_cstr(str);
       case 1: // valid
         break;
       case 2: // exception
       default:
-        result = rb_str_new2("Exception");
+        result = rb_utf8_str_new_cstr("Exception");
         break;
     };
     if (str) GEOSFree_r(self_data->geos_context, str);

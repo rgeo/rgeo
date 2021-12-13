@@ -130,7 +130,7 @@ module RGeo
       def invalid_reason
         # valid_detail gives solely the reason, or nil if valid, which is
         # what we want.
-        fg_geom.valid_detail&.dig(:detail)
+        fg_geom.valid_detail&.dig(:detail)&.force_encoding(Encoding::UTF_8)
       end
 
       # (see RGeo::ImplHelper::ValidityCheck#make_valid)
