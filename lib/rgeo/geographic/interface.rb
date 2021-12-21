@@ -441,7 +441,8 @@ module RGeo
             has_z_coordinate: opts[:has_z_coordinate],
             has_m_coordinate: opts[:has_m_coordinate],
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
-            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator],
+            uses_lenient_assertions: opts[:uses_lenient_assertions])
           projector = Geographic::Proj4Projector.create_from_proj4(factory,
             projection_proj4,
             srid: projection_srid,
