@@ -9,6 +9,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "errors.h"
 
 #include "factory.h"
@@ -26,15 +28,14 @@ RGEO_BEGIN_C
 void Init_geos_c_impl()
 {
 #ifdef RGEO_GEOS_SUPPORTED
-  RGeo_Globals* globals;
-
-  globals = rgeo_init_geos_factory();
-  rgeo_init_geos_geometry(globals);
-  rgeo_init_geos_point(globals);
-  rgeo_init_geos_line_string(globals);
-  rgeo_init_geos_polygon(globals);
-  rgeo_init_geos_geometry_collection(globals);
-  rgeo_init_geos_analysis(globals);
+  rgeo_init_geos_globals();
+  rgeo_init_geos_factory();
+  rgeo_init_geos_geometry();
+  rgeo_init_geos_point();
+  rgeo_init_geos_line_string();
+  rgeo_init_geos_polygon();
+  rgeo_init_geos_geometry_collection();
+  rgeo_init_geos_analysis();
   rgeo_init_geos_errors();
 #endif
 }

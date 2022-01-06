@@ -9,6 +9,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "analysis.h"
 #include "factory.h"
 #include "errors.h"
@@ -62,11 +64,11 @@ VALUE rgeo_geos_analysis_supports_ccw(VALUE self)
 }
 
 
-void rgeo_init_geos_analysis(RGeo_Globals* globals)
+void rgeo_init_geos_analysis()
 {
   VALUE geos_analysis_module;
 
-  geos_analysis_module = rb_define_module_under(globals->geos_module, "Analysis");
+  geos_analysis_module = rb_define_module_under(rgeo_geos_module, "Analysis");
   rb_define_singleton_method(geos_analysis_module, "ccw_supported?", rgeo_geos_analysis_supports_ccw, 0);
   #ifdef RGEO_GEOS_SUPPORTS_ISCCW
   rb_define_singleton_method(geos_analysis_module, "ccw?", rgeo_geos_analysis_ccw_p, 1);
