@@ -8,8 +8,6 @@
 
 #include <ruby.h>
 
-#include "factory.h"
-
 RGEO_BEGIN_C
 
 
@@ -17,7 +15,7 @@ RGEO_BEGIN_C
   Initializes the point module. This should be called after
   the geometry module is initialized.
 */
-void rgeo_init_geos_point(RGeo_Globals* globals);
+void rgeo_init_geos_point();
 
 /*
   Creates a 3d point and returns the ruby object.

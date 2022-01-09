@@ -10,6 +10,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "factory.h"
 #include "geometry.h"
 #include "line_string.h"
@@ -43,8 +45,7 @@ static VALUE method_polygon_hash(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
   hash = rb_hash_start(0);
-  hash = rgeo_geos_objbase_hash(factory,
-    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_polygon, hash);
+  hash = rgeo_geos_objbase_hash(factory, rgeo_feature_polygon_module, hash);
   hash = rgeo_geos_polygon_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
@@ -58,7 +59,7 @@ static VALUE method_polygon_geometry_type(VALUE self)
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_polygon;
+    result = rgeo_feature_polygon_module;
   }
   return result;
 }
@@ -93,7 +94,7 @@ static VALUE method_polygon_centroid(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSGetCentroid_r(self_data->geos_context, self_geom), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_point);
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSGetCentroid_r(self_data->geos_context, self_geom), rgeo_geos_point_class);
   }
   return result;
 }
@@ -109,7 +110,7 @@ static VALUE method_polygon_point_on_surface(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSPointOnSurface_r(self_data->geos_context, self_geom), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_point);
+    result = rgeo_wrap_geos_geometry(self_data->factory, GEOSPointOnSurface_r(self_data->geos_context, self_geom), rgeo_geos_point_class);
   }
   return result;
 }
@@ -145,7 +146,7 @@ static VALUE method_polygon_exterior_ring(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry_clone(self_data->factory, GEOSGetExteriorRing_r(self_data->geos_context, self_geom), RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring);
+    result = rgeo_wrap_geos_geometry_clone(self_data->factory, GEOSGetExteriorRing_r(self_data->geos_context, self_geom), rgeo_geos_linear_ring_class);
   }
   return result;
 }
@@ -191,7 +192,7 @@ static VALUE method_polygon_interior_ring_n(VALUE self, VALUE n)
       if (i < num) {
         result = rgeo_wrap_geos_geometry_clone(self_data->factory,
           GEOSGetInteriorRingN_r(self_context, self_geom, i),
-          RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring);
+          rgeo_geos_linear_ring_class);
       }
     }
   }
@@ -219,9 +220,8 @@ static VALUE method_polygon_interior_rings(VALUE self)
     if (count >= 0) {
       result = rb_ary_new2(count);
       factory = self_data->factory;
-      linear_ring_class = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->geos_linear_ring;
       for (i=0; i<count; ++i) {
-        rb_ary_store(result, i, rgeo_wrap_geos_geometry_clone(factory, GEOSGetInteriorRingN_r(self_context, self_geom, i), linear_ring_class));
+        rb_ary_store(result, i, rgeo_wrap_geos_geometry_clone(factory, GEOSGetInteriorRingN_r(self_context, self_geom, i), rgeo_geos_linear_ring_class));
       }
     }
   }
@@ -244,7 +244,7 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
 
   Check_Type(interior_array, T_ARRAY);
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  linear_ring_type = factory_data->globals->feature_linear_ring;
+  linear_ring_type = rgeo_feature_linear_ring_module;
   exterior_geom = rgeo_convert_to_detached_geos_geometry(exterior, factory, linear_ring_type, NULL);
   if (exterior_geom) {
     context = factory_data->geos_context;
@@ -262,7 +262,7 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
         polygon = GEOSGeom_createPolygon_r(context, exterior_geom, interior_geoms, actual_len);
         if (polygon) {
           free(interior_geoms);
-          return rgeo_wrap_geos_geometry(factory, polygon, factory_data->globals->geos_polygon);
+          return rgeo_wrap_geos_geometry(factory, polygon, rgeo_geos_polygon_class);
         }
       }
       for (i=0; i<actual_len; ++i) {
@@ -276,15 +276,15 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
 }
 
 
-void rgeo_init_geos_polygon(RGeo_Globals* globals)
+void rgeo_init_geos_polygon()
 {
   VALUE geos_polygon_methods;
 
   // Class methods for CAPIPolygonImpl
-  rb_define_module_function(globals->geos_polygon, "create", cmethod_create, 3);
+  rb_define_module_function(rgeo_geos_polygon_class, "create", cmethod_create, 3);
 
   // CAPIPolygonMethods module
-  geos_polygon_methods = rb_define_module_under(globals->geos_module, "CAPIPolygonMethods");
+  geos_polygon_methods = rb_define_module_under(rgeo_geos_module, "CAPIPolygonMethods");
   rb_define_method(geos_polygon_methods, "rep_equals?", method_polygon_eql, 1);
   rb_define_method(geos_polygon_methods, "eql?", method_polygon_eql, 1);
   rb_define_method(geos_polygon_methods, "hash", method_polygon_hash, 0);

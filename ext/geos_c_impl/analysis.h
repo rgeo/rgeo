@@ -9,8 +9,6 @@
 
 #ifdef RGEO_GEOS_SUPPORTED
 
-#include "factory.h"
-
 RGEO_BEGIN_C
 
 /*
@@ -33,7 +31,7 @@ VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring);
  */
 VALUE rgeo_geos_analysis_supports_ccw(VALUE self);
 
-void rgeo_init_geos_analysis(RGeo_Globals* globals);
+void rgeo_init_geos_analysis();
 
 RGEO_END_C
 

@@ -9,8 +9,6 @@
 #include <ruby.h>
 #include <geos_c.h>
 
-#include "factory.h"
-
 RGEO_BEGIN_C
 
 
@@ -18,7 +16,7 @@ RGEO_BEGIN_C
   Initializes the line string module. This should be called after
   the geometry module is initialized.
 */
-void rgeo_init_geos_line_string(RGeo_Globals* globals);
+void rgeo_init_geos_line_string();
 
 /*
   Determines whether the given GEOS line string is closed.

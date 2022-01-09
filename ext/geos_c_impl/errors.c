@@ -8,6 +8,8 @@
 
 #ifdef RGEO_GEOS_SUPPORTED
 
+#include "globals.h"
+
 #include "errors.h"
 
 RGEO_BEGIN_C
@@ -19,10 +21,8 @@ VALUE geos_error;
 
 
 void rgeo_init_geos_errors() {
-  VALUE rgeo_module;
   VALUE error_module;
 
-  rgeo_module = rb_define_module("RGeo");
   error_module = rb_define_module_under(rgeo_module, "Error");
   rgeo_error = rb_define_class_under(error_module, "RGeoError", rb_eRuntimeError);
   geos_error = rb_define_class_under(error_module, "GeosError", rgeo_error);

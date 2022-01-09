@@ -11,57 +11,12 @@
 RGEO_BEGIN_C
 
 /*
-  Per-interpreter globals.
-  Most of these are cached references to commonly used classes, modules,
-  and symbols so we don't have to do a lot of constant lookups and calls
-  to rb_intern.
-*/
-typedef struct {
-  VALUE feature_module;
-  VALUE feature_geometry;
-  VALUE feature_point;
-  VALUE feature_line_string;
-  VALUE feature_linear_ring;
-  VALUE feature_line;
-  VALUE feature_polygon;
-  VALUE feature_geometry_collection;
-  VALUE feature_multi_point;
-  VALUE feature_multi_line_string;
-  VALUE feature_multi_polygon;
-  VALUE geos_module;
-  VALUE geos_geometry;
-  VALUE geos_point;
-  VALUE geos_line_string;
-  VALUE geos_linear_ring;
-  VALUE geos_line;
-  VALUE geos_polygon;
-  VALUE geos_geometry_collection;
-  VALUE geos_multi_point;
-  VALUE geos_multi_line_string;
-  VALUE geos_multi_polygon;
-  ID id_cast;
-  ID id_eql;
-  ID id_generate;
-  ID id_enum_for;
-  ID id_hash;
-  VALUE sym_force_new;
-  VALUE sym_keep_subtype;
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  VALUE psych_wkt_generator;
-  VALUE marshal_wkb_generator;
-#endif
-} RGeo_Globals;
-
-
-/*
   Wrapped structure for Factory objects.
   A factory encapsulates the GEOS context, and GEOS serializer settings.
   It also stores the SRID for all geometries created by this factory,
   and the resolution for buffers created for this factory's geometries.
-  Finally, it provides easy access to the globals.
 */
 typedef struct {
-  RGeo_Globals* globals;
   GEOSContextHandle_t geos_context;
   GEOSWKTReader* wkt_reader;
   GEOSWKBReader* wkb_reader;
@@ -120,18 +75,6 @@ typedef struct {
 
 
 // Data types which indicate how RGeo types should be managed by Ruby.
-static void destroy_globals_func(RGeo_Globals* data);
-
-static void mark_globals_func(RGeo_Globals* data);
-
-static const rb_data_type_t rgeo_globals_type = {
-  .wrap_struct_name = "RGeo/Globals",
-  .function = {
-    .dmark = mark_globals_func,
-    .dfree = destroy_globals_func
-  }
-};
-
 static void destroy_factory_func(RGeo_FactoryData* data);
 
 static void mark_factory_func(RGeo_FactoryData* data);
@@ -173,7 +116,7 @@ static const rb_data_type_t rgeo_geometry_type = {
   Initializes the factory module. This should be called first in the
   initialization process.
 */
-RGeo_Globals* rgeo_init_geos_factory();
+void rgeo_init_geos_factory();
 
 /*
   Given a GEOS geometry handle, wraps it in a ruby Geometry object of the

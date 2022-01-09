@@ -11,6 +11,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "factory.h"
 #include "geometry.h"
 
@@ -180,13 +182,11 @@ static VALUE method_geometry_geometry_type(VALUE self)
 {
   VALUE result;
   RGeo_GeometryData* self_data;
-  const GEOSGeometry* self_geom;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  self_geom = self_data->geom;
-  if (self_geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_geometry;
+  if (self_data->geom) {
+    result = rgeo_feature_geometry_module;
   }
   return result;
 }
@@ -271,7 +271,7 @@ static VALUE method_geometry_as_text(VALUE self)
     factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
     wkt_generator = factory_data->wkrep_wkt_generator;
     if (!NIL_P(wkt_generator)) {
-      result = rb_funcall(wkt_generator, factory_data->globals->id_generate, 1, self);
+      result = rb_funcall(wkt_generator, rb_intern("generate"), 1, self);
     }
     else {
       wkt_writer = factory_data->wkt_writer;
@@ -310,7 +310,7 @@ static VALUE method_geometry_as_binary(VALUE self)
     factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
     wkb_generator = factory_data->wkrep_wkb_generator;
     if (!NIL_P(wkb_generator)) {
-      result = rb_funcall(wkb_generator, factory_data->globals->id_generate, 1, self);
+      result = rb_funcall(wkb_generator, rb_intern("generate"), 1, self);
     }
     else {
       wkb_writer = factory_data->wkb_writer;
@@ -1075,11 +1075,11 @@ static VALUE method_geometry_point_on_surface(VALUE self)
 /**** INITIALIZATION FUNCTION ****/
 
 
-void rgeo_init_geos_geometry(RGeo_Globals* globals)
+void rgeo_init_geos_geometry()
 {
   VALUE geos_geometry_methods;
 
-  geos_geometry_methods = rb_define_module_under(globals->geos_module, "CAPIGeometryMethods");
+  geos_geometry_methods = rb_define_module_under(rgeo_geos_module, "CAPIGeometryMethods");
 
   rb_define_method(geos_geometry_methods, "factory=", method_geometry_set_factory, 1);
   rb_define_method(geos_geometry_methods, "initialize_copy", method_geometry_initialize_copy, 1);

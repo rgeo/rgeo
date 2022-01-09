@@ -9,6 +9,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "factory.h"
 #include "geometry.h"
 #include "point.h"
@@ -26,7 +28,7 @@ static VALUE method_point_geometry_type(VALUE self)
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_point;
+    result = rgeo_feature_point_module;
   }
   return result;
 }
@@ -168,8 +170,7 @@ static VALUE method_point_hash(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
   hash = rb_hash_start(0);
-  hash = rgeo_geos_objbase_hash(factory,
-    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_point, hash);
+  hash = rgeo_geos_objbase_hash(factory, rgeo_feature_point_module, hash);
   hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
@@ -182,15 +183,15 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE x, VALUE y, VALUE
 }
 
 
-void rgeo_init_geos_point(RGeo_Globals* globals)
+void rgeo_init_geos_point()
 {
   VALUE geos_point_methods;
 
   // Class methods for CAPIPointImpl
-  rb_define_module_function(globals->geos_point, "create", cmethod_create, 4);
+  rb_define_module_function(rgeo_geos_point_class, "create", cmethod_create, 4);
 
   // CAPIPointMethods module
-  geos_point_methods = rb_define_module_under(globals->geos_module, "CAPIPointMethods");
+  geos_point_methods = rb_define_module_under(rgeo_geos_module, "CAPIPointMethods");
   rb_define_method(geos_point_methods, "rep_equals?", method_point_eql, 1);
   rb_define_method(geos_point_methods, "eql?", method_point_eql, 1);
   rb_define_method(geos_point_methods, "hash", method_point_hash, 0);
@@ -221,7 +222,7 @@ VALUE rgeo_create_geos_point(VALUE factory, double x, double y, double z)
         if (GEOSCoordSeq_setZ_r(context, coord_seq, 0, z)) {
           geom = GEOSGeom_createPoint_r(context, coord_seq);
           if (geom) {
-            result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_point);
+            result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_point_class);
           }
         }
       }
