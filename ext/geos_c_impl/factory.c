@@ -98,22 +98,22 @@ static void destroy_geometry_func(RGeo_GeometryData* data)
 static void mark_factory_func(RGeo_FactoryData* data)
 {
   if (!NIL_P(data->wkrep_wkt_generator)) {
-    rb_gc_mark(data->wkrep_wkt_generator);
+    mark(data->wkrep_wkt_generator);
   }
   if (!NIL_P(data->wkrep_wkb_generator)) {
-    rb_gc_mark(data->wkrep_wkb_generator);
+    mark(data->wkrep_wkb_generator);
   }
   if (!NIL_P(data->wkrep_wkt_parser)) {
-    rb_gc_mark(data->wkrep_wkt_parser);
+    mark(data->wkrep_wkt_parser);
   }
   if (!NIL_P(data->wkrep_wkb_parser)) {
-    rb_gc_mark(data->wkrep_wkb_parser);
+    mark(data->wkrep_wkb_parser);
   }
   if (!NIL_P(data->proj4_obj)) {
-    rb_gc_mark(data->proj4_obj);
+    mark(data->proj4_obj);
   }
   if (!NIL_P(data->coord_sys_obj)) {
-    rb_gc_mark(data->coord_sys_obj);
+    mark(data->coord_sys_obj);
   }
 }
 
@@ -124,12 +124,48 @@ static void mark_factory_func(RGeo_FactoryData* data)
 static void mark_geometry_func(RGeo_GeometryData* data)
 {
   if (!NIL_P(data->factory)) {
-    rb_gc_mark(data->factory);
+    mark(data->factory);
   }
   if (!NIL_P(data->klasses)) {
-    rb_gc_mark(data->klasses);
+    mark(data->klasses);
   }
 }
+
+
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+static void compact_factory_func(RGeo_FactoryData* data)
+{
+  if (!NIL_P(data->wkrep_wkt_generator)) {
+    data->wkrep_wkt_generator = rb_gc_location(data->wkrep_wkt_generator);
+  }
+  if (!NIL_P(data->wkrep_wkb_generator)) {
+    data->wkrep_wkb_generator = rb_gc_location(data->wkrep_wkb_generator);
+  }
+  if (!NIL_P(data->wkrep_wkt_parser)) {
+    data->wkrep_wkt_parser = rb_gc_location(data->wkrep_wkt_parser);
+  }
+  if (!NIL_P(data->wkrep_wkb_parser)) {
+    data->wkrep_wkb_parser = rb_gc_location(data->wkrep_wkb_parser);
+  }
+  if (!NIL_P(data->proj4_obj)) {
+    data->proj4_obj = rb_gc_location(data->proj4_obj);
+  }
+  if (!NIL_P(data->coord_sys_obj)) {
+    data->coord_sys_obj = rb_gc_location(data->coord_sys_obj);
+  }
+}
+
+
+static void compact_geometry_func(RGeo_GeometryData* data)
+{
+  if (!NIL_P(data->factory)) {
+    data->factory = rb_gc_location(data->factory);
+  }
+  if (!NIL_P(data->klasses)) {
+    data->klasses = rb_gc_location(data->klasses);
+  }
+}
+#endif
 
 
 /**** RUBY METHOD DEFINITIONS ****/
