@@ -35,7 +35,9 @@ jobs:
           bundler-cache: true
       - name: Install Geos (Linux)
         if: matrix.os == 'ubuntu'
-        run: sudo apt-get install libgeos-dev -y
+        run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get install libgeos-dev -y
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: brew install geos
