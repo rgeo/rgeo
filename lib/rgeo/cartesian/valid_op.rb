@@ -38,7 +38,7 @@ module RGeo
         end
 
         rings = [poly.exterior_ring] + poly.interior_rings
-        return ImplHelper::TopologyErrors::DUPLICATE_RINGS if rings.uniq.size != rings.size
+        return ImplHelper::TopologyErrors::SELF_INTERSECTION if rings.uniq.size != rings.size
 
         nil
       end
