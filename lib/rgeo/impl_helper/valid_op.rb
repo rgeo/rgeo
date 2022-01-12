@@ -226,14 +226,14 @@ module RGeo
           return TopologyErrors::SELF_INTERSECTION if ring.crosses?(exterior)
         end
 
-        # Duplicate rings check
-        rings = [exterior] + poly.interior_rings
-        return TopologyErrors::DUPLICATE_RINGS if rings.uniq.size != rings.size
-
         # check interiors do not cross
         poly.interior_rings.combination(2).each do |ring1, ring2|
           return TopologyErrors::SELF_INTERSECTION if ring1.crosses?(ring2)
         end
+
+        # Duplicate rings check
+        rings = [exterior] + poly.interior_rings
+        return TopologyErrors::SELF_INTERSECTION if rings.uniq.size != rings.size
 
         nil
       end

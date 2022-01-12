@@ -86,7 +86,7 @@ module RGeo
 
         def test_invalid_polygon_duplicate_rings
           poly = @factory.polygon(big_square, [little_square, little_square])
-          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::DUPLICATE_RINGS)
+          assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION)
           assert_equal(false, poly.valid?)
         end
 
