@@ -42,12 +42,10 @@ typedef struct {
   They are available in ruby under RGeo::Geos::CAPIFactory::FLAG_name
   where name is the name below without the RGEO_FACTORYFLAGS_ prefix.
  */
-#define RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON_ASSERTIONS 0b00001
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z                      0b00010
-#define RGEO_FACTORYFLAGS_SUPPORTS_M                      0b00100
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z                      0b0010
+#define RGEO_FACTORYFLAGS_SUPPORTS_M                      0b0100
 #define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M                 (RGEO_FACTORYFLAGS_SUPPORTS_Z | RGEO_FACTORYFLAGS_SUPPORTS_M)
-#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC               0b01000
-#define RGEO_FACTORYFLAGS_LENIENT_ASSERTIONS              0b10000
+#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC               0b1000
 
 /* call-seq:
  *   RGeo::Geos::CAPIFactory.supports_z? -> true or false

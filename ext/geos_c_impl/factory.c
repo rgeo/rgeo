@@ -576,12 +576,10 @@ void rgeo_init_geos_factory()
   geos_factory_class = rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);
   rb_define_alloc_func(geos_factory_class, alloc_factory);
   // Add C constants to the factory.
-  rb_define_const(geos_factory_class, "FLAG_LENIENT_MULTIPOLYGON_ASSERTIONS", INT2FIX(RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON_ASSERTIONS));
   rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z));
   rb_define_const(geos_factory_class, "FLAG_SUPPORTS_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_M));
   rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z_OR_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M));
   rb_define_const(geos_factory_class, "FLAG_PREPARE_HEURISTIC", INT2FIX(RGEO_FACTORYFLAGS_PREPARE_HEURISTIC));
-  rb_define_const(geos_factory_class, "FLAG_LENIENT_ASSERTIONS", INT2FIX(RGEO_FACTORYFLAGS_LENIENT_ASSERTIONS));
   // Add C methods to the factory.
   rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);

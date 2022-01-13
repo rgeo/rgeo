@@ -105,7 +105,7 @@ module RGeo
         end
 
         # check closed
-        return TopologyErrors::UNCLOSED_RING unless is_closed?
+        return TopologyErrors::UNCLOSED_RING unless closed?
 
         # check more than 3 points
         return TopologyErrors::TOO_FEW_POINTS unless num_points > 3
@@ -128,8 +128,8 @@ module RGeo
         end
 
         # check closed
-        return TopologyErrors::UNCLOSED_RING unless exterior_ring.is_closed?
-        return TopologyErrors::UNCLOSED_RING unless interior_rings.all?(&:is_closed?)
+        return TopologyErrors::UNCLOSED_RING unless exterior_ring.closed?
+        return TopologyErrors::UNCLOSED_RING unless interior_rings.all?(&:closed?)
 
         # check more than 3 points in each ring
         return TopologyErrors::TOO_FEW_POINTS unless exterior_ring.num_points > 3
@@ -247,7 +247,7 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_no_self_intersections(ring)
-        return TopologyErrors::SELF_INTERSECTION unless ring.is_simple?
+        return TopologyErrors::SELF_INTERSECTION unless ring.simple?
       end
 
       # Check that rings do not self intersect in a polygon

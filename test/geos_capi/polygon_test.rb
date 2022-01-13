@@ -145,7 +145,7 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
-    assert_equal("Self-intersection[0 0 0]", polygon.invalid_reason)
+    assert_equal("Self-intersection", polygon.invalid_reason)
   end
 
   def test_invalid_reason_with_valid_polygon

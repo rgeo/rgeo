@@ -299,7 +299,7 @@ module RGeo
       def add_line_string(geom)
         add_edges(geom.segments)
 
-        hedge = unless geom.is_empty?
+        hedge = unless geom.empty?
                   @incident_edges[geom.start_point.coordinates].first
                 end
 

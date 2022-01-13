@@ -21,7 +21,7 @@ module RGeo
         # Basic methods
         :factory, :geometry_type, :as_text, :as_binary, :srid,
         # Tests
-        :simple?, :is_simple?, :is_closed?, :is_empty?,
+        :simple?, :closed?, :empty?,
         # Accessors
         :exterior_ring, :interior_rings, :[], :num_geometries, :num_interior_rings,
         :geometry_n, :each, :points, :point_n, :start_point, :end_point, :x, :y, :z, :m,
