@@ -318,6 +318,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                             `Polygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `Polygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                               `Polygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                                 `Polygon#area` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `Polygon#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `Polygon#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `Polygon#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -686,6 +687,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                        `MultiPolygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                     `MultiPolygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `MultiPolygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                            `MultiPolygon#area` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `MultiPolygon#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |             `MultiPolygon#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |             `MultiPolygon#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |

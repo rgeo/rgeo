@@ -204,7 +204,9 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_invalid_coordinate(pt)
-        return if pt.x.finite? && pt.y.finite? && pt.x.real? && pt.y.real?
+        x = pt.x
+        y = pt.y
+        return if x.finite? && y.finite? && x.real? && y.real?
 
         TopologyErrors::INVALID_COORDINATE
       end

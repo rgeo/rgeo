@@ -42,7 +42,6 @@ module RGeo
         end
         srid ||= @coord_sys.authority_code if @coord_sys
         @srid = srid.to_i
-        @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
 
@@ -103,7 +102,6 @@ module RGeo
           "wkbg" => @wkb_generator.properties,
           "wktp" => @wkt_parser.properties,
           "wkbp" => @wkb_parser.properties,
-          "lena" => @lenient_assertions,
           "bufr" => @buffer_resolution
         }
         hash_["proj4"] = @proj4.marshal_dump if @proj4
@@ -131,7 +129,6 @@ module RGeo
           wkb_generator: symbolize_hash(data["wkbg"]),
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
-          uses_lenient_assertions: data["lena"],
           buffer_resolution: data["bufr"],
           proj4: proj4,
           coord_sys: coord_sys
@@ -144,7 +141,6 @@ module RGeo
         coder["has_z_coordinate"] = @has_z
         coder["has_m_coordinate"] = @has_m
         coder["srid"] = @srid
-        coder["lenient_assertions"] = @lenient_assertions
         coder["buffer_resolution"] = @buffer_resolution
         coder["wkt_generator"] = @wkt_generator.properties
         coder["wkb_generator"] = @wkb_generator.properties
@@ -180,7 +176,6 @@ module RGeo
           wkb_generator: symbolize_hash(coder["wkb_generator"]),
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
-          uses_lenient_assertions: coder["lenient_assertions"],
           buffer_resolution: coder["buffer_resolution"],
           proj4: proj4,
           coord_sys: coord_sys
@@ -199,8 +194,6 @@ module RGeo
           @has_z
         when :has_m_coordinate
           @has_m
-        when :uses_lenient_assertions
-          @lenient_assertions
         when :buffer_resolution
           @buffer_resolution
         when :is_cartesian

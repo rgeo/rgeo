@@ -6,9 +6,11 @@
 #
 # -----------------------------------------------------------------------------
 
+require_relative "../impl_helper/validity_check"
+
 module RGeo
   module Geos
-    module CAPIGeometryMethods # :nodoc:
+    module CAPIGeometryMethods
       include Feature::Instance
 
       def is_empty? # rubocop:disable Naming/PredicateName
@@ -83,21 +85,30 @@ module RGeo
       include Enumerable
     end
 
-    class CAPIGeometryImpl # :nodoc:
+    # TODO: is this any useful?
+    class CAPIGeometryImpl
+      include Feature::Geometry
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
     end
 
-    class CAPIPointImpl # :nodoc:
+    class CAPIPointImpl
+      include Feature::Point
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIPointMethods
     end
 
-    class CAPILineStringImpl  # :nodoc:
+    class CAPILineStringImpl
+      include Feature::LineString
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
     end
 
-    class CAPILinearRingImpl  # :nodoc:
+    class CAPILinearRingImpl
+      include Feature::LinearRing
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILinearRingMethods
@@ -107,38 +118,52 @@ module RGeo
       end
     end
 
-    class CAPILineImpl # :nodoc:
+    class CAPILineImpl
+      include Feature::Line
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPILineStringMethods
       include CAPILineMethods
     end
 
-    class CAPIPolygonImpl # :nodoc:
+    class CAPIPolygonImpl
+      include Feature::Polygon
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIPolygonMethods
     end
 
-    class CAPIGeometryCollectionImpl # :nodoc:
+    class CAPIGeometryCollectionImpl
+      include Feature::GeometryCollection
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
     end
 
-    class CAPIMultiPointImpl # :nodoc:
+    class CAPIMultiPointImpl
+      include Feature::MultiPoint
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPointMethods
     end
 
-    class CAPIMultiLineStringImpl # :nodoc:
+    class CAPIMultiLineStringImpl
+      include Feature::MultiLineString
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiLineStringMethods
     end
 
-    class CAPIMultiPolygonImpl # :nodoc:
+    class CAPIMultiPolygonImpl
+      include Feature::MultiPolygon
+      include ImplHelper::ValidityCheck
       include CAPIGeometryMethods
       include CAPIGeometryCollectionMethods
       include CAPIMultiPolygonMethods
     end
+
+    ImplHelper::ValidityCheck.override_classes
   end
 end

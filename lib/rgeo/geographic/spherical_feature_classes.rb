@@ -8,8 +8,9 @@
 
 module RGeo
   module Geographic
-    class SphericalPointImpl # :nodoc:
+    class SphericalPointImpl
       include Feature::Point
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPointMethods
       include ImplHelper::ValidOp
@@ -17,8 +18,9 @@ module RGeo
       include SphericalPointMethods
     end
 
-    class SphericalLineStringImpl # :nodoc:
+    class SphericalLineStringImpl
       include Feature::LineString
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::ValidOp
@@ -26,8 +28,9 @@ module RGeo
       include SphericalLineStringMethods
     end
 
-    class SphericalLineImpl # :nodoc:
+    class SphericalLineImpl
       include Feature::Line
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::BasicLineMethods
@@ -36,8 +39,9 @@ module RGeo
       include SphericalLineStringMethods
     end
 
-    class SphericalLinearRingImpl # :nodoc:
+    class SphericalLinearRingImpl
       include Feature::LinearRing
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::BasicLinearRingMethods
@@ -46,8 +50,9 @@ module RGeo
       include SphericalLineStringMethods
     end
 
-    class SphericalPolygonImpl # :nodoc:
+    class SphericalPolygonImpl
       include Feature::Polygon
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPolygonMethods
       include ImplHelper::ValidOp
@@ -55,16 +60,18 @@ module RGeo
       include SphericalPolygonMethods
     end
 
-    class SphericalGeometryCollectionImpl # :nodoc:
+    class SphericalGeometryCollectionImpl
       include Feature::GeometryCollection
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::ValidOp
       include SphericalGeometryMethods
     end
 
-    class SphericalMultiPointImpl # :nodoc:
+    class SphericalMultiPointImpl
       include Feature::MultiPoint
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPointMethods
@@ -72,8 +79,9 @@ module RGeo
       include SphericalGeometryMethods
     end
 
-    class SphericalMultiLineStringImpl # :nodoc:
+    class SphericalMultiLineStringImpl
       include Feature::MultiLineString
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiLineStringMethods
@@ -82,13 +90,16 @@ module RGeo
       include SphericalMultiLineStringMethods
     end
 
-    class SphericalMultiPolygonImpl # :nodoc:
+    class SphericalMultiPolygonImpl
       include Feature::MultiPolygon
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPolygonMethods
       include ImplHelper::ValidOp
       include SphericalGeometryMethods
     end
+
+    ImplHelper::ValidityCheck.override_classes
   end
 end

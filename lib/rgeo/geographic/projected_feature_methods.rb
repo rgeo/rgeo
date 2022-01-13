@@ -19,7 +19,7 @@ module RGeo
       end
 
       def envelope
-        factory.unproject(projection.envelope)
+        factory.unproject(projection.unsafe_envelope)
       end
 
       def empty?
@@ -48,8 +48,13 @@ module RGeo
         projection.invalid_reason
       end
 
+      # (see RGeo::ImplHelper::ValidityCheck#make_valid)
+      def make_valid
+        factory.unproject projection.make_valid
+      end
+
       def boundary
-        boundary = projection.boundary
+        boundary = projection.unsafe_boundary
         boundary ? factory.unproject(boundary) : nil
       end
 
@@ -58,79 +63,79 @@ module RGeo
       end
 
       def disjoint?(rhs)
-        projection.disjoint?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_disjoint?(Feature.cast(rhs, factory).projection)
       end
 
       def intersects?(rhs)
-        projection.intersects?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_intersects?(Feature.cast(rhs, factory).projection)
       end
 
       def touches?(rhs)
-        projection.touches?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_touches?(Feature.cast(rhs, factory).projection)
       end
 
       def crosses?(rhs)
-        projection.crosses?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_crosses?(Feature.cast(rhs, factory).projection)
       end
 
       def within?(rhs)
-        projection.within?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_within?(Feature.cast(rhs, factory).projection)
       end
 
       def contains?(rhs)
-        projection.contains?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_contains?(Feature.cast(rhs, factory).projection)
       end
 
       def overlaps?(rhs)
-        projection.overlaps?(Feature.cast(rhs, factory).projection)
+        projection.unsafe_overlaps?(Feature.cast(rhs, factory).projection)
       end
 
       def relate(rhs, pattern_)
-        projection.relate(Feature.cast(rhs, factory).projection, pattern_)
+        projection.unsafe_relate(Feature.cast(rhs, factory).projection, pattern_)
       end
 
       def distance(rhs)
-        projection.distance(Feature.cast(rhs, factory).projection)
+        projection.unsafe_distance(Feature.cast(rhs, factory).projection)
       end
 
       def buffer(distance)
-        factory.unproject(projection.buffer(distance))
+        factory.unproject(projection.unsafe_buffer(distance))
       end
 
       def buffer_with_style(distance, end_cap_style, join_style, mitre_limit)
-        factory.unproject(projection.buffer_with_style(distance, end_cap_style, join_style, mitre_limit))
+        factory.unproject(projection.unsafe_buffer_with_style(distance, end_cap_style, join_style, mitre_limit))
       end
 
       def simplify(tolerance)
-        factory.unproject(projection.simplify(tolerance))
+        factory.unproject(projection.unsafe_simplify(tolerance))
       end
 
       def simplify_preserve_topology(tolerance)
-        factory.unproject(projection.simplify_preserve_topology(tolerance))
+        factory.unproject(projection.unsafe_simplify_preserve_topology(tolerance))
       end
 
       def convex_hull
-        factory.unproject(projection.convex_hull)
+        factory.unproject(projection.unsafe_convex_hull)
       end
 
       def intersection(rhs)
-        factory.unproject(projection.intersection(Feature.cast(rhs, factory).projection))
+        factory.unproject(projection.unsafe_intersection(Feature.cast(rhs, factory).projection))
       end
 
       def union(rhs)
-        factory.unproject(projection.union(Feature.cast(rhs, factory).projection))
+        factory.unproject(projection.unsafe_union(Feature.cast(rhs, factory).projection))
       end
 
       def difference(rhs)
-        factory.unproject(projection.difference(Feature.cast(rhs, factory).projection))
+        factory.unproject(projection.unsafe_difference(Feature.cast(rhs, factory).projection))
       end
 
       def sym_difference(rhs)
-        factory.unproject(projection.sym_difference(Feature.cast(rhs, factory).projection))
+        factory.unproject(projection.unsafe_sym_difference(Feature.cast(rhs, factory).projection))
       end
 
       def point_on_surface
-        factory.unproject(projection.point_on_surface)
+        factory.unproject(projection.unsafe_point_on_surface)
       end
     end
 
@@ -171,7 +176,7 @@ module RGeo
 
     module ProjectedNCurveMethods # :nodoc:
       def length
-        projection.length
+        projection.unsafe_length
       end
     end
 
@@ -192,11 +197,11 @@ module RGeo
 
     module ProjectedNSurfaceMethods # :nodoc:
       def area
-        projection.area
+        projection.unsafe_area
       end
 
       def centroid
-        factory.unproject(projection.centroid)
+        factory.unproject(projection.unsafe_centroid)
       end
     end
 

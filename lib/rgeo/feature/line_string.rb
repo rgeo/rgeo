@@ -34,7 +34,7 @@ module RGeo
       # Returns an integer.
 
       def num_points
-        raise Error::UnsupportedOperation, "Method LineString#num_points not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#num_points not defined."
       end
 
       # === SFS 1.1 Description
@@ -48,14 +48,14 @@ module RGeo
       # Does not support negative indexes.
 
       def point_n(n)
-        raise Error::UnsupportedOperation, "Method LineString#point_n not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#point_n not defined."
       end
 
       # Returns the constituent points as an array of objects that
       # support the Point interface.
 
       def points
-        raise Error::UnsupportedOperation, "Method LineString#points not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#points not defined."
       end
     end
   end

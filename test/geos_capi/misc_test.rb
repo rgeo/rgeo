@@ -8,6 +8,7 @@
 
 require "ostruct"
 require_relative "../test_helper"
+require_relative "../common/validity_tests"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
   def setup

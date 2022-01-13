@@ -6,7 +6,8 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
+require_relative "../common/validity_tests"
 
 class GeosFFIMiscTest < Minitest::Test # :nodoc:
   def setup

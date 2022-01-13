@@ -13,7 +13,6 @@ class CartesianMultiPolygonTest < Minitest::Test # :nodoc:
 
   def create_factories
     @factory = RGeo::Cartesian.simple_factory
-    @lenient_factory = RGeo::Cartesian.simple_factory(lenient_multi_polygon_assertions: true)
   end
 
   def test_contains_not_point

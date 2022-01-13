@@ -12,6 +12,6 @@ class GeosFFIValidityTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::ValidityTests
 
   def setup
-    @factory = RGeo::Geos.factory(native_interface: :ffi, uses_lenient_multi_polygon_assertions: true)
+    @factory = RGeo::Geos.factory(native_interface: :ffi)
   end
 end if RGeo::Geos.ffi_supported?
