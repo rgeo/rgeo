@@ -14,8 +14,14 @@ require_relative "common/polygon_tests"
 
 require "pry-byebug" if ENV["BYEBUG"]
 
-# Test for missed references in our CAPI codebase (or FFI interface).
+# Static test for missed references in our CAPI codebase (or FFI interface).
 # See https://alanwu.space/post/check-compaction/
 if defined?(GC.verify_compaction_references) == "method"
   GC.verify_compaction_references(double_heap: true, toward: :empty)
+end
+
+# Live test for our implementation of Ruby's compaction methods (rb_gc_mark_movable
+# and rb_gc_location), enabling compaction for every major collection.
+if defined?(GC.auto_compact) == "method"
+  GC.auto_compact = true
 end
