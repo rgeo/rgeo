@@ -98,6 +98,14 @@ module RGeo
       def each(&block)
         raise Error::UnsupportedOperation, "Method #{self.class}#each not defined."
       end
+
+      # Gives a point that is guaranteed to be within the geometry.
+      #
+      # Extends OGC SFS 1.1 and follows PostGIS standards.
+      # @see https://postgis.net/docs/ST_PointOnSurface.html
+      def point_on_surface
+        raise Error::UnsupportedOperation, "Method #{self.class}#each not defined."
+      end
     end
   end
 end
