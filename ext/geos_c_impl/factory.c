@@ -38,82 +38,89 @@ static void message_handler(const char* fmt, ...)
 // objects that have been created for the factory, and then destroy
 // the GEOS context, before freeing the factory data itself.
 
-static void destroy_factory_func(RGeo_FactoryData* data)
+static void destroy_factory_func(void* data)
 {
+  RGeo_FactoryData* factory_data;
   GEOSContextHandle_t context;
 
-  context = data->geos_context;
-  if (data->wkt_reader) {
-    GEOSWKTReader_destroy_r(context, data->wkt_reader);
+  factory_data = (RGeo_FactoryData*)data;
+  context = factory_data->geos_context;
+  if (factory_data->wkt_reader) {
+    GEOSWKTReader_destroy_r(context, factory_data->wkt_reader);
   }
-  if (data->wkb_reader) {
-    GEOSWKBReader_destroy_r(context, data->wkb_reader);
+  if (factory_data->wkb_reader) {
+    GEOSWKBReader_destroy_r(context, factory_data->wkb_reader);
   }
-  if (data->wkt_writer) {
-    GEOSWKTWriter_destroy_r(context, data->wkt_writer);
+  if (factory_data->wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, factory_data->wkt_writer);
   }
-  if (data->wkb_writer) {
-    GEOSWKBWriter_destroy_r(context, data->wkb_writer);
+  if (factory_data->wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, factory_data->wkb_writer);
   }
-  if (data->psych_wkt_reader) {
-    GEOSWKTReader_destroy_r(context, data->psych_wkt_reader);
+  if (factory_data->psych_wkt_reader) {
+    GEOSWKTReader_destroy_r(context, factory_data->psych_wkt_reader);
   }
-  if (data->marshal_wkb_reader) {
-    GEOSWKBReader_destroy_r(context, data->marshal_wkb_reader);
+  if (factory_data->marshal_wkb_reader) {
+    GEOSWKBReader_destroy_r(context, factory_data->marshal_wkb_reader);
   }
-  if (data->psych_wkt_writer) {
-    GEOSWKTWriter_destroy_r(context, data->psych_wkt_writer);
+  if (factory_data->psych_wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, factory_data->psych_wkt_writer);
   }
-  if (data->marshal_wkb_writer) {
-    GEOSWKBWriter_destroy_r(context, data->marshal_wkb_writer);
+  if (factory_data->marshal_wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, factory_data->marshal_wkb_writer);
   }
   finishGEOS_r(context);
-  free(data);
+  free(factory_data);
 }
 
 
 // Destroy function for geometry data. We destroy the internal
 // GEOS geometry (if present) before freeing the data itself.
 
-static void destroy_geometry_func(RGeo_GeometryData* data)
+static void destroy_geometry_func(void* data)
 {
+  RGeo_GeometryData* geometry_data;
   const GEOSPreparedGeometry* prep;
 
-  if (data->geom) {
-    GEOSGeom_destroy_r(data->geos_context, data->geom);
+  geometry_data = (RGeo_GeometryData*)data;
+  if (geometry_data->geom) {
+    GEOSGeom_destroy_r(geometry_data->geos_context, geometry_data->geom);
   }
-  prep = data->prep;
+  prep = geometry_data->prep;
   if (prep && prep != (const GEOSPreparedGeometry*)1 && prep != (const GEOSPreparedGeometry*)2 &&
     prep != (const GEOSPreparedGeometry*)3)
   {
-    GEOSPreparedGeom_destroy_r(data->geos_context, prep);
+    GEOSPreparedGeom_destroy_r(geometry_data->geos_context, prep);
   }
-  free(data);
+  free(geometry_data);
 }
 
 
 // Mark function for factory data. This marks the wkt and wkb generator
 // handles so they don't get collected.
 
-static void mark_factory_func(RGeo_FactoryData* data)
+static void mark_factory_func(void* data)
 {
-  if (!NIL_P(data->wkrep_wkt_generator)) {
-    mark(data->wkrep_wkt_generator);
+  RGeo_FactoryData* factory_data;
+
+  factory_data = (RGeo_FactoryData*)data;
+  if (!NIL_P(factory_data->wkrep_wkt_generator)) {
+    mark(factory_data->wkrep_wkt_generator);
   }
-  if (!NIL_P(data->wkrep_wkb_generator)) {
-    mark(data->wkrep_wkb_generator);
+  if (!NIL_P(factory_data->wkrep_wkb_generator)) {
+    mark(factory_data->wkrep_wkb_generator);
   }
-  if (!NIL_P(data->wkrep_wkt_parser)) {
-    mark(data->wkrep_wkt_parser);
+  if (!NIL_P(factory_data->wkrep_wkt_parser)) {
+    mark(factory_data->wkrep_wkt_parser);
   }
-  if (!NIL_P(data->wkrep_wkb_parser)) {
-    mark(data->wkrep_wkb_parser);
+  if (!NIL_P(factory_data->wkrep_wkb_parser)) {
+    mark(factory_data->wkrep_wkb_parser);
   }
-  if (!NIL_P(data->proj4_obj)) {
-    mark(data->proj4_obj);
+  if (!NIL_P(factory_data->proj4_obj)) {
+    mark(factory_data->proj4_obj);
   }
-  if (!NIL_P(data->coord_sys_obj)) {
-    mark(data->coord_sys_obj);
+  if (!NIL_P(factory_data->coord_sys_obj)) {
+    mark(factory_data->coord_sys_obj);
   }
 }
 
@@ -121,51 +128,83 @@ static void mark_factory_func(RGeo_FactoryData* data)
 // Mark function for geometry data. This marks the factory and klasses
 // held by the geometry so those don't get collected.
 
-static void mark_geometry_func(RGeo_GeometryData* data)
+static void mark_geometry_func(void* data)
 {
-  if (!NIL_P(data->factory)) {
-    mark(data->factory);
+  RGeo_GeometryData* geometry_data;
+
+  geometry_data = (RGeo_GeometryData*)data;
+  if (!NIL_P(geometry_data->factory)) {
+    mark(geometry_data->factory);
   }
-  if (!NIL_P(data->klasses)) {
-    mark(data->klasses);
+  if (!NIL_P(geometry_data->klasses)) {
+    mark(geometry_data->klasses);
   }
 }
 
 
 #ifdef HAVE_RB_GC_MARK_MOVABLE
-static void compact_factory_func(RGeo_FactoryData* data)
+static void compact_factory_func(void* data)
 {
-  if (!NIL_P(data->wkrep_wkt_generator)) {
-    data->wkrep_wkt_generator = rb_gc_location(data->wkrep_wkt_generator);
+  RGeo_FactoryData* factory_data;
+
+  factory_data = (RGeo_FactoryData*)data;
+  if (!NIL_P(factory_data->wkrep_wkt_generator)) {
+    factory_data->wkrep_wkt_generator = rb_gc_location(factory_data->wkrep_wkt_generator);
   }
-  if (!NIL_P(data->wkrep_wkb_generator)) {
-    data->wkrep_wkb_generator = rb_gc_location(data->wkrep_wkb_generator);
+  if (!NIL_P(factory_data->wkrep_wkb_generator)) {
+    factory_data->wkrep_wkb_generator = rb_gc_location(factory_data->wkrep_wkb_generator);
   }
-  if (!NIL_P(data->wkrep_wkt_parser)) {
-    data->wkrep_wkt_parser = rb_gc_location(data->wkrep_wkt_parser);
+  if (!NIL_P(factory_data->wkrep_wkt_parser)) {
+    factory_data->wkrep_wkt_parser = rb_gc_location(factory_data->wkrep_wkt_parser);
   }
-  if (!NIL_P(data->wkrep_wkb_parser)) {
-    data->wkrep_wkb_parser = rb_gc_location(data->wkrep_wkb_parser);
+  if (!NIL_P(factory_data->wkrep_wkb_parser)) {
+    factory_data->wkrep_wkb_parser = rb_gc_location(factory_data->wkrep_wkb_parser);
   }
-  if (!NIL_P(data->proj4_obj)) {
-    data->proj4_obj = rb_gc_location(data->proj4_obj);
+  if (!NIL_P(factory_data->proj4_obj)) {
+    factory_data->proj4_obj = rb_gc_location(factory_data->proj4_obj);
   }
-  if (!NIL_P(data->coord_sys_obj)) {
-    data->coord_sys_obj = rb_gc_location(data->coord_sys_obj);
+  if (!NIL_P(factory_data->coord_sys_obj)) {
+    factory_data->coord_sys_obj = rb_gc_location(factory_data->coord_sys_obj);
   }
 }
 
 
-static void compact_geometry_func(RGeo_GeometryData* data)
+static void compact_geometry_func(void* data)
 {
-  if (!NIL_P(data->factory)) {
-    data->factory = rb_gc_location(data->factory);
+  RGeo_GeometryData* geometry_data;
+
+  geometry_data = (RGeo_GeometryData*)data;
+  if (!NIL_P(geometry_data->factory)) {
+    geometry_data->factory = rb_gc_location(geometry_data->factory);
   }
-  if (!NIL_P(data->klasses)) {
-    data->klasses = rb_gc_location(data->klasses);
+  if (!NIL_P(geometry_data->klasses)) {
+    geometry_data->klasses = rb_gc_location(geometry_data->klasses);
   }
 }
 #endif
+
+
+const rb_data_type_t rgeo_factory_type = {
+  .wrap_struct_name = "RGeo/Factory",
+  .function = {
+    .dmark = mark_factory_func,
+    .dfree = destroy_factory_func,
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+    .dcompact = compact_factory_func,
+#endif
+  }
+};
+
+const rb_data_type_t rgeo_geometry_type = {
+  .wrap_struct_name = "RGeo/Geometry",
+  .function = {
+    .dmark = mark_geometry_func,
+    .dfree = destroy_geometry_func,
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+    .dcompact = compact_geometry_func,
+#endif
+  }
+};
 
 
 /**** RUBY METHOD DEFINITIONS ****/

@@ -75,44 +75,9 @@ typedef struct {
 
 
 // Data types which indicate how RGeo types should be managed by Ruby.
-static void destroy_factory_func(RGeo_FactoryData* data);
+extern const rb_data_type_t rgeo_factory_type;
 
-static void destroy_geometry_func(RGeo_GeometryData* data);
-
-
-static void mark_factory_func(RGeo_FactoryData* data);
-
-static void mark_geometry_func(RGeo_GeometryData* data);
-
-
-#ifdef HAVE_RB_GC_MARK_MOVABLE
-static void compact_factory_func(RGeo_FactoryData* data);
-
-static void compact_geometry_func(RGeo_GeometryData* data);
-#endif
-
-
-static const rb_data_type_t rgeo_factory_type = {
-  .wrap_struct_name = "RGeo/Factory",
-  .function = {
-    .dmark = mark_factory_func,
-    .dfree = destroy_factory_func,
-#ifdef HAVE_RB_GC_MARK_MOVABLE
-    .dcompact = compact_factory_func,
-#endif
-  }
-};
-
-static const rb_data_type_t rgeo_geometry_type = {
-  .wrap_struct_name = "RGeo/Geometry",
-  .function = {
-    .dmark = mark_geometry_func,
-    .dfree = destroy_geometry_func,
-#ifdef HAVE_RB_GC_MARK_MOVABLE
-    .dcompact = compact_geometry_func,
-#endif
-  }
-};
+extern const rb_data_type_t rgeo_geometry_type;
 
 
 // Convenient macros for checking the type of data from Ruby
