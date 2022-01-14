@@ -85,7 +85,6 @@ module RGeo
       include Enumerable
     end
 
-    # TODO: is this any useful?
     class CAPIGeometryImpl
       include Feature::Geometry
       include ImplHelper::ValidityCheck

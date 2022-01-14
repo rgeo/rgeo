@@ -15,8 +15,10 @@ module RGeo
     # - finally, you can bypass any checked method by prepending `unsafe_` to
     #   it. At your own risk.
     module ValidityCheck
-      # Every method that need to be valid to give a correct result.
-      # TODO: list all methods that need valid geometries here.
+      # Every method that should not be overriden by the validity check.
+      # Those methods are either accessors or very basic methods not related
+      # to validity checks, or are used to check validity, in which case the
+      # `true/false` gives a correct information, no need to raise).
       UNCHECKED_METHODS = [
         # Basic methods
         :factory, :geometry_type, :as_text, :as_binary, :srid,
@@ -30,6 +32,7 @@ module RGeo
         # Comparison
         :equals?, :rep_equals?, :eql?, :==, :'!='
       ].freeze
+      private_constant :UNCHECKED_METHODS
 
       class << self
         # Note for contributors: this should be called after all methods
