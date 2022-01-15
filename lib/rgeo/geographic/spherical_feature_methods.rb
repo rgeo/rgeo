@@ -149,7 +149,7 @@ module RGeo
 
       private
 
-      # TODO: replace with better algorithm
+      # TODO: replace with better algorithm (https://github.com/rgeo/rgeo/issues/274)
       # Very simple algorithm to determine if 2 LineStrings intersect.
       # Uses a nested for loop to look at each arc in the LineStrings and
       # check if each arc intersects.
@@ -167,7 +167,7 @@ module RGeo
         false
       end
 
-      # TODO: replace with better algorithm
+      # TODO: replace with better algorithm (https://github.com/rgeo/rgeo/issues/274)
       # Very simple algorithm to determine if 2 LineStrings cross.
       # Uses a nested for loop to look at each arc in the LineStrings and
       # check if each arc crosses.

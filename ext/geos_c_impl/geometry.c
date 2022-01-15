@@ -1042,8 +1042,6 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    // TODO: should we consider using the flag GEOSVALID_ALLOW_SELFTOUCHING_RING_FORMING_HOLE?
-
     // We use NULL there to tell GEOS that we don't care about the position.
     switch(GEOSisValidDetail_r(self_data->geos_context, self_geom, 0, &str, NULL)) {
       case 0: // invalid

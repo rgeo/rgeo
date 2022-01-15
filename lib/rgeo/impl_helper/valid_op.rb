@@ -26,7 +26,6 @@ module RGeo
     #
     # @see https://github.com/locationtech/jts/blob/master/modules/core/src/main/java/org/locationtech/jts/operation/valid/IsValidOp.java
     module ValidOp
-      # TODO: determine if "Unkown Validity" should count as valid.
       # Validity of geometry
       #
       # @return Boolean

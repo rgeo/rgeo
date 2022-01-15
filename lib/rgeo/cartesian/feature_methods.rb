@@ -56,8 +56,12 @@ module RGeo
       end
 
       def simple?
-        # TODO: should we replace with graph.incident_edges.length == segments.length
-        # since graph isn't used elsewhere yet it might be more overhead.
+        # Use a SweeplineIntersector to determine if there are any self-intersections
+        # in the ring. The GeometryGraph of the ring could be used by comparing the
+        # edges to number of segments (graph.incident_edges.length == segments.length),
+        # but this adds computational and memory overhead if graph isn't already memoized.
+        # Since graph is not used elsewhere in LineStringMethods, we will just use the
+        # SweeplineIntersector for now.
         li = SweeplineIntersector.new(segments)
         li.proper_intersections.empty?
       end
