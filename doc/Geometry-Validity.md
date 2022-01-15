@@ -87,4 +87,6 @@ ok_polygon.area.round # => 5
 
 You can also play around with validity thanks to the `RGeo::ImplHelper::ValidityCheck`
 helper.
-)
+
+Note that not all methods on a geometry are checked for validity first. Tests like `simple?`, `closed?`, and `empty?` are not, and data accessors like `num_points`, `factory`, `[]`, and `interior_rings` are not checked either. Only geometric analysis and predicate methods like `length`, `buffer`, `intersection`, `crosses?` and `contains?` are checked.
+  
