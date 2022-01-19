@@ -1069,6 +1069,9 @@ static VALUE method_geometry_make_valid(VALUE self)
 
   // According to GEOS implementation, MakeValid always returns.
   valid_geom = GEOSMakeValid_r(self_data->geos_context, self_geom);
+  if (!valid_geom) {
+    rb_raise(rgeo_invalid_geometry_error, "%"PRIsVALUE, method_geometry_invalid_reason(self));
+  }
   return rgeo_wrap_geos_geometry(self_data->factory, valid_geom, Qnil);
 }
 

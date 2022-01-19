@@ -34,6 +34,16 @@ module RGeo
       ].freeze
       private_constant :UNCHECKED_METHODS
 
+      # Since methods have their unsafe_ counter part, it means that the `+`
+      # method would lead to having an `unsafe_+` method that is not simply
+      # callable. Here's a simple fallback:
+      SYMBOL2NAME = {
+        :+ => "add",
+        :- => "remove",
+        :* => "multiply"
+      }.tap { |h| h.default_proc = ->(_,key) {key.to_s} }.freeze
+      private_constant :SYMBOL2NAME
+
       class << self
         # Note for contributors: this should be called after all methods
         # are loaded for a given feature classe. No worries though, this
@@ -60,7 +70,7 @@ module RGeo
 
           klass.class_eval do
             methods_to_check.each do |method_sym|
-              copy = "unsafe_#{method_sym}".to_sym
+              copy = "unsafe_#{SYMBOL2NAME[method_sym]}".to_sym
               alias_method copy, method_sym
               undef_method method_sym
               define_method(method_sym) do |*args|

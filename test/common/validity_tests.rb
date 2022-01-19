@@ -37,6 +37,30 @@ module RGeo
           skip "#make_valid not handled by current implementation" unless implements_make_valid?
 
           assert_equal(bowtie_polygon_expected_area, bowtie_polygon.make_valid.area)
+          assert_raises(RGeo::Error::InvalidGeometry) do
+            # A self intersecting ring cannot be made valid.
+            bowtie_polygon.exterior_ring.make_valid
+          end
+        end
+
+        def test_validity_no_symbol_methods
+          rand_point = Enumerator.new do |yielder|
+            loop { yielder << @factory.point(rand, rand) }
+          end
+
+          symbol_methods = [ # Check for every kind of geometry.
+            point = rand_point.next,
+            @factory.multi_point([point]),
+            line_string = @factory.line_string([point, rand_point.next]),
+            @factory.multi_line_string([line_string]),
+            ring = @factory.linear_ring([point, rand_point.next, rand_point.next, point]),
+            polygon = @factory.polygon(ring),
+            @factory.multi_polygon([polygon])
+          ].flat_map(&:methods).grep(/\Aunsafe_/).reject { |met| met.match?(/\A[a-z_?]+\z/) }
+          assert(
+            symbol_methods.empty?,
+            "Some methods cannot be called in their simple form: #{symbol_methods.inspect}"
+          )
         end
 
         def test_validity_invalid_reason
