@@ -27,6 +27,11 @@
 #ifdef HAVE_RB_MEMHASH
 #define RGEO_SUPPORTS_NEW_HASHING
 #endif
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+#define mark rb_gc_mark_movable
+#else
+#define mark rb_gc_mark
+#endif
 
 #ifndef RGEO_SUPPORTS_NEW_HASHING
 #define st_index_t int
