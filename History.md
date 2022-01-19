@@ -1,3 +1,8 @@
+### 2.4.0 / 2022-01-19
+
+* Allow movable pointers for `GC.compact` (teckwan) #284
+* Refactor globals and GC mark them (e.g. avoid segv) (teckwan) #282
+
 ### 2.3.1 / 2021-11-30
 
 * Fix core dump when cast returns a non Geos object #261
