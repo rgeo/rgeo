@@ -41,7 +41,7 @@ module RGeo
         :+ => "add",
         :- => "remove",
         :* => "multiply"
-      }.tap { |h| h.default_proc = ->(_,key) {key.to_s} }.freeze
+      }.tap { |h| h.default_proc = ->(_, key) { key.to_s } }.freeze
       private_constant :SYMBOL2NAME
 
       class << self
@@ -75,6 +75,9 @@ module RGeo
               undef_method method_sym
               define_method(method_sym) do |*args|
                 check_validity!
+                args.each do |arg|
+                  arg.check_validity! if RGeo::Feature::Geometry.check_type(arg)
+                end
                 method(copy).call(*args)
               end
             end

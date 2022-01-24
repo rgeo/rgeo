@@ -32,6 +32,22 @@ module RGeo
           assert_equal(square_polygon_expected_area, square_polygon.area)
         end
 
+        def test_validity_arguments
+          skip "Implementation #{@factory.class} does not implement ValidityCheck" unless implements_validity_check?
+          skip "#area not handled by current implementation" unless implements_area?
+
+          poly1 = square_polygon
+          poly2 = bowtie_polygon
+
+          assert_raises(RGeo::Error::InvalidGeometry) do
+            poly1.intersects?(poly2)
+          end
+
+          assert_raises(RGeo::Error::InvalidGeometry) do
+            poly2.intersects?(poly1)
+          end
+        end
+
         def test_validity_make_valid
           skip "Implementation #{@factory.class} does not implement ValidityCheck" unless implements_validity_check?
           skip "#make_valid not handled by current implementation" unless implements_make_valid?
