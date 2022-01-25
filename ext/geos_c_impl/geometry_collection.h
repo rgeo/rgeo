@@ -9,8 +9,6 @@
 #include <ruby.h>
 #include <geos_c.h>
 
-#include "factory.h"
-
 RGEO_BEGIN_C
 
 
@@ -18,7 +16,7 @@ RGEO_BEGIN_C
   Initializes the geometry collection module. This should be called after
   the geometry module is initialized.
 */
-void rgeo_init_geos_geometry_collection(RGeo_Globals* globals);
+void rgeo_init_geos_geometry_collection();
 
 /*
   Comopares the contents of two geometry collections. Does not test the

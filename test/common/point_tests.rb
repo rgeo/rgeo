@@ -84,17 +84,17 @@ module RGeo
 
         def test_is_empty
           point1 = @factory.point(0, 0)
-          assert(!point1.is_empty?)
+          assert(!point1.empty?)
         end
 
         def test_is_simple
           point1 = @factory.point(0, 0)
-          assert(point1.is_simple?)
+          assert(point1.simple?)
         end
 
         def test_boundary
           point = @factory.point(11, 12)
-          assert point.boundary.is_empty?
+          assert point.boundary.empty?
         end
 
         def test_equals
@@ -197,7 +197,7 @@ module RGeo
           point2 = @factory.point(11, 12)
           point3 = @factory.point(12, 12)
           assert_close_enough(point1, point1.intersection(point2))
-          assert point1.intersection(point3).is_empty?
+          assert point1.intersection(point3).empty?
         end
 
         def test_union
@@ -219,7 +219,7 @@ module RGeo
           diff12 = point1.difference(point2)
           diff13 = point1.difference(point3)
           assert_equal(RGeo::Feature::GeometryCollection, diff12.geometry_type)
-          assert(diff12.is_empty?)
+          assert(diff12.empty?)
           assert_close_enough(point1, diff13)
         end
 
@@ -230,7 +230,7 @@ module RGeo
           diff12 = point1.sym_difference(point2)
           diff13 = point1.sym_difference(point3)
           assert_equal(RGeo::Feature::GeometryCollection, diff12.geometry_type)
-          assert(diff12.is_empty?)
+          assert(diff12.empty?)
           assert_equal(RGeo::Feature::MultiPoint, diff13.geometry_type)
           assert_contains_approx(point1, diff13)
           assert_contains_approx(point3, diff13)

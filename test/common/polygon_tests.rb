@@ -204,9 +204,9 @@ module RGeo
           point3 = @factory.point(1, 0)
           exterior = @factory.linear_ring([point1, point2, point3, point1])
           poly1 = @factory.polygon(exterior)
-          assert(!poly1.is_empty?)
+          assert(!poly1.empty?)
           poly2 = @factory.polygon(@factory.linear_ring([]))
-          assert(poly2.is_empty?)
+          assert(poly2.empty?)
         end
 
         def test_boundary_simple
@@ -286,6 +286,50 @@ module RGeo
           exterior = @factory.linear_ring([point1, point2, point3, point4, point1])
           polygon = @factory.polygon(exterior)
           assert_equal(polygon.point_on_surface, @factory.point(5.0, 5.0))
+        end
+
+        def test_contains_point
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(0, 5)
+          point3 = @factory.point(5, 5)
+          point4 = @factory.point(5, 0)
+          exterior = @factory.linear_ring([point1, point2, point3, point4, point1])
+          polygon = @factory.polygon(exterior)
+
+          assert_equal(true, polygon.contains?(@factory.point(2.5, 2.5)))
+          assert_equal(false, polygon.contains?(@factory.point(6, 6)))
+          assert_equal(false, polygon.contains?(@factory.point(0, 2.5)))
+          assert_equal(false, polygon.contains?(@factory.point(2.5, 0)))
+          assert_equal(false, polygon.contains?(point1))
+          assert_equal(false, polygon.contains?(point2))
+          assert_equal(false, polygon.contains?(point3))
+          assert_equal(false, polygon.contains?(point4))
+        end
+
+        def test_contains_triangle
+          point1 = @factory.point(4, 4)
+          point2 = @factory.point(5, 6)
+          point3 = @factory.point(6, 4)
+          line_string = @factory.line_string([point1, point2, point3, point1])
+          polygon = @factory.polygon(line_string)
+          assert_equal(true, polygon.contains?(@factory.point(5, 5)))
+        end
+
+        def test_contains_point_one_hole
+          point1 = @factory.point(0, 0)
+          point2 = @factory.point(0, 10)
+          point3 = @factory.point(10, 10)
+          point4 = @factory.point(10, 0)
+          point5 = @factory.point(4, 4)
+          point6 = @factory.point(5, 6)
+          point7 = @factory.point(6, 4)
+          exterior = @factory.linear_ring([point1, point2, point3, point4, point1])
+          interior = @factory.linear_ring([point5, point6, point7, point5])
+          polygon = @factory.polygon(exterior, [interior])
+
+          assert_equal(true, polygon.contains?(@factory.point(2, 3)))
+          assert_equal(false, polygon.contains?(@factory.point(5, 5)))
+          assert_equal(false, polygon.contains?(@factory.point(4, 4)))
         end
       end
     end

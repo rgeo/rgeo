@@ -20,7 +20,7 @@ class CartesianBBoxTest < Minitest::Test # :nodoc:
     assert_nil(bbox.min_x)
     assert_equal(@factory, bbox.factory)
     assert_nil(bbox.min_point)
-    assert_equal(true, bbox.to_geometry.is_empty?)
+    assert_equal(true, bbox.to_geometry.empty?)
     assert_equal(true, bbox.contains?(bbox))
     assert_equal(false, bbox.contains?(@factory.point(1, 1)))
     assert_nil(bbox.center_x)

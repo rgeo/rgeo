@@ -45,6 +45,13 @@ module RGeo
           assert(@line1.eql?(geom[-1]))
         end
 
+        def test_enumerables
+          geom = @factory.collection([@point1, @line1])
+          assert_equal(geom.select { |e| e == @point1 }, [@point1])
+          assert_equal(geom.detect { |e| e == @point1 }, @point1)
+          assert_equal(geom.map { |e| e == @point1 }, [true, false])
+        end
+
         def test_creation_save_klass
           geom = @factory.collection([@point1, @line3])
           assert(RGeo::Feature::GeometryCollection === geom)
@@ -186,9 +193,9 @@ module RGeo
 
         def test_is_empty
           geom1 = @factory.collection([@point1, @line1])
-          assert(!geom1.is_empty?)
+          assert(!geom1.empty?)
           geom2 = @factory.collection([])
-          assert(geom2.is_empty?)
+          assert(geom2.empty?)
         end
 
         def test_empty_collection_envelope

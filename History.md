@@ -1,3 +1,29 @@
+### 2.4.0 / 2022-01-19
+
+* Allow movable pointers for `GC.compact` (teckwan) #284
+* Refactor globals and GC mark them (e.g. avoid segv) (teckwan) #282
+
+### 2.3.1 / 2021-11-30
+
+* Fix core dump when cast returns a non Geos object #261
+* Change all `is_*?` method names to `*?` (stephenandersondev) #268
+* Fix lenient_assertion flags for `simple_mercator_factory` (thestelz) #278
+
+### 2.3.0 / 2021-04-16
+
+* Fix a memory leak in CAPI's `#invalid_reason`
+* `#invalid_reason` now must return `nil` if polygon is valid.
+* Add #geometries and utilize #each for Enumerable (mylesboone) #248
+
+### 2.2.0 / 2020-11-18
+
+* Add SphericalPolygonMethods#centroid (allknowingfrog) #208
+* Expand gemspec
+* Drop Ruby 2.3 support
+* Add a simple fallback for `Polygon#contains?` (Quiwin) #224
+* Add `ccw?` method for linear rings, with geos support #229
+* Add a simple fallback for `MultiPolygon/LineString#contains?` (Quiwin) #230 #232
+
 ### 2.1.1 / 2019-8-26
 
 * Fix BasicPolygonMethods#boundary #206 (ans82)

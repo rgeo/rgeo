@@ -21,24 +21,24 @@
 
 module RGeo
   module Geos
-    require "rgeo/geos/utils"
-    require "rgeo/geos/interface"
+    require_relative "geos/utils"
+    require_relative "geos/interface"
     begin
-      require "rgeo/geos/geos_c_impl"
+      require_relative "geos/geos_c_impl"
     rescue LoadError
       # continue
     end
     CAPI_SUPPORTED = RGeo::Geos.const_defined?(:CAPIGeometryMethods)
     if CAPI_SUPPORTED
-      require "rgeo/geos/capi_feature_classes"
-      require "rgeo/geos/capi_factory"
+      require_relative "geos/capi_feature_classes"
+      require_relative "geos/capi_factory"
     end
-    require "rgeo/geos/ffi_feature_methods"
-    require "rgeo/geos/ffi_feature_classes"
-    require "rgeo/geos/ffi_factory"
-    require "rgeo/geos/zm_feature_methods"
-    require "rgeo/geos/zm_feature_classes"
-    require "rgeo/geos/zm_factory"
+    require_relative "geos/ffi_feature_methods"
+    require_relative "geos/ffi_feature_classes"
+    require_relative "geos/ffi_factory"
+    require_relative "geos/zm_feature_methods"
+    require_relative "geos/zm_feature_classes"
+    require_relative "geos/zm_factory"
 
     # Determine ffi support.
     begin

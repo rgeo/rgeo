@@ -157,9 +157,9 @@ module RGeo
 
         def test_is_empty
           geom1 = @factory.multi_line_string([@linestring1, @linestring2])
-          assert(!geom1.is_empty?)
+          assert(!geom1.empty?)
           geom2 = @factory.multi_line_string([])
-          assert(geom2.is_empty?)
+          assert(geom2.empty?)
         end
 
         def test_length
@@ -177,6 +177,12 @@ module RGeo
         def test_point_on_surface
           ml = @factory.multi_line_string([@linestring1, @linestring2])
           assert_equal(ml.point_on_surface, @factory.point(-7, 6))
+        end
+
+        def test_contains_point
+          ml = @factory.multi_line_string([@linestring1, @linestring2])
+          pt = @factory.point(-7, 6) # point4
+          assert_equal(true, ml.contains?(pt))
         end
       end
     end

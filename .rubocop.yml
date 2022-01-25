@@ -1,9 +1,10 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
+  NewCops: enable
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: false
 
 Layout/EmptyLineAfterGuardClause:
@@ -41,3 +42,7 @@ Style/StringLiterals:
 
 Style/ZeroLengthPredicate:
   Enabled: false
+
+Metrics/ParameterLists:
+  Max: 8
+  MaxOptionalParameters: 6

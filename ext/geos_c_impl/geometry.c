@@ -11,6 +11,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "factory.h"
 #include "geometry.h"
 
@@ -180,13 +182,11 @@ static VALUE method_geometry_geometry_type(VALUE self)
 {
   VALUE result;
   RGeo_GeometryData* self_data;
-  const GEOSGeometry* self_geom;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  self_geom = self_data->geom;
-  if (self_geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_geometry;
+  if (self_data->geom) {
+    result = rgeo_feature_geometry_module;
   }
   return result;
 }
@@ -271,7 +271,7 @@ static VALUE method_geometry_as_text(VALUE self)
     factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
     wkt_generator = factory_data->wkrep_wkt_generator;
     if (!NIL_P(wkt_generator)) {
-      result = rb_funcall(wkt_generator, factory_data->globals->id_generate, 1, self);
+      result = rb_funcall(wkt_generator, rb_intern("generate"), 1, self);
     }
     else {
       wkt_writer = factory_data->wkt_writer;
@@ -310,7 +310,7 @@ static VALUE method_geometry_as_binary(VALUE self)
     factory_data = RGEO_FACTORY_DATA_PTR(self_data->factory);
     wkb_generator = factory_data->wkrep_wkb_generator;
     if (!NIL_P(wkb_generator)) {
-      result = rb_funcall(wkb_generator, factory_data->globals->id_generate, 1, self);
+      result = rb_funcall(wkb_generator, rb_intern("generate"), 1, self);
     }
     else {
       wkb_writer = factory_data->wkb_writer;
@@ -1070,12 +1070,13 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   self_geom = self_data->geom;
   if (self_geom) {
     str = GEOSisValidReason_r(self_data->geos_context, self_geom);
-    if (str) {
-      result = rb_str_new2(str);
-    }
-    else {
-      result = rb_str_new2("Exception");
-    }
+    // Per documentation, a valid geometry should give an empty string.
+    // However it seems not to be the case. Hence the comparison against
+    // the string that is really given: `"Valid Geometry"`.
+    // See https://github.com/libgeos/geos/issues/431.
+    if (str) result = (str[0] == '\0' || !strcmp(str, "Valid Geometry")) ? Qnil : rb_str_new2(str);
+    else result = rb_str_new2("Exception");
+    GEOSFree_r(self_data->geos_context, str);
   }
   return result;
 }
@@ -1099,11 +1100,11 @@ static VALUE method_geometry_point_on_surface(VALUE self)
 /**** INITIALIZATION FUNCTION ****/
 
 
-void rgeo_init_geos_geometry(RGeo_Globals* globals)
+void rgeo_init_geos_geometry()
 {
   VALUE geos_geometry_methods;
 
-  geos_geometry_methods = rb_define_module_under(globals->geos_module, "CAPIGeometryMethods");
+  geos_geometry_methods = rb_define_module_under(rgeo_geos_module, "CAPIGeometryMethods");
 
   rb_define_method(geos_geometry_methods, "factory=", method_geometry_set_factory, 1);
   rb_define_method(geos_geometry_methods, "initialize_copy", method_geometry_initialize_copy, 1);
@@ -1119,8 +1120,8 @@ void rgeo_init_geos_geometry(RGeo_Globals* globals)
   rb_define_method(geos_geometry_methods, "boundary", method_geometry_boundary, 0);
   rb_define_method(geos_geometry_methods, "_as_text", method_geometry_as_text, 0);
   rb_define_method(geos_geometry_methods, "as_binary", method_geometry_as_binary, 0);
-  rb_define_method(geos_geometry_methods, "is_empty?", method_geometry_is_empty, 0);
-  rb_define_method(geos_geometry_methods, "is_simple?", method_geometry_is_simple, 0);
+  rb_define_method(geos_geometry_methods, "empty?", method_geometry_is_empty, 0);
+  rb_define_method(geos_geometry_methods, "simple?", method_geometry_is_simple, 0);
   rb_define_method(geos_geometry_methods, "equals?", method_geometry_equals, 1);
   rb_define_method(geos_geometry_methods, "==", method_geometry_equals, 1);
   rb_define_method(geos_geometry_methods, "rep_equals?", method_geometry_eql, 1);

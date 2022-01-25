@@ -15,6 +15,15 @@ class CartesianMultiLineStringTest < Minitest::Test # :nodoc:
     @factory = RGeo::Cartesian.simple_factory
   end
 
+  def test_contains_not_point
+    ml1 = @factory.multi_line_string([])
+    ml2 = @factory.multi_line_string([])
+
+    assert_raises(RGeo::Error::UnsupportedOperation) do
+      ml1.contains?(ml2)
+    end
+  end
+
   undef_method :test_fully_equal
   undef_method :test_geometrically_equal
   undef_method :test_not_equal

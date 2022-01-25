@@ -160,7 +160,7 @@ module RGeo
       end
 
       def generate_line_string(obj)
-        if obj.is_empty?
+        if obj.empty?
           "EMPTY"
         else
           "#{@begin_bracket}#{obj.points.map { |p| generate_coords(p) }.join(', ')}#{@end_bracket}"
@@ -168,7 +168,7 @@ module RGeo
       end
 
       def generate_polygon(obj)
-        if obj.is_empty?
+        if obj.empty?
           "EMPTY"
         else
           "#{@begin_bracket}#{([generate_line_string(obj.exterior_ring)] + obj.interior_rings.map { |r| generate_line_string(r) }).join(', ')}#{@end_bracket}"
@@ -176,7 +176,7 @@ module RGeo
       end
 
       def generate_geometry_collection(obj)
-        if obj.is_empty?
+        if obj.empty?
           "EMPTY"
         else
           "#{@begin_bracket}#{obj.map { |f| generate_feature(f) }.join(', ')}#{@end_bracket}"
@@ -184,7 +184,7 @@ module RGeo
       end
 
       def generate_multi_point(obj)
-        if obj.is_empty?
+        if obj.empty?
           "EMPTY"
         else
           "#{@begin_bracket}#{obj.map { |f| generate_point(f) }.join(', ')}#{@end_bracket}"
@@ -192,7 +192,7 @@ module RGeo
       end
 
       def generate_multi_line_string(obj)
-        if obj.is_empty?
+        if obj.empty?
           "EMPTY"
         else
           "#{@begin_bracket}#{obj.map { |f| generate_line_string(f) }.join(', ')}#{@end_bracket}"
@@ -200,7 +200,7 @@ module RGeo
       end
 
       def generate_multi_polygon(obj)
-        if obj.is_empty?
+        if obj.empty?
           "EMPTY"
         else
           "#{@begin_bracket}#{obj.map { |f| generate_polygon(f) }.join(', ')}#{@end_bracket}"

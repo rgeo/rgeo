@@ -191,8 +191,13 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
+      def empty?
+        raise Error::UnsupportedOperation, "Method Geometry#empty? not defined."
+      end
+
       def is_empty?
-        raise Error::UnsupportedOperation, "Method Geometry#is_empty? not defined."
+        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        empty?
       end
 
       # === SFS 1.1 Description
@@ -208,8 +213,13 @@ module RGeo
       # Returns a boolean value. Note that this is different from the SFS
       # specification, which stipulates an integer return value.
 
+      def simple?
+        raise Error::UnsupportedOperation, "Method Geometry#simple? not defined."
+      end
+
       def is_simple?
-        raise Error::UnsupportedOperation, "Method Geometry#is_simple? not defined."
+        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
+        simple?
       end
 
       # === SFS 1.1 Description

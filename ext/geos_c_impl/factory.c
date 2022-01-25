@@ -10,12 +10,15 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "factory.h"
 #include "geometry.h"
 #include "point.h"
 #include "line_string.h"
 #include "polygon.h"
 #include "geometry_collection.h"
+#include "errors.h"
 
 RGEO_BEGIN_C
 
@@ -35,82 +38,89 @@ static void message_handler(const char* fmt, ...)
 // objects that have been created for the factory, and then destroy
 // the GEOS context, before freeing the factory data itself.
 
-static void destroy_factory_func(RGeo_FactoryData* data)
+static void destroy_factory_func(void* data)
 {
+  RGeo_FactoryData* factory_data;
   GEOSContextHandle_t context;
 
-  context = data->geos_context;
-  if (data->wkt_reader) {
-    GEOSWKTReader_destroy_r(context, data->wkt_reader);
+  factory_data = (RGeo_FactoryData*)data;
+  context = factory_data->geos_context;
+  if (factory_data->wkt_reader) {
+    GEOSWKTReader_destroy_r(context, factory_data->wkt_reader);
   }
-  if (data->wkb_reader) {
-    GEOSWKBReader_destroy_r(context, data->wkb_reader);
+  if (factory_data->wkb_reader) {
+    GEOSWKBReader_destroy_r(context, factory_data->wkb_reader);
   }
-  if (data->wkt_writer) {
-    GEOSWKTWriter_destroy_r(context, data->wkt_writer);
+  if (factory_data->wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, factory_data->wkt_writer);
   }
-  if (data->wkb_writer) {
-    GEOSWKBWriter_destroy_r(context, data->wkb_writer);
+  if (factory_data->wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, factory_data->wkb_writer);
   }
-  if (data->psych_wkt_reader) {
-    GEOSWKTReader_destroy_r(context, data->psych_wkt_reader);
+  if (factory_data->psych_wkt_reader) {
+    GEOSWKTReader_destroy_r(context, factory_data->psych_wkt_reader);
   }
-  if (data->marshal_wkb_reader) {
-    GEOSWKBReader_destroy_r(context, data->marshal_wkb_reader);
+  if (factory_data->marshal_wkb_reader) {
+    GEOSWKBReader_destroy_r(context, factory_data->marshal_wkb_reader);
   }
-  if (data->psych_wkt_writer) {
-    GEOSWKTWriter_destroy_r(context, data->psych_wkt_writer);
+  if (factory_data->psych_wkt_writer) {
+    GEOSWKTWriter_destroy_r(context, factory_data->psych_wkt_writer);
   }
-  if (data->marshal_wkb_writer) {
-    GEOSWKBWriter_destroy_r(context, data->marshal_wkb_writer);
+  if (factory_data->marshal_wkb_writer) {
+    GEOSWKBWriter_destroy_r(context, factory_data->marshal_wkb_writer);
   }
   finishGEOS_r(context);
-  free(data);
+  free(factory_data);
 }
 
 
 // Destroy function for geometry data. We destroy the internal
 // GEOS geometry (if present) before freeing the data itself.
 
-static void destroy_geometry_func(RGeo_GeometryData* data)
+static void destroy_geometry_func(void* data)
 {
+  RGeo_GeometryData* geometry_data;
   const GEOSPreparedGeometry* prep;
 
-  if (data->geom) {
-    GEOSGeom_destroy_r(data->geos_context, data->geom);
+  geometry_data = (RGeo_GeometryData*)data;
+  if (geometry_data->geom) {
+    GEOSGeom_destroy_r(geometry_data->geos_context, geometry_data->geom);
   }
-  prep = data->prep;
+  prep = geometry_data->prep;
   if (prep && prep != (const GEOSPreparedGeometry*)1 && prep != (const GEOSPreparedGeometry*)2 &&
     prep != (const GEOSPreparedGeometry*)3)
   {
-    GEOSPreparedGeom_destroy_r(data->geos_context, prep);
+    GEOSPreparedGeom_destroy_r(geometry_data->geos_context, prep);
   }
-  free(data);
+  free(geometry_data);
 }
 
 
 // Mark function for factory data. This marks the wkt and wkb generator
 // handles so they don't get collected.
 
-static void mark_factory_func(RGeo_FactoryData* data)
+static void mark_factory_func(void* data)
 {
-  if (!NIL_P(data->wkrep_wkt_generator)) {
-    rb_gc_mark(data->wkrep_wkt_generator);
+  RGeo_FactoryData* factory_data;
+
+  factory_data = (RGeo_FactoryData*)data;
+  if (!NIL_P(factory_data->wkrep_wkt_generator)) {
+    mark(factory_data->wkrep_wkt_generator);
   }
-  if (!NIL_P(data->wkrep_wkb_generator)) {
-    rb_gc_mark(data->wkrep_wkb_generator);
+  if (!NIL_P(factory_data->wkrep_wkb_generator)) {
+    mark(factory_data->wkrep_wkb_generator);
   }
-  if (!NIL_P(data->wkrep_wkt_parser)) {
-    rb_gc_mark(data->wkrep_wkt_parser);
+  if (!NIL_P(factory_data->wkrep_wkt_parser)) {
+    mark(factory_data->wkrep_wkt_parser);
   }
-  if (!NIL_P(data->wkrep_wkb_parser)) {
-    rb_gc_mark(data->wkrep_wkb_parser);
+  if (!NIL_P(factory_data->wkrep_wkb_parser)) {
+    mark(factory_data->wkrep_wkb_parser);
   }
-  if (!NIL_P(data->proj4_obj)) {
-    rb_gc_mark(data->proj4_obj);
+  if (!NIL_P(factory_data->proj4_obj)) {
+    mark(factory_data->proj4_obj);
   }
-  if (!NIL_P(data->coord_sys_obj)) {
-    rb_gc_mark(data->coord_sys_obj);
+  if (!NIL_P(factory_data->coord_sys_obj)) {
+    mark(factory_data->coord_sys_obj);
   }
 }
 
@@ -118,32 +128,83 @@ static void mark_factory_func(RGeo_FactoryData* data)
 // Mark function for geometry data. This marks the factory and klasses
 // held by the geometry so those don't get collected.
 
-static void mark_geometry_func(RGeo_GeometryData* data)
+static void mark_geometry_func(void* data)
 {
-  if (!NIL_P(data->factory)) {
-    rb_gc_mark(data->factory);
+  RGeo_GeometryData* geometry_data;
+
+  geometry_data = (RGeo_GeometryData*)data;
+  if (!NIL_P(geometry_data->factory)) {
+    mark(geometry_data->factory);
   }
-  if (!NIL_P(data->klasses)) {
-    rb_gc_mark(data->klasses);
+  if (!NIL_P(geometry_data->klasses)) {
+    mark(geometry_data->klasses);
   }
 }
 
 
-// Destroy function for globals data. We don't need to destroy any
-// auxiliary data for now...
-
-static void destroy_globals_func(RGeo_Globals* data)
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+static void compact_factory_func(void* data)
 {
-  free(data);
+  RGeo_FactoryData* factory_data;
+
+  factory_data = (RGeo_FactoryData*)data;
+  if (!NIL_P(factory_data->wkrep_wkt_generator)) {
+    factory_data->wkrep_wkt_generator = rb_gc_location(factory_data->wkrep_wkt_generator);
+  }
+  if (!NIL_P(factory_data->wkrep_wkb_generator)) {
+    factory_data->wkrep_wkb_generator = rb_gc_location(factory_data->wkrep_wkb_generator);
+  }
+  if (!NIL_P(factory_data->wkrep_wkt_parser)) {
+    factory_data->wkrep_wkt_parser = rb_gc_location(factory_data->wkrep_wkt_parser);
+  }
+  if (!NIL_P(factory_data->wkrep_wkb_parser)) {
+    factory_data->wkrep_wkb_parser = rb_gc_location(factory_data->wkrep_wkb_parser);
+  }
+  if (!NIL_P(factory_data->proj4_obj)) {
+    factory_data->proj4_obj = rb_gc_location(factory_data->proj4_obj);
+  }
+  if (!NIL_P(factory_data->coord_sys_obj)) {
+    factory_data->coord_sys_obj = rb_gc_location(factory_data->coord_sys_obj);
+  }
 }
 
 
-// Mark function for globals data. This should mark any globals that
-// need to be held through garbage collection (none at the moment.)
-
-static void mark_globals_func(RGeo_Globals* data)
+static void compact_geometry_func(void* data)
 {
+  RGeo_GeometryData* geometry_data;
+
+  geometry_data = (RGeo_GeometryData*)data;
+  if (!NIL_P(geometry_data->factory)) {
+    geometry_data->factory = rb_gc_location(geometry_data->factory);
+  }
+  if (!NIL_P(geometry_data->klasses)) {
+    geometry_data->klasses = rb_gc_location(geometry_data->klasses);
+  }
 }
+#endif
+
+
+const rb_data_type_t rgeo_factory_type = {
+  .wrap_struct_name = "RGeo/Factory",
+  .function = {
+    .dmark = mark_factory_func,
+    .dfree = destroy_factory_func,
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+    .dcompact = compact_factory_func,
+#endif
+  }
+};
+
+const rb_data_type_t rgeo_geometry_type = {
+  .wrap_struct_name = "RGeo/Geometry",
+  .function = {
+    .dmark = mark_geometry_func,
+    .dfree = destroy_geometry_func,
+#ifdef HAVE_RB_GC_MARK_MOVABLE
+    .dcompact = compact_geometry_func,
+#endif
+  }
+};
 
 
 /**** RUBY METHOD DEFINITIONS ****/
@@ -247,7 +308,6 @@ static VALUE method_factory_read_for_marshal(VALUE self, VALUE str)
   return result;
 }
 
-
 static VALUE method_factory_read_for_psych(VALUE self, VALUE str)
 {
   RGeo_FactoryData* self_data;
@@ -274,6 +334,9 @@ static VALUE method_factory_read_for_psych(VALUE self, VALUE str)
   return result;
 }
 
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+static VALUE marshal_wkb_generator;
+#endif
 
 static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
 {
@@ -285,25 +348,18 @@ static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
   char* str;
   size_t size;
   char has_3d;
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  RGeo_Globals* globals;
-  VALUE wkb_generator;
-#endif
 
   self_data = RGEO_FACTORY_DATA_PTR(self);
   self_context = self_data->geos_context;
   has_3d = self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
   if (has_3d) {
-    globals = self_data->globals;
-    wkb_generator = globals->marshal_wkb_generator;
-    if (NIL_P(wkb_generator)) {
-      wkb_generator = rb_funcall(
-        rb_const_get_at(globals->geos_module, rb_intern("Utils")),
+    if (NIL_P(marshal_wkb_generator)) {
+      marshal_wkb_generator = rb_funcall(
+        rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
         rb_intern("marshal_wkb_generator"), 0);
-      globals->marshal_wkb_generator = wkb_generator;
     }
-    return rb_funcall(wkb_generator, globals->id_generate, 1, obj);
+    return rb_funcall(marshal_wkb_generator, rb_intern("generate"), 1, obj);
   }
 #endif
   wkb_writer = self_data->marshal_wkb_writer;
@@ -328,6 +384,9 @@ static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
   return result;
 }
 
+#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+static VALUE psych_wkt_generator;
+#endif
 
 static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
 {
@@ -338,25 +397,18 @@ static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
   VALUE result;
   char* str;
   char has_3d;
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  RGeo_Globals* globals;
-  VALUE wkt_generator;
-#endif
 
   self_data = RGEO_FACTORY_DATA_PTR(self);
   self_context = self_data->geos_context;
   has_3d = self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
   if (has_3d) {
-    globals = self_data->globals;
-    wkt_generator = globals->psych_wkt_generator;
-    if (NIL_P(wkt_generator)) {
-      wkt_generator = rb_funcall(
-        rb_const_get_at(globals->geos_module, rb_intern("Utils")),
+    if (NIL_P(psych_wkt_generator)) {
+      psych_wkt_generator = rb_funcall(
+        rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
         rb_intern("psych_wkt_generator"), 0);
-      globals->psych_wkt_generator = wkt_generator;
     }
-    return rb_funcall(wkt_generator, globals->id_generate, 1, obj);
+    return rb_funcall(psych_wkt_generator, rb_intern("generate"), 1, obj);
   }
 #endif
   wkt_writer = self_data->psych_wkt_writer;
@@ -403,15 +455,12 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
   VALUE result;
   RGeo_FactoryData* data;
   GEOSContextHandle_t context;
-  VALUE wrapped_globals;
 
   result = Qnil;
   data = ALLOC(RGeo_FactoryData);
   if (data) {
     context = initGEOS_r(message_handler, message_handler);
     if (context) {
-      wrapped_globals = rb_const_get_at(klass, rb_intern("INTERNAL_CGLOBALS"));
-      data->globals = (RGeo_Globals*)DATA_PTR(wrapped_globals);
       data->geos_context = context;
       data->flags = NUM2INT(flags);
       data->srid = NUM2INT(srid);
@@ -430,7 +479,7 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       data->wkrep_wkb_parser = Qnil;
       data->proj4_obj = proj4_obj;
       data->coord_sys_obj = coord_sys_obj;
-      result = Data_Wrap_Struct(klass, mark_factory_func, destroy_factory_func, data);
+      result = TypedData_Wrap_Struct(klass, &rgeo_factory_type, data);
     }
     else {
       free(data);
@@ -495,7 +544,7 @@ static VALUE method_factory_initialize_copy(VALUE self, VALUE orig)
   self_data->coord_sys_obj = Qnil;
 
   // Copy new data from original object
-  if (TYPE(orig) == T_DATA && RDATA(orig)->dfree == (RUBY_DATA_FUNC)destroy_factory_func) {
+  if (RGEO_FACTORY_TYPEDDATA_P(orig)) {
     orig_data = RGEO_FACTORY_DATA_PTR(orig);
     self_data->flags = orig_data->flags;
     self_data->srid = orig_data->srid;
@@ -568,47 +617,20 @@ static VALUE alloc_geometry(VALUE klass)
 /**** INITIALIZATION FUNCTION ****/
 
 
-RGeo_Globals* rgeo_init_geos_factory()
+void rgeo_init_geos_factory()
 {
-  RGeo_Globals* globals;
-  VALUE rgeo_module;
   VALUE geos_factory_class;
-  VALUE wrapped_globals;
-  VALUE feature_module;
 
-  globals = ALLOC(RGeo_Globals);
-
-  // Cache some modules so we don't have to look them up by name every time
-  rgeo_module = rb_define_module("RGeo");
-  feature_module = rb_define_module_under(rgeo_module, "Feature");
-  globals->feature_module = feature_module;
-  globals->geos_module = rb_define_module_under(rgeo_module, "Geos");
-  globals->feature_geometry = rb_const_get_at(feature_module, rb_intern("Geometry"));
-  globals->feature_point = rb_const_get_at(feature_module, rb_intern("Point"));
-  globals->feature_line_string = rb_const_get_at(feature_module, rb_intern("LineString"));
-  globals->feature_linear_ring = rb_const_get_at(feature_module, rb_intern("LinearRing"));
-  globals->feature_line = rb_const_get_at(feature_module, rb_intern("Line"));
-  globals->feature_polygon = rb_const_get_at(feature_module, rb_intern("Polygon"));
-  globals->feature_geometry_collection = rb_const_get_at(feature_module, rb_intern("GeometryCollection"));
-  globals->feature_multi_point = rb_const_get_at(feature_module, rb_intern("MultiPoint"));
-  globals->feature_multi_line_string = rb_const_get_at(feature_module, rb_intern("MultiLineString"));
-  globals->feature_multi_polygon = rb_const_get_at(feature_module, rb_intern("MultiPolygon"));
-
-  // Cache some commonly used names
-  globals->id_cast = rb_intern("cast");
-  globals->id_eql = rb_intern("eql?");
-  globals->id_generate = rb_intern("generate");
-  globals->id_enum_for = rb_intern("enum_for");
-  globals->id_hash = rb_intern("hash");
-  globals->sym_force_new = ID2SYM(rb_intern("force_new"));
-  globals->sym_keep_subtype = ID2SYM(rb_intern("keep_subtype"));
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  globals->psych_wkt_generator = Qnil;
-  globals->marshal_wkb_generator = Qnil;
+  /* We favor rb_gc_register_address over rb_gc_register_mark_object because the value changes at runtime */
+  psych_wkt_generator = Qnil;
+  rb_gc_register_address(&psych_wkt_generator);
+  marshal_wkb_generator = Qnil;
+  rb_gc_register_address(&marshal_wkb_generator);
 #endif
 
   // Add C methods to the factory.
-  geos_factory_class = rb_define_class_under(globals->geos_module, "CAPIFactory", rb_cObject);
+  geos_factory_class = rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);
   rb_define_alloc_func(geos_factory_class, alloc_factory);
   rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
@@ -631,34 +653,17 @@ RGeo_Globals* rgeo_init_geos_factory()
   rb_define_module_function(geos_factory_class, "_geos_version", cmethod_factory_geos_version, 0);
   rb_define_module_function(geos_factory_class, "_supports_unary_union?", cmethod_factory_supports_unary_union, 0);
 
-  // Pre-define implementation classes and set up allocation methods
-  globals->geos_geometry = rb_define_class_under(globals->geos_module, "CAPIGeometryImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_geometry, alloc_geometry);
-  globals->geos_point = rb_define_class_under(globals->geos_module, "CAPIPointImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_point, alloc_geometry);
-  globals->geos_line_string = rb_define_class_under(globals->geos_module, "CAPILineStringImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_line_string, alloc_geometry);
-  globals->geos_linear_ring = rb_define_class_under(globals->geos_module, "CAPILinearRingImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_linear_ring, alloc_geometry);
-  globals->geos_line = rb_define_class_under(globals->geos_module, "CAPILineImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_line, alloc_geometry);
-  globals->geos_polygon = rb_define_class_under(globals->geos_module, "CAPIPolygonImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_polygon, alloc_geometry);
-  globals->geos_geometry_collection = rb_define_class_under(globals->geos_module, "CAPIGeometryCollectionImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_geometry_collection, alloc_geometry);
-  globals->geos_multi_point = rb_define_class_under(globals->geos_module, "CAPIMultiPointImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_multi_point, alloc_geometry);
-  globals->geos_multi_line_string = rb_define_class_under(globals->geos_module, "CAPIMultiLineStringImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_multi_line_string, alloc_geometry);
-  globals->geos_multi_polygon = rb_define_class_under(globals->geos_module, "CAPIMultiPolygonImpl", rb_cObject);
-  rb_define_alloc_func(globals->geos_multi_polygon, alloc_geometry);
-
-  // Wrap the globals in a Ruby object and store it off so we have access
-  // to it later. Each factory instance will reference it internally.
-  wrapped_globals = Data_Wrap_Struct(rb_cObject, mark_globals_func, destroy_globals_func, globals);
-  rb_define_const(geos_factory_class, "INTERNAL_CGLOBALS", wrapped_globals);
-
-  return globals;
+  // Define allocation methods for global class types
+  rb_define_alloc_func(rgeo_geos_geometry_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_point_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_line_string_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_linear_ring_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_line_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_polygon_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_geometry_collection_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_multi_point_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_multi_line_string_class, alloc_geometry);
+  rb_define_alloc_func(rgeo_geos_multi_polygon_class, alloc_geometry);
 }
 
 
@@ -671,7 +676,6 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
   RGeo_FactoryData* factory_data;
   GEOSContextHandle_t factory_context;
   VALUE klasses;
-  RGeo_Globals* globals;
   VALUE inferred_klass;
   char is_collection;
   RGeo_GeometryData* data;
@@ -680,7 +684,6 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
   if (geom || !NIL_P(klass)) {
     factory_data = NIL_P(factory) ? NULL : RGEO_FACTORY_DATA_PTR(factory);
     factory_context = factory_data ? factory_data->geos_context : NULL;
-    globals = factory_data ? factory_data->globals : NULL;
 
     // We don't allow "empty" points, so replace such objects with
     // an empty collection.
@@ -688,7 +691,7 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       if (GEOSGeomTypeId_r(factory_context, geom) == GEOS_POINT && GEOSGetNumCoordinates_r(factory_context, geom) == 0) {
         GEOSGeom_destroy_r(factory_context, geom);
         geom = GEOSGeom_createCollection_r(factory_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
-        klass = globals->geos_geometry_collection;
+        klass = rgeo_geos_geometry_collection_class;
       }
     }
 
@@ -698,35 +701,35 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       is_collection = 0;
       switch (GEOSGeomTypeId_r(factory_context, geom)) {
       case GEOS_POINT:
-        inferred_klass = globals->geos_point;
+        inferred_klass = rgeo_geos_point_class;
         break;
       case GEOS_LINESTRING:
-        inferred_klass = globals->geos_line_string;
+        inferred_klass = rgeo_geos_line_string_class;
         break;
       case GEOS_LINEARRING:
-        inferred_klass = globals->geos_linear_ring;
+        inferred_klass = rgeo_geos_linear_ring_class;
         break;
       case GEOS_POLYGON:
-        inferred_klass = globals->geos_polygon;
+        inferred_klass = rgeo_geos_polygon_class;
         break;
       case GEOS_MULTIPOINT:
-        inferred_klass = globals->geos_multi_point;
+        inferred_klass = rgeo_geos_multi_point_class;
         is_collection = 1;
         break;
       case GEOS_MULTILINESTRING:
-        inferred_klass = globals->geos_multi_line_string;
+        inferred_klass = rgeo_geos_multi_line_string_class;
         is_collection = 1;
         break;
       case GEOS_MULTIPOLYGON:
-        inferred_klass = globals->geos_multi_polygon;
+        inferred_klass = rgeo_geos_multi_polygon_class;
         is_collection = 1;
         break;
       case GEOS_GEOMETRYCOLLECTION:
-        inferred_klass = globals->geos_geometry_collection;
+        inferred_klass = rgeo_geos_geometry_collection_class;
         is_collection = 1;
         break;
       default:
-        inferred_klass = globals->geos_geometry;
+        inferred_klass = rgeo_geos_geometry_class;
         break;
       }
       if (TYPE(klass) == T_ARRAY && is_collection) {
@@ -745,12 +748,11 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
         (GEOSPreparedGeometry*)1 : NULL;
       data->factory = factory;
       data->klasses = klasses;
-      result = Data_Wrap_Struct(klass, mark_geometry_func, destroy_geometry_func, data);
+      result = TypedData_Wrap_Struct(klass, &rgeo_geometry_type, data);
     }
   }
   return result;
 }
-
 
 VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VALUE klass)
 {
@@ -771,21 +773,18 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
 const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
 {
   VALUE object;
-  const GEOSGeometry* geom;
-  RGeo_Globals* globals;
 
-  if (NIL_P(type) && TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
+  if (NIL_P(type) && RGEO_GEOMETRY_TYPEDDATA_P(obj) && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
     object = obj;
   }
   else {
-    globals = RGEO_FACTORY_DATA_PTR(factory)->globals;
-    object = rb_funcall(globals->feature_module, globals->id_cast, 3, obj, factory, type);
+    object = rb_funcall(rgeo_feature_module, rb_intern("cast"), 3, obj, factory, type);
   }
-  geom = NULL;
-  if (!NIL_P(object)) {
-    geom = RGEO_GEOMETRY_DATA_PTR(object)->geom;
-  }
-  return geom;
+  if (NIL_P(object))
+    return NULL;
+
+  Check_TypedStruct(object, &rgeo_geometry_type);
+  return RGEO_GEOMETRY_DATA_PTR(object)->geom;
 }
 
 
@@ -795,13 +794,11 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
   GEOSGeometry* geom;
   RGeo_GeometryData* object_data;
   const GEOSPreparedGeometry* prep;
-  RGeo_Globals* globals;
 
   if (klasses) {
     *klasses = Qnil;
   }
-  globals = RGEO_FACTORY_DATA_PTR(factory)->globals;
-  object = rb_funcall(globals->feature_module, globals->id_cast, 5, obj, factory, type, globals->sym_force_new, globals->sym_keep_subtype);
+  object = rb_funcall(rgeo_feature_module, rb_intern("cast"), 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
   geom = NULL;
   if (!NIL_P(object)) {
     object_data = RGEO_GEOMETRY_DATA_PTR(object);
@@ -828,13 +825,20 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
 
 char rgeo_is_geos_object(VALUE obj)
 {
-  return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? 1 : 0;
+  return RGEO_GEOMETRY_TYPEDDATA_P(obj) ? 1 : 0;
+}
+
+void rgeo_check_geos_object(VALUE obj)
+{
+  if (!rgeo_is_geos_object(obj)) {
+    rb_raise(rgeo_error, "Not a GEOS Geometry object.");
+  }
 }
 
 
 const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj)
 {
-  return (TYPE(obj) == T_DATA && RDATA(obj)->dfree == (RUBY_DATA_FUNC)destroy_geometry_func) ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom) : NULL;
+  return RGEO_GEOMETRY_TYPEDDATA_P(obj) ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom) : NULL;
 }
 
 
@@ -922,7 +926,8 @@ VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
   }
   else {
     factory = RGEO_GEOMETRY_DATA_PTR(obj1)->factory;
-    result = rb_funcall(factory, RGEO_FACTORY_DATA_PTR(factory)->globals->id_eql, 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
+    /* No need to cache the internal here (https://ips.fastruby.io/4x) */
+    result = rb_funcall(factory, rb_intern("eql?"), 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
   }
   return result;
 }
@@ -975,7 +980,7 @@ st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t h
   ID hash_method;
   RGeo_Objbase_Hash_Struct hash_struct;
 
-  hash_method = RGEO_FACTORY_DATA_PTR(factory)->globals->id_hash;
+  hash_method = rb_intern("hash");
   hash_struct.seed_hash = hash;
   hash_struct.h1 = FIX2LONG(rb_funcall(factory, hash_method, 0));
   hash_struct.h2 = FIX2LONG(rb_funcall(type_module, hash_method, 0));

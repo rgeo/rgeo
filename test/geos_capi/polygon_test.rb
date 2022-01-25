@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class GeosPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
@@ -109,7 +109,13 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     buffered_line_string =
       line_string.buffer_with_style(0.3, RGeo::Geos::CAP_SQUARE, RGeo::Geos::JOIN_MITRE, 5)
 
-    assert_equal polygon, buffered_line_string
+    b_coords = buffered_line_string.exterior_ring.coordinates
+    p_coords = polygon.exterior_ring.coordinates
+    p_coords.zip(b_coords).each do |p_coord, b_coord|
+      p_coord.zip(b_coord).each do |pt1, pt2|
+        assert_in_delta(pt1, pt2, 1e-7)
+      end
+    end
   end
 
   def test_is_valid_polygon
@@ -134,7 +140,7 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
-    assert_equal(polygon.invalid_reason, "Self-intersection[0 0 0]")
+    assert_equal("Self-intersection[0 0 0]", polygon.invalid_reason)
   end
 
   def test_invalid_reason_with_valid_polygon
@@ -142,6 +148,6 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
-    polygon.invalid_reason
+    assert_nil(polygon.invalid_reason)
   end
 end if RGeo::Geos.capi_supported?

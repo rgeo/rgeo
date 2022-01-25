@@ -11,6 +11,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
+
 #include "factory.h"
 #include "geometry.h"
 #include "point.h"
@@ -29,7 +31,7 @@ static VALUE method_line_string_geometry_type(VALUE self)
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_line_string;
+    result = rgeo_feature_line_string_module;
   }
   return result;
 }
@@ -43,7 +45,7 @@ static VALUE method_linear_ring_geometry_type(VALUE self)
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_linear_ring;
+    result = rgeo_feature_linear_ring_module;
   }
   return result;
 }
@@ -57,7 +59,7 @@ static VALUE method_line_geometry_type(VALUE self)
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   if (self_data->geom) {
-    result = RGEO_FACTORY_DATA_PTR(self_data->factory)->globals->feature_line;
+    result = rgeo_feature_line_module;
   }
   return result;
 }
@@ -291,7 +293,7 @@ static VALUE method_line_string_project_point(VALUE self, VALUE point)
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
 
   if(self_geom && point) {
-    geos_point = rgeo_convert_to_geos_geometry(factory, point, factory_data->globals->geos_point);
+    geos_point = rgeo_convert_to_geos_geometry(factory, point, rgeo_geos_point_class);
     location = GEOSProject_r(self_data->geos_context, self_geom, geos_point);
     result = DBL2NUM(location);
   }
@@ -317,7 +319,7 @@ static VALUE method_line_string_interpolate_point(VALUE self, VALUE loc_num)
 
   if(self_geom) {
     geos_point = GEOSInterpolate_r(self_data->geos_context, self_geom, location);
-    result = rgeo_wrap_geos_geometry(factory, geos_point, factory_data->globals->geos_point);
+    result = rgeo_wrap_geos_geometry(factory, geos_point, rgeo_geos_point_class);
   }
 
   return result;
@@ -385,8 +387,7 @@ static VALUE method_line_string_hash(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
   hash = rb_hash_start(0);
-  hash = rgeo_geos_objbase_hash(factory,
-    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_line_string, hash);
+  hash = rgeo_geos_objbase_hash(factory, rgeo_feature_line_string_module, hash);
   hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
@@ -401,8 +402,7 @@ static VALUE method_linear_ring_hash(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
   hash = rb_hash_start(0);
-  hash = rgeo_geos_objbase_hash(factory,
-    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_linear_ring, hash);
+  hash = rgeo_geos_objbase_hash(factory, rgeo_feature_linear_ring_module, hash);
   hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
@@ -417,8 +417,7 @@ static VALUE method_line_hash(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
   hash = rb_hash_start(0);
-  hash = rgeo_geos_objbase_hash(factory,
-    RGEO_FACTORY_DATA_PTR(factory)->globals->feature_line, hash);
+  hash = rgeo_geos_objbase_hash(factory, rgeo_feature_line_module, hash);
   hash = rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
@@ -442,7 +441,7 @@ static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char 
 
   Check_Type(array, T_ARRAY);
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  point_type = factory_data->globals->feature_point;
+  point_type = rgeo_feature_point_module;
   len = (unsigned int)RARRAY_LEN(array);
   has_z = (char)(RGEO_FACTORY_DATA_PTR(factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   dims = has_z ? 3 : 2;
@@ -518,7 +517,7 @@ static VALUE cmethod_create_line_string(VALUE module, VALUE factory, VALUE array
     factory_data = RGEO_FACTORY_DATA_PTR(factory);
     geom = GEOSGeom_createLineString_r(factory_data->geos_context, coord_seq);
     if (geom) {
-      result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_line_string);
+      result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_line_string_class);
     }
   }
   return result;
@@ -538,7 +537,7 @@ static VALUE cmethod_create_linear_ring(VALUE module, VALUE factory, VALUE array
     factory_data = RGEO_FACTORY_DATA_PTR(factory);
     geom = GEOSGeom_createLinearRing_r(factory_data->geos_context, coord_seq);
     if (geom) {
-      result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_linear_ring);
+      result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_linear_ring_class);
     }
   }
   return result;
@@ -584,7 +583,7 @@ static VALUE cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE
   result = Qnil;
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
   has_z = (char)(factory_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
-  point_type = factory_data->globals->feature_point;
+  point_type = rgeo_feature_point_module;
   context = factory_data->geos_context;
 
   start_geom = rgeo_convert_to_geos_geometry(factory, start, point_type);
@@ -597,7 +596,7 @@ static VALUE cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE
         populate_geom_into_coord_seq(context, end_geom, coord_seq, 1, has_z);
         geom = GEOSGeom_createLineString_r(context, coord_seq);
         if (geom) {
-          result = rgeo_wrap_geos_geometry(factory, geom, factory_data->globals->geos_line);
+          result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_line_class);
         }
       }
     }
@@ -658,26 +657,26 @@ static VALUE cmethod_linear_ring_copy_from(VALUE klass, VALUE factory, VALUE ori
 }
 
 
-void rgeo_init_geos_line_string(RGeo_Globals* globals)
+void rgeo_init_geos_line_string()
 {
   VALUE geos_line_string_methods;
   VALUE geos_linear_ring_methods;
   VALUE geos_line_methods;
 
   // Class methods for CAPILineStringImpl
-  rb_define_module_function(globals->geos_line_string, "create", cmethod_create_line_string, 2);
-  rb_define_module_function(globals->geos_line_string, "_copy_from", cmethod_line_string_copy_from, 2);
+  rb_define_module_function(rgeo_geos_line_string_class, "create", cmethod_create_line_string, 2);
+  rb_define_module_function(rgeo_geos_line_string_class, "_copy_from", cmethod_line_string_copy_from, 2);
 
   // Class methods for CAPILinearRingImpl
-  rb_define_module_function(globals->geos_linear_ring, "create", cmethod_create_linear_ring, 2);
-  rb_define_module_function(globals->geos_linear_ring, "_copy_from", cmethod_linear_ring_copy_from, 2);
+  rb_define_module_function(rgeo_geos_linear_ring_class, "create", cmethod_create_linear_ring, 2);
+  rb_define_module_function(rgeo_geos_linear_ring_class, "_copy_from", cmethod_linear_ring_copy_from, 2);
 
   // Class methods for CAPILineImpl
-  rb_define_module_function(globals->geos_line, "create", cmethod_create_line, 3);
-  rb_define_module_function(globals->geos_line, "_copy_from", cmethod_line_copy_from, 2);
+  rb_define_module_function(rgeo_geos_line_class, "create", cmethod_create_line, 3);
+  rb_define_module_function(rgeo_geos_line_class, "_copy_from", cmethod_line_copy_from, 2);
 
   // CAPILineStringMethods module
-  geos_line_string_methods = rb_define_module_under(globals->geos_module, "CAPILineStringMethods");
+  geos_line_string_methods = rb_define_module_under(rgeo_geos_module, "CAPILineStringMethods");
   rb_define_method(geos_line_string_methods, "rep_equals?", method_line_string_eql, 1);
   rb_define_method(geos_line_string_methods, "eql?", method_line_string_eql, 1);
   rb_define_method(geos_line_string_methods, "hash", method_line_string_hash, 0);
@@ -690,18 +689,18 @@ void rgeo_init_geos_line_string(RGeo_Globals* globals)
   rb_define_method(geos_line_string_methods, "end_point", method_line_string_end_point, 0);
   rb_define_method(geos_line_string_methods, "project_point", method_line_string_project_point, 1);
   rb_define_method(geos_line_string_methods, "interpolate_point", method_line_string_interpolate_point, 1);
-  rb_define_method(geos_line_string_methods, "is_closed?", method_line_string_is_closed, 0);
-  rb_define_method(geos_line_string_methods, "is_ring?", method_line_string_is_ring, 0);
+  rb_define_method(geos_line_string_methods, "closed?", method_line_string_is_closed, 0);
+  rb_define_method(geos_line_string_methods, "ring?", method_line_string_is_ring, 0);
   rb_define_method(geos_line_string_methods, "coordinates", method_line_string_coordinates, 0);
   rb_define_method(geos_line_string_methods, "polygonize", method_line_string_polygonize, 0);
 
   // CAPILinearRingMethods module
-  geos_linear_ring_methods = rb_define_module_under(globals->geos_module, "CAPILinearRingMethods");
+  geos_linear_ring_methods = rb_define_module_under(rgeo_geos_module, "CAPILinearRingMethods");
   rb_define_method(geos_linear_ring_methods, "geometry_type", method_linear_ring_geometry_type, 0);
   rb_define_method(geos_linear_ring_methods, "hash", method_linear_ring_hash, 0);
 
   // CAPILineMethods module
-  geos_line_methods = rb_define_module_under(globals->geos_module, "CAPILineMethods");
+  geos_line_methods = rb_define_module_under(rgeo_geos_module, "CAPILineMethods");
   rb_define_method(geos_line_methods, "geometry_type", method_line_geometry_type, 0);
   rb_define_method(geos_line_methods, "hash", method_line_hash, 0);
 }

@@ -31,7 +31,9 @@ else
     have_func("GEOSPreparedContains_r", "geos_c.h")
     have_func("GEOSPreparedDisjoint_r", "geos_c.h")
     have_func("GEOSUnaryUnion_r", "geos_c.h")
+    have_func("GEOSCoordSeq_isCCW_r", "geos_c.h")
     have_func("rb_memhash", "ruby.h")
+    have_func("rb_gc_mark_movable", "ruby.h")
   end
 
   if found_geos_
