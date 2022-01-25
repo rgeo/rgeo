@@ -25,17 +25,11 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
 
   def test_polygonize
     coordinates = [
-      [30.001043463959554, 49.011562641544636],
-      [30.00104344258436, 49.01156262042366],
-      [30.000986002945037, 49.01153728085321],
-      [30.00098241341133, 49.011536807005264],
-      [30.0009793658682, 49.01153814158362],
-      [30.000978645524963, 49.011540502810455],
-      [30.00098067434918, 49.01154250751114],
-      [30.001038084302778, 49.01156783398706],
-      [30.001038084303158, 49.011567833987236],
-      [30.001043463959558, 49.011562641544636],
-      [30.001043463959554, 49.011562641544636]
+      [0, 0],
+      [0, 1],
+      [1, 1],
+      [1, 0],
+      [0, 0],
     ]
 
     points = coordinates.map { |x, y| @factory.point(x, y) }
@@ -47,7 +41,11 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
     line_string_polygonized = line_string.polygonize
     assert_equal expected_result, line_string_polygonized
   end
-    
+
+  # This test is based on the pistgis documentation
+  # https://postgis.net/docs/ST_OffsetCurve.html
+  # Parameter
+  # 'join=round' and 'offset=15'
   def test_offset_curve
     factory = RGeo::Geos.factory(buffer_resolution: 4)
     line_coordinates = [

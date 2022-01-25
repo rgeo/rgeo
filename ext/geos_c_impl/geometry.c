@@ -777,6 +777,7 @@ static VALUE method_geometry_offset_curve(VALUE self, VALUE distance, VALUE join
   self_geom = self_data->geom;
   if (self_geom) {
     factory = self_data->factory;
+    printf("RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution: %d", rb_num2int(joinStyle));
     result = rgeo_wrap_geos_geometry(factory,
                                      GEOSOffsetCurve_r(self_data->geos_context, self_geom,
                                                        rb_num2dbl(distance),

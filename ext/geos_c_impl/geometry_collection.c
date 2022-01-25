@@ -409,7 +409,7 @@ static VALUE method_multi_line_string_coordinates(VALUE self)
 }
 
 
-static VALUE method_line_string_polygonize(VALUE self)
+static VALUE method_multi_line_string_polygonize(VALUE self)
 {
   VALUE result;
   RGeo_GeometryData* self_data;
@@ -650,7 +650,7 @@ void rgeo_init_geos_geometry_collection()
   rb_define_method(geos_multi_line_string_methods, "closed?", method_multi_line_string_is_closed, 0);
   rb_define_method(geos_multi_line_string_methods, "hash", method_multi_line_string_hash, 0);
   rb_define_method(geos_multi_line_string_methods, "coordinates", method_multi_line_string_coordinates, 0);
-  rb_define_method(geos_multi_line_string_methods, "polygonize", method_line_string_polygonize, 0);
+  rb_define_method(geos_multi_line_string_methods, "polygonize", method_multi_line_string_polygonize, 0);
 
   // Methods for MultiPolygonImpl
   geos_multi_polygon_methods = rb_define_module_under(rgeo_geos_module, "CAPIMultiPolygonMethods");
