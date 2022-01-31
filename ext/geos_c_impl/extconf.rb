@@ -14,6 +14,8 @@ if RUBY_DESCRIPTION =~ /^jruby\s/
 else
   require "mkmf"
 
+  $CFLAGS << " -DRGEO_GEOS_DEBUG" if ENV.key?("DEBUG") || ENV.key?("RGEO_GEOS_DEBUG")
+
   geosconfig = with_config("geos-config") || find_executable("geos-config")
 
   if geosconfig

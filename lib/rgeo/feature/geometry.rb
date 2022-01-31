@@ -90,7 +90,7 @@ module RGeo
       # operations on them.)
 
       def factory
-        raise Error::UnsupportedOperation, "Method Geometry#factory not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#factory not defined."
       end
 
       # === SFS 1.1 Description
@@ -105,7 +105,7 @@ module RGeo
       # point geometries, 1 for curves, and 2 for surfaces.
 
       def dimension
-        raise Error::UnsupportedOperation, "Method Geometry#dimension not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#dimension not defined."
       end
 
       # === SFS 1.1 Description
@@ -122,7 +122,7 @@ module RGeo
       # call the +type_name+ method of the returned module.
 
       def geometry_type
-        raise Error::UnsupportedOperation, "Method Geometry#geometry_type not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#geometry_type not defined."
       end
 
       # === SFS 1.1 Description
@@ -137,7 +137,7 @@ module RGeo
       # stored in either the same or some other datastore.
 
       def srid
-        raise Error::UnsupportedOperation, "Method Geometry#srid not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#srid not defined."
       end
 
       # === SFS 1.1 Description
@@ -151,7 +151,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
 
       def envelope
-        raise Error::UnsupportedOperation, "Method Geometry#envelope not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#envelope not defined."
       end
 
       # === SFS 1.1 Description
@@ -164,7 +164,7 @@ module RGeo
       # Returns an ASCII string.
 
       def as_text
-        raise Error::UnsupportedOperation, "Method Geometry#as_text not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#as_text not defined."
       end
 
       # === SFS 1.1 Description
@@ -177,7 +177,7 @@ module RGeo
       # Returns a binary string.
 
       def as_binary
-        raise Error::UnsupportedOperation, "Method Geometry#as_binary not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#as_binary not defined."
       end
 
       # === SFS 1.1 Description
@@ -192,7 +192,7 @@ module RGeo
       # specification, which stipulates an integer return value.
 
       def empty?
-        raise Error::UnsupportedOperation, "Method Geometry#empty? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#empty? not defined."
       end
 
       def is_empty?
@@ -214,7 +214,7 @@ module RGeo
       # specification, which stipulates an integer return value.
 
       def simple?
-        raise Error::UnsupportedOperation, "Method Geometry#simple? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#simple? not defined."
       end
 
       def is_simple?
@@ -234,7 +234,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
 
       def boundary
-        raise Error::UnsupportedOperation, "Method Geometry#boundary not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#boundary not defined."
       end
 
       # === SFS 1.1 Description
@@ -253,7 +253,7 @@ module RGeo
       # from different factories is undefined.
 
       def equals?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#equals? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#equals? not defined."
       end
 
       # === SFS 1.1 Description
@@ -272,7 +272,7 @@ module RGeo
       # from different factories is undefined.
 
       def disjoint?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#disjoint? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#disjoint? not defined."
       end
 
       # === SFS 1.1 Description
@@ -291,7 +291,7 @@ module RGeo
       # from different factories is undefined.
 
       def intersects?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#intersects? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#intersects? not defined."
       end
 
       # === SFS 1.1 Description
@@ -310,7 +310,7 @@ module RGeo
       # from different factories is undefined.
 
       def touches?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#touches? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#touches? not defined."
       end
 
       # === SFS 1.1 Description
@@ -329,7 +329,7 @@ module RGeo
       # from different factories is undefined.
 
       def crosses?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#crosses? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#crosses? not defined."
       end
 
       # === SFS 1.1 Description
@@ -348,7 +348,7 @@ module RGeo
       # from different factories is undefined.
 
       def within?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#within? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#within? not defined."
       end
 
       # === SFS 1.1 Description
@@ -367,7 +367,7 @@ module RGeo
       # from different factories is undefined.
 
       def contains?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#contains? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#contains? not defined."
       end
 
       # === SFS 1.1 Description
@@ -386,7 +386,7 @@ module RGeo
       # from different factories is undefined.
 
       def overlaps?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#overlaps? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#overlaps? not defined."
       end
 
       # === SFS 1.1 Description
@@ -412,7 +412,7 @@ module RGeo
       # from different factories is undefined.
 
       def relate?(another_geometry, _intersection_pattern_matrix_)
-        raise Error::UnsupportedOperation, "Method Geometry#relate not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#relate not defined."
       end
 
       # === SFS 1.1 Description
@@ -431,7 +431,7 @@ module RGeo
       # distance between objects from different factories is undefined.
 
       def distance(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#distance not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#distance not defined."
       end
 
       # === SFS 1.1 Description
@@ -446,7 +446,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
 
       def buffer(_distance_)
-        raise Error::UnsupportedOperation, "Method Geometry#buffer not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#buffer not defined."
       end
 
       # === SFS 1.1 Description
@@ -459,7 +459,7 @@ module RGeo
       # Returns an object that supports the Geometry interface.
 
       def convex_hull
-        raise Error::UnsupportedOperation, "Method Geometry#convex_hull not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#convex_hull not defined."
       end
 
       # === SFS 1.1 Description
@@ -477,7 +477,7 @@ module RGeo
       # operations on objects from different factories is undefined.
 
       def intersection(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#intersection not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#intersection not defined."
       end
 
       # === SFS 1.1 Description
@@ -495,7 +495,7 @@ module RGeo
       # operations on objects from different factories is undefined.
 
       def union(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#union not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#union not defined."
       end
 
       # === SFS 1.1 Description
@@ -513,7 +513,7 @@ module RGeo
       # operations on objects from different factories is undefined.
 
       def difference(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#difference not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#difference not defined."
       end
 
       # === SFS 1.1 Description
@@ -531,7 +531,7 @@ module RGeo
       # operations on objects from different factories is undefined.
 
       def sym_difference(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#sym_difference not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#sym_difference not defined."
       end
 
       # Returns true if this geometric object is representationally
@@ -543,7 +543,7 @@ module RGeo
       # from different factories is undefined.
 
       def rep_equals?(another_geometry)
-        raise Error::UnsupportedOperation, "Method Geometry#rep_equals? not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#rep_equals? not defined."
       end
 
       # Unions a collection of Geometry or a single Geometry
@@ -560,7 +560,7 @@ module RGeo
       # returns nil.
       #
       def unary_union
-        raise Error::UnsupportedOperation, "Method Geometry#unary_union not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#unary_union not defined."
       end
 
       # This method should behave almost the same as the rep_equals?

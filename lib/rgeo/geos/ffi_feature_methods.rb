@@ -147,6 +147,8 @@ module RGeo
       # Only available since GEOS 3.8+
       def make_valid
         @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
+      rescue ::Geos::GEOSException
+        raise Error::UnsupportedOperation
       end if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
 
       def equals?(rhs)

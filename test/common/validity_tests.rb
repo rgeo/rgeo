@@ -53,7 +53,7 @@ module RGeo
           skip "#make_valid not handled by current implementation" unless implements_make_valid?
 
           assert_equal(bowtie_polygon_expected_area, bowtie_polygon.make_valid.area)
-          assert_raises(RGeo::Error::InvalidGeometry) do
+          assert_raises(RGeo::Error::UnsupportedOperation) do
             # A self intersecting ring cannot be made valid.
             bowtie_polygon.exterior_ring.make_valid
           end
