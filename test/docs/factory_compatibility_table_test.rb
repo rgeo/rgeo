@@ -79,7 +79,7 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
     factories.each do |factory_key, factory|
       results[factory_key] = {}
       geometries_per_factory(factory).each do |geometry_key, geometry|
-        basic_methods.each do |method_sym|
+        (basic_methods + geometry_specific_methods(geometry_key)).each do |method_sym|
           description = "#{classify_sym(geometry_key)}##{method_sym}"
           results[factory_key][description] = basic_method_handled?(geometry, method_sym, description)
         end
@@ -136,6 +136,15 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
     end
 
     markdown
+  end
+
+  def geometry_specific_methods(geometry_key)
+    case geometry_key
+    when :polygon, :multi_polygon
+      [:area]
+    else
+      []
+    end
   end
 
   def geometries_per_factory(a_factory)

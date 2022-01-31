@@ -152,6 +152,25 @@ static VALUE method_factory_flags(VALUE self)
   return INT2NUM(RGEO_FACTORY_DATA_PTR(self)->flags);
 }
 
+VALUE method_factory_supports_z_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z ? Qtrue : Qfalse;
+}
+
+VALUE method_factory_supports_m_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_M ? Qtrue : Qfalse;
+}
+
+VALUE method_factory_supports_z_or_m_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M ? Qtrue : Qfalse;
+}
+
+VALUE method_factory_prepare_heuristic_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC ? Qtrue : Qfalse;
+}
 
 static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
 {
@@ -554,15 +573,24 @@ void rgeo_init_geos_factory()
   rb_gc_register_address(&marshal_wkb_generator);
 #endif
 
-  // Add C methods to the factory.
   geos_factory_class = rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);
   rb_define_alloc_func(geos_factory_class, alloc_factory);
+  // Add C constants to the factory.
+  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z));
+  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_M));
+  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z_OR_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M));
+  rb_define_const(geos_factory_class, "FLAG_PREPARE_HEURISTIC", INT2FIX(RGEO_FACTORYFLAGS_PREPARE_HEURISTIC));
+  // Add C methods to the factory.
   rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
   rb_define_method(geos_factory_class, "_parse_wkb_impl", method_factory_parse_wkb, 1);
   rb_define_method(geos_factory_class, "_srid", method_factory_srid, 0);
   rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
+  rb_define_method(geos_factory_class, "supports_z?", method_factory_supports_z_p, 0);
+  rb_define_method(geos_factory_class, "supports_m?", method_factory_supports_m_p, 0);
+  rb_define_method(geos_factory_class, "supports_z_or_m?", method_factory_supports_z_or_m_p, 0);
+  rb_define_method(geos_factory_class, "prepare_heuristic?", method_factory_prepare_heuristic_p, 0);
   rb_define_method(geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
   rb_define_method(geos_factory_class, "_proj4", method_get_proj4, 0);
   rb_define_method(geos_factory_class, "_coord_sys", method_get_coord_sys, 0);

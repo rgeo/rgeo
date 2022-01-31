@@ -116,13 +116,6 @@ module RGeo
       #   Specifies which native interface to use. Possible values are
       #   <tt>:capi</tt> and <tt>:ffi</tt>. The default is the value
       #   of the preferred_native_interface.
-      # [<tt>:uses_lenient_multi_polygon_assertions</tt>]
-      #   If set to true, assertion checking on MultiPolygon is disabled.
-      #   This may speed up creation of MultiPolygon objects, at the
-      #   expense of not doing the proper checking for OGC MultiPolygon
-      #   compliance. See RGeo::Feature::MultiPolygon for details on
-      #   the MultiPolygon assertions. Default is false. Also called
-      #   <tt>:lenient_multi_polygon_assertions</tt>.
       # [<tt>:buffer_resolution</tt>]
       #   The resolution of buffers around geometries created by this
       #   factory. This controls the number of line segments used to

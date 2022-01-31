@@ -44,7 +44,7 @@ module RGeo
       # Returns an integer.
 
       def num_geometries
-        raise Error::UnsupportedOperation, "Method GeometryCollection#num_geometries not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#num_geometries not defined."
       end
 
       # === SFS 1.1 Description
@@ -59,7 +59,7 @@ module RGeo
       # in that it does not support negative indexes.
 
       def geometry_n(n)
-        raise Error::UnsupportedOperation, "Method GeometryCollection#geometry_n not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#geometry_n not defined."
       end
 
       # Alias of the num_geometries method.
@@ -79,13 +79,13 @@ module RGeo
       # returns nil, where [-1] returns the last element of the collection.
 
       def [](n)
-        raise Error::UnsupportedOperation, "Method GeometryCollection#[] not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#[] not defined."
       end
 
       # Nodes the linework in a list of Geometries
       #
       def node
-        raise Error::UnsupportedOperation, "Method GeometryCollection#node not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#node not defined."
       end
 
       # Iterates over the geometries of this GeometryCollection.
@@ -96,7 +96,15 @@ module RGeo
       # include the Enumerable mixin.
 
       def each(&block)
-        raise Error::UnsupportedOperation, "Method GeometryCollection#each not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#each not defined."
+      end
+
+      # Gives a point that is guaranteed to be within the geometry.
+      #
+      # Extends OGC SFS 1.1 and follows PostGIS standards.
+      # @see https://postgis.net/docs/ST_PointOnSurface.html
+      def point_on_surface
+        raise Error::UnsupportedOperation, "Method #{self.class}#each not defined."
       end
     end
   end
