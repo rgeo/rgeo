@@ -42,7 +42,6 @@ module RGeo
         if @coord_sys.is_a?(String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
-        @lenient_assertions = opts[:uses_lenient_assertions] ? true : false
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
 
@@ -106,7 +105,6 @@ module RGeo
           "wkbg" => @wkb_generator.properties,
           "wktp" => @wkt_parser.properties,
           "wkbp" => @wkb_parser.properties,
-          "lena" => @lenient_assertions,
           "bufr" => @buffer_resolution
         }
         hash_["proj4"] = @proj4.marshal_dump if @proj4
@@ -138,7 +136,6 @@ module RGeo
           wkb_generator: symbolize_hash(data_["wkbg"]),
           wkt_parser: symbolize_hash(data_["wktp"]),
           wkb_parser: symbolize_hash(data_["wkbp"]),
-          uses_lenient_assertions: data_["lena"],
           buffer_resolution: data_["bufr"],
           proj4: proj4,
           coord_sys: coord_sys
@@ -164,7 +161,6 @@ module RGeo
         coder["wkb_generator"] = @wkb_generator.properties
         coder["wkt_parser"] = @wkt_parser.properties
         coder["wkb_parser"] = @wkb_parser.properties
-        coder["lenient_assertions"] = @lenient_assertions
         coder["buffer_resolution"] = @buffer_resolution
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str
@@ -201,7 +197,6 @@ module RGeo
           wkb_generator: symbolize_hash(coder["wkb_generator"]),
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
-          uses_lenient_assertions: coder["lenient_assertions"],
           buffer_resolution: coder["buffer_resolution"],
           proj4: proj4,
           coord_sys: coord_sys
@@ -293,8 +288,6 @@ module RGeo
           @support_z
         when :has_m_coordinate
           @support_m
-        when :uses_lenient_assertions
-          @lenient_assertions
         when :buffer_resolution
           @buffer_resolution
         when :is_geographic

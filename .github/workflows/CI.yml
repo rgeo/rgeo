@@ -20,7 +20,8 @@ jobs:
           - jruby
         os:
           - ubuntu
-          - windows
+          # Windows users, feel free to open a PR :)
+          # - windows
           - macos
         exclude:
           - os: windows # See issue #242, windows support would be welcome.
@@ -32,16 +33,20 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
+          bundler-cache: false
       - name: Install Geos (Linux)
         if: matrix.os == 'ubuntu'
-        run: sudo apt-get install libgeos-dev -y
+        run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get install libgeos-dev -y
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: brew install geos
       - name: Install Geos (Windows)
         if: matrix.os == 'windows'
-        run: exit 1 # FIXME
+        run: exit 1
+      - name: Bundle Install
+        run: bundle install
       - name: Test
         run: bundle exec rake
   RuboCop:

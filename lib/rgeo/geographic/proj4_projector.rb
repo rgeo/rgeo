@@ -48,8 +48,6 @@ module RGeo
               proj4: proj4,
               coord_sys: opts[:coord_sys], srid: opts[:srid],
               buffer_resolution: opts[:buffer_resolution],
-              lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
-              uses_lenient_assertions: opts[:uses_lenient_assertions],
               has_z_coordinate: opts[:has_z_coordinate],
               has_m_coordinate: opts[:has_m_coordinate],
               wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],

@@ -16,6 +16,12 @@ module RGeo
       def envelope
         BoundingBox.new(factory).add(self).to_geometry
       end
+
+      private
+
+      def graph
+        @graph ||= GeometryGraph.new(self)
+      end
     end
 
     module PointMethods # :nodoc:
@@ -50,26 +56,14 @@ module RGeo
       end
 
       def simple?
-        len = segments.length
-        return false if segments.any?(&:degenerate?)
-        return true if len == 1
-        return segments[0].s != segments[1].e if len == 2
-        segments.each_with_index do |seg, index|
-          nindex = index + 1
-          nindex = nil if nindex == len
-          return false if nindex && seg.contains_point?(segments[nindex].e)
-          pindex = index - 1
-          pindex = nil if pindex < 0
-          return false if pindex && seg.contains_point?(segments[pindex].s)
-          next unless nindex
-          oindex = nindex + 1
-          while oindex < len
-            oseg = segments[oindex]
-            return false if !(index == 0 && oindex == len - 1 && seg.s == oseg.e) && seg.intersects_segment?(oseg)
-            oindex += 1
-          end
-        end
-        true
+        # Use a SweeplineIntersector to determine if there are any self-intersections
+        # in the ring. The GeometryGraph of the ring could be used by comparing the
+        # edges to number of segments (graph.incident_edges.length == segments.length),
+        # but this adds computational and memory overhead if graph isn't already memoized.
+        # Since graph is not used elsewhere in LineStringMethods, we will just use the
+        # SweeplineIntersector for now.
+        li = SweeplineIntersector.new(segments)
+        li.proper_intersections.empty?
       end
 
       def is_simple?
@@ -79,6 +73,43 @@ module RGeo
 
       def length
         segments.inject(0.0) { |sum, seg| sum + seg.length }
+      end
+
+      def crosses?(rhs)
+        case rhs
+        when Feature::LineString
+          crosses_line_string?(rhs)
+        else
+          super
+        end
+      end
+
+      private
+
+      # Determines if a cross occurs with another linestring.
+      # Process is to get the number of proper intersections in each geom
+      # then overlay and get the number of proper intersections from that.
+      # If the overlaid number is higher than the sum of individual self-ints
+      # then there is an intersection. Finally, we need to check the intersection
+      # to see that it is not a boundary point of either segment.
+      #
+      # @param rhs [Feature::LineString]
+      #
+      # @return [Boolean]
+      def crosses_line_string?(rhs)
+        self_ints = SweeplineIntersector.new(segments).proper_intersections
+        self_ints += SweeplineIntersector.new(rhs.segments).proper_intersections
+        overlay_ints = SweeplineIntersector.new(segments + rhs.segments).proper_intersections
+
+        (overlay_ints - self_ints).each do |int|
+          s1s = int.s1.s
+          s1e = int.s1.e
+          s2s = int.s2.s
+          s2e = int.s2.e
+          return true unless [s1s, s1e, s2s, s2e].include?(int.point)
+        end
+
+        false
       end
     end
 

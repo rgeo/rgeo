@@ -76,7 +76,7 @@ This guide shows examples of different operations that can be performed with RGe
 
 ## Creating a Factory
 
-The examples below will show different methods for creating a factory with certain properties. 
+The examples below will show different methods for creating a factory with certain properties.
 
 _Note that these are not exhaustive and you should refer to the docs for a complete list of options._
 
@@ -87,7 +87,7 @@ Create a 2D Cartesian factory using a GEOS integration, if available, otherwise 
 ```ruby
 factory = RGeo::Cartesian.factory
 p factory
-#=> #<RGeo::Geos::CAPIFactory srid=0 bufres=1 flags=8> 
+#=> #<RGeo::Geos::CAPIFactory srid=0 bufres=1 flags=8>
 ```
 
 ### Ruby Cartesian Factory
@@ -97,7 +97,7 @@ Create a 2D Cartesian factory using a Ruby implementation.
 ```ruby
 factory = RGeo::Cartesian.simple_factory
 p factory
-#=> #<RGeo::Cartesian::Factory @has_z=false, @has_m=false, @proj4=nil, @coord_sys=nil, @srid=0, @lenient_assertions=false, @buffer_resolution=1>
+#=> #<RGeo::Cartesian::Factory @has_z=false, @has_m=false, @proj4=nil, @coord_sys=nil, @srid=0, @buffer_resolution=1>
 ```
 
 ### Spherical Factory
@@ -164,7 +164,7 @@ p factory
 
 simple_factory = RGeo::Cartesian.simple_factory(has_z_coordinate: true, has_m_coordinate: true)
 p simple_factory
-#=> #<RGeo::Cartesian::Factory @has_z=true, @has_m=true, @proj4=nil, @coord_sys=nil, @srid=0, @lenient_assertions=false, @buffer_resolution=1>
+#=> #<RGeo::Cartesian::Factory @has_z=true, @has_m=true, @proj4=nil, @coord_sys=nil, @srid=0, @buffer_resolution=1>
 ```
 
 ### Specify an SRID
@@ -177,19 +177,6 @@ _Note: This does not specify how data should be converted between coordinate sys
 factory = RGeo::Geos.factory(srid: 3857)
 p factory
 #=> #<RGeo::Geos::CAPIFactory:0x2ad702f454bc srid=3857 bufres=1 flags=8>
-```
-
-### Factory that Allows Invalid Geometries
-
-By default, most factories will not allow the creation of invalid geometries and will raise an `RGeo::Error::InvalidGeometry` exception. This can be set with the `:uses_lenient_assertions` parameter.
-
-```ruby
-factory = RGeo::Geographic.spherical_factory(uses_lenient_assertions: true)
-p factory
-#=> #<RGeo::Geographic::Factory:0x000055ae05d98150 @impl_prefix="Spherical", @point_class=RGeo::Geographic::SphericalPointImpl, @line_string_class=RGeo::Geographic::SphericalLineStringImpl, @linear_ring_class=RGeo::Geographic::SphericalLinearRingImpl, @line_class=RGeo::Geographic::SphericalLineImpl, @polygon_class=RGeo::Geographic::SphericalPolygonImpl, @geometry_collection_class=RGeo::Geographic::SphericalGeometryCollectionImpl, @multi_point_class=RGeo::Geographic::SphericalMultiPointImpl, @multi_line_string_class=RGeo::Geographic::SphericalMultiLineStringImpl, @multi_polygon_class=RGeo::Geographic::SphericalMultiPolygonImpl, @support_z=false, @support_m=false, @srid=4055, @proj4=nil>
-
-p factory.property(:uses_lenient_assertions)
-#=> true
 ```
 
 ## Points
@@ -257,7 +244,7 @@ pt2 = factory.point(2, 0)
 pt3 = factory.point(2, 2)
 linestring = factory.line_string([pt1, pt2, pt3])
 p linestring
-# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)"> 
+# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)">
 ```
 
 
@@ -271,7 +258,7 @@ This creates the same LineString as above.
 factory = RGeo::Cartesian.factory
 linestring2 = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring2
-# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)"> 
+# => #<RGeo::Geos::CAPILineStringImpl "LINESTRING (0.0 0.0, 2.0 0.0, 2.0 2.0)">
 # p linestring == linestring2
 # => true
 ```
@@ -296,14 +283,14 @@ linestring = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring.boundary
 #  => #<RGeo::Geos::CAPIMultiPointImpl "MULTIPOINT ((0.0 0.0), (2.0 2.0))">
 ```
-![Basic LineString](assets/linestring_boundary.png)
+![Basic LineString](https://github.com/rgeo/rgeo/raw/master/doc/assets/linestring_boundary.png)
 
 ## LinearRings
 
 A LinearRing is a LineString that is both closed and simple. Closed means that the `start_point` and `end_point` are equivalent. Simple means that there are no self-intersections. The first example is a valid LinearRing and the second is an invalid LinearRing.
 
-![Valid LinearRing](assets/linearring_valid.png)
-![Invalid LinearRing](assets/linearring_invalid.png)
+![Valid LinearRing](https://github.com/rgeo/rgeo/raw/master/doc/assets/linearring_valid.png)
+![Invalid LinearRing](https://github.com/rgeo/rgeo/raw/master/doc/assets/linearring_invalid.png)
 
 _Note: Some factories may prevent the creation of invalid LinearRings and raise an `RGeo::Error::InvalidGeometry exception._
 
@@ -317,7 +304,7 @@ pt3 = factory.point(4, 4)
 pt4 = factory.point(2, 6)
 linearring = factory.linear_ring([pt1, pt2, pt3, pt4, pt1])
 p linearring
-# => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)"> 
+# => #<RGeo::Geos::CAPILinearRingImpl "LINESTRING (2.0 2.0, 4.0 2.0, 4.0 4.0, 2.0 6.0, 2.0 2.0)">
 p linearring.closed?
 #=> true
 p linearring.simple?
@@ -364,18 +351,18 @@ A Polygon is a geometry composed of an outer ring and, optionally, multiple inte
 
 The following are all examples of valid Polygons.
 
-![Valid Polygon1](assets/polygon_valid1.png)
-![Valid Polygon2](assets/polygon_valid2.png)
-![Valid Polygon3](assets/polygon_valid3.png)
-![Valid Polygon4](assets/polygon_valid4.png)
+![Valid Polygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid1.png)
+![Valid Polygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid2.png)
+![Valid Polygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid3.png)
+![Valid Polygon4](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid4.png)
 
 _Note in the last figure that the two interior rings share point G._
 
 The following are examples of invalid Polygons.
 
-![Invalid Polygon1](assets/polygon_invalid1.png)
-![Invalid Polygon2](assets/polygon_invalid2.png)
-![Invalid Polygon3](assets/polygon_invalid3.png)
+![Invalid Polygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid1.png)
+![Invalid Polygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid2.png)
+![Invalid Polygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid3.png)
 
 ### Creating a Polygon with RGeo Features
 
@@ -554,12 +541,12 @@ A MultiLineString is closed if all of its elements are closed.
 
 The following is an example of a simple MultiLineString.
 
-![Simple MultiLineString1](assets/multilinestring_valid1.png)
+![Simple MultiLineString1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multilinestring_valid1.png)
 
 The following are examples of non-simple MultiLineStrings.
 
-![Non-Simple MultiLineString1](assets/multilinestring_invalid1.png)
-![Non-Simple MultiLineString2](assets/multilinestring_invalid2.png)
+![Non-Simple MultiLineString1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multilinestring_invalid1.png)
+![Non-Simple MultiLineString2](https://github.com/rgeo/rgeo/raw/master/doc/assets/multilinestring_invalid2.png)
 
 ### Create a MultiLineString with RGeo Features
 
@@ -602,15 +589,15 @@ A MultiPolygon is a collection of Polygons. A MultiPolygon is simple if all Poly
 
 The following are examples of simple MultiPolygons.
 
-![Simple MultiPolygon1](assets/multipolygon_valid1.png)
-![Simple MultiPolygon2](assets/multipolygon_valid2.png)
-![Simple MultiPolygon3](assets/multipolygon_valid3.png)
+![Simple MultiPolygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_valid1.png)
+![Simple MultiPolygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_valid2.png)
+![Simple MultiPolygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_valid3.png)
 
 The following are examples of non-simple MultiPolygons.
 
-![Non-simple MultiPolygon1](assets/multipolygon_invalid1.png)
-![Non-simple MultiPolygon2](assets/multipolygon_invalid2.png)
-![Non-simple MultiPolygon3](assets/multipolygon_invalid3.png)
+![Non-simple MultiPolygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_invalid1.png)
+![Non-simple MultiPolygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_invalid2.png)
+![Non-simple MultiPolygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_invalid3.png)
 
 ### Creating a MultiPolygon with RGeo Features
 
@@ -647,7 +634,7 @@ p multipolygon
 
 This creates the following MultiPolygon.
 
-![MultiPolygon Example](assets/multipolygon_example.png)
+![MultiPolygon Example](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_example.png)
 
 ### Creating a MultiPolygon with WKT
 
@@ -731,7 +718,7 @@ Get the WKT representation of a geometry.
 ```ruby
 factory = RGeo::Cartesian.factory
 p factory.point(1, 1).as_text
-# => "POINT (1.0 1.0)" 
+# => "POINT (1.0 1.0)"
 ```
 
 ### as_binary
@@ -741,7 +728,7 @@ Get the WKB representation of a geometry.
 ```ruby
 factory = RGeo::Cartesian.factory
 p factory.point(1, 1).as_binary
-# => "\x00\x00\x00\x00\x01?\xF0\x00\x00\x00\x00\x00\x00?\xF0\x00\x00\x00\x00\x00\x00" 
+# => "\x00\x00\x00\x00\x01?\xF0\x00\x00\x00\x00\x00\x00?\xF0\x00\x00\x00\x00\x00\x00"
 ```
 
 ## Predicates and Relationships
@@ -1048,7 +1035,7 @@ square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 intersection = square1.intersection(square2)
 
 p intersection
-# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((1.0 2.0, 2.0 2.0, 2.0 0.0, 1.0 0.0, 1.0 2.0))"> 
+# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((1.0 2.0, 2.0 2.0, 2.0 0.0, 1.0 0.0, 1.0 2.0))">
 ```
 
 ### Union
@@ -1079,7 +1066,7 @@ squares = factory.collection([square1, square2])
 union = squares.unary_union
 
 p union
-# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 2.0 2.0, 3.0 2.0, 3.0 0.0, 2.0 0.0, 1.0 0.0, 0.0 0.0))"> 
+# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 2.0 2.0, 3.0 2.0, 3.0 0.0, 2.0 0.0, 1.0 0.0, 0.0 0.0))">
 ```
 
 ### Difference
@@ -1094,7 +1081,7 @@ square2 = factory.parse_wkt("POLYGON ((1 0, 1 2, 3 2, 3 0, 1 0))")
 diff = square1.difference(square2)
 
 p diff
-# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 1.0 0.0, 0.0 0.0))"> 
+# => #<RGeo::Geos::CAPIPolygonImpl "POLYGON ((0.0 0.0, 0.0 2.0, 1.0 2.0, 1.0 0.0, 0.0 0.0))">
 ```
 
 ### SymDifference

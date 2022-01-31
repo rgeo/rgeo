@@ -47,7 +47,7 @@ module RGeo
       # Returns a floating-point scalar value.
 
       def x
-        raise Error::UnsupportedOperation, "Method Point#x not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#x not defined."
       end
 
       # === SFS 1.1 Description
@@ -59,7 +59,7 @@ module RGeo
       # Returns a floating-point scalar value.
 
       def y
-        raise Error::UnsupportedOperation, "Method Point#y not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#y not defined."
       end
 
       # Returns the z-coordinate for this Point as a floating-point
@@ -69,7 +69,7 @@ module RGeo
       # not support Z coordinates.
 
       def z
-        raise Error::UnsupportedOperation, "Method Point#z not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#z not defined."
       end
 
       # Returns the m-coordinate for this Point as a floating-point
@@ -79,7 +79,7 @@ module RGeo
       # not support M coordinates.
 
       def m
-        raise Error::UnsupportedOperation, "Method Point#m not defined."
+        raise Error::UnsupportedOperation, "Method #{self.class}#m not defined."
       end
     end
   end

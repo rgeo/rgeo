@@ -13,7 +13,6 @@ class SphericalMultiPolygonTest < Minitest::Test # :nodoc:
 
   def create_factories
     @factory = RGeo::Geographic.spherical_factory
-    @lenient_factory = RGeo::Geographic.spherical_factory(lenient_multi_polygon_assertions: true)
   end
 
   undef_method :test_creation_wrong_type

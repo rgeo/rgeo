@@ -53,8 +53,6 @@ module RGeo
         end
         srid ||= coord_sys.authority_code if coord_sys
         config = {
-          uses_lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions] ||
-            opts[:uses_lenient_multi_polygon_assertions],
           buffer_resolution: opts[:buffer_resolution], auto_prepare: opts[:auto_prepare],
           wkt_generator: opts[:wkt_generator], wkt_parser: opts[:wkt_parser],
           wkb_generator: opts[:wkb_generator], wkb_parser: opts[:wkb_parser],
@@ -109,7 +107,6 @@ module RGeo
           "wkbg" => @wkb_generator.properties,
           "wktp" => @wkt_parser.properties,
           "wkbp" => @wkb_parser.properties,
-          "lmpa" => @zfactory.lenient_multi_polygon_assertions?,
           "apre" => @zfactory.property(:auto_prepare) == :simple,
           "nffi" => @zfactory.is_a?(FFIFactory)
         }
@@ -142,7 +139,6 @@ module RGeo
           wkb_generator: symbolize_hash(data["wkbg"]),
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
-          uses_lenient_multi_polygon_assertions: data["lmpa"],
           auto_prepare: (data["apre"] ? :simple : :disabled),
           proj4: proj4,
           coord_sys: coord_sys
@@ -154,7 +150,6 @@ module RGeo
       def encode_with(coder) # :nodoc:
         coder["srid"] = @zfactory.srid
         coder["buffer_resolution"] = @zfactory.buffer_resolution
-        coder["lenient_multi_polygon_assertions"] = @zfactory.lenient_multi_polygon_assertions?
         coder["wkt_generator"] = @wkt_generator.properties
         coder["wkb_generator"] = @wkb_generator.properties
         coder["wkt_parser"] = @wkt_parser.properties
@@ -197,7 +192,6 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
-          uses_lenient_multi_polygon_assertions: coder["lenient_multi_polygon_assertions"],
           proj4: proj4,
           coord_sys: coord_sys
         )
@@ -214,12 +208,6 @@ module RGeo
 
       def buffer_resolution
         @zfactory.buffer_resolution
-      end
-
-      # Returns true if this factory is lenient with MultiPolygon assertions
-
-      def lenient_multi_polygon_assertions?
-        @zfactory.lenient_multi_polygon_assertions?
       end
 
       # Returns the z-only factory corresponding to this factory.
