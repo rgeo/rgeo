@@ -23,7 +23,7 @@ module GeosCapi
       skip "Needs GEOS 3.7+" unless RGeo::Geos::Analysis.ccw_supported?
       factory = RGeo::Geos.factory(native_interface: :capi)
       point = factory.point(1, 2)
-      assert_raises(RGeo::Error::GeosError) { RGeo::Geos::Analysis.ccw?(point) }
+      assert_raises(RGeo::Error::InvalidGeometry) { RGeo::Geos::Analysis.ccw?(point) }
     end
 
     def test_ccw_p_returns_true_if_ccw

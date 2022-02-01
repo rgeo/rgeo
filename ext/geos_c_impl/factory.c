@@ -9,6 +9,7 @@
 
 #include <ruby.h>
 #include <geos_c.h>
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -51,12 +52,28 @@ static void error_handler(const char* fmt, ...)
   va_start(args1, fmt);
   va_list args2;
   va_copy(args2, args1);
-  char buf[1+vsnprintf(NULL, 0, fmt, args1)];
+  int size = 1+vsnprintf(NULL, 0, fmt, args1);
   va_end(args1);
-  vsnprintf(buf, sizeof buf, fmt, args2);
+  char geos_full_error[size];
+  vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
   va_end(args2);
 
-  rb_raise(geos_error, "%s", buf);
+  // NOTE: strok is destructive, geos_full_error is not to be used afterwards.
+  char *geos_error = strtok(geos_full_error, ":");
+  char *geos_message = strtok(NULL, ":");
+  while(isspace(*geos_message)) geos_message++;
+
+  if (strcmp(geos_error, "UnsupportedOperationException") == 0) {
+    rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
+  } else if (strcmp(geos_error, "IllegalArgumentException") == 0) {
+    rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else {
+    if (geos_message) {
+      rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
+    } else {
+      rb_raise(rb_eGeosError, "%s", geos_error);
+    }
+  }
 }
 
 // Destroy function for factory data. We destroy any serialization
@@ -814,7 +831,7 @@ char rgeo_is_geos_object(VALUE obj)
 void rgeo_check_geos_object(VALUE obj)
 {
   if (!rgeo_is_geos_object(obj)) {
-    rb_raise(rgeo_error, "Not a GEOS Geometry object.");
+    rb_raise(rb_eRGeoError, "Not a GEOS Geometry object.");
   }
 }
 

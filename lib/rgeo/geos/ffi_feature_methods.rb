@@ -97,11 +97,9 @@ module RGeo
       end
 
       def boundary
-        if self.class == FFIGeometryCollectionImpl
-          nil
-        else
-          @factory.wrap_fg_geom(@fg_geom.boundary, nil)
-        end
+        @factory.wrap_fg_geom(@fg_geom.boundary, nil)
+      rescue ::Geos::GEOSException
+        raise Error::InvalidGeometry, "Operation not supported by GeometryCollection"
       end
 
       def as_text

@@ -207,7 +207,7 @@ module RGeo
 
         def test_empty_collection_boundary
           empty = @factory.collection([])
-          assert_nil(empty.boundary)
+          assert_raises(RGeo::Error::InvalidGeometry) { empty.boundary }
         end
 
         def test_each_block
