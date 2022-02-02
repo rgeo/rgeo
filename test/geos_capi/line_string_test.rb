@@ -23,54 +23,40 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
     assert_equal point, interpolated_point
   end
 
-  def test_polygonize
-    coordinates = [
-      [0, 0],
-      [0, 1],
-      [1, 1],
-      [1, 0],
-      [0, 0],
-    ]
+  def do_test_polygonize(expected_wkt, input_wkt)
+    expected = @factory.parse_wkt(expected_wkt)
+    input = @factory.parse_wkt(input_wkt)
 
-    points = coordinates.map { |x, y| @factory.point(x, y) }
-    line_string = @factory.line_string(points)
-    line_ring = @factory.line_string(points)
-    polygon = @factory.polygon(line_ring)
-    expected_result = @factory.collection([polygon])
+    input_geometry_polygonized = input.polygonize
 
-    line_string_polygonized = line_string.polygonize
-    assert_equal expected_result, line_string_polygonized
+    assert_equal expected, input_geometry_polygonized
   end
 
-  # This test is based on the pistgis documentation
-  # https://postgis.net/docs/ST_OffsetCurve.html
-  # Parameter
-  # 'join=round' and 'offset=15'
-  def test_offset_curve
-    factory = RGeo::Geos.factory(buffer_resolution: 4)
-    line_coordinates = [
-      [164.0, 16.0], [144.0, 16.0], [124.0, 16.0], [104.0, 16.0], [84.0, 16.0],
-      [64.0, 16.0], [44.0, 16.0], [24.0, 16.0], [20.0, 16.0], [18.0, 16.0],
-      [17.0, 17.0], [16.0, 18.0], [16.0, 20.0], [16.0, 40.0],
-      [16.0, 60.0], [16.0, 80.0], [16.0, 100.0], [16.0, 120.0],
-      [16.0, 140.0], [16.0, 160.0], [16.0, 180.0], [16.0, 195.0],
-    ]
+  def test_polygonize
+    input = "LINESTRING(0 0, 0 10, 10 10, 10 0, 0 0)"
+    expected = "GEOMETRYCOLLECTION(POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0)))"
 
-    expected_line_coordinates = [
-      [164.0, 1.0], [18.0, 1.0],
-      [12.25974851452365, 2.1418070123306983],
-      [7.393398282201787, 5.3933982822017885],
-      [5.393398282201787, 7.3933982822017885],
-      [2.1418070123306734, 12.259748514523698],
-      [1.0, 18.0], [1.0, 195.0],
-    ]
+    do_test_polygonize(expected, input)
+  end
 
-    points_array = line_coordinates.map { |v| factory.point(v[0], v[1]) }
-    expected_points_array = expected_line_coordinates.map { |v| factory.point(v[0], v[1]) }
+  def test_polygonize_not_ring
+    input = "LINESTRING(0 0, 0 10, 10 10, 10 0)"
+    expected = "GEOMETRYCOLLECTION EMPTY"
 
-    line_string = factory.line_string(points_array)
-    expected_line_string = factory.line_string(expected_points_array)
+    do_test_polygonize(expected, input)
+  end
 
-    assert_equal expected_line_string, line_string.offset_curve(15, RGeo::Geos::JOIN_ROUND, 5)
+  def test_polygonize_self_intersection
+    input = "LINESTRING(1 2, 4 2, 4 3, 3 3, 3 1)"
+    expected = "GEOMETRYCOLLECTION EMPTY"
+
+    do_test_polygonize(expected, input)
+  end
+
+  def test_polygonize_dangle
+    input = "LINESTRING(-10 10, 0 10, 10 10, 10 0, 0 0, 0 10)"
+    expected = "GEOMETRYCOLLECTION EMPTY"
+
+    do_test_polygonize(expected, input)
   end
 end if RGeo::Geos.capi_supported?
