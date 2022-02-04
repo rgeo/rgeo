@@ -97,11 +97,9 @@ module RGeo
       end
 
       def boundary
-        if self.class == FFIGeometryCollectionImpl
-          nil
-        else
-          @factory.wrap_fg_geom(@fg_geom.boundary, nil)
-        end
+        @factory.wrap_fg_geom(@fg_geom.boundary, nil)
+      rescue ::Geos::GEOSException
+        raise Error::InvalidGeometry, "Operation not supported by GeometryCollection"
       end
 
       def as_text
@@ -147,6 +145,8 @@ module RGeo
       # Only available since GEOS 3.8+
       def make_valid
         @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
+      rescue ::Geos::GEOSException
+        raise Error::UnsupportedOperation
       end if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
 
       def equals?(rhs)

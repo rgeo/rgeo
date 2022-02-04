@@ -9,6 +9,9 @@
 
 #include <ruby.h>
 #include <geos_c.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "globals.h"
 
@@ -26,13 +29,52 @@ RGEO_BEGIN_C
 /**** RUBY AND GEOS CALLBACKS ****/
 
 
-// NOP message handler. GEOS requires that a message handler be set
-// for every context handle.
-
-static void message_handler(const char* fmt, ...)
+// The notice handler is very rarely used by GEOS, only in
+// GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
+// We still set it to make sure we do not miss any implementation
+// change. Use `DEBUG=1 rake` to show notice.
+#ifdef RGEO_GEOS_DEBUG
+static void notice_handler(const char* fmt, ...)
 {
+  va_list args;
+  va_start(args, fmt);
+  fprintf(stderr, "GEOS Notice -- ");
+  vfprintf(stderr, fmt, args);
+  fprintf(stderr, "\n");
+  va_end(args);
 }
+#endif
 
+static void error_handler(const char* fmt, ...)
+{
+  // See https://en.cppreference.com/w/c/io/vfprintf
+  va_list args1;
+  va_start(args1, fmt);
+  va_list args2;
+  va_copy(args2, args1);
+  int size = 1+vsnprintf(NULL, 0, fmt, args1);
+  va_end(args1);
+  char geos_full_error[size];
+  vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
+  va_end(args2);
+
+  // NOTE: strok is destructive, geos_full_error is not to be used afterwards.
+  char *geos_error = strtok(geos_full_error, ":");
+  char *geos_message = strtok(NULL, ":");
+  while(isspace(*geos_message)) geos_message++;
+
+  if (strcmp(geos_error, "UnsupportedOperationException") == 0) {
+    rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
+  } else if (strcmp(geos_error, "IllegalArgumentException") == 0) {
+    rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else {
+    if (geos_message) {
+      rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
+    } else {
+      rb_raise(rb_eGeosError, "%s", geos_error);
+    }
+  }
+}
 
 // Destroy function for factory data. We destroy any serialization
 // objects that have been created for the factory, and then destroy
@@ -478,7 +520,12 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
   result = Qnil;
   data = ALLOC(RGeo_FactoryData);
   if (data) {
-    context = initGEOS_r(message_handler, message_handler);
+    context = GEOS_init_r();
+#ifdef RGEO_GEOS_DEBUG
+    GEOSContext_setNoticeHandler_r(context, notice_handler);
+#endif
+    GEOSContext_setErrorHandler_r(context, error_handler);
+
     if (context) {
       data->geos_context = context;
       data->flags = NUM2INT(flags);
@@ -859,7 +906,7 @@ char rgeo_is_geos_object(VALUE obj)
 void rgeo_check_geos_object(VALUE obj)
 {
   if (!rgeo_is_geos_object(obj)) {
-    rb_raise(rgeo_error, "Not a GEOS Geometry object.");
+    rb_raise(rb_eRGeoError, "Not a GEOS Geometry object.");
   }
 }
 
