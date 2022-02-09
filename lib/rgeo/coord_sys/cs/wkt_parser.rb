@@ -24,7 +24,7 @@ module RGeo
             return value
           end
           unless @cur_token.is_a?(TypeString)
-            raise Error::ParseError("Found token #{@cur_token} when we expected a value")
+            raise Error::ParseError, "Found token #{@cur_token} when we expected a value"
           end
           type = @cur_token
           next_token
@@ -48,7 +48,7 @@ module RGeo
           when "TOWGS84"
             bursa_wolf_params = args.find_all(Numeric)
             unless bursa_wolf_params.size == 7
-              raise Error::ParseError("Expected 7 Bursa Wolf parameters but found #{bursa_wolf_params.size}")
+              raise Error::ParseError, "Expected 7 Bursa Wolf parameters but found #{bursa_wolf_params.size}"
             end
             obj = WGS84ConversionInfo.create(*bursa_wolf_params)
           when "UNIT"
@@ -87,7 +87,7 @@ module RGeo
             unit = args.find_first(Unit)
             axes = args.find_all(AxisInfo)
             unless axes.size > 0
-              raise Error::ParseError("Expected at least one AXIS in a LOCAL_CS")
+              raise Error::ParseError, "Expected at least one AXIS in a LOCAL_CS"
             end
             obj = LocalCoordinateSystem.create(name, local_datum, unit, axes, *args.create_optionals)
           when "GEOCCS"
@@ -97,7 +97,7 @@ module RGeo
             linear_unit = args.find_first(LinearUnit)
             axes = args.find_all(AxisInfo)
             unless axes.size == 0 || axes.size == 3
-              raise Error::ParseError("GEOCCS must contain either 0 or 3 AXIS parameters")
+              raise Error::ParseError, "GEOCCS must contain either 0 or 3 AXIS parameters"
             end
             obj = GeocentricCoordinateSystem.create(name, horizontal_datum, prime_meridian, linear_unit, axes[0], axes[1], axes[2], *args.create_optionals)
           when "VERT_CS"
@@ -113,7 +113,7 @@ module RGeo
             angular_unit = args.find_first(AngularUnit)
             axes = args.find_all(AxisInfo)
             unless axes.size == 0 || axes.size == 2
-              raise Error::ParseError("GEOGCS must contain either 0 or 2 AXIS parameters")
+              raise Error::ParseError, "GEOGCS must contain either 0 or 2 AXIS parameters"
             end
             obj = GeographicCoordinateSystem.create(name, angular_unit, horizontal_datum, prime_meridian, axes[0], axes[1], *args.create_optionals)
           when "PROJCS"
@@ -125,7 +125,7 @@ module RGeo
             linear_unit = args.find_first(LinearUnit)
             axes = args.find_all(AxisInfo)
             unless axes.size == 0 || axes.size == 2
-              raise Error::ParseError("PROJCS must contain either 0 or 2 AXIS parameters")
+              raise Error::ParseError, "PROJCS must contain either 0 or 2 AXIS parameters"
             end
             obj = ProjectedCoordinateSystem.create(name, geographic_coordinate_system, projection, linear_unit, axes[0], axes[1], *args.create_optionals)
           else
