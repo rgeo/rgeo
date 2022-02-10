@@ -15,7 +15,7 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
     @factory = RGeo::Geos.factory
   end
 
-  def do_test_polygonize(expected_wkt, input_wkt)
+  def assert_polygonize_equal(expected_wkt, input_wkt)
     expected = @factory.parse_wkt(expected_wkt)
     input = @factory.parse_wkt(input_wkt)
 
@@ -28,7 +28,7 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
     input = "LINESTRING(0 0, 0 10, 10 10, 10 0, 0 0)"
     expected = "GEOMETRYCOLLECTION(POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0)))"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_two_rings
@@ -43,7 +43,7 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
       (1 1, 2 1, 2 0, 1 0)
     )"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_two_line_strings
@@ -59,28 +59,28 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
       )
     )"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_empty_geometry
     expected = "GEOMETRYCOLLECTION EMPTY"
     input = "MULTILINESTRING((0 0, 0 10, 10 10, 10 0))"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_self_intersection
     input = "MULTILINESTRING((1 2, 4 2, 4 3, 3 3, 3 1))"
     expected = "GEOMETRYCOLLECTION EMPTY"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_dangle
     input = "MULTILINESTRING((-10 10, 0 10, 10 10, 10 0, 0 0, 0 10))"
     expected = "GEOMETRYCOLLECTION EMPTY"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_cut_edges
@@ -92,7 +92,7 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
       )"
     expected = "GEOMETRYCOLLECTION EMPTY"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 
   def test_polygonize_two_squares
@@ -107,6 +107,6 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
       POLYGON ((20 10, 20 20, 30 20, 30 10, 20 10))
     )"
 
-    do_test_polygonize(expected, input)
+    assert_polygonize_equal(expected, input)
   end
 end if RGeo::Geos.capi_supported?
