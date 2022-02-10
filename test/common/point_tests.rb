@@ -341,21 +341,21 @@ module RGeo
         def test_psych_roundtrip
           point = @factory.point(11, 12)
           data = Psych.dump(point)
-          point2 = Psych.load(data)
+          point2 = Psych.unsafe_load(data)
           assert_equal(point, point2)
         end
 
         def test_psych_roundtrip_3d
           point = @zfactory.point(11, 12, 13)
           data = Psych.dump(point)
-          point2 = Psych.load(data)
+          point2 = Psych.unsafe_load(data)
           assert_equal(point, point2)
         end
 
         def test_psych_roundtrip_4d
           point = @zmfactory.point(11, 12, 13, 14)
           data = Psych.dump(point)
-          point2 = Psych.load(data)
+          point2 = Psych.unsafe_load(data)
           assert_equal(point, point2)
         end
 

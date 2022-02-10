@@ -320,7 +320,7 @@ module RGeo
           point2 = @factory.point(0, 1)
           line1 = @factory.line_string([point1, point2])
           data = Psych.dump(line1)
-          line2 = Psych.load(data)
+          line2 = Psych.unsafe_load(data)
           assert_equal(line1, line2)
         end
 
