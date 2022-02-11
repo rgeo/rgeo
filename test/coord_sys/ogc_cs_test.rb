@@ -330,4 +330,37 @@ class OgcCsTest < Minitest::Test # :nodoc:
     obj2 = Psych.load(dump)
     assert_equal(obj1, obj2)
   end
+
+  def test_parse_error_for_towgs84
+    input = 'TOWGS84["example"]'
+    error = assert_raises(RGeo::Error::ParseError) do
+      RGeo::CoordSys::CS.create_from_wkt(input)
+    end
+    assert_equal error.message, "Expected 7 Bursa Wolf parameters but found 0"
+  end
+
+  def test_parse_error_for_local_cs
+    input = 'LOCAL_CS["example"]'
+    error = assert_raises(RGeo::Error::ParseError) do
+      RGeo::CoordSys::CS.create_from_wkt(input)
+    end
+    assert_equal error.message, "Expected at least one AXIS in a LOCAL_CS"
+  end
+
+  def test_parse_error_for_geogcs
+    input = 'GEOGCS["example", AXIS["Lat", NORTH]]'
+    error = assert_raises(RGeo::Error::ParseError) do
+      RGeo::CoordSys::CS.create_from_wkt(input)
+    end
+    assert_equal error.message, "GEOGCS must contain either 0 or 2 AXIS parameters"
+  end
+
+  def test_parse_error_for_projcs
+    # Missing NORTH axis
+    input = 'PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB 1936",DATUM["OSGB_1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],TOWGS84[375.0,-111.0,431.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6277"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["DMSH",0.0174532925199433,AUTHORITY["EPSG","9108"]],AXIS["Lat",NORTH],AXIS["Long",EAST],AUTHORITY["EPSG","4277"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",49.0],PARAMETER["central_meridian",-2.0],PARAMETER["scale_factor",0.999601272],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],UNIT["metre",1.0,AUTHORITY["EPSG","9001"]],AXIS["E",EAST],AUTHORITY["EPSG","27700"]]'
+    error = assert_raises(RGeo::Error::ParseError) do
+      RGeo::CoordSys::CS.create_from_wkt(input)
+    end
+    assert_equal error.message, "PROJCS must contain either 0 or 2 AXIS parameters"
+  end
 end
