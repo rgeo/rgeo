@@ -18,7 +18,7 @@ task :clean do
   clean_files = %w[pkg tmp] +
     Dir.glob("ext/**/Makefile*") +
     Dir.glob("ext/**/*.{o,class,log,dSYM}") +
-    Dir.glob("**/*.{bundle,so,dll,rbc,jar}") +
+    Dir.glob("{ext,tmp,lib}/**/*.{bundle,so,dll,rbc,jar}")
     Dir.glob("**/.rbx")
 
   clean_files.each { |path| rm_rf path }
