@@ -3,6 +3,7 @@
 require "rake/testtask"
 require "rake/extensiontask"
 require "bundler/gem_tasks"
+require "yard"
 
 # Build tasks
 
@@ -28,6 +29,13 @@ Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
   t.test_files = FileList["test/**/*_test.rb"]
+end
+
+YARD::Rake::YardocTask.new do |t|
+  # Runs a server to appreciate doc after having it running
+  t.after = proc do
+    exec "ruby", "-run", "-e", "httpd", File.join(__dir__, "yardoc")
+  end
 end
 
 task test: :compile

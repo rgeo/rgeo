@@ -2,9 +2,9 @@
 
 Breaking Changes
 
-* Major changes to validity handling through `ImplHelper::ValidityCheck` module (see doc/Geometry-Validity.md) #275
+* Major changes to validity handling through `ImplHelper::ValidityCheck` module (see [doc/Geometry-Validity.md](doc/Geometry-Validity.md)) #275
 * Add more robust validity checks to Ruby factory implementations through `ImplHelper::ValidOp` module #271
-* Deprecate all `is_*?` methods in favor of `*?` methods (stephenandersondev)#268
+* Deprecate all `is_*?` methods in favor of `*?` methods (stephenandersondev) #268
 * Deprecate `Collection#boundary` since it is undefined in GEOS/PostGIS
 * Deprecate `uses_lenient_assertions` flag for factories
 
