@@ -1,9 +1,28 @@
 ### Current
 
+Breaking Changes
 
-* Change `ProjectedLinearRing#is_simple?` method to be uniform across geos versions #228
+* Major changes to validity handling through `ImplHelper::ValidityCheck` module (see doc/Geometry-Validity.md) #275
+* Add more robust validity checks to Ruby factory implementations through `ImplHelper::ValidOp` module #271
+* Deprecate all `is_*?` methods in favor of `*?` methods (stephenandersondev)#268
+* Deprecate `Collection#boundary` since it is undefined in GEOS/PostGIS
+* Deprecate `uses_lenient_assertions` flag for factories
+
+Minor Changes
+
 * Improve large MultiPolygon creation performance (Quiwin) #251
-* Major changes to validity handling (see doc/Geometry-Validity.md) #275
+* Change `ProjectedLinearRing#is_simple?` method to be uniform across geos versions #228
+* Add `LinearRing#intersects?`, `LinearRing#crosses?` to Ruby factory implementations
+* Improve error reporting from CAPI factory
+* Add `supports_*?` methods to the CAPI factory to get information about config flags
+* Implement `make_valid` in CAPI/FFI factories
+* Add `segment_intersection` method to cartesian library
+* Add `SweeplineIntersector` class to cartesian library
+* Add `PlanarGraph` class to cartesian library
+* Change `validate_geometry` methods to `prepare_geometry` methods that handle only quality of life functionality instead of validation as well
+
+Bug Fixes
+
 * Fix CAPI equality (`==`) comparison on macos by using `GEOSEqualsExact_r` #270
 
 ### 2.3.1 / 2021-11-30
