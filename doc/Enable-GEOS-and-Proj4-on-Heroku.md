@@ -73,7 +73,7 @@ The example provided at [heroku-buildpack-vendorbinaries' readme](https://github
 
 Ref: http://www.diowa.com/blog/heroku/2017/08/01/compile-libraries-on-heroku-with-vesuvius
 
-## Option 3: Use [heroku-geo-buildpack]
+## Option 3: Use [heroku-geo-buildpack]
 
 This is the simplest method, but it also installs `gdal`, which is not used by RGeo. Just install the buildpack as usual and purge your repo if RGeo was already installed.
 

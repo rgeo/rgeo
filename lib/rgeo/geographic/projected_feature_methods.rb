@@ -190,7 +190,7 @@ module RGeo
     end
 
     module ProjectedLinearRingMethods # :nodoc:
-      def is_simple?
+      def simple?
         projection.valid?
       end
     end

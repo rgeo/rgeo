@@ -32,7 +32,6 @@ module RGeo
       def valid?
         invalid_reason.nil?
       end
-      alias is_valid? valid?
 
       # Reason for invalidity or nil if valid
       #
