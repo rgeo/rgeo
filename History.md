@@ -19,7 +19,7 @@
 * Add `segment_intersection` method to cartesian library
 * Add `SweeplineIntersector` class to cartesian library
 * Add `PlanarGraph` class to cartesian library
-* Change `validate_geometry` methods to `prepare_geometry` methods that handle only quality of life functionality instead of validation as well
+* Change `validate_geometry` methods to `init_geometry` methods that handle only quality of life functionality instead of validation as well
 
 **Bug Fixes**
 

@@ -18,7 +18,7 @@ module RGeo
         if extra.size > 0
           raise ArgumentError, "Too many arguments for point initializer"
         end
-        prepare_geometry
+        init_geometry
       end
 
       def x
