@@ -58,21 +58,19 @@ static void error_handler(const char* fmt, ...)
   vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
   va_end(args2);
 
-  // NOTE: strok is destructive, geos_full_error is not to be used afterwards.
+  // NOTE: strtok is destructive, geos_full_error is not to be used afterwards.
   char *geos_error = strtok(geos_full_error, ":");
   char *geos_message = strtok(NULL, ":");
   while(isspace(*geos_message)) geos_message++;
 
-  if (strcmp(geos_error, "UnsupportedOperationException") == 0) {
+  if (streq(geos_error, "UnsupportedOperationException")) {
     rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
-  } else if (strcmp(geos_error, "IllegalArgumentException") == 0) {
+  } else if (streq(geos_error, "IllegalArgumentException")) {
     rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else if (geos_message) {
+    rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
   } else {
-    if (geos_message) {
-      rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
-    } else {
-      rb_raise(rb_eGeosError, "%s", geos_error);
-    }
+    rb_raise(rb_eGeosError, "%s", geos_error);
   }
 }
 

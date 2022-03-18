@@ -181,7 +181,7 @@ module RGeo
 
       # Checks that the given point has valid coordinates.
       #
-      # @param poly [RGeo::Feature::Point]
+      # @param pt [RGeo::Feature::Point]
       #
       # @return [String] invalid_reason
       def check_invalid_coordinate(pt)

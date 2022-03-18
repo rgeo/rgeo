@@ -134,7 +134,7 @@ module RGeo
       # Insert multiple edges into the graph. Like +add_edge+, this automatically
       # calculates intersections and adds new vertices.
       #
-      # @param edge [Array<RGeo::Cartesian::Segment>]
+      # @param new_edges [Array<RGeo::Cartesian::Segment>]
       def add_edges(new_edges)
         @edges.concat(new_edges)
         new_edges.each do |edge|

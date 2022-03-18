@@ -47,3 +47,6 @@
 #define RGEO_BEGIN_C
 #define RGEO_END_C
 #endif
+
+// https://ozlabs.org/~rusty/index.cgi/tech/2008-04-01.html
+#define streq(a, b) (!strcmp((a),(b)))
