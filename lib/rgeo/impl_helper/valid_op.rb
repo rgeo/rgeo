@@ -4,23 +4,6 @@ require "set"
 
 module RGeo
   module ImplHelper
-    module TopologyErrors
-      # Standard error messages from
-      # https://github.com/locationtech/jts/blob/0afbfb1956ec24912a8b4dc4edff0f1200442857/modules/core/src/main/java/org/locationtech/jts/operation/valid/TopologyValidationError.java#L98-L110
-      TOPOLOGY_VALIDATION_ERR = "Topology Validation Error"
-      REPEATED_POINT = "Repeated Point"
-      HOLE_OUTSIDE_SHELL = "Hole lies outside shell"
-      NESTED_HOLES = "Holes are nested"
-      DISCONNECTED_INTERIOR = "Interior is disconnected"
-      SELF_INTERSECTION = "Self-intersection"
-      RING_SELF_INTERSECTION = "Ring Self-intersection"
-      NESTED_SHELLS = "Nested shells"
-      DUPLICATE_RINGS = "Duplicate Rings"
-      TOO_FEW_POINTS = "Too few distinct points in geometry component"
-      INVALID_COORDINATE = "Invalid Coordinate"
-      UNCLOSED_RING = "Ring is not closed"
-    end
-
     # Mixin based off of the JTS/GEOS IsValidOp class.
     # Implements #valid? and #invalid_reason on Features that include this.
     #
@@ -90,7 +73,7 @@ module RGeo
         end
 
         # check more than 1 point
-        return TopologyErrors::TOO_FEW_POINTS unless num_points > 1
+        return Error::TOO_FEW_POINTS unless num_points > 1
 
         nil
       end
@@ -103,10 +86,10 @@ module RGeo
         end
 
         # check closed
-        return TopologyErrors::UNCLOSED_RING unless closed?
+        return Error::UNCLOSED_RING unless closed?
 
         # check more than 3 points
-        return TopologyErrors::TOO_FEW_POINTS unless num_points > 3
+        return Error::TOO_FEW_POINTS unless num_points > 3
 
         # check no self-intersections
         validity_helper.check_no_self_intersections(self)
@@ -126,12 +109,12 @@ module RGeo
         end
 
         # check closed
-        return TopologyErrors::UNCLOSED_RING unless exterior_ring.closed?
-        return TopologyErrors::UNCLOSED_RING unless interior_rings.all?(&:closed?)
+        return Error::UNCLOSED_RING unless exterior_ring.closed?
+        return Error::UNCLOSED_RING unless interior_rings.all?(&:closed?)
 
         # check more than 3 points in each ring
-        return TopologyErrors::TOO_FEW_POINTS unless exterior_ring.num_points > 3
-        return TopologyErrors::TOO_FEW_POINTS unless interior_rings.all? { |r| r.num_points > 3 }
+        return Error::TOO_FEW_POINTS unless exterior_ring.num_points > 3
+        return Error::TOO_FEW_POINTS unless interior_rings.all? { |r| r.num_points > 3 }
 
         # can skip this check if there's no holes
         unless interior_rings.empty?
@@ -206,7 +189,7 @@ module RGeo
         y = pt.y
         return if x.finite? && y.finite? && x.real? && y.real?
 
-        TopologyErrors::INVALID_COORDINATE
+        Error::INVALID_COORDINATE
       end
 
       # Checks that the edges in the polygon form a consistent area.
@@ -223,17 +206,17 @@ module RGeo
         # Holes don't cross exterior check.
         exterior = poly.exterior_ring
         poly.interior_rings.each do |ring|
-          return TopologyErrors::SELF_INTERSECTION if ring.crosses?(exterior)
+          return Error::SELF_INTERSECTION if ring.crosses?(exterior)
         end
 
         # check interiors do not cross
         poly.interior_rings.combination(2).each do |ring1, ring2|
-          return TopologyErrors::SELF_INTERSECTION if ring1.crosses?(ring2)
+          return Error::SELF_INTERSECTION if ring1.crosses?(ring2)
         end
 
         # Duplicate rings check
         rings = [exterior] + poly.interior_rings
-        return TopologyErrors::SELF_INTERSECTION if rings.uniq.size != rings.size
+        return Error::SELF_INTERSECTION if rings.uniq.size != rings.size
 
         nil
       end
@@ -245,7 +228,7 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_no_self_intersections(ring)
-        return TopologyErrors::SELF_INTERSECTION unless ring.simple?
+        return Error::SELF_INTERSECTION unless ring.simple?
       end
 
       # Check that rings do not self intersect in a polygon
@@ -283,7 +266,7 @@ module RGeo
         poly.interior_rings.each do |interior|
           test_pt = interior.start_point
           unless shell.contains?(test_pt) || poly.exterior_ring.contains?(test_pt)
-            return TopologyErrors::HOLE_OUTSIDE_SHELL
+            return Error::HOLE_OUTSIDE_SHELL
           end
         end
 
@@ -304,7 +287,7 @@ module RGeo
         holes = holes.map { |v| v.factory.polygon(v) }
         holes.combination(2).each do |p1, p2|
           if p1.contains?(p2.exterior_ring.start_point) || p2.contains?(p1.exterior_ring.start_point)
-            return TopologyErrors::NESTED_HOLES
+            return Error::NESTED_HOLES
           end
         end
 
@@ -331,7 +314,7 @@ module RGeo
             touches.add(pt) if poly.exterior_ring.contains?(pt)
           end
 
-          return TopologyErrors::DISCONNECTED_INTERIOR if touches.size > 1
+          return Error::DISCONNECTED_INTERIOR if touches.size > 1
         end
 
         nil
@@ -345,7 +328,7 @@ module RGeo
       def check_consistent_area_mp(mp)
         mp.geometries.combination(2) do |p1, p2|
           if p1.exterior_ring.crosses?(p2.exterior_ring)
-            return TopologyErrors::SELF_INTERSECTION
+            return Error::SELF_INTERSECTION
           end
         end
         nil
@@ -361,7 +344,7 @@ module RGeo
         # that one point lies in the other.
         mp.geometries.combination(2) do |p1, p2|
           if p1.contains?(p2.exterior_ring.start_point) || p2.contains?(p1.exterior_ring.start_point)
-            return TopologyErrors::NESTED_SHELLS
+            return Error::NESTED_SHELLS
           end
         end
         nil
