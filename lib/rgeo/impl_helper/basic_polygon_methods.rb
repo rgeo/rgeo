@@ -22,7 +22,7 @@ module RGeo
           end
           elem
         end
-        prepare_geometry
+        init_geometry
       end
 
       def exterior_ring

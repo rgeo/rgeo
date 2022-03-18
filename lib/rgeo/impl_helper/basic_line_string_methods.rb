@@ -22,7 +22,7 @@ module RGeo
         if @points.size == 1
           raise Error::InvalidGeometry, "LineString Cannot Have 1 Point"
         end
-        prepare_geometry
+        init_geometry
       end
 
       def num_points
@@ -161,7 +161,7 @@ module RGeo
         cstop = Feature.cast(stop, factory, Feature::Point)
         raise Error::InvalidGeometry, "Could not cast end: #{stop}" unless cstop
         @points = [cstart, cstop]
-        prepare_geometry
+        init_geometry
       end
 
       def geometry_type
@@ -191,7 +191,8 @@ module RGeo
 
       private
 
-      def prepare_geometry
+      # Close ring if necessary.
+      def init_geometry
         super
         if @points.size > 0
           @points << @points.first if @points.first != @points.last

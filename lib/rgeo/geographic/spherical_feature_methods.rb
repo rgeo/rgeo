@@ -79,7 +79,8 @@ module RGeo
 
       private
 
-      def prepare_geometry
+      # Ensure coordinates fall within a valid range.
+      def init_geometry
         if @x < -180.0 || @x > 180.0
           @x = @x % 360.0
           @x -= 360.0 if @x > 180.0

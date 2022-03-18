@@ -167,7 +167,8 @@ module RGeo
 
       private
 
-      def prepare_geometry
+      # Ensure coordinates fall within a valid range.
+      def init_geometry
         @y = 85.0511287 if @y > 85.0511287
         @y = -85.0511287 if @y < -85.0511287
         super
@@ -183,7 +184,8 @@ module RGeo
     module ProjectedLineStringMethods # :nodoc:
       private
 
-      def prepare_geometry
+      # Ensure coordinates fall within a valid range.
+      def init_geometry
         @points = @points.map(&:canonical_point)
         super
       end
@@ -208,7 +210,8 @@ module RGeo
     module ProjectedPolygonMethods # :nodoc:
       private
 
-      def prepare_geometry
+      # Ensure projection is available.
+      def init_geometry
         super
         unless projection
           raise Error::InvalidGeometry, "Polygon failed assertions"
@@ -219,7 +222,8 @@ module RGeo
     module ProjectedMultiPolygonMethods # :nodoc:
       private
 
-      def prepare_geometry
+      # Ensure projection is available.
+      def init_geometry
         super
         unless projection
           raise Error::InvalidGeometry, "MultiPolygon failed assertions"
