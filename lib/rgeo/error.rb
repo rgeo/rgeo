@@ -30,7 +30,6 @@ module RGeo
     class ParseError < RGeoError
     end
 
-
     # Standard error messages from
     # https://github.com/locationtech/jts/blob/0afbfb1956ec24912a8b4dc4edff0f1200442857/modules/core/src/main/java/org/locationtech/jts/operation/valid/TopologyValidationError.java#L98-L110
     TOPOLOGY_VALIDATION_ERR = "Topology Validation Error"
