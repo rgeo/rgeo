@@ -7,7 +7,7 @@ factory = RGeo::Cartesian.preferred_factory
 bowtie_polygon = factory.polygon(factory.linear_ring([factory.point(0, 4),factory.point(4, 4),factory.point(2, 6),factory.point(0, 0),factory.point(0, 4)]))
 polygon =
 	case bowtie_polygon.invalid_reason
-	when RGeo::ImplHelper::TopologyErrors::SELF_INTERSECTION
+	when RGeo::Error::SELF_INTERSECTION
 		bowtie_polygon.make_valid
 	when nil # already valid
 		bowtie_polygon
@@ -59,21 +59,21 @@ bowtie_polygon.area # raises: Self-intersection (RGeo::Error::InvalidGeometry)
 Errors are mapped to GEOS errors, and are all available in the codebase:
 
 ```ruby
-> constants = RGeo::ImplHelper::TopologyErrors.constants
+> constants = RGeo::Error.constants.grep(/\A[A-Z_]+\z/).sort
 > size = constants.map(&:size).max
-> puts constants.map { "#{_1.to_s.rjust(size)}: #{RGeo::ImplHelper::TopologyErrors.const_get(_1).inspect}" }
-         REPEATED_POINT: "Repeated Point"
-     HOLE_OUTSIDE_SHELL: "Hole lies outside shell"
-           NESTED_HOLES: "Holes are nested"
+> puts constants.map { "#{_1.to_s.rjust(size)}: #{RGeo::Error.const_get(_1).inspect}" }
   DISCONNECTED_INTERIOR: "Interior is disconnected"
-      SELF_INTERSECTION: "Self-intersection"
- RING_SELF_INTERSECTION: "Ring Self-intersection"
-          NESTED_SHELLS: "Nested shells"
         DUPLICATE_RINGS: "Duplicate Rings"
-         TOO_FEW_POINTS: "Too few distinct points in geometry component"
+     HOLE_OUTSIDE_SHELL: "Hole lies outside shell"
      INVALID_COORDINATE: "Invalid Coordinate"
-          UNCLOSED_RING: "Ring is not closed"
+           NESTED_HOLES: "Holes are nested"
+          NESTED_SHELLS: "Nested shells"
+         REPEATED_POINT: "Repeated Point"
+ RING_SELF_INTERSECTION: "Ring Self-intersection"
+      SELF_INTERSECTION: "Self-intersection"
+         TOO_FEW_POINTS: "Too few distinct points in geometry component"
 TOPOLOGY_VALIDATION_ERR: "Topology Validation Error"
+          UNCLOSED_RING: "Ring is not closed"
 ```
 
 Now if you really want to compute the area of our bowtie polygon, you have some
@@ -89,4 +89,3 @@ You can also play around with validity thanks to the `RGeo::ImplHelper::Validity
 helper.
 
 Note that not all methods on a geometry are checked for validity first. Tests like `simple?`, `closed?`, and `empty?` are not, and data accessors like `num_points`, `factory`, `[]`, and `interior_rings` are not checked either. Only geometric analysis and predicate methods like `length`, `buffer`, `intersection`, `crosses?` and `contains?` are checked.
-  

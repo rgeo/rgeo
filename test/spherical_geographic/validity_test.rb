@@ -61,7 +61,7 @@ class SphericalValidityTest < Minitest::Test # :nodoc:
     inscribed_diamond = @factory.linear_ring([pt5, pt6, pt7, pt8])
 
     poly = @factory.polygon(sq, [inscribed_diamond])
-    assert_includes(poly.invalid_reason, RGeo::ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR)
+    assert_includes(poly.invalid_reason, RGeo::Error::DISCONNECTED_INTERIOR)
     assert_equal(false, poly.valid?)
   end
 end

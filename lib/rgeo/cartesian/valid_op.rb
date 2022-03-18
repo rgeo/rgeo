@@ -34,11 +34,11 @@ module RGeo
         # if additional nodes were added, there must be an intersection
         # through a boundary.
         if poly.send(:graph).incident_edges.size > num_points
-          return ImplHelper::TopologyErrors::SELF_INTERSECTION
+          return Error::SELF_INTERSECTION
         end
 
         rings = [poly.exterior_ring] + poly.interior_rings
-        return ImplHelper::TopologyErrors::SELF_INTERSECTION if rings.uniq.size != rings.size
+        return Error::SELF_INTERSECTION if rings.uniq.size != rings.size
 
         nil
       end
@@ -62,7 +62,7 @@ module RGeo
           visited << hedge.origin.coordinates
         end
 
-        return ImplHelper::TopologyErrors::DISCONNECTED_INTERIOR unless exterior_coords.subset?(visited)
+        return Error::DISCONNECTED_INTERIOR unless exterior_coords.subset?(visited)
 
         nil
       end
