@@ -37,12 +37,35 @@ typedef struct {
   int buffer_resolution;
 } RGeo_FactoryData;
 
-#define RGEO_FACTORYFLAGS_LENIENT_MULTIPOLYGON 1
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z 2
-#define RGEO_FACTORYFLAGS_SUPPORTS_M 4
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M 6
-#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC 8
+/*
+  Flags that are used to pass options when creating a factory.
+  They are available in ruby under RGeo::Geos::CAPIFactory::FLAG_name
+  where name is the name below without the RGEO_FACTORYFLAGS_ prefix.
+ */
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z                      0b0010
+#define RGEO_FACTORYFLAGS_SUPPORTS_M                      0b0100
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M                 (RGEO_FACTORYFLAGS_SUPPORTS_Z | RGEO_FACTORYFLAGS_SUPPORTS_M)
+#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC               0b1000
 
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.supports_z? -> true or false
+ */
+VALUE method_factory_supports_z_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.supports_m? -> true or false
+ */
+VALUE method_factory_supports_m_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.supports_z_or_m? -> true or false
+ */
+VALUE method_factory_supports_z_or_m_p(VALUE self);
+
+/* call-seq:
+ *   RGeo::Geos::CAPIFactory.prepare_heuristic? -> true or false
+ */
+VALUE method_factory_prepare_heuristic_p(VALUE self);
 
 /*
   Wrapped structure for Geometry objects.
@@ -163,15 +186,6 @@ void rgeo_check_geos_object(VALUE obj);
   if the given ruby object is not a GEOS geometry wrapper.
 */
 const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj);
-
-/*
-  Compares the coordinate sequences for two given GEOS geometries.
-  The two given geometries MUST be of types backed directly by
-  coordinate sequences-- i.e. points or line strings.
-  Returns Qtrue if the two coordinate sequences are equal, Qfalse
-  if they are inequal, or Qnil if an error occurs.
-*/
-VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z);
 
 /*
   Compares the ruby classes and geometry factories of the two given ruby

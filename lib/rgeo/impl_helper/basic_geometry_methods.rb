@@ -52,7 +52,7 @@ module RGeo
         @factory = obj.factory
       end
 
-      def validate_geometry
+      def init_geometry
       end
     end
   end

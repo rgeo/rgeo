@@ -8,6 +8,7 @@
 
 require "ostruct"
 require_relative "../test_helper"
+require_relative "../common/validity_tests"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
   def setup
@@ -133,7 +134,8 @@ class GeosMiscTest < Minitest::Test # :nodoc:
     expected = @factory.parse_wkt("GEOMETRYCOLLECTION (POINT (60 140),   LINESTRING (40 90, 40 140), LINESTRING (160 90, 160 140), POLYGON ((0 0, 0 90, 40 90, 90 90, 90 0, 0 0)), POLYGON ((120 0, 120 90, 160 90, 210 90, 210 0, 120 0)))")
     geom = collection.unary_union
     if RGeo::Geos::CAPIFactory._supports_unary_union?
-      assert(geom.eql?(expected))
+      # Note that here `.eql?` is not guaranteed on all GEOS implementation.
+      assert(geom == expected)
     else
       assert_equal(nil, geom)
     end

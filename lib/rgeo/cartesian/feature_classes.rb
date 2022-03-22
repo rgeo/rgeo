@@ -9,76 +9,96 @@
 module RGeo
   module Cartesian
     class PointImpl # :nodoc:
-      include RGeo::Feature::Point
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicPointMethods
-      include RGeo::Cartesian::GeometryMethods
-      include RGeo::Cartesian::PointMethods
+      include Feature::Point
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicPointMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
+      include PointMethods
     end
 
     class LineStringImpl # :nodoc:
-      include RGeo::Feature::LineString
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicLineStringMethods
-      include RGeo::Cartesian::GeometryMethods
-      include RGeo::Cartesian::LineStringMethods
+      include Feature::LineString
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicLineStringMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
+      include LineStringMethods
     end
 
     class LineImpl # :nodoc:
-      include RGeo::Feature::Line
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicLineStringMethods
-      include RGeo::ImplHelper::BasicLineMethods
-      include RGeo::Cartesian::GeometryMethods
-      include RGeo::Cartesian::LineStringMethods
+      include Feature::Line
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicLineStringMethods
+      include ImplHelper::BasicLineMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
+      include LineStringMethods
     end
 
     class LinearRingImpl # :nodoc:
-      include RGeo::Feature::LinearRing
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicLineStringMethods
-      include RGeo::ImplHelper::BasicLinearRingMethods
-      include RGeo::Cartesian::GeometryMethods
-      include RGeo::Cartesian::LineStringMethods
+      include Feature::LinearRing
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicLineStringMethods
+      include ImplHelper::BasicLinearRingMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
+      include LineStringMethods
     end
 
     class PolygonImpl # :nodoc:
-      include RGeo::Feature::Polygon
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicPolygonMethods
-      include RGeo::Cartesian::GeometryMethods
+      include Feature::Polygon
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicPolygonMethods
+      include ValidOp
+      include GeometryMethods
     end
 
     class GeometryCollectionImpl # :nodoc:
-      include RGeo::Feature::GeometryCollection
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicGeometryCollectionMethods
-      include RGeo::Cartesian::GeometryMethods
+      include Feature::GeometryCollection
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicGeometryCollectionMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
     end
 
     class MultiPointImpl # :nodoc:
-      include RGeo::Feature::MultiPoint
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicGeometryCollectionMethods
-      include RGeo::ImplHelper::BasicMultiPointMethods
-      include RGeo::Cartesian::GeometryMethods
+      include Feature::MultiPoint
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicGeometryCollectionMethods
+      include ImplHelper::BasicMultiPointMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
     end
 
     class MultiLineStringImpl # :nodoc:
-      include RGeo::Feature::MultiLineString
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicGeometryCollectionMethods
-      include RGeo::ImplHelper::BasicMultiLineStringMethods
-      include RGeo::Cartesian::GeometryMethods
-      include RGeo::Cartesian::MultiLineStringMethods
+      include Feature::MultiLineString
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicGeometryCollectionMethods
+      include ImplHelper::BasicMultiLineStringMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
+      include MultiLineStringMethods
     end
 
     class MultiPolygonImpl # :nodoc:
-      include RGeo::Feature::MultiPolygon
-      include RGeo::ImplHelper::BasicGeometryMethods
-      include RGeo::ImplHelper::BasicGeometryCollectionMethods
-      include RGeo::ImplHelper::BasicMultiPolygonMethods
-      include RGeo::Cartesian::GeometryMethods
+      include Feature::MultiPolygon
+      include ImplHelper::ValidityCheck
+      include ImplHelper::BasicGeometryMethods
+      include ImplHelper::BasicGeometryCollectionMethods
+      include ImplHelper::BasicMultiPolygonMethods
+      include ImplHelper::ValidOp
+      include GeometryMethods
     end
+
+    ImplHelper::ValidityCheck.override_classes
   end
 end

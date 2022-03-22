@@ -36,4 +36,20 @@ class GeosFFIPolygonTest < Minitest::Test # :nodoc:
     poly3 = poly1.union(poly2)
     assert_equal(poly1, poly3)
   end
+
+  def test_is_valid_polygon
+    polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
+    outer_ring = @factory.linear_ring(points_arr)
+    polygon = @factory.polygon(outer_ring)
+
+    assert_equal(polygon.valid?, true)
+
+    polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
+    outer_ring = @factory.linear_ring(points_arr)
+    polygon = @factory.polygon(outer_ring)
+
+    assert_equal(polygon.valid?, false)
+  end
 end if RGeo::Geos.ffi_supported?

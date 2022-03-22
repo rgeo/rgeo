@@ -37,9 +37,9 @@ VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
   ring_data = RGEO_GEOMETRY_DATA_PTR(ring);
 
   coord_seq = GEOSGeom_getCoordSeq_r(ring_data->geos_context, ring_data->geom);
-  if (!coord_seq) { rb_raise(geos_error, "Could not retrieve CoordSeq from given ring."); }
+  if (!coord_seq) { rb_raise(rb_eGeosError, "Could not retrieve CoordSeq from given ring."); }
   if (!GEOSCoordSeq_isCCW_r(ring_data->geos_context, coord_seq, &is_ccw)) {
-    rb_raise(geos_error, "Could not determine if the CoordSeq is CCW.");
+    rb_raise(rb_eGeosError, "Could not determine if the CoordSeq is CCW.");
   }
 
   return is_ccw ? Qtrue : Qfalse;
@@ -49,8 +49,8 @@ VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
 
 /**
  * call-seq:
- *   RGeo::Geos::Analysis.ccw_supported? -> true or false 
- * 
+ *   RGeo::Geos::Analysis.ccw_supported? -> true or false
+ *
  * Checks if the RGEO_GEOS_SUPPORTS_ISCCW macro is defined, returns +true+
  * if it is, +false+ otherwise
  */

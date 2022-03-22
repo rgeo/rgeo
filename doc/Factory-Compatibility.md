@@ -159,8 +159,8 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |        `LineString#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `LineString#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                `LineString#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|           `LineString#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|           `LineString#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LineString#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ✅     |
+|           `LineString#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ✅     |
 |              `LineString#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `LineString#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `LineString#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -175,8 +175,8 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |         `LineString#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |            `LineString#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                   `LineString#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LineString#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LineString#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LineString#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|              `LineString#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                 `LineString#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LineString#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LineString#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -251,8 +251,8 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |        `LinearRing#disjoint?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `LinearRing#disjoint?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                `LinearRing#intersects?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|           `LinearRing#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|           `LinearRing#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|           `LinearRing#intersects?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ✅     |
+|           `LinearRing#intersects?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ✅     |
 |              `LinearRing#intersects?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `LinearRing#intersects?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |           `LinearRing#intersects?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -267,8 +267,8 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |         `LinearRing#touches?(MultiLineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |            `LinearRing#touches?(MultiPolygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                   `LinearRing#crosses?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LinearRing#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|              `LinearRing#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|              `LinearRing#crosses?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
+|              `LinearRing#crosses?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                 `LinearRing#crosses?(Polygon)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LinearRing#crosses?(Collection)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |              `LinearRing#crosses?(MultiPoint)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -318,6 +318,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                             `Polygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                          `Polygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                               `Polygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                                 `Polygon#area` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                       `Polygon#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `Polygon#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `Polygon#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -407,7 +408,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                         `Collection#as_binary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                            `Collection#empty?` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                           `Collection#simple?` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
-|                          `Collection#boundary` |  ✅   |    ❌    |  ✅  |   ❌    |     ❌     |     ✅      |     ❌     |
+|                          `Collection#boundary` |  ❌   |    ❌    |  ❌  |   ❌    |     ❌     |     ❌      |     ❌     |
 |                       `Collection#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                            `Collection#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                    `Collection#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
@@ -686,6 +687,7 @@ _Note: This list is not exhaustive of all the methods defined by each factory. T
 |                        `MultiPolygon#boundary` |  ✅   |    ✅    |  ✅  |   ✅    |     ✅     |     ✅      |     ✅     |
 |                     `MultiPolygon#convex_hull` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                          `MultiPolygon#buffer` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
+|                            `MultiPolygon#area` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |                  `MultiPolygon#equals?(Point)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |             `MultiPolygon#equals?(LineString)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |
 |             `MultiPolygon#equals?(LinearRing)` |  ✅   |    ✅    |  ✅  |   ✅    |     ❌     |     ✅      |     ❌     |

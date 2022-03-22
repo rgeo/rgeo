@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+# rubocop:disable all
+
+$LOAD_PATH.prepend File.join __dir__, "..", "lib"
+
+require "rgeo"
+
+$factory = $f = RGeo::Cartesian.factory
+
+## Add helper methods to your convenience here:
+
+def nums2points(*points)
+  if points.first.is_a?(Numeric)
+    points.each_slice(2)
+  else
+    points
+  end.map { $f.point _1, _2 }
+end
+
+# usage: polygon 1, 1,  2, 2,  3, 3,  1, 1
+def polygon(*points)
+  $f.polygon $f.linear_ring nums2points(*points)
+end
+
+$bermuda = polygon -64.73, 32.31,  -80.19, 25.76,   -66.09, 18.43,   -64.73, 32.31
+
+IRB.start

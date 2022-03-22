@@ -16,6 +16,7 @@
 #include "geometry.h"
 #include "line_string.h"
 #include "polygon.h"
+#include "geometry.h"
 #include "geometry_collection.h"
 
 #include "coordinates.h"
@@ -43,9 +44,6 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
   VALUE cast_type;
   GEOSGeometry* geom;
   GEOSGeometry* collection;
-  char problem;
-  GEOSGeometry* igeom;
-  GEOSGeometry* jgeom;
 
   result = Qnil;
   Check_Type(array, T_ARRAY);
@@ -90,32 +88,6 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
     }
     else {
       collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
-      // Due to a limitation of GEOS, the MultiPolygon assertions are not checked.
-      // We do that manually here.
-      if (collection && type == GEOS_MULTIPOLYGON && (factory_data->flags & 1) == 0) {
-        problem = 0;
-        for (i=1; i<len; ++i) {
-          for (j=0; j<i; ++j) {
-            igeom = geoms[i];
-            jgeom = geoms[j];
-            problem = GEOSRelatePattern_r(geos_context, igeom, jgeom, "2********");
-            if (problem) {
-              break;
-            }
-            problem = GEOSRelatePattern_r(geos_context, igeom, jgeom, "****1****");
-            if (problem) {
-              break;
-            }
-          }
-          if (problem) {
-            break;
-          }
-        }
-        if (problem) {
-          GEOSGeom_destroy_r(geos_context, collection);
-          collection = NULL;
-        }
-      }
       if (collection) {
         result = rgeo_wrap_geos_geometry(factory, collection, module);
         RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
@@ -143,7 +115,7 @@ static VALUE method_geometry_collection_eql(VALUE self, VALUE rhs)
   result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
     self_data = RGEO_GEOMETRY_DATA_PTR(self);
-    result = rgeo_geos_geometry_collections_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom, RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
+    result = rgeo_geos_geometries_strict_eql(self_data->geos_context, self_data->geom, RGEO_GEOMETRY_DATA_PTR(rhs)->geom);
   }
   return result;
 }
@@ -633,80 +605,6 @@ void rgeo_init_geos_geometry_collection()
 
 
 /**** OTHER PUBLIC FUNCTIONS ****/
-
-
-VALUE rgeo_geos_geometry_collections_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z)
-{
-  VALUE result;
-  int len1;
-  int len2;
-  int i;
-  const GEOSGeometry* sub_geom1;
-  const GEOSGeometry* sub_geom2;
-  int type1;
-  int type2;
-
-  result = Qnil;
-  if (geom1 && geom2) {
-    len1 = GEOSGetNumGeometries_r(context, geom1);
-    len2 = GEOSGetNumGeometries_r(context, geom2);
-    if (len1 >= 0 && len2 >= 0) {
-      if (len1 == len2) {
-        result = Qtrue;
-        for (i=0; i<len1; ++i) {
-          sub_geom1 = GEOSGetGeometryN_r(context, geom1, i);
-          sub_geom2 = GEOSGetGeometryN_r(context, geom2, i);
-          if (sub_geom1 && sub_geom2) {
-            type1 = GEOSGeomTypeId_r(context, sub_geom1);
-            type2 = GEOSGeomTypeId_r(context, sub_geom2);
-            if (type1 >= 0 && type2 >= 0) {
-              if (type1 == type2) {
-                switch (type1) {
-                case GEOS_POINT:
-                case GEOS_LINESTRING:
-                case GEOS_LINEARRING:
-                  result = rgeo_geos_coordseqs_eql(context, sub_geom1, sub_geom2, check_z);
-                  break;
-                case GEOS_POLYGON:
-                  result = rgeo_geos_polygons_eql(context, sub_geom1, sub_geom2, check_z);
-                  break;
-                case GEOS_GEOMETRYCOLLECTION:
-                case GEOS_MULTIPOINT:
-                case GEOS_MULTILINESTRING:
-                case GEOS_MULTIPOLYGON:
-                  result = rgeo_geos_geometry_collections_eql(context, sub_geom1, sub_geom2, check_z);
-                  break;
-                default:
-                  result = Qnil;
-                  break;
-                }
-                if (!RTEST(result)) {
-                  break;
-                }
-              }
-              else {
-                result = Qfalse;
-                break;
-              }
-            }
-            else {
-              result = Qnil;
-              break;
-            }
-          }
-          else {
-            result = Qnil;
-            break;
-          }
-        }
-      }
-      else {
-        result = Qfalse;
-      }
-    }
-  }
-  return result;
-}
 
 
 st_index_t rgeo_geos_geometry_collection_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash)

@@ -8,16 +8,18 @@
 
 module RGeo
   module Geographic
-    class ProjectedPointImpl # :nodoc:
+    class ProjectedPointImpl
       include Feature::Point
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPointMethods
       include ProjectedGeometryMethods
       include ProjectedPointMethods
     end
 
-    class ProjectedLineStringImpl  # :nodoc:
+    class ProjectedLineStringImpl
       include Feature::LineString
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ProjectedGeometryMethods
@@ -25,18 +27,21 @@ module RGeo
       include ProjectedLineStringMethods
     end
 
-    class ProjectedLinearRingImpl  # :nodoc:
+    class ProjectedLinearRingImpl
       include Feature::LinearRing
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::BasicLinearRingMethods
       include ProjectedGeometryMethods
       include ProjectedNCurveMethods
       include ProjectedLineStringMethods
+      include ProjectedLinearRingMethods
     end
 
-    class ProjectedLineImpl # :nodoc:
+    class ProjectedLineImpl
       include Feature::Line
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicLineStringMethods
       include ImplHelper::BasicLineMethods
@@ -45,8 +50,9 @@ module RGeo
       include ProjectedLineStringMethods
     end
 
-    class ProjectedPolygonImpl # :nodoc:
+    class ProjectedPolygonImpl
       include Feature::Polygon
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicPolygonMethods
       include ProjectedGeometryMethods
@@ -54,23 +60,26 @@ module RGeo
       include ProjectedPolygonMethods
     end
 
-    class ProjectedGeometryCollectionImpl # :nodoc:
+    class ProjectedGeometryCollectionImpl
       include Feature::GeometryCollection
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ProjectedGeometryMethods
     end
 
-    class ProjectedMultiPointImpl # :nodoc:
+    class ProjectedMultiPointImpl
       include Feature::MultiPoint
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPointMethods
       include ProjectedGeometryMethods
     end
 
-    class ProjectedMultiLineStringImpl # :nodoc:
+    class ProjectedMultiLineStringImpl
       include Feature::MultiLineString
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiLineStringMethods
@@ -78,8 +87,9 @@ module RGeo
       include ProjectedNCurveMethods
     end
 
-    class ProjectedMultiPolygonImpl # :nodoc:
+    class ProjectedMultiPolygonImpl
       include Feature::MultiPolygon
+      include ImplHelper::ValidityCheck
       include ImplHelper::BasicGeometryMethods
       include ImplHelper::BasicGeometryCollectionMethods
       include ImplHelper::BasicMultiPolygonMethods
@@ -87,5 +97,7 @@ module RGeo
       include ProjectedNSurfaceMethods
       include ProjectedMultiPolygonMethods
     end
+
+    ImplHelper::ValidityCheck.override_classes
   end
 end

@@ -17,8 +17,6 @@ module RGeo
                                                           proj4: SimpleMercatorProjector._proj4_3857,
                                                           coord_sys: SimpleMercatorProjector._coordsys_3857,
                                                           buffer_resolution: opts[:buffer_resolution],
-                                                          lenient_multi_polygon_assertions: opts[:lenient_multi_polygon_assertions],
-                                                          uses_lenient_assertions: opts[:uses_lenient_assertions],
                                                           has_z_coordinate: opts[:has_z_coordinate],
                                                           has_m_coordinate: opts[:has_m_coordinate])
       end

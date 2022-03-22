@@ -6,6 +6,9 @@ Saving geocoded points, importing shapefiles, creating/saving polygons, importin
 ## [DigitalGlobe](http://www.digitalglobe.com/)
 Uses activerecord-postgis-adapter, rgeo and rgeo-geojson on a project at DigitalGlobe where I need to comb through a [large image archive](http://blog.digitalglobe.com/industry/digitalglobe-moves-to-the-cloud-with-aws-snowmobile/).
 
+## [Klaxit](https://klaxit.com)
+Uses rgeo and rgeo-geojson to handle complex territorial conditions on pricing workflows.
+
 ## [Neighborland](https://neighborland.com)
 Saving geocoded points, saving polygons, encoding/decoding/validating GeoJSON, querying nearby points, building polygons for queries.
 

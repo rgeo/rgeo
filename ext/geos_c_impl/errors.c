@@ -14,18 +14,20 @@
 
 RGEO_BEGIN_C
 
-// Any error relative to RGeo.
-VALUE rgeo_error;
-// RGeo error specific to the GEOS implementation.
-VALUE geos_error;
+VALUE rb_eRGeoError;
+VALUE rb_eRGeoInvalidGeometry;
+VALUE rb_eRGeoUnsupportedOperation;
+VALUE rb_eGeosError;
 
 
 void rgeo_init_geos_errors() {
   VALUE error_module;
 
   error_module = rb_define_module_under(rgeo_module, "Error");
-  rgeo_error = rb_define_class_under(error_module, "RGeoError", rb_eRuntimeError);
-  geos_error = rb_define_class_under(error_module, "GeosError", rgeo_error);
+  rb_eRGeoError = rb_define_class_under(error_module, "RGeoError", rb_eRuntimeError);
+  rb_eRGeoInvalidGeometry = rb_define_class_under(error_module, "InvalidGeometry", rb_eRGeoError);
+  rb_eRGeoUnsupportedOperation = rb_define_class_under(error_module, "UnsupportedOperation", rb_eRGeoError);
+  rb_eGeosError = rb_define_class_under(error_module, "GeosError", rb_eRGeoError);
 }
 
 RGEO_END_C

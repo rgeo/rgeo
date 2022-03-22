@@ -13,6 +13,7 @@
 
 #include "globals.h"
 
+#include "errors.h"
 #include "factory.h"
 #include "geometry.h"
 
@@ -863,24 +864,21 @@ static VALUE method_geometry_union(VALUE self, VALUE rhs)
 
 static VALUE method_geometry_unary_union(VALUE self)
 {
-  VALUE result;
+#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
 
-  result = Qnil;
-
-#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
     GEOSContextHandle_t self_context = self_data->geos_context;
-    result = rgeo_wrap_geos_geometry(self_data->factory,
+    return rgeo_wrap_geos_geometry(self_data->factory,
       GEOSUnaryUnion_r(self_context, self_geom),
       Qnil);
   }
 #endif
 
-  return result;
+  return Qnil;
 }
 
 
@@ -1044,16 +1042,37 @@ static VALUE method_geometry_invalid_reason(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    str = GEOSisValidReason_r(self_data->geos_context, self_geom);
-    // Per documentation, a valid geometry should give an empty string.
-    // However it seems not to be the case. Hence the comparison against
-    // the string that is really given: `"Valid Geometry"`.
-    // See https://github.com/libgeos/geos/issues/431.
-    if (str) result = (str[0] == '\0' || !strcmp(str, "Valid Geometry")) ? Qnil : rb_str_new2(str);
-    else result = rb_str_new2("Exception");
-    GEOSFree_r(self_data->geos_context, str);
+    // We use NULL there to tell GEOS that we don't care about the position.
+    switch(GEOSisValidDetail_r(self_data->geos_context, self_geom, 0, &str, NULL)) {
+      case 0: // invalid
+        result = rb_utf8_str_new_cstr(str);
+      case 1: // valid
+        break;
+      case 2: // exception
+      default:
+        result = rb_utf8_str_new_cstr("Exception");
+        break;
+    };
+    if (str) GEOSFree_r(self_data->geos_context, str);
   }
   return result;
+}
+
+static VALUE method_geometry_make_valid(VALUE self)
+{
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* valid_geom;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (!self_geom) return Qnil;
+
+  // According to GEOS implementation, MakeValid always returns.
+  valid_geom = GEOSMakeValid_r(self_data->geos_context, self_geom);
+  if (!valid_geom) {
+    rb_raise(rb_eRGeoInvalidGeometry, "%"PRIsVALUE, method_geometry_invalid_reason(self));
+  }
+  return rgeo_wrap_geos_geometry(self_data->factory, valid_geom, Qnil);
 }
 
 static VALUE method_geometry_point_on_surface(VALUE self)
@@ -1071,6 +1090,18 @@ static VALUE method_geometry_point_on_surface(VALUE self)
   return result;
 }
 
+VALUE rgeo_geos_geometries_strict_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2)
+{
+  switch (GEOSEqualsExact_r(context, geom1, geom2, 0.0)) {
+  case 0:
+    return Qfalse;
+  case 1:
+    return Qtrue;
+  case 2:
+  default:
+    rb_raise(rb_eGeosError, "Cannot test equality.");
+  }
+}
 
 /**** INITIALIZATION FUNCTION ****/
 
@@ -1126,6 +1157,7 @@ void rgeo_init_geos_geometry()
   rb_define_method(geos_geometry_methods, "valid?", method_geometry_is_valid, 0);
   rb_define_method(geos_geometry_methods, "invalid_reason", method_geometry_invalid_reason, 0);
   rb_define_method(geos_geometry_methods, "point_on_surface", method_geometry_point_on_surface, 0);
+  rb_define_method(geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
 }
 
 

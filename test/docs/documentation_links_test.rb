@@ -21,11 +21,11 @@ class DocumentationLinksTest < MiniTest::Test # :nodoc:
 
     assert(
       (by_files - in_readme).size == 0,
-      "Missing reference to documentation files (#{(by_files - in_readme).to_a.join(', ')})"
+      "Missing reference to documentation files in README.md (#{(by_files - in_readme).to_a.join(', ')})"
     )
     assert(
       (in_readme - by_files).size == 0,
-      "Deprecated reference to documentation files (#{(in_readme - by_files).to_a.join(', ')})"
+      "Deprecated reference to documentation files in README.md (#{(in_readme - by_files).to_a.join(', ')})"
     )
   end
 end

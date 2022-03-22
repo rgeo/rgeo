@@ -9,6 +9,9 @@
 
 #include <ruby.h>
 #include <geos_c.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "globals.h"
 
@@ -26,13 +29,50 @@ RGEO_BEGIN_C
 /**** RUBY AND GEOS CALLBACKS ****/
 
 
-// NOP message handler. GEOS requires that a message handler be set
-// for every context handle.
-
-static void message_handler(const char* fmt, ...)
+// The notice handler is very rarely used by GEOS, only in
+// GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
+// We still set it to make sure we do not miss any implementation
+// change. Use `DEBUG=1 rake` to show notice.
+#ifdef RGEO_GEOS_DEBUG
+static void notice_handler(const char* fmt, ...)
 {
+  va_list args;
+  va_start(args, fmt);
+  fprintf(stderr, "GEOS Notice -- ");
+  vfprintf(stderr, fmt, args);
+  fprintf(stderr, "\n");
+  va_end(args);
 }
+#endif
 
+static void error_handler(const char* fmt, ...)
+{
+  // See https://en.cppreference.com/w/c/io/vfprintf
+  va_list args1;
+  va_start(args1, fmt);
+  va_list args2;
+  va_copy(args2, args1);
+  int size = 1+vsnprintf(NULL, 0, fmt, args1);
+  va_end(args1);
+  char geos_full_error[size];
+  vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
+  va_end(args2);
+
+  // NOTE: strtok is destructive, geos_full_error is not to be used afterwards.
+  char *geos_error = strtok(geos_full_error, ":");
+  char *geos_message = strtok(NULL, ":");
+  while(isspace(*geos_message)) geos_message++;
+
+  if (streq(geos_error, "UnsupportedOperationException")) {
+    rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
+  } else if (streq(geos_error, "IllegalArgumentException")) {
+    rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else if (geos_message) {
+    rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
+  } else {
+    rb_raise(rb_eGeosError, "%s", geos_error);
+  }
+}
 
 // Destroy function for factory data. We destroy any serialization
 // objects that have been created for the factory, and then destroy
@@ -227,6 +267,25 @@ static VALUE method_factory_flags(VALUE self)
   return INT2NUM(RGEO_FACTORY_DATA_PTR(self)->flags);
 }
 
+VALUE method_factory_supports_z_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z ? Qtrue : Qfalse;
+}
+
+VALUE method_factory_supports_m_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_M ? Qtrue : Qfalse;
+}
+
+VALUE method_factory_supports_z_or_m_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M ? Qtrue : Qfalse;
+}
+
+VALUE method_factory_prepare_heuristic_p(VALUE self)
+{
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC ? Qtrue : Qfalse;
+}
 
 static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
 {
@@ -459,7 +518,12 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
   result = Qnil;
   data = ALLOC(RGeo_FactoryData);
   if (data) {
-    context = initGEOS_r(message_handler, message_handler);
+    context = GEOS_init_r();
+#ifdef RGEO_GEOS_DEBUG
+    GEOSContext_setNoticeHandler_r(context, notice_handler);
+#endif
+    GEOSContext_setErrorHandler_r(context, error_handler);
+
     if (context) {
       data->geos_context = context;
       data->flags = NUM2INT(flags);
@@ -629,15 +693,24 @@ void rgeo_init_geos_factory()
   rb_gc_register_address(&marshal_wkb_generator);
 #endif
 
-  // Add C methods to the factory.
   geos_factory_class = rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);
   rb_define_alloc_func(geos_factory_class, alloc_factory);
+  // Add C constants to the factory.
+  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z));
+  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_M));
+  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z_OR_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M));
+  rb_define_const(geos_factory_class, "FLAG_PREPARE_HEURISTIC", INT2FIX(RGEO_FACTORYFLAGS_PREPARE_HEURISTIC));
+  // Add C methods to the factory.
   rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
   rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
   rb_define_method(geos_factory_class, "_parse_wkb_impl", method_factory_parse_wkb, 1);
   rb_define_method(geos_factory_class, "_srid", method_factory_srid, 0);
   rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
+  rb_define_method(geos_factory_class, "supports_z?", method_factory_supports_z_p, 0);
+  rb_define_method(geos_factory_class, "supports_m?", method_factory_supports_m_p, 0);
+  rb_define_method(geos_factory_class, "supports_z_or_m?", method_factory_supports_z_or_m_p, 0);
+  rb_define_method(geos_factory_class, "prepare_heuristic?", method_factory_prepare_heuristic_p, 0);
   rb_define_method(geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
   rb_define_method(geos_factory_class, "_proj4", method_get_proj4, 0);
   rb_define_method(geos_factory_class, "_coord_sys", method_get_coord_sys, 0);
@@ -831,7 +904,7 @@ char rgeo_is_geos_object(VALUE obj)
 void rgeo_check_geos_object(VALUE obj)
 {
   if (!rgeo_is_geos_object(obj)) {
-    rb_raise(rgeo_error, "Not a GEOS Geometry object.");
+    rb_raise(rb_eRGeoError, "Not a GEOS Geometry object.");
   }
 }
 

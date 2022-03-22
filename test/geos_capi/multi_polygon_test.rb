@@ -13,7 +13,6 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
 
   def create_factories
     @factory = RGeo::Geos.factory
-    @lenient_factory = RGeo::Geos.factory(lenient_multi_polygon_assertions: true)
   end
 
   # Centroid of an empty should return an empty collection rather than crash
