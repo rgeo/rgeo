@@ -24,6 +24,7 @@
 **Bug Fixes**
 
 * Fix CAPI equality (`==`) comparison on macos by using `GEOSEqualsExact_r` #270
+* Only require geos/ffi_* if FFI supported #297
 
 ### 2.4.0 / 2022-01-19
 
