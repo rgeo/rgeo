@@ -33,9 +33,6 @@ module RGeo
       require_relative "geos/capi_feature_classes"
       require_relative "geos/capi_factory"
     end
-    require_relative "geos/ffi_feature_methods"
-    require_relative "geos/ffi_feature_classes"
-    require_relative "geos/ffi_factory"
     require_relative "geos/zm_feature_methods"
     require_relative "geos/zm_feature_classes"
     require_relative "geos/zm_factory"
@@ -54,6 +51,12 @@ module RGeo
     rescue StandardError => ex
       FFI_SUPPORTED = false
       FFI_SUPPORT_EXCEPTION = ex
+    end
+
+    if FFI_SUPPORTED
+      require_relative "geos/ffi_feature_methods"
+      require_relative "geos/ffi_feature_classes"
+      require_relative "geos/ffi_factory"
     end
 
     # Default preferred native interface
