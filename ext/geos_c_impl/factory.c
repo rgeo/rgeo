@@ -110,7 +110,7 @@ static void destroy_factory_func(void* data)
     GEOSWKBWriter_destroy_r(context, factory_data->marshal_wkb_writer);
   }
   finishGEOS_r(context);
-  free(factory_data);
+  FREE(factory_data);
 }
 
 
@@ -132,7 +132,7 @@ static void destroy_geometry_func(void* data)
   {
     GEOSPreparedGeom_destroy_r(geometry_data->geos_context, prep);
   }
-  free(geometry_data);
+  FREE(geometry_data);
 }
 
 
@@ -546,7 +546,7 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       result = TypedData_Wrap_Struct(klass, &rgeo_factory_type, data);
     }
     else {
-      free(data);
+      FREE(data);
     }
   }
   return result;

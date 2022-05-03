@@ -97,7 +97,7 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
       // are not doing that ourselves. If that turns out not to be the
       // case, this will be a memory leak.
     }
-    free(geoms);
+    FREE(geoms);
   }
 
   return result;

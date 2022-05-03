@@ -261,14 +261,14 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
       if (len == actual_len) {
         polygon = GEOSGeom_createPolygon_r(context, exterior_geom, interior_geoms, actual_len);
         if (polygon) {
-          free(interior_geoms);
+          FREE(interior_geoms);
           return rgeo_wrap_geos_geometry(factory, polygon, rgeo_geos_polygon_class);
         }
       }
       for (i=0; i<actual_len; ++i) {
         GEOSGeom_destroy_r(context, interior_geoms[i]);
       }
-      free(interior_geoms);
+      FREE(interior_geoms);
     }
     GEOSGeom_destroy_r(context, exterior_geom);
   }
