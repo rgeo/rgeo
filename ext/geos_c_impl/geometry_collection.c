@@ -10,16 +10,16 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "globals.h"
 
-#include "coordinates.h"
-#include "errors.h"
 #include "factory.h"
 #include "geometry.h"
-#include "geometry_collection.h"
-#include "globals.h"
 #include "line_string.h"
 #include "polygon.h"
+#include "geometry.h"
+#include "geometry_collection.h"
 
+#include "coordinates.h"
 
 RGEO_BEGIN_C
 
@@ -44,19 +44,17 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
   VALUE cast_type;
   GEOSGeometry* geom;
   GEOSGeometry* collection;
-  int state = 0;
 
   result = Qnil;
   Check_Type(array, T_ARRAY);
   len = (unsigned int)RARRAY_LEN(array);
   geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
-  if (!geoms) { rb_raise(rb_eRGeoError, "not enough memory available"); }
-
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  geos_context = factory_data->geos_context;
-  klasses = Qnil;
-  cast_type = Qnil;
-  switch (type) {
+  if (geoms) {
+    factory_data = RGEO_FACTORY_DATA_PTR(factory);
+    geos_context = factory_data->geos_context;
+    klasses = Qnil;
+    cast_type = Qnil;
+    switch (type) {
     case GEOS_MULTIPOINT:
       cast_type = rgeo_feature_point_module;
       break;
@@ -66,46 +64,45 @@ static VALUE create_geometry_collection(VALUE module, int type, VALUE factory, V
     case GEOS_MULTIPOLYGON:
       cast_type = rgeo_feature_polygon_module;
       break;
-  }
-  for (i=0; i<len; ++i) {
-    geom = rgeo_convert_to_detached_geos_geometry(rb_ary_entry(array, i), factory, cast_type, &klass, &state);
-    if (state || !geom) {
-      break;
     }
-    geoms[i] = geom;
-    if (!NIL_P(klass) && NIL_P(klasses)) {
-      klasses = rb_ary_new2(len);
-      for (j=0; j<i; ++j) {
-        rb_ary_push(klasses, Qnil);
+    for (i=0; i<len; ++i) {
+      geom = rgeo_convert_to_detached_geos_geometry(rb_ary_entry(array, i), factory, cast_type, &klass);
+      if (!geom) {
+        break;
+      }
+      geoms[i] = geom;
+      if (!NIL_P(klass) && NIL_P(klasses)) {
+        klasses = rb_ary_new2(len);
+        for (j=0; j<i; ++j) {
+          rb_ary_push(klasses, Qnil);
+        }
+      }
+      if (!NIL_P(klasses)) {
+        rb_ary_push(klasses, klass);
       }
     }
-    if (!NIL_P(klasses)) {
-      rb_ary_push(klasses, klass);
+    if (i != len) {
+      for (j=0; j<i; ++j) {
+        GEOSGeom_destroy_r(geos_context, geoms[j]);
+      }
     }
-  }
-  if (i != len) {
-    for (j=0; j<i; ++j) {
-      GEOSGeom_destroy_r(geos_context, geoms[j]);
+    else {
+      collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
+      if (collection) {
+        result = rgeo_wrap_geos_geometry(factory, collection, module);
+        RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
+      }
+      // NOTE: We are assuming that GEOS will do its own cleanup of the
+      // element geometries if it fails to create the collection, so we
+      // are not doing that ourselves. If that turns out not to be the
+      // case, this will be a memory leak.
     }
-  }
-  else {
-    collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
-    if (collection) {
-      result = rgeo_wrap_geos_geometry(factory, collection, module);
-      RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
-    }
-    // NOTE: We are assuming that GEOS will do its own cleanup of the
-    // element geometries if it fails to create the collection, so we
-    // are not doing that ourselves. If that turns out not to be the
-    // case, this will be a memory leak.
-  }
-  FREE(geoms);
-  if (state) {
-    rb_exc_raise(rb_errinfo()); // raise $!
+    FREE(geoms);
   }
 
   return result;
 }
+
 
 /**** RUBY METHOD DEFINITIONS ****/
 
