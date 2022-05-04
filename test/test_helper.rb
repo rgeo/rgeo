@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Ensure that we cleanup every object before comparing with valgrind.
+at_exit { GC.start } if ENV["LD_PRELOAD"]&.include? "valgrind"
+
 require "minitest/autorun"
 require_relative "../lib/rgeo"
 require "psych"

@@ -241,37 +241,44 @@ static VALUE cmethod_create(VALUE module, VALUE factory, VALUE exterior, VALUE i
   unsigned int i;
   GEOSGeometry* interior_geom;
   GEOSGeometry* polygon;
+  int state = 0;
 
   Check_Type(interior_array, T_ARRAY);
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
   linear_ring_type = rgeo_feature_linear_ring_module;
-  exterior_geom = rgeo_convert_to_detached_geos_geometry(exterior, factory, linear_ring_type, NULL);
-  if (exterior_geom) {
-    context = factory_data->geos_context;
-    len = (unsigned int)RARRAY_LEN(interior_array);
-    interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
-    if (interior_geoms) {
-      actual_len = 0;
-      for (i=0; i<len; ++i) {
-        interior_geom = rgeo_convert_to_detached_geos_geometry(rb_ary_entry(interior_array, i), factory, linear_ring_type, NULL);
-        if (interior_geom) {
-          interior_geoms[actual_len++] = interior_geom;
-        }
+  exterior_geom = rgeo_convert_to_detached_geos_geometry(exterior, factory, linear_ring_type, NULL, &state);
+  if (state) { rb_exc_raise(rb_errinfo()); }
+  if (!exterior_geom) { return Qnil; }
+
+  context = factory_data->geos_context;
+  len = (unsigned int)RARRAY_LEN(interior_array);
+  interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
+  if (interior_geoms) {
+    actual_len = 0;
+    for (i=0; i<len; ++i) {
+      interior_geom = rgeo_convert_to_detached_geos_geometry(rb_ary_entry(interior_array, i), factory, linear_ring_type, NULL, &state);
+      if (interior_geom) {
+        interior_geoms[actual_len++] = interior_geom;
       }
-      if (len == actual_len) {
-        polygon = GEOSGeom_createPolygon_r(context, exterior_geom, interior_geoms, actual_len);
-        if (polygon) {
-          FREE(interior_geoms);
-          return rgeo_wrap_geos_geometry(factory, polygon, rgeo_geos_polygon_class);
-        }
+      if (state) {
+        break;
       }
-      for (i=0; i<actual_len; ++i) {
-        GEOSGeom_destroy_r(context, interior_geoms[i]);
-      }
-      FREE(interior_geoms);
     }
-    GEOSGeom_destroy_r(context, exterior_geom);
+    if (len == actual_len) {
+      polygon = GEOSGeom_createPolygon_r(context, exterior_geom, interior_geoms, actual_len);
+      if (polygon) {
+        FREE(interior_geoms);
+        // NOTE: we can return safely here, state cannot be other than 0.
+        return rgeo_wrap_geos_geometry(factory, polygon, rgeo_geos_polygon_class);
+      }
+    }
+    for (i=0; i<actual_len; ++i) {
+      GEOSGeom_destroy_r(context, interior_geoms[i]);
+    }
+    FREE(interior_geoms);
   }
+  GEOSGeom_destroy_r(context, exterior_geom);
+  if (state) { rb_exc_raise(rb_errinfo()); }
   return Qnil;
 }
 

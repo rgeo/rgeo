@@ -9,8 +9,8 @@
 #include <ruby.h>
 #include <geos_c.h>
 
+#include "ruby_more.h"
 #include "globals.h"
-
 #include "errors.h"
 
 #include "factory.h"

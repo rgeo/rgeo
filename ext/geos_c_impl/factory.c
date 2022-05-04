@@ -13,15 +13,15 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "globals.h"
-
-#include "factory.h"
-#include "geometry.h"
-#include "point.h"
-#include "line_string.h"
-#include "polygon.h"
-#include "geometry_collection.h"
 #include "errors.h"
+#include "factory.h"
+#include "globals.h"
+#include "geometry.h"
+#include "geometry_collection.h"
+#include "line_string.h"
+#include "point.h"
+#include "polygon.h"
+#include "ruby_more.h"
 
 RGEO_BEGIN_C
 
@@ -860,38 +860,39 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   return RGEO_GEOMETRY_DATA_PTR(object)->geom;
 }
 
-
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses)
+GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses, int *state)
 {
   VALUE object;
   GEOSGeometry* geom;
   RGeo_GeometryData* object_data;
   const GEOSPreparedGeometry* prep;
-
   if (klasses) {
     *klasses = Qnil;
   }
-  object = rb_funcall(rgeo_feature_module, rb_intern("cast"), 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
-  geom = NULL;
-  if (!NIL_P(object)) {
-    object_data = RGEO_GEOMETRY_DATA_PTR(object);
-    geom = object_data->geom;
-    if (klasses) {
-      *klasses = object_data->klasses;
-      if (NIL_P(*klasses)) {
-        *klasses = CLASS_OF(object);
-      }
-    }
-    prep = object_data->prep;
-    if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
-      GEOSPreparedGeom_destroy_r(object_data->geos_context, prep);
-    }
-    object_data->geos_context = NULL;
-    object_data->geom = NULL;
-    object_data->prep = NULL;
-    object_data->factory = Qnil;
-    object_data->klasses = Qnil;
+
+  object = rb_protect_funcall(rgeo_feature_module, rb_intern("cast"), state, 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
+  if (*state || NIL_P(object)) {
+    return NULL;
   }
+
+  object_data = RGEO_GEOMETRY_DATA_PTR(object);
+  geom = object_data->geom;
+  if (klasses) {
+    *klasses = object_data->klasses;
+    if (NIL_P(*klasses)) {
+      *klasses = CLASS_OF(object);
+    }
+  }
+  prep = object_data->prep;
+  if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+    GEOSPreparedGeom_destroy_r(object_data->geos_context, prep);
+  }
+  object_data->geos_context = NULL;
+  object_data->geom = NULL;
+  object_data->prep = NULL;
+  object_data->factory = Qnil;
+  object_data->klasses = Qnil;
+
   return geom;
 }
 

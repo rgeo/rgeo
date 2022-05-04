@@ -167,8 +167,15 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   result of this function to build a GEOS-backed clone of the original
   geometry, or to include the given geometry in a collection while keeping
   the klasses intact.
+
+  The state parameter is given to follow `rb_protect*` ruby methods: this
+  method calls `#cast`, and this call may raise. if it does raise, state
+  will be set to a non-zero value, and you'll have access to the error
+  in `rb_errinfo()`. IT IS THE CALLER'S RESPONSIBILITY TO PROPAGATE THE
+  ERROR. You could also discard the error with `rb_set_errinfo(Qnil)`,
+  this will just ignore the error altogether.
 */
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses);
+GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses, int* state);
 
 /*
   Returns 1 if the given ruby object is a GEOS Geometry implementation,
