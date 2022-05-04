@@ -22,6 +22,11 @@ module RGeo
       def initialize(opts = {})
         @has_z = opts[:has_z_coordinate] ? true : false
         @has_m = opts[:has_m_coordinate] ? true : false
+        @coordinate_dimension = 2
+        @coordinate_dimension += 1 if @has_z
+        @coordinate_dimension += 1 if @has_m
+        @spatial_dimension = @has_z ? 3 : 2
+
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
           if @proj4.is_a?(String) || @proj4.is_a?(Hash)
@@ -74,6 +79,7 @@ module RGeo
           @wkb_parser = WKRep::WKBParser.new(self)
         end
       end
+      attr_reader :coordinate_dimension, :spatial_dimension
 
       # Equivalence test.
 

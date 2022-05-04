@@ -108,6 +108,36 @@ module RGeo
         raise Error::UnsupportedOperation, "Method #{self.class}#dimension not defined."
       end
 
+      # === SFS 1.2 Description
+      #
+      # The coordinate dimension is the dimension of direct positions (coordinate tuples) used in
+      # the definition of this geometric object
+      #
+      # === Notes
+      #
+      # Difference between this and dimension is that this is the dimension of the coordinate
+      # not the dimension of the geometry.
+      #
+      # @return [Integer]
+      def coordinate_dimension
+        raise Error::UnsupportedOperation, "Method #{self.class}#coordinate_dimension not defined."
+      end
+
+      # === SFS 1.2 Description
+      #
+      # The spatial dimension is the dimension of the spatial portion of the direct positions
+      # (coordinate tuples) used in the definition of this geometric object. If the direct positions
+      # do not carry a measure coordinate, this will be equal to the coordinate dimension.
+      #
+      # === Notes
+      #
+      # Similar to coordinate_dimension except it will ignore the M component always.
+      #
+      # @return [Integer]
+      def spatial_dimension
+        raise Error::UnsupportedOperation, "Method #{self.class}#spatial_dimension not defined."
+      end
+
       # === SFS 1.1 Description
       #
       # Returns the instantiable subtype of Geometry of which this
@@ -220,6 +250,28 @@ module RGeo
       def is_simple?
         warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         simple?
+      end
+
+      # === SFS 1.2 Description
+      #
+      # Returns 1 (TRUE) if this geometric object has z coordinate values.
+      #
+      # === Notes
+      #
+      # @return [Boolean]
+      def is_3d?
+        raise Error::UnsupportedOperation, "Method #{self.class}#is_3d? not defined."
+      end
+
+      # === SFS 1.2 Description
+      #
+      # Returns 1 (TRUE) if this geometric object has m coordinate values.
+      #
+      # === Notes
+      #
+      # @return [Boolean]
+      def measured?
+        raise Error::UnsupportedOperation, "Method #{self.class}#measured? not defined."
       end
 
       # === SFS 1.1 Description
@@ -413,6 +465,33 @@ module RGeo
 
       def relate?(another_geometry, _intersection_pattern_matrix_)
         raise Error::UnsupportedOperation, "Method #{self.class}#relate not defined."
+      end
+
+      # === SFS 1.2 Description
+      #
+      # Returns a derived geometry collection value that matches the
+      # specified m coordinate value.
+      #
+      # === Notes
+      #
+      # @param m_value [Float] value to find matches for
+      # @return [RGeo::Feature::GeometryCollection]
+      def locate_along
+        raise Error::UnsupportedOperation, "Method #{self.class}#locate_along not defined."
+      end
+
+      # === SFS 1.2 Description
+      #
+      # Returns a derived geometry collection value
+      # that matches the specified range of m coordinate values inclusively
+      #
+      # === Notes
+      #
+      # @param m_start [Float] lower bound of value range
+      # @param m_end [Float] upper bound of value range
+      # @return [RGeo::Feature::GeometryCollection]
+      def locate_between
+        raise Error::UnsupportedOperation, "Method #{self.class}#locate_between not defined."
       end
 
       # === SFS 1.1 Description

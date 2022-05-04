@@ -77,6 +77,14 @@ module RGeo
         Utils.ffi_compute_dimension(@fg_geom)
       end
 
+      def coordinate_dimension
+        factory.coordinate_dimension
+      end
+
+      def spatial_dimension
+        factory.spatial_dimension
+      end
+
       def geometry_type
         Feature::Geometry
       end
@@ -129,6 +137,14 @@ module RGeo
       def is_simple?
         warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         simple?
+      end
+
+      def is_3d?
+        factory.property(:has_z_coordinate)
+      end
+
+      def measured?
+        factory.property(:has_m_coordinate)
       end
 
       def valid?

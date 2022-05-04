@@ -22,6 +22,22 @@ module RGeo
         factory.unproject(projection.unsafe_envelope)
       end
 
+      def coordinate_dimension
+        factory.coordinate_dimension
+      end
+
+      def spatial_dimension
+        factory.spatial_dimension
+      end
+
+      def is_3d?
+        factory.property(:has_z_coordinate)
+      end
+
+      def measured?
+        factory.property(:has_m_coordinate)
+      end
+
       def empty?
         projection.empty?
       end

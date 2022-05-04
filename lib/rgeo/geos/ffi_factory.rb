@@ -25,6 +25,11 @@ module RGeo
         if @has_z && @has_m
           raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
         end
+        @coordinate_dimension = 2
+        @coordinate_dimension += 1 if @has_z
+        @coordinate_dimension += 1 if @has_m
+        @spatial_dimension = @has_z ? 3 : 2
+
         @_has_3d = @has_z || @has_m
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
@@ -106,6 +111,7 @@ module RGeo
           @wkb_reader = nil
         end
       end
+      attr_reader :coordinate_dimension, :spatial_dimension
 
       # Standard object inspection output
 
