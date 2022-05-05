@@ -16,8 +16,6 @@ jobs:
           - '3.1'
           - '3.0'
           - '2.7'
-          - '2.6'
-          - '2.5'
           - jruby
         os:
           - ubuntu
@@ -39,16 +37,20 @@ jobs:
         if: matrix.os == 'ubuntu'
         run: |
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get install libgeos-dev -y
+          sudo apt-get install -yqq libgeos-dev valgrind
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: brew install geos
       - name: Install Geos (Windows)
         if: matrix.os == 'windows'
-        run: exit 1
+        run: TODO
       - name: Bundle Install
         run: bundle install
+      - name: Test & memcheck
+        if: matrix.os == 'ubuntu' && matrix.ruby != 'jruby'
+        run: bundle exec rake test:valgrind
       - name: Test
+        if: matrix.os != 'ubuntu' && matrix.ruby == 'jruby'
         run: bundle exec rake
   RuboCop:
     runs-on: ubuntu-latest

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cp test/valgrind/Dockerfile .
+docker build -t rgeo-valgrind . && docker run -it rgeo-valgrind
+rm Dockerfile

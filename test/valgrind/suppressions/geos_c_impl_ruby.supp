@@ -1,0 +1,9 @@
+{
+  <ruby_false_positive>
+  Memcheck:Addr8
+  ...
+  fun:gc_marks
+  fun:gc_start
+  ...
+  fun:main
+}
