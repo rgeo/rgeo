@@ -20,6 +20,8 @@
 * Add `SweeplineIntersector` class to cartesian library
 * Add `PlanarGraph` class to cartesian library
 * Change `validate_geometry` methods to `init_geometry` methods that handle only quality of life functionality instead of validation as well
+* Add OGC SFS 1.2 methods to `RGeo::Feature::Geometry`.
+* Implement `coordinate_dimension`, `spatial_dimension`, `is_3d?` and `measured?` for all factories.
 
 **Bug Fixes**
 
