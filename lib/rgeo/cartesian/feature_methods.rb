@@ -17,6 +17,22 @@ module RGeo
         BoundingBox.new(factory).add(self).to_geometry
       end
 
+      def coordinate_dimension
+        factory.coordinate_dimension
+      end
+
+      def spatial_dimension
+        factory.spatial_dimension
+      end
+
+      def is_3d?
+        factory.property(:has_z_coordinate)
+      end
+
+      def measured?
+        factory.property(:has_m_coordinate)
+      end
+
       private
 
       def graph

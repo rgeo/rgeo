@@ -31,6 +31,11 @@ module RGeo
         @multi_polygon_class = Geographic.const_get("#{impl_prefix}MultiPolygonImpl")
         @support_z = opts[:has_z_coordinate] ? true : false
         @support_m = opts[:has_m_coordinate] ? true : false
+        @coordinate_dimension = 2
+        @coordinate_dimension += 1 if @support_z
+        @coordinate_dimension += 1 if @support_m
+        @spatial_dimension = @support_z ? 3 : 2
+
         @srid = (opts[:srid] || 4326).to_i
         @proj4 = opts[:proj4]
         if @proj4 && CoordSys.check!(:proj4)
@@ -75,6 +80,7 @@ module RGeo
         end
         @projector = nil
       end
+      attr_reader :coordinate_dimension, :spatial_dimension
 
       # Equivalence test.
 

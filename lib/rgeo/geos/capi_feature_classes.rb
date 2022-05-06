@@ -13,6 +13,17 @@ module RGeo
     module CAPIGeometryMethods
       include Feature::Instance
 
+      def coordinate_dimension
+        dim = 2
+        dim += 1 if factory.supports_z?
+        dim += 1 if factory.supports_m?
+        dim
+      end
+
+      def spatial_dimension
+        factory.supports_z? ? 3 : 2
+      end
+
       def is_empty? # rubocop:disable Naming/PredicateName
         warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         empty?
@@ -21,6 +32,14 @@ module RGeo
       def is_simple? # rubocop:disable Naming/PredicateName
         warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
         simple?
+      end
+
+      def is_3d?
+        factory.supports_z?
+      end
+
+      def measured?
+        factory.supports_m?
       end
 
       def inspect

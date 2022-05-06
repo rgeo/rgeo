@@ -22,13 +22,14 @@ module RGeo
       UNCHECKED_METHODS = [
         # Basic methods
         :factory, :geometry_type, :as_text, :as_binary, :srid,
+        :dimension, :coordinate_dimension, :spatial_dimension,
         # Tests
-        :simple?, :closed?, :empty?,
+        :simple?, :closed?, :empty?, :is_3d?, :measured?,
         # Accessors
         :exterior_ring, :interior_rings, :[], :num_geometries, :num_interior_rings,
         :geometry_n, :each, :points, :point_n, :start_point, :end_point, :x, :y, :z, :m,
         # Trivial methods
-        :num_points,
+        :num_points, :locate_along, :locate_between,
         # Comparison
         :equals?, :rep_equals?, :eql?, :==, :'!='
       ].freeze
