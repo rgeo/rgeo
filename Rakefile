@@ -2,8 +2,11 @@
 
 require "rake/testtask"
 require "rake/extensiontask"
+require "ruby_memcheck"
 require "bundler/gem_tasks"
 require "yard"
+
+RubyMemcheck.config(binary_name: "geos_c_impl")
 
 # Build tasks
 
@@ -25,10 +28,16 @@ task :clean do
   clean_files.each { |path| rm_rf path }
 end
 
-Rake::TestTask.new(:test) do |t|
+test_config = proc do |t|
   t.libs << "test"
   t.libs << "lib"
   t.test_files = FileList["test/**/*_test.rb"]
+end
+
+Rake::TestTask.new(:test, &test_config)
+
+namespace :test do
+  RubyMemcheck::TestTask.new(valgrind: :compile, &test_config)
 end
 
 YARD::Rake::YardocTask.new do |t|

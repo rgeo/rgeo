@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class WKBGeneratorTest < Minitest::Test # :nodoc:
   def setup

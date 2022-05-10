@@ -447,7 +447,7 @@ static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char 
       }
     }
     if (!good) {
-      free(coords);
+      FREE(coords);
       return NULL;
     }
   }
@@ -472,7 +472,7 @@ static GEOSCoordSequence* coord_seq_from_array(VALUE factory, VALUE array, char 
       GEOSCoordSeq_setZ_r(context, coord_seq, len, has_z ? coords[2] : 0);
     }
   }
-  free(coords);
+  FREE(coords);
   return coord_seq;
 }
 

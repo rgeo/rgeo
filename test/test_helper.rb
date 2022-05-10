@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Ensure that we cleanup every object before comparing with valgrind.
+at_exit { GC.start } if ENV["LD_PRELOAD"]&.include? "valgrind"
+
 require "minitest/autorun"
 require_relative "../lib/rgeo"
 require "psych"
@@ -23,8 +26,6 @@ require_relative "common/multi_polygon_tests"
 require_relative "common/point_tests"
 require_relative "common/polygon_tests"
 require_relative "common/validity_tests"
-
-require "pry-byebug" if ENV["BYEBUG"]
 
 # Static test for missed references in our CAPI codebase (or FFI interface).
 # See https://alanwu.space/post/check-compaction/
