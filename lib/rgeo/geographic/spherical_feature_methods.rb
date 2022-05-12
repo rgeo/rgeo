@@ -232,7 +232,7 @@ module RGeo
         centroid_lat /= (6.0 * signed_area)
         centroid_lng /= (6.0 * signed_area)
 
-        RGeo::Geographic.spherical_factory.point(centroid_lat, centroid_lng)
+        factory.point(centroid_lat, centroid_lng)
       end
     end
   end

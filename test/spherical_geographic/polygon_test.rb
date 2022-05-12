@@ -28,4 +28,16 @@ class SphericalPolygonTest < Minitest::Test # :nodoc:
     polygon = @factory.polygon(exterior)
     assert_equal @factory.point(1.0/3.0, 1.0/3.0), polygon.centroid
   end
+
+  def test_centroid_srid
+    factory = RGeo::Geographic.spherical_factory(srid: 4326)
+
+    point1 = factory.point(0, 0)
+    point2 = factory.point(0, 1)
+    point3 = factory.point(1, 0)
+    exterior = factory.linear_ring([point1, point2, point3, point1])
+    polygon = factory.polygon(exterior)
+
+    assert_equal 4326, polygon.centroid.srid
+  end
 end
