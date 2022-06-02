@@ -142,6 +142,20 @@ module RGeo
           square_polygon_expected_area / 2.0 # Once valid!
         end
 
+        def test_validity_frozen
+          skip "Implementation #{@factory.class} does not implement ValidityCheck" unless implements_validity_check?
+
+          geom1 = @factory.point(1, 1)
+          geom1.freeze
+          geom1.check_validity!
+          refute(geom1.instance_variable_defined?(:@invalid_reason_memo))
+
+          geom2 = @factory.point(1, 1)
+          geom2.check_validity!
+          geom2.freeze
+          assert(geom2.instance_variable_defined?(:@invalid_reason_memo))
+        end
+
         def test_invalid_point_invalid_coordinate
           assert_equal(RGeo::Error::INVALID_COORDINATE, invalid_point.invalid_reason)
           assert_equal(false, invalid_point.valid?)

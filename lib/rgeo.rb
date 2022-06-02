@@ -76,6 +76,7 @@
 #   activerecord-postgis-adapter gem.
 
 require_relative "rgeo/version"
+require_relative "rgeo/logger"
 require_relative "rgeo/error"
 require_relative "rgeo/feature"
 require_relative "rgeo/coord_sys"

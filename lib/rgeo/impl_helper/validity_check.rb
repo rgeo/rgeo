@@ -132,6 +132,11 @@ module RGeo
         # `defined?` is a bit faster than `instance_variable_defined?`.
         return @invalid_reason_memo if defined?(@invalid_reason_memo)
 
+        if frozen?
+          RGeo.logger.info("If freezing a geometry, calling valid?, invalid_reason, or check_validity! beforehand will cache the results of the validity check and can potentially improve performance. Define SUPPRESS_RGEO_PERF_WARNING in your environment to disable this message.") unless ENV.key?("SUPPRESS_RGEO_PERF_WARNING")
+          return invalid_reason
+        end
+
         @invalid_reason_memo = invalid_reason
       end
     end

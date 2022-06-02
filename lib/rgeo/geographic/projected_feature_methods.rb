@@ -14,8 +14,13 @@ module RGeo
       end
 
       def projection
-        @projection = factory.project(self) unless defined?(@projection)
-        @projection
+        return @projection if defined?(@projection)
+
+        if frozen?
+          return factory.project(self)
+        end
+
+        @projection = factory.project(self)
       end
 
       def envelope

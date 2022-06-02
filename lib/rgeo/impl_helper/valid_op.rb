@@ -21,6 +21,11 @@ module RGeo
       # @return String
       def invalid_reason
         return @invalid_reason if defined?(@invalid_reason)
+
+        if frozen?
+          return check_valid
+        end
+
         @invalid_reason = check_valid
       end
 
