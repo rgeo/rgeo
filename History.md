@@ -3,6 +3,7 @@
 **Minor Changes**
 
 * Implement `coordinate_dimension`, `spatial_dimension`, `is_3d?` and `measured?` for all factories.
+* Add `invalid_reason_location` method to the CAPI factory #310
 
 **Bug Fixes**
 
