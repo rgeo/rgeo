@@ -386,6 +386,11 @@ static VALUE method_geometry_equals(VALUE self, VALUE rhs)
   GEOSContextHandle_t self_context;
   char val;
 
+  // Shortcut when self and rhs are the same object.
+  if (self == rhs) {
+    return Qtrue;
+  }
+
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
