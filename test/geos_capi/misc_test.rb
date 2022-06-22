@@ -61,6 +61,12 @@ class GeosMiscTest < Minitest::Test # :nodoc:
     assert(geom1.equals?(geom2))
   end
 
+  def test_invalid_geometry_equal_itself
+    geom = @factory.parse_wkt("MULTIPOLYGON (((0 0, 1 1, 1 0, 0 0)), ((0 0, 2 2, 2 0, 0 0)))")
+    assert(geom.eql?(geom))
+    assert(geom.equals?(geom))
+  end
+
   def test_prepare
     p1 = @factory.point(1, 2)
     p2 = @factory.point(3, 4)
