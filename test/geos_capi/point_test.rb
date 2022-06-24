@@ -58,4 +58,11 @@ class GeosPointTest < Minitest::Test # :nodoc:
     point = factory.point(11, 12)
     assert_equal(Encoding::ASCII_8BIT, point.as_binary.encoding)
   end
+
+  def test_polygonize
+    input = @factory.parse_wkt("POINT (1 1)")
+    expected = @factory.parse_wkt("GEOMETRYCOLLECTION EMPTY")
+
+    assert_equal expected, input.polygonize
+  end
 end if RGeo::Geos.capi_supported?

@@ -28,4 +28,11 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
     mp = f.multi_polygon([p2, p1])
     mp.centroid.as_text
   end
+
+  def test_polygonize
+    input = @factory.parse_wkt("MULTIPOLYGON (((0 0, 1 1, 1 0, 0 0)))")
+    expected = @factory.parse_wkt("GEOMETRYCOLLECTION (MULTIPOLYGON (((0 0, 1 1, 1 0, 0 0))))")
+
+    assert_equal expected, input.polygonize
+  end
 end if RGeo::Geos.capi_supported?

@@ -4,6 +4,7 @@
 
 * Implement `coordinate_dimension`, `spatial_dimension`, `is_3d?` and `measured?` for all factories.
 * Add `invalid_reason_location` method to the CAPI factory #310
+* Add `polygonize` method to the CAPI factory (@aleksejleonov, @tyfoan) #313
 
 **Bug Fixes**
 
