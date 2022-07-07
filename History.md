@@ -3,11 +3,14 @@
 **Minor Changes**
 
 * Implement `coordinate_dimension`, `spatial_dimension`, `is_3d?` and `measured?` for all factories.
+* Add `invalid_reason_location` method to the CAPI factory #310
+* Add `polygonize` method to the CAPI factory (@aleksejleonov, @tyfoan) #313
 
 **Bug Fixes**
 
 * Fix memory leak on failing geometry collection creation #301
 * Use polygon factory on build polygon centroid #306
+* Don't raise exception when topology-invalid geometry compared with itself (CAPI factory) #311
 
 ### 3.0.0-rc.1 / 2022-03-22
 
