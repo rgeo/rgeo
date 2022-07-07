@@ -1,5 +1,9 @@
 ### Current
 
+**Breaking Changes**
+
+* Remove `SRSDatabase` and `factory_generator` related methods #314
+
 **Minor Changes**
 
 * Implement `coordinate_dimension`, `spatial_dimension`, `is_3d?` and `measured?` for all factories.

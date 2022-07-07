@@ -71,13 +71,6 @@ module RGeo
           if coord_sys_.is_a?(String)
             coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_)
           end
-          if (!proj4_ || !coord_sys_) && srid_ && (db_ = opts_[:srs_database])
-            entry_ = db_.get(srid_.to_i)
-            if entry_
-              proj4_ ||= entry_.proj4
-              coord_sys_ ||= entry_.coord_sys
-            end
-          end
           srid_ ||= coord_sys_.authority_code if coord_sys_
 
           # Create the factory and set instance variables

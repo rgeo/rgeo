@@ -75,13 +75,6 @@ module RGeo
         if @coord_sys.is_a?(String)
           @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
         end
-        if (!@proj4 || !@coord_sys) && @srid && (db = opts[:srs_database])
-          entry = db.get(@srid.to_i)
-          if entry
-            @proj4 ||= entry.proj4
-            @coord_sys ||= entry.coord_sys
-          end
-        end
         @srid ||= @coord_sys.authority_code if @coord_sys
         @srid = @srid.to_i
 

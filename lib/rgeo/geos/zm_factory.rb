@@ -44,13 +44,6 @@ module RGeo
         proj4 = opts[:proj4]
         coord_sys = opts[:coord_sys]
         srid = opts[:srid]
-        if (!proj4 || !coord_sys) && srid && (db = opts[:srs_database])
-          entry = db.get(srid.to_i)
-          if entry
-            proj4 ||= entry.proj4
-            coord_sys ||= entry.coord_sys
-          end
-        end
         srid ||= coord_sys.authority_code if coord_sys
         config = {
           buffer_resolution: opts[:buffer_resolution], auto_prepare: opts[:auto_prepare],

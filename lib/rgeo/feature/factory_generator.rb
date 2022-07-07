@@ -66,9 +66,6 @@ module RGeo
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
       #   This is usually an optional parameter; the default is usually
       #   nil.
-      # [<tt>:srs_database</tt>]
-      #   If provided, look up the Proj4 and OGC coordinate systems from
-      #   the given database and SRID.
       # [<tt>:has_z_coordinate</tt>]
       #   Support Z coordinates. Default is usually false.
       # [<tt>:has_m_coordinate</tt>]
