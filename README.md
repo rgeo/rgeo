@@ -1,7 +1,7 @@
 ## RGeo
 
 [![Gem Version](https://badge.fury.io/rb/rgeo.svg)](http://badge.fury.io/rb/rgeo)
-[![CI](https://github.com/rgeo/rgeo/workflows/CI/badge.svg)](https://github.com/rgeo/rgeo/actions?query=workflow%3ACI+branch%3Amaster+event%3Apush)
+[![CI](https://github.com/rgeo/rgeo/workflows/CI/badge.svg)](https://github.com/rgeo/rgeo/actions?query=workflow%3ACI+branch%3Amain+event%3Apush)
 
 RGeo is a geospatial data library for Ruby.
 
@@ -109,7 +109,7 @@ ActiveRecord connection adapter for SpatiaLite, based on sqlite3 (*not maintaine
 RDoc Documentation is available at https://www.rubydoc.info/gems/rgeo
 
 Contributions are welcome. Please read the
-[Contributing guidelines](https://github.com/rgeo/rgeo/blob/master/CONTRIBUTING.md).
+[Contributing guidelines](https://github.com/rgeo/rgeo/blob/main/CONTRIBUTING.md).
 
 Support may be available on the
 [rgeo-users google group](https://groups.google.com/forum/#!forum/rgeo-users)
@@ -124,14 +124,14 @@ generate documentation locally if you're working on RGeo: `yardoc server`.
 
 Here's the current list of available topics:
 
-- [An introduction to Spatial Programming With RGeo](https://github.com/rgeo/rgeo/blob/master/doc/An-Introduction-to-Spatial-Programming-With-RGeo.md)
-- [Enable GEOS and Proj4 on Heroku](https://github.com/rgeo/rgeo/blob/master/doc/Enable-GEOS-and-Proj4-on-Heroku.md)
-- [Installing GEOS](https://github.com/rgeo/rgeo/blob/master/doc/Installing-GEOS.md)
-- [Factory Compatibility](https://github.com/rgeo/rgeo/blob/master/doc/Factory-Compatibility.md)
-- [Which factory should I use?](https://github.com/rgeo/rgeo/blob/master/doc/Which-factory-should-I-use.md)
-- [Geometry validity handling](https://github.com/rgeo/rgeo/blob/master/doc/Geometry-Validity.md)
-- [Examples](https://github.com/rgeo/rgeo/blob/master/doc/Examples.md)
-- [Who uses `rgeo`?](https://github.com/rgeo/rgeo/blob/master/doc/Gallery.md)
+- [An introduction to Spatial Programming With RGeo](https://github.com/rgeo/rgeo/blob/main/doc/An-Introduction-to-Spatial-Programming-With-RGeo.md)
+- [Enable GEOS and Proj4 on Heroku](https://github.com/rgeo/rgeo/blob/main/doc/Enable-GEOS-and-Proj4-on-Heroku.md)
+- [Installing GEOS](https://github.com/rgeo/rgeo/blob/main/doc/Installing-GEOS.md)
+- [Factory Compatibility](https://github.com/rgeo/rgeo/blob/main/doc/Factory-Compatibility.md)
+- [Which factory should I use?](https://github.com/rgeo/rgeo/blob/main/doc/Which-factory-should-I-use.md)
+- [Geometry validity handling](https://github.com/rgeo/rgeo/blob/main/doc/Geometry-Validity.md)
+- [Examples](https://github.com/rgeo/rgeo/blob/main/doc/Examples.md)
+- [Who uses `rgeo`?](https://github.com/rgeo/rgeo/blob/main/doc/Gallery.md)
 
 You can see an exhaustive and up to date list at https://rubydoc.info/gems/rgeo/index.
 ### Acknowledgments
@@ -158,4 +158,4 @@ by [J Smith](https://github.com/dark-panda).
 
 Copyright (c) Daniel Azuma, Tee Parham
 
-[License](https://github.com/rgeo/rgeo/blob/master/LICENSE.txt)
+[License](https://github.com/rgeo/rgeo/blob/main/LICENSE.txt)

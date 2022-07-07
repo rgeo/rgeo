@@ -63,7 +63,7 @@ Ref: http://www.diowa.com/blog/heroku/2017/08/01/using-rgeo-with-geos-on-heroku-
 ## Option 2: Use [heroku-buildpack-vendorbinaries]
 
 Apt packages often contain older version of the libraries, so you may be interested in something
-newer or in compiling the master branch by yourself.
+newer or in compiling the main branch by yourself.
 
 You can find latest GEOS and PROJ binaries built for Heroku at [Vesuvius: a Vulcan replacement](https://vesuvius.herokuapp.com/)
 

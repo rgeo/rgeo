@@ -46,7 +46,7 @@ bowtie_polygon = factory.polygon(
 There is no issue with creating this polygon, or viewing its representation for
 instance.
 
-![Bowtie polygon](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid1.png)
+![Bowtie polygon](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_invalid1.png)
 
 However, its representation is invalid per specifications since it contains a
 _Self-intersection_. Computing its area would give us the result of 0, definitely

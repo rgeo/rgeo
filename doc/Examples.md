@@ -283,14 +283,14 @@ linestring = factory.parse_wkt("LINESTRING (0 0, 2 0, 2 2)")
 p linestring.boundary
 #  => #<RGeo::Geos::CAPIMultiPointImpl "MULTIPOINT ((0.0 0.0), (2.0 2.0))">
 ```
-![Basic LineString](https://github.com/rgeo/rgeo/raw/master/doc/assets/linestring_boundary.png)
+![Basic LineString](https://github.com/rgeo/rgeo/raw/main/doc/assets/linestring_boundary.png)
 
 ## LinearRings
 
 A LinearRing is a LineString that is both closed and simple. Closed means that the `start_point` and `end_point` are equivalent. Simple means that there are no self-intersections. The first example is a valid LinearRing and the second is an invalid LinearRing.
 
-![Valid LinearRing](https://github.com/rgeo/rgeo/raw/master/doc/assets/linearring_valid.png)
-![Invalid LinearRing](https://github.com/rgeo/rgeo/raw/master/doc/assets/linearring_invalid.png)
+![Valid LinearRing](https://github.com/rgeo/rgeo/raw/main/doc/assets/linearring_valid.png)
+![Invalid LinearRing](https://github.com/rgeo/rgeo/raw/main/doc/assets/linearring_invalid.png)
 
 _Note: Some factories may prevent the creation of invalid LinearRings and raise an `RGeo::Error::InvalidGeometry exception._
 
@@ -351,18 +351,18 @@ A Polygon is a geometry composed of an outer ring and, optionally, multiple inte
 
 The following are all examples of valid Polygons.
 
-![Valid Polygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid1.png)
-![Valid Polygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid2.png)
-![Valid Polygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid3.png)
-![Valid Polygon4](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_valid4.png)
+![Valid Polygon1](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_valid1.png)
+![Valid Polygon2](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_valid2.png)
+![Valid Polygon3](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_valid3.png)
+![Valid Polygon4](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_valid4.png)
 
 _Note in the last figure that the two interior rings share point G._
 
 The following are examples of invalid Polygons.
 
-![Invalid Polygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid1.png)
-![Invalid Polygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid2.png)
-![Invalid Polygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/polygon_invalid3.png)
+![Invalid Polygon1](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_invalid1.png)
+![Invalid Polygon2](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_invalid2.png)
+![Invalid Polygon3](https://github.com/rgeo/rgeo/raw/main/doc/assets/polygon_invalid3.png)
 
 ### Creating a Polygon with RGeo Features
 
@@ -541,12 +541,12 @@ A MultiLineString is closed if all of its elements are closed.
 
 The following is an example of a simple MultiLineString.
 
-![Simple MultiLineString1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multilinestring_valid1.png)
+![Simple MultiLineString1](https://github.com/rgeo/rgeo/raw/main/doc/assets/multilinestring_valid1.png)
 
 The following are examples of non-simple MultiLineStrings.
 
-![Non-Simple MultiLineString1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multilinestring_invalid1.png)
-![Non-Simple MultiLineString2](https://github.com/rgeo/rgeo/raw/master/doc/assets/multilinestring_invalid2.png)
+![Non-Simple MultiLineString1](https://github.com/rgeo/rgeo/raw/main/doc/assets/multilinestring_invalid1.png)
+![Non-Simple MultiLineString2](https://github.com/rgeo/rgeo/raw/main/doc/assets/multilinestring_invalid2.png)
 
 ### Create a MultiLineString with RGeo Features
 
@@ -589,15 +589,15 @@ A MultiPolygon is a collection of Polygons. A MultiPolygon is simple if all Poly
 
 The following are examples of simple MultiPolygons.
 
-![Simple MultiPolygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_valid1.png)
-![Simple MultiPolygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_valid2.png)
-![Simple MultiPolygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_valid3.png)
+![Simple MultiPolygon1](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_valid1.png)
+![Simple MultiPolygon2](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_valid2.png)
+![Simple MultiPolygon3](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_valid3.png)
 
 The following are examples of non-simple MultiPolygons.
 
-![Non-simple MultiPolygon1](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_invalid1.png)
-![Non-simple MultiPolygon2](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_invalid2.png)
-![Non-simple MultiPolygon3](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_invalid3.png)
+![Non-simple MultiPolygon1](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_invalid1.png)
+![Non-simple MultiPolygon2](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_invalid2.png)
+![Non-simple MultiPolygon3](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_invalid3.png)
 
 ### Creating a MultiPolygon with RGeo Features
 
@@ -634,7 +634,7 @@ p multipolygon
 
 This creates the following MultiPolygon.
 
-![MultiPolygon Example](https://github.com/rgeo/rgeo/raw/master/doc/assets/multipolygon_example.png)
+![MultiPolygon Example](https://github.com/rgeo/rgeo/raw/main/doc/assets/multipolygon_example.png)
 
 ### Creating a MultiPolygon with WKT
 

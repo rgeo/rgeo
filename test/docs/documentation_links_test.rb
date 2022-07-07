@@ -10,13 +10,13 @@ class DocumentationLinksTest < MiniTest::Test # :nodoc:
     root_path = File.join(__dir__, "..", "..")
     by_files = Dir[File.join(root_path, "doc", "*.md")]
                .map { |path| Pathname.new(path).relative_path_from(Pathname.new(root_path)) }
-               .map { |file| "https://github.com/rgeo/rgeo/blob/master/#{file}" }
+               .map { |file| "https://github.com/rgeo/rgeo/blob/main/#{file}" }
                .to_set
 
     in_readme = IO
                 .foreach(File.join(root_path, "README.md"))
-                .grep(%r{https://github\.com/rgeo/rgeo/blob/master/doc})
-                .map { |line| line[%r{https://github\.com/rgeo/rgeo/blob/master/doc/.*?\.md}] }
+                .grep(%r{https://github\.com/rgeo/rgeo/blob/main/doc})
+                .map { |line| line[%r{https://github\.com/rgeo/rgeo/blob/main/doc/.*?\.md}] }
                 .to_set
 
     assert(
