@@ -9,9 +9,6 @@
 require_relative "coord_sys/cs/factories"
 require_relative "coord_sys/cs/entities"
 require_relative "coord_sys/cs/wkt_parser"
-require_relative "coord_sys/srs_database/entry"
-require_relative "coord_sys/srs_database/url_reader"
-require_relative "coord_sys/srs_database/sr_org"
 
 module RGeo
   # This module provides data structures and tools related to coordinate
@@ -26,14 +23,6 @@ module RGeo
   # This includes classes for representing ellipsoids, datums, coordinate
   # systems, and other related concepts, as well as a parser for the WKT
   # format for specifying coordinate systems.
-  #
-  # The RGeo::CoordSys::SRSDatabase module contains tools for accessing
-  # spatial reference databases, from which you can look up coordinate
-  # system specifications. You can access the <tt>spatial_ref_sys</tt>
-  # table provided with OGC-compliant spatial databases such as PostGIS,
-  # read the databases provided with the proj4 library, or access URLs
-  # such as those provided by spatialreference.org.
-
   module CoordSys
     # The only valid key is :proj4
     def self.supported?(key)
