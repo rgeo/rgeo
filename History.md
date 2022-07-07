@@ -15,6 +15,7 @@
 * Fix memory leak on failing geometry collection creation #301
 * Use polygon factory on build polygon centroid #306
 * Don't raise exception when topology-invalid geometry compared with itself (CAPI factory) #311
+* Ensure that frozen geometries are properly validated #309
 
 ### 3.0.0-rc.1 / 2022-03-22
 
