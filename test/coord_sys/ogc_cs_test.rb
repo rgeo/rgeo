@@ -278,6 +278,44 @@ class OgcCsTest < Minitest::Test # :nodoc:
     assert_equal('PROJCS["OSGB 1936 / British National Grid",GEOGCS["OSGB 1936",DATUM["OSGB_1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],TOWGS84[375.0,-111.0,431.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6277"]],PRIMEM["Greenwich",0.0,AUTHORITY["EPSG","8901"]],UNIT["DMSH",0.0174532925199433,AUTHORITY["EPSG","9108"]],AXIS["Lat",NORTH],AXIS["Long",EAST],AUTHORITY["EPSG","4277"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",49.0],PARAMETER["central_meridian",-2.0],PARAMETER["scale_factor",0.999601272],PARAMETER["false_easting",400000.0],PARAMETER["false_northing",-100000.0],UNIT["metre",1.0,AUTHORITY["EPSG","9001"]],AXIS["E",EAST],AXIS["N",NORTH],AUTHORITY["EPSG","27700"]]', obj.to_wkt)
   end
 
+  def test_coordinate_transform
+    obj1 = RGeo::CoordSys::CS::Ellipsoid.create_flattened_sphere("Airy 1830", 6_377_563.396, 299.3249646, nil, "EPSG", "7001")
+    obj2 = RGeo::CoordSys::CS::WGS84ConversionInfo.create(375, -111, 431, 0, 0, 0, 0)
+    obj3 = RGeo::CoordSys::CS::AngularUnit.create("DMSH", 0.0174532925199433, "EPSG", 9108)
+    obj4 = RGeo::CoordSys::CS::HorizontalDatum.create("OSGB_1936", RGeo::CoordSys::CS::HD_CLASSIC, obj1, obj2, "EPSG", "6277")
+    obj5 = RGeo::CoordSys::CS::PrimeMeridian.create("Greenwich", nil, 0, "EPSG", "8901")
+    obj6 = RGeo::CoordSys::CS::AxisInfo.create("Lat", RGeo::CoordSys::CS::AO_NORTH)
+    obj7 = RGeo::CoordSys::CS::AxisInfo.create("Long", RGeo::CoordSys::CS::AO_EAST)
+    obj8 = RGeo::CoordSys::CS::GeographicCoordinateSystem.create("OSGB 1936", obj3, obj4, obj5, obj6, obj7, "EPSG", 4277)
+    obj9 = RGeo::CoordSys::CS::ProjectionParameter.create("latitude_of_origin", 49)
+    obj10 = RGeo::CoordSys::CS::ProjectionParameter.create("central_meridian", -2)
+    obj11 = RGeo::CoordSys::CS::ProjectionParameter.create("scale_factor", 0.999601272)
+    obj12 = RGeo::CoordSys::CS::ProjectionParameter.create("false_easting", 400_000)
+    obj13 = RGeo::CoordSys::CS::ProjectionParameter.create("false_northing", -100_000)
+    obj14 = RGeo::CoordSys::CS::Projection.create("Transverse_Mercator", "Transverse_Mercator", [obj9, obj10, obj11, obj12, obj13])
+    obj15 = RGeo::CoordSys::CS::LinearUnit.create("metre", 1, "EPSG", 9001)
+    obj16 = RGeo::CoordSys::CS::AxisInfo.create("E", RGeo::CoordSys::CS::AO_EAST)
+    obj17 = RGeo::CoordSys::CS::AxisInfo.create("N", RGeo::CoordSys::CS::AO_NORTH)
+    source_cs = RGeo::CoordSys::CS::ProjectedCoordinateSystem.create("OSGB 1936 / British National Grid", obj8, obj14, obj15, obj16, obj17, "EPSG", 27_700)
+    target_cs = source_cs.dup
+
+    ct = RGeo::CoordSys::CS::CoordinateTransform.create(source_cs, target_cs)
+
+    assert_equal(2, ct.dim_source)
+    assert_equal(2, ct.dim_target)
+    assert_raises(NotImplementedError) { ct.area_of_use }
+    assert_raises(NotImplementedError) { ct.transform_type }
+    assert_raises(NotImplementedError) { ct.identity? }
+    assert_raises(NotImplementedError) { ct.domain_flags([]) }
+    assert_raises(NotImplementedError) { ct.codomain_convex_hull([]) }
+    assert_raises(NotImplementedError) { ct.transform(1, 1) }
+    assert_raises(NotImplementedError) { ct.transform_list([[1, 1]]) }
+
+    inv_ct = ct.inverse
+    assert_equal(ct.source_cs, inv_ct.target_cs)
+    assert_equal(ct.target_cs, inv_ct.source_cs)
+  end
+
   def test_parse_epsg_6055
     input = 'DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137.0,0.0,AUTHORITY["EPSG","7059"]],TOWGS84[0.0,0.0,0.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6055"]]'
     obj = RGeo::CoordSys::CS.create_from_wkt(input)
