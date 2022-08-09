@@ -351,14 +351,7 @@ module RGeo
           projection_proj4 = opts[:projection_proj4]
           projection_coord_sys = opts[:projection_coord_sys]
           projection_srid = opts[:projection_srid]
-          # Check the case where we need to look up a srid from an srs database.
-          if (!projection_proj4 || !projection_coord_sys) && projection_srid && db_
-            entry_ = db_.get(projection_srid.to_i)
-            if entry_
-              projection_proj4 ||= entry_.proj4
-              projection_coord_sys ||= entry_.coord_sys
-            end
-          end
+
           # A projection proj4 is absolutely required.
           unless projection_proj4
             raise ArgumentError, "Unable to determine the Proj4 for the projected coordinate system."
@@ -379,14 +372,7 @@ module RGeo
           proj4 = opts[:proj4]
           coord_sys = opts[:coord_sys]
           srid = opts[:srid]
-          # Lookup srid from srs database if needed
-          if (!proj4 || !coord_sys) && srid && db_
-            entry_ = db_.get(srid.to_i)
-            if entry_
-              proj4 ||= entry_.proj4
-              coord_sys ||= entry_.coord_sys
-            end
-          end
+
           # Fall back to getting the values from the projection.
           proj4 ||= projection_proj4.get_geographic || _proj_4326
           coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
