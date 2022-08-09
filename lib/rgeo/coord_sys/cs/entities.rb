@@ -134,6 +134,14 @@ module RGeo
       # Highest possible value for local datum types.
       LD_MAX = 32_767
 
+      # Flags indicating parts of domain covered by a convex hull. These flags can be combined. For
+      # example, the value 3 corresponds to a combination of CT_DF_Inside and MF_DF_Outside, which
+      # means that some parts of the convex hull are inside the domain, and some parts of the convex
+      # hull are outside the domain
+      CT_DF_INSIDE = 1
+      CT_DF_OUTSIDE = 2
+      CT_DF_DISCONTINUOUS = 4
+
       # This is a base class for all OGC coordinate system objects.
       # This includes both interfaces and data types from the OGC
       # Coordinate Transformation spec.
@@ -1350,6 +1358,155 @@ module RGeo
           arr << @axis0.to_wkt(standard_brackets) if @axis0
           arr << @axis1.to_wkt(standard_brackets) if @axis1
           arr
+        end
+      end
+
+      # CoordinateTransform object. Note it is a combo of
+      # CoordinateTransform and MathTransform as specified in
+      # the OGC standard. This is just to simplify the model
+      # and keep all functionality in this class.
+      #
+      # @see https://portal.ogc.org/files/?artifact_id=999 page 79
+      class CoordinateTransform < Info
+        # Initialize a new CoordinateTransform
+        #
+        # Note this class should not be used directly since it does not
+        # implement any transformation logic. It merely defines
+        # what methods actual implementations must use.
+        #
+        # @param [CoordinateSystem] source_cs
+        # @param [CoordinateSystem] target_cs
+        # @param [Array] optional any params for Info or Base
+        # @return [CoordinateTransform]
+        def initialize(source_cs, target_cs, *optional)
+          super(optional)
+          @source_cs = source_cs
+          @target_cs = target_cs
+        end
+        attr_accessor :source_cs, :target_cs
+
+        # TODO: This changes depending on what type of conversion is done
+        # and we can't know unless we implement the conversion ourselves.
+        # We should delegate all of the wkt generation to the library
+        # if possible.
+        def wkt_typename
+          "CONVERSION"
+        end
+
+        def inspect
+          "#<#{self.class}:0x#{object_id.to_s(16)} @source_cs=#{source_cs.to_wkt} @target_cs=#{target_cs.to_wkt}>"
+        end
+
+        # Human readable description of domain in source coordinate system.
+        #
+        # @return [String]
+        def area_of_use
+          raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
+        end
+
+        # Semantic type of transform. For example, a datum transformation or a coordinate conversion.
+        #
+        # @return [String]
+        def transform_type
+          raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
+        end
+
+        # Dimension of the source_cs
+        #
+        # @return [Integer]
+        def dim_source
+          source_cs.dimension
+        end
+
+        # Dimension of the target_cs
+        #
+        # @return [Integer]
+        def dim_target
+          target_cs.dimension
+        end
+
+        # Tests whether this transform does not move any points
+        #
+        # @return [Boolean]
+        def identity?
+          raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
+        end
+
+        # Gets flags classifying domain points within a convex hull. The supplied ordinates are interpreted
+        # as a sequence of points, which generates a convex hull in the source space. Conceptually, each
+        # of the (usually infinite) points inside the convex hull is then tested against the source domain.
+        # The flags of all these tests are then combined. In practice, implementations of different
+        # transforms will use different short-cuts to avoid doing an infinite number of tests.
+        #
+        # @param [Array<<Array<Integer>>] points in tuples of (x,y,z) with z being optional
+        # @return [Array<Integer>] the domain_flags of the input points
+        def domain_flags(points)
+          raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
+        end
+
+        # Gets transformed convex hull. The supplied ordinates are interpreted as a sequence of points,
+        # which generates a convex hull in the source space. The returned sequence of ordinates
+        # represents a convex hull in the output space. The number of output points will often be different
+        # from the number of input points. Each of the input points should be inside the valid domain (this
+        # can be checked by testing the points' domain flags individually). However, the convex hull of the
+        # input points may go outside the valid domain. The returned convex hull should contain the
+        # transformed image of the intersection of the source convex hull and the source domain.
+        #
+        # @param [Array<<Array<Integer>>] points in tuples of (x,y,z) with z being optional
+        # @return [Array<<Array<Integer>>]
+        def codomain_convex_hull(points)
+          raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
+        end
+
+        # Transforms a coordinate point. The passed parameter point should not be modified.
+        #
+        # @param [Integer] x
+        # @param [Integer] y
+        # @param [Integer] z optional
+        # @return [Array<Integer>] transformed point coordinates in (x,y,z) order
+        def transform(x, y, z = nil)
+          raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
+        end
+
+        # Transforms a coordinate point. The passed parameter point should not be modified.
+        #
+        # @param [Array<Array<Integer>>] points in (x,y,z) tuples where z is optional
+        # @return [Array<Array<Integer>>] list of transformed point coordinates in (x,y,z) order
+        def transform_list(points)
+          points.map { |x, y, z| transform(x, y, z) }
+        end
+
+        # Creates the inverse transform of this object. This method may fail if the transform is not one to
+        # one. However, all cartographic projections should succeed.
+        #
+        # @return [CoordinateTransform]
+        def inverse
+          self.class.create(target_cs, source_cs)
+        end
+
+        class << self
+          # Initialize a new CoordinateTransform
+          #
+          # Note this class should not be used directly since it does not
+          # implement any transformation logic. It merely defines
+          # what methods actual implementations must use.
+          #
+          # @param [CoordinateSystem] source_cs
+          # @param [CoordinateSystem] target_cs
+          # @param [Array] optional any params for Info or Base
+          # @return [CoordinateTransform]
+          def create(source_cs, target_cs, *optional)
+            new(source_cs, target_cs, optional)
+          end
+        end
+
+        private
+
+        def wkt_content(standard_brackets)
+          source_cs_wkt = "SOURCECS[#{source_cs.to_wkt(standard_brackets)}]"
+          target_cs_wkt = "TARGETCS[#{target_cs.to_wkt(standard_brackets)}]"
+
+          [source_cs_wkt, target_cs_wkt]
         end
       end
     end
