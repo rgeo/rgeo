@@ -16,7 +16,7 @@ There are 7 factories shown in the table which are representative of the differe
 | spherical  | `RGeo::Geographic.spherical_factory`                                                         | Factory with calculations performed on a spherical surface, written in Ruby                                                               |
 | projection | `RGeo::Geographic.simple_mercator_factory`                                                   | Compound factory that uses a spherical factory to create geometries, but a geos or cartesian factory for computations on a projected coordinate system |
 
-For more information about choosing a factory, see the [Choosing a Fatory doc](https://github.com/rgeo/rgeo/wiki/Which-factory-should-I-use%3F-(draft)).
+For more information about choosing a factory, see the [Which factory should I use? doc](https://github.com/rgeo/rgeo/blob/main/doc/Which-factory-should-I-use.md).
 
 ## Tested Methods
 
