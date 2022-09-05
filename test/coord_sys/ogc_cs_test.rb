@@ -308,7 +308,7 @@ class OgcCsTest < Minitest::Test # :nodoc:
     assert_raises(NotImplementedError) { ct.identity? }
     assert_raises(NotImplementedError) { ct.domain_flags([]) }
     assert_raises(NotImplementedError) { ct.codomain_convex_hull([]) }
-    assert_raises(NotImplementedError) { ct.transform(1, 1) }
+    assert_raises(NotImplementedError) { ct.transform_coords(1, 1) }
     assert_raises(NotImplementedError) { ct.transform_list([[1, 1]]) }
 
     inv_ct = ct.inverse

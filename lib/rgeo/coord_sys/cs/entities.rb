@@ -1464,7 +1464,7 @@ module RGeo
         # @param [Integer] y
         # @param [Integer] z optional
         # @return [Array<Integer>] transformed point coordinates in (x,y,z) order
-        def transform(x, y, z = nil)
+        def transform_coords(x, y, z = nil)
           raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
         end
 
@@ -1473,7 +1473,7 @@ module RGeo
         # @param [Array<Array<Integer>>] points in (x,y,z) tuples where z is optional
         # @return [Array<Array<Integer>>] list of transformed point coordinates in (x,y,z) order
         def transform_list(points)
-          points.map { |x, y, z| transform(x, y, z) }
+          points.map { |x, y, z| transform_coords(x, y, z) }
         end
 
         # Creates the inverse transform of this object. This method may fail if the transform is not one to
