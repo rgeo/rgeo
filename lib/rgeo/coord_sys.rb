@@ -6,6 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
+require 'ostruct'
 require_relative "coord_sys/cs/factories"
 require_relative "coord_sys/cs/entities"
 require_relative "coord_sys/cs/wkt_parser"
@@ -24,6 +25,9 @@ module RGeo
   # systems, and other related concepts, as well as a parser for the WKT
   # format for specifying coordinate systems.
   module CoordSys
+    CONFIG = OpenStruct.new
+    CONFIG.default_coord_sys_class = CS::CoordinateSystem
+
     # The only valid key is :proj4
     def self.supported?(key)
       raise(Error::UnsupportedOperation, "Invalid key. The only valid key is :proj4.") unless key == :proj4

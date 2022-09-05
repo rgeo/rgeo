@@ -939,6 +939,15 @@ module RGeo
         def get_units(dimension)
           nil
         end
+
+        class << self
+          def create(defn, *optional)
+            # TODO: should this raise?
+            # Need this so we can maintain consistency with actual
+            # CoordinateSystem implementations
+            nil
+          end
+        end
       end
 
       # == OGC spec description

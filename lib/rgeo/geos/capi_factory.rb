@@ -57,25 +57,27 @@ module RGeo
             wkb_generator_ = WKRep::WKBGenerator.new
           end
 
-          # Coordinate system (srid, proj4, and coord_sys)
+          # Coordinate system (srid and coord_sys)
           srid_ = opts_[:srid]
-          proj4_ = opts_[:proj4]
-          if proj4_ && CoordSys.check!(:proj4)
-            if proj4_.is_a?(String) || proj4_.is_a?(Hash)
-              proj4_ = CoordSys::Proj4.create(proj4_)
-            end
-          else
-            proj4_ = nil
-          end
           coord_sys_ = opts_[:coord_sys]
+          coord_sys_class = opts_[:coord_sys_class]
+          unless coord_sys_class.is_a?(Class)
+            coord_sys_class = CoordSys::CONFIG.default_coord_sys_class
+          end
           if coord_sys_.is_a?(String)
-            coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_)
+            coord_sys_ = coord_sys_class.create_from_wkt(coord_sys_)
+          end
+          unless coord_sys_.is_a?(CoordSys::CS::CoordinateSystem)
+            coord_sys_ = nil
           end
           srid_ ||= coord_sys_.authority_code if coord_sys_
+          if coord_sys_.nil? && srid_ != 0
+            coord_sys_ = coord_sys_class.create(srid_)
+          end
 
           # Create the factory and set instance variables
           result = _create(flags, srid_.to_i, buffer_resolution_,
-            wkt_generator_, wkb_generator_, proj4_, coord_sys_)
+            wkt_generator_, wkb_generator_, coord_sys_)
 
           # Interpret parser options
           wkt_parser_ = opts_[:wkt_parser]
@@ -115,14 +117,14 @@ module RGeo
       def eql?(rhs_)
         rhs_.is_a?(CAPIFactory) && rhs_.srid == _srid &&
           rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
-          rhs_.proj4 == _proj4
+          rhs_.coord_sys == coord_sys
       end
       alias == eql?
 
       # Standard hash code
 
       def hash
-        @hash ||= [_srid, _buffer_resolution, _flags, _proj4].hash
+        @hash ||= [_srid, _buffer_resolution, _flags].hash
       end
 
       # Marshal support
@@ -139,9 +141,6 @@ module RGeo
           "wkbp" => _wkb_parser ? _wkb_parser.properties : {},
           "apre" => auto_prepare
         }
-        if (proj4_ = _proj4)
-          hash_["proj4"] = proj4_.marshal_dump
-        end
         if (coord_sys_ = _coord_sys)
           hash_["cs"] = coord_sys_.to_wkt
         end
@@ -149,12 +148,6 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        if (proj4_data_ = data_["proj4"]) && CoordSys.check!(:proj4)
-          proj4_ = CoordSys::Proj4.allocate
-          proj4_.marshal_load(proj4_data_)
-        else
-          proj4_ = nil
-        end
         if (coord_sys_data_ = data_["cs"])
           coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_)
         else
@@ -171,7 +164,6 @@ module RGeo
             wkt_parser: symbolize_hash(data_["wktp"]),
             wkb_parser: symbolize_hash(data_["wkbp"]),
             auto_prepare: data_["apre"],
-            proj4: proj4_,
             coord_sys: coord_sys_
           )
         )
@@ -189,26 +181,12 @@ module RGeo
         coder_["wkt_parser"] = _wkt_parser ? _wkt_parser.properties : {}
         coder_["wkb_parser"] = _wkb_parser ? _wkb_parser.properties : {}
         coder_["auto_prepare"] = auto_prepare
-        if (proj4_ = _proj4)
-          str_ = proj4_.original_str || proj4_.canonical_str
-          coder_["proj4"] = proj4_.radians? ? { "proj4" => str_, "radians" => true } : str_
-        end
         if (coord_sys_ = _coord_sys)
           coder_["coord_sys"] = coord_sys_.to_wkt
         end
       end
 
       def init_with(coder_) # :nodoc:
-        if (proj4_data_ = coder_["proj4"])
-          CoordSys.check!(:proj4)
-          if proj4_data_.is_a?(Hash)
-            proj4_ = CoordSys::Proj4.create(proj4_data_["proj4"], radians: proj4_data_["radians"])
-          else
-            proj4_ = CoordSys::Proj4.create(proj4_data_.to_s)
-          end
-        else
-          proj4_ = nil
-        end
         if (coord_sys_data_ = coder_["cs"])
           coord_sys_ = CoordSys::CS.create_from_wkt(coord_sys_data_.to_s)
         else
@@ -225,7 +203,6 @@ module RGeo
             wkt_parser: symbolize_hash(coder_["wkt_parser"]),
             wkb_parser: symbolize_hash(coder_["wkb_parser"]),
             auto_prepare: coder_["auto_prepare"] == "disabled" ? :disabled : :simple,
-            proj4: proj4_,
             coord_sys: coord_sys_
           )
         )
@@ -351,12 +328,6 @@ module RGeo
           raise(RGeo::Error::InvalidGeometry, "Parse error")
       end
 
-      # See RGeo::Feature::Factory#proj4
-
-      def proj4
-        _proj4
-      end
-
       # See RGeo::Feature::Factory#coord_sys
 
       def coord_sys
@@ -375,10 +346,10 @@ module RGeo
         case original
         when CAPIGeometryMethods
           # Optimization if we're just changing factories, but the
-          # factories are zm-compatible and proj4-compatible.
+          # factories are zm-compatible and coord_sys-compatible.
           if original.factory != self && ntype == type &&
               original.factory._flags & FLAG_SUPPORTS_Z_OR_M == _flags & FLAG_SUPPORTS_Z_OR_M &&
-              (!project || original.factory.proj4 == _proj4)
+              (!project || original.factory.coord_sys == coord_sys)
             result = original.dup
             result.factory = self
             return result
@@ -386,7 +357,7 @@ module RGeo
           # LineString conversion optimization.
           if (original.factory != self || ntype != type) &&
               original.factory._flags & FLAG_SUPPORTS_Z_OR_M == _flags & FLAG_SUPPORTS_Z_OR_M &&
-              (!project || original.factory.proj4 == _proj4) &&
+              (!project || original.factory.coord_sys == coord_sys) &&
               type.subtype_of?(Feature::LineString) && ntype.subtype_of?(Feature::LineString)
             return IMPL_CLASSES[ntype]._copy_from(self, original)
           end
