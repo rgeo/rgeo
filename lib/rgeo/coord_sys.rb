@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require 'ostruct'
+require "ostruct"
 require_relative "coord_sys/cs/factories"
 require_relative "coord_sys/cs/entities"
 require_relative "coord_sys/cs/wkt_parser"
