@@ -326,25 +326,10 @@ module RGeo
             projection_factory)
         else
           # Determine projection coordinate system. First check the parameters.
-          projection_coord_sys = opts[:projection_coord_sys]
-          projection_srid = opts[:projection_srid]
-          coord_sys_class = opts[:projection_coord_sys_class]
-          unless coord_sys_class.is_a?(Class)
-            coord_sys_class = CoordSys::CONFIG.default_coord_sys_class
-          end
+          projection_coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:projection_srid], opts[:projection_coord_sys], opts[:projection_coord_sys_class])
+          projection_coord_sys = projection_coord_sys_info[:coord_sys]
+          projection_srid = projection_coord_sys_info[:srid]
 
-          if projection_coord_sys.is_a?(String)
-            projection_coord_sys = coord_sys_class.create_from_wkt(projection_coord_sys)
-          end
-
-          if projection_coord_sys.nil? && projection_srid != 0
-            projection_coord_sys = coord_sys_class.create(projection_srid)
-          end
-
-          if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
-            raise ArgumentError, "The :projection_coord_sys is not a ProjectedCoordinateSystem."
-          end
-          projection_srid ||= projection_coord_sys.authority_code if projection_coord_sys
           # Determine geographic coordinate system. First check parameters.
           coord_sys = opts[:coord_sys]
           srid = opts[:srid]

@@ -27,27 +27,9 @@ module RGeo
         @coordinate_dimension += 1 if @has_m
         @spatial_dimension = @has_z ? 3 : 2
 
-        @coord_sys = opts[:coord_sys]
-        coord_sys_class = opts[:coord_sys_class]
-        unless coord_sys_class.is_a?(Class)
-          coord_sys_class = CoordSys::CONFIG.default_coord_sys_class
-        end
-
-        if @coord_sys.is_a?(String)
-          @coord_sys = coord_sys_class.create_from_wkt(@coord_sys)
-        end
-
-        unless @coord_sys.is_a?(CoordSys::CS::CoordinateSystem)
-          # TODO: should we raise here?
-          @coord_sys = nil
-        end
-        srid = opts[:srid]
-        srid ||= @coord_sys.authority_code if @coord_sys
-        @srid = srid.to_i
-        # Create a coord sys based on the SRID if one was not given
-        if @coord_sys.nil? && srid != 0
-          @coord_sys = coord_sys_class.create(srid)
-        end
+        coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:srid], opts[:coord_sys], opts[:coord_sys_class])
+        @coord_sys = coord_sys_info[:coord_sys]
+        @srid = coord_sys_info[:srid]
 
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1

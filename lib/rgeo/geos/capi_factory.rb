@@ -58,22 +58,9 @@ module RGeo
           end
 
           # Coordinate system (srid and coord_sys)
-          srid_ = opts_[:srid]
-          coord_sys_ = opts_[:coord_sys]
-          coord_sys_class = opts_[:coord_sys_class]
-          unless coord_sys_class.is_a?(Class)
-            coord_sys_class = CoordSys::CONFIG.default_coord_sys_class
-          end
-          if coord_sys_.is_a?(String)
-            coord_sys_ = coord_sys_class.create_from_wkt(coord_sys_)
-          end
-          unless coord_sys_.is_a?(CoordSys::CS::CoordinateSystem)
-            coord_sys_ = nil
-          end
-          srid_ ||= coord_sys_.authority_code if coord_sys_
-          if coord_sys_.nil? && srid_ != 0
-            coord_sys_ = coord_sys_class.create(srid_)
-          end
+          coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts_[:srid], opts_[:coord_sys], opts_[:coord_sys_class])
+          srid_ = coord_sys_info[:srid]
+          coord_sys_ = coord_sys_info[:coord_sys]
 
           # Create the factory and set instance variables
           result = _create(flags, srid_.to_i, buffer_resolution_,
