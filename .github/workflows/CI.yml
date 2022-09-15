@@ -50,7 +50,7 @@ jobs:
         if: matrix.os == 'ubuntu' && matrix.ruby != 'jruby'
         run: bundle exec rake test:valgrind
       - name: Test
-        if: matrix.os != 'ubuntu' && matrix.ruby == 'jruby'
+        if: matrix.os != 'ubuntu' || matrix.ruby == 'jruby'
         run: bundle exec rake
   RuboCop:
     runs-on: ubuntu-latest
