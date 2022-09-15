@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  Build:
+  Test:
     strategy:
       fail-fast: false
       matrix:
@@ -37,7 +37,7 @@ jobs:
         if: matrix.os == 'ubuntu'
         run: |
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get install -yqq libgeos-dev valgrind
+          sudo apt-get install -yqq libgeos-dev
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: brew install geos
@@ -46,19 +46,29 @@ jobs:
         run: TODO
       - name: Bundle Install
         run: bundle install
-      - name: Test & memcheck
-        if: matrix.os == 'ubuntu' && matrix.ruby != 'jruby'
-        run: bundle exec rake test:valgrind
       - name: Test
-        if: matrix.os != 'ubuntu' || matrix.ruby == 'jruby'
         run: bundle exec rake
+  Memcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 'head'
+          bundler-cache: true
+      - name: Install dependencies
+        run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get install -yqq libgeos-dev valgrind
+      - name: Test & Memcheck
+        run: bundle exec rake test:valgrind
   RuboCop:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'
+          ruby-version: 'head'
           bundler-cache: true
       - run: |
           bundle exec rubocop --color --parallel
