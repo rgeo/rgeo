@@ -10,6 +10,9 @@ Layout/ParameterAlignment:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
+Layout/LineContinuationLeadingSpace:
+  Enabled: false
+
 Layout/MultilineOperationIndentation:
   Enabled: false
 

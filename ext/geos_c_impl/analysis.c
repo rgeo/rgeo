@@ -43,7 +43,7 @@ VALUE rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
   }
 
   return is_ccw ? Qtrue : Qfalse;
-};
+}
 #endif // RGEO_GEOS_SUPPORTS_ISCCW
 
 

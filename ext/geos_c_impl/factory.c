@@ -33,7 +33,7 @@ RGEO_BEGIN_C
 // GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
 // We still set it to make sure we do not miss any implementation
 // change. Use `DEBUG=1 rake` to show notice.
-#ifdef RGEO_GEOS_DEBUG
+#ifdef DEBUG
 static void notice_handler(const char* fmt, ...)
 {
   va_list args;
@@ -519,7 +519,7 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
   data = ALLOC(RGeo_FactoryData);
   if (data) {
     context = GEOS_init_r();
-#ifdef RGEO_GEOS_DEBUG
+#ifdef DEBUG
     GEOSContext_setNoticeHandler_r(context, notice_handler);
 #endif
     GEOSContext_setErrorHandler_r(context, error_handler);
@@ -1059,22 +1059,6 @@ st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t h
   hash_struct.h1 = FIX2LONG(rb_funcall(factory, hash_method, 0));
   hash_struct.h2 = FIX2LONG(rb_funcall(type_module, hash_method, 0));
   return rb_memhash(&hash_struct, sizeof(RGeo_Objbase_Hash_Struct));
-}
-
-
-st_index_t rgeo_internal_memhash(const void* ptr, long len)
-{
-  const char* bytes;
-  st_index_t hval;
-  long i;
-
-  bytes = (const char*)ptr;
-  hval = 0x811c9dc5;
-  for (i=0; i<len; ++i) {
-    hval ^= (unsigned int)(*bytes++);
-    hval *= 0x01000193;
-  }
-  return hval;
 }
 
 
