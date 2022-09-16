@@ -17,7 +17,8 @@ extern VALUE rb_eRGeoUnsupportedOperation;
 // RGeo error specific to the GEOS implementation.
 extern VALUE rb_eGeosError;
 
-void rgeo_init_geos_errors();
+void
+rgeo_init_geos_errors();
 
 RGEO_END_C
 

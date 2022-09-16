@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+die() {
+	>&2 echo "$0: ${1-Unknown error}"
+	false
+}
+
+root=$(dirname $(dirname $(realpath $0)))
+command -v clang-format &> /dev/null || die "clang-format not installed"
+case ${1-format} in
+	format)
+		clang-format --style=file -i $root/ext/**/*.{c,h}
+		;;
+	lint)
+		clang-format --style=file -Werror --dry-run $root/ext/**/*.{c,h}
+		;;
+	*)
+		die "'$1' not recognized, try 'format' or 'lint'"
+		;;
+esac
