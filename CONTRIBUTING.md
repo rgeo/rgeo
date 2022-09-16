@@ -62,4 +62,5 @@ have extra information when compiling.
 
 ```sh
 rubocop
+bin/clang-format
 ```

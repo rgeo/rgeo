@@ -2,22 +2,21 @@
   Factory and utility functions for GEOS wrapper
 */
 
-
 #include "preface.h"
 
 #ifdef RGEO_GEOS_SUPPORTED
 
-#include <ruby.h>
-#include <geos_c.h>
 #include <ctype.h>
+#include <geos_c.h>
+#include <ruby.h>
 #include <stdarg.h>
 #include <stdio.h>
 
 #include "errors.h"
 #include "factory.h"
-#include "globals.h"
 #include "geometry.h"
 #include "geometry_collection.h"
+#include "globals.h"
 #include "line_string.h"
 #include "point.h"
 #include "polygon.h"
@@ -25,16 +24,15 @@
 
 RGEO_BEGIN_C
 
-
 /**** RUBY AND GEOS CALLBACKS ****/
-
 
 // The notice handler is very rarely used by GEOS, only in
 // GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
 // We still set it to make sure we do not miss any implementation
 // change. Use `DEBUG=1 rake` to show notice.
 #ifdef DEBUG
-static void notice_handler(const char* fmt, ...)
+static void
+notice_handler(const char* fmt, ...)
 {
   va_list args;
   va_start(args, fmt);
@@ -45,23 +43,25 @@ static void notice_handler(const char* fmt, ...)
 }
 #endif
 
-static void error_handler(const char* fmt, ...)
+static void
+error_handler(const char* fmt, ...)
 {
   // See https://en.cppreference.com/w/c/io/vfprintf
   va_list args1;
   va_start(args1, fmt);
   va_list args2;
   va_copy(args2, args1);
-  int size = 1+vsnprintf(NULL, 0, fmt, args1);
+  int size = 1 + vsnprintf(NULL, 0, fmt, args1);
   va_end(args1);
   char geos_full_error[size];
   vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
   va_end(args2);
 
   // NOTE: strtok is destructive, geos_full_error is not to be used afterwards.
-  char *geos_error = strtok(geos_full_error, ":");
-  char *geos_message = strtok(NULL, ":");
-  while(isspace(*geos_message)) geos_message++;
+  char* geos_error = strtok(geos_full_error, ":");
+  char* geos_message = strtok(NULL, ":");
+  while (isspace(*geos_message))
+    geos_message++;
 
   if (streq(geos_error, "UnsupportedOperationException")) {
     rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
@@ -78,7 +78,8 @@ static void error_handler(const char* fmt, ...)
 // objects that have been created for the factory, and then destroy
 // the GEOS context, before freeing the factory data itself.
 
-static void destroy_factory_func(void* data)
+static void
+destroy_factory_func(void* data)
 {
   RGeo_FactoryData* factory_data;
   GEOSContextHandle_t context;
@@ -113,11 +114,11 @@ static void destroy_factory_func(void* data)
   FREE(factory_data);
 }
 
-
 // Destroy function for geometry data. We destroy the internal
 // GEOS geometry (if present) before freeing the data itself.
 
-static void destroy_geometry_func(void* data)
+static void
+destroy_geometry_func(void* data)
 {
   RGeo_GeometryData* geometry_data;
   const GEOSPreparedGeometry* prep;
@@ -127,19 +128,19 @@ static void destroy_geometry_func(void* data)
     GEOSGeom_destroy_r(geometry_data->geos_context, geometry_data->geom);
   }
   prep = geometry_data->prep;
-  if (prep && prep != (const GEOSPreparedGeometry*)1 && prep != (const GEOSPreparedGeometry*)2 &&
-    prep != (const GEOSPreparedGeometry*)3)
-  {
+  if (prep && prep != (const GEOSPreparedGeometry*)1 &&
+      prep != (const GEOSPreparedGeometry*)2 &&
+      prep != (const GEOSPreparedGeometry*)3) {
     GEOSPreparedGeom_destroy_r(geometry_data->geos_context, prep);
   }
   FREE(geometry_data);
 }
 
-
 // Mark function for factory data. This marks the wkt and wkb generator
 // handles so they don't get collected.
 
-static void mark_factory_func(void* data)
+static void
+mark_factory_func(void* data)
 {
   RGeo_FactoryData* factory_data;
 
@@ -164,11 +165,11 @@ static void mark_factory_func(void* data)
   }
 }
 
-
 // Mark function for geometry data. This marks the factory and klasses
 // held by the geometry so those don't get collected.
 
-static void mark_geometry_func(void* data)
+static void
+mark_geometry_func(void* data)
 {
   RGeo_GeometryData* geometry_data;
 
@@ -181,24 +182,28 @@ static void mark_geometry_func(void* data)
   }
 }
 
-
 #ifdef HAVE_RB_GC_MARK_MOVABLE
-static void compact_factory_func(void* data)
+static void
+compact_factory_func(void* data)
 {
   RGeo_FactoryData* factory_data;
 
   factory_data = (RGeo_FactoryData*)data;
   if (!NIL_P(factory_data->wkrep_wkt_generator)) {
-    factory_data->wkrep_wkt_generator = rb_gc_location(factory_data->wkrep_wkt_generator);
+    factory_data->wkrep_wkt_generator =
+      rb_gc_location(factory_data->wkrep_wkt_generator);
   }
   if (!NIL_P(factory_data->wkrep_wkb_generator)) {
-    factory_data->wkrep_wkb_generator = rb_gc_location(factory_data->wkrep_wkb_generator);
+    factory_data->wkrep_wkb_generator =
+      rb_gc_location(factory_data->wkrep_wkb_generator);
   }
   if (!NIL_P(factory_data->wkrep_wkt_parser)) {
-    factory_data->wkrep_wkt_parser = rb_gc_location(factory_data->wkrep_wkt_parser);
+    factory_data->wkrep_wkt_parser =
+      rb_gc_location(factory_data->wkrep_wkt_parser);
   }
   if (!NIL_P(factory_data->wkrep_wkb_parser)) {
-    factory_data->wkrep_wkb_parser = rb_gc_location(factory_data->wkrep_wkb_parser);
+    factory_data->wkrep_wkb_parser =
+      rb_gc_location(factory_data->wkrep_wkb_parser);
   }
   if (!NIL_P(factory_data->proj4_obj)) {
     factory_data->proj4_obj = rb_gc_location(factory_data->proj4_obj);
@@ -208,8 +213,8 @@ static void compact_factory_func(void* data)
   }
 }
 
-
-static void compact_geometry_func(void* data)
+static void
+compact_geometry_func(void* data)
 {
   RGeo_GeometryData* geometry_data;
 
@@ -223,71 +228,79 @@ static void compact_geometry_func(void* data)
 }
 #endif
 
-
-const rb_data_type_t rgeo_factory_type = {
-  .wrap_struct_name = "RGeo/Factory",
-  .function = {
-    .dmark = mark_factory_func,
-    .dfree = destroy_factory_func,
+const rb_data_type_t rgeo_factory_type = { .wrap_struct_name = "RGeo/Factory",
+                                           .function = {
+                                             .dmark = mark_factory_func,
+                                             .dfree = destroy_factory_func,
 #ifdef HAVE_RB_GC_MARK_MOVABLE
-    .dcompact = compact_factory_func,
+                                             .dcompact = compact_factory_func,
 #endif
-  }
-};
+                                           } };
 
-const rb_data_type_t rgeo_geometry_type = {
-  .wrap_struct_name = "RGeo/Geometry",
-  .function = {
-    .dmark = mark_geometry_func,
-    .dfree = destroy_geometry_func,
+const rb_data_type_t rgeo_geometry_type = { .wrap_struct_name = "RGeo/Geometry",
+                                            .function = {
+                                              .dmark = mark_geometry_func,
+                                              .dfree = destroy_geometry_func,
 #ifdef HAVE_RB_GC_MARK_MOVABLE
-    .dcompact = compact_geometry_func,
+                                              .dcompact = compact_geometry_func,
 #endif
-  }
-};
-
+                                            } };
 
 /**** RUBY METHOD DEFINITIONS ****/
 
-
-static VALUE method_factory_srid(VALUE self)
+static VALUE
+method_factory_srid(VALUE self)
 {
   return INT2NUM(RGEO_FACTORY_DATA_PTR(self)->srid);
 }
 
-
-static VALUE method_factory_buffer_resolution(VALUE self)
+static VALUE
+method_factory_buffer_resolution(VALUE self)
 {
   return INT2NUM(RGEO_FACTORY_DATA_PTR(self)->buffer_resolution);
 }
 
-
-static VALUE method_factory_flags(VALUE self)
+static VALUE
+method_factory_flags(VALUE self)
 {
   return INT2NUM(RGEO_FACTORY_DATA_PTR(self)->flags);
 }
 
-VALUE method_factory_supports_z_p(VALUE self)
+VALUE
+method_factory_supports_z_p(VALUE self)
 {
-  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z ? Qtrue : Qfalse;
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z
+           ? Qtrue
+           : Qfalse;
 }
 
-VALUE method_factory_supports_m_p(VALUE self)
+VALUE
+method_factory_supports_m_p(VALUE self)
 {
-  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_M ? Qtrue : Qfalse;
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_M
+           ? Qtrue
+           : Qfalse;
 }
 
-VALUE method_factory_supports_z_or_m_p(VALUE self)
+VALUE
+method_factory_supports_z_or_m_p(VALUE self)
 {
-  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M ? Qtrue : Qfalse;
+  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M
+           ? Qtrue
+           : Qfalse;
 }
 
-VALUE method_factory_prepare_heuristic_p(VALUE self)
+VALUE
+method_factory_prepare_heuristic_p(VALUE self)
 {
-  return RGEO_FACTORY_DATA_PTR(self)->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC ? Qtrue : Qfalse;
+  return RGEO_FACTORY_DATA_PTR(self)->flags &
+             RGEO_FACTORYFLAGS_PREPARE_HEURISTIC
+           ? Qtrue
+           : Qfalse;
 }
 
-static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
+static VALUE
+method_factory_parse_wkt(VALUE self, VALUE str)
 {
   RGeo_FactoryData* self_data;
   GEOSContextHandle_t self_context;
@@ -313,8 +326,8 @@ static VALUE method_factory_parse_wkt(VALUE self, VALUE str)
   return result;
 }
 
-
-static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
+static VALUE
+method_factory_parse_wkb(VALUE self, VALUE str)
 {
   RGeo_FactoryData* self_data;
   GEOSContextHandle_t self_context;
@@ -332,7 +345,10 @@ static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
   }
   result = Qnil;
   if (wkb_reader) {
-    geom = GEOSWKBReader_read_r(self_context, wkb_reader, (unsigned char*)RSTRING_PTR(str), (size_t)RSTRING_LEN(str));
+    geom = GEOSWKBReader_read_r(self_context,
+                                wkb_reader,
+                                (unsigned char*)RSTRING_PTR(str),
+                                (size_t)RSTRING_LEN(str));
     if (geom) {
       result = rgeo_wrap_geos_geometry(self, geom, Qnil);
     }
@@ -340,8 +356,8 @@ static VALUE method_factory_parse_wkb(VALUE self, VALUE str)
   return result;
 }
 
-
-static VALUE method_factory_read_for_marshal(VALUE self, VALUE str)
+static VALUE
+method_factory_read_for_marshal(VALUE self, VALUE str)
 {
   RGeo_FactoryData* self_data;
   GEOSContextHandle_t self_context;
@@ -359,7 +375,10 @@ static VALUE method_factory_read_for_marshal(VALUE self, VALUE str)
   }
   result = Qnil;
   if (wkb_reader) {
-    geom = GEOSWKBReader_read_r(self_context, wkb_reader, (unsigned char*)RSTRING_PTR(str), (size_t)RSTRING_LEN(str));
+    geom = GEOSWKBReader_read_r(self_context,
+                                wkb_reader,
+                                (unsigned char*)RSTRING_PTR(str),
+                                (size_t)RSTRING_LEN(str));
     if (geom) {
       result = rgeo_wrap_geos_geometry(self, geom, Qnil);
     }
@@ -367,7 +386,8 @@ static VALUE method_factory_read_for_marshal(VALUE self, VALUE str)
   return result;
 }
 
-static VALUE method_factory_read_for_psych(VALUE self, VALUE str)
+static VALUE
+method_factory_read_for_psych(VALUE self, VALUE str)
 {
   RGeo_FactoryData* self_data;
   GEOSContextHandle_t self_context;
@@ -397,7 +417,8 @@ static VALUE method_factory_read_for_psych(VALUE self, VALUE str)
 static VALUE marshal_wkb_generator;
 #endif
 
-static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
+static VALUE
+method_factory_write_for_marshal(VALUE self, VALUE obj)
 {
   RGeo_FactoryData* self_data;
   GEOSContextHandle_t self_context;
@@ -414,9 +435,10 @@ static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
   if (has_3d) {
     if (NIL_P(marshal_wkb_generator)) {
-      marshal_wkb_generator = rb_funcall(
-        rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
-        rb_intern("marshal_wkb_generator"), 0);
+      marshal_wkb_generator =
+        rb_funcall(rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
+                   rb_intern("marshal_wkb_generator"),
+                   0);
     }
     return rb_funcall(marshal_wkb_generator, rb_intern("generate"), 1, obj);
   }
@@ -447,7 +469,8 @@ static VALUE method_factory_write_for_marshal(VALUE self, VALUE obj)
 static VALUE psych_wkt_generator;
 #endif
 
-static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
+static VALUE
+method_factory_write_for_psych(VALUE self, VALUE obj)
 {
   RGeo_FactoryData* self_data;
   GEOSContextHandle_t self_context;
@@ -463,9 +486,10 @@ static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
   if (has_3d) {
     if (NIL_P(psych_wkt_generator)) {
-      psych_wkt_generator = rb_funcall(
-        rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
-        rb_intern("psych_wkt_generator"), 0);
+      psych_wkt_generator =
+        rb_funcall(rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
+                   rb_intern("psych_wkt_generator"),
+                   0);
     }
     return rb_funcall(psych_wkt_generator, rb_intern("generate"), 1, obj);
   }
@@ -492,14 +516,14 @@ static VALUE method_factory_write_for_psych(VALUE self, VALUE obj)
   return result;
 }
 
-
-static VALUE cmethod_factory_geos_version(VALUE klass)
+static VALUE
+cmethod_factory_geos_version(VALUE klass)
 {
   return rb_str_new2(GEOS_VERSION);
 }
 
-
-static VALUE cmethod_factory_supports_unary_union(VALUE klass)
+static VALUE
+cmethod_factory_supports_unary_union(VALUE klass)
 {
 #ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   return Qtrue;
@@ -508,8 +532,15 @@ static VALUE cmethod_factory_supports_unary_union(VALUE klass)
 #endif
 }
 
-static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE buffer_resolution,
-  VALUE wkt_generator, VALUE wkb_generator, VALUE proj4_obj, VALUE coord_sys_obj)
+static VALUE
+cmethod_factory_create(VALUE klass,
+                       VALUE flags,
+                       VALUE srid,
+                       VALUE buffer_resolution,
+                       VALUE wkt_generator,
+                       VALUE wkb_generator,
+                       VALUE proj4_obj,
+                       VALUE coord_sys_obj)
 {
   VALUE result;
   RGeo_FactoryData* data;
@@ -544,22 +575,22 @@ static VALUE cmethod_factory_create(VALUE klass, VALUE flags, VALUE srid, VALUE 
       data->proj4_obj = proj4_obj;
       data->coord_sys_obj = coord_sys_obj;
       result = TypedData_Wrap_Struct(klass, &rgeo_factory_type, data);
-    }
-    else {
+    } else {
       FREE(data);
     }
   }
   return result;
 }
 
-
-static VALUE alloc_factory(VALUE klass)
+static VALUE
+alloc_factory(VALUE klass)
 {
-  return cmethod_factory_create(klass, INT2NUM(0), INT2NUM(0), INT2NUM(0), Qnil, Qnil, Qnil, Qnil);
+  return cmethod_factory_create(
+    klass, INT2NUM(0), INT2NUM(0), INT2NUM(0), Qnil, Qnil, Qnil, Qnil);
 }
 
-
-static VALUE method_factory_initialize_copy(VALUE self, VALUE orig)
+static VALUE
+method_factory_initialize_copy(VALUE self, VALUE orig)
 {
   RGeo_FactoryData* self_data;
   RGeo_FactoryData* orig_data;
@@ -623,8 +654,8 @@ static VALUE method_factory_initialize_copy(VALUE self, VALUE orig)
   return self;
 }
 
-
-static VALUE method_set_wkrep_parsers(VALUE self, VALUE wkt_parser, VALUE wkb_parser)
+static VALUE
+method_set_wkrep_parsers(VALUE self, VALUE wkt_parser, VALUE wkb_parser)
 {
   RGeo_FactoryData* self_data;
 
@@ -635,96 +666,133 @@ static VALUE method_set_wkrep_parsers(VALUE self, VALUE wkt_parser, VALUE wkb_pa
   return self;
 }
 
-
-static VALUE method_get_proj4(VALUE self)
+static VALUE
+method_get_proj4(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->proj4_obj;
 }
 
-
-static VALUE method_get_coord_sys(VALUE self)
+static VALUE
+method_get_coord_sys(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->coord_sys_obj;
 }
 
-
-static VALUE method_get_wkt_generator(VALUE self)
+static VALUE
+method_get_wkt_generator(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkt_generator;
 }
 
-
-static VALUE method_get_wkb_generator(VALUE self)
+static VALUE
+method_get_wkb_generator(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkb_generator;
 }
 
-
-static VALUE method_get_wkt_parser(VALUE self)
+static VALUE
+method_get_wkt_parser(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkt_parser;
 }
 
-
-static VALUE method_get_wkb_parser(VALUE self)
+static VALUE
+method_get_wkb_parser(VALUE self)
 {
   return RGEO_FACTORY_DATA_PTR(self)->wkrep_wkb_parser;
 }
 
-
-static VALUE alloc_geometry(VALUE klass)
+static VALUE
+alloc_geometry(VALUE klass)
 {
   return rgeo_wrap_geos_geometry(Qnil, NULL, klass);
 }
 
-
 /**** INITIALIZATION FUNCTION ****/
 
-
-void rgeo_init_geos_factory()
+void
+rgeo_init_geos_factory()
 {
   VALUE geos_factory_class;
 
 #ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  /* We favor rb_gc_register_address over rb_gc_register_mark_object because the value changes at runtime */
+  /* We favor rb_gc_register_address over rb_gc_register_mark_object because
+   * the value changes at runtime */
   psych_wkt_generator = Qnil;
   rb_gc_register_address(&psych_wkt_generator);
   marshal_wkb_generator = Qnil;
   rb_gc_register_address(&marshal_wkb_generator);
 #endif
 
-  geos_factory_class = rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);
+  geos_factory_class =
+    rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);
   rb_define_alloc_func(geos_factory_class, alloc_factory);
   // Add C constants to the factory.
-  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z));
-  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_M));
-  rb_define_const(geos_factory_class, "FLAG_SUPPORTS_Z_OR_M", INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M));
-  rb_define_const(geos_factory_class, "FLAG_PREPARE_HEURISTIC", INT2FIX(RGEO_FACTORYFLAGS_PREPARE_HEURISTIC));
+  rb_define_const(geos_factory_class,
+                  "FLAG_SUPPORTS_Z",
+                  INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z));
+  rb_define_const(geos_factory_class,
+                  "FLAG_SUPPORTS_M",
+                  INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_M));
+  rb_define_const(geos_factory_class,
+                  "FLAG_SUPPORTS_Z_OR_M",
+                  INT2FIX(RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M));
+  rb_define_const(geos_factory_class,
+                  "FLAG_PREPARE_HEURISTIC",
+                  INT2FIX(RGEO_FACTORYFLAGS_PREPARE_HEURISTIC));
   // Add C methods to the factory.
-  rb_define_method(geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
-  rb_define_method(geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
-  rb_define_method(geos_factory_class, "_parse_wkb_impl", method_factory_parse_wkb, 1);
+  rb_define_method(
+    geos_factory_class, "initialize_copy", method_factory_initialize_copy, 1);
+  rb_define_method(
+    geos_factory_class, "_parse_wkt_impl", method_factory_parse_wkt, 1);
+  rb_define_method(
+    geos_factory_class, "_parse_wkb_impl", method_factory_parse_wkb, 1);
   rb_define_method(geos_factory_class, "_srid", method_factory_srid, 0);
-  rb_define_method(geos_factory_class, "_buffer_resolution", method_factory_buffer_resolution, 0);
+  rb_define_method(geos_factory_class,
+                   "_buffer_resolution",
+                   method_factory_buffer_resolution,
+                   0);
   rb_define_method(geos_factory_class, "_flags", method_factory_flags, 0);
-  rb_define_method(geos_factory_class, "supports_z?", method_factory_supports_z_p, 0);
-  rb_define_method(geos_factory_class, "supports_m?", method_factory_supports_m_p, 0);
-  rb_define_method(geos_factory_class, "supports_z_or_m?", method_factory_supports_z_or_m_p, 0);
-  rb_define_method(geos_factory_class, "prepare_heuristic?", method_factory_prepare_heuristic_p, 0);
-  rb_define_method(geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
+  rb_define_method(
+    geos_factory_class, "supports_z?", method_factory_supports_z_p, 0);
+  rb_define_method(
+    geos_factory_class, "supports_m?", method_factory_supports_m_p, 0);
+  rb_define_method(geos_factory_class,
+                   "supports_z_or_m?",
+                   method_factory_supports_z_or_m_p,
+                   0);
+  rb_define_method(geos_factory_class,
+                   "prepare_heuristic?",
+                   method_factory_prepare_heuristic_p,
+                   0);
+  rb_define_method(
+    geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
   rb_define_method(geos_factory_class, "_proj4", method_get_proj4, 0);
   rb_define_method(geos_factory_class, "_coord_sys", method_get_coord_sys, 0);
-  rb_define_method(geos_factory_class, "_wkt_generator", method_get_wkt_generator, 0);
-  rb_define_method(geos_factory_class, "_wkb_generator", method_get_wkb_generator, 0);
+  rb_define_method(
+    geos_factory_class, "_wkt_generator", method_get_wkt_generator, 0);
+  rb_define_method(
+    geos_factory_class, "_wkb_generator", method_get_wkb_generator, 0);
   rb_define_method(geos_factory_class, "_wkt_parser", method_get_wkt_parser, 0);
   rb_define_method(geos_factory_class, "_wkb_parser", method_get_wkb_parser, 0);
-  rb_define_method(geos_factory_class, "read_for_marshal", method_factory_read_for_marshal, 1);
-  rb_define_method(geos_factory_class, "write_for_marshal", method_factory_write_for_marshal, 1);
-  rb_define_method(geos_factory_class, "read_for_psych", method_factory_read_for_psych, 1);
-  rb_define_method(geos_factory_class, "write_for_psych", method_factory_write_for_psych, 1);
-  rb_define_module_function(geos_factory_class, "_create", cmethod_factory_create, 7);
-  rb_define_module_function(geos_factory_class, "_geos_version", cmethod_factory_geos_version, 0);
-  rb_define_module_function(geos_factory_class, "_supports_unary_union?", cmethod_factory_supports_unary_union, 0);
+  rb_define_method(
+    geos_factory_class, "read_for_marshal", method_factory_read_for_marshal, 1);
+  rb_define_method(geos_factory_class,
+                   "write_for_marshal",
+                   method_factory_write_for_marshal,
+                   1);
+  rb_define_method(
+    geos_factory_class, "read_for_psych", method_factory_read_for_psych, 1);
+  rb_define_method(
+    geos_factory_class, "write_for_psych", method_factory_write_for_psych, 1);
+  rb_define_module_function(
+    geos_factory_class, "_create", cmethod_factory_create, 7);
+  rb_define_module_function(
+    geos_factory_class, "_geos_version", cmethod_factory_geos_version, 0);
+  rb_define_module_function(geos_factory_class,
+                            "_supports_unary_union?",
+                            cmethod_factory_supports_unary_union,
+                            0);
 
   // Define allocation methods for global class types
   rb_define_alloc_func(rgeo_geos_geometry_class, alloc_geometry);
@@ -739,11 +807,10 @@ void rgeo_init_geos_factory()
   rb_define_alloc_func(rgeo_geos_multi_polygon_class, alloc_geometry);
 }
 
-
 /**** OTHER PUBLIC FUNCTIONS ****/
 
-
-VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
+VALUE
+rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
 {
   VALUE result;
   RGeo_FactoryData* factory_data;
@@ -761,9 +828,11 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
     // We don't allow "empty" points, so replace such objects with
     // an empty collection.
     if (geom && factory) {
-      if (GEOSGeomTypeId_r(factory_context, geom) == GEOS_POINT && GEOSGetNumCoordinates_r(factory_context, geom) == 0) {
+      if (GEOSGeomTypeId_r(factory_context, geom) == GEOS_POINT &&
+          GEOSGetNumCoordinates_r(factory_context, geom) == 0) {
         GEOSGeom_destroy_r(factory_context, geom);
-        geom = GEOSGeom_createCollection_r(factory_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
+        geom = GEOSGeom_createCollection_r(
+          factory_context, GEOS_GEOMETRYCOLLECTION, NULL, 0);
         klass = rgeo_geos_geometry_collection_class;
       }
     }
@@ -773,37 +842,37 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       inferred_klass = Qnil;
       is_collection = 0;
       switch (GEOSGeomTypeId_r(factory_context, geom)) {
-      case GEOS_POINT:
-        inferred_klass = rgeo_geos_point_class;
-        break;
-      case GEOS_LINESTRING:
-        inferred_klass = rgeo_geos_line_string_class;
-        break;
-      case GEOS_LINEARRING:
-        inferred_klass = rgeo_geos_linear_ring_class;
-        break;
-      case GEOS_POLYGON:
-        inferred_klass = rgeo_geos_polygon_class;
-        break;
-      case GEOS_MULTIPOINT:
-        inferred_klass = rgeo_geos_multi_point_class;
-        is_collection = 1;
-        break;
-      case GEOS_MULTILINESTRING:
-        inferred_klass = rgeo_geos_multi_line_string_class;
-        is_collection = 1;
-        break;
-      case GEOS_MULTIPOLYGON:
-        inferred_klass = rgeo_geos_multi_polygon_class;
-        is_collection = 1;
-        break;
-      case GEOS_GEOMETRYCOLLECTION:
-        inferred_klass = rgeo_geos_geometry_collection_class;
-        is_collection = 1;
-        break;
-      default:
-        inferred_klass = rgeo_geos_geometry_class;
-        break;
+        case GEOS_POINT:
+          inferred_klass = rgeo_geos_point_class;
+          break;
+        case GEOS_LINESTRING:
+          inferred_klass = rgeo_geos_line_string_class;
+          break;
+        case GEOS_LINEARRING:
+          inferred_klass = rgeo_geos_linear_ring_class;
+          break;
+        case GEOS_POLYGON:
+          inferred_klass = rgeo_geos_polygon_class;
+          break;
+        case GEOS_MULTIPOINT:
+          inferred_klass = rgeo_geos_multi_point_class;
+          is_collection = 1;
+          break;
+        case GEOS_MULTILINESTRING:
+          inferred_klass = rgeo_geos_multi_line_string_class;
+          is_collection = 1;
+          break;
+        case GEOS_MULTIPOLYGON:
+          inferred_klass = rgeo_geos_multi_polygon_class;
+          is_collection = 1;
+          break;
+        case GEOS_GEOMETRYCOLLECTION:
+          inferred_klass = rgeo_geos_geometry_collection_class;
+          is_collection = 1;
+          break;
+        default:
+          inferred_klass = rgeo_geos_geometry_class;
+          break;
       }
       if (TYPE(klass) == T_ARRAY && is_collection) {
         klasses = klass;
@@ -817,8 +886,11 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       data->geos_context = factory_context;
       data->geom = geom;
-      data->prep = factory_data && ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0) ?
-        (GEOSPreparedGeometry*)1 : NULL;
+      data->prep =
+        factory_data &&
+            ((factory_data->flags & RGEO_FACTORYFLAGS_PREPARE_HEURISTIC) != 0)
+          ? (GEOSPreparedGeometry*)1
+          : NULL;
       data->factory = factory;
       data->klasses = klasses;
       result = TypedData_Wrap_Struct(klass, &rgeo_geometry_type, data);
@@ -827,14 +899,18 @@ VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
   return result;
 }
 
-VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VALUE klass)
+VALUE
+rgeo_wrap_geos_geometry_clone(VALUE factory,
+                              const GEOSGeometry* geom,
+                              VALUE klass)
 {
   VALUE result;
   GEOSGeometry* clone_geom;
 
   result = Qnil;
   if (geom) {
-    clone_geom = GEOSGeom_clone_r(RGEO_FACTORY_DATA_PTR(factory)->geos_context, geom);
+    clone_geom =
+      GEOSGeom_clone_r(RGEO_FACTORY_DATA_PTR(factory)->geos_context, geom);
     if (clone_geom) {
       result = rgeo_wrap_geos_geometry(factory, clone_geom, klass);
     }
@@ -842,16 +918,17 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
   return result;
 }
 
-
-const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
+const GEOSGeometry*
+rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
 {
   VALUE object;
 
-  if (NIL_P(type) && RGEO_GEOMETRY_TYPEDDATA_P(obj) && RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
+  if (NIL_P(type) && RGEO_GEOMETRY_TYPEDDATA_P(obj) &&
+      RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
     object = obj;
-  }
-  else {
-    object = rb_funcall(rgeo_feature_module, rb_intern("cast"), 3, obj, factory, type);
+  } else {
+    object =
+      rb_funcall(rgeo_feature_module, rb_intern("cast"), 3, obj, factory, type);
   }
   if (NIL_P(object))
     return NULL;
@@ -860,7 +937,12 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   return RGEO_GEOMETRY_DATA_PTR(object)->geom;
 }
 
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses, int *state)
+GEOSGeometry*
+rgeo_convert_to_detached_geos_geometry(VALUE obj,
+                                       VALUE factory,
+                                       VALUE type,
+                                       VALUE* klasses,
+                                       int* state)
 {
   VALUE object;
   GEOSGeometry* geom;
@@ -870,7 +952,15 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
     *klasses = Qnil;
   }
 
-  object = rb_protect_funcall(rgeo_feature_module, rb_intern("cast"), state, 5, obj, factory, type, ID2SYM(rb_intern("force_new")), ID2SYM(rb_intern("keep_subtype")));
+  object = rb_protect_funcall(rgeo_feature_module,
+                              rb_intern("cast"),
+                              state,
+                              5,
+                              obj,
+                              factory,
+                              type,
+                              ID2SYM(rb_intern("force_new")),
+                              ID2SYM(rb_intern("keep_subtype")));
   if (*state || NIL_P(object)) {
     return NULL;
   }
@@ -884,7 +974,8 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
     }
   }
   prep = object_data->prep;
-  if (prep && prep != (GEOSPreparedGeometry*)1 && prep != (GEOSPreparedGeometry*)2) {
+  if (prep && prep != (GEOSPreparedGeometry*)1 &&
+      prep != (GEOSPreparedGeometry*)2) {
     GEOSPreparedGeom_destroy_r(object_data->geos_context, prep);
   }
   object_data->geos_context = NULL;
@@ -896,27 +987,33 @@ GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, V
   return geom;
 }
 
-
-char rgeo_is_geos_object(VALUE obj)
+char
+rgeo_is_geos_object(VALUE obj)
 {
   return RGEO_GEOMETRY_TYPEDDATA_P(obj) ? 1 : 0;
 }
 
-void rgeo_check_geos_object(VALUE obj)
+void
+rgeo_check_geos_object(VALUE obj)
 {
   if (!rgeo_is_geos_object(obj)) {
     rb_raise(rb_eRGeoError, "Not a GEOS Geometry object.");
   }
 }
 
-
-const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj)
+const GEOSGeometry*
+rgeo_get_geos_geometry_safe(VALUE obj)
 {
-  return RGEO_GEOMETRY_TYPEDDATA_P(obj) ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom) : NULL;
+  return RGEO_GEOMETRY_TYPEDDATA_P(obj)
+           ? (const GEOSGeometry*)(RGEO_GEOMETRY_DATA_PTR(obj)->geom)
+           : NULL;
 }
 
-
-VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* geom1, const GEOSGeometry* geom2, char check_z)
+VALUE
+rgeo_geos_coordseqs_eql(GEOSContextHandle_t context,
+                        const GEOSGeometry* geom1,
+                        const GEOSGeometry* geom2,
+                        char check_z)
 {
   VALUE result;
   const GEOSCoordSequence* cs1;
@@ -933,13 +1030,16 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
     if (cs1 && cs2) {
       len1 = 0;
       len2 = 0;
-      if (GEOSCoordSeq_getSize_r(context, cs1, &len1) && GEOSCoordSeq_getSize_r(context, cs2, &len2)) {
+      if (GEOSCoordSeq_getSize_r(context, cs1, &len1) &&
+          GEOSCoordSeq_getSize_r(context, cs2, &len2)) {
         if (len1 == len2) {
           result = Qtrue;
-          for (i=0; i<len1; ++i) {
-            if (GEOSCoordSeq_getX_r(context, cs1, i, &val1) && GEOSCoordSeq_getX_r(context, cs2, i, &val2)) {
+          for (i = 0; i < len1; ++i) {
+            if (GEOSCoordSeq_getX_r(context, cs1, i, &val1) &&
+                GEOSCoordSeq_getX_r(context, cs2, i, &val2)) {
               if (val1 == val2) {
-                if (GEOSCoordSeq_getY_r(context, cs1, i, &val1) && GEOSCoordSeq_getY_r(context, cs2, i, &val2)) {
+                if (GEOSCoordSeq_getY_r(context, cs1, i, &val1) &&
+                    GEOSCoordSeq_getY_r(context, cs2, i, &val2)) {
                   if (val1 == val2) {
                     if (check_z) {
                       val1 = 0;
@@ -957,29 +1057,24 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
                         break;
                       }
                     }
-                  }
-                  else {  // Y coords are different
+                  } else { // Y coords are different
                     result = Qfalse;
                     break;
                   }
-                }
-                else {  // Failed to get Y coords
+                } else { // Failed to get Y coords
                   result = Qnil;
                   break;
                 }
-              }
-              else {  // X coords are different
+              } else { // X coords are different
                 result = Qfalse;
                 break;
               }
-            }
-            else {  // Failed to get X coords
+            } else { // Failed to get X coords
               result = Qnil;
               break;
             }
-          }  // Iteration over coords
-        }
-        else {  // Lengths are different
+          }      // Iteration over coords
+        } else { // Lengths are different
           result = Qfalse;
         }
       }
@@ -988,8 +1083,8 @@ VALUE rgeo_geos_coordseqs_eql(GEOSContextHandle_t context, const GEOSGeometry* g
   return result;
 }
 
-
-VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
+VALUE
+rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
 {
   VALUE result;
   VALUE factory;
@@ -997,24 +1092,27 @@ VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2)
   result = Qnil;
   if (rb_obj_class(obj1) != rb_obj_class(obj2)) {
     result = Qfalse;
-  }
-  else {
+  } else {
     factory = RGEO_GEOMETRY_DATA_PTR(obj1)->factory;
     /* No need to cache the internal here (https://ips.fastruby.io/4x) */
-    result = rb_funcall(factory, rb_intern("eql?"), 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
+    result = rb_funcall(
+      factory, rb_intern("eql?"), 1, RGEO_GEOMETRY_DATA_PTR(obj2)->factory);
   }
   return result;
 }
 
-
-typedef struct {
+typedef struct
+{
   st_index_t seed_hash;
   double x;
   double y;
   double z;
 } RGeo_Coordseq_Hash_Struct;
 
-st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash)
+st_index_t
+rgeo_geos_coordseq_hash(GEOSContextHandle_t context,
+                        const GEOSGeometry* geom,
+                        st_index_t hash)
 {
   const GEOSCoordSequence* cs;
   unsigned int len;
@@ -1025,14 +1123,15 @@ st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeomet
     cs = GEOSGeom_getCoordSeq_r(context, geom);
     if (cs) {
       if (GEOSCoordSeq_getSize_r(context, cs, &len)) {
-        for (i=0; i<len; ++i) {
+        for (i = 0; i < len; ++i) {
           if (GEOSCoordSeq_getX_r(context, cs, i, &hash_struct.x)) {
             if (GEOSCoordSeq_getY_r(context, cs, i, &hash_struct.y)) {
               if (!GEOSCoordSeq_getY_r(context, cs, i, &hash_struct.z)) {
                 hash_struct.z = 0;
               }
               hash_struct.seed_hash = hash;
-              hash = rb_memhash(&hash_struct, sizeof(RGeo_Coordseq_Hash_Struct));
+              hash =
+                rb_memhash(&hash_struct, sizeof(RGeo_Coordseq_Hash_Struct));
             }
           }
         }
@@ -1042,14 +1141,15 @@ st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeomet
   return hash;
 }
 
-
-typedef struct {
+typedef struct
+{
   st_index_t seed_hash;
   st_index_t h1;
   st_index_t h2;
 } RGeo_Objbase_Hash_Struct;
 
-st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash)
+st_index_t
+rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash)
 {
   ID hash_method;
   RGeo_Objbase_Hash_Struct hash_struct;
@@ -1060,7 +1160,6 @@ st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t h
   hash_struct.h2 = FIX2LONG(rb_funcall(type_module, hash_method, 0));
   return rb_memhash(&hash_struct, sizeof(RGeo_Objbase_Hash_Struct));
 }
-
 
 RGEO_END_C
 

@@ -5,8 +5,8 @@
 #ifndef RGEO_GEOS_FACTORY_INCLUDED
 #define RGEO_GEOS_FACTORY_INCLUDED
 
-#include <ruby.h>
 #include <geos_c.h>
+#include <ruby.h>
 
 RGEO_BEGIN_C
 
@@ -16,7 +16,8 @@ RGEO_BEGIN_C
   It also stores the SRID for all geometries created by this factory,
   and the resolution for buffers created for this factory's geometries.
 */
-typedef struct {
+typedef struct
+{
   GEOSContextHandle_t geos_context;
   GEOSWKTReader* wkt_reader;
   GEOSWKBReader* wkb_reader;
@@ -42,30 +43,35 @@ typedef struct {
   They are available in ruby under RGeo::Geos::CAPIFactory::FLAG_name
   where name is the name below without the RGEO_FACTORYFLAGS_ prefix.
  */
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z                      0b0010
-#define RGEO_FACTORYFLAGS_SUPPORTS_M                      0b0100
-#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M                 (RGEO_FACTORYFLAGS_SUPPORTS_Z | RGEO_FACTORYFLAGS_SUPPORTS_M)
-#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC               0b1000
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z 0b0010
+#define RGEO_FACTORYFLAGS_SUPPORTS_M 0b0100
+#define RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M                                      \
+  (RGEO_FACTORYFLAGS_SUPPORTS_Z | RGEO_FACTORYFLAGS_SUPPORTS_M)
+#define RGEO_FACTORYFLAGS_PREPARE_HEURISTIC 0b1000
 
 /* call-seq:
  *   RGeo::Geos::CAPIFactory.supports_z? -> true or false
  */
-VALUE method_factory_supports_z_p(VALUE self);
+VALUE
+method_factory_supports_z_p(VALUE self);
 
 /* call-seq:
  *   RGeo::Geos::CAPIFactory.supports_m? -> true or false
  */
-VALUE method_factory_supports_m_p(VALUE self);
+VALUE
+method_factory_supports_m_p(VALUE self);
 
 /* call-seq:
  *   RGeo::Geos::CAPIFactory.supports_z_or_m? -> true or false
  */
-VALUE method_factory_supports_z_or_m_p(VALUE self);
+VALUE
+method_factory_supports_z_or_m_p(VALUE self);
 
 /* call-seq:
  *   RGeo::Geos::CAPIFactory.prepare_heuristic? -> true or false
  */
-VALUE method_factory_prepare_heuristic_p(VALUE self);
+VALUE
+method_factory_prepare_heuristic_p(VALUE self);
 
 /*
   Wrapped structure for Geometry objects.
@@ -88,7 +94,8 @@ VALUE method_factory_prepare_heuristic_p(VALUE self);
   evaluate a DATA_PTR from that function, so we copy the context handle
   here so the destroy_geometry_func can get to it.
 */
-typedef struct {
+typedef struct
+{
   GEOSContextHandle_t geos_context;
   GEOSGeometry* geom;
   const GEOSPreparedGeometry* prep;
@@ -96,31 +103,35 @@ typedef struct {
   VALUE klasses;
 } RGeo_GeometryData;
 
-
 // Data types which indicate how RGeo types should be managed by Ruby.
 extern const rb_data_type_t rgeo_factory_type;
 
 extern const rb_data_type_t rgeo_geometry_type;
 
-
 // Convenient macros for checking the type of data from Ruby
-#define RGEO_FACTORY_TYPEDDATA_P(object) (_RGEO_TYPEDDATA_P(object, &rgeo_factory_type))
-#define RGEO_GEOMETRY_TYPEDDATA_P(object) (_RGEO_TYPEDDATA_P(object, &rgeo_geometry_type))
+#define RGEO_FACTORY_TYPEDDATA_P(object)                                       \
+  (_RGEO_TYPEDDATA_P(object, &rgeo_factory_type))
+#define RGEO_GEOMETRY_TYPEDDATA_P(object)                                      \
+  (_RGEO_TYPEDDATA_P(object, &rgeo_geometry_type))
 
-#define _RGEO_TYPEDDATA_P(object, data_type) (TYPE(object) == T_DATA && RTYPEDDATA(object)->typed_flag == 1 && RTYPEDDATA(object)->type == data_type)
+#define _RGEO_TYPEDDATA_P(object, data_type)                                   \
+  (TYPE(object) == T_DATA && RTYPEDDATA(object)->typed_flag == 1 &&            \
+   RTYPEDDATA(object)->type == data_type)
 
 // Returns the RGeo_FactoryData* given a ruby Factory object
-#define RGEO_FACTORY_DATA_PTR(factory) ((RGeo_FactoryData*)RTYPEDDATA_DATA(factory))
+#define RGEO_FACTORY_DATA_PTR(factory)                                         \
+  ((RGeo_FactoryData*)RTYPEDDATA_DATA(factory))
 
 // Returns the RGeo_GeometryData* given a ruby Geometry object
-#define RGEO_GEOMETRY_DATA_PTR(geometry) ((RGeo_GeometryData*)RTYPEDDATA_DATA(geometry))
-
+#define RGEO_GEOMETRY_DATA_PTR(geometry)                                       \
+  ((RGeo_GeometryData*)RTYPEDDATA_DATA(geometry))
 
 /*
   Initializes the factory module. This should be called first in the
   initialization process.
 */
-void rgeo_init_geos_factory();
+void
+rgeo_init_geos_factory();
 
 /*
   Given a GEOS geometry handle, wraps it in a ruby Geometry object of the
@@ -134,13 +145,17 @@ void rgeo_init_geos_factory();
   classes for the elements of the collection.
   Returns Qnil if the wrapping failed for any reason.
 */
-VALUE rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass);
+VALUE
+rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass);
 
 /*
   Same as rgeo_wrap_geos_geometry except that it wraps a clone of the
   given geom, so the original geom doesn't change ownership.
 */
-VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VALUE klass);
+VALUE
+rgeo_wrap_geos_geometry_clone(VALUE factory,
+                              const GEOSGeometry* geom,
+                              VALUE klass);
 
 /*
   Gets the GEOS geometry for a given ruby Geometry object. If the given
@@ -150,7 +165,8 @@ VALUE rgeo_wrap_geos_geometry_clone(VALUE factory, const GEOSGeometry* geom, VAL
   disables this auto-cast. The returned GEOS geometry is owned by rgeo,
   and you should not dispose it or take ownership of it yourself.
 */
-const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type);
+const GEOSGeometry*
+rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type);
 
 /*
   Gets a GEOS geometry for a given ruby Geometry object. You must provide
@@ -175,31 +191,40 @@ const GEOSGeometry* rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALU
   ERROR. You could also discard the error with `rb_set_errinfo(Qnil)`,
   this will just ignore the error altogether.
 */
-GEOSGeometry* rgeo_convert_to_detached_geos_geometry(VALUE obj, VALUE factory, VALUE type, VALUE* klasses, int* state);
+GEOSGeometry*
+rgeo_convert_to_detached_geos_geometry(VALUE obj,
+                                       VALUE factory,
+                                       VALUE type,
+                                       VALUE* klasses,
+                                       int* state);
 
 /*
   Returns 1 if the given ruby object is a GEOS Geometry implementation,
   or 0 if not.
 */
-char rgeo_is_geos_object(VALUE obj);
+char
+rgeo_is_geos_object(VALUE obj);
 
 /*
   Raises a rgeo error if the object is not a GEOS Geometry implementation.
 */
-void rgeo_check_geos_object(VALUE obj);
+void
+rgeo_check_geos_object(VALUE obj);
 
 /*
   Gets the underlying GEOS geometry for a given ruby object. Returns NULL
   if the given ruby object is not a GEOS geometry wrapper.
 */
-const GEOSGeometry* rgeo_get_geos_geometry_safe(VALUE obj);
+const GEOSGeometry*
+rgeo_get_geos_geometry_safe(VALUE obj);
 
 /*
   Compares the ruby classes and geometry factories of the two given ruby
   objects. Returns Qtrue if everything is equal (that is, the two objects
   are of the same type and factory), or Qfalse otherwise.
 */
-VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2);
+VALUE
+rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2);
 
 /*
   A tool for building up hash values.
@@ -208,7 +233,10 @@ VALUE rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2);
   This call is useful in sequence, and should be bracketed by calls to
   rb_hash_start and rb_hash_end.
 */
-st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeometry* geom, st_index_t hash);
+st_index_t
+rgeo_geos_coordseq_hash(GEOSContextHandle_t context,
+                        const GEOSGeometry* geom,
+                        st_index_t hash);
 
 /*
   A tool for building up hash values.
@@ -217,8 +245,8 @@ st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeomet
   This call is useful in sequence, and should be bracketed by calls to
   rb_hash_start and rb_hash_end.
 */
-st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash);
-
+st_index_t
+rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash);
 
 RGEO_END_C
 
