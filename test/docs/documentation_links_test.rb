@@ -13,7 +13,7 @@ class DocumentationLinksTest < MiniTest::Test # :nodoc:
                .map { |file| "https://github.com/rgeo/rgeo/blob/main/#{file}" }
                .to_set
 
-    in_readme = IO
+    in_readme = File
                 .foreach(File.join(root_path, "README.md"))
                 .grep(%r{https://github\.com/rgeo/rgeo/blob/main/doc})
                 .map { |line| line[%r{https://github\.com/rgeo/rgeo/blob/main/doc/.*?\.md}] }

@@ -177,13 +177,13 @@ module RGeo
         end
         if zm.length > 0 || @strict_wkt11
           creating_expectation = @cur_expect_z.nil?
-          expect_z = zm[0, 1] == "z" ? true : false
+          expect_z = zm[0, 1] == "z"
           if @cur_expect_z.nil?
             @cur_expect_z = expect_z
           elsif expect_z != @cur_expect_z
             raise Error::ParseError, "Surrounding collection has Z but contained geometry doesn't."
           end
-          expect_m = zm[-1, 1] == "m" ? true : false
+          expect_m = zm[-1, 1] == "m"
           if @cur_expect_m.nil?
             @cur_expect_m = expect_m
           elsif expect_m != @cur_expect_m

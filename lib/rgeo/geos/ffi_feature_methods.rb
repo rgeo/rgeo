@@ -565,12 +565,7 @@ module RGeo
       end
 
       def hash
-        @hash ||= begin
-          hash = [@factory, geometry_type].hash
-          (0...num_geometries).inject(hash) do |h, i|
-            (1_664_525 * h + geometry_n(i).hash).hash
-          end
-        end
+        @hash ||= [@factory, geometry_type, *(0...num_geometries).map { |i| geometry_n(i) }].hash
       end
 
       def each
