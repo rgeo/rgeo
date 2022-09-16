@@ -311,8 +311,8 @@ module RGeo
           p1 = @factory.point(-169.478, -56)
           p2 = @factory.point(167.95, 64.8333)
           bbox = RGeo::Cartesian::BoundingBox.create_from_points(p1, p2)
-          assert_equal "POLYGON ((-169.478 -56.0, 167.95 -56.0, 167.95 64.8333, "\
-            "-169.478 64.8333, -169.478 -56.0))", bbox.to_geometry.to_s
+          assert_equal "POLYGON ((-169.478 -56.0, 167.95 -56.0, 167.95 64.8333, " \
+                       "-169.478 64.8333, -169.478 -56.0))", bbox.to_geometry.to_s
         end
 
         def test_psych_roundtrip

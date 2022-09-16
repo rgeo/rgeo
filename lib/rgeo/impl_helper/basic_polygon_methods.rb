@@ -74,10 +74,7 @@ module RGeo
       end
 
       def hash
-        @hash ||= begin
-          hash = [geometry_type, @exterior_ring].hash
-          @interior_rings.inject(hash) { |h, r| (1_664_525 * h + r.hash).hash }
-        end
+        @hash ||= [geometry_type, @exterior_ring, *@interior_rings].hash
       end
 
       def coordinates

@@ -20,6 +20,8 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.5.0"
   spec.license = "BSD-3-Clause"
 
+  spec.metadata["rubygems_mfa_required"] = "true"
+
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt", "README.md", ".yardopts"]
   spec.extensions = Dir["ext/*/extconf.rb"]
 
@@ -27,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.11"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rake-compiler", "~> 1.0"
-  spec.add_development_dependency "rubocop", "~> 1.8.1"
+  spec.add_development_dependency "rubocop", "~> 1.36.0"
   spec.add_development_dependency "ruby_memcheck", "~> 1.0"
   spec.add_development_dependency "yard", "~> 0.9"
 end

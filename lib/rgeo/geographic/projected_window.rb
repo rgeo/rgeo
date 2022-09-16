@@ -72,7 +72,7 @@ module RGeo
       alias == eql?
 
       def hash # :nodoc:
-        @factory.hash + @x_min.hash + @x_max.hash + @y_min.hash + @y_max.hash
+        [@factory, @x_min, @x_max, @y_min, @y_max].hash
       end
 
       # Returns the Geographic::Factory associated with this window.

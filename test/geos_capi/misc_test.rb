@@ -149,7 +149,8 @@ class GeosMiscTest < Minitest::Test # :nodoc:
 
   def test_casting_dumb_objects
     assert_raises(TypeError) do
-      RGeo::Geos.factory.point(1, 1).contains?(OpenStruct.new(factory: RGeo::Geos.factory))
+      # We use an OpenStruct here because we want an object that respond `nil` to unknown methods.
+      RGeo::Geos.factory.point(1, 1).contains?(OpenStruct.new(factory: RGeo::Geos.factory)) # rubocop:disable Style/OpenStructUse
     end
   end
 end if RGeo::Geos.capi_supported?

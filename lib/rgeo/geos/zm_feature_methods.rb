@@ -26,7 +26,7 @@ module RGeo
       end
 
       def hash
-        @factory.hash ^ @zgeometry.hash ^ @mgeometry.hash
+        [@factory, @zgeometry, @mgeometry].hash
       end
 
       def factory

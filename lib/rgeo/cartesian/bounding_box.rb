@@ -290,7 +290,7 @@ module RGeo
           false
         elsif @has_m && rhs.has_m && !opts[:ignore_m] && (@min_m > rhs.min_m || @max_m < rhs.max_m)
           false
-        elsif @has_z && rhs.has_z && !opts[:ignore_z] && (@min_z > rhs.min_z || @max_z < rhs.max_z)
+        elsif @has_z && rhs.has_z && !opts[:ignore_z] && (@min_z > rhs.min_z || @max_z < rhs.max_z) # rubocop:disable Style/IfWithBooleanLiteralBranches
           false
         else
           true

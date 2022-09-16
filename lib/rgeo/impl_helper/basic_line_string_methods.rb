@@ -98,10 +98,7 @@ module RGeo
       end
 
       def hash
-        @hash ||= begin
-          hash = [factory, geometry_type].hash
-          @points.inject(hash) { |h, p| (1_664_525 * h + p.hash).hash }
-        end
+        @hash ||= [factory, geometry_type, *@points].hash
       end
 
       def coordinates

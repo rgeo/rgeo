@@ -24,7 +24,7 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
         relative_path = Pathname.new(compatility_table_path)
                                 .relative_path_from(Pathname.new(Dir.pwd))
         "Expected #{relative_path} not to change. Please check if this " \
-        "is intended and then commit changes, or fix otherwise."
+          "is intended and then commit changes, or fix otherwise."
       }
     )
   end
