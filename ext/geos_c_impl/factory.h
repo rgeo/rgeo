@@ -219,11 +219,6 @@ st_index_t rgeo_geos_coordseq_hash(GEOSContextHandle_t context, const GEOSGeomet
 */
 st_index_t rgeo_geos_objbase_hash(VALUE factory, VALUE type_module, st_index_t hash);
 
-/*
-  Internal tool for creating simple (FNV-1A 32 bit) hashes.
-*/
-st_index_t rgeo_internal_memhash(const void* ptr, long len);
-
 
 RGEO_END_C
 

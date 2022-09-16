@@ -251,7 +251,6 @@ static VALUE method_line_string_end_point(VALUE self)
 
 static VALUE method_line_string_project_point(VALUE self, VALUE point)
 {
-  RGeo_FactoryData* factory_data;
   VALUE result = Qnil;
   VALUE factory;
   RGeo_GeometryData* self_data;
@@ -263,7 +262,6 @@ static VALUE method_line_string_project_point(VALUE self, VALUE point)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
   self_geom = self_data->geom;
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
 
   if(self_geom && point) {
     geos_point = rgeo_convert_to_geos_geometry(factory, point, rgeo_geos_point_class);
