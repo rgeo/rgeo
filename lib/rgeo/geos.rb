@@ -42,16 +42,15 @@ module RGeo
       require "ffi-geos"
       # An additional check to make sure FFI loaded okay. This can fail on
       # some versions of ffi-geos and some versions of Rubinius.
-      raise "Problem loading FFI" unless ::FFI::AutoPointer
+      raise LoadError, "Problem loading FFI" unless ::FFI::AutoPointer
       FFI_SUPPORTED = true
       FFI_SUPPORT_EXCEPTION = nil
     rescue LoadError => ex
       FFI_SUPPORTED = false
       FFI_SUPPORT_EXCEPTION = ex
-    rescue StandardError => ex
-      FFI_SUPPORTED = false
-      FFI_SUPPORT_EXCEPTION = ex
     end
+
+    p FFI_SUPPORT_EXCEPTION
 
     if FFI_SUPPORTED
       require_relative "geos/ffi_feature_methods"
