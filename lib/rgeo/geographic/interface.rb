@@ -302,8 +302,7 @@ module RGeo
         if (projection_factory = opts[:projection_factory])
           # Get the projection coordinate systems from the given factory
           projection_coord_sys = projection_factory.coord_sys
-          # TODO: may have to change to just CoordinateSystem because the proj4 implementation doesn't subclass ProjectedCoordinateSystem.
-          # Maybe we can use some other method to check
+
           if projection_coord_sys && !projection_coord_sys.projected?
             raise ArgumentError, "The :projection_factory's coord_sys is not a ProjectedCoordinateSystem."
           end
