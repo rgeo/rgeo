@@ -26,11 +26,6 @@ module RGeo
           coord_sys = coord_sys_class.create_from_wkt(coord_sys)
         end
 
-        unless coord_sys.is_a?(CoordSys::CS::CoordinateSystem)
-          # TODO: should we raise here?
-          coord_sys = nil
-        end
-
         srid ||= coord_sys.authority_code if coord_sys
         srid = srid.to_i
         # Create a coord sys based on the SRID if one was not given

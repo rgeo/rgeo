@@ -304,7 +304,7 @@ module RGeo
           projection_coord_sys = projection_factory.coord_sys
           # TODO: may have to change to just CoordinateSystem because the proj4 implementation doesn't subclass ProjectedCoordinateSystem.
           # Maybe we can use some other method to check
-          if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
+          if projection_coord_sys && !projection_coord_sys.projected?
             raise ArgumentError, "The :projection_factory's coord_sys is not a ProjectedCoordinateSystem."
           end
           # Determine geographic coordinate system. First check parameters.

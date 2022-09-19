@@ -79,6 +79,13 @@ module RGeo
             obj = VerticalDatum.create(args.shift(QuotedString), args.shift(Numeric), *args.create_optionals)
           when "LOCAL_DATUM"
             obj = LocalDatum.create(args.shift(QuotedString), args.shift(Numeric), *args.create_optionals)
+          when "CS"
+            # Not actually valid WKT, but necessary to load and dump factories
+            # with placeholder coord_sys objects
+            defn = args.shift(Float).to_i
+            args.shift # srid is passed twice for some reason
+            optionals = args.create_optionals
+            obj = CoordinateSystem.create(defn, 2, optionals)
           when "COMPD_CS"
             obj = CompoundCoordinateSystem.create(args.shift(QuotedString), args.shift(CoordinateSystem), args.shift(CoordinateSystem), *args.create_optionals)
           when "LOCAL_CS"
