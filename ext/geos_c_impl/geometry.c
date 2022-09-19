@@ -1130,7 +1130,7 @@ static VALUE method_geometry_point_on_surface(VALUE self)
   *
   * All types of Geometry are accepted as input;
   * the constituent linework is extracted as the edges to be polygonized.
-  * 
+  *
   * The edges must be correctly noded;
   * that is, they must only meet at their endpoints and not overlap anywhere.
   *

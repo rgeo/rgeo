@@ -208,7 +208,6 @@ static VALUE method_polygon_interior_rings(VALUE self)
   GEOSContextHandle_t self_context;
   int count;
   VALUE factory;
-  VALUE linear_ring_class;
   int i;
 
   result = Qnil;

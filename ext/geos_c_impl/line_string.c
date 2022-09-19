@@ -275,7 +275,6 @@ static VALUE method_line_string_project_point(VALUE self, VALUE point)
 
 static VALUE method_line_string_interpolate_point(VALUE self, VALUE loc_num)
 {
-  RGeo_FactoryData* factory_data;
   VALUE result = Qnil;
   VALUE factory;
   RGeo_GeometryData* self_data;
@@ -287,7 +286,6 @@ static VALUE method_line_string_interpolate_point(VALUE self, VALUE loc_num)
   location = NUM2DBL(loc_num);
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   factory = self_data->factory;
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   self_geom = self_data->geom;
 
   if(self_geom) {
