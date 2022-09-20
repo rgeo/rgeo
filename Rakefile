@@ -22,16 +22,6 @@ else
   end
 end
 
-task :clean do
-  clean_files = %w[pkg tmp] +
-    Dir.glob("ext/**/Makefile*") +
-    Dir.glob("ext/**/*.{o,class,log,dSYM}") +
-    Dir.glob("**/*.{bundle,so,dll,rbc,jar}") +
-    Dir.glob("**/.rbx")
-
-  clean_files.each { |path| rm_rf path }
-end
-
 test_config = proc do |t|
   t.libs << "test"
   t.libs << "lib"
