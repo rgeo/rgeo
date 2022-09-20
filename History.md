@@ -10,6 +10,7 @@
 * Add `invalid_reason_location` method to the CAPI factory #310
 * Add `polygonize` method to the CAPI factory (@aleksejleonov, @tyfoan) #313
 * Change `hash` computation for security reasons #323
+* The `RGeo::WKRep::*` family is now thread-safe #326
 
 **Bug Fixes**
 

@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class WKTGeneratorTest < Minitest::Test # :nodoc:
   def setup
@@ -285,5 +285,13 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
     generator = RGeo::WKRep::WKTGenerator.new
     obj = @factory.collection([])
     assert_equal("GeometryCollection EMPTY", generator.generate(obj))
+  end
+
+  def test_multithreaded
+    generator = RGeo::WKRep::WKTGenerator.new
+    obj = RGeo::WKRep::WKBParser.new.parse(File.read(File.join(__dir__, "data.wkb"), mode: "rb"))
+    Array.new(100) do
+      Thread.fork { generator.generate(obj) }
+    end.map(&:join)
   end
 end

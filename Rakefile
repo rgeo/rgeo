@@ -22,16 +22,18 @@ else
   end
 end
 
-test_config = proc do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList["test/**/*_test.rb"]
+Rake::TestTask.new(:test) do |task|
+  task.libs << "test"
+  task.libs << "lib"
+  task.test_files = FileList["test/**/*_test.rb"]
 end
 
-Rake::TestTask.new(:test, &test_config)
-
 namespace :test do
-  RubyMemcheck::TestTask.new(valgrind: :compile, &test_config)
+  RubyMemcheck::TestTask.new(valgrind: :compile) do |task|
+    task.libs << "test"
+    task.libs << "lib"
+    task.test_files = FileList["test/geos_capi/*_test.rb"]
+  end
 end
 
 YARD::Rake::YardocTask.new do |t|

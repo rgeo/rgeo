@@ -93,13 +93,13 @@ module RGeo
         @end_bracket = @square_brackets ? "]" : ")"
         factory = obj.factory
         if @tag_format == :wkt11_strict
-          @cur_support_z = nil
-          @cur_support_m = nil
+          support_z = false
+          support_m = false
         else
-          @cur_support_z = factory.property(:has_z_coordinate)
-          @cur_support_m = factory.property(:has_m_coordinate)
+          support_z = factory.property(:has_z_coordinate)
+          support_m = factory.property(:has_m_coordinate)
         end
-        str = generate_feature(obj, true)
+        str = generate_feature(obj, support_z, support_m, true)
         if @convert_case == :upper
           str.upcase
         elsif @convert_case == :lower
@@ -111,99 +111,99 @@ module RGeo
 
       private
 
-      def generate_feature(obj, toplevel = false)
+      def generate_feature(obj, support_z, support_m, toplevel = false)
         type = obj.geometry_type
         type = Feature::LineString if type.subtype_of?(Feature::LineString)
         tag = type.type_name.dup
         if @tag_format == :ewkt
-          tag << "M" if @cur_support_m && !@cur_support_z
+          tag << "M" if support_m && !support_z
           tag = "SRID=#{obj.srid};#{tag}" if toplevel && @emit_ewkt_srid
         elsif @tag_format == :wkt12
-          if @cur_support_z
-            if @cur_support_m
+          if support_z
+            if support_m
               tag << " ZM"
             else
               tag << " Z"
             end
-          elsif @cur_support_m
+          elsif support_m
             tag << " M"
           end
         end
         if type == Feature::Point
-          "#{tag} #{generate_point(obj)}"
+          "#{tag} #{generate_point(obj, support_z, support_m)}"
         elsif type == Feature::LineString
-          "#{tag} #{generate_line_string(obj)}"
+          "#{tag} #{generate_line_string(obj, support_z, support_m)}"
         elsif type == Feature::Polygon
-          "#{tag} #{generate_polygon(obj)}"
+          "#{tag} #{generate_polygon(obj, support_z, support_m)}"
         elsif type == Feature::GeometryCollection
-          "#{tag} #{generate_geometry_collection(obj)}"
+          "#{tag} #{generate_geometry_collection(obj, support_z, support_m)}"
         elsif type == Feature::MultiPoint
-          "#{tag} #{generate_multi_point(obj)}"
+          "#{tag} #{generate_multi_point(obj, support_z, support_m)}"
         elsif type == Feature::MultiLineString
-          "#{tag} #{generate_multi_line_string(obj)}"
+          "#{tag} #{generate_multi_line_string(obj, support_z, support_m)}"
         elsif type == Feature::MultiPolygon
-          "#{tag} #{generate_multi_polygon(obj)}"
+          "#{tag} #{generate_multi_polygon(obj, support_z, support_m)}"
         else
           raise Error::ParseError, "Unrecognized geometry type: #{type}"
         end
       end
 
-      def generate_coords(obj)
+      def generate_coords(obj, support_z, support_m)
         str = +"#{obj.x} #{obj.y}"
-        str << " #{obj.z}" if @cur_support_z
-        str << " #{obj.m}" if @cur_support_m
+        str << " #{obj.z}" if support_z
+        str << " #{obj.m}" if support_m
         str
       end
 
-      def generate_point(obj)
-        "#{@begin_bracket}#{generate_coords(obj)}#{@end_bracket}"
+      def generate_point(obj, support_z, support_m)
+        "#{@begin_bracket}#{generate_coords(obj, support_z, support_m)}#{@end_bracket}"
       end
 
-      def generate_line_string(obj)
+      def generate_line_string(obj, support_z, support_m)
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.points.map { |p| generate_coords(p) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.points.map { |p| generate_coords(p, support_z, support_m) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def generate_polygon(obj)
+      def generate_polygon(obj, support_z, support_m)
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{([generate_line_string(obj.exterior_ring)] + obj.interior_rings.map { |r| generate_line_string(r) }).join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{([generate_line_string(obj.exterior_ring, support_z, support_m)] + obj.interior_rings.map { |r| generate_line_string(r, support_z, support_m) }).join(', ')}#{@end_bracket}"
         end
       end
 
-      def generate_geometry_collection(obj)
+      def generate_geometry_collection(obj, support_z, support_m)
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| generate_feature(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_feature(f, support_z, support_m) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def generate_multi_point(obj)
+      def generate_multi_point(obj, support_z, support_m)
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| generate_point(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_point(f, support_z, support_m) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def generate_multi_line_string(obj)
+      def generate_multi_line_string(obj, support_z, support_m)
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| generate_line_string(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_line_string(f, support_z, support_m) }.join(', ')}#{@end_bracket}"
         end
       end
 
-      def generate_multi_polygon(obj)
+      def generate_multi_polygon(obj, support_z, support_m)
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.map { |f| generate_polygon(f) }.join(', ')}#{@end_bracket}"
+          "#{@begin_bracket}#{obj.map { |f| generate_polygon(f, support_z, support_m) }.join(', ')}#{@end_bracket}"
         end
       end
     end

@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class WKTParserTest < Minitest::Test # :nodoc:
   def test_point_2d
@@ -403,5 +403,15 @@ class WKTParserTest < Minitest::Test # :nodoc:
     obj = parser.parse("GEOMETRYCOLLECTION EMPTY")
     assert_equal(RGeo::Feature::GeometryCollection, obj.geometry_type)
     assert_equal(0, obj.num_geometries)
+  end
+
+  def test_multithreaded
+    parser = RGeo::WKRep::WKTParser.new
+    data = File.read(File.join(__dir__, "data.wkt"))
+    Array.new(100) do
+      Thread.fork do
+        parser.parse(data)
+      end
+    end.map(&:join)
   end
 end

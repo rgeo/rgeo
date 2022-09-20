@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../test_helper"
+require_relative "../cartesian_analysis_test"
 
 module GeosCapi
   class AnalysisTest < CartesianAnalysisTest
