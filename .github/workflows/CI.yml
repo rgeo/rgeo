@@ -36,7 +36,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          cache-version: 1
+          cache-version: ${{ matrix.os }}-test
       - name: Install Geos (Linux)
         if: matrix.os == 'ubuntu'
         run: |
@@ -58,6 +58,7 @@ jobs:
         with:
           ruby-version: 'head'
           bundler-cache: true
+          cache-version: memcheck
       - name: Install dependencies
         run: |
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
@@ -72,6 +73,7 @@ jobs:
         with:
           ruby-version: 'head'
           bundler-cache: true
+          cache-version: rubocop
       - run: |
           bundle exec rubocop --color --parallel
   clang-format:
