@@ -69,6 +69,7 @@ module RGeo
         @strict_wkt11 = @support_ewkt || @support_wkt12 ? false : opts[:strict_wkt11] ? true : false
         @ignore_extra_tokens = opts[:ignore_extra_tokens] ? true : false
         @default_srid = opts[:default_srid]
+        @mutex = Mutex.new
       end
 
       # Returns the factory generator. See WKTParser for details.
@@ -115,29 +116,31 @@ module RGeo
       # Parse the given string, and return a geometry object.
 
       def parse(str)
-        str = str.downcase
-        @cur_factory = @exact_factory
-        if @cur_factory
-          @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
-          @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
-        end
-        @cur_expect_z = nil
-        @cur_expect_m = nil
-        @cur_srid = @default_srid
-        if @support_ewkt && str =~ /^srid=(\d+);/i
-          str = $'
-          @cur_srid = Regexp.last_match(1).to_i
-        end
-        begin
-          start_scanner(str)
-          obj = parse_type_tag
-          if @cur_token && !@ignore_extra_tokens
-            raise Error::ParseError, "Extra tokens beginning with #{@cur_token.inspect}."
+        @mutex.synchronize do
+          str = str.downcase
+          @cur_factory = @exact_factory
+          if @cur_factory
+            @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
+            @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
           end
-        ensure
-          clean_scanner
+          @cur_expect_z = nil
+          @cur_expect_m = nil
+          @cur_srid = @default_srid
+          if @support_ewkt && str =~ /^srid=(\d+);/i
+            str = $'
+            @cur_srid = Regexp.last_match(1).to_i
+          end
+          begin
+            start_scanner(str)
+            obj = parse_type_tag
+            if @cur_token && !@ignore_extra_tokens
+              raise Error::ParseError, "Extra tokens beginning with #{@cur_token.inspect}."
+            end
+          ensure
+            clean_scanner
+          end
+          obj
         end
-        obj
       end
 
       private

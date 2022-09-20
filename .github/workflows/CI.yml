@@ -41,7 +41,7 @@ jobs:
           sudo apt-get install -yqq libgeos-dev
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
-        run: brew install geos
+        run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install geos
       - name: Install Geos (Windows)
         if: matrix.os == 'windows'
         run: TODO
