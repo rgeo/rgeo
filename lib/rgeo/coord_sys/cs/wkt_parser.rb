@@ -82,10 +82,10 @@ module RGeo
           when "CS"
             # Not actually valid WKT, but necessary to load and dump factories
             # with placeholder coord_sys objects
-            defn = args.shift(Float).to_i
-            args.shift # srid is passed twice for some reason
+            defn = args.shift(QuotedString)
+            dim = args.shift(Float).to_i
             optionals = args.create_optionals
-            obj = CoordinateSystem.create(defn, 2, optionals)
+            obj = CoordinateSystem.create(defn, dim, *optionals)
           when "COMPD_CS"
             obj = CompoundCoordinateSystem.create(args.shift(QuotedString), args.shift(CoordinateSystem), args.shift(CoordinateSystem), *args.create_optionals)
           when "LOCAL_CS"

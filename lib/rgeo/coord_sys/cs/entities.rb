@@ -958,7 +958,10 @@ module RGeo
             # CoordinateSystem implementations
 
             if defn.is_a?(Integer)
-              new(defn, dimension, "EPSG", defn)
+              # not technically correct but we can use cartesian as a placeholder
+              # to form valid wkt
+              defn_string = "Cartesian"
+              new(defn_string, dimension, "EPSG", defn, *optional)
             else
               new(defn, dimension, *optional)
             end
@@ -968,7 +971,7 @@ module RGeo
         private
 
         def wkt_content(_)
-          [@name]
+          [@dimension]
         end
       end
 
