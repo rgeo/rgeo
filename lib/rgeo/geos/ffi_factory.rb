@@ -61,22 +61,10 @@ module RGeo
           @wkb_writer = nil
         end
 
-        # Coordinate system (srid, proj4, and coord_sys)
-        @srid = opts[:srid]
-        @proj4 = opts[:proj4]
-        if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(String) || @proj4.is_a?(Hash)
-            @proj4 = CoordSys::Proj4.create(@proj4)
-          end
-        else
-          @proj4 = nil
-        end
-        @coord_sys = opts[:coord_sys]
-        if @coord_sys.is_a?(String)
-          @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
-        end
-        @srid ||= @coord_sys.authority_code if @coord_sys
-        @srid = @srid.to_i
+        # Coordinate system (srid and coord_sys)
+        coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:srid], opts[:coord_sys], opts[:coord_sys_class])
+        @srid = coord_sys_info[:srid]
+        @coord_sys = coord_sys_info[:coord_sys]
 
         # Interpret parser options
         wkt_parser = opts[:wkt_parser]
@@ -119,14 +107,14 @@ module RGeo
           @has_z == rhs.property(:has_z_coordinate) &&
           @has_m == rhs.property(:has_m_coordinate) &&
           @buffer_resolution == rhs.property(:buffer_resolution) &&
-          @proj4.eql?(rhs.proj4)
+          @coord_sys.eql?(rhs.coord_sys)
       end
       alias == eql?
 
       # Standard hash code
 
       def hash
-        @hash ||= [@srid, @has_z, @has_m, @buffer_resolution, @proj4].hash
+        @hash ||= [@srid, @has_z, @has_m, @buffer_resolution, @coord_sys].hash
       end
 
       # Marshal support
@@ -143,18 +131,11 @@ module RGeo
           "wkbp" => @wkb_parser.properties,
           "apre" => @_auto_prepare
         }
-        hash["proj4"] = @proj4.marshal_dump if @proj4
         hash["cs"] = @coord_sys.to_wkt if @coord_sys
         hash
       end
 
       def marshal_load(data) # :nodoc:
-        if (proj4_data = data["proj4"]) && CoordSys.check!(:proj4)
-          proj4 = CoordSys::Proj4.allocate
-          proj4.marshal_load(proj4_data)
-        else
-          proj4 = nil
-        end
         if (coord_sys_data = data["cs"])
           coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
         else
@@ -170,7 +151,6 @@ module RGeo
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
           auto_prepare: (data["apre"] ? :simple : :disabled),
-          proj4: proj4,
           coord_sys: coord_sys
         )
       end
@@ -187,24 +167,10 @@ module RGeo
         coder["wkt_parser"] = @wkt_parser.properties
         coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
-        if @proj4
-          str = @proj4.original_str || @proj4.canonical_str
-          coder["proj4"] = @proj4.radians? ? { "proj4" => str, "radians" => true } : str
-        end
         coder["coord_sys"] = @coord_sys.to_wkt if @coord_sys
       end
 
       def init_with(coder) # :nodoc:
-        if (proj4_data = coder["proj4"])
-          CoordSys.check!(:proj4)
-          if proj4_data.is_a?(Hash)
-            proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
-          else
-            proj4 = CoordSys::Proj4.create(proj4_data.to_s)
-          end
-        else
-          proj4 = nil
-        end
         if (coord_sys_data = coder["cs"])
           coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
         else
@@ -220,7 +186,6 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
-          proj4: proj4,
           coord_sys: coord_sys
         )
       end
@@ -403,10 +368,6 @@ module RGeo
         fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOLYGON, elems)
         FFIMultiPolygonImpl.new(self, fg_geom, klasses)
       end
-
-      # See RGeo::Feature::Factory#proj4
-
-      attr_reader :proj4
 
       # See RGeo::Feature::Factory#coord_sys
 

@@ -24,6 +24,8 @@ module RGeo
   # systems, and other related concepts, as well as a parser for the WKT
   # format for specifying coordinate systems.
   module CoordSys
+    CONFIG = Struct.new(:default_coord_sys_class).new(CS::CoordinateSystem)
+
     # The only valid key is :proj4
     def self.supported?(key)
       raise(Error::UnsupportedOperation, "Invalid key. The only valid key is :proj4.") unless key == :proj4

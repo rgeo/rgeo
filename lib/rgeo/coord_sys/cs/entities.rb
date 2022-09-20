@@ -939,6 +939,40 @@ module RGeo
         def get_units(dimension)
           nil
         end
+
+        def geographic?
+          false
+        end
+
+        def projected?
+          false
+        end
+
+        def wkt_typename
+          "CS"
+        end
+
+        class << self
+          def create(defn, dimension = 2, *optional)
+            # Need this so we can maintain consistency with actual
+            # CoordinateSystem implementations
+
+            if defn.is_a?(Integer)
+              # not technically correct but we can use cartesian as a placeholder
+              # to form valid wkt
+              defn_string = "Cartesian"
+              new(defn_string, dimension, "EPSG", defn, *optional)
+            else
+              new(defn, dimension, *optional)
+            end
+          end
+        end
+
+        private
+
+        def wkt_content(_)
+          [@dimension]
+        end
       end
 
       # == OGC spec description
@@ -1108,6 +1142,10 @@ module RGeo
           [@axis0, @axis1, @axis2][index]
         end
 
+        def geographic?
+          true
+        end
+
         def wkt_typename
           "GEOCCS"
         end
@@ -1267,6 +1305,10 @@ module RGeo
           @horizontal_datum.wgs84_parameters
         end
 
+        def geographic?
+          true
+        end
+
         def wkt_typename
           "GEOGCS"
         end
@@ -1331,6 +1373,10 @@ module RGeo
 
         def get_axis(index)
           index == 1 ? @axis1 : @axis0
+        end
+
+        def projected?
+          true
         end
 
         def wkt_typename

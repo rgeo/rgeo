@@ -220,14 +220,6 @@ module RGeo
         nil
       end
 
-      # Returns a RGeo::CoordSys::Proj4 representing the projection for
-      # the coordinate system of features created by this factory, or nil
-      # if there is no such proj4 projection.
-
-      def proj4
-        nil
-      end
-
       # Returns the coordinate system specification for the features
       # created by this factory, or nil if there is no such coordinate
       # system.
@@ -262,7 +254,7 @@ module RGeo
       #   the original is already of the desired factory and type
       # [<tt>:project</tt>]
       #   indicates whether to project the coordinates from the source to
-      #   the destination proj4 coordinate system, if available
+      #   the destination coordinate system, if available
       #
       # It should return either a casted result object, false, or nil.
       # A nil return value indicates that casting should be forced to

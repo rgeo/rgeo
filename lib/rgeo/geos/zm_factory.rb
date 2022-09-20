@@ -41,7 +41,6 @@ module RGeo
       end
 
       def initialize(opts = {}) # :nodoc:
-        proj4 = opts[:proj4]
         coord_sys = opts[:coord_sys]
         srid = opts[:srid]
         srid ||= coord_sys.authority_code if coord_sys
@@ -49,7 +48,7 @@ module RGeo
           buffer_resolution: opts[:buffer_resolution], auto_prepare: opts[:auto_prepare],
           wkt_generator: opts[:wkt_generator], wkt_parser: opts[:wkt_parser],
           wkb_generator: opts[:wkb_generator], wkb_parser: opts[:wkb_parser],
-          srid: srid.to_i, proj4: proj4, coord_sys: coord_sys
+          srid: srid.to_i, coord_sys: coord_sys
         }
         native_interface = opts[:native_interface] || Geos.preferred_native_interface
         if native_interface == :ffi
@@ -103,20 +102,12 @@ module RGeo
           "apre" => @zfactory.property(:auto_prepare) == :simple,
           "nffi" => @zfactory.is_a?(FFIFactory)
         }
-        proj4 = @zfactory.proj4
         coord_sys = @zfactory.coord_sys
-        hash["proj4"] = proj4.marshal_dump if proj4
         hash["cs"] = coord_sys.to_wkt if coord_sys
         hash
       end
 
       def marshal_load(data) # :nodoc:
-        if (proj4_data = data["proj4"]) && CoordSys.check!(:proj4)
-          proj4 = CoordSys::Proj4.allocate
-          proj4.marshal_load(proj4_data)
-        else
-          proj4 = nil
-        end
         if (coord_sys_data = data["cs"])
           coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
         else
@@ -133,7 +124,6 @@ module RGeo
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
           auto_prepare: (data["apre"] ? :simple : :disabled),
-          proj4: proj4,
           coord_sys: coord_sys
         )
       end
@@ -149,26 +139,12 @@ module RGeo
         coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @zfactory.property(:auto_prepare).to_s
         coder["native_interface"] = @zfactory.is_a?(FFIFactory) ? "ffi" : "capi"
-        if (proj4 = @zfactory.proj4)
-          str = proj4.original_str || proj4.canonical_str
-          coder["proj4"] = proj4.radians? ? { "proj4" => str, "radians" => true } : str
-        end
         if (coord_sys = @zfactory.coord_sys)
           coder["coord_sys"] = coord_sys.to_wkt
         end
       end
 
       def init_with(coder) # :nodoc:
-        if (proj4_data = coder["proj4"])
-          CoordSys.check!(:proj4)
-          if proj4_data.is_a?(Hash)
-            proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
-          else
-            proj4 = CoordSys::Proj4.create(proj4_data.to_s)
-          end
-        else
-          proj4 = nil
-        end
         if (coord_sys_data = coder["cs"])
           coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
         else
@@ -185,7 +161,6 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
-          proj4: proj4,
           coord_sys: coord_sys
         )
       end
@@ -303,12 +278,6 @@ module RGeo
         create_feature(ZMMultiPolygonImpl, @zfactory.multi_polygon(elems), @mfactory.multi_polygon(elems))
       end
 
-      # See RGeo::Feature::Factory#proj4
-
-      def proj4
-        @zfactory.proj4
-      end
-
       # See RGeo::Feature::Factory#coord_sys
 
       def coord_sys
@@ -328,7 +297,7 @@ module RGeo
           # Optimization if we're just changing factories, but to
           # another ZM factory.
           if original.factory != self && ntype == type &&
-              (!project || original.factory.proj4 == @proj4)
+              (!project || original.factory.coord_sys == @coord_sys)
             zresult = original.z_geometry.dup
             zresult.factory = @zfactory
             mresult = original.m_geometry.dup
@@ -337,7 +306,7 @@ module RGeo
           end
           # LineString conversion optimization.
           if (original.factory != self || ntype != type) &&
-              (!project || original.factory.proj4 == @proj4) &&
+              (!project || original.factory.coord_sys == @coord_sys) &&
               type.subtypeof?(Feature::LineString) && ntype.subtypeof?(Feature::LineString)
             klass = Factory::IMPL_CLASSES[ntype]
             zresult = klass._copy_from(@zfactory, original.z_geometry)
