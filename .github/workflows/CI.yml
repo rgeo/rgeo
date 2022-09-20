@@ -45,8 +45,6 @@ jobs:
       - name: Install Geos (Windows)
         if: matrix.os == 'windows'
         run: TODO
-      - name: Bundle Install
-        run: bundle install
       - name: Test
         run: bundle exec rake
   Memcheck:
