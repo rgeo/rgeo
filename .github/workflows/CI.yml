@@ -37,11 +37,13 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           cache-version: ${{ matrix.os }}-test
+      - if: matrix.os == 'ubuntu'
+        run: sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
       - name: Install Geos (Linux)
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libgeos-dev
         if: matrix.os == 'ubuntu'
-        run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get install -yqq libgeos-dev
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: brew install geos
