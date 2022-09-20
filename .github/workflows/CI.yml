@@ -26,6 +26,8 @@ jobs:
         exclude:
           - os: windows # See issue #242, windows support would be welcome.
     runs-on: ${{ matrix.os }}-latest
+    env:
+      BUNDLE_BUILD__FFI: "--platform=ruby"
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
@@ -34,6 +36,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+          cache-version: 1
       - name: Install Geos (Linux)
         if: matrix.os == 'ubuntu'
         run: |
