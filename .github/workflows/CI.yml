@@ -78,9 +78,8 @@ jobs:
           bundle exec rubocop --color --parallel
   clang-format:
     runs-on: ubuntu-latest
+    container: silkeh/clang:12
     steps:
       - uses: actions/checkout@v2
-      - name: Install clang-format
-        run: sudo apt-get install -yqq clang-format
       - name: Run clang-format
         run: bin/clang-format lint
