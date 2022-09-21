@@ -38,7 +38,8 @@ extern VALUE rgeo_geos_multi_point_class;
 extern VALUE rgeo_geos_multi_line_string_class;
 extern VALUE rgeo_geos_multi_polygon_class;
 
-void rgeo_init_geos_globals();
+void
+rgeo_init_geos_globals();
 
 RGEO_END_C
 

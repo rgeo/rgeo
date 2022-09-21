@@ -10,8 +10,14 @@ Layout/ParameterAlignment:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
+Layout/LineContinuationLeadingSpace:
+  Enabled: false
+
 Layout/MultilineOperationIndentation:
   Enabled: false
+
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false # `1 * 3 + 2 * 2` is not that ambiguous!
 
 Metrics/ClassLength:
   Enabled: false

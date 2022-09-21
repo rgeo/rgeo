@@ -72,7 +72,7 @@ module RGeo
             ring = @factory.linear_ring([point, rand_point.next, rand_point.next, point]),
             polygon = @factory.polygon(ring),
             @factory.multi_polygon([polygon])
-          ].flat_map(&:methods).grep(/\Aunsafe_/).reject { |met| met.match?(/\A[a-z_?]+\z/) }
+          ].flat_map(&:methods).grep(/\Aunsafe_/).grep_v(/\A[a-z_?]+\z/)
           assert(
             symbol_methods.empty?,
             "Some methods cannot be called in their simple form: #{symbol_methods.inspect}"

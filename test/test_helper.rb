@@ -4,6 +4,7 @@
 at_exit { GC.start } if ENV["LD_PRELOAD"]&.include? "valgrind"
 
 require "minitest/autorun"
+require "minitest/pride"
 require_relative "../lib/rgeo"
 require "psych"
 

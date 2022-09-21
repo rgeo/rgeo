@@ -69,10 +69,7 @@ module RGeo
       end
 
       def hash
-        @hash ||= begin
-          hash = [factory, geometry_type].hash
-          @elements.inject(hash) { |h, g| (1_664_525 * h + g.hash).hash }
-        end
+        @hash ||= [factory, geometry_type, *@elements].hash
       end
 
       private

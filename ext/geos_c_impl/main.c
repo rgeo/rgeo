@@ -6,26 +6,26 @@
 
 #ifdef RGEO_GEOS_SUPPORTED
 
-#include <ruby.h>
 #include <geos_c.h>
+#include <ruby.h>
 
-#include "ruby_more.h"
-#include "globals.h"
+#include "analysis.h"
 #include "errors.h"
-
 #include "factory.h"
 #include "geometry.h"
-#include "point.h"
-#include "line_string.h"
-#include "polygon.h"
 #include "geometry_collection.h"
-#include "analysis.h"
+#include "globals.h"
+#include "line_string.h"
+#include "point.h"
+#include "polygon.h"
+#include "ruby_more.h"
 
 #endif
 
 RGEO_BEGIN_C
 
-void Init_geos_c_impl()
+void
+Init_geos_c_impl()
 {
 #ifdef RGEO_GEOS_SUPPORTED
   rgeo_init_geos_globals();
@@ -39,6 +39,5 @@ void Init_geos_c_impl()
   rgeo_init_geos_errors();
 #endif
 }
-
 
 RGEO_END_C

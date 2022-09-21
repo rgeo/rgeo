@@ -177,4 +177,12 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
     obj = @factory.collection([])
     assert_equal("000000000700000000", generator.generate(obj))
   end
+
+  def test_multithreaded
+    generator = RGeo::WKRep::WKBGenerator.new
+    obj = RGeo::WKRep::WKBParser.new.parse(File.read(File.join(__dir__, "data.wkb"), mode: "rb"))
+    Array.new(500) do
+      Thread.fork { generator.generate(obj) }
+    end.map(&:join)
+  end
 end

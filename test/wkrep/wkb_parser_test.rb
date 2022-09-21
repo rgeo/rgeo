@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 class WKBParserTest < Minitest::Test # :nodoc:
   def test_point_2d_xdr_hex
@@ -284,5 +284,15 @@ class WKBParserTest < Minitest::Test # :nodoc:
     obj = parser.parse("000000000700000000")
     assert_equal(RGeo::Feature::GeometryCollection, obj.geometry_type)
     assert_equal(0, obj.num_geometries)
+  end
+
+  def test_multithreaded
+    parser = RGeo::WKRep::WKBParser.new
+    data = File.read(File.join(__dir__, "data.wkb"), mode: "rb")
+    Array.new(100) do
+      Thread.fork do
+        parser.parse(data)
+      end
+    end.map(&:join)
   end
 end

@@ -33,7 +33,7 @@ module RGeo
         @_has_3d = @has_z || @has_m
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
-        @_auto_prepare = opts[:auto_prepare] == :disabled ? false : true
+        @_auto_prepare = opts[:auto_prepare] != :disabled
 
         # Interpret the generator options
         wkt_generator_ = opts[:wkt_generator]

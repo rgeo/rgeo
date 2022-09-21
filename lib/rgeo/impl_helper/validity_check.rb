@@ -31,7 +31,7 @@ module RGeo
         # Trivial methods
         :num_points, :locate_along, :locate_between,
         # Comparison
-        :equals?, :rep_equals?, :eql?, :==, :'!='
+        :equals?, :rep_equals?, :eql?, :==, :"!="
       ].freeze
       private_constant :UNCHECKED_METHODS
 
@@ -109,7 +109,7 @@ module RGeo
       def invalid_reason
         if defined?(super) == "super"
           raise Error::RGeoError, "ValidityCheck MUST be loaded before " \
-            "definition of #{self.class}##{__method__}."
+                                  "definition of #{self.class}##{__method__}."
         end
 
         raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
@@ -120,7 +120,7 @@ module RGeo
       def make_valid
         if defined?(super) == "super"
           raise Error::RGeoError, "ValidityCheck MUST be loaded before " \
-            "definition of #{self.class}##{__method__}."
+                                  "definition of #{self.class}##{__method__}."
         end
 
         raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."

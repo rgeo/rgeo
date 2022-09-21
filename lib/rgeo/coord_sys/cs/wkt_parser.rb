@@ -52,14 +52,14 @@ module RGeo
             end
             obj = WGS84ConversionInfo.create(*bursa_wolf_params)
           when "UNIT"
-            case containing_type
-            when "GEOCCS", "VERT_CS", "PROJCS", "SPHEROID"
-              klass = LinearUnit
-            when "GEOGCS"
-              klass = AngularUnit
-            else
-              klass = Unit
-            end
+            klass = case containing_type
+                    when "GEOCCS", "VERT_CS", "PROJCS", "SPHEROID"
+                      LinearUnit
+                    when "GEOGCS"
+                      AngularUnit
+                    else
+                      Unit
+                    end
             obj = klass.create(args.shift(QuotedString), args.shift(Numeric), *args.create_optionals)
           when "PARAMETER"
             obj = ProjectionParameter.create(args.shift(QuotedString), args.shift(Numeric))

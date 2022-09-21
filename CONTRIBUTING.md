@@ -55,8 +55,12 @@ apt-get install libgeos-dev
 bundle exec rake
 ```
 
+If you are working on the C extension, consider setting MAINTAINER_MODE=1 to
+have extra information when compiling.
+
 ##### Check that your code style is OK
 
 ```sh
 rubocop
+bin/clang-format
 ```

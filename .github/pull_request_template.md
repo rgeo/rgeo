@@ -11,3 +11,5 @@ If there's anything else that's important and relevant to your pull
 request, mention that information here. This could include benchmarks.
 
 Thanks for contributing!
+
+P.S: Don't forget to edit the `History.md` file with your beautiful contribution!

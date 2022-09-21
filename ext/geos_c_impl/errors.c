@@ -8,9 +8,8 @@
 
 #ifdef RGEO_GEOS_SUPPORTED
 
-#include "globals.h"
-
 #include "errors.h"
+#include "globals.h"
 
 RGEO_BEGIN_C
 
@@ -19,15 +18,20 @@ VALUE rb_eRGeoInvalidGeometry;
 VALUE rb_eRGeoUnsupportedOperation;
 VALUE rb_eGeosError;
 
-
-void rgeo_init_geos_errors() {
+void
+rgeo_init_geos_errors()
+{
   VALUE error_module;
 
   error_module = rb_define_module_under(rgeo_module, "Error");
-  rb_eRGeoError = rb_define_class_under(error_module, "RGeoError", rb_eRuntimeError);
-  rb_eRGeoInvalidGeometry = rb_define_class_under(error_module, "InvalidGeometry", rb_eRGeoError);
-  rb_eRGeoUnsupportedOperation = rb_define_class_under(error_module, "UnsupportedOperation", rb_eRGeoError);
-  rb_eGeosError = rb_define_class_under(error_module, "GeosError", rb_eRGeoError);
+  rb_eRGeoError =
+    rb_define_class_under(error_module, "RGeoError", rb_eRuntimeError);
+  rb_eRGeoInvalidGeometry =
+    rb_define_class_under(error_module, "InvalidGeometry", rb_eRGeoError);
+  rb_eRGeoUnsupportedOperation =
+    rb_define_class_under(error_module, "UnsupportedOperation", rb_eRGeoError);
+  rb_eGeosError =
+    rb_define_class_under(error_module, "GeosError", rb_eRGeoError);
 }
 
 RGEO_END_C

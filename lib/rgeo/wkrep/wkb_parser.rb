@@ -62,6 +62,7 @@ module RGeo
         @support_wkb12 = opts[:support_wkb12] ? true : false
         @ignore_extra_bytes = opts[:ignore_extra_bytes] ? true : false
         @default_srid = opts[:default_srid]
+        @mutex = Mutex.new
       end
 
       # Returns the factory generator. See WKBParser for details.
@@ -105,25 +106,27 @@ module RGeo
       # reasons but deprecated. Use #parse instead.
 
       def parse(data)
-        data = [data].pack("H*") if data[0, 1] =~ /[0-9a-fA-F]/
-        @cur_has_z = nil
-        @cur_has_m = nil
-        @cur_srid = nil
-        @cur_dims = 2
-        @cur_factory = nil
-        begin
-          start_scanner(data)
-          obj = parse_object(false)
-          unless @ignore_extra_bytes
-            bytes = bytes_remaining
-            if bytes > 0
-              raise Error::ParseError, "Found #{bytes} extra bytes at the end of the stream."
+        @mutex.synchronize do
+          data = [data].pack("H*") if data[0, 1] =~ /[0-9a-fA-F]/
+          @cur_has_z = nil
+          @cur_has_m = nil
+          @cur_srid = nil
+          @cur_dims = 2
+          @cur_factory = nil
+          begin
+            start_scanner(data)
+            obj = parse_object(false)
+            unless @ignore_extra_bytes
+              bytes = bytes_remaining
+              if bytes > 0
+                raise Error::ParseError, "Found #{bytes} extra bytes at the end of the stream."
+              end
             end
+          ensure
+            @data = nil
           end
-        ensure
-          @data = nil
+          obj
         end
-        obj
       end
       alias parse_hex parse
 
