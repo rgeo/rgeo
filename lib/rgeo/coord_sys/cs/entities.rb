@@ -973,6 +973,10 @@ module RGeo
               new(defn, dimension, *optional)
             end
           end
+
+          def create_from_wkt(str)
+            CS.create_from_wkt(str)
+          end
         end
 
         private

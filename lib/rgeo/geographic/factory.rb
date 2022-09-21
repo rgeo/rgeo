@@ -117,7 +117,7 @@ module RGeo
 
       def marshal_load(data_) # :nodoc:
         if (coord_sys_data = data_["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
+          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
         else
           coord_sys = nil
         end
@@ -163,7 +163,7 @@ module RGeo
 
       def init_with(coder) # :nodoc:
         if (coord_sys_data = coder["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
+          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
         else
           coord_sys = nil
         end
