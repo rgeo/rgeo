@@ -345,8 +345,7 @@ module RGeo
             has_m_coordinate: opts[:has_m_coordinate],
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
             wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
-          projector = Geographic::Proj4Projector.create_from_proj4(factory,
-            nil,
+          projector = Geographic::Proj4Projector.create_from_opts(factory,
             srid: projection_srid,
             coord_sys: projection_coord_sys,
             buffer_resolution: opts[:buffer_resolution],
