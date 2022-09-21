@@ -38,33 +38,3 @@ end
 if defined?(GC.auto_compact) == "method"
   GC.auto_compact = true
 end
-
-# Basic test class where transformations will translate
-# based on difference between "value" attribute
-class TestAffineCoordinateSystem < RGeo::CoordSys::CS::CoordinateSystem
-  def initialize(value, dimension, *optional)
-    super(value, dimension, *optional)
-    @value = value
-  end
-  attr_accessor :value
-
-  def transform_coords(target_cs, x, y, z = nil)
-    ct = TestAffineCoordinateTransform.create(self, target_cs)
-    ct.transform_coords(x, y, z)
-  end
-
-  class << self
-    def create(value, dimension = 2)
-      new(value, dimension)
-    end
-  end
-end
-
-class TestAffineCoordinateTransform < RGeo::CoordSys::CS::CoordinateTransform
-  def transform_coords(x, y, z = nil)
-    diff = target_cs.value - source_cs.value
-    coords = [x + diff, y + diff]
-    coords << (z + diff) if z
-    coords
-  end
-end

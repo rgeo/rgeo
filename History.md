@@ -4,8 +4,8 @@
 
 * Remove `SRSDatabase` and `factory_generator` related methods #314
 * `proj4` keyword removed from factory creation and responsibilities have been delegated to `coord_sys`. #322
-* Remove `check!` and `supported?` from `CoordSys` module
-* Change `Feature#cast` to rely on `coord_sys`
+* Remove `check!` and `supported?` from `CoordSys` module #327
+* Change `Feature#cast` to rely on `coord_sys` #327
 
 **Minor Changes**
 
@@ -14,7 +14,7 @@
 * Add `polygonize` method to the CAPI factory (@aleksejleonov, @tyfoan) #313
 * Add `CS::CoordinateTransform` class #318
 * Factories will always create a `CoordinateSystem` given a valid SRID. #322
-* Add `transform_coords` instance method to `CoordinateSystem`
+* Add `transform_coords` instance method to `CoordinateSystem` #327
 
 **Bug Fixes**
 
