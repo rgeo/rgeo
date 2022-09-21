@@ -952,6 +952,13 @@ module RGeo
           "CS"
         end
 
+        # Not an OGC method, but useful for being able to
+        # transform directly from a CoordinateSystem object.
+        def transform_coords(target_cs, x, y, z = nil)
+          ct = CoordinateTransform.create(self, target_cs)
+          ct.transform_coords(x, y, z)
+        end
+
         class << self
           def create(defn, dimension = 2, *optional)
             # Need this so we can maintain consistency with actual

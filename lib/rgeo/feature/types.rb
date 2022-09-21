@@ -194,15 +194,15 @@ module RGeo
             force_new ? obj.dup : obj
           else
             if type == Point
-              proj = nproj = nil
+              cs = ncs = nil
               if project
-                proj = factory.proj4
-                nproj = nfactory.proj4
+                cs = factory.coord_sys
+                ncs = nfactory.coord_sys
               end
               hasz = factory.property(:has_z_coordinate)
               nhasz = nfactory.property(:has_z_coordinate)
-              if proj && nproj && CoordSys.check!(:proj4)
-                coords = CoordSys::Proj4.transform_coords(proj, nproj, obj.x, obj.y, hasz ? obj.z : nil)
+              if cs && ncs
+                coords = cs.transform_coords(ncs, obj.x, obj.y, hasz ? obj.z : nil)
                 coords << (hasz ? obj.z : 0.0) if nhasz && coords.size < 3
               else
                 coords = [obj.x, obj.y]

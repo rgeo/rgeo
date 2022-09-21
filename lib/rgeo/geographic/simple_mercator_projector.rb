@@ -14,7 +14,6 @@ module RGeo
       def initialize(geography_factory, opts = {})
         @geography_factory = geography_factory
         @projection_factory = Cartesian.preferred_factory(srid: 3857,
-                                                          proj4: SimpleMercatorProjector._proj4_3857,
                                                           coord_sys: SimpleMercatorProjector._coordsys_3857,
                                                           buffer_resolution: opts[:buffer_resolution],
                                                           has_z_coordinate: opts[:has_z_coordinate],
@@ -90,14 +89,6 @@ module RGeo
         @limits_window ||= ProjectedWindow.new(@geography_factory,
           -20_037_508.342789, -20_037_508.342789, 20_037_508.342789, 20_037_508.342789,
           is_limits: true)
-      end
-
-      def self._proj4_3857 # :nodoc:
-        return unless CoordSys.supported?(:proj4)
-        unless defined?(@proj4_3857)
-          @proj4_3857 = CoordSys::Proj4.create("+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-        end
-        @proj4_3857
       end
 
       def self._coordsys_3857 # :nodoc:

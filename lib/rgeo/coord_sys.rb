@@ -25,15 +25,5 @@ module RGeo
   # format for specifying coordinate systems.
   module CoordSys
     CONFIG = Struct.new(:default_coord_sys_class).new(CS::CoordinateSystem)
-
-    # The only valid key is :proj4
-    def self.supported?(key)
-      raise(Error::UnsupportedOperation, "Invalid key. The only valid key is :proj4.") unless key == :proj4
-      defined?(RGeo::CoordSys::Proj4) && RGeo::CoordSys::Proj4.supported?
-    end
-
-    def self.check!(key)
-      supported?(key) || raise(Error::UnsupportedOperation, "Coordinate system '#{key}' is not supported.")
-    end
   end
 end
