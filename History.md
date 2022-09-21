@@ -6,6 +6,9 @@
 * `proj4` keyword removed from factory creation and responsibilities have been delegated to `coord_sys`. #322
 * Remove `check!` and `supported?` from `CoordSys` module #327
 * Change `Feature#cast` to rely on `coord_sys` #327
+* Rename `Geographic::Proj4Projector` to `Projector` #328
+* Remove `proj4` option from projector creation #328
+* Rename `Projector#create_from_proj4` to `create_from_opts` #328
 
 **Minor Changes**
 
