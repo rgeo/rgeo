@@ -93,7 +93,7 @@ module RGeo
 
       def self._coordsys_3857 # :nodoc:
         unless defined?(@coordsys_3857)
-          @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3785)
+          @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857)
         end
         @coordsys_3857
       end

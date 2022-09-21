@@ -8,7 +8,7 @@
 
 module RGeo
   module Geographic
-    class Proj4Projector # :nodoc:
+    class Projector # :nodoc:
       def initialize(geography_factory, projection_factory)
         @geography_factory = geography_factory
         @projection_factory = projection_factory
