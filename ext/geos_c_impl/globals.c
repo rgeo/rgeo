@@ -2,11 +2,18 @@
 
 #ifdef RGEO_GEOS_SUPPORTED
 
+#include <ctype.h>
+#include <geos_c.h>
 #include <ruby.h>
+#include <stdarg.h>
+#include <stdio.h>
 
+#include "errors.h"
 #include "globals.h"
 
 RGEO_BEGIN_C
+
+GEOSContextHandle_t geos_context;
 
 VALUE rgeo_module;
 
@@ -34,9 +41,65 @@ VALUE rgeo_geos_multi_point_class;
 VALUE rgeo_geos_multi_line_string_class;
 VALUE rgeo_geos_multi_polygon_class;
 
+// The notice handler is very rarely used by GEOS, only in
+// GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
+// We still set it to make sure we do not miss any implementation
+// change. Use `DEBUG=1 rake` to show notice.
+#ifdef DEBUG
+static void
+notice_handler(const char* fmt, ...)
+{
+  va_list args;
+  va_start(args, fmt);
+  fprintf(stderr, "GEOS Notice -- ");
+  vfprintf(stderr, fmt, args);
+  fprintf(stderr, "\n");
+  va_end(args);
+}
+#endif
+
+static void
+error_handler(const char* fmt, ...)
+{
+  // See https://en.cppreference.com/w/c/io/vfprintf
+  va_list args1;
+  va_start(args1, fmt);
+  va_list args2;
+  va_copy(args2, args1);
+  int size = 1 + vsnprintf(NULL, 0, fmt, args1);
+  va_end(args1);
+  char geos_full_error[size];
+  vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
+  va_end(args2);
+
+  // NOTE: strtok is destructive, geos_full_error is not to be used afterwards.
+  char* geos_error = strtok(geos_full_error, ":");
+  char* geos_message = strtok(NULL, ":");
+  while (isspace(*geos_message))
+    geos_message++;
+
+  if (streq(geos_error, "UnsupportedOperationException")) {
+    rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
+  } else if (streq(geos_error, "IllegalArgumentException")) {
+    rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else if (streq(geos_error, "ParseException")) {
+    rb_raise(rb_eRGeoParseError, "%s", geos_message);
+  } else if (geos_message) {
+    rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
+  } else {
+    rb_raise(rb_eGeosError, "%s", geos_error);
+  }
+}
+
 void
 rgeo_init_geos_globals()
 {
+  geos_context = GEOS_init_r();
+#ifdef DEBUG
+  GEOSContext_setNoticeHandler_r(geos_context, notice_handler);
+#endif
+  GEOSContext_setErrorHandler_r(geos_context, error_handler);
+
   rgeo_module = rb_define_module("RGeo");
   rb_gc_register_mark_object(rgeo_module);
 

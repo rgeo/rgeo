@@ -6,11 +6,8 @@
 
 #ifdef RGEO_GEOS_SUPPORTED
 
-#include <ctype.h>
 #include <geos_c.h>
 #include <ruby.h>
-#include <stdarg.h>
-#include <stdio.h>
 
 #include "errors.h"
 #include "factory.h"
@@ -25,56 +22,6 @@
 RGEO_BEGIN_C
 
 /**** RUBY AND GEOS CALLBACKS ****/
-
-// The notice handler is very rarely used by GEOS, only in
-// GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
-// We still set it to make sure we do not miss any implementation
-// change. Use `DEBUG=1 rake` to show notice.
-#ifdef DEBUG
-static void
-notice_handler(const char* fmt, ...)
-{
-  va_list args;
-  va_start(args, fmt);
-  fprintf(stderr, "GEOS Notice -- ");
-  vfprintf(stderr, fmt, args);
-  fprintf(stderr, "\n");
-  va_end(args);
-}
-#endif
-
-static void
-NORETURN(error_handler)(const char* fmt, ...)
-{
-  // See https://en.cppreference.com/w/c/io/vfprintf
-  va_list args1;
-  va_start(args1, fmt);
-  va_list args2;
-  va_copy(args2, args1);
-  int size = 1 + vsnprintf(NULL, 0, fmt, args1);
-  va_end(args1);
-  char geos_full_error[size];
-  vsnprintf(geos_full_error, sizeof geos_full_error, fmt, args2);
-  va_end(args2);
-
-  // NOTE: strtok is destructive, geos_full_error is not to be used afterwards.
-  char* geos_error = strtok(geos_full_error, ":");
-  char* geos_message = strtok(NULL, ":");
-  while (isspace(*geos_message))
-    geos_message++;
-
-  if (streq(geos_error, "UnsupportedOperationException")) {
-    rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
-  } else if (streq(geos_error, "IllegalArgumentException")) {
-    rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
-  } else if (streq(geos_error, "ParseException")) {
-    rb_raise(rb_eRGeoParseError, "%s", geos_message);
-  } else if (geos_message) {
-    rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
-  } else {
-    rb_raise(rb_eGeosError, "%s", geos_error);
-  }
-}
 
 // Destroy function for factory data. We destroy any serialization
 // objects that have been created for the factory, and then destroy
@@ -112,7 +59,7 @@ destroy_factory_func(void* data)
   if (factory_data->marshal_wkb_writer) {
     GEOSWKBWriter_destroy_r(context, factory_data->marshal_wkb_writer);
   }
-  finishGEOS_r(context);
+  // finishGEOS_r(context);
   FREE(factory_data);
 }
 
@@ -553,11 +500,7 @@ cmethod_factory_create(VALUE klass,
   result = Qnil;
   data = ALLOC(RGeo_FactoryData);
   if (data) {
-    context = GEOS_init_r();
-#ifdef DEBUG
-    GEOSContext_setNoticeHandler_r(context, notice_handler);
-#endif
-    GEOSContext_setErrorHandler_r(context, error_handler);
+    context = geos_context;
 
     if (context) {
       data->geos_context = context;
