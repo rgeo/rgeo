@@ -12,8 +12,6 @@
 
 RGEO_BEGIN_C
 
-extern GEOSContextHandle_t geos_context;
-
 extern VALUE rgeo_module;
 
 extern VALUE rgeo_feature_module;

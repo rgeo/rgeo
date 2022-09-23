@@ -20,8 +20,7 @@ rgeo_init_geos_geometry();
   May raise a `RGeo::Error::GeosError`.
 */
 VALUE
-rgeo_geos_geometries_strict_eql(GEOSContextHandle_t context,
-                                const GEOSGeometry* geom1,
+rgeo_geos_geometries_strict_eql(const GEOSGeometry* geom1,
                                 const GEOSGeometry* geom2);
 
 RGEO_END_C

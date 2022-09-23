@@ -13,8 +13,6 @@
 
 RGEO_BEGIN_C
 
-GEOSContextHandle_t geos_context;
-
 VALUE rgeo_module;
 
 VALUE rgeo_feature_module;
@@ -45,18 +43,18 @@ VALUE rgeo_geos_multi_polygon_class;
 // GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
 // We still set it to make sure we do not miss any implementation
 // change. Use `DEBUG=1 rake` to show notice.
-#ifdef DEBUG
 static void
 notice_handler(const char* fmt, ...)
 {
+#ifdef DEBUG
   va_list args;
   va_start(args, fmt);
   fprintf(stderr, "GEOS Notice -- ");
   vfprintf(stderr, fmt, args);
   fprintf(stderr, "\n");
   va_end(args);
-}
 #endif
+}
 
 static void
 error_handler(const char* fmt, ...)
@@ -94,11 +92,7 @@ error_handler(const char* fmt, ...)
 void
 rgeo_init_geos_globals()
 {
-  geos_context = GEOS_init_r();
-#ifdef DEBUG
-  GEOSContext_setNoticeHandler_r(geos_context, notice_handler);
-#endif
-  GEOSContext_setErrorHandler_r(geos_context, error_handler);
+  initGEOS(notice_handler, error_handler);
 
   rgeo_module = rb_define_module("RGeo");
   rb_gc_register_mark_object(rgeo_module);
