@@ -44,7 +44,7 @@ notice_handler(const char* fmt, ...)
 #endif
 
 static void
-error_handler(const char* fmt, ...)
+NORETURN(error_handler)(const char* fmt, ...)
 {
   // See https://en.cppreference.com/w/c/io/vfprintf
   va_list args1;
@@ -67,6 +67,8 @@ error_handler(const char* fmt, ...)
     rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
   } else if (streq(geos_error, "IllegalArgumentException")) {
     rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else if (streq(geos_error, "ParseException")) {
+    rb_raise(rb_eRGeoParseError, "%s", geos_message);
   } else if (geos_message) {
     rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
   } else {

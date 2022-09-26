@@ -38,23 +38,19 @@ module RGeo
           buffer_resolution_ = 1 if buffer_resolution_ < 1
 
           # Interpret the generator options
-          wkt_generator_ = opts_[:wkt_generator]
-          case wkt_generator_
-          when :geos
-            wkt_generator_ = nil
+          wkt_generator = opts_[:wkt_generator]
+          case wkt_generator
           when Hash
-            wkt_generator_ = WKRep::WKTGenerator.new(wkt_generator_)
+            wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
           else
-            wkt_generator_ = WKRep::WKTGenerator.new(convert_case: :upper)
+            wkt_generator = nil
           end
-          wkb_generator_ = opts_[:wkb_generator]
-          case wkb_generator_
-          when :geos
-            wkb_generator_ = nil
+          wkb_generator = opts_[:wkb_generator]
+          case wkb_generator
           when Hash
-            wkb_generator_ = WKRep::WKBGenerator.new(wkb_generator_)
+            wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
           else
-            wkb_generator_ = WKRep::WKBGenerator.new
+            wkb_generator = nil
           end
 
           # Coordinate system (srid, proj4, and coord_sys)
@@ -75,28 +71,26 @@ module RGeo
 
           # Create the factory and set instance variables
           result = _create(flags, srid_.to_i, buffer_resolution_,
-            wkt_generator_, wkb_generator_, proj4_, coord_sys_)
+            wkt_generator, wkb_generator, proj4_, coord_sys_)
 
           # Interpret parser options
-          wkt_parser_ = opts_[:wkt_parser]
-          case wkt_parser_
+          wkt_parser = opts_[:wkt_parser]
+          case wkt_parser
           when :geos
-            wkt_parser_ = nil
           when Hash
-            wkt_parser_ = WKRep::WKTParser.new(result, wkt_parser_)
+            wkt_parser = WKRep::WKTParser.new(result, wkt_parser)
           else
-            wkt_parser_ = WKRep::WKTParser.new(result)
+            wkt_parser = nil
           end
-          wkb_parser_ = opts_[:wkb_parser]
-          case wkb_parser_
+          wkb_parser = opts_[:wkb_parser]
+          case wkb_parser
           when :geos
-            wkb_parser_ = nil
           when Hash
-            wkb_parser_ = WKRep::WKBParser.new(result, wkb_parser_)
+            wkb_parser = WKRep::WKBParser.new(result, wkb_parser)
           else
-            wkb_parser_ = WKRep::WKBParser.new(result)
+            wkb_parser = nil
           end
-          result._set_wkrep_parsers(wkt_parser_, wkb_parser_)
+          result._set_wkrep_parsers(wkt_parser, wkb_parser)
 
           # Return the result
           result
