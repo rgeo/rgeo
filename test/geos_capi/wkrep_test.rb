@@ -4,6 +4,7 @@ require_relative "../test_helper"
 
 class GeosWKREPTest < Minitest::Test
   def setup
+    skip "Needs GEOS." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos::CAPIFactory.new
   end
 
