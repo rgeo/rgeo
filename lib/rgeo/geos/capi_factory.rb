@@ -76,7 +76,6 @@ module RGeo
           # Interpret parser options
           wkt_parser = opts_[:wkt_parser]
           case wkt_parser
-          when :geos
           when Hash
             wkt_parser = WKRep::WKTParser.new(result, wkt_parser)
           else
@@ -84,7 +83,6 @@ module RGeo
           end
           wkb_parser = opts_[:wkb_parser]
           case wkb_parser
-          when :geos
           when Hash
             wkb_parser = WKRep::WKBParser.new(result, wkb_parser)
           else

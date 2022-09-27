@@ -8,10 +8,9 @@ module Support
       def fixtures
         return @fixtures if defined?(@fixtures)
 
-        @fixtures =
-          Pathname(__dir__).
-          join("..", "fixtures").
-          realpath
+        @fixtures = Pathname(__dir__)
+                    .join("..", "fixtures")
+                    .realpath
       end
     end
   end
