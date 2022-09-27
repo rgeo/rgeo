@@ -26,6 +26,8 @@ jobs:
         exclude:
           - os: windows # See issue #242, windows support would be welcome.
     runs-on: ${{ matrix.os }}-latest
+    env:
+      MAINTAINER_MODE: 1
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:

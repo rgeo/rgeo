@@ -16,13 +16,12 @@ end
 
 require "mkmf"
 
-$CFLAGS << " -std=c17"
-
 if ENV.key?("DEBUG") || ENV.key?("MAINTAINER_MODE")
   $CFLAGS << " -DDEBUG" \
              " -Wall" \
              " -ggdb" \
-             " -pedantic"
+             " -pedantic" \
+             " -std=c17"
 
   extra_flags = ENV.fetch("MAINTAINER_MODE", ENV.fetch("DEBUG", ""))
   $CFLAGS << " " << extra_flags if extra_flags.strip.start_with?("-")
