@@ -29,6 +29,7 @@ require_relative "common/polygon_tests"
 require_relative "common/validity_tests"
 
 require_relative "support/minitest/assert_wkt_similar"
+require_relative "support/minitest/fixtures"
 
 # Static test for missed references in our CAPI codebase (or FFI interface).
 # See https://alanwu.space/post/check-compaction/
