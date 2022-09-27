@@ -53,6 +53,8 @@ jobs:
         run: bundle exec rake
   Memcheck:
     runs-on: ubuntu-latest
+    env:
+      MAINTAINER_MODE: 1
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
