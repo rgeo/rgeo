@@ -288,7 +288,7 @@ class WKBParserTest < Minitest::Test # :nodoc:
 
   def test_multithreaded
     parser = RGeo::WKRep::WKBParser.new
-    data = File.read(File.join(__dir__, "data.wkb"), mode: "rb")
+    data = fixtures.join("isere.wkb").binread
     Array.new(100) do
       Thread.fork do
         parser.parse(data)

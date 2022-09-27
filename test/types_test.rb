@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "test_helper"
 
 class TypesTest < Minitest::Test
   def test_geometry
@@ -43,7 +43,7 @@ class TypesTest < Minitest::Test
     geom = wkt_parser.parse("POINT(1 2)")
     point = RGeo::Feature.cast(geom, RGeo::Feature::Point)
     assert RGeo::Feature::Point.check_type(point)
-    assert_equal "POINT (1.0 2.0)", point.to_s
+    assert_wkt_similar "POINT (1.0 2.0)", point.to_s
   end
 
   def test_cast_linestring_to_line
@@ -51,7 +51,7 @@ class TypesTest < Minitest::Test
     linestring = wkt_parser.parse("LINESTRING(1 2, 3 4)")
     line = RGeo::Feature.cast(linestring, RGeo::Feature::Line)
     assert RGeo::Feature::Line.check_type(line)
-    assert_equal "LINESTRING (1.0 2.0, 3.0 4.0)", line.to_s
+    assert_wkt_similar "LINESTRING (1.0 2.0, 3.0 4.0)", line.to_s
   end
 
   def test_cast_collection_to_multipoint
@@ -60,7 +60,7 @@ class TypesTest < Minitest::Test
     collection = factory.collection([p1, p2])
     multipoint = RGeo::Feature.cast(collection, RGeo::Feature::MultiPoint)
     assert RGeo::Feature::MultiPoint.check_type(multipoint)
-    assert_equal "MULTIPOINT ((0.0 0.0), (1.0 1.0))", multipoint.to_s
+    assert_wkt_similar "MULTIPOINT ((0.0 0.0), (1.0 1.0))", multipoint.to_s
   end
 
   private

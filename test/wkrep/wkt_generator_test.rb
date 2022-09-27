@@ -289,7 +289,7 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
 
   def test_multithreaded
     generator = RGeo::WKRep::WKTGenerator.new
-    obj = RGeo::WKRep::WKBParser.new.parse(File.read(File.join(__dir__, "data.wkb"), mode: "rb"))
+    obj = RGeo::WKRep::WKBParser.new.parse(fixtures.join("isere.wkb").binread)
     Array.new(100) do
       Thread.fork { generator.generate(obj) }
     end.map(&:join)

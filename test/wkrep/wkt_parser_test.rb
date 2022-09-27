@@ -407,7 +407,7 @@ class WKTParserTest < Minitest::Test # :nodoc:
 
   def test_multithreaded
     parser = RGeo::WKRep::WKTParser.new
-    data = File.read(File.join(__dir__, "data.wkt"))
+    data = fixtures.join("isere.wkt").read
     Array.new(100) do
       Thread.fork do
         parser.parse(data)

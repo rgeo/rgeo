@@ -274,6 +274,7 @@ method_geometry_as_text(VALUE self)
       geos_context = self_data->geos_context;
       if (!wkt_writer) {
         wkt_writer = GEOSWKTWriter_create_r(geos_context);
+        GEOSWKTWriter_setTrim_r(geos_context, wkt_writer, 1);
         factory_data->wkt_writer = wkt_writer;
       }
       str = GEOSWKTWriter_write_r(geos_context, wkt_writer, self_geom);
@@ -759,8 +760,8 @@ method_geometry_buffer_with_style(VALUE self,
                             self_geom,
                             rb_num2dbl(distance),
                             RGEO_FACTORY_DATA_PTR(factory)->buffer_resolution,
-                            rb_num2int(endCapStyle),
-                            rb_num2int(joinStyle),
+                            RB_NUM2INT(endCapStyle),
+                            RB_NUM2INT(joinStyle),
                             rb_num2dbl(mitreLimit)),
       Qnil);
   }
