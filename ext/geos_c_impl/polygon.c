@@ -195,7 +195,7 @@ method_polygon_interior_ring_n(VALUE self, VALUE n)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    i = NUM2INT(n);
+    i = RB_NUM2INT(n);
     if (i >= 0) {
       self_context = self_data->geos_context;
       num = GEOSGetNumInteriorRings_r(self_context, self_geom);

@@ -15,6 +15,7 @@ RGEO_BEGIN_C
 
 VALUE rb_eRGeoError;
 VALUE rb_eRGeoInvalidGeometry;
+VALUE rb_eRGeoParseError;
 VALUE rb_eRGeoUnsupportedOperation;
 VALUE rb_eGeosError;
 
@@ -30,6 +31,8 @@ rgeo_init_geos_errors()
     rb_define_class_under(error_module, "InvalidGeometry", rb_eRGeoError);
   rb_eRGeoUnsupportedOperation =
     rb_define_class_under(error_module, "UnsupportedOperation", rb_eRGeoError);
+  rb_eRGeoParseError =
+    rb_define_class_under(error_module, "ParseError", rb_eRGeoError);
   rb_eGeosError =
     rb_define_class_under(error_module, "GeosError", rb_eRGeoError);
 }

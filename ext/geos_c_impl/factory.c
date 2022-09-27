@@ -44,7 +44,7 @@ notice_handler(const char* fmt, ...)
 #endif
 
 static void
-error_handler(const char* fmt, ...)
+NORETURN(error_handler)(const char* fmt, ...)
 {
   // See https://en.cppreference.com/w/c/io/vfprintf
   va_list args1;
@@ -67,6 +67,8 @@ error_handler(const char* fmt, ...)
     rb_raise(rb_eRGeoUnsupportedOperation, "%s", geos_message);
   } else if (streq(geos_error, "IllegalArgumentException")) {
     rb_raise(rb_eRGeoInvalidGeometry, "%s", geos_message);
+  } else if (streq(geos_error, "ParseException")) {
+    rb_raise(rb_eRGeoParseError, "%s", geos_message);
   } else if (geos_message) {
     rb_raise(rb_eGeosError, "%s: %s", geos_error, geos_message);
   } else {
@@ -334,6 +336,7 @@ method_factory_parse_wkb(VALUE self, VALUE str)
   GEOSWKBReader* wkb_reader;
   VALUE result;
   GEOSGeometry* geom;
+  char* c_str;
 
   Check_Type(str, T_STRING);
   self_data = RGEO_FACTORY_DATA_PTR(self);
@@ -345,10 +348,17 @@ method_factory_parse_wkb(VALUE self, VALUE str)
   }
   result = Qnil;
   if (wkb_reader) {
-    geom = GEOSWKBReader_read_r(self_context,
-                                wkb_reader,
-                                (unsigned char*)RSTRING_PTR(str),
-                                (size_t)RSTRING_LEN(str));
+    c_str = RSTRING_PTR(str);
+    if (c_str[0] == '\x00' || c_str[0] == '\x01')
+      geom = GEOSWKBReader_read_r(self_context,
+                                  wkb_reader,
+                                  (unsigned char*)c_str,
+                                  (size_t)RSTRING_LEN(str));
+    else
+      geom = GEOSWKBReader_readHEX_r(self_context,
+                                     wkb_reader,
+                                     (unsigned char*)c_str,
+                                     (size_t)RSTRING_LEN(str));
     if (geom) {
       result = rgeo_wrap_geos_geometry(self, geom, Qnil);
     }
@@ -497,6 +507,7 @@ method_factory_write_for_psych(VALUE self, VALUE obj)
   wkt_writer = self_data->psych_wkt_writer;
   if (!wkt_writer) {
     wkt_writer = GEOSWKTWriter_create_r(self_context);
+    GEOSWKTWriter_setTrim_r(self_context, wkt_writer, 1);
     if (has_3d) {
       GEOSWKTWriter_setOutputDimension_r(self_context, wkt_writer, 3);
     }
@@ -557,9 +568,9 @@ cmethod_factory_create(VALUE klass,
 
     if (context) {
       data->geos_context = context;
-      data->flags = NUM2INT(flags);
-      data->srid = NUM2INT(srid);
-      data->buffer_resolution = NUM2INT(buffer_resolution);
+      data->flags = RB_NUM2INT(flags);
+      data->srid = RB_NUM2INT(srid);
+      data->buffer_resolution = RB_NUM2INT(buffer_resolution);
       data->wkt_reader = NULL;
       data->wkb_reader = NULL;
       data->wkt_writer = NULL;

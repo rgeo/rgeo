@@ -3,6 +3,7 @@
 **Breaking Changes**
 
 * Remove `SRSDatabase` and `factory_generator` related methods #314
+* Use GEOS tools as defaults for WKRep manipulation within GEOS CAPI and FFI #331
 
 **Minor Changes**
 

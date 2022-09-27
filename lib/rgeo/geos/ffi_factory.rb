@@ -36,29 +36,24 @@ module RGeo
         @_auto_prepare = opts[:auto_prepare] != :disabled
 
         # Interpret the generator options
-        wkt_generator_ = opts[:wkt_generator]
-        case wkt_generator_
-        when :geos
-          @wkt_writer = ::Geos::WktWriter.new
-          @wkt_generator = nil
+        wkt_generator = opts[:wkt_generator]
+        case wkt_generator
         when Hash
-          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator_)
+          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
           @wkt_writer = nil
         else
-          @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
-          @wkt_writer = nil
+          @wkt_writer = ::Geos::WktWriter.new
+          @wkt_writer.trim = true
+          @wkt_generator = nil
         end
-        wkb_generator_ = opts[:wkb_generator]
-        case wkb_generator_
-        when :geos
+        wkb_generator = opts[:wkb_generator]
+        case wkb_generator
+        when Hash
+          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
+          @wkb_writer = nil
+        else
           @wkb_writer = ::Geos::WkbWriter.new
           @wkb_generator = nil
-        when Hash
-          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator_)
-          @wkb_writer = nil
-        else
-          @wkb_generator = WKRep::WKBGenerator.new
-          @wkb_writer = nil
         end
 
         # Coordinate system (srid, proj4, and coord_sys)
@@ -81,27 +76,21 @@ module RGeo
         # Interpret parser options
         wkt_parser = opts[:wkt_parser]
         case wkt_parser
-        when :geos
-          @wkt_reader = ::Geos::WktReader.new
-          @wkt_parser = nil
         when Hash
           @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
           @wkt_reader = nil
         else
-          @wkt_parser = WKRep::WKTParser.new(self)
-          @wkt_reader = nil
+          @wkt_reader = ::Geos::WktReader.new
+          @wkt_parser = nil
         end
         wkb_parser = opts[:wkb_parser]
         case wkb_parser
-        when :geos
-          @wkb_reader = ::Geos::WkbReader.new
-          @wkb_parser = nil
         when Hash
           @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
           @wkb_reader = nil
         else
-          @wkb_parser = WKRep::WKBParser.new(self)
-          @wkb_reader = nil
+          @wkb_reader = ::Geos::WkbReader.new
+          @wkb_parser = nil
         end
       end
       attr_reader :coordinate_dimension, :spatial_dimension
@@ -137,10 +126,10 @@ module RGeo
           "hasm" => @has_m,
           "srid" => @srid,
           "bufr" => @buffer_resolution,
-          "wktg" => @wkt_generator.properties,
-          "wkbg" => @wkb_generator.properties,
-          "wktp" => @wkt_parser.properties,
-          "wkbp" => @wkb_parser.properties,
+          "wktg" => @wkt_generator&.properties,
+          "wkbg" => @wkb_generator&.properties,
+          "wktp" => @wkt_parser&.properties,
+          "wkbp" => @wkb_parser&.properties,
           "apre" => @_auto_prepare
         }
         hash["proj4"] = @proj4.marshal_dump if @proj4
@@ -165,10 +154,10 @@ module RGeo
           has_m_coordinate: data["hasm"],
           srid: data["srid"],
           buffer_resolution: data["bufr"],
-          wkt_generator: symbolize_hash(data["wktg"]),
-          wkb_generator: symbolize_hash(data["wkbg"]),
-          wkt_parser: symbolize_hash(data["wktp"]),
-          wkb_parser: symbolize_hash(data["wkbp"]),
+          wkt_generator: data["wktg"] && symbolize_hash(data["wktg"]),
+          wkb_generator: data["wkbg"] && symbolize_hash(data["wkbg"]),
+          wkt_parser: data["wktp"] && symbolize_hash(data["wktp"]),
+          wkb_parser: data["wkbp"] && symbolize_hash(data["wkbp"]),
           auto_prepare: (data["apre"] ? :simple : :disabled),
           proj4: proj4,
           coord_sys: coord_sys
@@ -182,10 +171,10 @@ module RGeo
         coder["has_m_coordinate"] = @has_m
         coder["srid"] = @srid
         coder["buffer_resolution"] = @buffer_resolution
-        coder["wkt_generator"] = @wkt_generator.properties
-        coder["wkb_generator"] = @wkb_generator.properties
-        coder["wkt_parser"] = @wkt_parser.properties
-        coder["wkb_parser"] = @wkb_parser.properties
+        coder["wkt_generator"] = @wkt_generator&.properties
+        coder["wkb_generator"] = @wkb_generator&.properties
+        coder["wkt_parser"] = @wkt_parser&.properties
+        coder["wkb_parser"] = @wkb_parser&.properties
         coder["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str
@@ -215,10 +204,10 @@ module RGeo
           has_m_coordinate: coder["has_m_coordinate"],
           srid: coder["srid"],
           buffer_resolution: coder["buffer_resolution"],
-          wkt_generator: symbolize_hash(coder["wkt_generator"]),
-          wkb_generator: symbolize_hash(coder["wkb_generator"]),
-          wkt_parser: symbolize_hash(coder["wkt_parser"]),
-          wkb_parser: symbolize_hash(coder["wkb_parser"]),
+          wkt_generator: coder["wkt_generator"] && symbolize_hash(coder["wkt_generator"]),
+          wkb_generator: coder["wkb_generator"] && symbolize_hash(coder["wkb_generator"]),
+          wkt_parser: coder["wkt_parser"] && symbolize_hash(coder["wkt_parser"]),
+          wkb_parser: coder["wkb_parser"] && symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
           proj4: proj4,
           coord_sys: coord_sys
@@ -253,7 +242,11 @@ module RGeo
       # See RGeo::Feature::Factory#parse_wkt
       def parse_wkt(str)
         if @wkt_reader
-          wrap_fg_geom(@wkt_reader.read(str), nil)
+          begin
+            wrap_fg_geom(@wkt_reader.read(str), nil)
+          rescue ::Geos::WktReader::ParseError => e
+            raise RGeo::Error::ParseError, e.message.partition(":").last
+          end
         else
           @wkt_parser.parse(str)
         end
@@ -263,7 +256,12 @@ module RGeo
 
       def parse_wkb(str)
         if @wkb_reader
-          wrap_fg_geom(@wkb_reader.read(str), nil)
+          begin
+            meth = str[0].match?(/[0-9a-fA-F]/) ? :read_hex : :read
+            wrap_fg_geom(@wkb_reader.public_send(meth, str), nil)
+          rescue ::Geos::WkbReader::ParseError => e
+            raise RGeo::Error::ParseError, e.message.partition(":").last
+          end
         else
           @wkb_parser.parse(str)
         end
@@ -505,6 +503,7 @@ module RGeo
       def write_for_psych(geom)
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
           wkt_writer = ::Geos::WktWriter.new
+          wkt_writer.trim = true
           wkt_writer.output_dimensions = 3 if @_has_3d
           wkt_writer.write(geom.fg_geom)
         else
