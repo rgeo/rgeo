@@ -125,10 +125,10 @@ module RGeo
           "hasm" => @has_m,
           "srid" => @srid,
           "bufr" => @buffer_resolution,
-          "wktg" => @wkt_generator.properties,
-          "wkbg" => @wkb_generator.properties,
-          "wktp" => @wkt_parser.properties,
-          "wkbp" => @wkb_parser.properties,
+          "wktg" => @wkt_generator&.properties,
+          "wkbg" => @wkb_generator&.properties,
+          "wktp" => @wkt_parser&.properties,
+          "wkbp" => @wkb_parser&.properties,
           "apre" => @_auto_prepare
         }
         hash["proj4"] = @proj4.marshal_dump if @proj4
@@ -153,10 +153,10 @@ module RGeo
           has_m_coordinate: data["hasm"],
           srid: data["srid"],
           buffer_resolution: data["bufr"],
-          wkt_generator: symbolize_hash(data["wktg"]),
-          wkb_generator: symbolize_hash(data["wkbg"]),
-          wkt_parser: symbolize_hash(data["wktp"]),
-          wkb_parser: symbolize_hash(data["wkbp"]),
+          wkt_generator: data["wktg"] && symbolize_hash(data["wktg"]),
+          wkb_generator: data["wkbg"] && symbolize_hash(data["wkbg"]),
+          wkt_parser: data["wktp"] && symbolize_hash(data["wktp"]),
+          wkb_parser: data["wkbp"] && symbolize_hash(data["wkbp"]),
           auto_prepare: (data["apre"] ? :simple : :disabled),
           proj4: proj4,
           coord_sys: coord_sys
@@ -170,10 +170,10 @@ module RGeo
         coder["has_m_coordinate"] = @has_m
         coder["srid"] = @srid
         coder["buffer_resolution"] = @buffer_resolution
-        coder["wkt_generator"] = @wkt_generator.properties
-        coder["wkb_generator"] = @wkb_generator.properties
-        coder["wkt_parser"] = @wkt_parser.properties
-        coder["wkb_parser"] = @wkb_parser.properties
+        coder["wkt_generator"] = @wkt_generator&.properties
+        coder["wkb_generator"] = @wkb_generator&.properties
+        coder["wkt_parser"] = @wkt_parser&.properties
+        coder["wkb_parser"] = @wkb_parser&.properties
         coder["auto_prepare"] = @_auto_prepare ? "simple" : "disabled"
         if @proj4
           str = @proj4.original_str || @proj4.canonical_str
@@ -203,10 +203,10 @@ module RGeo
           has_m_coordinate: coder["has_m_coordinate"],
           srid: coder["srid"],
           buffer_resolution: coder["buffer_resolution"],
-          wkt_generator: symbolize_hash(coder["wkt_generator"]),
-          wkb_generator: symbolize_hash(coder["wkb_generator"]),
-          wkt_parser: symbolize_hash(coder["wkt_parser"]),
-          wkb_parser: symbolize_hash(coder["wkb_parser"]),
+          wkt_generator: coder["wkt_generator"] && symbolize_hash(coder["wkt_generator"]),
+          wkb_generator: coder["wkb_generator"] && symbolize_hash(coder["wkb_generator"]),
+          wkt_parser: coder["wkt_parser"] && symbolize_hash(coder["wkt_parser"]),
+          wkb_parser: coder["wkb_parser"] && symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
           proj4: proj4,
           coord_sys: coord_sys
@@ -256,7 +256,7 @@ module RGeo
       def parse_wkb(str)
         if @wkb_reader
           begin
-            str = [str].pack("H*") if str[0].match? /[0-9a-fA-F]/
+            str = [str].pack("H*") if str[0].match?(/[0-9a-fA-F]/)
             wrap_fg_geom(@wkb_reader.read(str), nil)
           rescue ::Geos::WkbReader::ParseError => e
             raise RGeo::Error::ParseError, e.message.partition(":").last

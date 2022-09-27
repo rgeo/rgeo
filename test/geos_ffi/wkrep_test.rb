@@ -2,7 +2,7 @@
 
 require_relative "../test_helper"
 
-class GeosWKREPTest < Minitest::Test
+class GeosFFIWKREPTest < Minitest::Test
   def setup
     skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
     @factory = RGeo::Geos.factory(native_interface: :ffi)
