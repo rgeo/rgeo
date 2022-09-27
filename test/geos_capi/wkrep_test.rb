@@ -44,7 +44,7 @@ class GeosWKREPTest < Minitest::Test
   end
 
   def test_generate_wkt
-    assert_equal(@factory.point(1, 2).as_text, "POINT (1.0000000000000000 2.0000000000000000)")
+    assert_equal(@factory.point(1, 2).as_text, "POINT (1 2)")
   end
 
   def test_wkt_generator_downcase

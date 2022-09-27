@@ -43,6 +43,7 @@ module RGeo
           @wkt_writer = nil
         else
           @wkt_writer = ::Geos::WktWriter.new
+          @wkt_writer.trim = true
           @wkt_generator = nil
         end
         wkb_generator = opts[:wkb_generator]
@@ -502,6 +503,7 @@ module RGeo
       def write_for_psych(geom)
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
           wkt_writer = ::Geos::WktWriter.new
+          wkt_writer.trim = true
           wkt_writer.output_dimensions = 3 if @_has_3d
           wkt_writer.write(geom.fg_geom)
         else

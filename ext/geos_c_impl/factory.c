@@ -336,7 +336,7 @@ method_factory_parse_wkb(VALUE self, VALUE str)
   GEOSWKBReader* wkb_reader;
   VALUE result;
   GEOSGeometry* geom;
-  char * c_str;
+  char* c_str;
 
   Check_Type(str, T_STRING);
   self_data = RGEO_FACTORY_DATA_PTR(self);
@@ -507,6 +507,7 @@ method_factory_write_for_psych(VALUE self, VALUE obj)
   wkt_writer = self_data->psych_wkt_writer;
   if (!wkt_writer) {
     wkt_writer = GEOSWKTWriter_create_r(self_context);
+    GEOSWKTWriter_setTrim_r(self_context, wkt_writer, 1);
     if (has_3d) {
       GEOSWKTWriter_setOutputDimension_r(self_context, wkt_writer, 3);
     }
