@@ -74,7 +74,10 @@ jobs:
       - run: |
           bundle exec rubocop --color --parallel
   clang-format:
-    runs-on: ubuntu-latest
+    # NOTE: you could update that tag to `-latest` when the new ubuntu LTS
+    #   is released. Nowadays, `-latest` would point to 20.04 which has an
+    #   outdated clang-format package.
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Install clang-format
