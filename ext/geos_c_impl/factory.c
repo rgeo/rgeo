@@ -336,6 +336,7 @@ method_factory_parse_wkb(VALUE self, VALUE str)
   GEOSWKBReader* wkb_reader;
   VALUE result;
   GEOSGeometry* geom;
+  char * c_str;
 
   Check_Type(str, T_STRING);
   self_data = RGEO_FACTORY_DATA_PTR(self);
@@ -347,10 +348,17 @@ method_factory_parse_wkb(VALUE self, VALUE str)
   }
   result = Qnil;
   if (wkb_reader) {
-    geom = GEOSWKBReader_read_r(self_context,
-                                wkb_reader,
-                                (unsigned char*)RSTRING_PTR(str),
-                                (size_t)RSTRING_LEN(str));
+    c_str = RSTRING_PTR(str);
+    if (c_str[0] == '\x00' || c_str[0] == '\x01')
+      geom = GEOSWKBReader_read_r(self_context,
+                                  wkb_reader,
+                                  (unsigned char*)c_str,
+                                  (size_t)RSTRING_LEN(str));
+    else
+      geom = GEOSWKBReader_readHEX_r(self_context,
+                                     wkb_reader,
+                                     (unsigned char*)c_str,
+                                     (size_t)RSTRING_LEN(str));
     if (geom) {
       result = rgeo_wrap_geos_geometry(self, geom, Qnil);
     }

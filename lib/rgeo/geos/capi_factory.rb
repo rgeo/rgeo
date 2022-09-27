@@ -268,11 +268,7 @@ module RGeo
         if (wkb_parser_ = _wkb_parser)
           wkb_parser_.parse(str_)
         else
-          if str_[0] == "\x00" || str_[0] == "\x01"
-            _parse_wkb_impl(str_)
-          else
-            _parse_wkb_impl([str_].pack('H*'))
-          end
+          _parse_wkb_impl(str_)
         end
       end
 

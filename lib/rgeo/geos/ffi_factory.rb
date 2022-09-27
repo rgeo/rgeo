@@ -256,8 +256,8 @@ module RGeo
       def parse_wkb(str)
         if @wkb_reader
           begin
-            str = [str].pack("H*") if str[0].match?(/[0-9a-fA-F]/)
-            wrap_fg_geom(@wkb_reader.read(str), nil)
+            meth = str[0].match?(/[0-9a-fA-F]/) ? :read_hex : :read
+            wrap_fg_geom(@wkb_reader.public_send(meth, str), nil)
           rescue ::Geos::WkbReader::ParseError => e
             raise RGeo::Error::ParseError, e.message.partition(":").last
           end
