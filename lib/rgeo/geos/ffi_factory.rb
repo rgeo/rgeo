@@ -247,7 +247,7 @@ module RGeo
             raise RGeo::Error::ParseError, e.message.partition(":").last
           end
         else
-            @wkt_parser.parse(str)
+          @wkt_parser.parse(str)
         end
       end
 
