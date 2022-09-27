@@ -4,7 +4,7 @@ module Support
   module Minitest
     module AssertWktSimilar
       def assert_wkt_similar(a, b)
-        assert_equal(Inner.normalize(a), Inner.normalize(b))
+        assert_equal(Inner.normalize(a), Inner.normalize(b), "Normalized WKT differs")
       end
 
       module Inner

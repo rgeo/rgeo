@@ -11,11 +11,12 @@ module RGeo
     module Common # :nodoc:
       module PointTests # :nodoc:
         def assert_close_enough(p1, p2)
-          assert((p1.x - p2.x).abs < 0.00000001 && (p1.y - p2.y).abs < 0.00000001)
+          assert_in_delta(p1.x, p2.x, 1e-8, "x axis not close enough")
+          assert_in_delta(p1.y, p2.y, 1e-8, "y axis not close enough")
         end
 
         def assert_contains_approx(p, mp)
-          assert(mp.any? { |q| (p.x - q.x).abs < 0.00000001 && (p.y - q.y).abs < 0.00000001 })
+          assert(mp.any? { |q| (p.x - q.x).abs < 1e-8 && (p.y - q.y).abs < 1e-8 })
         end
 
         def test_creation
