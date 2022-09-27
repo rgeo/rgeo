@@ -176,7 +176,7 @@ method_line_string_point_n(VALUE self, VALUE n)
     if (coord_seq) {
       has_z = (char)(RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
                      RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
-      si = NUM2INT(n);
+      si = RB_NUM2INT(n);
       if (si >= 0) {
         i = si;
         if (GEOSCoordSeq_getSize_r(self_context, coord_seq, &size)) {

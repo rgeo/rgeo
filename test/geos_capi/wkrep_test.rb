@@ -4,7 +4,7 @@ require_relative "../test_helper"
 
 class GeosWKREPTest < Minitest::Test
   def setup
-    @factory = RGeo::Geos.factory
+    @factory = RGeo::Geos::CAPIFactory.new
   end
 
   def test_parse_wkb_raises_on_wrong_data
@@ -44,5 +44,11 @@ class GeosWKREPTest < Minitest::Test
 
   def test_generate_wkt
     assert_equal(@factory.point(1, 2).as_text, "POINT (1.0000000000000000 2.0000000000000000)")
+  end
+
+  def test_wkt_generator_downcase
+    factory = RGeo::Geos.factory(wkt_generator: { convert_case: :lower })
+    point = factory.point(1, 1)
+    assert_equal("point (1.0 1.0)", point.as_text)
   end
 end

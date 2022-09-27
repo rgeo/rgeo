@@ -65,7 +65,7 @@ module RGeo
 
         def test_as_text
           point = @factory.point(11, 12)
-          assert_equal("POINT (11.0 12.0)", point.as_text)
+          assert_wkt_similar("POINT (11.0 12.0)", point.as_text)
         end
 
         def test_as_text_wkt_round_trip

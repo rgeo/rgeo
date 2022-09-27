@@ -559,9 +559,9 @@ cmethod_factory_create(VALUE klass,
 
     if (context) {
       data->geos_context = context;
-      data->flags = NUM2INT(flags);
-      data->srid = NUM2INT(srid);
-      data->buffer_resolution = NUM2INT(buffer_resolution);
+      data->flags = RB_NUM2INT(flags);
+      data->srid = RB_NUM2INT(srid);
+      data->buffer_resolution = RB_NUM2INT(buffer_resolution);
       data->wkt_reader = NULL;
       data->wkb_reader = NULL;
       data->wkt_writer = NULL;
