@@ -79,5 +79,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install clang-format
         run: sudo apt-get install -yqq clang-format
+      - name: Show version
+        run: clang-format --version
       - name: Run clang-format
         run: bin/clang-format lint
