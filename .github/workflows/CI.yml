@@ -64,9 +64,6 @@ jobs:
         run: |
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get install -yqq libgeos-dev valgrind
-      - name: Set Maintainer Mode
-        if: ${{ github.event.pull_request }}
-        run: export MAINTAINER_MODE=1
       - name: Test & Memcheck
         run: bundle exec rake test:valgrind
   RuboCop:
