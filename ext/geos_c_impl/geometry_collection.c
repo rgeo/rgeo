@@ -186,7 +186,7 @@ impl_geometry_n(VALUE self, VALUE n, char allow_negatives)
   self_geom = self_data->geom;
   if (self_geom) {
     klasses = self_data->klasses;
-    i = NUM2INT(n);
+    i = RB_NUM2INT(n);
     if (allow_negatives || i >= 0) {
       GEOSContextHandle_t self_context = self_data->geos_context;
       len = GEOSGetNumGeometries_r(self_context, self_geom);
