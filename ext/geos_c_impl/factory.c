@@ -159,9 +159,6 @@ mark_factory_func(void* data)
   if (!NIL_P(factory_data->wkrep_wkb_parser)) {
     mark(factory_data->wkrep_wkb_parser);
   }
-  if (!NIL_P(factory_data->proj4_obj)) {
-    mark(factory_data->proj4_obj);
-  }
   if (!NIL_P(factory_data->coord_sys_obj)) {
     mark(factory_data->coord_sys_obj);
   }
@@ -206,9 +203,6 @@ compact_factory_func(void* data)
   if (!NIL_P(factory_data->wkrep_wkb_parser)) {
     factory_data->wkrep_wkb_parser =
       rb_gc_location(factory_data->wkrep_wkb_parser);
-  }
-  if (!NIL_P(factory_data->proj4_obj)) {
-    factory_data->proj4_obj = rb_gc_location(factory_data->proj4_obj);
   }
   if (!NIL_P(factory_data->coord_sys_obj)) {
     factory_data->coord_sys_obj = rb_gc_location(factory_data->coord_sys_obj);
@@ -550,7 +544,6 @@ cmethod_factory_create(VALUE klass,
                        VALUE buffer_resolution,
                        VALUE wkt_generator,
                        VALUE wkb_generator,
-                       VALUE proj4_obj,
                        VALUE coord_sys_obj)
 {
   VALUE result;
@@ -583,7 +576,6 @@ cmethod_factory_create(VALUE klass,
       data->wkrep_wkb_generator = wkb_generator;
       data->wkrep_wkt_parser = Qnil;
       data->wkrep_wkb_parser = Qnil;
-      data->proj4_obj = proj4_obj;
       data->coord_sys_obj = coord_sys_obj;
       result = TypedData_Wrap_Struct(klass, &rgeo_factory_type, data);
     } else {
@@ -597,7 +589,7 @@ static VALUE
 alloc_factory(VALUE klass)
 {
   return cmethod_factory_create(
-    klass, INT2NUM(0), INT2NUM(0), INT2NUM(0), Qnil, Qnil, Qnil, Qnil);
+    klass, INT2NUM(0), INT2NUM(0), INT2NUM(0), Qnil, Qnil, Qnil);
 }
 
 static VALUE
@@ -646,7 +638,6 @@ method_factory_initialize_copy(VALUE self, VALUE orig)
   self_data->wkrep_wkb_generator = Qnil;
   self_data->wkrep_wkt_parser = Qnil;
   self_data->wkrep_wkb_parser = Qnil;
-  self_data->proj4_obj = Qnil;
   self_data->coord_sys_obj = Qnil;
 
   // Copy new data from original object
@@ -659,7 +650,6 @@ method_factory_initialize_copy(VALUE self, VALUE orig)
     self_data->wkrep_wkb_generator = orig_data->wkrep_wkb_generator;
     self_data->wkrep_wkt_parser = orig_data->wkrep_wkt_parser;
     self_data->wkrep_wkb_parser = orig_data->wkrep_wkb_parser;
-    self_data->proj4_obj = orig_data->proj4_obj;
     self_data->coord_sys_obj = orig_data->coord_sys_obj;
   }
   return self;
@@ -675,12 +665,6 @@ method_set_wkrep_parsers(VALUE self, VALUE wkt_parser, VALUE wkb_parser)
   self_data->wkrep_wkb_parser = wkb_parser;
 
   return self;
-}
-
-static VALUE
-method_get_proj4(VALUE self)
-{
-  return RGEO_FACTORY_DATA_PTR(self)->proj4_obj;
 }
 
 static VALUE
@@ -778,7 +762,6 @@ rgeo_init_geos_factory()
                    0);
   rb_define_method(
     geos_factory_class, "_set_wkrep_parsers", method_set_wkrep_parsers, 2);
-  rb_define_method(geos_factory_class, "_proj4", method_get_proj4, 0);
   rb_define_method(geos_factory_class, "_coord_sys", method_get_coord_sys, 0);
   rb_define_method(
     geos_factory_class, "_wkt_generator", method_get_wkt_generator, 0);
@@ -797,7 +780,7 @@ rgeo_init_geos_factory()
   rb_define_method(
     geos_factory_class, "write_for_psych", method_factory_write_for_psych, 1);
   rb_define_module_function(
-    geos_factory_class, "_create", cmethod_factory_create, 7);
+    geos_factory_class, "_create", cmethod_factory_create, 6);
   rb_define_module_function(
     geos_factory_class, "_geos_version", cmethod_factory_geos_version, 0);
   rb_define_module_function(geos_factory_class,

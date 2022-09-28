@@ -56,16 +56,12 @@ module RGeo
       # [<tt>:srid</tt>]
       #   The SRID for the factory and objects it creates.
       #   Default is usually 0.
-      # [<tt>:proj4</tt>]
-      #   The coordinate system in Proj4 format, either as a
-      #   CoordSys::Proj4 object or as a string or hash representing the
-      #   proj4 format. This is usually an optional parameter; the default
-      #   is usually nil.
       # [<tt>:coord_sys</tt>]
       #   The coordinate system in OGC form, either as a subclass of
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
-      #   This is usually an optional parameter; the default is usually
-      #   nil.
+      #   Optional. If no coord_sys is given, but an SRID is the factory
+      #   will try to create one using the CoordSys::CONFIG.default_coord_sys_class
+      #   or the given :coord_sys_class option. The option is usually nil.
       # [<tt>:has_z_coordinate</tt>]
       #   Support Z coordinates. Default is usually false.
       # [<tt>:has_m_coordinate</tt>]

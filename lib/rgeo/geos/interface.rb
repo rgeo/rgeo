@@ -127,14 +127,14 @@ module RGeo
       # [<tt>:srid</tt>]
       #   Set the SRID returned by geometries created by this factory.
       #   Default is 0.
-      # [<tt>:proj4</tt>]
-      #   The coordinate system in Proj4 format, either as a
-      #   CoordSys::Proj4 object or as a string or hash representing the
-      #   proj4 format. Optional.
       # [<tt>:coord_sys</tt>]
       #   The coordinate system in OGC form, either as a subclass of
       #   CoordSys::CS::CoordinateSystem, or as a string in WKT format.
-      #   Optional.
+      #   Optional. If not provided, but <tt>:srid</tt> is, a coord_sys
+      #   will be created using the CS::CONFIG.default_coord_sys_class.
+      #  [<tt>:coord_sys_class</tt>]
+      #    The coordinate system implementation to use if you do not want to
+      #    use the CS::CONFIG.default_coord_sys_class. Optional.
       # [<tt>:has_z_coordinate</tt>]
       #   Support <tt>z_coordinate</tt>. Default is false.
       # [<tt>:has_m_coordinate</tt>]

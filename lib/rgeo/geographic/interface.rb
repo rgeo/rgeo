@@ -64,19 +64,14 @@ module RGeo
       #   for different kinds of buffers is not specified precisely,
       #   but in general the value is taken as the number of segments
       #   per 90-degree curve.
-      # [<tt>:proj4</tt>]
-      #   Provide the coordinate system in Proj4 format. You may pass
-      #   either an RGeo::CoordSys::Proj4 object, or a string or hash
-      #   containing the Proj4 parameters. This coordinate system must be
-      #   a geographic (lat/long) coordinate system. The default is the
-      #   "popular visualization CRS" (EPSG 4055), represented by
-      #   "<tt>+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs</tt>".
-      #   Has no effect if Proj4 is not available.
       # [<tt>:coord_sys</tt>]
       #   Provide a coordinate system in OGC format, either as an object
       #   (one of the CoordSys::CS classes) or as a string in WKT format.
       #   This coordinate system must be a GeographicCoordinateSystem.
       #   The default is the "popular visualization CRS" (EPSG 4055).
+      # [<tt>:coord_sys_class</tt>]
+      #   CoordSys::CS::CoordinateSystem implementation used to instansiate
+      #   a coord_sys based on the :srid given.
       # [<tt>:srid</tt>]
       #   The SRID that should be returned by features from this factory.
       #   Default is 4055, indicating EPSG 4055, the "popular
@@ -104,14 +99,12 @@ module RGeo
       #   for WKRep::WKBGenerator.
 
       def spherical_factory(opts = {})
-        proj4 = opts[:proj4]
         coord_sys = opts[:coord_sys]
         srid = opts[:srid]
         srid ||= coord_sys.authority_code if coord_sys
         Geographic::Factory.new("Spherical",
           has_z_coordinate: opts[:has_z_coordinate],
           has_m_coordinate: opts[:has_m_coordinate],
-          proj4: proj4 || proj_4055,
           coord_sys: coord_sys || coord_sys_4055,
           buffer_resolution: opts[:buffer_resolution],
           wkt_parser: opts[:wkt_parser],
@@ -193,7 +186,6 @@ module RGeo
 
       def simple_mercator_factory(opts = {})
         factory = Geographic::Factory.new("Projected",
-          proj4: proj_4326,
           coord_sys: coord_sys_4326,
           srid: 4326,
           wkt_parser: opts[:wkt_parser],
@@ -211,7 +203,7 @@ module RGeo
       end
 
       # Creates and returns a geographic factory that includes a
-      # projection specified by a Proj4 coordinate system. Like all
+      # projection specified by a coordinate system. Like all
       # geographic factories, this one creates features using latitude-
       # longitude values. However, calculations such as intersections are
       # done in the projected coordinate system, and size and distance
@@ -227,28 +219,24 @@ module RGeo
       # === Options
       #
       # When creating a projected implementation, you must provide enough
-      # information to construct a Proj4 specification for the projection.
+      # information to construct a CoordinateSystem specification for the projection.
       # Generally, this means you will provide either the projection's
       # factory itself (via the <tt>:projection_factory</tt> option), in
-      # which case the factory must include a Proj4 coordinate system;
-      # or, alternatively, you should provide the Proj4 coordinate system
+      # which case the factory must include a coord_sys;
+      # or, alternatively, you should provide the coordinate system
       # and let this method construct a projection factory for you (which
       # it will do using the preferred Cartesian factory generator).
-      # If you choose this second method, you may provide the proj4
-      # via the <tt>:projection_proj4</tt> option.
+      # If you choose this second method, you may provide the coord_sys
+      # via the <tt>:projection_coord_sys</tt> or <option or <tt>:projection_srid</tt>.
       #
       # Following are detailed descriptions of the various options you can
       # pass to this method.
       #
       # [<tt>:projection_factory</tt>]
       #   Specify an existing Cartesian factory to use for the projection.
-      #   This factory must have a non-nil Proj4. If this is provided, any
-      #   <tt>:projection_proj4</tt>, <tt>:projection_coord_sys</tt>, and
+      #   This factory must have a non-nil coord_sys. If this is provided, any
+      #   <tt>:projection_coord_sys</tt> and
       #   <tt>:projection_srid</tt> are ignored.
-      # [<tt>:projection_proj4</tt>]
-      #   Specify a Proj4 projection to use to construct the projection
-      #   factory. This may be specified as a CoordSys::Proj4 object, or
-      #   as a Proj4 string or hash representation.
       # [<tt>:projection_coord_sys</tt>]
       #   Specify a OGC coordinate system for the projection. This may be
       #   specified as an RGeo::CoordSys::CS::GeographicCoordinateSystem
@@ -256,16 +244,12 @@ module RGeo
       # [<tt>:projection_srid</tt>]
       #   The SRID value to use for the projection factory. Defaults to
       #   the given projection coordinate system's authority code, or to
-      #   0 if no projection coordinate system is known.
-      # [<tt>:proj4</tt>]
-      #   A proj4 projection for the geographic (lat-lon) factory. You may
-      #   pass either an RGeo::CoordSys::Proj4 object, or a string or hash
-      #   containing the Proj4 parameters. This coordinate system must be
-      #   a geographic (lat/long) coordinate system. It defaults to the
-      #   geographic part of the projection factory's coordinate system.
-      #   Generally, you should leave it at the default unless you want
-      #   the geographic coordinate system to be based on a different
-      #   horizontal datum than the projection.
+      #   0 if no projection coordinate system is known. If this is provided
+      #   without a projection_coord_sys, one will be instansiated from
+      #   the default_coord_sys_class or projection_coord_sys_class if given.
+      # [<tt>:projection_coord_sys_class</tt>]
+      #   Class to create the projection_coord_sys from if only a projection_srid
+      #   is provided.
       # [<tt>:coord_sys</tt>]
       #   An OGC coordinate system for the geographic (lat-lon) factory,
       #   which may be an RGeo::CoordSys::CS::GeographicCoordinateSystem
@@ -315,80 +299,53 @@ module RGeo
       # for more details.
 
       def projected_factory(opts = {})
-        CoordSys.check!(:proj4)
         if (projection_factory = opts[:projection_factory])
           # Get the projection coordinate systems from the given factory
-          projection_proj4 = projection_factory.proj4
-          unless projection_proj4
-            raise ArgumentError, "The :projection_factory does not have a proj4."
-          end
           projection_coord_sys = projection_factory.coord_sys
-          if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
+
+          if projection_coord_sys && !projection_coord_sys.projected?
             raise ArgumentError, "The :projection_factory's coord_sys is not a ProjectedCoordinateSystem."
           end
           # Determine geographic coordinate system. First check parameters.
-          proj4 = opts[:proj4]
           coord_sys = opts[:coord_sys]
           srid = opts[:srid]
           # Fall back to getting the values from the projection.
-          proj4 ||= projection_proj4.get_geographic || _proj_4326
           coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
           srid ||= coord_sys.authority_code if coord_sys
           srid ||= 4326
           # Now we should have all the coordinate system info.
           factory = Geographic::Factory.new("Projected",
-            proj4: proj4,
             coord_sys: coord_sys,
             srid: srid.to_i,
             has_z_coordinate: projection_factory.property(:has_z_coordinate),
             has_m_coordinate: projection_factory.property(:has_m_coordinate),
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
             wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
-          projector = Geographic::Proj4Projector.create_from_existing_factory(factory,
+          projector = Geographic::Projector.create_from_existing_factory(factory,
             projection_factory)
         else
           # Determine projection coordinate system. First check the parameters.
-          projection_proj4 = opts[:projection_proj4]
-          projection_coord_sys = opts[:projection_coord_sys]
-          projection_srid = opts[:projection_srid]
+          projection_coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:projection_srid], opts[:projection_coord_sys], opts[:projection_coord_sys_class])
+          projection_coord_sys = projection_coord_sys_info[:coord_sys]
+          projection_srid = projection_coord_sys_info[:srid]
 
-          # A projection proj4 is absolutely required.
-          unless projection_proj4
-            raise ArgumentError, "Unable to determine the Proj4 for the projected coordinate system."
-          end
-          # Check the projection coordinate systems, and parse if needed.
-          if projection_proj4.is_a?(String) || projection_proj4.is_a?(Hash)
-            actual_projection_proj4 = CoordSys::Proj4.create(projection_proj4)
-            unless actual_projection_proj4
-              raise ArgumentError, "Bad proj4 syntax: #{projection_proj4.inspect}"
-            end
-            projection_proj4 = actual_projection_proj4
-          end
-          if projection_coord_sys && !projection_coord_sys.is_a?(CoordSys::CS::ProjectedCoordinateSystem)
-            raise ArgumentError, "The :projection_coord_sys is not a ProjectedCoordinateSystem."
-          end
-          projection_srid ||= projection_coord_sys.authority_code if projection_coord_sys
           # Determine geographic coordinate system. First check parameters.
-          proj4 = opts[:proj4]
           coord_sys = opts[:coord_sys]
           srid = opts[:srid]
 
           # Fall back to getting the values from the projection.
-          proj4 ||= projection_proj4.get_geographic || _proj_4326
           coord_sys ||= projection_coord_sys.geographic_coordinate_system if projection_coord_sys
           srid ||= coord_sys.authority_code if coord_sys
           srid ||= 4326
           # Now we should have all the coordinate system info.
           factory = Geographic::Factory.new("Projected",
-            proj4: proj4,
             coord_sys: coord_sys,
             srid: srid.to_i,
             has_z_coordinate: opts[:has_z_coordinate],
             has_m_coordinate: opts[:has_m_coordinate],
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
             wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
-          projector = Geographic::Proj4Projector.create_from_proj4(factory,
-            projection_proj4,
+          projector = Geographic::Projector.create_from_opts(factory,
             srid: projection_srid,
             coord_sys: projection_coord_sys,
             buffer_resolution: opts[:buffer_resolution],
@@ -403,30 +360,16 @@ module RGeo
 
       private
 
-      def proj_4055
-        unless defined?(@proj44055)
-          @proj44055 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +a=6378137 +b=6378137 +towgs84=0,0,0,0,0,0,0 +no_defs")
-        end
-        @proj44055
-      end
-
       def coord_sys_4055
         unless defined?(@coord_sys_4055)
-          @coord_sys_4055 = CoordSys::CS.create_from_wkt('GEOGCS["Popular Visualisation CRS",DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137,0,AUTHORITY["EPSG","7059"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6055"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4055"]]')
+          @coord_sys_4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055)
         end
         @coord_sys_4055
       end
 
-      def proj_4326
-        unless defined?(@proj_4326)
-          @proj_4326 = CoordSys.supported?(:proj4) && CoordSys::Proj4.create("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
-        end
-        @proj_4326
-      end
-
       def coord_sys_4326
         unless defined?(@coord_sys_4326)
-          @coord_sys_4326 = CoordSys::CS.create_from_wkt('GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]')
+          @coord_sys_4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326)
         end
         @coord_sys_4326
       end

@@ -16,9 +16,7 @@
 #   Simple Features Specifiation (SFS). This module forms the core of RGeo.
 #
 # * RGeo::CoordSys contains classes for representing spatial
-#   reference systems and coordinate transformations. For example, it
-#   includes a wrapper for the Proj4 library, supporting many geographic
-#   projections.
+#   reference systems and coordinate transformations.
 #
 # * RGeo::Cartesian is a gateway for geometric data implementations
 #   that operate in Caresian (flat) coordinate systems. It also provides a

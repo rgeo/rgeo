@@ -1,3 +1,26 @@
+### Current
+
+**Breaking Changes**
+
+* `proj4` keyword removed from factory creation and responsibilities have been delegated to `coord_sys`. #322
+* Remove `check!` and `supported?` from `CoordSys` module #327
+* Change `Feature#cast` to rely on `coord_sys` #327
+* Rename `Geographic::Proj4Projector` to `Projector` #328
+* Remove `proj4` option from projector creation #328
+* Rename `Projector#create_from_proj4` to `create_from_opts` #328
+
+**Minor Changes**
+
+* Add `CS::CoordinateTransform` class #318
+* Factories will always create a `CoordinateSystem` given a valid SRID. #322
+* Add `transform_coords` instance method to `CoordinateSystem` #327
+* Change `hash` computation for security reasons #323
+* The `RGeo::WKRep::*` family is now thread-safe #326
+
+**Bug Fixes**
+
+* Ensure that frozen geometries are properly validated #309
+
 ### 3.0.0-rc.2 / 2022-07-07
 
 **Breaking Changes**
@@ -10,15 +33,12 @@
 * Implement `coordinate_dimension`, `spatial_dimension`, `is_3d?` and `measured?` for all factories.
 * Add `invalid_reason_location` method to the CAPI factory #310
 * Add `polygonize` method to the CAPI factory (@aleksejleonov, @tyfoan) #313
-* Change `hash` computation for security reasons #323
-* The `RGeo::WKRep::*` family is now thread-safe #326
 
 **Bug Fixes**
 
 * Fix memory leak on failing geometry collection creation #301
 * Use polygon factory on build polygon centroid #306
 * Don't raise exception when topology-invalid geometry compared with itself (CAPI factory) #311
-* Ensure that frozen geometries are properly validated #309
 
 ### 3.0.0-rc.1 / 2022-03-22
 

@@ -36,17 +36,11 @@ module RGeo
         @coordinate_dimension += 1 if @support_m
         @spatial_dimension = @support_z ? 3 : 2
 
-        @srid = (opts[:srid] || 4326).to_i
-        @proj4 = opts[:proj4]
-        if @proj4 && CoordSys.check!(:proj4)
-          if @proj4.is_a?(String) || @proj4.is_a?(Hash)
-            @proj4 = CoordSys::Proj4.create(@proj4)
-          end
-        end
-        @coord_sys = opts[:coord_sys]
-        if @coord_sys.is_a?(String)
-          @coord_sys = CoordSys::CS.create_from_wkt(@coord_sys)
-        end
+        srid = opts.fetch(:srid, 4326).to_i
+        coord_sys_info = ImplHelper::Utils.setup_coord_sys(srid, opts[:coord_sys], opts[:coord_sys_class])
+        @coord_sys = coord_sys_info[:coord_sys]
+        @srid = coord_sys_info[:srid]
+
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
 
@@ -89,14 +83,14 @@ module RGeo
           @impl_prefix == rhs_.instance_variable_get(:@impl_prefix) &&
           @support_z == rhs_.instance_variable_get(:@support_z) &&
           @support_m == rhs_.instance_variable_get(:@support_m) &&
-          @proj4 == rhs_.instance_variable_get(:@proj4)
+          @coord_sys == rhs_.instance_variable_get(:@coord_sys)
       end
       alias == eql?
 
       # Standard hash code
 
       def hash
-        @hash ||= [@impl_prefix, @support_z, @support_m, @proj4].hash
+        @hash ||= [@impl_prefix, @support_z, @support_m, @coord_sys].hash
       end
 
       # Marshal support
@@ -113,7 +107,6 @@ module RGeo
           "wkbp" => @wkb_parser.properties,
           "bufr" => @buffer_resolution
         }
-        hash_["proj4"] = @proj4.marshal_dump if @proj4
         hash_["cs"] = @coord_sys.to_wkt if @coord_sys
         if @projector
           hash_["prjc"] = @projector.class.name.sub(/.*::/, "")
@@ -123,14 +116,8 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        if (proj4_data = data_["proj4"]) && CoordSys.check!(:proj4)
-          proj4 = CoordSys::Proj4.allocate
-          proj4.marshal_load(proj4_data)
-        else
-          proj4 = nil
-        end
         if (coord_sys_data = data_["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data)
+          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
         else
           coord_sys = nil
         end
@@ -143,7 +130,6 @@ module RGeo
           wkt_parser: symbolize_hash(data_["wktp"]),
           wkb_parser: symbolize_hash(data_["wkbp"]),
           buffer_resolution: data_["bufr"],
-          proj4: proj4,
           coord_sys: coord_sys
         )
         if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
@@ -168,10 +154,6 @@ module RGeo
         coder["wkt_parser"] = @wkt_parser.properties
         coder["wkb_parser"] = @wkb_parser.properties
         coder["buffer_resolution"] = @buffer_resolution
-        if @proj4
-          str = @proj4.original_str || @proj4.canonical_str
-          coder["proj4"] = @proj4.radians? ? { "proj4" => str, "radians" => true } : str
-        end
         coder["coord_sys"] = @coord_sys.to_wkt if @coord_sys
         if @projector
           coder["projectorclass"] = @projector.class.name.sub(/.*::/, "")
@@ -180,18 +162,8 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        if (proj4_data = coder["proj4"])
-          CoordSys.check!(:proj4)
-          if proj4_data.is_a?(Hash)
-            proj4 = CoordSys::Proj4.create(proj4_data["proj4"], radians: proj4_data["radians"])
-          else
-            proj4 = CoordSys::Proj4.create(proj4_data.to_s)
-          end
-        else
-          proj4 = nil
-        end
         if (coord_sys_data = coder["cs"])
-          coord_sys = CoordSys::CS.create_from_wkt(coord_sys_data.to_s)
+          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
         else
           coord_sys = nil
         end
@@ -204,7 +176,6 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           buffer_resolution: coder["buffer_resolution"],
-          proj4: proj4,
           coord_sys: coord_sys
         )
         if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
@@ -366,10 +337,6 @@ module RGeo
       def multi_polygon(elems)
         @multi_polygon_class.new(self, elems)
       end
-
-      # See RGeo::Feature::Factory#proj4
-
-      attr_reader :proj4
 
       # See RGeo::Feature::Factory#coord_sys
 
