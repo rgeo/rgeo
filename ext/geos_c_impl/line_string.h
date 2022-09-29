@@ -22,8 +22,7 @@ rgeo_init_geos_line_string();
   Returns Qtrue if true, Qfalse if false, or Qnil on an error.
 */
 VALUE
-rgeo_is_geos_line_string_closed(GEOSContextHandle_t context,
-                                const GEOSGeometry* geom);
+rgeo_is_geos_line_string_closed(const GEOSGeometry* geom);
 
 RGEO_END_C
 

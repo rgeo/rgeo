@@ -12,13 +12,12 @@ RGEO_BEGIN_C
 
 /*
   Wrapped structure for Factory objects.
-  A factory encapsulates the GEOS context, and GEOS serializer settings.
+  A factory encapsulates GEOS serializer settings.
   It also stores the SRID for all geometries created by this factory,
   and the resolution for buffers created for this factory's geometries.
 */
 typedef struct
 {
-  GEOSContextHandle_t geos_context;
   GEOSWKTReader* wkt_reader;
   GEOSWKBReader* wkb_reader;
   GEOSWKTWriter* wkt_writer;
@@ -85,17 +84,9 @@ method_factory_prepare_heuristic_p(VALUE self);
   in Line objects, which have no GEOS type). Any array element, or the
   array itself, could be Qnil, indicating fall back to the default
   inferred from the GEOS type.
-
-  The GEOS context handle is also included here. Ideally, it would be
-  available by following the factory reference and getting it from the
-  factory data. However, one use case is in the destroy_geometry_func
-  in factory.c, and Rubinius 1.1.1 seems to crash when you try to
-  evaluate a DATA_PTR from that function, so we copy the context handle
-  here so the destroy_geometry_func can get to it.
 */
 typedef struct
 {
-  GEOSContextHandle_t geos_context;
   GEOSGeometry* geom;
   const GEOSPreparedGeometry* prep;
   VALUE factory;
@@ -227,15 +218,13 @@ rgeo_geos_klasses_and_factories_eql(VALUE obj1, VALUE obj2);
 
 /*
   A tool for building up hash values.
-  You must pass in the context, a geos geometry, and a seed hash.
+  You must pass a geos geometry and a seed hash.
   Returns an updated hash.
   This call is useful in sequence, and should be bracketed by calls to
   rb_hash_start and rb_hash_end.
 */
 st_index_t
-rgeo_geos_coordseq_hash(GEOSContextHandle_t context,
-                        const GEOSGeometry* geom,
-                        st_index_t hash);
+rgeo_geos_coordseq_hash(const GEOSGeometry* geom, st_index_t hash);
 
 /*
   A tool for building up hash values.

@@ -2,8 +2,7 @@
 #include <ruby.h>
 
 VALUE
-extract_points_from_coordinate_sequence(GEOSContextHandle_t context,
-                                        const GEOSCoordSequence* coord_sequence,
+extract_points_from_coordinate_sequence(const GEOSCoordSequence* coord_sequence,
                                         int zCoordinate)
 {
   VALUE result = Qnil;
@@ -12,7 +11,7 @@ extract_points_from_coordinate_sequence(GEOSContextHandle_t context,
   unsigned int i;
   double val;
 
-  if (GEOSCoordSeq_getSize_r(context, coord_sequence, &count)) {
+  if (GEOSCoordSeq_getSize(coord_sequence, &count)) {
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
       if (zCoordinate) {
@@ -20,12 +19,12 @@ extract_points_from_coordinate_sequence(GEOSContextHandle_t context,
       } else {
         point = rb_ary_new2(2);
       }
-      GEOSCoordSeq_getX_r(context, coord_sequence, i, &val);
+      GEOSCoordSeq_getX(coord_sequence, i, &val);
       rb_ary_push(point, rb_float_new(val));
-      GEOSCoordSeq_getY_r(context, coord_sequence, i, &val);
+      GEOSCoordSeq_getY(coord_sequence, i, &val);
       rb_ary_push(point, rb_float_new(val));
       if (zCoordinate) {
-        GEOSCoordSeq_getZ_r(context, coord_sequence, i, &val);
+        GEOSCoordSeq_getZ(coord_sequence, i, &val);
         rb_ary_push(point, rb_float_new(val));
       }
       rb_ary_push(result, point);
@@ -36,9 +35,7 @@ extract_points_from_coordinate_sequence(GEOSContextHandle_t context,
 }
 
 VALUE
-extract_points_from_polygon(GEOSContextHandle_t context,
-                            const GEOSGeometry* polygon,
-                            int zCoordinate)
+extract_points_from_polygon(const GEOSGeometry* polygon, int zCoordinate)
 {
   VALUE result = Qnil;
 
@@ -48,24 +45,24 @@ extract_points_from_polygon(GEOSContextHandle_t context,
   unsigned int i;
 
   if (polygon) {
-    ring = GEOSGetExteriorRing_r(context, polygon);
-    coord_sequence = GEOSGeom_getCoordSeq_r(context, ring);
+    ring = GEOSGetExteriorRing(polygon);
+    coord_sequence = GEOSGeom_getCoordSeq(ring);
 
     if (coord_sequence) {
-      interior_ring_count = GEOSGetNumInteriorRings_r(context, polygon);
+      interior_ring_count = GEOSGetNumInteriorRings(polygon);
       result = rb_ary_new2(interior_ring_count + 1); // exterior + inner rings
 
-      rb_ary_push(result,
-                  extract_points_from_coordinate_sequence(
-                    context, coord_sequence, zCoordinate));
+      rb_ary_push(
+        result,
+        extract_points_from_coordinate_sequence(coord_sequence, zCoordinate));
 
       for (i = 0; i < interior_ring_count; ++i) {
-        ring = GEOSGetInteriorRingN_r(context, polygon, i);
-        coord_sequence = GEOSGeom_getCoordSeq_r(context, ring);
+        ring = GEOSGetInteriorRingN(polygon, i);
+        coord_sequence = GEOSGeom_getCoordSeq(ring);
         if (coord_sequence) {
           rb_ary_push(result,
-                      extract_points_from_coordinate_sequence(
-                        context, coord_sequence, zCoordinate));
+                      extract_points_from_coordinate_sequence(coord_sequence,
+                                                              zCoordinate));
         }
       }
     }

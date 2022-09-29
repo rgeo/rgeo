@@ -37,7 +37,6 @@ method_point_coordinates(VALUE self)
   VALUE result = Qnil;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t context;
   const GEOSCoordSequence* coord_sequence;
   int zCoordinate;
 
@@ -47,11 +46,10 @@ method_point_coordinates(VALUE self)
   if (self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
                   RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-    context = self_data->geos_context;
-    coord_sequence = GEOSGeom_getCoordSeq_r(context, self_geom);
+    coord_sequence = GEOSGeom_getCoordSeq(self_geom);
     if (coord_sequence) {
-      result = rb_ary_pop(extract_points_from_coordinate_sequence(
-        context, coord_sequence, zCoordinate));
+      result = rb_ary_pop(
+        extract_points_from_coordinate_sequence(coord_sequence, zCoordinate));
     }
   }
   return result;
@@ -63,7 +61,6 @@ method_point_x(VALUE self)
   VALUE result;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t self_context;
   const GEOSCoordSequence* coord_seq;
   double val;
 
@@ -71,10 +68,9 @@ method_point_x(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    self_context = self_data->geos_context;
-    coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
+    coord_seq = GEOSGeom_getCoordSeq(self_geom);
     if (coord_seq) {
-      if (GEOSCoordSeq_getX_r(self_context, coord_seq, 0, &val)) {
+      if (GEOSCoordSeq_getX(coord_seq, 0, &val)) {
         result = rb_float_new(val);
       }
     }
@@ -88,7 +84,6 @@ method_point_y(VALUE self)
   VALUE result;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t self_context;
   const GEOSCoordSequence* coord_seq;
   double val;
 
@@ -96,10 +91,9 @@ method_point_y(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    self_context = self_data->geos_context;
-    coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
+    coord_seq = GEOSGeom_getCoordSeq(self_geom);
     if (coord_seq) {
-      if (GEOSCoordSeq_getY_r(self_context, coord_seq, 0, &val)) {
+      if (GEOSCoordSeq_getY(coord_seq, 0, &val)) {
         result = rb_float_new(val);
       }
     }
@@ -113,7 +107,6 @@ get_3d_point(VALUE self, int flag)
   VALUE result;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t self_context;
   const GEOSCoordSequence* coord_seq;
   double val;
 
@@ -122,10 +115,9 @@ get_3d_point(VALUE self, int flag)
   self_geom = self_data->geom;
   if (self_geom) {
     if (RGEO_FACTORY_DATA_PTR(self_data->factory)->flags & flag) {
-      self_context = self_data->geos_context;
-      coord_seq = GEOSGeom_getCoordSeq_r(self_context, self_geom);
+      coord_seq = GEOSGeom_getCoordSeq(self_geom);
       if (coord_seq) {
-        if (GEOSCoordSeq_getZ_r(self_context, coord_seq, 0, &val)) {
+        if (GEOSCoordSeq_getZ(coord_seq, 0, &val)) {
           result = rb_float_new(val);
         }
       }
@@ -155,8 +147,7 @@ method_point_eql(VALUE self, VALUE rhs)
   result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
     self_data = RGEO_GEOMETRY_DATA_PTR(self);
-    result = rgeo_geos_geometries_strict_eql(self_data->geos_context,
-                                             self_data->geom,
+    result = rgeo_geos_geometries_strict_eql(self_data->geom,
                                              RGEO_GEOMETRY_DATA_PTR(rhs)->geom);
   }
   return result;
@@ -173,8 +164,7 @@ method_point_hash(VALUE self)
   factory = self_data->factory;
   hash = rb_hash_start(0);
   hash = rgeo_geos_objbase_hash(factory, rgeo_feature_point_module, hash);
-  hash =
-    rgeo_geos_coordseq_hash(self_data->geos_context, self_data->geom, hash);
+  hash = rgeo_geos_coordseq_hash(self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
 
@@ -219,19 +209,17 @@ rgeo_create_geos_point(VALUE factory, double x, double y, double z)
 {
   VALUE result;
   RGeo_FactoryData* factory_data;
-  GEOSContextHandle_t context;
   GEOSCoordSequence* coord_seq;
   GEOSGeometry* geom;
 
   result = Qnil;
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  context = factory_data->geos_context;
-  coord_seq = GEOSCoordSeq_create_r(context, 1, 3);
+  coord_seq = GEOSCoordSeq_create(1, 3);
   if (coord_seq) {
-    if (GEOSCoordSeq_setX_r(context, coord_seq, 0, x)) {
-      if (GEOSCoordSeq_setY_r(context, coord_seq, 0, y)) {
-        if (GEOSCoordSeq_setZ_r(context, coord_seq, 0, z)) {
-          geom = GEOSGeom_createPoint_r(context, coord_seq);
+    if (GEOSCoordSeq_setX(coord_seq, 0, x)) {
+      if (GEOSCoordSeq_setY(coord_seq, 0, y)) {
+        if (GEOSCoordSeq_setZ(coord_seq, 0, z)) {
+          geom = GEOSGeom_createPoint(coord_seq);
           if (geom) {
             result =
               rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_point_class);
