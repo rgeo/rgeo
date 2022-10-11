@@ -1,4 +1,4 @@
-### Current
+### 3.0.0-rc.3 / 2022-10-11
 
 **Breaking Changes**
 
