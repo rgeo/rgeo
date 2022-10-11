@@ -193,37 +193,6 @@ Naming/MemoizedInstanceVariableName:
 Naming/MethodParameterName:
   Enabled: false
 
-# Offense count: 31
-# Configuration parameters: NamePrefix, ForbiddenPrefixes, AllowedMethods, MethodDefinitionMacros.
-# NamePrefix: is_, has_, have_
-# ForbiddenPrefixes: is_, has_, have_
-# AllowedMethods: is_a?
-# MethodDefinitionMacros: define_method, define_singleton_method
-Naming/PredicateName:
-  Exclude:
-    - 'spec/**/*'
-    - 'lib/rgeo/cartesian/feature_methods.rb'
-    - 'lib/rgeo/feature/curve.rb'
-    - 'lib/rgeo/feature/geometry.rb'
-    - 'lib/rgeo/feature/multi_curve.rb'
-    - 'lib/rgeo/geographic/factory.rb'
-    - 'lib/rgeo/geographic/projected_feature_methods.rb'
-    - 'lib/rgeo/geographic/spherical_feature_methods.rb'
-    - 'lib/rgeo/geos/ffi_feature_methods.rb'
-    - 'lib/rgeo/geos/interface.rb'
-    - 'lib/rgeo/geos/zm_feature_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_geometry_collection_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_line_string_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_point_methods.rb'
-    - 'lib/rgeo/impl_helper/basic_polygon_methods.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredName.
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - 'lib/rgeo/geos.rb'
-
 # Offense count: 20
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers.
 # SupportedStyles: snake_case, normalcase, non_integer

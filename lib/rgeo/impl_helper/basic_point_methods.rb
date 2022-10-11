@@ -49,18 +49,8 @@ module RGeo
         false
       end
 
-      def is_empty?
-        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        empty?
-      end
-
       def simple?
         true
-      end
-
-      def is_simple?
-        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        simple?
       end
 
       def envelope

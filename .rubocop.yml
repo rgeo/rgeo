@@ -34,6 +34,11 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Naming/PredicateName:
+  AllowedMethods:
+    - is_a?
+    - has_projection? # Helps disambiguating.
+
 Style/CaseEquality:
   Enabled: false
 
