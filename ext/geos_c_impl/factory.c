@@ -57,7 +57,7 @@ destroy_factory_func(void* data)
   if (factory_data->marshal_wkb_writer) {
     GEOSWKBWriter_destroy(factory_data->marshal_wkb_writer);
   }
-  FREE(factory_data);
+  RB_FREE(factory_data);
 }
 
 // Destroy function for geometry data. We destroy the internal
@@ -79,7 +79,7 @@ destroy_geometry_func(void* data)
       prep != (const GEOSPreparedGeometry*)3) {
     GEOSPreparedGeom_destroy(prep);
   }
-  FREE(geometry_data);
+  RB_FREE(geometry_data);
 }
 
 // Mark function for factory data. This marks the wkt and wkb generator
@@ -476,7 +476,7 @@ cmethod_factory_create(VALUE klass,
   RGeo_FactoryData* data;
 
   result = Qnil;
-  data = ALLOC(RGeo_FactoryData);
+  data = RB_ALLOC(RGeo_FactoryData);
   if (data) {
     data->flags = RB_NUM2INT(flags);
     data->srid = RB_NUM2INT(srid);
@@ -782,7 +782,7 @@ rgeo_wrap_geos_geometry(VALUE factory, GEOSGeometry* geom, VALUE klass)
       }
       klass = inferred_klass;
     }
-    data = ALLOC(RGeo_GeometryData);
+    data = RB_ALLOC(RGeo_GeometryData);
     if (data) {
       if (geom) {
         GEOSSetSRID(geom, factory_data->srid);

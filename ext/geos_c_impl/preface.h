@@ -42,6 +42,7 @@
 // https://ozlabs.org/~rusty/index.cgi/tech/2008-04-01.html
 #define streq(a, b) (!strcmp((a), (b)))
 
-// When using ruby ALLOC* macros, we are using ruby_xmalloc, which counterpart
-// is ruby_xfree. This macro helps enforcing that by showing us the way.
-#define FREE ruby_xfree
+// When using ruby RB_ALLOC* macros, we are using ruby_xmalloc, which
+// counterpart is ruby_xfree. This macro helps enforcing that by showing us the
+// way.
+#define RB_FREE ruby_xfree

@@ -261,7 +261,7 @@ cmethod_create(VALUE module,
   }
 
   len = (unsigned int)RARRAY_LEN(interior_array);
-  interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
+  interior_geoms = RB_ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
   if (interior_geoms) {
     actual_len = 0;
     for (i = 0; i < len; ++i) {
@@ -282,7 +282,7 @@ cmethod_create(VALUE module,
       polygon =
         GEOSGeom_createPolygon(exterior_geom, interior_geoms, actual_len);
       if (polygon) {
-        FREE(interior_geoms);
+        RB_FREE(interior_geoms);
         // NOTE: we can return safely here, state cannot be other than 0.
         return rgeo_wrap_geos_geometry(
           factory, polygon, rgeo_geos_polygon_class);
@@ -291,7 +291,7 @@ cmethod_create(VALUE module,
     for (i = 0; i < actual_len; ++i) {
       GEOSGeom_destroy(interior_geoms[i]);
     }
-    FREE(interior_geoms);
+    RB_FREE(interior_geoms);
   }
   GEOSGeom_destroy(exterior_geom);
   if (state) {

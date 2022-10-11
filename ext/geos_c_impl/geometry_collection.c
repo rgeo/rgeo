@@ -31,7 +31,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   VALUE result;
   unsigned int len;
   GEOSGeometry** geoms;
-  RGeo_FactoryData* factory_data;
   VALUE klass;
   unsigned int i;
   unsigned int j;
@@ -44,12 +43,11 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   result = Qnil;
   Check_Type(array, T_ARRAY);
   len = (unsigned int)RARRAY_LEN(array);
-  geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
+  geoms = RB_ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
   if (!geoms) {
     rb_raise(rb_eRGeoError, "not enough memory available");
   }
 
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   klasses = Qnil;
   cast_type = Qnil;
   switch (type) {
@@ -95,7 +93,7 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
     // are not doing that ourselves. If that turns out not to be the
     // case, this will be a memory leak.
   }
-  FREE(geoms);
+  RB_FREE(geoms);
   if (state) {
     rb_exc_raise(rb_errinfo()); // raise $!
   }

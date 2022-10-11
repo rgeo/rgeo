@@ -120,8 +120,8 @@ module RGeo
           str = str.downcase
           @cur_factory = @exact_factory
           if @cur_factory
-            @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
-            @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
+            @cur_factory_support_z = @cur_factory.property(:has_z_coordinate)
+            @cur_factory_support_m = @cur_factory.property(:has_m_coordinate)
           end
           @cur_expect_z = nil
           @cur_expect_m = nil

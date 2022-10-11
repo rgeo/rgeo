@@ -69,6 +69,39 @@ module RGeo
         str
       end
       alias to_s as_text
+
+      # TODO: test it (see shapely tests/test_voronoi_diagram.py)
+      # TODO: add it in geos-ffi
+
+      # Constructs a [Voronoi diagram][1] from the vertices of the input geometry.
+      #
+      # The source may be any geometry type. All vertices of the geometry will be
+      # used as the input points to the diagram.
+      #
+      # @param enevelope [RGeo::Feature::Geometry | nil]
+      #   The `envelope` keyword argument provides an envelope to use to clip the
+      #   resulting diagram. If `nil`, it will be calculated automatically.
+      #   The diagram will be clipped to the *larger* of the provided envelope
+      #   or an envelope surrounding the sites.
+      #
+      # @param tolerance [Float]
+      #   The `tolerance` keyword argument sets the snapping tolerance used to improve
+      #   the robustness of the computation. A tolerance of 0.0 specifies
+      #   that no snapping will take place. The `tolerance` argument can be
+      #   finicky and is known to cause the algorithm to fail in several cases.
+      #   If you're using `tolerance` and getting a failure, try removing it.
+      #   The test cases in [`tests/test_voronoi_diagram.py`][2] show more details.
+      #
+      # @param only_edges [true|false]
+      #   If the `only_edges` keyword argument is `false` a collection of `Polygon`s
+      #   will be returned. Otherwise a collection of `LineString` edges is returned.
+      #
+      # [1]: https://en.wikipedia.org/wiki/Voronoi_diagram
+      # [2]: TODO
+      # [3]: https://libgeos.org/doxygen/geos__c_8h.html#ace0b2fabc92d8457a295c385ea128aa5
+      def voronoi_diagram(envelope: nil, tolerance: 0.0, only_edges: false)
+        Primary.voronoi_diagram(self, envelope, tolerance || 0.0, only_edges)
+      end
     end
 
     module CAPIGeometryCollectionMethods # :nodoc:

@@ -412,7 +412,7 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
   has_z = (char)(RGEO_FACTORY_DATA_PTR(factory)->flags &
                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   dims = has_z ? 3 : 2;
-  coords = ALLOC_N(double, len == 0 ? 1 : len * dims);
+  coords = RB_ALLOC_N(double, len == 0 ? 1 : len * dims);
   if (!coords) {
     return NULL;
   }
@@ -440,7 +440,7 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
       }
     }
     if (!good) {
-      FREE(coords);
+      RB_FREE(coords);
       return NULL;
     }
   }
@@ -465,7 +465,7 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
       GEOSCoordSeq_setZ(coord_seq, len, has_z ? coords[2] : 0);
     }
   }
-  FREE(coords);
+  RB_FREE(coords);
   return coord_seq;
 }
 
