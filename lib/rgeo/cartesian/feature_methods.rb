@@ -82,11 +82,6 @@ module RGeo
         li.proper_intersections.empty?
       end
 
-      def is_simple?
-        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        simple?
-      end
-
       def length
         segments.inject(0.0) { |sum, seg| sum + seg.length }
       end

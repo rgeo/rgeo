@@ -8,6 +8,7 @@
 * Rename `Geographic::Proj4Projector` to `Projector` #328
 * Remove `proj4` option from projector creation #328
 * Rename `Projector#create_from_proj4` to `create_from_opts` #328
+* Remove `is_*?` deprecated methods for good (see #268)
 
 **Minor Changes**
 

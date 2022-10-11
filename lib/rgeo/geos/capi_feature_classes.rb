@@ -24,16 +24,6 @@ module RGeo
         factory.supports_z? ? 3 : 2
       end
 
-      def is_empty? # rubocop:disable Naming/PredicateName
-        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        empty?
-      end
-
-      def is_simple? # rubocop:disable Naming/PredicateName
-        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        simple?
-      end
-
       def is_3d?
         factory.supports_z?
       end
@@ -79,25 +69,6 @@ module RGeo
         str
       end
       alias to_s as_text
-    end
-
-    module CAPIMultiLineStringMethods # :nodoc:
-      def is_closed? # rubocop:disable Naming/PredicateName
-        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        closed?
-      end
-    end
-
-    module CAPILineStringMethods # :nodoc:
-      def is_closed? # rubocop:disable Naming/PredicateName
-        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        closed?
-      end
-
-      def is_ring? # rubocop:disable Naming/PredicateName
-        warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        ring?
-      end
     end
 
     module CAPIGeometryCollectionMethods # :nodoc:
