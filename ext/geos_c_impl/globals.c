@@ -58,6 +58,8 @@ notice_handler(const char* fmt, ...)
 #endif
 }
 
+NORETURN(static void error_handler(const char* fmt, ...));
+
 static void
 error_handler(const char* fmt, ...)
 {
