@@ -11,6 +11,8 @@ require_relative "../test_helper"
 require_relative "../common/validity_tests"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::VoronoiTests
+
   def setup
     @factory = RGeo::Geos.factory(srid: 4326)
   end
