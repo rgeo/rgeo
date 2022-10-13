@@ -311,10 +311,10 @@ module RGeo
           @fg_geom.voronoi_diagram(
             envelope: fg,
             tolerance: tolerance,
-            only_edges: only_edges,
+            only_edges: only_edges
           )
         )
-      rescue ::Geos::GEOSException => e
+      rescue ::Geos::GEOSException
         message = "Could not create a voronoi_diagram with the specified inputs"
         message += ". Try removing the `tolerance` parameter from ##{__method__}" if tolerance
         raise RGeo::Error::InvalidGeometry, message

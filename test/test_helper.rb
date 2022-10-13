@@ -18,7 +18,7 @@ def psych_load(*args)
   end
 end
 
-Dir[File.join(__dir__, "common", "*")].each { |file| require file }
+Dir[File.join(__dir__, "common", "*")].sort.each { |file| require file }
 
 require_relative "support/minitest/assert_wkt_similar"
 require_relative "support/minitest/fixtures"
