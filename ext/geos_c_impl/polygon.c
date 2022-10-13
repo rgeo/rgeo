@@ -252,6 +252,8 @@ cmethod_create(VALUE module,
   exterior_geom = rgeo_convert_to_detached_geos_geometry(
     exterior, factory, linear_ring_type, NULL, &state);
   if (state) {
+    if (exterior_geom)
+      GEOSGeom_destroy(exterior_geom);
     rb_exc_raise(rb_errinfo());
   }
   if (!exterior_geom) {
@@ -269,11 +271,11 @@ cmethod_create(VALUE module,
                                                linear_ring_type,
                                                NULL,
                                                &state);
+      if (state || !interior_geom) {
+        break;
+      }
       if (interior_geom) {
         interior_geoms[actual_len++] = interior_geom;
-      }
-      if (state) {
-        break;
       }
     }
     if (len == actual_len) {
