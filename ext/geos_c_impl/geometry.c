@@ -1179,7 +1179,6 @@ primary_method_geometry_voronoi_diagram(VALUE _,
 
   if (self_geom) {
     if (RB_TEST(env)) {
-      Check_TypedStruct(env, &rgeo_geometry_type);
       env_geom = rgeo_convert_to_geos_geometry(self_data->factory, env, Qnil);
     }
     diagram = GEOSVoronoiDiagram(
