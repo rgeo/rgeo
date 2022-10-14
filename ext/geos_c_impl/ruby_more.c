@@ -33,6 +33,7 @@ rb_protect_funcall(VALUE recv, ID mid, int* state, int n, ...)
 {
   struct funcall_args args;
   VALUE* argv;
+  VALUE result;
   va_list ar;
 
   if (n > 0) {
@@ -52,7 +53,12 @@ rb_protect_funcall(VALUE recv, ID mid, int* state, int n, ...)
   args.argc = n;
   args.argv = argv;
 
-  return rb_protect(inner_funcall, (VALUE)&args, state);
+  result = rb_protect(inner_funcall, (VALUE)&args, state);
+
+  if (n > 0)
+    RB_FREE(argv);
+
+  return result;
 }
 
 RGEO_END_C
