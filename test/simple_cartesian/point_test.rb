@@ -37,8 +37,10 @@ class CartesianPointTest < Minitest::Test # :nodoc:
       [48.00000, 180.0]
     ].map { |coord| factory.point(coord[1], coord[0]) }
 
-    assert_equal "LINESTRING (-179.47466 48.02006, -179.7496 48.00986, 180.0 48.0)",
+    assert_equal(
+      "LINESTRING (-179.47466 48.02006, -179.7496 48.00986, 180.0 48.0)",
       factory.line_string(points).to_s
+    )
   end
 
   undef_method :test_disjoint

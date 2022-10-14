@@ -9,15 +9,13 @@
 module RGeo
   module ImplHelper # :nodoc:
     module BasicPointMethods # :nodoc:
-      def initialize(factory, x, y, *extra)
+      def initialize(factory, x_coord, y_coord, *extra)
         self.factory = factory
-        @x = x.to_f
-        @y = y.to_f
+        @x = x_coord.to_f
+        @y = y_coord.to_f
         @z = factory.property(:has_z_coordinate) ? extra.shift.to_f : nil
         @m = factory.property(:has_m_coordinate) ? extra.shift.to_f : nil
-        if extra.size > 0
-          raise ArgumentError, "Too many arguments for point initializer"
-        end
+        raise ArgumentError, "Too many arguments for point initializer" if extra.size.positive?
         init_geometry
       end
 

@@ -1,7 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
   NewCops: enable
 
 Layout/ParameterAlignment:
@@ -41,6 +41,10 @@ Naming/PredicateName:
 
 Style/CaseEquality:
   Enabled: false
+
+Style/GlobalVars:
+  Exclude:
+    - 'ext/geos_c_impl/extconf.rb'
 
 Style/NumericPredicate:
   Enabled: false

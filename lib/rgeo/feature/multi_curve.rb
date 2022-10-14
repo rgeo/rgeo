@@ -37,7 +37,6 @@ module RGeo
     # include this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
     # class method (or === operator) defined in the Type module.
-
     module MultiCurve
       include GeometryCollection
       extend Type

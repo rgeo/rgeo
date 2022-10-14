@@ -9,8 +9,8 @@
 require_relative "../impl_helper/validity_check"
 
 module RGeo
-  module Geos
-    module CAPIGeometryMethods
+  module Geos # :nodoc:
+    module CAPIGeometryMethods # :nodoc:
       include Feature::Instance
 
       def coordinate_dimension
@@ -95,7 +95,7 @@ module RGeo
       include CAPILineStringMethods
     end
 
-    class CAPILinearRingImpl
+    class CAPILinearRingImpl # :nodoc:
       include Feature::LinearRing
       include ImplHelper::ValidityCheck
       include CAPIGeometryMethods

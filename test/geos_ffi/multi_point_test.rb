@@ -8,10 +8,12 @@
 
 require "test_helper"
 
-class GeosFFIMultiPointTest < Minitest::Test # :nodoc:
-  include RGeo::Tests::Common::MultiPointTests
+if RGeo::Geos.ffi_supported?
+  class GeosFFIMultiPointTest < Minitest::Test # :nodoc:
+    include RGeo::Tests::Common::MultiPointTests
 
-  def create_factory(opts = {})
-    RGeo::Geos.factory(opts.merge(native_interface: :ffi))
+    def create_factory(opts = {})
+      RGeo::Geos.factory(opts.merge(native_interface: :ffi))
+    end
   end
-end if RGeo::Geos.ffi_supported?
+end

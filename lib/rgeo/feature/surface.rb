@@ -34,7 +34,6 @@ module RGeo
     # class method (or === operator) defined in the Type module.
     #
     # Some implementations may support higher dimensional points.
-
     module Surface
       include Geometry
       extend Type

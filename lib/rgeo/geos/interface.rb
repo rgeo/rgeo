@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Geos
+  module Geos # :nodoc:
     class << self
       # Returns true if the CAPI GEOS implementation is supported.
 
@@ -62,13 +62,12 @@ module RGeo
 
       def version
         unless defined?(@version)
-          if RGeo::Geos::CAPI_SUPPORTED
-            @version = RGeo::Geos::CAPIFactory._geos_version.freeze
-          elsif RGeo::Geos::FFI_SUPPORTED
-            @version = ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, "").freeze
-          else
-            @version = nil
-          end
+          @version =
+            if RGeo::Geos::CAPI_SUPPORTED
+              RGeo::Geos::CAPIFactory._geos_version.freeze
+            elsif RGeo::Geos::FFI_SUPPORTED
+              ::Geos::FFIGeos.GEOSversion.sub(/-CAPI-.*$/, "").freeze
+            end
         end
         @version
       end
@@ -163,15 +162,16 @@ module RGeo
       #   never automatically generates a prepared geometry (unless you
       #   generate one explicitly using the <tt>prepare!</tt> method).
       def factory(opts = {})
-        if supported?
-          native_interface = opts[:native_interface] || Geos.preferred_native_interface
-          if opts[:has_z_coordinate] && opts[:has_m_coordinate]
-            ZMFactory.new(opts)
-          elsif native_interface == :ffi
-            FFIFactory.new(opts)
-          else
-            CAPIFactory.create(opts)
-          end
+        return unless supported?
+
+        native_interface = opts[:native_interface] || Geos.preferred_native_interface
+
+        if opts[:has_z_coordinate] && opts[:has_m_coordinate]
+          ZMFactory.new(opts)
+        elsif native_interface == :ffi
+          FFIFactory.new(opts)
+        else
+          CAPIFactory.create(opts)
         end
       end
     end

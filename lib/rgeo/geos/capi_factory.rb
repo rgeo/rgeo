@@ -9,7 +9,6 @@
 module RGeo
   module Geos
     # This the GEOS CAPI implementation of RGeo::Feature::Factory.
-
     class CAPIFactory
       include Feature::Factory::Instance
       include ImplHelper::Utils
@@ -28,9 +27,11 @@ module RGeo
           flags = 0
           flags |= 2 if opts[:has_z_coordinate]
           flags |= 4 if opts[:has_m_coordinate]
+
           if flags & 6 == 6
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
+
           flags |= 8 unless opts[:auto_prepare] == :disabled
 
           # Buffer resolution
@@ -39,19 +40,17 @@ module RGeo
 
           # Interpret the generator options
           wkt_generator = opts[:wkt_generator]
-          case wkt_generator
-          when Hash
-            wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
-          else
-            wkt_generator = nil
-          end
+          wkt_generator =
+            case wkt_generator
+            when Hash
+              WKRep::WKTGenerator.new(wkt_generator)
+            end
           wkb_generator = opts[:wkb_generator]
-          case wkb_generator
-          when Hash
-            wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
-          else
-            wkb_generator = nil
-          end
+          wkb_generator =
+            case wkb_generator
+            when Hash
+              WKRep::WKBGenerator.new(wkb_generator)
+            end
 
           # Coordinate system (srid and coord_sys)
           coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:srid], opts[:coord_sys], opts[:coord_sys_class])
@@ -59,24 +58,28 @@ module RGeo
           coord_sys = coord_sys_info[:coord_sys]
 
           # Create the factory and set instance variables
-          result = _create(flags, srid.to_i, buffer_resolution,
-            wkt_generator, wkb_generator, coord_sys)
+          result = _create(
+            flags,
+            srid.to_i,
+            buffer_resolution,
+            wkt_generator,
+            wkb_generator,
+            coord_sys
+          )
 
           # Interpret parser options
           wkt_parser = opts[:wkt_parser]
-          case wkt_parser
-          when Hash
-            wkt_parser = WKRep::WKTParser.new(result, wkt_parser)
-          else
-            wkt_parser = nil
-          end
+          wkt_parser =
+            case wkt_parser
+            when Hash
+              WKRep::WKTParser.new(result, wkt_parser)
+            end
           wkb_parser = opts[:wkb_parser]
-          case wkb_parser
-          when Hash
-            wkb_parser = WKRep::WKBParser.new(result, wkb_parser)
-          else
-            wkb_parser = nil
-          end
+          wkb_parser =
+            case wkb_parser
+            when Hash
+              WKRep::WKBParser.new(result, wkb_parser)
+            end
           result._set_wkrep_parsers(wkt_parser, wkb_parser)
 
           # Return the result
@@ -93,10 +96,10 @@ module RGeo
 
       # Factory equivalence test.
 
-      def eql?(rhs_)
-        rhs_.is_a?(CAPIFactory) && rhs_.srid == _srid &&
-          rhs_._buffer_resolution == _buffer_resolution && rhs_._flags == _flags &&
-          rhs_.coord_sys == coord_sys
+      def eql?(other)
+        other.is_a?(CAPIFactory) && other.srid == _srid &&
+          other._buffer_resolution == _buffer_resolution && other._flags == _flags &&
+          other.coord_sys == coord_sys
       end
       alias == eql?
 
@@ -127,11 +130,10 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        if (coord_sys_data_ = data_["cs"])
-          coord_sys_ = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data_)
-        else
-          coord_sys_ = nil
-        end
+        coord_sys_ =
+          if (coord_sys_data_ = data_["cs"])
+            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data_)
+          end
         initialize_copy(
           CAPIFactory.create(
             has_z_coordinate: data_["hasz"],
@@ -160,17 +162,17 @@ module RGeo
         coder_["wkt_parser"] = _wkt_parser ? _wkt_parser.properties : {}
         coder_["wkb_parser"] = _wkb_parser ? _wkb_parser.properties : {}
         coder_["auto_prepare"] = auto_prepare
-        if (coord_sys_ = _coord_sys)
-          coder_["coord_sys"] = coord_sys_.to_wkt
-        end
+
+        return unless (coord_sys_ = _coord_sys)
+
+        coder_["coord_sys"] = coord_sys_.to_wkt
       end
 
       def init_with(coder_) # :nodoc:
-        if (coord_sys_data_ = coder_["cs"])
-          coord_sys_ = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data_.to_s)
-        else
-          coord_sys_ = nil
-        end
+        coord_sys_ =
+          if (coord_sys_data_ = coder_["cs"])
+            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data_.to_s)
+          end
         initialize_copy(
           CAPIFactory.create(
             has_z_coordinate: coder_["has_z_coordinate"],
@@ -238,12 +240,10 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x, y, *extra)
-        if extra.length > (supports_z_or_m? ? 1 : 0)
-          raise(RGeo::Error::InvalidGeometry, "Parse error")
-        else
-          CAPIPointImpl.create(self, x, y, extra[0].to_f)
-        end
+      def point(x_coord, y_coord, *extra)
+        raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > (supports_z_or_m? ? 1 : 0)
+
+        CAPIPointImpl.create(self, x_coord, y_coord, extra[0].to_f)
       end
 
       # See RGeo::Feature::Factory#line_string
@@ -341,7 +341,9 @@ module RGeo
           # compatible factory
           if supports_z? && !supports_m? && self == original.factory.z_factory
             return Feature.cast(original.z_geometry, ntype, flags)
-          elsif supports_m? && !supports_z? && self == original.factory.m_factory
+          end
+
+          if supports_m? && !supports_z? && self == original.factory.m_factory
             return Feature.cast(original.m_geometry, ntype, flags)
           end
         end

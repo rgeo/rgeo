@@ -85,25 +85,33 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
   def test_linestring_basic
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true)
     obj = @factory.line_string([@factory.point(1, 2), @factory.point(3, 4), @factory.point(5, 6)])
-    assert_equal("0000000002000000033ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000", generator.generate(obj))
+    test_str = "0000000002000000033ff00000000000004000000000000000400800000000000040100000000000004014000000000000" \
+               "4018000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_linestring_with_ewkb_z
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true, type_format: :ewkb)
     obj = @factoryz.line_string([@factoryz.point(1, 2, 3), @factoryz.point(4, 5, 6)])
-    assert_equal("0080000002000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000", generator.generate(obj))
+    test_str = "0080000002000000023ff00000000000004000000000000000400800000000000040100000000000004014000000000000" \
+               "4018000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_linestring_with_ewkb_z_and_srid
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true, type_format: :ewkb, emit_ewkb_srid: true)
     obj = @factoryz.line_string([@factoryz.point(1, 2, 3), @factoryz.point(4, 5, 6)])
-    assert_equal("00a0000002000003e8000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000", generator.generate(obj))
+    test_str = "00a0000002000003e8000000023ff0000000000000400000000000000040080000000000004010000000000000401400000" \
+               "00000004018000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_linestring_with_wkb12_m
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true, type_format: :wkb12)
     obj = @factorym.line_string([@factorym.point(1, 2, 3), @factorym.point(4, 5, 6)])
-    assert_equal("00000007d2000000023ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000", generator.generate(obj))
+    test_str = "00000007d2000000023ff00000000000004000000000000000400800000000000040100000000000004014000000000000" \
+               "4018000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_linestring_empty
@@ -114,8 +122,12 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
 
   def test_polygon_basic
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true)
-    obj = @factory.polygon(@factory.linear_ring([@factory.point(1, 2), @factory.point(3, 4), @factory.point(6, 5), @factory.point(1, 2)]))
-    assert_equal("000000000300000001000000043ff0000000000000400000000000000040080000000000004010000000000000401800000000000040140000000000003ff00000000000004000000000000000", generator.generate(obj))
+    obj = @factory.polygon(
+      @factory.linear_ring([@factory.point(1, 2), @factory.point(3, 4), @factory.point(6, 5), @factory.point(1, 2)])
+    )
+    test_str = "000000000300000001000000043ff00000000000004000000000000000400800000000000040100000000000004018000000" \
+               "00000040140000000000003ff00000000000004000000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_polygon_empty
@@ -127,13 +139,18 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
   def test_multipoint_basic
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true)
     obj = @factory.multi_point([@factory.point(1, 2), @factory.point(3, 4)])
-    assert_equal("00000000040000000200000000013ff00000000000004000000000000000000000000140080000000000004010000000000000", generator.generate(obj))
+    assert_equal(
+      "00000000040000000200000000013ff00000000000004000000000000000000000000140080000000000004010000000000000",
+      generator.generate(obj)
+    )
   end
 
   def test_multipoint_with_ewkb_z
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true, type_format: :ewkb)
     obj = @factoryz.multi_point([@factoryz.point(1, 2, 5), @factoryz.point(3, 4, 6)])
-    assert_equal("00800000040000000200800000013ff0000000000000400000000000000040140000000000000080000001400800000000000040100000000000004018000000000000", generator.generate(obj))
+    test_str = "00800000040000000200800000013ff00000000000004000000000000000401400000000000000800000014008000000000" \
+               "00040100000000000004018000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_multipoint_empty
@@ -144,8 +161,16 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
 
   def test_multilinestring_basic
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true)
-    obj = @factory.multi_line_string([@factory.line_string([@factory.point(1, 2), @factory.point(3, 4), @factory.point(5, 6)]), @factory.line_string([@factory.point(-1, -2), @factory.point(-3, -4)])])
-    assert_equal("0000000005000000020000000002000000033ff000000000000040000000000000004008000000000000401000000000000040140000000000004018000000000000000000000200000002bff0000000000000c000000000000000c008000000000000c010000000000000", generator.generate(obj))
+    obj = @factory.multi_line_string(
+      [
+        @factory.line_string([@factory.point(1, 2), @factory.point(3, 4), @factory.point(5, 6)]),
+        @factory.line_string([@factory.point(-1, -2), @factory.point(-3, -4)])
+      ]
+    )
+    test_str = "0000000005000000020000000002000000033ff0000000000000400000000000000040080000000000004010000000000000" \
+               "40140000000000004018000000000000000000000200000002bff0000000000000c000000000000000c008000000000000" \
+               "c010000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_multilinestring_empty
@@ -156,8 +181,19 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
 
   def test_multipolygon_basic
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true)
-    obj = @factory.multi_polygon([@factory.polygon(@factory.linear_ring([@factory.point(1, 2), @factory.point(3, 4), @factory.point(6, 5), @factory.point(1, 2)])), @factory.polygon(@factory.linear_ring([]))])
-    assert_equal("000000000600000002000000000300000001000000043ff0000000000000400000000000000040080000000000004010000000000000401800000000000040140000000000003ff00000000000004000000000000000000000000300000000", generator.generate(obj))
+    obj = @factory.multi_polygon(
+      [
+        @factory.polygon(
+          @factory.linear_ring([@factory.point(1, 2), @factory.point(3, 4), @factory.point(6, 5), @factory.point(1, 2)])
+        ),
+        @factory.polygon(
+          @factory.linear_ring([])
+        )
+      ]
+    )
+    test_str = "000000000600000002000000000300000001000000043ff000000000000040000000000000004008000000000000401000" \
+               "0000000000401800000000000040140000000000003ff00000000000004000000000000000000000000300000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_multipolygon_empty
@@ -168,8 +204,14 @@ class WKBGeneratorTest < Minitest::Test # :nodoc:
 
   def test_collection_basic
     generator = RGeo::WKRep::WKBGenerator.new(hex_format: true)
-    obj = @factory.collection([@factory.line_string([@factory.point(1, 2), @factory.point(3, 4), @factory.point(5, 6)]), @factory.point(-1, -2)])
-    assert_equal("0000000007000000020000000002000000033ff0000000000000400000000000000040080000000000004010000000000000401400000000000040180000000000000000000001bff0000000000000c000000000000000", generator.generate(obj))
+    obj = @factory.collection(
+      [
+        @factory.line_string([@factory.point(1, 2), @factory.point(3, 4), @factory.point(5, 6)]), @factory.point(-1, -2)
+      ]
+    )
+    test_str = "0000000007000000020000000002000000033ff0000000000000400000000000000040080000000000004010000000000000" \
+               "401400000000000040180000000000000000000001bff0000000000000c000000000000000"
+    assert_equal(test_str, generator.generate(obj))
   end
 
   def test_collection_empty

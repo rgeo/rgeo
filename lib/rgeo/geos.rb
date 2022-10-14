@@ -20,7 +20,7 @@
 # :stopdoc:
 
 module RGeo
-  module Geos
+  module Geos # :nodoc:
     require_relative "geos/utils"
     require_relative "geos/interface"
     begin

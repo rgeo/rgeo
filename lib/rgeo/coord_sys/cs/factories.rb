@@ -28,7 +28,6 @@ module RGeo
     # * FittedCoordinateSystem is not implemented.
     # * The defaultEnvelope attribute of CS_CoordinateSystem is not
     #   implemented.
-
     module CS
       # A class implementing the CS_CoordinateSystemFactory interface.
       # It provides methods for building up complex objects from simpler
@@ -37,7 +36,6 @@ module RGeo
       # Note that the methods of CS_CoordinateSystemFactory do not provide
       # facilities for setting the authority. If you need to set authority
       # values, use the create methods for the object classes themselves.
-
       class CoordinateSystemFactory
         # Create a CompoundCoordinateSystem from a name, and two
         # constituent coordinate systems.

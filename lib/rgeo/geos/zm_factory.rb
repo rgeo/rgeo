@@ -9,7 +9,6 @@
 module RGeo
   module Geos
     # A factory for Geos that handles both Z and M.
-
     class ZMFactory
       include Feature::Factory::Instance
       include ImplHelper::Utils
@@ -60,33 +59,37 @@ module RGeo
         end
 
         wkt_generator = opts[:wkt_generator]
-        case wkt_generator
-        when Hash
-          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
-        else
-          @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
-        end
+        @wkt_generator =
+          case wkt_generator
+          when Hash
+            WKRep::WKTGenerator.new(wkt_generator)
+          else
+            WKRep::WKTGenerator.new(convert_case: :upper)
+          end
         wkb_generator = opts[:wkb_generator]
-        case wkb_generator
-        when Hash
-          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
-        else
-          @wkb_generator = WKRep::WKBGenerator.new
-        end
+        @wkb_generator =
+          case wkb_generator
+          when Hash
+            WKRep::WKBGenerator.new(wkb_generator)
+          else
+            WKRep::WKBGenerator.new
+          end
         wkt_parser = opts[:wkt_parser]
-        case wkt_parser
-        when Hash
-          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
-        else
-          @wkt_parser = WKRep::WKTParser.new(self)
-        end
+        @wkt_parser =
+          case wkt_parser
+          when Hash
+            WKRep::WKTParser.new(self, wkt_parser)
+          else
+            WKRep::WKTParser.new(self)
+          end
         wkb_parser = opts[:wkb_parser]
-        case wkb_parser
-        when Hash
-          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
-        else
-          @wkb_parser = WKRep::WKBParser.new(self)
-        end
+        @wkb_parser =
+          case wkb_parser
+          when Hash
+            WKRep::WKBParser.new(self, wkb_parser)
+          else
+            WKRep::WKBParser.new(self)
+          end
       end
 
       # Marshal support
@@ -108,11 +111,10 @@ module RGeo
       end
 
       def marshal_load(data) # :nodoc:
-        if (coord_sys_data = data["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
-        else
-          coord_sys = nil
-        end
+        coord_sys =
+          if (coord_sys_data = data["cs"])
+            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
+          end
         initialize(
           native_interface: (data["nffi"] ? :ffi : :capi),
           has_z_coordinate: data["hasz"],
@@ -139,17 +141,17 @@ module RGeo
         coder["wkb_parser"] = @wkb_parser.properties
         coder["auto_prepare"] = @zfactory.property(:auto_prepare).to_s
         coder["native_interface"] = @zfactory.is_a?(FFIFactory) ? "ffi" : "capi"
-        if (coord_sys = @zfactory.coord_sys)
-          coder["coord_sys"] = coord_sys.to_wkt
-        end
+
+        return unless (coord_sys = @zfactory.coord_sys)
+
+        coder["coord_sys"] = coord_sys.to_wkt
       end
 
       def init_with(coder) # :nodoc:
-        if (coord_sys_data = coder["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-        else
-          coord_sys = nil
-        end
+        coord_sys =
+          if (coord_sys_data = coder["cs"])
+            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
+          end
         initialize(
           native_interface: coder["native_interface"] == "ffi" ? :ffi : :capi,
           has_z_coordinate: coder["has_z_coordinate"],
@@ -192,8 +194,8 @@ module RGeo
 
       # Factory equivalence test.
 
-      def eql?(rhs)
-        rhs.is_a?(ZMFactory) && rhs.z_factory == @zfactory
+      def eql?(other)
+        other.is_a?(ZMFactory) && other.z_factory == @zfactory
       end
       alias == eql?
 
@@ -226,8 +228,12 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x, y, z = 0, m = 0)
-        create_feature(ZMPointImpl, @zfactory.point(x, y, z), @mfactory.point(x, y, m))
+      def point(x_coord, y_coord, z_coord = 0, m_coord = 0)
+        create_feature(
+          ZMPointImpl,
+          @zfactory.point(x_coord, y_coord, z_coord),
+          @mfactory.point(x_coord, y_coord, m_coord)
+        )
       end
 
       # See RGeo::Feature::Factory#line_string
@@ -251,7 +257,11 @@ module RGeo
       # See RGeo::Feature::Factory#polygon
 
       def polygon(outer_ring, inner_rings = nil)
-        create_feature(ZMPolygonImpl, @zfactory.polygon(outer_ring, inner_rings), @mfactory.polygon(outer_ring, inner_rings))
+        create_feature(
+          ZMPolygonImpl,
+          @zfactory.polygon(outer_ring, inner_rings),
+          @mfactory.polygon(outer_ring, inner_rings)
+        )
       end
 
       # See RGeo::Feature::Factory#collection

@@ -159,12 +159,19 @@ module RGeo
 
       def sym_difference(rhs)
         rhs = RGeo::Feature.cast(rhs, self)
-        @factory.create_feature(nil, @zgeometry.sym_difference(rhs.z_geometry), @mgeometry.sym_difference(rhs.m_geometry))
+        @factory.create_feature(
+          nil,
+          @zgeometry.sym_difference(rhs.z_geometry),
+          @mgeometry.sym_difference(rhs.m_geometry)
+        )
       end
 
       def rep_equals?(rhs)
         rhs = RGeo::Feature.cast(rhs, self)
-        rhs.is_a?(self.class) && @factory.eql?(rhs.factory) && @zgeometry.rep_equals?(rhs.z_geometry) && @mgeometry.rep_equals?(rhs.m_geometry)
+        rhs.is_a?(self.class) &&
+          @factory.eql?(rhs.factory) &&
+          @zgeometry.rep_equals?(rhs.z_geometry) &&
+          @mgeometry.rep_equals?(rhs.m_geometry)
       end
 
       alias eql? rep_equals?
@@ -250,8 +257,8 @@ module RGeo
         @zgeometry.num_points
       end
 
-      def point_n(n)
-        @factory.create_feature(ZMPointImpl, @zgeometry.point_n(n), @mgeometry.point_n(n))
+      def point_n(idx)
+        @factory.create_feature(ZMPointImpl, @zgeometry.point_n(idx), @mgeometry.point_n(idx))
       end
 
       def points
@@ -290,8 +297,8 @@ module RGeo
         @zgeometry.num_interior_rings
       end
 
-      def interior_ring_n(n)
-        @factory.create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(n), @mgeometry.interior_ring_n(n))
+      def interior_ring_n(idx)
+        @factory.create_feature(ZMLineStringImpl, @zgeometry.interior_ring_n(idx), @mgeometry.interior_ring_n(idx))
       end
 
       def interior_rings
@@ -315,8 +322,8 @@ module RGeo
       end
       alias size num_geometries
 
-      def geometry_n(n)
-        @factory.create_feature(nil, @zgeometry.geometry_n(n), @mgeometry.geometry_n(n))
+      def geometry_n(idx)
+        @factory.create_feature(nil, @zgeometry.geometry_n(idx), @mgeometry.geometry_n(idx))
       end
       alias [] geometry_n
 

@@ -52,8 +52,7 @@ module RGeo
         @factory = obj.factory
       end
 
-      def init_geometry
-      end
+      def init_geometry; end
     end
   end
 end

@@ -32,8 +32,10 @@ module RGeo
         when Feature::Point
           rpd_ = ImplHelper::Math::RADIANS_PER_DEGREE
           radius = EQUATORIAL_RADIUS
-          @projection_factory.point(geometry.x * rpd_ * radius,
-            Math.log(Math.tan(Math::PI / 4.0 + geometry.y * rpd_ / 2.0)) * radius)
+          @projection_factory.point(
+            geometry.x * rpd_ * radius,
+            Math.log(Math.tan(Math::PI / 4.0 + geometry.y * rpd_ / 2.0)) * radius
+          )
         when Feature::Line
           @projection_factory.line(project(geometry.start_point), project(geometry.end_point))
         when Feature::LinearRing
@@ -59,8 +61,10 @@ module RGeo
         when Feature::Point
           dpr = ImplHelper::Math::DEGREES_PER_RADIAN
           radius = EQUATORIAL_RADIUS
-          @geography_factory.point(geometry.x / radius * dpr,
-            (2.0 * Math.atan(Math.exp(geometry.y / radius)) - Math::PI / 2.0) * dpr)
+          @geography_factory.point(
+            geometry.x / radius * dpr,
+            (2.0 * Math.atan(Math.exp(geometry.y / radius)) - Math::PI / 2.0) * dpr
+          )
         when Feature::Line
           @geography_factory.line(unproject(geometry.start_point), unproject(geometry.end_point))
         when Feature::LinearRing
@@ -68,8 +72,10 @@ module RGeo
         when Feature::LineString
           @geography_factory.line_string(geometry.points.map { |p| unproject(p) })
         when Feature::Polygon
-          @geography_factory.polygon(unproject(geometry.exterior_ring),
-            geometry.interior_rings.map { |p| unproject(p) })
+          @geography_factory.polygon(
+            unproject(geometry.exterior_ring),
+            geometry.interior_rings.map { |p| unproject(p) }
+          )
         when Feature::MultiPoint
           @geography_factory.multi_point(geometry.map { |p| unproject(p) })
         when Feature::MultiLineString
@@ -86,15 +92,18 @@ module RGeo
       end
 
       def limits_window
-        @limits_window ||= ProjectedWindow.new(@geography_factory,
-          -20_037_508.342789, -20_037_508.342789, 20_037_508.342789, 20_037_508.342789,
-          is_limits: true)
+        @limits_window ||= ProjectedWindow.new(
+          @geography_factory,
+          -20_037_508.342789,
+          -20_037_508.342789,
+          20_037_508.342789,
+          20_037_508.342789,
+          is_limits: true
+        )
       end
 
       def self._coordsys_3857 # :nodoc:
-        unless defined?(@coordsys_3857)
-          @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857)
-        end
+        @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857) unless defined?(@coordsys_3857)
         @coordsys_3857
       end
     end

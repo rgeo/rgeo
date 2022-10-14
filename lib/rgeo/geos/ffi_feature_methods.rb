@@ -13,6 +13,8 @@ module RGeo
     module FFIGeometryMethods # :nodoc:
       include Feature::Instance
 
+      attr_reader :factory, :fg_geom, :_klasses
+
       def initialize(factory, fg_geom, klasses)
         @factory = factory
         @fg_geom = fg_geom
@@ -56,11 +58,6 @@ module RGeo
         @_klasses = nil
       end
 
-      attr_reader :factory
-      attr_reader :fg_geom
-
-      attr_reader :_klasses # :nodoc:
-
       def initialize_copy(orig)
         @factory = orig.factory
         @fg_geom = orig.fg_geom.clone
@@ -94,9 +91,7 @@ module RGeo
       end
 
       def prepare!
-        if @_fg_prep.is_a?(Integer)
-          @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom)
-        end
+        @_fg_prep = ::Geos::PreparedGeometry.new(@fg_geom) if @_fg_prep.is_a?(Integer)
         self
       end
 
@@ -149,11 +144,13 @@ module RGeo
 
       # (see RGeo::ImplHelper::ValidityCheck#make_valid)
       # Only available since GEOS 3.8+
-      def make_valid
-        @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
-      rescue ::Geos::GEOSException
-        raise Error::UnsupportedOperation
-      end if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
+      if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
+        def make_valid
+          @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
+        rescue ::Geos::GEOSException
+          raise Error::UnsupportedOperation
+        end
+      end
 
       def equals?(rhs)
         return false unless rhs.is_a?(RGeo::Feature::Instance)
@@ -290,8 +287,8 @@ module RGeo
         fg ? @factory.wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
       end
 
-      def eql?(rhs)
-        rep_equals?(rhs)
+      def eql?(other)
+        rep_equals?(other)
       end
 
       def detach_fg_geom
@@ -343,7 +340,7 @@ module RGeo
       end
 
       def rep_equals?(rhs)
-        rhs.class == self.class && rhs.factory.eql?(@factory) &&
+        rhs.instance_of?(self.class) && rhs.factory.eql?(@factory) &&
           Utils.ffi_coord_seqs_equal?(rhs.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
 
@@ -372,14 +369,15 @@ module RGeo
         @fg_geom.num_points
       end
 
-      def point_n(n)
-        if n >= 0 && n < @fg_geom.num_points
-          coord_seq = @fg_geom.coord_seq
-          x = coord_seq.get_x(n)
-          y = coord_seq.get_y(n)
-          extra = @factory._has_3d ? [coord_seq.get_z(n)] : []
-          @factory.point(x, y, *extra)
-        end
+      def point_n(idx)
+        return unless idx >= 0 && idx < @fg_geom.num_points
+
+        coord_seq = @fg_geom.coord_seq
+        x = coord_seq.get_x(idx)
+        y = coord_seq.get_y(idx)
+        extra = @factory._has_3d ? [coord_seq.get_z(idx)] : []
+
+        @factory.point(x, y, *extra)
       end
 
       def start_point
@@ -410,7 +408,7 @@ module RGeo
       end
 
       def rep_equals?(rhs)
-        rhs.class == self.class && rhs.factory.eql?(@factory) &&
+        rhs.instance_of?(self.class) && rhs.factory.eql?(@factory) &&
           Utils.ffi_coord_seqs_equal?(rhs.fg_geom.coord_seq, @fg_geom.coord_seq, @factory._has_3d)
       end
 
@@ -464,10 +462,10 @@ module RGeo
         @fg_geom.num_interior_rings
       end
 
-      def interior_ring_n(n)
-        if n >= 0 && n < @fg_geom.num_interior_rings
-          @factory.wrap_fg_geom(@fg_geom.interior_ring_n(n), FFILinearRingImpl)
-        end
+      def interior_ring_n(idx)
+        return unless idx >= 0 && idx < @fg_geom.num_interior_rings
+
+        @factory.wrap_fg_geom(@fg_geom.interior_ring_n(idx), FFILinearRingImpl)
       end
 
       def interior_rings
@@ -477,7 +475,7 @@ module RGeo
       end
 
       def rep_equals?(rhs)
-        if rhs.class == self.class && rhs.factory.eql?(@factory) &&
+        if rhs.instance_of?(self.class) && rhs.factory.eql?(@factory) &&
           rhs.exterior_ring.rep_equals?(exterior_ring)
           sn = @fg_geom.num_interior_rings
           rn = rhs.num_interior_rings
@@ -493,8 +491,10 @@ module RGeo
 
       def hash
         @hash ||= begin
-          hash = Utils.ffi_coord_seq_hash(@fg_geom.exterior_ring.coord_seq,
-            [@factory, geometry_type].hash)
+          hash = Utils.ffi_coord_seq_hash(
+            @fg_geom.exterior_ring.coord_seq,
+            [@factory, geometry_type].hash
+          )
           @fg_geom.interior_rings.inject(hash) do |h, r|
             Utils.ffi_coord_seq_hash(r.coord_seq, h)
           end
@@ -512,7 +512,7 @@ module RGeo
       end
 
       def rep_equals?(rhs)
-        if rhs.class == self.class && rhs.factory.eql?(@factory)
+        if rhs.instance_of?(self.class) && rhs.factory.eql?(@factory)
           size = @fg_geom.num_geometries
           if size == rhs.num_geometries
             size.times do |n|
@@ -529,19 +529,24 @@ module RGeo
       end
       alias size num_geometries
 
-      def geometry_n(n)
-        if n >= 0 && n < @fg_geom.num_geometries
-          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
-            @_klasses ? @_klasses[n] : nil)
-        end
+      def geometry_n(idx)
+        return unless idx >= 0 && idx < @fg_geom.num_geometries
+
+        @factory.wrap_fg_geom(
+          @fg_geom.get_geometry_n(idx),
+          @_klasses ? @_klasses[idx] : nil
+        )
       end
 
-      def [](n)
-        n += @fg_geom.num_geometries if n < 0
-        if n >= 0 && n < @fg_geom.num_geometries
-          @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
-            @_klasses ? @_klasses[n] : nil)
-        end
+      def [](idx)
+        idx += @fg_geom.num_geometries if idx < 0
+
+        return unless idx >= 0 && idx < @fg_geom.num_geometries
+
+        @factory.wrap_fg_geom(
+          @fg_geom.get_geometry_n(idx),
+          @_klasses ? @_klasses[idx] : nil
+        )
       end
 
       def hash
@@ -551,8 +556,7 @@ module RGeo
       def each
         if block_given?
           @fg_geom.num_geometries.times do |n|
-            yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n),
-              @_klasses ? @_klasses[n] : nil)
+            yield @factory.wrap_fg_geom(@fg_geom.get_geometry_n(n), @_klasses ? @_klasses[n] : nil)
           end
           self
         else

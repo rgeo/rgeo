@@ -44,4 +44,4 @@ YARD::Rake::YardocTask.new do |t|
 end
 
 task test: :compile
-task default: [:clean, :test]
+task default: %i[clean test]

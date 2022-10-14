@@ -181,12 +181,12 @@ module RGeo
 
       # Checks that the given point has valid coordinates.
       #
-      # @param pt [RGeo::Feature::Point]
+      # @param point [RGeo::Feature::Point]
       #
       # @return [String] invalid_reason
-      def check_invalid_coordinate(pt)
-        x = pt.x
-        y = pt.y
+      def check_invalid_coordinate(point)
+        x = point.x
+        y = point.y
         return if x.finite? && y.finite? && x.real? && y.real?
 
         Error::INVALID_COORDINATE
@@ -265,9 +265,7 @@ module RGeo
 
         poly.interior_rings.each do |interior|
           test_pt = interior.start_point
-          unless shell.contains?(test_pt) || poly.exterior_ring.contains?(test_pt)
-            return Error::HOLE_OUTSIDE_SHELL
-          end
+          return Error::HOLE_OUTSIDE_SHELL unless shell.contains?(test_pt) || poly.exterior_ring.contains?(test_pt)
         end
 
         nil
@@ -322,27 +320,25 @@ module RGeo
 
       # Checks that polygons do not intersect in a multipolygon.
       #
-      # @param mp [RGeo::Feature::MultiPolygon]
+      # @param mpoly [RGeo::Feature::MultiPolygon]
       #
       # @return [String] invalid_reason
-      def check_consistent_area_mp(mp)
-        mp.geometries.combination(2) do |p1, p2|
-          if p1.exterior_ring.crosses?(p2.exterior_ring)
-            return Error::SELF_INTERSECTION
-          end
+      def check_consistent_area_mp(mpoly)
+        mpoly.geometries.combination(2) do |p1, p2|
+          return Error::SELF_INTERSECTION if p1.exterior_ring.crosses?(p2.exterior_ring)
         end
         nil
       end
 
       # Checks that individual polygons within a multipolygon are not nested.
       #
-      # @param mp [RGeo::Feature::MultiPolygon]
+      # @param mpoly [RGeo::Feature::MultiPolygon]
       #
       # @return [String] invalid_reason
-      def check_shells_not_nested(mp)
+      def check_shells_not_nested(mpoly)
         # Since we've passed the consistent area test, we can just check
         # that one point lies in the other.
-        mp.geometries.combination(2) do |p1, p2|
+        mpoly.geometries.combination(2) do |p1, p2|
           if p1.contains?(p2.exterior_ring.start_point) || p2.contains?(p1.exterior_ring.start_point)
             return Error::NESTED_SHELLS
           end

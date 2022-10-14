@@ -45,15 +45,16 @@ module RGeo
     #   letters to lower case; or nil, indicating no case changes from
     #   the default (which is not specified exactly, but is chosen by the
     #   generator to emphasize readability.) Default is nil.
-
     class WKTGenerator
       # Create and configure a WKT generator. See the WKTGenerator
       # documentation for the options that can be passed.
 
       def initialize(opts = {})
         @tag_format = opts[:tag_format] || opts[:type_format] || :wkt11
-        @emit_ewkt_srid = @tag_format == :ewkt ?
-          (opts[:emit_ewkt_srid] ? true : false) : nil
+        @emit_ewkt_srid =
+          if @tag_format == :ewkt
+            (opts[:emit_ewkt_srid] ? true : false)
+          end
         @square_brackets = opts[:square_brackets] ? true : false
         @convert_case = opts[:convert_case]
       end
@@ -100,9 +101,10 @@ module RGeo
           support_m = factory.property(:has_m_coordinate)
         end
         str = generate_feature(obj, support_z, support_m, true)
-        if @convert_case == :upper
+        case @convert_case
+        when :upper
           str.upcase
-        elsif @convert_case == :lower
+        when :lower
           str.downcase
         else
           str
@@ -115,16 +117,18 @@ module RGeo
         type = obj.geometry_type
         type = Feature::LineString if type.subtype_of?(Feature::LineString)
         tag = type.type_name.dup
-        if @tag_format == :ewkt
+        case @tag_format
+        when :ewkt
           tag << "M" if support_m && !support_z
           tag = "SRID=#{obj.srid};#{tag}" if toplevel && @emit_ewkt_srid
-        elsif @tag_format == :wkt12
+        when :wkt12
           if support_z
-            if support_m
-              tag << " ZM"
-            else
-              tag << " Z"
-            end
+            tag <<
+              if support_m
+                " ZM"
+              else
+                " Z"
+              end
           elsif support_m
             tag << " M"
           end
@@ -163,7 +167,8 @@ module RGeo
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{obj.points.map { |p| generate_coords(p, support_z, support_m) }.join(', ')}#{@end_bracket}"
+          points = obj.points.map { |p| generate_coords(p, support_z, support_m) }
+          "#{@begin_bracket}#{points.join(', ')}#{@end_bracket}"
         end
       end
 
@@ -171,7 +176,9 @@ module RGeo
         if obj.empty?
           "EMPTY"
         else
-          "#{@begin_bracket}#{([generate_line_string(obj.exterior_ring, support_z, support_m)] + obj.interior_rings.map { |r| generate_line_string(r, support_z, support_m) }).join(', ')}#{@end_bracket}"
+          lines = [generate_line_string(obj.exterior_ring, support_z, support_m)]
+          lines += obj.interior_rings.map { |r| generate_line_string(r, support_z, support_m) }
+          "#{@begin_bracket}#{lines.join(', ')}#{@end_bracket}"
         end
       end
 

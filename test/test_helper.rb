@@ -39,6 +39,15 @@ end
 
 # Live test for our implementation of Ruby's compaction methods (rb_gc_mark_movable
 # and rb_gc_location), enabling compaction for every major collection.
-if defined?(GC.auto_compact) == "method"
-  GC.auto_compact = true
+GC.auto_compact = true if defined?(GC.auto_compact) == "method"
+
+# Formats the WKT heredoc string into something that will match the
+# {RGeo::WKRep::WKTGenerator#generate} method.
+#
+# @param wkt [String]
+#
+# @return [string]
+#
+def format_wkt(wkt)
+  wkt.gsub(/[[:space:]]+/, " ").gsub(/\(\s/, "(").gsub(/\)\s/, ")").gsub(/\s\)/, ")").strip
 end

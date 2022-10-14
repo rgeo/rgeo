@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Geographic
+  module Geographic # :nodoc:
     class << self
       # Creates and returns a geographic factory that does not include a
       # a projection, and which performs calculations assuming a
@@ -102,7 +102,8 @@ module RGeo
         coord_sys = opts[:coord_sys]
         srid = opts[:srid]
         srid ||= coord_sys.authority_code if coord_sys
-        Geographic::Factory.new("Spherical",
+        Geographic::Factory.new(
+          "Spherical",
           has_z_coordinate: opts[:has_z_coordinate],
           has_m_coordinate: opts[:has_m_coordinate],
           coord_sys: coord_sys || coord_sys_4055,
@@ -111,7 +112,8 @@ module RGeo
           wkb_parser: opts[:wkb_parser],
           wkt_generator: opts[:wkt_generator],
           wkb_generator: opts[:wkb_generator],
-          srid: (srid || 4055).to_i)
+          srid: (srid || 4055).to_i
+        )
       end
 
       # Creates and returns a geographic factory that is designed for
@@ -185,7 +187,8 @@ module RGeo
       # options. See RGeo::Geos.factory for more details.
 
       def simple_mercator_factory(opts = {})
-        factory = Geographic::Factory.new("Projected",
+        factory = Geographic::Factory.new(
+          "Projected",
           coord_sys: coord_sys_4326,
           srid: 4326,
           wkt_parser: opts[:wkt_parser],
@@ -193,11 +196,14 @@ module RGeo
           wkt_generator: opts[:wkt_generator],
           wkb_generator: opts[:wkb_generator],
           has_z_coordinate: opts[:has_z_coordinate],
-          has_m_coordinate: opts[:has_m_coordinate])
-        projector = Geographic::SimpleMercatorProjector.new(factory,
+          has_m_coordinate: opts[:has_m_coordinate]
+        )
+        projector = Geographic::SimpleMercatorProjector.new(
+          factory,
           buffer_resolution: opts[:buffer_resolution],
           has_z_coordinate: opts[:has_z_coordinate],
-          has_m_coordinate: opts[:has_m_coordinate])
+          has_m_coordinate: opts[:has_m_coordinate]
+        )
         factory.projector = projector
         factory
       end
@@ -306,6 +312,7 @@ module RGeo
           if projection_coord_sys && !projection_coord_sys.projected?
             raise ArgumentError, "The :projection_factory's coord_sys is not a ProjectedCoordinateSystem."
           end
+
           # Determine geographic coordinate system. First check parameters.
           coord_sys = opts[:coord_sys]
           srid = opts[:srid]
@@ -314,18 +321,26 @@ module RGeo
           srid ||= coord_sys.authority_code if coord_sys
           srid ||= 4326
           # Now we should have all the coordinate system info.
-          factory = Geographic::Factory.new("Projected",
+          factory = Geographic::Factory.new(
+            "Projected",
             coord_sys: coord_sys,
             srid: srid.to_i,
             has_z_coordinate: projection_factory.property(:has_z_coordinate),
             has_m_coordinate: projection_factory.property(:has_m_coordinate),
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
-            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
-          projector = Geographic::Projector.create_from_existing_factory(factory,
-            projection_factory)
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator]
+          )
+          projector = Geographic::Projector.create_from_existing_factory(
+            factory,
+            projection_factory
+          )
         else
           # Determine projection coordinate system. First check the parameters.
-          projection_coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:projection_srid], opts[:projection_coord_sys], opts[:projection_coord_sys_class])
+          projection_coord_sys_info = ImplHelper::Utils.setup_coord_sys(
+            opts[:projection_srid],
+            opts[:projection_coord_sys],
+            opts[:projection_coord_sys_class]
+          )
           projection_coord_sys = projection_coord_sys_info[:coord_sys]
           projection_srid = projection_coord_sys_info[:srid]
 
@@ -338,21 +353,25 @@ module RGeo
           srid ||= coord_sys.authority_code if coord_sys
           srid ||= 4326
           # Now we should have all the coordinate system info.
-          factory = Geographic::Factory.new("Projected",
+          factory = Geographic::Factory.new(
+            "Projected",
             coord_sys: coord_sys,
             srid: srid.to_i,
             has_z_coordinate: opts[:has_z_coordinate],
             has_m_coordinate: opts[:has_m_coordinate],
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
-            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
-          projector = Geographic::Projector.create_from_opts(factory,
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator]
+          )
+          projector = Geographic::Projector.create_from_opts(
+            factory,
             srid: projection_srid,
             coord_sys: projection_coord_sys,
             buffer_resolution: opts[:buffer_resolution],
             has_z_coordinate: opts[:has_z_coordinate],
             has_m_coordinate: opts[:has_m_coordinate],
             wkt_parser: opts[:wkt_parser], wkt_generator: opts[:wkt_generator],
-            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator])
+            wkb_parser: opts[:wkb_parser], wkb_generator: opts[:wkb_generator]
+          )
         end
         factory.projector = projector
         factory
@@ -361,16 +380,12 @@ module RGeo
       private
 
       def coord_sys_4055
-        unless defined?(@coord_sys_4055)
-          @coord_sys_4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055)
-        end
+        @coord_sys_4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055) unless defined?(@coord_sys_4055)
         @coord_sys_4055
       end
 
       def coord_sys_4326
-        unless defined?(@coord_sys_4326)
-          @coord_sys_4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326)
-        end
+        @coord_sys_4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326) unless defined?(@coord_sys_4326)
         @coord_sys_4326
       end
     end

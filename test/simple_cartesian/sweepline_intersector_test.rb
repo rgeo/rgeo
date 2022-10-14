@@ -84,10 +84,22 @@ class SweeplineIntersectorTest < Minitest::Test
   end
 
   def test_sweepline_proper_intersections
-    square_pts = [@factory.point(0, 0), @factory.point(0, 1), @factory.point(1, 1), @factory.point(1, 0), @factory.point(0, 0)]
+    square_pts = [
+      @factory.point(0, 0),
+      @factory.point(0, 1),
+      @factory.point(1, 1),
+      @factory.point(1, 0),
+      @factory.point(0, 0)
+    ]
     square = @factory.line_string(square_pts)
 
-    hourglass_pts = [@factory.point(0, 0), @factory.point(0, 1), @factory.point(1, 0), @factory.point(1, 1), @factory.point(0, 0)]
+    hourglass_pts = [
+      @factory.point(0, 0),
+      @factory.point(0, 1),
+      @factory.point(1, 0),
+      @factory.point(1, 1),
+      @factory.point(0, 0)
+    ]
     hourglass = @factory.line_string(hourglass_pts)
 
     square_li = RGeo::Cartesian::SweeplineIntersector.new(square.segments)

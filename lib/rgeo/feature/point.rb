@@ -33,7 +33,6 @@ module RGeo
     # replace them with empty GeometryCollection objects. Therefore,
     # currently, every RGeo Point object represents an actual location
     # with real coordinates.
-
     module Point
       include Geometry
       extend Type

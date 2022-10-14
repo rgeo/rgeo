@@ -166,17 +166,15 @@ module RGeo
           # list of intersections for that edge.
           s1_intersects = int.point != int.s1.s && int.point != int.s1.e
           if s1_intersects
-            unless intersection_map[int.s1]
-              intersection_map[int.s1] = []
-            end
+            intersection_map[int.s1] = [] unless intersection_map[int.s1]
             intersection_map[int.s1] << int.point
           end
 
           s2_intersects = int.point != int.s2.s && int.point != int.s2.e
+
           next unless s2_intersects
-          unless intersection_map[int.s2]
-            intersection_map[int.s2] = []
-          end
+
+          intersection_map[int.s2] = [] unless intersection_map[int.s2]
           intersection_map[int.s2] << int.point
         end
         intersection_map
@@ -194,11 +192,9 @@ module RGeo
         insert_half_edge(e2)
       end
 
-      def insert_half_edge(he)
-        unless incident_edges[he.origin.coordinates]
-          @incident_edges[he.origin.coordinates] = []
-        end
-        @incident_edges[he.origin.coordinates] << he
+      def insert_half_edge(half_edge)
+        @incident_edges[half_edge.origin.coordinates] = [] unless incident_edges[half_edge.origin.coordinates]
+        @incident_edges[half_edge.origin.coordinates] << half_edge
       end
 
       # Links all half-edges where possible.
@@ -299,9 +295,7 @@ module RGeo
       def add_line_string(geom)
         add_edges(geom.segments)
 
-        hedge = unless geom.empty?
-                  @incident_edges[geom.start_point.coordinates].first
-                end
+        hedge = @incident_edges[geom.start_point.coordinates].first unless geom.empty?
 
         @geom_edges << GeomEdge.new(hedge, nil)
       end

@@ -9,7 +9,7 @@
 require_relative "../impl_helper/validity_check"
 
 module RGeo
-  module Cartesian
+  module Cartesian # :nodoc:
     class PointImpl # :nodoc:
       include Feature::Point
       include ImplHelper::ValidityCheck

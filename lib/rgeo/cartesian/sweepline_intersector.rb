@@ -46,9 +46,7 @@ module RGeo
           s2 = intersection.s2
           pt = intersection.point
 
-          unless (pt == s1.s && pt == s2.e) || (pt == s1.e && pt == s2.s)
-            @proper_intersections << intersection
-          end
+          @proper_intersections << intersection unless (pt == s1.s && pt == s2.e) || (pt == s1.e && pt == s2.s)
         end
         @proper_intersections
       end

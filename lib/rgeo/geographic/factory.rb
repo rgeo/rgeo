@@ -11,12 +11,19 @@ module RGeo
     # This class implements the various factories for geography features.
     # See methods of the RGeo::Geographic module for the API for creating
     # geography factories.
-
     class Factory
       include Feature::Factory::Instance
       include ImplHelper::Utils
 
       attr_writer :projector
+
+      attr_reader :coordinate_dimension, :spatial_dimension
+
+      # Returns the srid reported by this factory.
+      attr_reader :srid
+
+      # See RGeo::Feature::Factory#coord_sys
+      attr_reader :coord_sys
 
       def initialize(impl_prefix, opts = {}) # :nodoc:
         @impl_prefix = impl_prefix
@@ -45,45 +52,48 @@ module RGeo
         @buffer_resolution = 1 if @buffer_resolution < 1
 
         wkt_generator = opts[:wkt_generator]
-        case wkt_generator
-        when Hash
-          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
-        else
-          @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
-        end
+        @wkt_generator =
+          case wkt_generator
+          when Hash
+            WKRep::WKTGenerator.new(wkt_generator)
+          else
+            WKRep::WKTGenerator.new(convert_case: :upper)
+          end
         wkb_generator = opts[:wkb_generator]
-        case wkb_generator
-        when Hash
-          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
-        else
-          @wkb_generator = WKRep::WKBGenerator.new
-        end
+        @wkb_generator =
+          case wkb_generator
+          when Hash
+            WKRep::WKBGenerator.new(wkb_generator)
+          else
+            WKRep::WKBGenerator.new
+          end
         wkt_parser = opts[:wkt_parser]
-        case wkt_parser
-        when Hash
-          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
-        else
-          @wkt_parser = WKRep::WKTParser.new(self)
-        end
+        @wkt_parser =
+          case wkt_parser
+          when Hash
+            WKRep::WKTParser.new(self, wkt_parser)
+          else
+            WKRep::WKTParser.new(self)
+          end
         wkb_parser = opts[:wkb_parser]
-        case wkb_parser
-        when Hash
-          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
-        else
-          @wkb_parser = WKRep::WKBParser.new(self)
-        end
+        @wkb_parser =
+          case wkb_parser
+          when Hash
+            WKRep::WKBParser.new(self, wkb_parser)
+          else
+            WKRep::WKBParser.new(self)
+          end
         @projector = nil
       end
-      attr_reader :coordinate_dimension, :spatial_dimension
 
       # Equivalence test.
 
-      def eql?(rhs_)
-        rhs_.is_a?(Geographic::Factory) &&
-          @impl_prefix == rhs_.instance_variable_get(:@impl_prefix) &&
-          @support_z == rhs_.instance_variable_get(:@support_z) &&
-          @support_m == rhs_.instance_variable_get(:@support_m) &&
-          @coord_sys == rhs_.instance_variable_get(:@coord_sys)
+      def eql?(other)
+        other.is_a?(Geographic::Factory) &&
+          @impl_prefix == other.instance_variable_get(:@impl_prefix) &&
+          @support_z == other.instance_variable_get(:@support_z) &&
+          @support_m == other.instance_variable_get(:@support_m) &&
+          @coord_sys == other.instance_variable_get(:@coord_sys)
       end
       alias == eql?
 
@@ -116,12 +126,12 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        if (coord_sys_data = data_["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
-        else
-          coord_sys = nil
-        end
-        initialize(data_["pref"],
+        coord_sys =
+          if (coord_sys_data = data_["cs"])
+            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
+          end
+        initialize(
+          data_["pref"],
           has_z_coordinate: data_["hasz"],
           has_m_coordinate: data_["hasm"],
           srid: data_["srid"],
@@ -132,14 +142,18 @@ module RGeo
           buffer_resolution: data_["bufr"],
           coord_sys: coord_sys
         )
-        if (proj_klass = data_["prjc"]) && (proj_factory = data_["prjf"])
-          klass_ = RGeo::Geographic.const_get(proj_klass)
-          if klass_
-            projector = klass_.allocate
-            projector.set_factories(self, proj_factory)
-            @projector = projector
-          end
-        end
+        proj_klass = data_["prjc"]
+        proj_factory = data_["prjf"]
+
+        return unless proj_klass && proj_factory
+
+        klass_ = RGeo::Geographic.const_get(proj_klass)
+
+        return unless klass_
+
+        projector = klass_.allocate
+        projector.set_factories(self, proj_factory)
+        @projector = projector
       end
 
       # Psych support
@@ -155,19 +169,20 @@ module RGeo
         coder["wkb_parser"] = @wkb_parser.properties
         coder["buffer_resolution"] = @buffer_resolution
         coder["coord_sys"] = @coord_sys.to_wkt if @coord_sys
-        if @projector
-          coder["projectorclass"] = @projector.class.name.sub(/.*::/, "")
-          coder["projection_factory"] = @projector.projection_factory
-        end
+
+        return unless @projector
+
+        coder["projectorclass"] = @projector.class.name.sub(/.*::/, "")
+        coder["projection_factory"] = @projector.projection_factory
       end
 
       def init_with(coder) # :nodoc:
-        if (coord_sys_data = coder["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-        else
-          coord_sys = nil
-        end
-        initialize(coder["impl_prefix"],
+        coord_sys =
+          if (coord_sys_data = coder["cs"])
+            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
+          end
+        initialize(
+          coder["impl_prefix"],
           has_z_coordinate: coder["has_z_coordinate"],
           has_m_coordinate: coder["has_m_coordinate"],
           srid: coder["srid"],
@@ -178,19 +193,19 @@ module RGeo
           buffer_resolution: coder["buffer_resolution"],
           coord_sys: coord_sys
         )
-        if (proj_klass = coder["projectorclass"]) && (proj_factory = coder["projection_factory"])
-          klass_ = RGeo::Geographic.const_get(proj_klass)
-          if klass_
-            projector = klass_.allocate
-            projector.set_factories(self, proj_factory)
-            @projector = projector
-          end
-        end
+        proj_klass = coder["projectorclass"]
+        proj_factory = coder["projection_factory"]
+
+        return unless proj_klass && proj_factory
+
+        klass_ = RGeo::Geographic.const_get(proj_klass)
+
+        return unless klass_
+
+        projector = klass_.allocate
+        projector.set_factories(self, proj_factory)
+        @projector = projector
       end
-
-      # Returns the srid reported by this factory.
-
-      attr_reader :srid
 
       # Returns true if this factory supports a projection.
 
@@ -213,9 +228,7 @@ module RGeo
 
       def project(geometry)
         return unless @projector && geometry
-        unless geometry.factory == self
-          raise Error::InvalidGeometry, "Wrong geometry type"
-        end
+        raise Error::InvalidGeometry, "Wrong geometry type" unless geometry.factory == self
         @projector.project(geometry)
       end
 
@@ -226,9 +239,11 @@ module RGeo
 
       def unproject(geometry)
         return unless geometry
+
         unless @projector && @projector.projection_factory == geometry.factory
           raise Error::InvalidGeometry, "You can unproject only features that are in the projected coordinate space."
         end
+
         @projector.unproject(geometry)
       end
 
@@ -249,12 +264,10 @@ module RGeo
       # projection limits are not known.
 
       def projection_limits_window
-        if @projector
-          unless defined?(@projection_limits_window)
-            @projection_limits_window = @projector.limits_window
-          end
-          @projection_limits_window
-        end
+        return unless @projector
+
+        @projection_limits_window = @projector.limits_window unless defined?(@projection_limits_window)
+        @projection_limits_window
       end
 
       # See RGeo::Feature::Factory#property
@@ -286,8 +299,8 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x, y, *extra)
-        @point_class.new(self, x, y, *extra)
+      def point(x_point, y_point, *extra)
+        @point_class.new(self, x_point, y_point, *extra)
       end
 
       # See RGeo::Feature::Factory#line_string
@@ -337,10 +350,6 @@ module RGeo
       def multi_polygon(elems)
         @multi_polygon_class.new(self, elems)
       end
-
-      # See RGeo::Feature::Factory#coord_sys
-
-      attr_reader :coord_sys
 
       def generate_wkt(obj)
         @wkt_generator.generate(obj)

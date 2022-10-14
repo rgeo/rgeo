@@ -12,14 +12,10 @@ module RGeo
       def initialize(factory, exterior_ring, interior_rings)
         self.factory = factory
         @exterior_ring = Feature.cast(exterior_ring, factory, Feature::LinearRing)
-        unless @exterior_ring
-          raise Error::InvalidGeometry, "Failed to cast exterior ring #{exterior_ring}"
-        end
+        raise Error::InvalidGeometry, "Failed to cast exterior ring #{exterior_ring}" unless @exterior_ring
         @interior_rings = (interior_rings || []).map do |elem|
           elem = Feature.cast(elem, factory, Feature::LinearRing)
-          unless elem
-            raise Error::InvalidGeometry, "Could not cast interior ring #{elem}"
-          end
+          raise Error::InvalidGeometry, "Could not cast interior ring #{elem}" unless elem
           elem
         end
         init_geometry
@@ -33,8 +29,8 @@ module RGeo
         @interior_rings.size
       end
 
-      def interior_ring_n(n)
-        n < 0 ? nil : @interior_rings[n]
+      def interior_ring_n(idx)
+        idx < 0 ? nil : @interior_rings[idx]
       end
 
       def interior_rings
@@ -61,11 +57,14 @@ module RGeo
       end
 
       def rep_equals?(rhs)
-        if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @exterior_ring.rep_equals?(rhs.exterior_ring) && @interior_rings.size == rhs.num_interior_rings
-          rhs.interior_rings.each_with_index { |r, i| return false unless @interior_rings[i].rep_equals?(r) }
-        else
-          false
-        end
+        proper_match = rhs.is_a?(self.class) &&
+          rhs.factory.eql?(@factory) &&
+          @exterior_ring.rep_equals?(rhs.exterior_ring) &&
+          @interior_rings.size == rhs.num_interior_rings
+
+        return false unless proper_match
+
+        rhs.interior_rings.each_with_index { |r, i| return false unless @interior_rings[i].rep_equals?(r) }
       end
 
       def hash
@@ -80,7 +79,8 @@ module RGeo
         if Feature::Point === rhs
           contains_point?(rhs)
         else
-          raise(Error::UnsupportedOperation,
+          raise(
+            Error::UnsupportedOperation,
             "Method Polygon#contains? is only defined for Point"
           )
         end
@@ -90,7 +90,7 @@ module RGeo
 
       def contains_point?(point)
         ring_encloses_point?(@exterior_ring, point) &&
-          !@interior_rings.any? do |exclusion|
+          @interior_rings.none? do |exclusion|
             ring_encloses_point?(exclusion, point, on_border_return: true)
           end
       end
@@ -113,7 +113,6 @@ module RGeo
         end
         encloses_point
       end
-
 
       def copy_state_from(obj)
         super

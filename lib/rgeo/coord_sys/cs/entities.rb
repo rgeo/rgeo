@@ -147,7 +147,6 @@ module RGeo
       # Coordinate Transformation spec.
       #
       # This is a non-instantiable abstract class.
-
       class Base
         # Standard object inspection output
 
@@ -158,8 +157,8 @@ module RGeo
         # Tests for equality. Two objects are defined as equal if they
         # have the same type (class) and the same WKT representation.
 
-        def eql?(rhs)
-          rhs.class == self.class && rhs.to_wkt == to_wkt
+        def eql?(other)
+          other.class == self.class && other.to_wkt == to_wkt
         end
         alias == eql?
 
@@ -183,16 +182,14 @@ module RGeo
         def to_wkt(standard_brackets = false)
           open, close = brackets(standard_brackets)
           content = wkt_content(standard_brackets).map { |obj| ",#{obj}" }.join
-          if defined?(@authority) && @authority
-            authority = ",AUTHORITY#{open}#{@authority.inspect},#{@authority_code.inspect}#{close}"
-          else
-            authority = ""
-          end
-          if defined?(@extensions) && @extensions
-            extensions = @extensions.map { |k, v| ",EXTENSION#{open}#{k.inspect},#{v.inspect}#{close}" }.join
-          else
-            extensions = ""
-          end
+          authority =
+            defined?(@authority) &&
+            @authority &&
+            ",AUTHORITY#{open}#{@authority.inspect},#{@authority_code.inspect}#{close}"
+          extensions =
+            defined?(@extensions) &&
+            @extensions &&
+            @extensions.map { |k, v| ",EXTENSION#{open}#{k.inspect},#{v.inspect}#{close}" }.join
           "#{wkt_typename}#{open}#{@name.inspect}#{content}#{extensions}#{authority}#{close}"
         end
 
@@ -205,12 +202,11 @@ module RGeo
         def marshal_load(data) # :nodoc:
           data = data["wkt"] if data.is_a?(Hash)
           temp = CS.create_from_wkt(data)
-          if temp.class == self.class
-            temp.instance_variables.each do |iv|
-              instance_variable_set(iv, temp.instance_variable_get(iv))
-            end
-          else
-            raise TypeError, "Bad Marshal data"
+
+          raise TypeError, "Bad Marshal data" unless temp.instance_of?(self.class)
+
+          temp.instance_variables.each do |iv|
+            instance_variable_set(iv, temp.instance_variable_get(iv))
           end
         end
 
@@ -222,12 +218,11 @@ module RGeo
 
         def init_with(coder) # :nodoc:
           temp = CS.create_from_wkt(coder.type == :scalar ? coder.scalar : coder["wkt"])
-          if temp.class == self.class
-            temp.instance_variables.each do |iv|
-              instance_variable_set(iv, temp.instance_variable_get(iv))
-            end
-          else
-            raise TypeError, "Bad YAML data"
+
+          raise TypeError, "Bad YAML data" unless temp.instance_of?(self.class)
+
+          temp.instance_variables.each do |iv|
+            instance_variable_set(iv, temp.instance_variable_get(iv))
           end
         end
 
@@ -246,7 +241,6 @@ module RGeo
       #
       # Details of axis. This is used to label axes, and indicate the
       # orientation.
-
       class AxisInfo < Base
         # :stopdoc:
         NAMES_BY_VALUE = %w[OTHER NORTH SOUTH EAST WEST UP DOWN].freeze
@@ -254,12 +248,13 @@ module RGeo
 
         def initialize(name, orientation) # :nodoc:
           @name = name
-          case orientation
-          when String, Symbol
-            @orientation = NAMES_BY_VALUE.index(orientation.to_s.upcase).to_i
-          else
-            @orientation = orientation.to_i
-          end
+          @orientation =
+            case orientation
+            when String, Symbol
+              NAMES_BY_VALUE.index(orientation.to_s.upcase).to_i
+            else
+              orientation.to_i
+            end
         end
 
         # Human readable name for axis. Possible values are "X", "Y",
@@ -301,7 +296,6 @@ module RGeo
       # projected coordinate system. The angular units of parameter
       # values match the angular units of the geographic coordinate
       # system that the projected coordinate system is based on.
-
       class ProjectionParameter < Base
         def initialize(name, value) # :nodoc:
           @name = name
@@ -339,15 +333,14 @@ module RGeo
       # Wolf parameters should be applied to geocentric coordinates, where
       # the X axis points towards the Greenwich Prime Meridian, the Y axis
       # points East, and the Z axis points North.
-
       class WGS84ConversionInfo < Base
-        def initialize(dx, dy, dz, ex, ey, ez, ppm) # :nodoc:
-          @dx = dx.to_f
-          @dy = dy.to_f
-          @dz = dz.to_f
-          @ex = ex.to_f
-          @ey = ey.to_f
-          @ez = ez.to_f
+        def initialize(dxm, dym, dzm, exas, eyas, ezas, ppm) # :nodoc:
+          @dx = dxm.to_f
+          @dy = dym.to_f
+          @dz = dzm.to_f
+          @ex = exas.to_f
+          @ey = eyas.to_f
+          @ez = ezas.to_f
           @ppm = ppm.to_f
         end
 
@@ -383,8 +376,8 @@ module RGeo
           # The Bursa Wolf shift should be in meters, the rotation in arc
           # seconds, and the scaling in parts per million.
 
-          def create(dx, dy, dz, ex, ey, ez, ppm)
-            new(dx, dy, dz, ex, ey, ez, ppm)
+          def create(dxm, dym, dzm, exas, eyas, ezas, ppm)
+            new(dxm, dym, dzm, exas, eyas, ezas, ppm)
           end
         end
       end
@@ -427,9 +420,9 @@ module RGeo
       # * <b>alias</b>: an alias
       # * <b>remarks</b>: provider-supplied remarks.
       # * <b>extensions</b>: a hash of extension keys and values
-
       class Info < Base
-        def initialize(name, authority = nil, authority_code = nil, abbreviation = nil, init_alias = nil, remarks = nil, extensions = nil) # :nodoc:
+        def initialize(name, authority = nil, authority_code = nil, abbreviation = nil, init_alias = nil,
+                       remarks = nil, extensions = nil) # :nodoc:
           @name = name
           @authority = authority ? authority.to_s : nil
           @authority_code = authority_code ? authority_code.to_s : nil
@@ -488,7 +481,6 @@ module RGeo
       # Normally, you will instantiate one of the subclasses LinearUnit or
       # AngularUnit. However, it is possible to instantiate Unit if it is
       # not clear whether the data refers to a LinearUnit or AngularUnit.
-
       class Unit < Info
         def initialize(name, conversion_factor, *optional) # :nodoc:
           super(name, *optional)
@@ -525,7 +517,6 @@ module RGeo
       # == OGC spec description
       #
       # Definition of linear units.
-
       class LinearUnit < Unit
         # Returns the number of meters per LinearUnit.
         # Also available as Unit#conversion_factor.
@@ -548,7 +539,6 @@ module RGeo
       # == OGC spec description
       #
       # Definition of angular units.
-
       class AngularUnit < Unit
         # Returns the number of radians per AngularUnit.
         # Also available as Unit#conversion_factor.
@@ -571,7 +561,6 @@ module RGeo
       # == OGC spec description
       #
       # A meridian used to take longitude measurements from.
-
       class PrimeMeridian < Info
         def initialize(name, angular_unit, longitude, *optional) # :nodoc:
           super(name, *optional)
@@ -611,9 +600,9 @@ module RGeo
       # == OGC spec description
       #
       # An approximation of the Earth's surface as a squashed sphere.
-
       class Ellipsoid < Info
-        def initialize(name, semi_major_axis, semi_minor_axis, inverse_flattening, ivf_definitive, linear_unit, *optional) # :nodoc:
+        def initialize(name, semi_major_axis, semi_minor_axis, inverse_flattening, ivf_definitive,
+                       linear_unit, *optional) # :nodoc:
           super(name, *optional)
           @semi_major_axis = semi_major_axis.to_f
           @semi_minor_axis = semi_minor_axis.to_f
@@ -718,7 +707,6 @@ module RGeo
       # This is a non-instantiable abstract class. You must instantiate
       # one of the subclasses HorizontalDatum, VerticalDatum, or
       # LocalDatum.
-
       class Datum < Info
         def initialize(name, datum_type, *optional) # :nodoc:
           super(name, *optional)
@@ -738,7 +726,6 @@ module RGeo
       # == OGC spec description
       #
       # Procedure used to measure vertical distances.
-
       class VerticalDatum < Datum
         def wkt_typename
           "VERT_DATUM"
@@ -768,7 +755,6 @@ module RGeo
       # coordinates can be transformed between two different local
       # coordinate systems, as long as they are based on the same local
       # datum.
-
       class LocalDatum < Datum
         def wkt_typename
           "LOCAL_DATUM"
@@ -794,7 +780,6 @@ module RGeo
       # == OGC spec description
       #
       # Procedure used to measure positions on the surface of the Earth.
-
       class HorizontalDatum < Datum
         def initialize(name, datum_type, ellipsoid, wgs84_parameters, *optional) # :nodoc:
           super(name, datum_type, *optional)
@@ -837,7 +822,6 @@ module RGeo
       # == OGC spec description
       #
       # A projection from geographic coordinates to projected coordinates.
-
       class Projection < Info
         def initialize(name, class_name, parameters, *optional) # :nodoc:
           super(name, *optional)
@@ -916,7 +900,6 @@ module RGeo
       # GeographicCoordinateSystem, ProjectedCoordinateSystem,
       # VerticalCoordinateSystem, LocalCoordinateSystem, or
       # CompoundCoordinateSystem.
-
       class CoordinateSystem < Info
         def initialize(name, dimension, *optional) # :nodoc:
           super(name, *optional)
@@ -929,14 +912,14 @@ module RGeo
         # Gets axis details for dimension within coordinate system. Each
         # dimension in the coordinate system has a corresponding axis.
 
-        def get_axis(dimension)
+        def get_axis(_dimension)
           nil
         end
 
         # Gets units for dimension within coordinate system. Each
         # dimension in the coordinate system has corresponding units.
 
-        def get_units(dimension)
+        def get_units(_dimension)
           nil
         end
 
@@ -954,9 +937,9 @@ module RGeo
 
         # Not an OGC method, but useful for being able to
         # transform directly from a CoordinateSystem object.
-        def transform_coords(target_cs, x, y, z = nil)
+        def transform_coords(target_cs, x_coord, y_coord, z_coord = nil)
           ct = CoordinateTransform.create(self, target_cs)
-          ct.transform_coords(x, y, z)
+          ct.transform_coords(x_coord, y_coord, z_coord)
         end
 
         class << self
@@ -993,7 +976,6 @@ module RGeo
       # as a geographic or a projected coordinate system with a horizontal
       # datum. The other is a vertical CRS which is a one-dimensional
       # coordinate system with a vertical datum.
-
       class CompoundCoordinateSystem < CoordinateSystem
         def initialize(name, head, tail, *optional) # :nodoc:
           super(name, head.dimension + tail.dimension, *optional)
@@ -1060,7 +1042,6 @@ module RGeo
       #
       # RGeo's implementation does not provide the Coordinate
       # Transformation (CT) package.
-
       class LocalCoordinateSystem < CoordinateSystem
         def initialize(name, local_datum, unit, axes, *optional) # :nodoc:
           super(name, axes.size, *optional)
@@ -1080,7 +1061,7 @@ module RGeo
 
         # Implements CoordinateSystem#get_units
 
-        def get_units(index)
+        def get_units(_index)
           @unit
         end
 
@@ -1117,7 +1098,6 @@ module RGeo
       # the Z axis will point North, and the Y axis will point East (e.g.
       # a right handed system), but you should check the axes for
       # non-default values.
-
       class GeocentricCoordinateSystem < CoordinateSystem
         def initialize(name, horizontal_datum, prime_meridian, linear_unit, axis0, axis1, axis2, *optional) # :nodoc:
           super(name, 3, *optional)
@@ -1143,7 +1123,7 @@ module RGeo
 
         # Implements CoordinateSystem#get_units
 
-        def get_units(index)
+        def get_units(_index)
           @linear_unit
         end
 
@@ -1192,7 +1172,6 @@ module RGeo
       #
       # A one-dimensional coordinate system suitable for vertical
       # measurements.
-
       class VerticalCoordinateSystem < CoordinateSystem
         def initialize(name, vertical_datum, vertical_unit, axis, *optional) # :nodoc:
           super(name, 1, *optional)
@@ -1210,13 +1189,13 @@ module RGeo
 
         # Implements CoordinateSystem#get_units
 
-        def get_units(index)
+        def get_units(_index)
           @vertical_unit
         end
 
         # Implements CoordinateSystem#get_axis
 
-        def get_axis(index)
+        def get_axis(_index)
           @axis
         end
 
@@ -1253,7 +1232,6 @@ module RGeo
       # This is a non-instantiable abstract class. You must instantiate
       # one of the subclasses GeographicCoordinateSystem or
       # ProjectedCoordinateSystem.
-
       class HorizontalCoordinateSystem < CoordinateSystem
         def initialize(name, horizontal_datum, *optional) # :nodoc:
           super(name, 2, *optional)
@@ -1271,7 +1249,6 @@ module RGeo
       # You can find out which this is by examining the axes. You should
       # also check the angular units, since not all geographic coordinate
       # systems use degrees.
-
       class GeographicCoordinateSystem < HorizontalCoordinateSystem
         def initialize(name, angular_unit, horizontal_datum, prime_meridian, axis0, axis1, *optional) # :nodoc:
           super(name, horizontal_datum, *optional)
@@ -1290,7 +1267,7 @@ module RGeo
 
         # Implements CoordinateSystem#get_units
 
-        def get_units(index)
+        def get_units(_index)
           @angular_unit
         end
 
@@ -1312,7 +1289,7 @@ module RGeo
         # of interest. The first conversion (with index=0) should provide
         # acceptable accuracy over the largest possible area of interest.
 
-        def get_wgs84_conversion_info(index)
+        def get_wgs84_conversion_info(_index)
           @horizontal_datum.wgs84_parameters
         end
 
@@ -1353,7 +1330,6 @@ module RGeo
       # == OGC spec description
       #
       # A 2D cartographic coordinate system.
-
       class ProjectedCoordinateSystem < HorizontalCoordinateSystem
         def initialize(name, geographic_coordinate_system, projection, linear_unit, axis0, axis1, *optional) # :nodoc:
           super(name, geographic_coordinate_system.horizontal_datum, *optional)
@@ -1376,7 +1352,7 @@ module RGeo
 
         # Implements CoordinateSystem#get_units
 
-        def get_units(index)
+        def get_units(_index)
           @linear_unit
         end
 
@@ -1517,11 +1493,11 @@ module RGeo
 
         # Transforms a coordinate point. The passed parameter point should not be modified.
         #
-        # @param [Integer] x
-        # @param [Integer] y
-        # @param [Integer] z optional
+        # @param [Integer] x_coord
+        # @param [Integer] y_coord
+        # @param [Integer] z_coord optional
         # @return [Array<Integer>] transformed point coordinates in (x,y,z) order
-        def transform_coords(x, y, z = nil)
+        def transform_coords(x_coord, y_coord, z_coord = nil)
           raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
         end
 

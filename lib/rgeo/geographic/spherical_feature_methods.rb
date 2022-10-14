@@ -49,9 +49,10 @@ module RGeo
         return false unless rhs.is_a?(self.class) && rhs.factory == factory
         case rhs
         when Feature::Point
-          if @y == 90
+          case @y
+          when 90
             rhs.y == 90
-          elsif @y == -90
+          when -90
             rhs.y == -90
           else
             rhs.x == @x && rhs.y == @y
@@ -193,7 +194,11 @@ module RGeo
             next unless arc.intersects_arc?(rhs_arc)
 
             # check that endpoints aren't the intersection point
-            is_endpoint = arc.contains_point?(rhs_arc.s) || arc.contains_point?(rhs_arc.e) || rhs_arc.contains_point?(arc.s) || rhs_arc.contains_point?(arc.e)
+            is_endpoint = arc.contains_point?(rhs_arc.s) ||
+              arc.contains_point?(rhs_arc.e) ||
+              rhs_arc.contains_point?(arc.s) ||
+              rhs_arc.contains_point?(arc.e)
+
             return true unless is_endpoint
           end
         end

@@ -7,11 +7,10 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Feature
+  module Feature # :nodoc:
     # All geometry implementations MUST include this submodule.
     # This serves as a marker that may be used to test an object for
     # feature-ness.
-
     module Instance
     end
 
@@ -49,7 +48,6 @@ module RGeo
     # a particular object is a feature type:
     #
     #   RGeo::Feature::Type === object.geometry_type  # true
-
     module Type
       # Returns true if the given object is this type or a subtype
       # thereof, or if it is a feature object whose geometry_type is
@@ -192,92 +190,84 @@ module RGeo
           # Types are the same
           if nfactory == factory
             force_new ? obj.dup : obj
-          else
-            if type == Point
-              cs = ncs = nil
-              if project
-                cs = factory.coord_sys
-                ncs = nfactory.coord_sys
-              end
-              hasz = factory.property(:has_z_coordinate)
-              nhasz = nfactory.property(:has_z_coordinate)
-              if cs && ncs
-                coords = cs.transform_coords(ncs, obj.x, obj.y, hasz ? obj.z : nil)
-                coords << (hasz ? obj.z : 0.0) if nhasz && coords.size < 3
-              else
-                coords = [obj.x, obj.y]
-                coords << (hasz ? obj.z : 0.0) if nhasz
-              end
-              coords << (factory.property(:has_m_coordinate) ? obj.m : 0.0) if nfactory.property(:has_m_coordinate)
-              nfactory.point(*coords)
-            elsif type == Line
-              nfactory.line(cast(obj.start_point, nfactory, opts), cast(obj.end_point, nfactory, opts))
-            elsif type == LinearRing
-              nfactory.linear_ring(obj.points.map { |p| cast(p, nfactory, opts) })
-            elsif type == LineString
-              nfactory.line_string(obj.points.map { |p| cast(p, nfactory, opts) })
-            elsif type == Polygon
-              nfactory.polygon(cast(obj.exterior_ring, nfactory, opts),
-                                obj.interior_rings.map { |r| cast(r, nfactory, opts) })
-            elsif type == MultiPoint
-              nfactory.multi_point(obj.map { |g| cast(g, nfactory, opts) })
-            elsif type == MultiLineString
-              nfactory.multi_line_string(obj.map { |g| cast(g, nfactory, opts) })
-            elsif type == MultiPolygon
-              nfactory.multi_polygon(obj.map { |g| cast(g, nfactory, opts) })
-            elsif type == GeometryCollection
-              nfactory.collection(obj.map { |g| cast(g, nfactory, opts) })
+          elsif type == Point
+            cs = ncs = nil
+            if project
+              cs = factory.coord_sys
+              ncs = nfactory.coord_sys
             end
+            hasz = factory.property(:has_z_coordinate)
+            nhasz = nfactory.property(:has_z_coordinate)
+            if cs && ncs
+              coords = cs.transform_coords(ncs, obj.x, obj.y, hasz ? obj.z : nil)
+              coords << (hasz ? obj.z : 0.0) if nhasz && coords.size < 3
+            else
+              coords = [obj.x, obj.y]
+              coords << (hasz ? obj.z : 0.0) if nhasz
+            end
+            coords << (factory.property(:has_m_coordinate) ? obj.m : 0.0) if nfactory.property(:has_m_coordinate)
+            nfactory.point(*coords)
+          elsif type == Line
+            nfactory.line(cast(obj.start_point, nfactory, opts), cast(obj.end_point, nfactory, opts))
+          elsif type == LinearRing
+            nfactory.linear_ring(obj.points.map { |p| cast(p, nfactory, opts) })
+          elsif type == LineString
+            nfactory.line_string(obj.points.map { |p| cast(p, nfactory, opts) })
+          elsif type == Polygon
+            nfactory.polygon(
+              cast(obj.exterior_ring, nfactory, opts),
+              obj.interior_rings.map { |r| cast(r, nfactory, opts) }
+            )
+          elsif type == MultiPoint
+            nfactory.multi_point(obj.map { |g| cast(g, nfactory, opts) })
+          elsif type == MultiLineString
+            nfactory.multi_line_string(obj.map { |g| cast(g, nfactory, opts) })
+          elsif type == MultiPolygon
+            nfactory.multi_polygon(obj.map { |g| cast(g, nfactory, opts) })
+          elsif type == GeometryCollection
+            nfactory.collection(obj.map { |g| cast(g, nfactory, opts) })
+          end
+        # Types are different
+        elsif ntype == Point && [MultiPoint, GeometryCollection].include?(type) ||
+            [Line, LineString, LinearRing].include?(ntype) && [MultiLineString, GeometryCollection].include?(type) ||
+            ntype == Polygon && [MultiPolygon, GeometryCollection].include?(type)
+          cast(obj.geometry_n(0), nfactory, ntype, opts) if obj.num_geometries == 1
+        elsif ntype == Point
+          raise(Error::InvalidGeometry, "Cannot cast to Point")
+        elsif ntype == Line
+          if type == LineString && obj.num_points == 2
+            nfactory.line(cast(obj.point_n(0), nfactory, opts), cast(obj.point_n(1), nfactory, opts))
+          end
+        elsif ntype == LinearRing
+          nfactory.linear_ring(obj.points.map { |p| cast(p, nfactory, opts) }) if type == LineString
+        elsif ntype == LineString
+          nfactory.line_string(obj.points.map { |p| cast(p, nfactory, opts) }) if [Line, LinearRing].include?(type)
+        elsif ntype == MultiPoint
+          if type == Point
+            nfactory.multi_point([cast(obj, nfactory, opts)])
+          elsif type == GeometryCollection
+            nfactory.multi_point(obj.map { |p| cast(p, nfactory, opts) })
+          end
+        elsif ntype == MultiLineString
+          if [Line, LinearRing, LineString].include?(type)
+            nfactory.multi_line_string([cast(obj, nfactory, opts)])
+          elsif type == GeometryCollection
+            nfactory.multi_line_string(obj.map { |p| cast(p, nfactory, opts) })
+          end
+        elsif ntype == MultiPolygon
+          if type == Polygon
+            nfactory.multi_polygon([cast(obj, nfactory, opts)])
+          elsif type == GeometryCollection
+            nfactory.multi_polygon(obj.map { |p| cast(p, nfactory, opts) })
+          end
+        elsif ntype == GeometryCollection
+          if [MultiPoint, MultiLineString, MultiPolygon].include?(type)
+            nfactory.collection(obj.map { |p| cast(p, nfactory, opts) })
+          else
+            nfactory.collection([cast(obj, nfactory, opts)])
           end
         else
-          # Types are different
-          if ntype == Point && (type == MultiPoint || type == GeometryCollection) ||
-              (ntype == Line || ntype == LineString || ntype == LinearRing) && (type == MultiLineString || type == GeometryCollection) ||
-              ntype == Polygon && (type == MultiPolygon || type == GeometryCollection)
-            if obj.num_geometries == 1
-              cast(obj.geometry_n(0), nfactory, ntype, opts)
-            end
-          elsif ntype == Point
-            raise(Error::InvalidGeometry, "Cannot cast to Point")
-          elsif ntype == Line
-            if type == LineString && obj.num_points == 2
-              nfactory.line(cast(obj.point_n(0), nfactory, opts), cast(obj.point_n(1), nfactory, opts))
-            end
-          elsif ntype == LinearRing
-            if type == LineString
-              nfactory.linear_ring(obj.points.map { |p| cast(p, nfactory, opts) })
-            end
-          elsif ntype == LineString
-            if type == Line || type == LinearRing
-              nfactory.line_string(obj.points.map { |p| cast(p, nfactory, opts) })
-            end
-          elsif ntype == MultiPoint
-            if type == Point
-              nfactory.multi_point([cast(obj, nfactory, opts)])
-            elsif type == GeometryCollection
-              nfactory.multi_point(obj.map { |p| cast(p, nfactory, opts) })
-            end
-          elsif ntype == MultiLineString
-            if type == Line || type == LinearRing || type == LineString
-              nfactory.multi_line_string([cast(obj, nfactory, opts)])
-            elsif type == GeometryCollection
-              nfactory.multi_line_string(obj.map { |p| cast(p, nfactory, opts) })
-            end
-          elsif ntype == MultiPolygon
-            if type == Polygon
-              nfactory.multi_polygon([cast(obj, nfactory, opts)])
-            elsif type == GeometryCollection
-              nfactory.multi_polygon(obj.map { |p| cast(p, nfactory, opts) })
-            end
-          elsif ntype == GeometryCollection
-            if type == MultiPoint || type == MultiLineString || type == MultiPolygon
-              nfactory.collection(obj.map { |p| cast(p, nfactory, opts) })
-            else
-              nfactory.collection([cast(obj, nfactory, opts)])
-            end
-          else
-            raise(RGeo::Error::InvalidGeometry, "Undefined type cast from #{type.name} to #{ntype.name}")
-          end
+          raise(RGeo::Error::InvalidGeometry, "Undefined type cast from #{type.name} to #{ntype.name}")
         end
       end
     end

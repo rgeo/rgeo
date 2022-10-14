@@ -28,7 +28,6 @@ module RGeo
     # include this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
     # class method (or === operator) defined in the Type module.
-
     module GeometryCollection
       include Geometry
       extend Type
@@ -58,7 +57,7 @@ module RGeo
       # Also note that this method is different from GeometryCollection#[]
       # in that it does not support negative indexes.
 
-      def geometry_n(n)
+      def geometry_n(_idx)
         raise Error::UnsupportedOperation, "Method #{self.class}#geometry_n not defined."
       end
 
@@ -78,7 +77,7 @@ module RGeo
       # the same way Ruby's array indexing works. Hence, geometry_n(-1)
       # returns nil, where [-1] returns the last element of the collection.
 
-      def [](n)
+      def [](_idx)
         raise Error::UnsupportedOperation, "Method #{self.class}#[] not defined."
       end
 
@@ -95,7 +94,7 @@ module RGeo
       # Note that all GeometryCollection implementations must also
       # include the Enumerable mixin.
 
-      def each(&block)
+      def each(&_block)
         raise Error::UnsupportedOperation, "Method #{self.class}#each not defined."
       end
 

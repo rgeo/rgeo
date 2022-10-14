@@ -2,7 +2,7 @@
 
 module RGeo
   module Cartesian
-    module ValidOp
+    module ValidOp # :nodoc:
       include ImplHelper::ValidOp
 
       def validity_helper
@@ -10,7 +10,7 @@ module RGeo
       end
     end
 
-    module ValidOpHelpers
+    module ValidOpHelpers # :nodoc:
       include ImplHelper::ValidOpHelpers
 
       module_function(*ImplHelper::ValidOpHelpers.singleton_methods) # rubocop:disable Style/AccessModifierDeclarations
@@ -33,9 +33,7 @@ module RGeo
 
         # if additional nodes were added, there must be an intersection
         # through a boundary.
-        if poly.send(:graph).incident_edges.size > num_points
-          return Error::SELF_INTERSECTION
-        end
+        return Error::SELF_INTERSECTION if poly.send(:graph).incident_edges.size > num_points
 
         rings = [poly.exterior_ring] + poly.interior_rings
         return Error::SELF_INTERSECTION if rings.uniq.size != rings.size

@@ -9,7 +9,7 @@
 require_relative "../impl_helper/validity_check"
 
 module RGeo
-  module Geos
+  module Geos # :nodoc:
     class FFIGeometryImpl
       include Feature::Geometry
       include ImplHelper::ValidityCheck

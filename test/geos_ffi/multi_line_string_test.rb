@@ -8,10 +8,12 @@
 
 require "test_helper"
 
-class GeosFFIMultiLineStringTest < Minitest::Test # :nodoc:
-  include RGeo::Tests::Common::MultiLineStringTests
+if RGeo::Geos.ffi_supported?
+  class GeosFFIMultiLineStringTest < Minitest::Test # :nodoc:
+    include RGeo::Tests::Common::MultiLineStringTests
 
-  def create_factory
-    RGeo::Geos.factory(native_interface: :ffi)
+    def create_factory
+      RGeo::Geos.factory(native_interface: :ffi)
+    end
   end
-end if RGeo::Geos.ffi_supported?
+end
