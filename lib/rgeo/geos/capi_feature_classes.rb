@@ -101,7 +101,7 @@ module RGeo
       # @see https://en.wikipedia.org/wiki/Voronoi_diagram
       # @see https://libgeos.org/doxygen/geos__c_8h.html#ace0b2fabc92d8457a295c385ea128aa5
       def voronoi_diagram(envelope: nil, tolerance: 0.0, only_edges: false)
-        Primary.voronoi_diagram(self, envelope, tolerance || 0.0, only_edges)
+        Primary.voronoi_diagram(self, envelope, Float(tolerance), only_edges)
       rescue RGeo::Error::InvalidGeometry => e
         message = "Could not create a voronoi_diagram with the specified inputs"
         message += ". Try removing the `tolerance` parameter from ##{__method__}" if tolerance

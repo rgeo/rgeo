@@ -1180,6 +1180,10 @@ primary_method_geometry_voronoi_diagram(VALUE _,
   if (self_geom) {
     if (RB_TEST(env)) {
       env_geom = rgeo_convert_to_geos_geometry(self_data->factory, env, Qnil);
+      if (env_geom == NULL)
+        rb_raise(rb_eRGeoInvalidGeometry,
+                 "Could not use the given envelope with a GEOS factory. "
+                 "`RGeo::Feature.cast` failed.");
     }
     diagram = GEOSVoronoiDiagram(
       self_geom, env_geom, rb_num2dbl(tolerance), RB_TEST(only_edges));

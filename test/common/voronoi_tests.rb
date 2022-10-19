@@ -40,6 +40,7 @@ module RGeo
         def test_voronoi_diagram_tolerance
           polygon = @factory.parse_wkt("POLYGON ((0 0, 0.5 0, 0.5 0.5, 0 0.5, 0 0))")
           polygon.voronoi_diagram(tolerance: 1.0)
+          polygon.voronoi_diagram(tolerance: 0)
           error = assert_raises(RGeo::Error::InvalidGeometry) do
             polygon.voronoi_diagram(tolerance: 0.6)
           end
