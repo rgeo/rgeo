@@ -74,6 +74,14 @@ If you are using proj.4 extensions, include
 gem "rgeo-proj4"
 ```
 
+### Upgrading to Version 3.0
+
+See [doc/Upgrading-to-v3.md](doc/Upgrading-to-v3.md) for a checklist of changes to make before upgrading to RGeo 3.0.
+
+For a brief overview of the changes, see [NEWS.md](NEWS.md).
+
+For a comprehensive list of all changes, see [History.md](History.md).
+
 
 ### Extensions
 
