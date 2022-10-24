@@ -138,6 +138,7 @@ Here's the current list of available topics:
 - [Factory Compatibility](https://github.com/rgeo/rgeo/blob/main/doc/Factory-Compatibility.md)
 - [Which factory should I use?](https://github.com/rgeo/rgeo/blob/main/doc/Which-factory-should-I-use.md)
 - [Geometry validity handling](https://github.com/rgeo/rgeo/blob/main/doc/Geometry-Validity.md)
+- [Upgrading to Version 3](https://github.com/rgeo/rgeo/blob/main/doc/Upgrading-to-v3.md)
 - [Examples](https://github.com/rgeo/rgeo/blob/main/doc/Examples.md)
 - [Who uses `rgeo`?](https://github.com/rgeo/rgeo/blob/main/doc/Gallery.md)
 
