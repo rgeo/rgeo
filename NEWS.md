@@ -14,7 +14,7 @@ More details about usage and some technical details can be found in [doc/Geometr
 
 ### Coordinate System and Coordinate Transformations
 
-__Note: rgeo-proj4 version 4.0 will need to be used with RGeo 3.0__
+__Note: If you are using rgeo-proj4, you will need to upgrade it to version 4.0 to be used with RGeo 3.0__
 
 In an effort to improve the interface for transforming coordinates and decoupling the `rgeo-proj4` gem from the core RGeo library, we've changed how factories are given coordinate system information. The `proj4` option has been removed from all factory creation options and the `coord_sys` option will be relied on instead.
 
