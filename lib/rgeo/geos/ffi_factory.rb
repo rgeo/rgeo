@@ -428,7 +428,11 @@ module RGeo
         if type && obj.factory != self
           obj = Feature.cast(obj, self, type)
         end
-        obj&.fg_geom
+
+        geom = obj&.fg_geom
+        raise RGeo::Error::GeosError, "Unable to cast the geometry to the FFI Factory" if geom.nil?
+
+        geom
       end
 
       def generate_wkt(geom)
