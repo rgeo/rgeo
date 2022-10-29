@@ -430,7 +430,7 @@ module RGeo
         end
 
         geom = obj&.fg_geom
-        raise RGeo::Error::GeosError, "Unable to cast the geometry to the FFI Factory" if geom.nil?
+        raise RGeo::Error::InvalidGeometry, "Unable to cast the geometry to the FFI Factory" if geom.nil?
 
         geom
       end

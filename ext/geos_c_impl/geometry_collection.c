@@ -66,9 +66,7 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   for (i = 0; i < len; ++i) {
     geom = rgeo_convert_to_detached_geos_geometry(
       rb_ary_entry(array, i), factory, cast_type, &klass, &state);
-    if (state || !geom) {
-      break;
-    }
+
     geoms[i] = geom;
     if (!NIL_P(klass) && NIL_P(klasses)) {
       klasses = rb_ary_new2(len);

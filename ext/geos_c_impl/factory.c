@@ -832,7 +832,8 @@ rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
       rb_funcall(rgeo_feature_module, rb_intern("cast"), 3, obj, factory, type);
   }
   if (NIL_P(object))
-    return NULL;
+    rb_raise(rb_eRGeoInvalidGeometry,
+             "Unable to cast the geometry to the GEOS Factory");
 
   Check_TypedStruct(object, &rgeo_geometry_type);
   return RGEO_GEOMETRY_DATA_PTR(object)->geom;
@@ -863,9 +864,11 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
                               ID2SYM(rb_intern("force_new")),
                               ID2SYM(rb_intern("keep_subtype")));
   if (*state || NIL_P(object)) {
-    return NULL;
+    rb_raise(rb_eRGeoInvalidGeometry,
+             "Unable to cast the geometry to the GEOS Factory");
   }
 
+  Check_TypedStruct(object, &rgeo_geometry_type);
   object_data = RGEO_GEOMETRY_DATA_PTR(object);
   geom = object_data->geom;
   if (klasses) {

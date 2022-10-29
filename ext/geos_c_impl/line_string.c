@@ -420,20 +420,18 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
     good = 0;
     entry_geom = rgeo_convert_to_geos_geometry(
       factory, rb_ary_entry(array, i), point_type);
-    if (entry_geom) {
-      entry_cs = GEOSGeom_getCoordSeq(entry_geom);
-      if (entry_cs) {
-        if (GEOSCoordSeq_getX(entry_cs, 0, &x)) {
-          coords[i * dims] = x;
-          if (GEOSCoordSeq_getY(entry_cs, 0, &x)) {
-            coords[i * dims + 1] = x;
-            good = 1;
-            if (has_z) {
-              if (GEOSCoordSeq_getZ(entry_cs, 0, &x)) {
-                coords[i * dims + 2] = x;
-              } else {
-                good = 0;
-              }
+    entry_cs = GEOSGeom_getCoordSeq(entry_geom);
+    if (entry_cs) {
+      if (GEOSCoordSeq_getX(entry_cs, 0, &x)) {
+        coords[i * dims] = x;
+        if (GEOSCoordSeq_getY(entry_cs, 0, &x)) {
+          coords[i * dims + 1] = x;
+          good = 1;
+          if (has_z) {
+            if (GEOSCoordSeq_getZ(entry_cs, 0, &x)) {
+              coords[i * dims + 2] = x;
+            } else {
+              good = 0;
             }
           }
         }
@@ -556,18 +554,14 @@ cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE end)
   point_type = rgeo_feature_point_module;
 
   start_geom = rgeo_convert_to_geos_geometry(factory, start, point_type);
-  if (start_geom) {
-    end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type);
-    if (end_geom) {
-      coord_seq = GEOSCoordSeq_create(2, 3);
-      if (coord_seq) {
-        populate_geom_into_coord_seq(start_geom, coord_seq, 0, has_z);
-        populate_geom_into_coord_seq(end_geom, coord_seq, 1, has_z);
-        geom = GEOSGeom_createLineString(coord_seq);
-        if (geom) {
-          result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_line_class);
-        }
-      }
+  end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type);
+  coord_seq = GEOSCoordSeq_create(2, 3);
+  if (coord_seq) {
+    populate_geom_into_coord_seq(start_geom, coord_seq, 0, has_z);
+    populate_geom_into_coord_seq(end_geom, coord_seq, 1, has_z);
+    geom = GEOSGeom_createLineString(coord_seq);
+    if (geom) {
+      result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_line_class);
     }
   }
 
