@@ -1,3 +1,9 @@
+### Current
+
+**Breaking Changes**
+
+* GEOS and FFI implementations will raise errors instead of returning `nil` when invalid data is given to methods that expect an RGeo geometry. (#341)
+
 ### 3.0.0-rc.3 / 2022-10-11
 
 **Breaking Changes**
