@@ -1,3 +1,9 @@
+### Current Changes
+
+**Minor Changes**
+
+* Add `transform` method to `Geometry`. #342
+
 ### 3.0.0-rc.3 / 2022-10-11
 
 **Breaking Changes**

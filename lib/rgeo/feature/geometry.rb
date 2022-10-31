@@ -711,6 +711,18 @@ module RGeo
       def *(rhs)
         intersection(rhs)
       end
+
+      # Convenience method to transform/project a geometry
+      # to a different coordinate system from the geometry itself
+      # instead of the cast method.
+      #
+      # @note: Not an OGC SFS method
+      #
+      # @param [RGeo::Feature::Factory] other_factory
+      # @return [RGeo::Feature::Geometry]
+      def transform(other_factory)
+        Feature.cast(self, factory: other_factory, project: true)
+      end
     end
   end
 end
