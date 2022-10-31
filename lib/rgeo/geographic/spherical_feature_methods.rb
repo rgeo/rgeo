@@ -137,11 +137,6 @@ module RGeo
         true
       end
 
-      def is_simple?
-        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        simple?
-      end
-
       def length
         arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
       end

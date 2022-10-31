@@ -577,8 +577,7 @@ straight line between those two points. But what is meant by "straight"? Does
 the shape follow the 50 degrees north latitude line, passing through
 Newfoundland? Or does it follow the actual shortest path on the globe, which
 passes much further north, close to Reykjavik, Iceland? (For a detailed
-explanation, see Morten Nielsen's post ["Straight Lines on a Sphere"]
-(http://www.sharpgis.net/post/2008/01/12/Straight-lines-on-a-sphere.aspx),
+explanation, see Morten Nielsen's post ["Straight Lines on a Sphere"](https://sharpgis.net/post/Straight-lines-on-a-sphere),
 which also includes some helpful diagrams.) If you were to call the SFS
 "distance" function to measure the distance between this LineString and a
 Point located at Reykjavik, what would you get?
@@ -619,8 +618,7 @@ straight Line in geographic coordinates) into a Mercator-projected Google map,
 the line will be curved. Therefore, the coordinate system is an integral part
 of the geometric object. If you get your coordinate systems mixed up, you may
 get incorrect results when you run a database query or a geometric operation.
-Morten Nielsen gives an example in [this post]
-(http://www.sharpgis.net/post/2009/02/06/Why-EPSG4326-is-usually-the-wrong-e2809cprojectione2809d.aspx).
+Morten Nielsen gives an example in [this post](https://sharpgis.net/post/Why-EPSG4326-is-usually-the-wrong-e2809cprojectione2809d).
 
     flat_factory = RGeo::Geos.factory
     curved_factory = RGeo::Geographic.spherical_factory
@@ -749,8 +747,7 @@ systems with a projection. The API inputs take latitude and longitude in the
 WGS84 coordinate system. However, the maps themselves are Mercator projections
 (with a minor modification to make computations easier), and so the map
 implementations transform the coordinates internally. Again, Morten Nielsen
-provides a more [detailed description]
-(http://www.sharpgis.net/post/2007/07/27/The-Microsoft-Live-Maps-and-Google-Maps-projection.aspx).
+provides a more [detailed description](https://sharpgis.net/post/The-Microsoft-Live-Maps-and-Google-Maps-projection).
 
 ### 4.4. Using Proj4
 
@@ -1087,7 +1084,7 @@ their contents as RGeo's geometric data types.
 
 Location is becoming a common feature of web services as well. An emerging
 standard in the encoding of geographic data in a web service is
-[GeoJSON](http://www.geojson.org/), an geospatial data format based on JSON.
+[GeoJSON](http://www.geojson.org/), a geospatial data format based on JSON.
 GeoJSON can encode any of the OGR geometry types, along with attributes,
 bounding boxes, and coordinate system specifications.
 [SimpleGeo](http://www.simplegeo.com/) is one of several high-profile location

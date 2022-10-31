@@ -1,4 +1,4 @@
-### Current
+### 3.0.0-rc.3 / 2022-10-11
 
 **Breaking Changes**
 
@@ -8,6 +8,7 @@
 * Rename `Geographic::Proj4Projector` to `Projector` #328
 * Remove `proj4` option from projector creation #328
 * Rename `Projector#create_from_proj4` to `create_from_opts` #328
+* Remove `is_*?` deprecated methods for good (see #268)
 
 **Minor Changes**
 
@@ -26,6 +27,7 @@
 **Breaking Changes**
 
 * Remove `SRSDatabase` and `factory_generator` related methods #314
+* Use GEOS tools as defaults for WKRep manipulation within GEOS CAPI and FFI #331
 
 **Minor Changes**
 

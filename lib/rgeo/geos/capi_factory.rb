@@ -20,72 +20,64 @@ module RGeo
         #
         # See RGeo::Geos.factory for a list of supported options.
 
-        def create(opts_ = {})
+        def create(opts = {})
           # Make sure GEOS is available
           return unless respond_to?(:_create)
 
           # Get flags to pass to the C extension
           flags = 0
-          flags |= 2 if opts_[:has_z_coordinate]
-          flags |= 4 if opts_[:has_m_coordinate]
+          flags |= 2 if opts[:has_z_coordinate]
+          flags |= 4 if opts[:has_m_coordinate]
           if flags & 6 == 6
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
-          flags |= 8 unless opts_[:auto_prepare] == :disabled
+          flags |= 8 unless opts[:auto_prepare] == :disabled
 
           # Buffer resolution
-          buffer_resolution_ = opts_[:buffer_resolution].to_i
-          buffer_resolution_ = 1 if buffer_resolution_ < 1
+          buffer_resolution = opts[:buffer_resolution].to_i
+          buffer_resolution = 1 if buffer_resolution < 1
 
           # Interpret the generator options
-          wkt_generator_ = opts_[:wkt_generator]
-          case wkt_generator_
-          when :geos
-            wkt_generator_ = nil
+          wkt_generator = opts[:wkt_generator]
+          case wkt_generator
           when Hash
-            wkt_generator_ = WKRep::WKTGenerator.new(wkt_generator_)
+            wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
           else
-            wkt_generator_ = WKRep::WKTGenerator.new(convert_case: :upper)
+            wkt_generator = nil
           end
-          wkb_generator_ = opts_[:wkb_generator]
-          case wkb_generator_
-          when :geos
-            wkb_generator_ = nil
+          wkb_generator = opts[:wkb_generator]
+          case wkb_generator
           when Hash
-            wkb_generator_ = WKRep::WKBGenerator.new(wkb_generator_)
+            wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
           else
-            wkb_generator_ = WKRep::WKBGenerator.new
+            wkb_generator = nil
           end
 
           # Coordinate system (srid and coord_sys)
-          coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts_[:srid], opts_[:coord_sys], opts_[:coord_sys_class])
-          srid_ = coord_sys_info[:srid]
-          coord_sys_ = coord_sys_info[:coord_sys]
+          coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:srid], opts[:coord_sys], opts[:coord_sys_class])
+          srid = coord_sys_info[:srid]
+          coord_sys = coord_sys_info[:coord_sys]
 
           # Create the factory and set instance variables
-          result = _create(flags, srid_.to_i, buffer_resolution_,
-            wkt_generator_, wkb_generator_, coord_sys_)
+          result = _create(flags, srid.to_i, buffer_resolution,
+            wkt_generator, wkb_generator, coord_sys)
 
           # Interpret parser options
-          wkt_parser_ = opts_[:wkt_parser]
-          case wkt_parser_
-          when :geos
-            wkt_parser_ = nil
+          wkt_parser = opts[:wkt_parser]
+          case wkt_parser
           when Hash
-            wkt_parser_ = WKRep::WKTParser.new(result, wkt_parser_)
+            wkt_parser = WKRep::WKTParser.new(result, wkt_parser)
           else
-            wkt_parser_ = WKRep::WKTParser.new(result)
+            wkt_parser = nil
           end
-          wkb_parser_ = opts_[:wkb_parser]
-          case wkb_parser_
-          when :geos
-            wkb_parser_ = nil
+          wkb_parser = opts[:wkb_parser]
+          case wkb_parser
           when Hash
-            wkb_parser_ = WKRep::WKBParser.new(result, wkb_parser_)
+            wkb_parser = WKRep::WKBParser.new(result, wkb_parser)
           else
-            wkb_parser_ = WKRep::WKBParser.new(result)
+            wkb_parser = nil
           end
-          result._set_wkrep_parsers(wkt_parser_, wkb_parser_)
+          result._set_wkrep_parsers(wkt_parser, wkb_parser)
 
           # Return the result
           result
@@ -240,11 +232,7 @@ module RGeo
         if (wkb_parser_ = _wkb_parser)
           wkb_parser_.parse(str_)
         else
-          if str_[0] == "\x00" || str_[0] == "\x01"
-            _parse_wkb_impl(str_)
-          else
-            _parse_wkb_impl([str_].pack('H*'))
-          end
+          _parse_wkb_impl(str_)
         end
       end
 

@@ -77,18 +77,8 @@ module RGeo
         @zgeometry.empty?
       end
 
-      def is_empty?
-        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        empty?
-      end
-
       def simple?
         @zgeometry.simple?
-      end
-
-      def is_simple?
-        warn "The is_simple? method is deprecated, please use the simple? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        simple?
       end
 
       def is_3d?
@@ -252,18 +242,8 @@ module RGeo
         @zgeometry.closed?
       end
 
-      def is_closed?
-        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        closed?
-      end
-
       def ring?
         @zgeometry.ring?
-      end
-
-      def is_ring?
-        warn "The is_ring? method is deprecated, please use the ring? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        ring?
       end
 
       def num_points
@@ -361,11 +341,6 @@ module RGeo
 
       def closed?
         @zgeometry.closed?
-      end
-
-      def is_closed?
-        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        closed?
       end
 
       def coordinates

@@ -55,11 +55,6 @@ module RGeo
         @elements.size == 0
       end
 
-      def is_empty?
-        warn "The is_empty? method is deprecated, please use the empty? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        empty?
-      end
-
       def rep_equals?(rhs)
         if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @elements.size == rhs.num_geometries
           rhs.each_with_index { |p, i| return false unless @elements[i].rep_equals?(p) }
@@ -97,11 +92,6 @@ module RGeo
 
       def closed?
         all?(&:closed?)
-      end
-
-      def is_closed?
-        warn "The is_closed? method is deprecated, please use the closed? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        closed?
       end
 
       def length

@@ -24,22 +24,19 @@ rgeo_init_geos_polygon();
   Qnil if an error occurs.
 */
 VALUE
-rgeo_geos_polygons_eql(GEOSContextHandle_t context,
-                       const GEOSGeometry* geom1,
+rgeo_geos_polygons_eql(const GEOSGeometry* geom1,
                        const GEOSGeometry* geom2,
                        char check_z);
 
 /*
   A tool for building up hash values.
-  You must pass in the context, a geos geometry, and a seed hash.
+  You must pass in a geos geometry, and a seed hash.
   Returns an updated hash.
   This call is useful in sequence, and should be bracketed by calls to
   rb_hash_start and rb_hash_end.
 */
 st_index_t
-rgeo_geos_polygon_hash(GEOSContextHandle_t context,
-                       const GEOSGeometry* geom,
-                       st_index_t hash);
+rgeo_geos_polygon_hash(const GEOSGeometry* geom, st_index_t hash);
 
 RGEO_END_C
 

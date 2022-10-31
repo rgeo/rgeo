@@ -27,8 +27,7 @@ method_polygon_eql(VALUE self, VALUE rhs)
   result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
     self_data = RGEO_GEOMETRY_DATA_PTR(self);
-    result = rgeo_geos_geometries_strict_eql(self_data->geos_context,
-                                             self_data->geom,
+    result = rgeo_geos_geometries_strict_eql(self_data->geom,
                                              RGEO_GEOMETRY_DATA_PTR(rhs)->geom);
   }
   return result;
@@ -45,7 +44,7 @@ method_polygon_hash(VALUE self)
   factory = self_data->factory;
   hash = rb_hash_start(0);
   hash = rgeo_geos_objbase_hash(factory, rgeo_feature_polygon_module, hash);
-  hash = rgeo_geos_polygon_hash(self_data->geos_context, self_data->geom, hash);
+  hash = rgeo_geos_polygon_hash(self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
 
@@ -75,7 +74,7 @@ method_polygon_area(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    if (GEOSArea_r(self_data->geos_context, self_geom, &area)) {
+    if (GEOSArea(self_geom, &area)) {
       result = rb_float_new(area);
     }
   }
@@ -94,9 +93,7 @@ method_polygon_centroid(VALUE self)
   self_geom = self_data->geom;
   if (self_geom) {
     result = rgeo_wrap_geos_geometry(
-      self_data->factory,
-      GEOSGetCentroid_r(self_data->geos_context, self_geom),
-      rgeo_geos_point_class);
+      self_data->factory, GEOSGetCentroid(self_geom), rgeo_geos_point_class);
   }
   return result;
 }
@@ -113,9 +110,7 @@ method_polygon_point_on_surface(VALUE self)
   self_geom = self_data->geom;
   if (self_geom) {
     result = rgeo_wrap_geos_geometry(
-      self_data->factory,
-      GEOSPointOnSurface_r(self_data->geos_context, self_geom),
-      rgeo_geos_point_class);
+      self_data->factory, GEOSPointOnSurface(self_geom), rgeo_geos_point_class);
   }
   return result;
 }
@@ -126,7 +121,6 @@ method_polygon_coordinates(VALUE self)
   VALUE result = Qnil;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t self_context;
 
   int zCoordinate;
 
@@ -136,8 +130,7 @@ method_polygon_coordinates(VALUE self)
   if (self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
                   RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-    self_context = self_data->geos_context;
-    result = extract_points_from_polygon(self_context, self_geom, zCoordinate);
+    result = extract_points_from_polygon(self_geom, zCoordinate);
   }
   return result;
 }
@@ -153,10 +146,9 @@ method_polygon_exterior_ring(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    result = rgeo_wrap_geos_geometry_clone(
-      self_data->factory,
-      GEOSGetExteriorRing_r(self_data->geos_context, self_geom),
-      rgeo_geos_linear_ring_class);
+    result = rgeo_wrap_geos_geometry_clone(self_data->factory,
+                                           GEOSGetExteriorRing(self_geom),
+                                           rgeo_geos_linear_ring_class);
   }
   return result;
 }
@@ -173,7 +165,7 @@ method_polygon_num_interior_rings(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    num = GEOSGetNumInteriorRings_r(self_data->geos_context, self_geom);
+    num = GEOSGetNumInteriorRings(self_geom);
     if (num >= 0) {
       result = INT2NUM(num);
     }
@@ -188,22 +180,20 @@ method_polygon_interior_ring_n(VALUE self, VALUE n)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   int i;
-  GEOSContextHandle_t self_context;
   int num;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    i = NUM2INT(n);
+    i = RB_NUM2INT(n);
     if (i >= 0) {
-      self_context = self_data->geos_context;
-      num = GEOSGetNumInteriorRings_r(self_context, self_geom);
+      num = GEOSGetNumInteriorRings(self_geom);
       if (i < num) {
-        result = rgeo_wrap_geos_geometry_clone(
-          self_data->factory,
-          GEOSGetInteriorRingN_r(self_context, self_geom, i),
-          rgeo_geos_linear_ring_class);
+        result =
+          rgeo_wrap_geos_geometry_clone(self_data->factory,
+                                        GEOSGetInteriorRingN(self_geom, i),
+                                        rgeo_geos_linear_ring_class);
       }
     }
   }
@@ -216,7 +206,6 @@ method_polygon_interior_rings(VALUE self)
   VALUE result;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t self_context;
   int count;
   VALUE factory;
   int i;
@@ -225,18 +214,17 @@ method_polygon_interior_rings(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    self_context = self_data->geos_context;
-    count = GEOSGetNumInteriorRings_r(self_context, self_geom);
+    count = GEOSGetNumInteriorRings(self_geom);
     if (count >= 0) {
       result = rb_ary_new2(count);
       factory = self_data->factory;
       for (i = 0; i < count; ++i) {
-        rb_ary_store(result,
-                     i,
-                     rgeo_wrap_geos_geometry_clone(
-                       factory,
-                       GEOSGetInteriorRingN_r(self_context, self_geom, i),
-                       rgeo_geos_linear_ring_class));
+        rb_ary_store(
+          result,
+          i,
+          rgeo_wrap_geos_geometry_clone(factory,
+                                        GEOSGetInteriorRingN(self_geom, i),
+                                        rgeo_geos_linear_ring_class));
       }
     }
   }
@@ -252,7 +240,6 @@ cmethod_create(VALUE module,
   RGeo_FactoryData* factory_data;
   VALUE linear_ring_type;
   GEOSGeometry* exterior_geom;
-  GEOSContextHandle_t context;
   unsigned int len;
   GEOSGeometry** interior_geoms;
   unsigned int actual_len;
@@ -273,7 +260,6 @@ cmethod_create(VALUE module,
     return Qnil;
   }
 
-  context = factory_data->geos_context;
   len = (unsigned int)RARRAY_LEN(interior_array);
   interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
   if (interior_geoms) {
@@ -293,8 +279,8 @@ cmethod_create(VALUE module,
       }
     }
     if (len == actual_len) {
-      polygon = GEOSGeom_createPolygon_r(
-        context, exterior_geom, interior_geoms, actual_len);
+      polygon =
+        GEOSGeom_createPolygon(exterior_geom, interior_geoms, actual_len);
       if (polygon) {
         FREE(interior_geoms);
         // NOTE: we can return safely here, state cannot be other than 0.
@@ -303,11 +289,11 @@ cmethod_create(VALUE module,
       }
     }
     for (i = 0; i < actual_len; ++i) {
-      GEOSGeom_destroy_r(context, interior_geoms[i]);
+      GEOSGeom_destroy(interior_geoms[i]);
     }
     FREE(interior_geoms);
   }
-  GEOSGeom_destroy_r(context, exterior_geom);
+  GEOSGeom_destroy(exterior_geom);
   if (state) {
     rb_exc_raise(rb_errinfo());
   }
@@ -353,20 +339,16 @@ rgeo_init_geos_polygon()
 }
 
 st_index_t
-rgeo_geos_polygon_hash(GEOSContextHandle_t context,
-                       const GEOSGeometry* geom,
-                       st_index_t hash)
+rgeo_geos_polygon_hash(const GEOSGeometry* geom, st_index_t hash)
 {
   unsigned int len;
   unsigned int i;
 
   if (geom) {
-    hash = rgeo_geos_coordseq_hash(
-      context, GEOSGetExteriorRing_r(context, geom), hash);
-    len = GEOSGetNumInteriorRings_r(context, geom);
+    hash = rgeo_geos_coordseq_hash(GEOSGetExteriorRing(geom), hash);
+    len = GEOSGetNumInteriorRings(geom);
     for (i = 0; i < len; ++i) {
-      hash = rgeo_geos_coordseq_hash(
-        context, GEOSGetInteriorRingN_r(context, geom, i), hash);
+      hash = rgeo_geos_coordseq_hash(GEOSGetInteriorRingN(geom, i), hash);
     }
   }
   return hash;

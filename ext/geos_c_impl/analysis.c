@@ -35,11 +35,11 @@ rgeo_geos_analysis_ccw_p(VALUE self, VALUE ring)
 
   ring_data = RGEO_GEOMETRY_DATA_PTR(ring);
 
-  coord_seq = GEOSGeom_getCoordSeq_r(ring_data->geos_context, ring_data->geom);
+  coord_seq = GEOSGeom_getCoordSeq(ring_data->geom);
   if (!coord_seq) {
     rb_raise(rb_eGeosError, "Could not retrieve CoordSeq from given ring.");
   }
-  if (!GEOSCoordSeq_isCCW_r(ring_data->geos_context, coord_seq, &is_ccw)) {
+  if (!GEOSCoordSeq_isCCW(coord_seq, &is_ccw)) {
     rb_raise(rb_eGeosError, "Could not determine if the CoordSeq is CCW.");
   }
 

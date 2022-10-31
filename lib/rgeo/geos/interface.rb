@@ -38,11 +38,6 @@ module RGeo
           ZMGeometryMethods === object && CAPIGeometryMethods === object.z_geometry)
       end
 
-      def is_capi_geos?(object)
-        warn "The is_capi_geos? method is deprecated, please use the capi_geos? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        capi_geos?(object)
-      end
-
       # Returns true if the given feature is an FFI GEOS feature, or if
       # the given factory is an FFI GEOS factory.
 
@@ -53,11 +48,6 @@ module RGeo
           ZMGeometryMethods === object && FFIGeometryMethods === object.z_geometry)
       end
 
-      def is_ffi_geos?(object)
-        warn "The is_ffi_geos? method is deprecated, please use the ffi_geos? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        ffi_geos?(object)
-      end
-
       # Returns true if the given feature is a GEOS feature, or if the given
       # factory is a GEOS factory. Does not distinguish between CAPI and FFI.
 
@@ -65,11 +55,6 @@ module RGeo
         CAPI_SUPPORTED && (CAPIFactory === object || CAPIGeometryMethods === object) ||
           FFI_SUPPORTED && (FFIFactory === object || FFIGeometryMethods === object) ||
           ZMFactory === object || ZMGeometryMethods === object
-      end
-
-      def is_geos?(object)
-        warn "The is_geos? method is deprecated, please use the geos? counterpart, will be removed in v3" unless ENV["RGEO_SILENCE_DEPRECATION"]
-        geos?(object)
       end
 
       # Returns the GEOS library version as a string of the format "x.y.z".

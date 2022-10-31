@@ -12,6 +12,8 @@ RGEO_BEGIN_C
 extern VALUE rb_eRGeoError;
 // RGeo::Error::InvalidGeometry
 extern VALUE rb_eRGeoInvalidGeometry;
+// RGeo::Error::ParseError
+extern VALUE rb_eRGeoParseError;
 // RGeo::Error::UnsupportedOperation
 extern VALUE rb_eRGeoUnsupportedOperation;
 // RGeo error specific to the GEOS implementation.

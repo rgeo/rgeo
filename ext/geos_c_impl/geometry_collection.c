@@ -32,7 +32,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   unsigned int len;
   GEOSGeometry** geoms;
   RGeo_FactoryData* factory_data;
-  GEOSContextHandle_t geos_context;
   VALUE klass;
   unsigned int i;
   unsigned int j;
@@ -51,7 +50,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   }
 
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
-  geos_context = factory_data->geos_context;
   klasses = Qnil;
   cast_type = Qnil;
   switch (type) {
@@ -84,10 +82,10 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   }
   if (i != len) {
     for (j = 0; j < i; ++j) {
-      GEOSGeom_destroy_r(geos_context, geoms[j]);
+      GEOSGeom_destroy(geoms[j]);
     }
   } else {
-    collection = GEOSGeom_createCollection_r(geos_context, type, geoms, len);
+    collection = GEOSGeom_createCollection(type, geoms, len);
     if (collection) {
       result = rgeo_wrap_geos_geometry(factory, collection, module);
       RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
@@ -116,8 +114,7 @@ method_geometry_collection_eql(VALUE self, VALUE rhs)
   result = rgeo_geos_klasses_and_factories_eql(self, rhs);
   if (RTEST(result)) {
     self_data = RGEO_GEOMETRY_DATA_PTR(self);
-    result = rgeo_geos_geometries_strict_eql(self_data->geos_context,
-                                             self_data->geom,
+    result = rgeo_geos_geometries_strict_eql(self_data->geom,
                                              RGEO_GEOMETRY_DATA_PTR(rhs)->geom);
   }
   return result;
@@ -135,8 +132,7 @@ method_geometry_collection_hash(VALUE self)
   hash = rb_hash_start(0);
   hash = rgeo_geos_objbase_hash(
     factory, rgeo_feature_geometry_collection_module, hash);
-  hash = rgeo_geos_geometry_collection_hash(
-    self_data->geos_context, self_data->geom, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
 
@@ -165,8 +161,7 @@ method_geometry_collection_num_geometries(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    result =
-      INT2NUM(GEOSGetNumGeometries_r(self_data->geos_context, self_geom));
+    result = INT2NUM(GEOSGetNumGeometries(self_geom));
   }
   return result;
 }
@@ -186,17 +181,16 @@ impl_geometry_n(VALUE self, VALUE n, char allow_negatives)
   self_geom = self_data->geom;
   if (self_geom) {
     klasses = self_data->klasses;
-    i = NUM2INT(n);
+    i = RB_NUM2INT(n);
     if (allow_negatives || i >= 0) {
-      GEOSContextHandle_t self_context = self_data->geos_context;
-      len = GEOSGetNumGeometries_r(self_context, self_geom);
+      len = GEOSGetNumGeometries(self_geom);
       if (i < 0) {
         i += len;
       }
       if (i >= 0 && i < len) {
         result = rgeo_wrap_geos_geometry_clone(
           self_data->factory,
-          GEOSGetGeometryN_r(self_context, self_geom, i),
+          GEOSGetGeometryN(self_geom, i),
           NIL_P(klasses) ? Qnil : rb_ary_entry(klasses, i));
       }
     }
@@ -234,12 +228,11 @@ method_geometry_collection_each(VALUE self)
 
   self_geom = self_data->geom;
   if (self_geom) {
-    GEOSContextHandle_t self_context = self_data->geos_context;
-    len = GEOSGetNumGeometries_r(self_context, self_geom);
+    len = GEOSGetNumGeometries(self_geom);
     if (len > 0) {
       klasses = self_data->klasses;
       for (i = 0; i < len; ++i) {
-        elem_geom = GEOSGetGeometryN_r(self_context, self_geom, i);
+        elem_geom = GEOSGetGeometryN(self_geom, i);
         elem = rgeo_wrap_geos_geometry_clone(
           self_data->factory,
           elem_geom,
@@ -278,8 +271,7 @@ method_multi_point_hash(VALUE self)
   factory = self_data->factory;
   hash = rb_hash_start(0);
   hash = rgeo_geos_objbase_hash(factory, rgeo_feature_multi_point_module, hash);
-  hash = rgeo_geos_geometry_collection_hash(
-    self_data->geos_context, self_data->geom, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
 
@@ -289,7 +281,6 @@ method_multi_point_coordinates(VALUE self)
   VALUE result = Qnil;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t context;
   const GEOSCoordSequence* coord_sequence;
 
   const GEOSGeometry* point;
@@ -303,15 +294,15 @@ method_multi_point_coordinates(VALUE self)
   if (self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
                   RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-    context = self_data->geos_context;
-    count = GEOSGetNumGeometries_r(context, self_geom);
+
+    count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
-      point = GEOSGetGeometryN_r(context, self_geom, i);
-      coord_sequence = GEOSGeom_getCoordSeq_r(context, point);
+      point = GEOSGetGeometryN(self_geom, i);
+      coord_sequence = GEOSGeom_getCoordSeq(point);
       rb_ary_push(result,
                   rb_ary_pop(extract_points_from_coordinate_sequence(
-                    context, coord_sequence, zCoordinate)));
+                    coord_sequence, zCoordinate)));
     }
   }
 
@@ -344,8 +335,7 @@ method_multi_line_string_hash(VALUE self)
   hash = rb_hash_start(0);
   hash = rgeo_geos_objbase_hash(
     factory, rgeo_feature_multi_line_string_module, hash);
-  hash = rgeo_geos_geometry_collection_hash(
-    self_data->geos_context, self_data->geom, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
 
@@ -356,13 +346,11 @@ method_geometry_collection_node(VALUE self)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   GEOSGeometry* noded;
-  GEOSContextHandle_t context;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
-  context = self_data->geos_context;
 
-  noded = GEOSNode_r(context, self_geom);
+  noded = GEOSNode(self_geom);
   result = rgeo_wrap_geos_geometry(self_data->factory, noded, Qnil);
 
   return result;
@@ -374,7 +362,6 @@ method_multi_line_string_coordinates(VALUE self)
   VALUE result = Qnil;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t context;
   const GEOSCoordSequence* coord_sequence;
 
   const GEOSGeometry* line_string;
@@ -388,15 +375,14 @@ method_multi_line_string_coordinates(VALUE self)
   if (self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
                   RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-    context = self_data->geos_context;
-    count = GEOSGetNumGeometries_r(context, self_geom);
+    count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
-      line_string = GEOSGetGeometryN_r(context, self_geom, i);
-      coord_sequence = GEOSGeom_getCoordSeq_r(context, line_string);
-      rb_ary_push(result,
-                  extract_points_from_coordinate_sequence(
-                    context, coord_sequence, zCoordinate));
+      line_string = GEOSGetGeometryN(self_geom, i);
+      coord_sequence = GEOSGeom_getCoordSeq(line_string);
+      rb_ary_push(
+        result,
+        extract_points_from_coordinate_sequence(coord_sequence, zCoordinate));
     }
   }
 
@@ -415,7 +401,7 @@ method_multi_line_string_length(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    if (GEOSLength_r(self_data->geos_context, self_geom, &len)) {
+    if (GEOSLength(self_geom, &len)) {
       result = rb_float_new(len);
     }
   }
@@ -428,7 +414,6 @@ method_multi_line_string_is_closed(VALUE self)
   VALUE result;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t self_context;
   int len;
   int i;
   const GEOSGeometry* geom;
@@ -437,14 +422,13 @@ method_multi_line_string_is_closed(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    self_context = self_data->geos_context;
     result = Qtrue;
-    len = GEOSGetNumGeometries_r(self_context, self_geom);
+    len = GEOSGetNumGeometries(self_geom);
     if (len > 0) {
       for (i = 0; i < len; ++i) {
-        geom = GEOSGetGeometryN_r(self_context, self_geom, i);
+        geom = GEOSGetGeometryN(self_geom, i);
         if (geom) {
-          result = rgeo_is_geos_line_string_closed(self_context, self_geom);
+          result = rgeo_is_geos_line_string_closed(self_geom);
           if (result != Qtrue) {
             break;
           }
@@ -481,8 +465,7 @@ method_multi_polygon_hash(VALUE self)
   hash = rb_hash_start(0);
   hash =
     rgeo_geos_objbase_hash(factory, rgeo_feature_multi_polygon_module, hash);
-  hash = rgeo_geos_geometry_collection_hash(
-    self_data->geos_context, self_data->geom, hash);
+  hash = rgeo_geos_geometry_collection_hash(self_data->geom, hash);
   return LONG2FIX(rb_hash_end(hash));
 }
 
@@ -492,7 +475,6 @@ method_multi_polygon_coordinates(VALUE self)
   VALUE result = Qnil;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-  GEOSContextHandle_t context;
 
   const GEOSGeometry* poly;
   unsigned int count;
@@ -505,13 +487,11 @@ method_multi_polygon_coordinates(VALUE self)
   if (self_geom) {
     zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
                   RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-    context = self_data->geos_context;
-    count = GEOSGetNumGeometries_r(context, self_geom);
+    count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
-      poly = GEOSGetGeometryN_r(context, self_geom, i);
-      rb_ary_push(result,
-                  extract_points_from_polygon(context, poly, zCoordinate));
+      poly = GEOSGetGeometryN(self_geom, i);
+      rb_ary_push(result, extract_points_from_polygon(poly, zCoordinate));
     }
   }
 
@@ -530,7 +510,7 @@ method_multi_polygon_area(VALUE self)
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
   if (self_geom) {
-    if (GEOSArea_r(self_data->geos_context, self_geom, &area)) {
+    if (GEOSArea(self_geom, &area)) {
       result = rb_float_new(area);
     }
   }
@@ -549,9 +529,7 @@ method_multi_polygon_centroid(VALUE self)
   self_geom = self_data->geom;
   if (self_geom) {
     result = rgeo_wrap_geos_geometry(
-      self_data->factory,
-      GEOSGetCentroid_r(self_data->geos_context, self_geom),
-      Qnil);
+      self_data->factory, GEOSGetCentroid(self_geom), Qnil);
   }
   return result;
 }
@@ -706,9 +684,7 @@ rgeo_init_geos_geometry_collection()
 /**** OTHER PUBLIC FUNCTIONS ****/
 
 st_index_t
-rgeo_geos_geometry_collection_hash(GEOSContextHandle_t context,
-                                   const GEOSGeometry* geom,
-                                   st_index_t hash)
+rgeo_geos_geometry_collection_hash(const GEOSGeometry* geom, st_index_t hash)
 {
   const GEOSGeometry* sub_geom;
   int type;
@@ -716,28 +692,27 @@ rgeo_geos_geometry_collection_hash(GEOSContextHandle_t context,
   unsigned int i;
 
   if (geom) {
-    len = GEOSGetNumGeometries_r(context, geom);
+    len = GEOSGetNumGeometries(geom);
     for (i = 0; i < len; ++i) {
-      sub_geom = GEOSGetGeometryN_r(context, geom, i);
+      sub_geom = GEOSGetGeometryN(geom, i);
       if (sub_geom) {
-        type = GEOSGeomTypeId_r(context, sub_geom);
+        type = GEOSGeomTypeId(sub_geom);
         if (type >= 0) {
           hash = hash ^ type;
           switch (type) {
             case GEOS_POINT:
             case GEOS_LINESTRING:
             case GEOS_LINEARRING:
-              hash = rgeo_geos_coordseq_hash(context, sub_geom, hash);
+              hash = rgeo_geos_coordseq_hash(sub_geom, hash);
               break;
             case GEOS_POLYGON:
-              hash = rgeo_geos_polygon_hash(context, sub_geom, hash);
+              hash = rgeo_geos_polygon_hash(sub_geom, hash);
               break;
             case GEOS_GEOMETRYCOLLECTION:
             case GEOS_MULTIPOINT:
             case GEOS_MULTILINESTRING:
             case GEOS_MULTIPOLYGON:
-              hash =
-                rgeo_geos_geometry_collection_hash(context, sub_geom, hash);
+              hash = rgeo_geos_geometry_collection_hash(sub_geom, hash);
               break;
           }
         }

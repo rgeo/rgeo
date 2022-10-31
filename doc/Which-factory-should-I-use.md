@@ -76,7 +76,7 @@ require 'rgeo'
 factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true, srid: 3857)
 ```
 
-To create geometries, using the factory design pattern is quite straightforward: just do never instantiate your objects with `new`, but rather use your factory to create an object.
+Creating geometries using the factory design pattern is quite straightforward: just never instantiate your objects with `new`, but rather use your factory to create an object.
 
 ```rb
 pt1 = factory.point(1, 1, 1)

@@ -8,7 +8,7 @@
 #ifndef RGEO_GEOS_GLOBALS_INCLUDED
 #define RGEO_GEOS_GLOBALS_INCLUDED
 
-#include <ruby.h>
+#include <geos_c.h>
 
 RGEO_BEGIN_C
 
