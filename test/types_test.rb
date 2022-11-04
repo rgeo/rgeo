@@ -62,6 +62,20 @@ class TypesTest < Minitest::Test
     assert_equal(point2.y, 12)
   end
 
+  def test_geometry_transform
+    cs1 = TestAffineCoordinateSystem.create(0)
+    cs2 = TestAffineCoordinateSystem.create(10)
+
+    fac1 = RGeo::Cartesian.preferred_factory(coord_sys: cs1)
+    fac2 = RGeo::Cartesian.preferred_factory(coord_sys: cs2)
+
+    point1 = fac1.point(1, 2)
+    point2 = point1.transform(fac2)
+
+    assert_equal(point2.x, 11)
+    assert_equal(point2.y, 12)
+  end
+
   def test_cast_point_to_same_type
     # geom is a RGeo::Geos::CAPIPointImpl
     geom = wkt_parser.parse("POINT(1 2)")
