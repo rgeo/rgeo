@@ -156,7 +156,7 @@ rgeo_wrap_geos_geometry_clone(VALUE factory,
   and you should not dispose it or take ownership of it yourself.
 */
 const GEOSGeometry*
-rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type);
+rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state);
 
 /*
   Gets a GEOS geometry for a given ruby Geometry object. You must provide

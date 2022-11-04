@@ -20,24 +20,6 @@
 
 RGEO_BEGIN_C
 
-struct convert_to_detached_geos_geometry_args
-{
-  VALUE obj;
-  VALUE factory;
-  VALUE type;
-  VALUE* klasses;
-  int* state;
-};
-
-VALUE
-rgeo_convert_to_detached_geos_geometry_wrapper(VALUE args_)
-{
-  struct convert_to_detached_geos_geometry_args* args =
-    (struct convert_to_detached_geos_geometry_args*)args_;
-  return rgeo_convert_to_detached_geos_geometry(
-    args->obj, args->factory, args->type, args->klasses, args->state);
-}
-
 /**** INTERNAL IMPLEMENTATION OF CREATE ****/
 
 // Main implementation of the "create" class method for geometry collections.
@@ -58,8 +40,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   GEOSGeometry* geom;
   GEOSGeometry* collection;
   int state = 0;
-  int detached_geos_geom_state = 0;
-  struct convert_to_detached_geos_geometry_args args;
 
   result = Qnil;
   Check_Type(array, T_ARRAY);
@@ -84,22 +64,14 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
       break;
   }
   for (i = 0; i < len; ++i) {
-    args.obj = rb_ary_entry(array, i);
-    args.factory = factory;
-    args.type = cast_type;
-    args.klasses = &klass;
-    args.state = &state;
-
-    geom = rb_protect(rgeo_convert_to_detached_geos_geometry_wrapper,
-                      (VALUE)&args,
-                      &detached_geos_geom_state);
-
-    if (detached_geos_geom_state) {
+    geom = rgeo_convert_to_detached_geos_geometry(
+      rb_ary_entry(array, i), factory, cast_type, &klass, &state);
+    if (state) {
       for (j = 0; j < i; j++) {
         GEOSGeom_destroy(geoms[j]);
       }
       FREE(geoms);
-      rb_jump_tag(detached_geos_geom_state);
+      rb_jump_tag(state);
     }
 
     geoms[i] = geom;

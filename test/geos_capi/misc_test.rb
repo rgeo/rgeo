@@ -136,9 +136,23 @@ class GeosMiscTest < Minitest::Test # :nodoc:
   end
 
   def test_casting_dumb_objects
-    assert_raises(TypeError) do
+    assert_raises(RGeo::Error::RGeoError) do
       # We use an OpenStruct here because we want an object that respond `nil` to unknown methods.
       RGeo::Geos.factory.point(1, 1).contains?(OpenStruct.new(factory: RGeo::Geos.factory)) # rubocop:disable Style/OpenStructUse
+    end
+  end
+
+  def test_polygon_creation_invalid_cast
+    assert_raises(RGeo::Error::RGeoError) do
+      fac = RGeo::Geos.factory
+      points = [fac.point(0, 0), fac.point(0, 1), fac.point(1, 1), fac.point(1, 0)]
+      shell = fac.linear_ring(points)
+
+      fake_geom = Struct.new(:factory)
+      hole = fake_geom.new(factory: fac)
+
+      # test that polygon creation will properly free data on a cast error
+      fac.polygon(shell, [shell, hole])
     end
   end
 end if RGeo::Geos.capi_supported?

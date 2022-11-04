@@ -244,6 +244,7 @@ cmethod_create(VALUE module,
   GEOSGeometry** interior_geoms;
   unsigned int actual_len;
   unsigned int i;
+  unsigned int j;
   GEOSGeometry* interior_geom;
   GEOSGeometry* polygon;
   int state = 0;
@@ -253,6 +254,9 @@ cmethod_create(VALUE module,
   linear_ring_type = rgeo_feature_linear_ring_module;
   exterior_geom = rgeo_convert_to_detached_geos_geometry(
     exterior, factory, linear_ring_type, NULL, &state);
+  if (state) {
+    rb_jump_tag(state);
+  }
 
   len = (unsigned int)RARRAY_LEN(interior_array);
   interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
@@ -265,6 +269,14 @@ cmethod_create(VALUE module,
                                                linear_ring_type,
                                                NULL,
                                                &state);
+      if (state) {
+        for (j = 0; j < i; j++) {
+          GEOSGeom_destroy(interior_geoms[j]);
+        }
+        GEOSGeom_destroy(exterior_geom);
+        FREE(interior_geoms);
+        rb_jump_tag(state);
+      }
       interior_geoms[actual_len++] = interior_geom;
     }
     if (len == actual_len) {

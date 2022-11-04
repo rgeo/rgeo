@@ -820,9 +820,10 @@ rgeo_wrap_geos_geometry_clone(VALUE factory,
 }
 
 const GEOSGeometry*
-rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
+rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state)
 {
   VALUE object;
+  VALUE msg;
 
   if (NIL_P(type) && RGEO_GEOMETRY_TYPEDDATA_P(obj) &&
       RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
@@ -831,11 +832,21 @@ rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type)
     object =
       rb_funcall(rgeo_feature_module, rb_intern("cast"), 3, obj, factory, type);
   }
-  if (NIL_P(object))
-    rb_raise(rb_eRGeoInvalidGeometry,
-             "Unable to cast the geometry to the GEOS Factory");
+  if (NIL_P(object)) {
+    msg = rb_str_new_cstr("Unable to cast the geometry to the GEOS Factory");
+    rb_protect(
+      rb_exc_raise, rb_exc_new_str(rb_eRGeoInvalidGeometry, msg), state);
+  }
 
-  Check_TypedStruct(object, &rgeo_geometry_type);
+  if (*state) {
+    return NULL;
+  }
+
+  rb_protect(rgeo_check_geos_object, object, state);
+  if (*state) {
+    return NULL;
+  }
+
   return RGEO_GEOMETRY_DATA_PTR(object)->geom;
 }
 
@@ -850,6 +861,8 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
   GEOSGeometry* geom;
   RGeo_GeometryData* object_data;
   const GEOSPreparedGeometry* prep;
+  VALUE msg;
+
   if (klasses) {
     *klasses = Qnil;
   }
@@ -863,12 +876,21 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
                               type,
                               ID2SYM(rb_intern("force_new")),
                               ID2SYM(rb_intern("keep_subtype")));
-  if (*state || NIL_P(object)) {
-    rb_raise(rb_eRGeoInvalidGeometry,
-             "Unable to cast the geometry to the GEOS Factory");
+
+  if (NIL_P(object)) {
+    msg = rb_str_new_cstr("Unable to cast the geometry to the GEOS Factory");
+    rb_protect(
+      rb_exc_raise, rb_exc_new_str(rb_eRGeoInvalidGeometry, msg), state);
+  }
+  if (*state) {
+    return NULL;
   }
 
-  Check_TypedStruct(object, &rgeo_geometry_type);
+  rb_protect(rgeo_check_geos_object, object, state);
+  if (*state) {
+    return NULL;
+  }
+
   object_data = RGEO_GEOMETRY_DATA_PTR(object);
   geom = object_data->geom;
   if (klasses) {
