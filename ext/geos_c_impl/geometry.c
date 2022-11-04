@@ -411,7 +411,6 @@ method_geometry_disjoint(VALUE self, VALUE rhs)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   const GEOSGeometry* rhs_geom;
-  char val;
   int state = 0;
 #ifdef RGEO_GEOS_SUPPORTS_PREPARED2
   const GEOSPreparedGeometry* prep;
@@ -429,15 +428,10 @@ method_geometry_disjoint(VALUE self, VALUE rhs)
 #ifdef RGEO_GEOS_SUPPORTS_PREPARED2
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
-      val = GEOSPreparedDisjoint(prep, rhs_geom);
+      result = GEOSPreparedDisjoint(prep, rhs_geom) ? Qtrue : Qfalse;
     else
 #endif
-      val = GEOSDisjoint(self_geom, rhs_geom);
-    if (val == 0) {
-      result = Qfalse;
-    } else if (val == 1) {
-      result = Qtrue;
-    }
+      result = GEOSDisjoint(self_geom, rhs_geom) ? Qtrue : Qfalse;
   }
   return result;
 }

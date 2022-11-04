@@ -97,7 +97,7 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   // case, this will be a memory leak.
   FREE(geoms);
   if (state) {
-    rb_exc_raise(rb_errinfo()); // raise $!
+    rb_jump_tag(state);
   }
 
   return result;

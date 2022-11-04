@@ -823,7 +823,6 @@ const GEOSGeometry*
 rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state)
 {
   VALUE object;
-  VALUE msg;
 
   if (NIL_P(type) && RGEO_GEOMETRY_TYPEDDATA_P(obj) &&
       RGEO_GEOMETRY_DATA_PTR(obj)->factory == factory) {
@@ -833,9 +832,11 @@ rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state)
       rb_funcall(rgeo_feature_module, rb_intern("cast"), 3, obj, factory, type);
   }
   if (NIL_P(object)) {
-    msg = rb_str_new_cstr("Unable to cast the geometry to the GEOS Factory");
     rb_protect(
-      rb_exc_raise, rb_exc_new_str(rb_eRGeoInvalidGeometry, msg), state);
+      rb_exc_raise,
+      rb_exc_new_cstr(rb_eRGeoInvalidGeometry,
+                      "Unable to cast the geometry to the GEOS Factory"),
+      state);
   }
 
   if (*state) {
@@ -861,7 +862,6 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
   GEOSGeometry* geom;
   RGeo_GeometryData* object_data;
   const GEOSPreparedGeometry* prep;
-  VALUE msg;
 
   if (klasses) {
     *klasses = Qnil;
@@ -878,9 +878,11 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
                               ID2SYM(rb_intern("keep_subtype")));
 
   if (NIL_P(object)) {
-    msg = rb_str_new_cstr("Unable to cast the geometry to the GEOS Factory");
     rb_protect(
-      rb_exc_raise, rb_exc_new_str(rb_eRGeoInvalidGeometry, msg), state);
+      rb_exc_raise,
+      rb_exc_new_cstr(rb_eRGeoInvalidGeometry,
+                      "Unable to cast the geometry to the GEOS Factory"),
+      state);
   }
   if (*state) {
     return NULL;

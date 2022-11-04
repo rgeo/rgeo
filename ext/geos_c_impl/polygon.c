@@ -296,7 +296,7 @@ cmethod_create(VALUE module,
   }
   GEOSGeom_destroy(exterior_geom);
   if (state) {
-    rb_exc_raise(rb_errinfo());
+    rb_jump_tag(state);
   }
   return Qnil;
 }
