@@ -240,10 +240,10 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_coord, y_coord, *extra)
+      def point(x, y, *extra)
         raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > (supports_z_or_m? ? 1 : 0)
 
-        CAPIPointImpl.create(self, x_coord, y_coord, extra[0].to_f)
+        CAPIPointImpl.create(self, x, y, extra[0].to_f)
       end
 
       # See RGeo::Feature::Factory#line_string

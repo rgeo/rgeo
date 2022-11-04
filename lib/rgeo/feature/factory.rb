@@ -97,7 +97,7 @@ module RGeo
       # supported. If both Z and M coordinates are supported, Z should
       # be passed first.
 
-      def point(_x_coord, _y_coord, *_extra)
+      def point(_x, _y, *_extra)
         nil
       end
 

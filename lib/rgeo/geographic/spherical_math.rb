@@ -25,11 +25,11 @@ module RGeo
       class PointXYZ # :nodoc:
         attr_reader :x, :y, :z
 
-        def initialize(x_coord, y_coord, z_coord)
-          r = Math.sqrt(x_coord * x_coord + y_coord * y_coord + z_coord * z_coord)
-          @x = (x_coord / r).to_f
-          @y = (y_coord / r).to_f
-          @z = (z_coord / r).to_f
+        def initialize(x, y, z)
+          r = Math.sqrt(x * x + y * y + z * z)
+          @x = (x / r).to_f
+          @y = (y / r).to_f
+          @z = (z / r).to_f
           raise "Not a number" if @x.nan? || @y.nan? || @z.nan?
         end
 

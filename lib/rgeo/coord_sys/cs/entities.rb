@@ -183,13 +183,17 @@ module RGeo
           open, close = brackets(standard_brackets)
           content = wkt_content(standard_brackets).map { |obj| ",#{obj}" }.join
           authority =
-            defined?(@authority) &&
-            @authority &&
-            ",AUTHORITY#{open}#{@authority.inspect},#{@authority_code.inspect}#{close}"
+            if defined?(@authority) && @authority
+              ",AUTHORITY#{open}#{@authority.inspect},#{@authority_code.inspect}#{close}"
+            else
+              ""
+            end
           extensions =
-            defined?(@extensions) &&
-            @extensions &&
-            @extensions.map { |k, v| ",EXTENSION#{open}#{k.inspect},#{v.inspect}#{close}" }.join
+            if defined?(@extensions) && @extensions
+              @extensions.map { |k, v| ",EXTENSION#{open}#{k.inspect},#{v.inspect}#{close}" }.join
+            else
+              ""
+            end
           "#{wkt_typename}#{open}#{@name.inspect}#{content}#{extensions}#{authority}#{close}"
         end
 
@@ -937,9 +941,9 @@ module RGeo
 
         # Not an OGC method, but useful for being able to
         # transform directly from a CoordinateSystem object.
-        def transform_coords(target_cs, x_coord, y_coord, z_coord = nil)
+        def transform_coords(target_cs, x, y, z = nil)
           ct = CoordinateTransform.create(self, target_cs)
-          ct.transform_coords(x_coord, y_coord, z_coord)
+          ct.transform_coords(x, y, z)
         end
 
         class << self
@@ -1493,11 +1497,11 @@ module RGeo
 
         # Transforms a coordinate point. The passed parameter point should not be modified.
         #
-        # @param [Integer] x_coord
-        # @param [Integer] y_coord
-        # @param [Integer] z_coord optional
+        # @param [Integer] x
+        # @param [Integer] y
+        # @param [Integer] z optional
         # @return [Array<Integer>] transformed point coordinates in (x,y,z) order
-        def transform_coords(x_coord, y_coord, z_coord = nil)
+        def transform_coords(x, y, z = nil)
           raise NotImplementedError, "#{__method__} is not implemented in the abstract CoordinateTransform class."
         end
 

@@ -166,7 +166,7 @@ module RGeo
           # list of intersections for that edge.
           s1_intersects = int.point != int.s1.s && int.point != int.s1.e
           if s1_intersects
-            intersection_map[int.s1] = [] unless intersection_map[int.s1]
+            intersection_map[int.s1] ||= []
             intersection_map[int.s1] << int.point
           end
 
@@ -174,7 +174,7 @@ module RGeo
 
           next unless s2_intersects
 
-          intersection_map[int.s2] = [] unless intersection_map[int.s2]
+          intersection_map[int.s2] ||= []
           intersection_map[int.s2] << int.point
         end
         intersection_map
@@ -193,7 +193,7 @@ module RGeo
       end
 
       def insert_half_edge(half_edge)
-        @incident_edges[half_edge.origin.coordinates] = [] unless incident_edges[half_edge.origin.coordinates]
+        @incident_edges[half_edge.origin.coordinates] ||= []
         @incident_edges[half_edge.origin.coordinates] << half_edge
       end
 

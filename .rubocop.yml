@@ -34,6 +34,13 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Naming/MethodParameterName:
+  AllowedNames:
+    - x
+    - y
+    - z
+    - m
+
 Naming/PredicateName:
   AllowedMethods:
     - is_a?

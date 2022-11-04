@@ -228,11 +228,11 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_coord, y_coord, z_coord = 0, m_coord = 0)
+      def point(x, y, z = 0, m = 0)
         create_feature(
           ZMPointImpl,
-          @zfactory.point(x_coord, y_coord, z_coord),
-          @mfactory.point(x_coord, y_coord, m_coord)
+          @zfactory.point(x, y, z),
+          @mfactory.point(x, y, m)
         )
       end
 

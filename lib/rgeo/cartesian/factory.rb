@@ -140,10 +140,9 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        coord_sys =
-          if (coord_sys_data = coder["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = coder["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           has_z_coordinate: coder["has_z_coordinate"],
           has_m_coordinate: coder["has_m_coordinate"],
@@ -186,8 +185,8 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_coord, y_coord, *extra)
-        PointImpl.new(self, x_coord, y_coord, *extra)
+      def point(x, y, *extra)
+        PointImpl.new(self, x, y, *extra)
       end
 
       # See RGeo::Feature::Factory#line_string

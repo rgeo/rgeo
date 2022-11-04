@@ -107,9 +107,9 @@ class TestAffineCoordinateSystem < RGeo::CoordSys::CS::CoordinateSystem
   end
   attr_accessor :value
 
-  def transform_coords(target_cs, x_coord, y_coord, z_coord = nil)
+  def transform_coords(target_cs, x, y, z = nil)
     ct = TestAffineCoordinateTransform.create(self, target_cs)
-    ct.transform_coords(x_coord, y_coord, z_coord)
+    ct.transform_coords(x, y, z)
   end
 
   class << self
@@ -120,10 +120,10 @@ class TestAffineCoordinateSystem < RGeo::CoordSys::CS::CoordinateSystem
 end
 
 class TestAffineCoordinateTransform < RGeo::CoordSys::CS::CoordinateTransform
-  def transform_coords(x_coord, y_coord, z_coord = nil)
+  def transform_coords(x, y, z = nil)
     diff = target_cs.value - source_cs.value
-    coords = [x_coord + diff, y_coord + diff]
-    coords << (z_coord + diff) if z_coord
+    coords = [x + diff, y + diff]
+    coords << (z + diff) if z
     coords
   end
 end

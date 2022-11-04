@@ -235,11 +235,11 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_coord, y_coord, z_coord = 0)
+      def point(x, y, z = 0)
         cs = ::Geos::CoordinateSequence.new(1, 3)
-        cs.set_x(0, x_coord)
-        cs.set_y(0, y_coord)
-        cs.set_z(0, z_coord)
+        cs.set_x(0, x)
+        cs.set_y(0, y)
+        cs.set_z(0, z)
         FFIPointImpl.new(self, ::Geos::Utils.create_point(cs), nil)
       end
 
