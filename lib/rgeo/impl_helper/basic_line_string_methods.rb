@@ -71,7 +71,7 @@ module RGeo
       end
 
       def ring?
-        closed? && simple?
+        closed?
       end
 
       def rep_equals?(rhs)
