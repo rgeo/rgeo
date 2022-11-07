@@ -55,6 +55,13 @@ rb_protect_funcall(VALUE recv, ID mid, int* state, int n, ...)
   return rb_protect(inner_funcall, (VALUE)&args, state);
 }
 
+VALUE
+rb_exc_raise_value(VALUE exc)
+{
+  rb_exc_raise(exc);
+  return Qnil;
+}
+
 RGEO_END_C
 
 #endif

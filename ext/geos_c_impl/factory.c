@@ -833,7 +833,7 @@ rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state)
   }
   if (NIL_P(object)) {
     rb_protect(
-      rb_exc_raise,
+      rb_exc_raise_value,
       rb_exc_new_cstr(rb_eRGeoInvalidGeometry,
                       "Unable to cast the geometry to the GEOS Factory"),
       state);
@@ -843,7 +843,12 @@ rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state)
     return NULL;
   }
 
-  rb_protect(rgeo_check_geos_object, object, state);
+  if (!rgeo_is_geos_object(object)) {
+    rb_protect(rb_exc_raise_value,
+               rb_exc_new_cstr(rb_eRGeoError, "Not a GEOS Geometry object."),
+               state);
+  }
+
   if (*state) {
     return NULL;
   }
@@ -879,7 +884,7 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
 
   if (NIL_P(object)) {
     rb_protect(
-      rb_exc_raise,
+      rb_exc_raise_value,
       rb_exc_new_cstr(rb_eRGeoInvalidGeometry,
                       "Unable to cast the geometry to the GEOS Factory"),
       state);
@@ -888,7 +893,11 @@ rgeo_convert_to_detached_geos_geometry(VALUE obj,
     return NULL;
   }
 
-  rb_protect(rgeo_check_geos_object, object, state);
+  if (!rgeo_is_geos_object(object)) {
+    rb_protect(rb_exc_raise_value,
+               rb_exc_new_cstr(rb_eRGeoError, "Not a GEOS Geometry object."),
+               state);
+  }
   if (*state) {
     return NULL;
   }

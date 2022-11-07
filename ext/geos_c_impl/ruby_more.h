@@ -12,6 +12,9 @@ RGEO_BEGIN_C
 VALUE
 rb_protect_funcall(VALUE recv, ID mid, int* state, int n, ...);
 
+VALUE
+rb_exc_raise_value(VALUE exc);
+
 RGEO_END_C
 
 #endif
