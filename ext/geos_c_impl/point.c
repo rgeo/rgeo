@@ -208,12 +208,10 @@ VALUE
 rgeo_create_geos_point(VALUE factory, double x, double y, double z)
 {
   VALUE result;
-  RGeo_FactoryData* factory_data;
   GEOSCoordSequence* coord_seq;
   GEOSGeometry* geom;
 
   result = Qnil;
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   coord_seq = GEOSCoordSeq_create(1, 3);
   if (coord_seq) {
     if (GEOSCoordSeq_setX(coord_seq, 0, x)) {

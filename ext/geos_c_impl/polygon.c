@@ -237,7 +237,6 @@ cmethod_create(VALUE module,
                VALUE exterior,
                VALUE interior_array)
 {
-  RGeo_FactoryData* factory_data;
   VALUE linear_ring_type;
   GEOSGeometry* exterior_geom;
   unsigned int len;
@@ -250,7 +249,6 @@ cmethod_create(VALUE module,
   int state = 0;
 
   Check_Type(interior_array, T_ARRAY);
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   linear_ring_type = rgeo_feature_linear_ring_module;
   exterior_geom = rgeo_convert_to_detached_geos_geometry(
     exterior, factory, linear_ring_type, NULL, &state);

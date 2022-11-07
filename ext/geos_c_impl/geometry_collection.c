@@ -31,7 +31,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   VALUE result;
   unsigned int len;
   GEOSGeometry** geoms;
-  RGeo_FactoryData* factory_data;
   VALUE klass;
   unsigned int i;
   unsigned int j;
@@ -49,7 +48,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
     rb_raise(rb_eRGeoError, "not enough memory available");
   }
 
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   klasses = Qnil;
   cast_type = Qnil;
   switch (type) {
