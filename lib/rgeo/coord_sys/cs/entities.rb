@@ -338,13 +338,13 @@ module RGeo
       # the X axis points towards the Greenwich Prime Meridian, the Y axis
       # points East, and the Z axis points North.
       class WGS84ConversionInfo < Base
-        def initialize(dxm, dym, dzm, exas, eyas, ezas, ppm) # :nodoc:
-          @dx = dxm.to_f
-          @dy = dym.to_f
-          @dz = dzm.to_f
-          @ex = exas.to_f
-          @ey = eyas.to_f
-          @ez = ezas.to_f
+        def initialize(dx_meters, dy_meters, dz_meters, ex_arc_seconds, ey_arc_seconds, ez_arc_seconds, ppm) # :nodoc:
+          @dx = dx_meters.to_f
+          @dy = dy_meters.to_f
+          @dz = dz_meters.to_f
+          @ex = ex_arc_seconds.to_f
+          @ey = ey_arc_seconds.to_f
+          @ez = ez_arc_seconds.to_f
           @ppm = ppm.to_f
         end
 
@@ -380,8 +380,8 @@ module RGeo
           # The Bursa Wolf shift should be in meters, the rotation in arc
           # seconds, and the scaling in parts per million.
 
-          def create(dxm, dym, dzm, exas, eyas, ezas, ppm)
-            new(dxm, dym, dzm, exas, eyas, ezas, ppm)
+          def create(dx_meters, dy_meters, dz_meters, ex_arc_seconds, ey_arc_seconds, ez_arc_seconds, ppm)
+            new(dx_meters, dy_meters, dz_meters, ex_arc_seconds, ey_arc_seconds, ez_arc_seconds, ppm)
           end
         end
       end
