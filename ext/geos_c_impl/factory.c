@@ -1023,7 +1023,7 @@ rgeo_geos_coordseq_hash(const GEOSGeometry* geom, st_index_t hash)
         for (i = 0; i < len; ++i) {
           if (GEOSCoordSeq_getX(cs, i, &hash_struct.x)) {
             if (GEOSCoordSeq_getY(cs, i, &hash_struct.y)) {
-              if (!GEOSCoordSeq_getY(cs, i, &hash_struct.z)) {
+              if (!GEOSCoordSeq_getZ(cs, i, &hash_struct.z)) {
                 hash_struct.z = 0;
               }
               hash_struct.seed_hash = hash;

@@ -49,8 +49,8 @@ module RGeo
           result
         end
 
-        def ffi_coord_seq_hash(cs, hash = 0)
-          (0...cs.length).inject(hash) do |h, i|
+        def ffi_coord_seq_hash(cs, init_hash = 0)
+          (0...cs.length).inject(init_hash) do |hash, i|
             [hash, cs.get_x(i), cs.get_y(i), cs.get_z(i)].hash
           end
         end

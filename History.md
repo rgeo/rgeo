@@ -4,6 +4,11 @@
 
 * Add `transform` method to `Geometry`. #342
 
+**Bug Fixes**
+
+* Fix `#hash` for every `LineString` related classes in FFI and for Z factories
+  in CAPI. #344
+
 ### 3.0.0-rc.3 / 2022-10-11
 
 **Breaking Changes**
