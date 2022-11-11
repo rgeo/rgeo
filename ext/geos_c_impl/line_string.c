@@ -392,7 +392,6 @@ method_line_hash(VALUE self)
 static GEOSCoordSequence*
 coord_seq_from_array(VALUE factory, VALUE array, char close)
 {
-  RGeo_FactoryData* factory_data;
   VALUE point_type;
   unsigned int len;
   char has_z;
@@ -406,13 +405,12 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
   GEOSCoordSequence* coord_seq;
 
   Check_Type(array, T_ARRAY);
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   point_type = rgeo_feature_point_module;
   len = (unsigned int)RARRAY_LEN(array);
   has_z = (char)(RGEO_FACTORY_DATA_PTR(factory)->flags &
                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   dims = has_z ? 3 : 2;
-  coords = ALLOC_N(double, len == 0 ? 1 : len * dims);
+  coords = RB_ALLOC_N(double, len == 0 ? 1 : len * dims);
   if (!coords) {
     return NULL;
   }
@@ -440,7 +438,7 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
       }
     }
     if (!good) {
-      FREE(coords);
+      RB_FREE(coords);
       return NULL;
     }
   }
@@ -465,7 +463,7 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
       GEOSCoordSeq_setZ(coord_seq, len, has_z ? coords[2] : 0);
     }
   }
-  FREE(coords);
+  RB_FREE(coords);
   return coord_seq;
 }
 
@@ -474,13 +472,11 @@ cmethod_create_line_string(VALUE module, VALUE factory, VALUE array)
 {
   VALUE result;
   GEOSCoordSequence* coord_seq;
-  RGeo_FactoryData* factory_data;
   GEOSGeometry* geom;
 
   result = Qnil;
   coord_seq = coord_seq_from_array(factory, array, 0);
   if (coord_seq) {
-    factory_data = RGEO_FACTORY_DATA_PTR(factory);
     geom = GEOSGeom_createLineString(coord_seq);
     if (geom) {
       result =
@@ -495,13 +491,11 @@ cmethod_create_linear_ring(VALUE module, VALUE factory, VALUE array)
 {
   VALUE result;
   GEOSCoordSequence* coord_seq;
-  RGeo_FactoryData* factory_data;
   GEOSGeometry* geom;
 
   result = Qnil;
   coord_seq = coord_seq_from_array(factory, array, 1);
   if (coord_seq) {
-    factory_data = RGEO_FACTORY_DATA_PTR(factory);
     geom = GEOSGeom_createLinearRing(coord_seq);
     if (geom) {
       result =

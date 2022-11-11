@@ -18,15 +18,7 @@ def psych_load(*args)
   end
 end
 
-require_relative "common/factory_tests"
-require_relative "common/geometry_collection_tests"
-require_relative "common/line_string_tests"
-require_relative "common/multi_line_string_tests"
-require_relative "common/multi_point_tests"
-require_relative "common/multi_polygon_tests"
-require_relative "common/point_tests"
-require_relative "common/polygon_tests"
-require_relative "common/validity_tests"
+Dir[File.join(__dir__, "common", "*")].sort.each { |file| require file }
 
 require_relative "support/minitest/assert_wkt_similar"
 require_relative "support/minitest/fixtures"

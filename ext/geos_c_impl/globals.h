@@ -38,6 +38,37 @@ extern VALUE rgeo_geos_multi_point_class;
 extern VALUE rgeo_geos_multi_line_string_class;
 extern VALUE rgeo_geos_multi_polygon_class;
 
+/*
+  The `RGeo::Geos::Primary` namespace is used to ease argument parsing between
+  the ruby interface and the ruby C API. This lets us avoid the usage of
+  `rb_scan_args`, and give a more user friendly method source. Hence also less
+  burden of maintaining a correct documentation.
+
+  Example usage:
+
+  ```
+  // ./geometry.c
+  VALUE
+  primary_method_geometry_simplify(VALUE _primary, VALUE self, VALUE tolerance)
+  {
+    ...
+  }
+
+  void Init_geometry()
+  {
+    rb_define_singleton_method(rgeo_geos_primary_module,
+                               "simplify",
+                               primary_method_geometry_simplify,
+                               2);
+  }
+
+  # ./geometry.rb
+  def simplify(tolerance: 0.2)
+    Primary.simplify(self, tolerance)
+  end
+*/
+extern VALUE rgeo_geos_primary_module;
+
 void
 rgeo_init_geos_globals();
 

@@ -63,8 +63,8 @@ module RGeo
         if (values = opts[:raw])
           @has_z, @has_m, @min_x, @max_x, @min_y, @max_y, @min_z, @max_z, @min_m, @max_m = values
         else
-          @has_z = !opts[:ignore_z] && factory.property(:has_z_coordinate) ? true : false
-          @has_m = !opts[:ignore_m] && factory.property(:has_m_coordinate) ? true : false
+          @has_z = !opts[:ignore_z] && factory.property(:has_z_coordinate)
+          @has_m = !opts[:ignore_m] && factory.property(:has_m_coordinate)
           @min_x = @max_x = @min_y = @max_y = @min_z = @max_z = @min_m = @max_m = nil
         end
       end

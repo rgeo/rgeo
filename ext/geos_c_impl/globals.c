@@ -39,6 +39,8 @@ VALUE rgeo_geos_multi_point_class;
 VALUE rgeo_geos_multi_line_string_class;
 VALUE rgeo_geos_multi_polygon_class;
 
+VALUE rgeo_geos_primary_module;
+
 // The notice handler is very rarely used by GEOS, only in
 // GEOSIsValid_r (check for NOTICE_MESSAGE in GEOS codebase).
 // We still set it to make sure we do not miss any implementation
@@ -55,6 +57,8 @@ notice_handler(const char* fmt, ...)
   va_end(args);
 #endif
 }
+
+NORETURN(static void error_handler(const char* fmt, ...));
 
 static void
 error_handler(const char* fmt, ...)
@@ -162,6 +166,9 @@ rgeo_init_geos_globals()
   rgeo_geos_multi_polygon_class =
     rb_define_class_under(rgeo_geos_module, "CAPIMultiPolygonImpl", rb_cObject);
   rb_gc_register_mark_object(rgeo_geos_multi_polygon_class);
+  rgeo_geos_primary_module =
+    rb_define_module_under(rgeo_geos_module, "Primary");
+  rb_gc_register_mark_object(rgeo_geos_primary_module);
 }
 
 RGEO_END_C

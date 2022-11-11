@@ -304,6 +304,22 @@ module RGeo
         @factory.wrap_fg_geom(@fg_geom.point_on_surface, FFIPointImpl)
       end
 
+      # (see RGeo::Geos::CAPIGeometryMethods#voronoi_diagram)
+      def voronoi_diagram(envelope: nil, tolerance: 0.0, only_edges: false)
+        fg = envelope ? @factory.convert_to_fg_geometry(envelope) : nil
+        @factory.wrap_fg_geom(
+          @fg_geom.voronoi_diagram(
+            envelope: fg,
+            tolerance: tolerance,
+            only_edges: only_edges
+          )
+        )
+      rescue ::Geos::GEOSException
+        message = "Could not create a voronoi_diagram with the specified inputs"
+        message += ". Try removing the `tolerance` parameter from ##{__method__}" if tolerance
+        raise RGeo::Error::InvalidGeometry, message
+      end
+
       private
 
       def request_prepared

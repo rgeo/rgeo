@@ -1153,6 +1153,46 @@ method_geometry_polygonize(VALUE self)
 }
 
 VALUE
+primary_method_geometry_voronoi_diagram(VALUE _,
+                                        VALUE self,
+                                        VALUE env,
+                                        VALUE tolerance,
+                                        VALUE only_edges)
+{
+  VALUE result;
+  const RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* diagram;
+  const GEOSGeometry* env_geom = NULL;
+
+  Check_Type(tolerance, T_FLOAT);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    if (RB_TEST(env)) {
+      env_geom = rgeo_convert_to_geos_geometry(self_data->factory, env, Qnil);
+      if (env_geom == NULL)
+        rb_raise(rb_eRGeoInvalidGeometry,
+                 "Could not use the given envelope with a GEOS factory. "
+                 "`RGeo::Feature.cast` failed.");
+    }
+    diagram = GEOSVoronoiDiagram(
+      self_geom, env_geom, rb_num2dbl(tolerance), RB_TEST(only_edges));
+
+    if (diagram == NULL) {
+      rb_raise(rb_eGeosError, "GEOS cannot create a voronoi diagram");
+    }
+
+    result = rgeo_wrap_geos_geometry(self_data->factory, diagram, Qnil);
+  }
+
+  return result;
+}
+
+VALUE
 rgeo_geos_geometries_strict_eql(const GEOSGeometry* geom1,
                                 const GEOSGeometry* geom2)
 {
@@ -1271,6 +1311,10 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
+  rb_define_singleton_method(rgeo_geos_primary_module,
+                             "voronoi_diagram",
+                             primary_method_geometry_voronoi_diagram,
+                             4);
 }
 
 RGEO_END_C

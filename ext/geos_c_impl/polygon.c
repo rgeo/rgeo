@@ -237,7 +237,6 @@ cmethod_create(VALUE module,
                VALUE exterior,
                VALUE interior_array)
 {
-  RGeo_FactoryData* factory_data;
   VALUE linear_ring_type;
   GEOSGeometry* exterior_geom;
   unsigned int len;
@@ -249,11 +248,12 @@ cmethod_create(VALUE module,
   int state = 0;
 
   Check_Type(interior_array, T_ARRAY);
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   linear_ring_type = rgeo_feature_linear_ring_module;
   exterior_geom = rgeo_convert_to_detached_geos_geometry(
     exterior, factory, linear_ring_type, NULL, &state);
   if (state) {
+    if (exterior_geom)
+      GEOSGeom_destroy(exterior_geom);
     rb_exc_raise(rb_errinfo());
   }
   if (!exterior_geom) {
@@ -261,7 +261,7 @@ cmethod_create(VALUE module,
   }
 
   len = (unsigned int)RARRAY_LEN(interior_array);
-  interior_geoms = ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
+  interior_geoms = RB_ALLOC_N(GEOSGeometry*, len == 0 ? 1 : len);
   if (interior_geoms) {
     actual_len = 0;
     for (i = 0; i < len; ++i) {
@@ -271,18 +271,18 @@ cmethod_create(VALUE module,
                                                linear_ring_type,
                                                NULL,
                                                &state);
+      if (state || !interior_geom) {
+        break;
+      }
       if (interior_geom) {
         interior_geoms[actual_len++] = interior_geom;
-      }
-      if (state) {
-        break;
       }
     }
     if (len == actual_len) {
       polygon =
         GEOSGeom_createPolygon(exterior_geom, interior_geoms, actual_len);
       if (polygon) {
-        FREE(interior_geoms);
+        RB_FREE(interior_geoms);
         // NOTE: we can return safely here, state cannot be other than 0.
         return rgeo_wrap_geos_geometry(
           factory, polygon, rgeo_geos_polygon_class);
@@ -291,7 +291,7 @@ cmethod_create(VALUE module,
     for (i = 0; i < actual_len; ++i) {
       GEOSGeom_destroy(interior_geoms[i]);
     }
-    FREE(interior_geoms);
+    RB_FREE(interior_geoms);
   }
   GEOSGeom_destroy(exterior_geom);
   if (state) {
