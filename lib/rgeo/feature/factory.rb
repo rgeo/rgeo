@@ -75,21 +75,21 @@ module RGeo
       #   meant to be so interpreted.
 
       def property(name)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Parse the given string in well-known-text format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
 
       def parse_wkt(str)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Parse the given string in well-known-binary format and return the
       # resulting feature. Returns nil if the string couldn't be parsed.
 
       def parse_wkb(str)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type Point.
@@ -100,7 +100,7 @@ module RGeo
       # be passed first.
 
       def point(x, y, *extra)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type LineString.
@@ -113,7 +113,7 @@ module RGeo
       # is undefined.
 
       def line_string(points)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type Line.
@@ -126,7 +126,7 @@ module RGeo
       # is undefined.
 
       def line(start, stop)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type LinearRing.
@@ -142,7 +142,7 @@ module RGeo
       # is undefined.
 
       def linear_ring(points)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type Polygon.
@@ -158,7 +158,7 @@ module RGeo
       # is undefined.
 
       def polygon(outer_ring, inner_rings = nil)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type GeometryCollection.
@@ -170,7 +170,7 @@ module RGeo
       # is undefined.
 
       def collection(elems)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type MultiPoint.
@@ -185,7 +185,7 @@ module RGeo
       # is undefined.
 
       def multi_point(elems)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type MultiLineString.
@@ -200,7 +200,7 @@ module RGeo
       # is undefined.
 
       def multi_line_string(elems)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Create a feature of type MultiPolygon.
@@ -217,7 +217,7 @@ module RGeo
       # is undefined.
 
       def multi_polygon(elems)
-        nil
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       # Returns the coordinate system specification for the features
