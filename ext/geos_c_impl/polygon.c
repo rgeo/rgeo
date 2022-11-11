@@ -237,27 +237,23 @@ cmethod_create(VALUE module,
                VALUE exterior,
                VALUE interior_array)
 {
-  RGeo_FactoryData* factory_data;
   VALUE linear_ring_type;
   GEOSGeometry* exterior_geom;
   unsigned int len;
   GEOSGeometry** interior_geoms;
   unsigned int actual_len;
   unsigned int i;
+  unsigned int j;
   GEOSGeometry* interior_geom;
   GEOSGeometry* polygon;
   int state = 0;
 
   Check_Type(interior_array, T_ARRAY);
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   linear_ring_type = rgeo_feature_linear_ring_module;
   exterior_geom = rgeo_convert_to_detached_geos_geometry(
     exterior, factory, linear_ring_type, NULL, &state);
   if (state) {
-    rb_exc_raise(rb_errinfo());
-  }
-  if (!exterior_geom) {
-    return Qnil;
+    rb_jump_tag(state);
   }
 
   len = (unsigned int)RARRAY_LEN(interior_array);
@@ -271,12 +267,15 @@ cmethod_create(VALUE module,
                                                linear_ring_type,
                                                NULL,
                                                &state);
-      if (interior_geom) {
-        interior_geoms[actual_len++] = interior_geom;
-      }
       if (state) {
-        break;
+        for (j = 0; j < i; j++) {
+          GEOSGeom_destroy(interior_geoms[j]);
+        }
+        GEOSGeom_destroy(exterior_geom);
+        FREE(interior_geoms);
+        rb_jump_tag(state);
       }
+      interior_geoms[actual_len++] = interior_geom;
     }
     if (len == actual_len) {
       polygon =
@@ -295,7 +294,7 @@ cmethod_create(VALUE module,
   }
   GEOSGeom_destroy(exterior_geom);
   if (state) {
-    rb_exc_raise(rb_errinfo());
+    rb_jump_tag(state);
   }
   return Qnil;
 }

@@ -77,6 +77,13 @@ class GeosFFIMiscTest < Minitest::Test # :nodoc:
       assert_equal(nil, geom)
     end
   end
+
+  def test_casting_dumb_objects
+    test_struct = Struct.new(:factory, :fg_geom)
+    assert_raises(RGeo::Error::InvalidGeometry) do
+      @factory.point(1, 1).contains?(test_struct.new(factory: @factory))
+    end
+  end
 end if RGeo::Geos.ffi_supported?
 
 unless RGeo::Geos.ffi_supported?

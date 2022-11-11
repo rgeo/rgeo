@@ -158,11 +158,10 @@ module RGeo
       def equals?(rhs)
         return false unless rhs.is_a?(RGeo::Feature::Instance)
         fg = factory.convert_to_fg_geometry(rhs)
-        if !fg
-          false
+
         # GEOS has a bug where empty geometries are not spatially equal
         # to each other. Work around this case first.
-        elsif fg.empty? && @fg_geom.empty?
+        if fg.empty? && @fg_geom.empty?
           true
         else
           @fg_geom.eql?(fg)
@@ -172,83 +171,55 @@ module RGeo
 
       def disjoint?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_2
-          prep ? prep.disjoint?(fg) : @fg_geom.disjoint?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep ? prep.disjoint?(fg) : @fg_geom.disjoint?(fg)
       end
 
       def intersects?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_1
-          prep ? prep.intersects?(fg) : @fg_geom.intersects?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_1
+        prep ? prep.intersects?(fg) : @fg_geom.intersects?(fg)
       end
 
       def touches?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_2
-          prep ? prep.touches?(fg) : @fg_geom.touches?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep ? prep.touches?(fg) : @fg_geom.touches?(fg)
       end
 
       def crosses?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_2
-          prep ? prep.crosses?(fg) : @fg_geom.crosses?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep ? prep.crosses?(fg) : @fg_geom.crosses?(fg)
       end
 
       def within?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_2
-          prep ? prep.within?(fg) : @fg_geom.within?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep ? prep.within?(fg) : @fg_geom.within?(fg)
       end
 
       def contains?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_1
-          prep ? prep.contains?(fg) : @fg_geom.contains?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_1
+        prep ? prep.contains?(fg) : @fg_geom.contains?(fg)
       end
 
       def overlaps?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        if fg
-          prep = request_prepared if Utils.ffi_supports_prepared_level_2
-          prep ? prep.overlaps?(fg) : @fg_geom.overlaps?(fg)
-        else
-          false
-        end
+        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep ? prep.overlaps?(fg) : @fg_geom.overlaps?(fg)
       end
 
       def relate?(rhs, pattern)
         fg = factory.convert_to_fg_geometry(rhs)
-        fg ? @fg_geom.relate_pattern(fg, pattern) : nil
+        @fg_geom.relate_pattern(fg, pattern)
       end
       alias relate relate? # DEPRECATED
 
       def distance(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        fg ? @fg_geom.distance(fg) : nil
+        @fg_geom.distance(fg)
       end
 
       def buffer(distance)
@@ -261,14 +232,14 @@ module RGeo
 
       def intersection(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        fg ? @factory.wrap_fg_geom(@fg_geom.intersection(fg), nil) : nil
+        @factory.wrap_fg_geom(@fg_geom.intersection(fg), nil)
       end
 
       alias * intersection
 
       def union(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        fg ? @factory.wrap_fg_geom(@fg_geom.union(fg), nil) : nil
+        @factory.wrap_fg_geom(@fg_geom.union(fg), nil)
       end
 
       alias + union
@@ -280,14 +251,14 @@ module RGeo
 
       def difference(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        fg ? @factory.wrap_fg_geom(@fg_geom.difference(fg), nil) : nil
+        @factory.wrap_fg_geom(@fg_geom.difference(fg), nil)
       end
 
       alias - difference
 
       def sym_difference(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        fg ? @factory.wrap_fg_geom(@fg_geom.sym_difference(fg), nil) : nil
+        @factory.wrap_fg_geom(@fg_geom.sym_difference(fg), nil)
       end
 
       def eql?(rhs)
