@@ -18,7 +18,7 @@ void
 rgeo_init_geos_polygon();
 
 /*
-  Comopares the values of two GEOS polygons. The two given geometries MUST
+  Compares the values of two GEOS polygons. The two given geometries MUST
   be polygon types.
   Returns Qtrue if the polygons are equal, Qfalse if they are inequal, or
   Qnil if an error occurs.
