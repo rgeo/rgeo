@@ -367,7 +367,6 @@ method_geometry_equals(VALUE self, VALUE rhs)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   const GEOSGeometry* rhs_geom;
-  char val;
 
   // Shortcut when self and rhs are the same object.
   if (self == rhs) {
@@ -385,12 +384,7 @@ method_geometry_equals(VALUE self, VALUE rhs)
       if (GEOSisEmpty(self_geom) == 1 && GEOSisEmpty(rhs_geom) == 1) {
         result = Qtrue;
       } else {
-        val = GEOSEquals(self_geom, rhs_geom);
-        if (val == 0) {
-          result = Qfalse;
-        } else if (val == 1) {
-          result = Qtrue;
-        }
+        result = GEOSEquals(self_geom, rhs_geom) ? Qtrue : Qfalse;
       }
     }
   }
