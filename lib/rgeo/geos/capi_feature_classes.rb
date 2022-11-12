@@ -75,7 +75,7 @@ module RGeo
       # The source may be any geometry type. All vertices of the geometry will be
       # used as the input points to the diagram.
       #
-      # @param enevelope [RGeo::Feature::Geometry | nil]
+      # @param envelope [RGeo::Feature::Geometry | nil]
       #   The +envelope+ keyword argument provides an envelope to use to clip the
       #   resulting diagram. If +nil+, it will be calculated automatically.
       #   The diagram will be clipped to the *larger* of the provided envelope
