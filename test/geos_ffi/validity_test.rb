@@ -8,12 +8,12 @@
 
 require_relative "../test_helper"
 
-if RGeo::Geos.ffi_supported?
-  class GeosFFIValidityTest < Minitest::Test # :nodoc:
-    include RGeo::Tests::Common::ValidityTests
+class GeosFFIValidityTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::ValidityTests
 
-    def setup
-      @factory = RGeo::Geos.factory(native_interface: :ffi)
-    end
+  def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
+    @factory = RGeo::Geos.factory(native_interface: :ffi)
   end
 end

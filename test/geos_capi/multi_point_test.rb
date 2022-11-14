@@ -8,19 +8,23 @@
 
 require "test_helper"
 
-if RGeo::Geos.capi_supported?
-  class GeosMultiPointTest < Minitest::Test # :nodoc:
-    include RGeo::Tests::Common::MultiPointTests
+class GeosMultiPointTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::MultiPointTests
 
-    def create_factory(opts = {})
-      RGeo::Geos.factory(opts)
-    end
+  def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
 
-    def test_polygonize
-      input = @factory.parse_wkt("MULTIPOINT ((1 1))")
-      expected = @factory.parse_wkt("GEOMETRYCOLLECTION EMPTY")
+    super
+  end
 
-      assert_equal expected, input.polygonize
-    end
+  def create_factory(opts = {})
+    RGeo::Geos.factory(opts)
+  end
+
+  def test_polygonize
+    input = @factory.parse_wkt("MULTIPOINT ((1 1))")
+    expected = @factory.parse_wkt("GEOMETRYCOLLECTION EMPTY")
+
+    assert_equal expected, input.polygonize
   end
 end

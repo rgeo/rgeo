@@ -8,12 +8,16 @@
 
 require "test_helper"
 
-if RGeo::Geos.ffi_supported?
-  class GeosFFIGeometryCollectionTest < Minitest::Test # :nodoc:
-    include RGeo::Tests::Common::GeometryCollectionTests
+class GeosFFIGeometryCollectionTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::GeometryCollectionTests
 
-    def create_factory
-      RGeo::Geos.factory(native_interface: :ffi)
-    end
+  def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
+    super
+  end
+
+  def create_factory
+    RGeo::Geos.factory(native_interface: :ffi)
   end
 end

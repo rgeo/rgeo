@@ -62,8 +62,9 @@ module RGeo
       end
 
       def closed?
-        @closed = @points.size > 2 && @points.first == @points.last unless defined?(@closed)
-        @closed
+        return @closed if defined?(@closed)
+
+        @closed = @points.size > 2 && @points.first == @points.last
       end
 
       def ring?

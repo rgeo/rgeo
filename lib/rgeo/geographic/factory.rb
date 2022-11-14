@@ -297,8 +297,8 @@ module RGeo
 
       # See RGeo::Feature::Factory#point
 
-      def point(x_point, y_point, *extra)
-        @point_class.new(self, x_point, y_point, *extra)
+      def point(x, y, *extra)
+        @point_class.new(self, x, y, *extra)
       end
 
       # See RGeo::Feature::Factory#line_string

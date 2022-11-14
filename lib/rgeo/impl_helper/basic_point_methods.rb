@@ -15,7 +15,7 @@ module RGeo
         @y = y.to_f
         @z = factory.property(:has_z_coordinate) ? extra.shift.to_f : nil
         @m = factory.property(:has_m_coordinate) ? extra.shift.to_f : nil
-        raise ArgumentError, "Too many arguments for point initializer" if extra.empty?
+        raise ArgumentError, "Too many arguments for point initializer" unless extra.empty?
         init_geometry
       end
 

@@ -8,43 +8,47 @@
 
 require_relative "../test_helper"
 
-if RGeo::Geos.capi_supported?
-  class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
-    include RGeo::Tests::Common::GeometryCollectionTests
+class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::GeometryCollectionTests
 
-    def create_factory
-      RGeo::Geos.factory
-    end
+  def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
 
-    def test_collection_node
-      lines = [[[0, 0], [0, 2]], [[-1, 1], [1, 1]]]
-              .map { |p1, p2| [@factory.point(*p1), @factory.point(*p2)] }
-              .map { |p1, p2| @factory.line(p1, p2) }
+    super
+  end
 
-      multi = @factory.multi_line_string(lines)
+  def create_factory
+    RGeo::Geos.factory
+  end
 
-      expected_lines = [
-        [[0, 0],  [0, 1]],
-        [[0, 1],  [0, 2]],
-        [[-1, 1], [0, 1]],
-        [[0, 1],  [1, 1]]
-      ].map { |p1, p2| @factory.line(@factory.point(*p1), @factory.point(*p2)) }
+  def test_collection_node
+    lines = [[[0, 0], [0, 2]], [[-1, 1], [1, 1]]]
+            .map { |p1, p2| [@factory.point(*p1), @factory.point(*p2)] }
+            .map { |p1, p2| @factory.line(p1, p2) }
 
-      noded = multi.node
+    multi = @factory.multi_line_string(lines)
 
-      assert_equal(noded.count, 4)
-      assert(expected_lines.all? { |line| noded.include? line })
-    end
+    expected_lines = [
+      [[0, 0],  [0, 1]],
+      [[0, 1],  [0, 2]],
+      [[-1, 1], [0, 1]],
+      [[0, 1],  [1, 1]]
+    ].map { |p1, p2| @factory.line(@factory.point(*p1), @factory.point(*p2)) }
 
-    def test_polygonize_collection
-      input = @factory.parse_wkt(
-        "GEOMETRYCOLLECTION(LINESTRING(0 0, 1 1, 1 0, 0 0), POINT(2 2))"
-      )
-      expected = @factory.parse_wkt(
-        "GEOMETRYCOLLECTION(POLYGON ((0 0, 1 1, 1 0, 0 0)))"
-      )
+    noded = multi.node
 
-      assert_equal expected, input.polygonize
-    end
+    assert_equal(noded.count, 4)
+    assert(expected_lines.all? { |line| noded.include? line })
+  end
+
+  def test_polygonize_collection
+    input = @factory.parse_wkt(
+      "GEOMETRYCOLLECTION(LINESTRING(0 0, 1 1, 1 0, 0 0), POINT(2 2))"
+    )
+    expected = @factory.parse_wkt(
+      "GEOMETRYCOLLECTION(POLYGON ((0 0, 1 1, 1 0, 0 0)))"
+    )
+
+    assert_equal expected, input.polygonize
   end
 end
