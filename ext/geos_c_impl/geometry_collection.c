@@ -31,7 +31,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   VALUE result;
   unsigned int len;
   GEOSGeometry** geoms;
-  RGeo_FactoryData* factory_data;
   VALUE klass;
   unsigned int i;
   unsigned int j;
@@ -49,7 +48,6 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
     rb_raise(rb_eRGeoError, "not enough memory available");
   }
 
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   klasses = Qnil;
   cast_type = Qnil;
   switch (type) {
@@ -66,9 +64,14 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
   for (i = 0; i < len; ++i) {
     geom = rgeo_convert_to_detached_geos_geometry(
       rb_ary_entry(array, i), factory, cast_type, &klass, &state);
-    if (state || !geom) {
-      break;
+    if (state) {
+      for (j = 0; j < i; j++) {
+        GEOSGeom_destroy(geoms[j]);
+      }
+      FREE(geoms);
+      rb_jump_tag(state);
     }
+
     geoms[i] = geom;
     if (!NIL_P(klass) && NIL_P(klasses)) {
       klasses = rb_ary_new2(len);
@@ -80,24 +83,19 @@ create_geometry_collection(VALUE module, int type, VALUE factory, VALUE array)
       rb_ary_push(klasses, klass);
     }
   }
-  if (i != len) {
-    for (j = 0; j < i; ++j) {
-      GEOSGeom_destroy(geoms[j]);
-    }
-  } else {
-    collection = GEOSGeom_createCollection(type, geoms, len);
-    if (collection) {
-      result = rgeo_wrap_geos_geometry(factory, collection, module);
-      RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
-    }
-    // NOTE: We are assuming that GEOS will do its own cleanup of the
-    // element geometries if it fails to create the collection, so we
-    // are not doing that ourselves. If that turns out not to be the
-    // case, this will be a memory leak.
+  collection = GEOSGeom_createCollection(type, geoms, len);
+  if (collection) {
+    result = rgeo_wrap_geos_geometry(factory, collection, module);
+    RGEO_GEOMETRY_DATA_PTR(result)->klasses = klasses;
   }
+
+  // NOTE: We are assuming that GEOS will do its own cleanup of the
+  // element geometries if it fails to create the collection, so we
+  // are not doing that ourselves. If that turns out not to be the
+  // case, this will be a memory leak.
   FREE(geoms);
   if (state) {
-    rb_exc_raise(rb_errinfo()); // raise $!
+    rb_jump_tag(state);
   }
 
   return result;

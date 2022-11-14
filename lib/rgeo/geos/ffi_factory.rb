@@ -423,7 +423,11 @@ module RGeo
 
       def convert_to_fg_geometry(obj, type = nil)
         obj = Feature.cast(obj, self, type) if type && obj.factory != self
-        obj&.fg_geom
+
+        geom = obj&.fg_geom
+        raise RGeo::Error::InvalidGeometry, "Unable to cast the geometry to the FFI Factory" if geom.nil?
+
+        geom
       end
 
       def generate_wkt(geom)

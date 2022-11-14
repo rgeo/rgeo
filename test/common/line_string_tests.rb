@@ -209,6 +209,24 @@ module RGeo
           refute_equal(line1.hash, line2.hash)
         end
 
+        # Non-regression of a bug.
+        # https://github.com/rgeo/rgeo/pull/338#discussion_r1017066445
+        def test_comparison_line_string
+          point1 = @factory.point(1, 0)
+          point2 = @factory.point(3, 0)
+          ls1 = @factory.line_string([point1, @factory.point(2, 0), point2])
+          ls2 = @factory.line_string([point1, point2])
+
+          # Spacial equivalence
+          if ls1.respond_to?(:equals?) && ls1.method(:equals?).owner != RGeo::Feature::Geometry
+            assert(ls1.equals?(ls2))
+          end
+          # But not representational
+          refute(ls1.rep_equals?(ls2))
+          # And hash should differ as well
+          refute_equal(ls1.hash, ls2.hash)
+        end
+
         def test_wkt_creation
           line1 = @factory.parse_wkt("LINESTRING(21 22, 11 12)")
           assert_equal(@factory.point(21, 22), line1.point_n(0))

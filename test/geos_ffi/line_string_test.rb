@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 
 if RGeo::Geos.ffi_supported?
   class GeosFFILineStringTest < Minitest::Test # :nodoc:

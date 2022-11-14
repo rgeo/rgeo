@@ -154,9 +154,18 @@ rgeo_wrap_geos_geometry_clone(VALUE factory,
   specified by an appropriate feature module. Passing Qnil for the type
   disables this auto-cast. The returned GEOS geometry is owned by rgeo,
   and you should not dispose it or take ownership of it yourself.
+
+  The state parameter is given to follow `rb_protect*` ruby methods: this
+  method calls `#cast`, and this call may raise. if it does raise, state
+  will be set to a non-zero value, and you'll have access to the error
+  in `rb_errinfo()`. IT IS THE CALLER'S RESPONSIBILITY TO PROPAGATE THE
+  ERROR. You could also discard the error with `rb_set_errinfo(Qnil)`,
+  this will just ignore the error altogether. The error can be raised
+  with `rb_jump_tag(state)` which is helpful if you need to free data
+  before you raise the error.
 */
 const GEOSGeometry*
-rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type);
+rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type, int* state);
 
 /*
   Gets a GEOS geometry for a given ruby Geometry object. You must provide
@@ -179,7 +188,9 @@ rgeo_convert_to_geos_geometry(VALUE factory, VALUE obj, VALUE type);
   will be set to a non-zero value, and you'll have access to the error
   in `rb_errinfo()`. IT IS THE CALLER'S RESPONSIBILITY TO PROPAGATE THE
   ERROR. You could also discard the error with `rb_set_errinfo(Qnil)`,
-  this will just ignore the error altogether.
+  this will just ignore the error altogether. The error can be raised
+  with `rb_jump_tag(state)` which is helpful if you need to free data
+  before you raise the error.
 */
 GEOSGeometry*
 rgeo_convert_to_detached_geos_geometry(VALUE obj,

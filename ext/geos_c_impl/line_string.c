@@ -250,6 +250,7 @@ method_line_string_project_point(VALUE self, VALUE point)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   const GEOSGeometry* geos_point;
+  int state = 0;
 
   double location;
 
@@ -258,8 +259,12 @@ method_line_string_project_point(VALUE self, VALUE point)
   self_geom = self_data->geom;
 
   if (self_geom && point) {
-    geos_point =
-      rgeo_convert_to_geos_geometry(factory, point, rgeo_geos_point_class);
+    geos_point = rgeo_convert_to_geos_geometry(
+      factory, point, rgeo_geos_point_class, &state);
+    if (state) {
+      rb_jump_tag(state);
+    }
+
     location = GEOSProject(self_geom, geos_point);
     result = DBL2NUM(location);
   }
@@ -392,7 +397,6 @@ method_line_hash(VALUE self)
 static GEOSCoordSequence*
 coord_seq_from_array(VALUE factory, VALUE array, char close)
 {
-  RGeo_FactoryData* factory_data;
   VALUE point_type;
   unsigned int len;
   char has_z;
@@ -404,9 +408,9 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
   const GEOSCoordSequence* entry_cs;
   double x;
   GEOSCoordSequence* coord_seq;
+  int state = 0;
 
   Check_Type(array, T_ARRAY);
-  factory_data = RGEO_FACTORY_DATA_PTR(factory);
   point_type = rgeo_feature_point_module;
   len = (unsigned int)RARRAY_LEN(array);
   has_z = (char)(RGEO_FACTORY_DATA_PTR(factory)->flags &
@@ -418,22 +422,26 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
   }
   for (i = 0; i < len; ++i) {
     good = 0;
+
     entry_geom = rgeo_convert_to_geos_geometry(
-      factory, rb_ary_entry(array, i), point_type);
-    if (entry_geom) {
-      entry_cs = GEOSGeom_getCoordSeq(entry_geom);
-      if (entry_cs) {
-        if (GEOSCoordSeq_getX(entry_cs, 0, &x)) {
-          coords[i * dims] = x;
-          if (GEOSCoordSeq_getY(entry_cs, 0, &x)) {
-            coords[i * dims + 1] = x;
-            good = 1;
-            if (has_z) {
-              if (GEOSCoordSeq_getZ(entry_cs, 0, &x)) {
-                coords[i * dims + 2] = x;
-              } else {
-                good = 0;
-              }
+      factory, rb_ary_entry(array, i), point_type, &state);
+    if (state) {
+      FREE(coords);
+      rb_jump_tag(state);
+    }
+
+    entry_cs = GEOSGeom_getCoordSeq(entry_geom);
+    if (entry_cs) {
+      if (GEOSCoordSeq_getX(entry_cs, 0, &x)) {
+        coords[i * dims] = x;
+        if (GEOSCoordSeq_getY(entry_cs, 0, &x)) {
+          coords[i * dims + 1] = x;
+          good = 1;
+          if (has_z) {
+            if (GEOSCoordSeq_getZ(entry_cs, 0, &x)) {
+              coords[i * dims + 2] = x;
+            } else {
+              good = 0;
             }
           }
         }
@@ -474,13 +482,11 @@ cmethod_create_line_string(VALUE module, VALUE factory, VALUE array)
 {
   VALUE result;
   GEOSCoordSequence* coord_seq;
-  RGeo_FactoryData* factory_data;
   GEOSGeometry* geom;
 
   result = Qnil;
   coord_seq = coord_seq_from_array(factory, array, 0);
   if (coord_seq) {
-    factory_data = RGEO_FACTORY_DATA_PTR(factory);
     geom = GEOSGeom_createLineString(coord_seq);
     if (geom) {
       result =
@@ -495,13 +501,11 @@ cmethod_create_linear_ring(VALUE module, VALUE factory, VALUE array)
 {
   VALUE result;
   GEOSCoordSequence* coord_seq;
-  RGeo_FactoryData* factory_data;
   GEOSGeometry* geom;
 
   result = Qnil;
   coord_seq = coord_seq_from_array(factory, array, 1);
   if (coord_seq) {
-    factory_data = RGEO_FACTORY_DATA_PTR(factory);
     geom = GEOSGeom_createLinearRing(coord_seq);
     if (geom) {
       result =
@@ -549,25 +553,31 @@ cmethod_create_line(VALUE module, VALUE factory, VALUE start, VALUE end)
   const GEOSGeometry* end_geom;
   GEOSCoordSequence* coord_seq;
   GEOSGeometry* geom;
+  int state = 0;
 
   result = Qnil;
   factory_data = RGEO_FACTORY_DATA_PTR(factory);
   has_z = (char)(factory_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M);
   point_type = rgeo_feature_point_module;
 
-  start_geom = rgeo_convert_to_geos_geometry(factory, start, point_type);
-  if (start_geom) {
-    end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type);
-    if (end_geom) {
-      coord_seq = GEOSCoordSeq_create(2, 3);
-      if (coord_seq) {
-        populate_geom_into_coord_seq(start_geom, coord_seq, 0, has_z);
-        populate_geom_into_coord_seq(end_geom, coord_seq, 1, has_z);
-        geom = GEOSGeom_createLineString(coord_seq);
-        if (geom) {
-          result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_line_class);
-        }
-      }
+  start_geom =
+    rgeo_convert_to_geos_geometry(factory, start, point_type, &state);
+  if (state) {
+    rb_jump_tag(state);
+  }
+
+  end_geom = rgeo_convert_to_geos_geometry(factory, end, point_type, &state);
+  if (state) {
+    rb_jump_tag(state);
+  }
+
+  coord_seq = GEOSCoordSeq_create(2, 3);
+  if (coord_seq) {
+    populate_geom_into_coord_seq(start_geom, coord_seq, 0, has_z);
+    populate_geom_into_coord_seq(end_geom, coord_seq, 1, has_z);
+    geom = GEOSGeom_createLineString(coord_seq);
+    if (geom) {
+      result = rgeo_wrap_geos_geometry(factory, geom, rgeo_geos_line_class);
     }
   }
 
