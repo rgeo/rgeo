@@ -92,7 +92,9 @@ module RGeo
       end
 
       def limits_window
-        @limits_window ||= ProjectedWindow.new(
+        return @limits_window if defined?(@limits_window)
+
+        @limits_window = ProjectedWindow.new(
           @geography_factory,
           -20_037_508.342789,
           -20_037_508.342789,
@@ -103,8 +105,9 @@ module RGeo
       end
 
       def self._coordsys_3857 # :nodoc:
-        @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857) unless defined?(@coordsys_3857)
-        @coordsys_3857
+        return @coordsys_3857 if defined?(@coordsys_3857)
+
+        @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857)
       end
     end
   end

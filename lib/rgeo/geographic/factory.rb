@@ -126,10 +126,9 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        coord_sys =
-          if (coord_sys_data = data_["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = data_["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           data_["pref"],
           has_z_coordinate: data_["hasz"],
@@ -177,10 +176,9 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        coord_sys =
-          if (coord_sys_data = coder["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = coder["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           coder["impl_prefix"],
           has_z_coordinate: coder["has_z_coordinate"],
@@ -264,10 +262,10 @@ module RGeo
       # projection limits are not known.
 
       def projection_limits_window
+        return @projection_limits_window if defined?(@projection_limits_window)
         return unless @projector
 
-        @projection_limits_window = @projector.limits_window unless defined?(@projection_limits_window)
-        @projection_limits_window
+        @projection_limits_window = @projector.limits_window
       end
 
       # See RGeo::Feature::Factory#property

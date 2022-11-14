@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Geographic # :nodoc:
+  module Geographic
     class SphericalPointImpl
       include Feature::Point
       include ImplHelper::ValidityCheck

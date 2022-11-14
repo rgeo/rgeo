@@ -344,7 +344,7 @@ module RGeo
       # @param ccw [Boolean] true for CCW, false for CW
       # @return [HalfEdge, nil]
       def find_hedge(ring, ccw: true)
-        return nil if ring.num_points.zero?
+        return nil if ring.num_points == 0
         ccw_target = ccw ? 1 : -1
 
         coords = ring.start_point.coordinates
@@ -355,7 +355,7 @@ module RGeo
         start_seg = Segment.new(ring.start_point, ring.point_n(1))
         end_seg = Segment.new(ring.point_n(ring.num_points - 2), ring.end_point)
         colinear_hedges = hedges.select do |he|
-          start_seg.side(he.destination).zero? || end_seg.side(he.destination).zero?
+          start_seg.side(he.destination) == 0 || end_seg.side(he.destination) == 0
         end
 
         colinear_hedges.find do |hedge|

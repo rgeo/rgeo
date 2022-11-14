@@ -2,7 +2,7 @@
 
 module RGeo
   module Cartesian
-    module ValidOp # :nodoc:
+    module ValidOp
       include ImplHelper::ValidOp
 
       def validity_helper
@@ -10,7 +10,7 @@ module RGeo
       end
     end
 
-    module ValidOpHelpers # :nodoc:
+    module ValidOpHelpers
       include ImplHelper::ValidOpHelpers
 
       module_function(*ImplHelper::ValidOpHelpers.singleton_methods) # rubocop:disable Style/AccessModifierDeclarations

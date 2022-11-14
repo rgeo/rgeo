@@ -130,10 +130,9 @@ module RGeo
       end
 
       def marshal_load(data_) # :nodoc:
-        coord_sys_ =
-          if (coord_sys_data_ = data_["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data_)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys_ = data_["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize_copy(
           CAPIFactory.create(
             has_z_coordinate: data_["hasz"],
@@ -169,10 +168,9 @@ module RGeo
       end
 
       def init_with(coder_) # :nodoc:
-        coord_sys_ =
-          if (coord_sys_data_ = coder_["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data_.to_s)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys_ = coder_["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize_copy(
           CAPIFactory.create(
             has_z_coordinate: coder_["has_z_coordinate"],

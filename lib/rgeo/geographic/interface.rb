@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Geographic # :nodoc:
+  module Geographic
     class << self
       # Creates and returns a geographic factory that does not include a
       # a projection, and which performs calculations assuming a
@@ -380,13 +380,15 @@ module RGeo
       private
 
       def coord_sys_4055
-        @coord_sys_4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055) unless defined?(@coord_sys_4055)
-        @coord_sys_4055
+        return @coord_sys_4055 if defined?(@coord_sys_4055)
+
+        @coord_sys_4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055)
       end
 
       def coord_sys_4326
-        @coord_sys_4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326) unless defined?(@coord_sys_4326)
-        @coord_sys_4326
+        return @coord_sys_4326 if defined?(@coord_sys_4326)
+
+        @coord_sys_4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326)
       end
     end
   end

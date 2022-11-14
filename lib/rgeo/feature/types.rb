@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Feature # :nodoc:
+  module Feature
     # All geometry implementations MUST include this submodule.
     # This serves as a marker that may be used to test an object for
     # feature-ness.

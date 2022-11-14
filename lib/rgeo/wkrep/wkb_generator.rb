@@ -112,7 +112,7 @@ module RGeo
 
       private
 
-      class Result # :nodoc:
+      class Result
         def initialize(has_z, has_m)
           @buffer = []
           @has_z = has_z
@@ -185,7 +185,7 @@ module RGeo
         end
         emit_integer(type_code, rval)
         emit_integer(obj.srid, rval) if emit_srid
-        multi_obj = [
+        type_is_collection = [
           Feature::GeometryCollection,
           Feature::MultiPoint,
           Feature::MultiLineString,
@@ -204,7 +204,7 @@ module RGeo
             emit_line_string_coords(exterior_ring, rval)
             obj.interior_rings.each { |r| emit_line_string_coords(r, rval) }
           end
-        elsif multi_obj
+        elsif type_is_collection
           emit_integer(obj.num_geometries, rval)
           obj.each { |g| generate_feature(g, rval) }
         end

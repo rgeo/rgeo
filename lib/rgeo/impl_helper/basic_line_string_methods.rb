@@ -169,7 +169,7 @@ module RGeo
       def init_geometry
         super
 
-        return if @points.size.zero?
+        return if @points.empty?
 
         @points << @points.first if @points.first != @points.last
         @points = @points.chunk { |x| x }.map(&:first)

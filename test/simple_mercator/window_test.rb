@@ -86,123 +86,38 @@ class MercatorWindowTest < Minitest::Test # :nodoc:
   end
 
   def test_noseam_contains_window
-    window1_ = RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(10, 10), @factory.point(30, 30))
+    window = RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(10, 10), @factory.point(30, 30))
+    assert_window_contains_window(window, south: 15, west: 15, north: 25, east: 25)
 
-    assert(
-      window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(25, 25))
-      )
-    )
+    refute_window_contains_window(window, south: 5, west: 15, north: 25, east: 25)
+    refute_window_contains_window(window, south: 15, west: 15, north: 35, east: 25)
+    refute_window_contains_window(window, south: 0, west: 15, north: 5, east: 25)
+    refute_window_contains_window(window, south: 35, west: 15, north: 40, east: 25)
+    refute_window_contains_window(window, south: 5, west: 15, north: 35, east: 25)
 
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(5, 15), @factory.point(25, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(35, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(0, 15), @factory.point(5, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(35, 15), @factory.point(40, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(5, 15), @factory.point(35, 25))
-      )
-    )
+    refute_window_contains_window(window, south: 15, west: 5, north: 25, east: 25)
+    refute_window_contains_window(window, south: 15, west: 15, north: 25, east: 35)
+    refute_window_contains_window(window, south: 15, west: 0, north: 25, east: 5)
+    refute_window_contains_window(window, south: 15, west: 35, north: 25, east: 40)
+    refute_window_contains_window(window, south: 15, west: 5, north: 25, east: 35)
 
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 5), @factory.point(25, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 15), @factory.point(25, 35))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 0), @factory.point(25, 5))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 35), @factory.point(25, 40))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(15, 5), @factory.point(25, 35))
-      )
-    )
-
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(170, 35), @factory.point(-170, 40))
-      )
-    )
+    refute_window_contains_window(window, south: 170, west: 35, north: -170, east: 40)
   end
 
   def test_seam_contains_window
-    window1_ = RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(160, 10), @factory.point(-160, 30))
+    window = RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(160, 10), @factory.point(-160, 30))
 
-    assert(
-      window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(175, 15), @factory.point(-175, 25))
-      )
-    )
-    assert(
-      window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(170, 15), @factory.point(175, 25))
-      )
-    )
-    assert(
-      window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(-175, 15), @factory.point(-170, 25))
-      )
-    )
+    assert_window_contains_window(window, south: 175, west: 15, north: -175, east: 25)
+    assert_window_contains_window(window, south: 170, west: 15, north: 175, east: 25)
+    assert_window_contains_window(window, south: -175, west: 15, north: -170, east: 25)
 
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(170, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(-170, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(-170, 15), @factory.point(-150, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(170, 15), @factory.point(-150, 25))
-      )
-    )
+    refute_window_contains_window(window, south: 150, west: 15, north: 170, east: 25)
+    refute_window_contains_window(window, south: 150, west: 15, north: -170, east: 25)
+    refute_window_contains_window(window, south: -170, west: 15, north: -150, east: 25)
+    refute_window_contains_window(window, south: 170, west: 15, north: -150, east: 25)
 
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(-150, 15), @factory.point(150, 25))
-      )
-    )
-    assert(
-      !window1_.contains_window?(
-        RGeo::Geographic::ProjectedWindow.for_corners(@factory.point(150, 15), @factory.point(-150, 25))
-      )
-    )
+    refute_window_contains_window(window, south: -150, west: 15, north: 150, east: 25)
+    refute_window_contains_window(window, south: 150, west: 15, north: -150, east: 25)
   end
 
   def test_scaled_by
@@ -261,5 +176,29 @@ class MercatorWindowTest < Minitest::Test # :nodoc:
       actual_distance_ = window1_.random_point.distance(point_)
       assert_in_delta(0, actual_distance_, max_distance_hypotenuse_)
     end
+  end
+
+  private
+
+  def assert_window_contains_window(window, south:, west:, north:, east:)
+    contained = RGeo::Geographic::ProjectedWindow.for_corners(
+      @factory.point(south, west), @factory.point(north, east)
+    )
+
+    assert(
+      window.contains_window?(contained),
+      "Window #{window} does not contain #{contained}"
+    )
+  end
+
+  def refute_window_contains_window(window, south:, west:, north:, east:)
+    contained = RGeo::Geographic::ProjectedWindow.for_corners(
+      @factory.point(south, west), @factory.point(north, east)
+    )
+
+    refute(
+      window.contains_window?(contained),
+      "Window #{window} contains #{contained}"
+    )
   end
 end

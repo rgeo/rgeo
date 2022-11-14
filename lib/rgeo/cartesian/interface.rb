@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Cartesian # :nodoc:
+  module Cartesian
     class << self
       # Creates and returns a cartesian factory of the preferred
       # Cartesian implementation.

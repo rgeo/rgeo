@@ -270,7 +270,7 @@ module RGeo
           end
 
           def assert_empty # :nodoc:
-            return if @values.size.zero?
+            return if @values.empty?
 
             names = @values.map do |val|
               val.is_a?(Base) ? val.wkt_typename : val.inspect

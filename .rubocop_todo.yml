@@ -42,6 +42,10 @@ Naming/VariableNumber:
     - 'test/geos_capi/multi_polygon_test.rb'
     - 'test/simple_cartesian/point_test.rb'
 
+# Offense count: 60
+Style/Documentation:
+  Enabled: false
+
 # Offense count: 5
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: respond_to_missing?

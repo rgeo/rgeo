@@ -156,14 +156,8 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
     ext = @factory.line_string([p1, p2, p3, p4, p1])
     int = @factory.line_string([p5, p6, p7, p5])
     obj = @factory.polygon(ext, [int])
-    test_polygon =
-      <<~WKT
-        Polygon (
-          (0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0),
-          (1.0 1.0, 2.0 2.0, 3.0 1.0, 1.0 1.0)
-        )
-      WKT
-    assert_equal(format_wkt(test_polygon), generator.generate(obj))
+    test_polygon = "Polygon ((0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0), (1.0 1.0, 2.0 2.0, 3.0 1.0, 1.0 1.0))"
+    assert_equal(test_polygon, generator.generate(obj))
   end
 
   def test_polygon_empty
@@ -200,15 +194,9 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
     ls2 = @factory.line_string([p5, p6, p7])
     ls3 = @factory.line_string([])
     obj = @factory.multi_line_string([ls1, ls2, ls3])
-    test_multistring =
-      <<~WKT
-        MultiLineString (
-          (0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0),
-          (1.0 1.0, 2.0 2.0, 3.0 1.0),
-          EMPTY
-        )
-      WKT
-    assert_equal(format_wkt(test_multistring), generator.generate(obj))
+    test_multistring = "MultiLineString ((0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0), " \
+                       "(1.0 1.0, 2.0 2.0, 3.0 1.0), EMPTY)"
+    assert_equal(test_multistring, generator.generate(obj))
   end
 
   def test_multilinestring_empty
@@ -237,15 +225,10 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
     poly2 = @factory.polygon(@factory.line_string([]))
     poly3 = @factory.polygon(ext3)
     obj = @factory.multi_polygon([poly1, poly2, poly3])
-    test_multipolygon =
-      <<~WKT
-        MultiPolygon (
-          ((0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0), (1.0 1.0, 2.0 2.0, 3.0 1.0, 1.0 1.0)),
-          EMPTY,
-          ((20.0 20.0, 30.0 20.0, 30.0 30.0, 20.0 30.0, 20.0 20.0))
-        )
-      WKT
-    assert_equal(format_wkt(test_multipolygon), generator.generate(obj))
+    test_multipolygon = "MultiPolygon (((0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0), " \
+                        "(1.0 1.0, 2.0 2.0, 3.0 1.0, 1.0 1.0)), EMPTY, " \
+                        "((20.0 20.0, 30.0 20.0, 30.0 30.0, 20.0 30.0, 20.0 20.0)))"
+    assert_equal(test_multipolygon, generator.generate(obj))
   end
 
   def test_multipolygon_empty
@@ -276,18 +259,10 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
     obj1 = @factory.multi_polygon([poly1, poly2, poly3])
     obj2 = @factory.point(1, 2)
     obj = @factory.collection([obj1, obj2])
-    test_geo_c =
-      <<~WKT
-        GeometryCollection (
-          MultiPolygon (
-            ((0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0), (1.0 1.0, 2.0 2.0, 3.0 1.0, 1.0 1.0)),
-            EMPTY,
-            ((20.0 20.0, 30.0 20.0, 30.0 30.0, 20.0 30.0, 20.0 20.0))
-          ),
-          Point (1.0 2.0)
-        )
-      WKT
-    assert_equal(format_wkt(test_geo_c), generator.generate(obj))
+    test_geo_c = "GeometryCollection (MultiPolygon (((0.0 0.0, 10.0 0.0, 10.0 10.0, 0.0 10.0, 0.0 0.0), " \
+                 "(1.0 1.0, 2.0 2.0, 3.0 1.0, 1.0 1.0)), EMPTY, " \
+                 "((20.0 20.0, 30.0 20.0, 30.0 30.0, 20.0 30.0, 20.0 20.0))), Point (1.0 2.0))"
+    assert_equal(test_geo_c, generator.generate(obj))
   end
 
   def test_collection_wkt12_z
@@ -312,21 +287,12 @@ class WKTGeneratorTest < Minitest::Test # :nodoc:
     obj1 = @factoryz.multi_polygon([poly1, poly2, poly3])
     obj2 = @factoryz.point(1, 2, 3)
     obj = @factoryz.collection([obj1, obj2])
-    test_geo_c =
-      <<~WKT
-        GeometryCollection Z (
-          MultiPolygon Z (
-            (
-              (0.0 0.0 0.0, 10.0 0.0 0.0, 10.0 10.0 0.0, 0.0 10.0 0.0, 0.0 0.0 0.0),
-              (1.0 1.0 0.0, 2.0 2.0 0.0, 3.0 1.0 0.0, 1.0 1.0 0.0)
-            ),
-            EMPTY,
-            ((20.0 20.0 0.0, 30.0 20.0 0.0, 30.0 30.0 0.0, 20.0 30.0 0.0, 20.0 20.0 0.0))
-          ),
-          Point Z (1.0 2.0 3.0)
-        )
-      WKT
-    assert_equal(format_wkt(test_geo_c), generator.generate(obj))
+    test_geo_c = "GeometryCollection Z (MultiPolygon Z ((" \
+                 "(0.0 0.0 0.0, 10.0 0.0 0.0, 10.0 10.0 0.0, 0.0 10.0 0.0, 0.0 0.0 0.0), " \
+                 "(1.0 1.0 0.0, 2.0 2.0 0.0, 3.0 1.0 0.0, 1.0 1.0 0.0)), EMPTY, " \
+                 "((20.0 20.0 0.0, 30.0 20.0 0.0, 30.0 30.0 0.0, 20.0 30.0 0.0, 20.0 20.0 0.0))), " \
+                 "Point Z (1.0 2.0 3.0))"
+    assert_equal(test_geo_c, generator.generate(obj))
   end
 
   def test_collection_empty

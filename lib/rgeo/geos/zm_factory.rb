@@ -111,10 +111,9 @@ module RGeo
       end
 
       def marshal_load(data) # :nodoc:
-        coord_sys =
-          if (coord_sys_data = data["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = data["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           native_interface: (data["nffi"] ? :ffi : :capi),
           has_z_coordinate: data["hasz"],
@@ -148,10 +147,9 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        coord_sys =
-          if (coord_sys_data = coder["cs"])
-            CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-          end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = coder["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           native_interface: coder["native_interface"] == "ffi" ? :ffi : :capi,
           has_z_coordinate: coder["has_z_coordinate"],

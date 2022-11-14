@@ -140,35 +140,45 @@ module RGeo
       # (lat/lng) space, as a Feature::Point object.
 
       def sw_point
-        @sw_point ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_min))
+        return @sw_point if defined?(@sw_point)
+
+        @sw_point = @factory.unproject(@factory.projection_factory.point(@x_min, @y_min))
       end
 
       # Returns the southeast corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def se_point
-        @se_point ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_min))
+        return @se_point if defined?(@se_point)
+
+        @se_point = @factory.unproject(@factory.projection_factory.point(@x_max, @y_min))
       end
 
       # Returns the northwest corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def nw_point
-        @nw_point ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_max))
+        return @nw_point if defined?(@nw_point)
+
+        @nw_point = @factory.unproject(@factory.projection_factory.point(@x_min, @y_max))
       end
 
       # Returns the northeast corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def ne_point
-        @ne_point ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_max))
+        return @ne_point if defined?(@ne_point)
+
+        @ne_point = @factory.unproject(@factory.projection_factory.point(@x_max, @y_max))
       end
 
       # Returns the center of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def center_point
-        @center_point ||= @factory.unproject(@factory.projection_factory.point(*center_xy))
+        return @center_point if defined?(@center_point)
+
+        @center_point = @factory.unproject(@factory.projection_factory.point(*center_xy))
       end
 
       # Returns a random point inside the rectangle in _unprojected_

@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 module RGeo
-  module Geos # :nodoc:
+  module Geos
     class << self
       # Returns true if the CAPI GEOS implementation is supported.
 
