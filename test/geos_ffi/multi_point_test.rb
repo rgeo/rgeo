@@ -7,15 +7,11 @@
 # -----------------------------------------------------------------------------
 
 require "test_helper"
+require_relative "skip_ffi"
 
 class GeosFFIMultiPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
-
-  def setup
-    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
-
-    super
-  end
+  include SkipFFI
 
   def create_factory(opts = {})
     RGeo::Geos.factory(opts.merge(native_interface: :ffi))

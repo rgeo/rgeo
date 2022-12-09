@@ -7,15 +7,11 @@
 # -----------------------------------------------------------------------------
 
 require "test_helper"
+require_relative "skip_capi"
 
 class GeosMultiPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
-
-  def setup
-    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
-
-    super
-  end
+  prepend SkipCAPI
 
   def create_factories
     @factory = RGeo::Geos.factory

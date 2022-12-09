@@ -7,12 +7,13 @@
 # -----------------------------------------------------------------------------
 
 require_relative "../test_helper"
+require_relative "skip_capi"
 
 class GeosValidityTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::ValidityTests
+  prepend SkipCAPI
 
   def setup
-    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory
   end
 
