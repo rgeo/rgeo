@@ -10,10 +10,17 @@ module RGeo
   module Cartesian
     # This class implements the factory for the simple cartesian
     # implementation.
-
     class Factory
       include Feature::Factory::Instance
       include ImplHelper::Utils
+
+      attr_reader :coordinate_dimension, :spatial_dimension
+
+      # Returns the SRID.
+      attr_reader :srid
+
+      # See RGeo::Feature::Factory#coord_sys
+      attr_reader :coord_sys
 
       # Create a new simple cartesian factory.
       #
@@ -35,43 +42,46 @@ module RGeo
         @buffer_resolution = 1 if @buffer_resolution < 1
 
         wkt_generator = opts[:wkt_generator]
-        case wkt_generator
-        when Hash
-          @wkt_generator = WKRep::WKTGenerator.new(wkt_generator)
-        else
-          @wkt_generator = WKRep::WKTGenerator.new(convert_case: :upper)
-        end
+        @wkt_generator =
+          case wkt_generator
+          when Hash
+            WKRep::WKTGenerator.new(wkt_generator)
+          else
+            WKRep::WKTGenerator.new(convert_case: :upper)
+          end
         wkb_generator = opts[:wkb_generator]
-        case wkb_generator
-        when Hash
-          @wkb_generator = WKRep::WKBGenerator.new(wkb_generator)
-        else
-          @wkb_generator = WKRep::WKBGenerator.new
-        end
+        @wkb_generator =
+          case wkb_generator
+          when Hash
+            WKRep::WKBGenerator.new(wkb_generator)
+          else
+            WKRep::WKBGenerator.new
+          end
         wkt_parser = opts[:wkt_parser]
-        case wkt_parser
-        when Hash
-          @wkt_parser = WKRep::WKTParser.new(self, wkt_parser)
-        else
-          @wkt_parser = WKRep::WKTParser.new(self)
-        end
+        @wkt_parser =
+          case wkt_parser
+          when Hash
+            WKRep::WKTParser.new(self, wkt_parser)
+          else
+            WKRep::WKTParser.new(self)
+          end
         wkb_parser = opts[:wkb_parser]
-        case wkb_parser
-        when Hash
-          @wkb_parser = WKRep::WKBParser.new(self, wkb_parser)
-        else
-          @wkb_parser = WKRep::WKBParser.new(self)
-        end
+        @wkb_parser =
+          case wkb_parser
+          when Hash
+            WKRep::WKBParser.new(self, wkb_parser)
+          else
+            WKRep::WKBParser.new(self)
+          end
       end
-      attr_reader :coordinate_dimension, :spatial_dimension
 
       # Equivalence test.
 
-      def eql?(rhs)
-        rhs.is_a?(self.class) && @srid == rhs.srid &&
-          @has_z == rhs.property(:has_z_coordinate) &&
-          @has_m == rhs.property(:has_m_coordinate) &&
-          @coord_sys == rhs.instance_variable_get(:@coord_sys)
+      def eql?(other)
+        other.is_a?(self.class) && @srid == other.srid &&
+          @has_z == other.property(:has_z_coordinate) &&
+          @has_m == other.property(:has_m_coordinate) &&
+          @coord_sys == other.instance_variable_get(:@coord_sys)
       end
       alias == eql?
 
@@ -99,11 +109,9 @@ module RGeo
       end
 
       def marshal_load(data) # :nodoc:
-        if (coord_sys_data = data["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
-        else
-          coord_sys = nil
-        end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = data["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           has_z_coordinate: data["hasz"],
           has_m_coordinate: data["hasm"],
@@ -132,11 +140,9 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        if (coord_sys_data = coder["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-        else
-          coord_sys = nil
-        end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = coder["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           has_z_coordinate: coder["has_z_coordinate"],
           has_m_coordinate: coder["has_m_coordinate"],
@@ -149,10 +155,6 @@ module RGeo
           coord_sys: coord_sys
         )
       end
-
-      # Returns the SRID.
-
-      attr_reader :srid
 
       # See RGeo::Feature::Factory#property
 
@@ -234,10 +236,6 @@ module RGeo
       def multi_polygon(elems)
         MultiPolygonImpl.new(self, elems)
       end
-
-      # See RGeo::Feature::Factory#coord_sys
-
-      attr_reader :coord_sys
 
       def generate_wkt(obj)
         @wkt_generator.generate(obj)

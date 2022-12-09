@@ -23,6 +23,8 @@ module RGeo
       # of rotation.
 
       class PointXYZ # :nodoc:
+        attr_reader :x, :y, :z
+
         def initialize(x, y, z)
           r = Math.sqrt(x * x + y * y + z * z)
           @x = (x / r).to_f
@@ -35,12 +37,8 @@ module RGeo
           "(#{@x}, #{@y}, #{@z})"
         end
 
-        attr_reader :x
-        attr_reader :y
-        attr_reader :z
-
-        def eql?(rhs)
-          rhs.is_a?(PointXYZ) && @x == rhs.x && @y == rhs.y && @z == rhs.z
+        def eql?(other)
+          other.is_a?(PointXYZ) && @x == other.x && @y == other.y && @z == other.z
         end
         alias == eql?
 
@@ -58,17 +56,17 @@ module RGeo
           [lon_rad / rpd, lat_rad / rpd]
         end
 
-        def *(rhs)
-          val = @x * rhs.x + @y * rhs.y + @z * rhs.z
+        def *(other)
+          val = @x * other.x + @y * other.y + @z * other.z
           val = 1.0 if val > 1.0
           val = -1.0 if val < -1.0
           val
         end
 
-        def %(rhs)
-          rx = rhs.x
-          ry = rhs.y
-          rz = rhs.z
+        def %(other)
+          rx = other.x
+          ry = other.y
+          rz = other.z
           begin
             PointXYZ.new(@y * rz - @z * ry, @z * rx - @x * rz, @x * ry - @y * rx)
           rescue StandardError
@@ -113,8 +111,8 @@ module RGeo
           new(x, y, z)
         end
 
-        def self.weighted_combination(p1, w1, p2, w2)
-          new(p1.x * w1 + p2.x * w2, p1.y * w1 + p2.y * w2, p1.z * w1 + p2.z * w2)
+        def self.weighted_combination(pt1, wt1, pt2, wt2)
+          new(pt1.x * wt1 + pt2.x * wt2, pt1.y * wt1 + pt2.y * wt2, pt1.z * wt1 + pt2.z * wt2)
         end
 
         P1 = new(1, 0, 0)
@@ -124,21 +122,20 @@ module RGeo
       # Represents a finite arc on the sphere.
 
       class ArcXYZ # :nodoc:
+        attr_reader :s, :e
+
         def initialize(start, stop)
           @s = start
           @e = stop
           @axis = false
         end
 
-        attr_reader :s
-        attr_reader :e
-
         def to_s
           "#{@s} - #{@e}"
         end
 
-        def eql?(rhs)
-          rhs.is_a?(ArcXYZ) && @s == rhs.s && @e == rhs.e
+        def eql?(other)
+          other.is_a?(ArcXYZ) && @s == other.s && @e == other.e
         end
         alias == eql?
 
@@ -156,7 +153,7 @@ module RGeo
           my_axis = axis
           s_axis = ArcXYZ.new(@s, obj).axis
           e_axis = ArcXYZ.new(obj, @e).axis
-          !s_axis || !e_axis || obj * my_axis == 0.0 && s_axis * my_axis > 0 && e_axis * my_axis > 0
+          !s_axis || !e_axis || obj * my_axis == 0 && s_axis * my_axis > 0 && e_axis * my_axis > 0
         end
 
         def intersects_arc?(obj)

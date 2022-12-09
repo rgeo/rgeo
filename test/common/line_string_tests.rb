@@ -218,9 +218,7 @@ module RGeo
           ls2 = @factory.line_string([point1, point2])
 
           # Spacial equivalence
-          if ls1.respond_to?(:equals?) && ls1.method(:equals?).owner != RGeo::Feature::Geometry
-            assert(ls1.equals?(ls2))
-          end
+          assert(ls1.equals?(ls2)) if ls1.respond_to?(:equals?) && ls1.method(:equals?).owner != RGeo::Feature::Geometry
           # But not representational
           refute(ls1.rep_equals?(ls2))
           # And hash should differ as well
@@ -315,8 +313,7 @@ module RGeo
           point1 = @factory.point(0, 0)
           point2 = @factory.point(0, 1)
           line1 = @factory.line_string([point1, point2])
-          data = Marshal.dump(line1)
-          line2 = Marshal.load(data)
+          line2 = Marshal.load(Marshal.dump(line1))
           assert_equal(line1, line2)
         end
 

@@ -20,7 +20,6 @@ module RGeo
     # include this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
     # class method (or === operator) defined in the Type module.
-
     module LineString
       include Curve
       extend Type
@@ -47,7 +46,7 @@ module RGeo
       # if the given N is out of range. N is zero-based.
       # Does not support negative indexes.
 
-      def point_n(n)
+      def point_n(_idx)
         raise Error::UnsupportedOperation, "Method #{self.class}#point_n not defined."
       end
 

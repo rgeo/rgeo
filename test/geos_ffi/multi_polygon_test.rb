@@ -11,6 +11,12 @@ require "test_helper"
 class GeosFFIMultiPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
+  def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
+    super
+  end
+
   def create_factories
     @factory = RGeo::Geos.factory(native_interface: :ffi)
   end
@@ -20,4 +26,4 @@ class GeosFFIMultiPolygonTest < Minitest::Test # :nodoc:
   def test_empty_centroid
     assert_equal(@factory.collection([]), @factory.multi_polygon([]).centroid)
   end
-end if RGeo::Geos.ffi_supported?
+end

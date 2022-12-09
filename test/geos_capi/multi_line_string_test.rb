@@ -11,6 +11,12 @@ require "test_helper"
 class GeosMultiLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiLineStringTests
 
+  def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
+
+    super
+  end
+
   def create_factory
     RGeo::Geos.factory
   end
@@ -82,4 +88,4 @@ class GeosMultiLineStringTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
-end if RGeo::Geos.capi_supported?
+end

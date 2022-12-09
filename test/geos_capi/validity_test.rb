@@ -12,6 +12,7 @@ class GeosValidityTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::ValidityTests
 
   def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory
   end
 
@@ -29,4 +30,4 @@ class GeosValidityTest < Minitest::Test # :nodoc:
     assert_equal(RGeo::Error::SELF_INTERSECTION, poly.invalid_reason)
     assert_equal(false, poly.valid?)
   end
-end if RGeo::Geos.capi_supported?
+end

@@ -12,6 +12,8 @@ class GeosFFIPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
     @factory = RGeo::Geos.factory(native_interface: :ffi, buffer_resolution: 8)
     @zfactory = RGeo::Geos.factory(has_z_coordinate: true, native_interface: :ffi)
     @mfactory = RGeo::Geos.factory(has_m_coordinate: true, native_interface: :ffi)
@@ -59,4 +61,4 @@ class GeosFFIPointTest < Minitest::Test # :nodoc:
     point = factory.point(11, 12)
     assert_equal(Encoding::ASCII_8BIT, point.as_binary.encoding)
   end
-end if RGeo::Geos.ffi_supported?
+end

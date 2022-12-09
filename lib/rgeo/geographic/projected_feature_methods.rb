@@ -219,9 +219,7 @@ module RGeo
       # Ensure projection is available.
       def init_geometry
         super
-        unless projection
-          raise Error::InvalidGeometry, "Polygon failed assertions"
-        end
+        raise Error::InvalidGeometry, "Polygon failed assertions" unless projection
       end
     end
 
@@ -231,9 +229,7 @@ module RGeo
       # Ensure projection is available.
       def init_geometry
         super
-        unless projection
-          raise Error::InvalidGeometry, "MultiPolygon failed assertions"
-        end
+        raise Error::InvalidGeometry, "MultiPolygon failed assertions" unless projection
       end
     end
   end

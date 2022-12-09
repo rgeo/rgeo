@@ -7,6 +7,7 @@
 **Minor Changes**
 
 * Add `transform` method to `Geometry`. #342
+* Fix rubocop_todos and other refactoring. (@thestelz) #338
 
 **Bug Fixes**
 

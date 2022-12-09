@@ -11,6 +11,7 @@ class ExamplesTest < MiniTest::Test
     unless RGeo::Geos.ffi_supported? && RGeo::Geos.capi_supported?
       skip "Examples can only be run with FFI and CAPI support"
     end
+
     read_examples do |example, line_no|
       _out, err = capture_io do
         eval example # rubocop:disable Security/Eval

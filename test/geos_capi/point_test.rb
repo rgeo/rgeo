@@ -12,6 +12,7 @@ class GeosPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
 
   def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory(buffer_resolution: 8)
     @zfactory = RGeo::Geos.factory(has_z_coordinate: true)
     @mfactory = RGeo::Geos.factory(has_m_coordinate: true)
@@ -65,4 +66,4 @@ class GeosPointTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
-end if RGeo::Geos.capi_supported?
+end

@@ -17,7 +17,7 @@ jobs:
           - '3.0'
           - '2.7'
           - '2.6'
-          - jruby
+          - "jruby-9.3.7.0"
         os:
           - ubuntu
           # Windows users, feel free to open a PR :)
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 'head'
+          ruby-version: '3.1'
           bundler-cache: true
       - name: Install dependencies
         run: |

@@ -50,19 +50,19 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
   end
 
   def basic_methods
-    @basic_methods ||= [
-      :factory,
-      :dimension,
-      :geometry_type,
-      :srid,
-      :envelope,
-      :as_text,
-      :as_binary,
-      :empty?,
-      :simple?,
-      :boundary,
-      :convex_hull,
-      :buffer
+    @basic_methods ||= %i[
+      factory
+      dimension
+      geometry_type
+      srid
+      envelope
+      as_text
+      as_binary
+      empty?
+      simple?
+      boundary
+      convex_hull
+      buffer
     ].freeze
   end
 
@@ -87,7 +87,12 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
         relational_methods.each do |method_sym|
           geometries_per_factory(factory).each do |other_geometry_key, other_geometry|
             description = "#{classify_sym(geometry_key)}##{method_sym}(#{classify_sym(other_geometry_key)})"
-            results[factory_key][description] = relational_method_handled?(geometry, other_geometry, method_sym, description)
+            results[factory_key][description] = relational_method_handled?(
+              geometry,
+              other_geometry,
+              method_sym,
+              description
+            )
           end
         end
       end
@@ -130,9 +135,10 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
 
     markdown = ""
     markdown += "| #{titles.zip(sizes).map { |title, size| title.to_s.center(size) } * ' | '} |\n"
-    markdown += "| #{"#{'-' * (sizes.first - 1)}:"} | #{sizes[1..-1].map { |size| ":#{'-' * (size - 2)}:" } * ' | '} |\n"
+    markdown += "| #{"#{'-' * (sizes.first - 1)}:"} | #{sizes[1..].map { |size| ":#{'-' * (size - 2)}:" } * ' | '} |\n"
     rows.each do |row|
-      markdown += "| #{row.first.rjust(sizes.first)} | #{row[1..-1].zip(sizes[1..-1]).map { |cell, size| cell.center(size) } * ' | '} |\n"
+      center = row[1..].zip(sizes[1..]).map { |cell, size| cell.center(size) }
+      markdown += "| #{row.first.rjust(sizes.first)} | #{center * ' | '} |\n"
     end
 
     markdown
@@ -216,17 +222,17 @@ class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
   end
 
   def relational_methods
-    @relational_methods ||= [
-      :equals?,
-      :eql?,
-      :disjoint?,
-      :intersects?,
-      :touches?,
-      :crosses?,
-      :within?,
-      :contains?,
-      :overlaps?,
-      :relate?
+    @relational_methods ||= %i[
+      equals?
+      eql?
+      disjoint?
+      intersects?
+      touches?
+      crosses?
+      within?
+      contains?
+      overlaps?
+      relate?
     ].freeze
   end
 

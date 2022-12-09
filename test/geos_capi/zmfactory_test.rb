@@ -12,6 +12,7 @@ class GeosZMFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true, srid: 1000, buffer_resolution: 2)
     @srid = 1000
   end
@@ -47,4 +48,4 @@ class GeosZMFactoryTest < Minitest::Test # :nodoc:
     assert_nil(point.m_geometry.z)
     assert_equal(4, point.m_geometry.m)
   end
-end if RGeo::Geos.capi_supported?
+end

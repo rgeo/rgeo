@@ -83,7 +83,8 @@ class CartesianBBoxTest < Minitest::Test # :nodoc:
     bbox.add(@factory.point(1, 4))
     bbox.add(@factory.point(2, 3))
     bbox2 = RGeo::Cartesian::BoundingBox.create_from_points(
-      @factory.point(2, 3), @factory.point(1, 4))
+      @factory.point(2, 3), @factory.point(1, 4)
+    )
     assert_equal(bbox, bbox2)
   end
 

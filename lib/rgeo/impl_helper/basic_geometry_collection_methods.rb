@@ -27,12 +27,12 @@ module RGeo
         @elements.size
       end
 
-      def geometry_n(n)
-        n < 0 ? nil : @elements[n]
+      def geometry_n(idx)
+        idx < 0 ? nil : @elements[idx]
       end
 
-      def [](n)
-        @elements[n]
+      def [](idx)
+        @elements[idx]
       end
 
       def each(&block)

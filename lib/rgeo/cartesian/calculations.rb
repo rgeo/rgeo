@@ -23,17 +23,14 @@ module RGeo
         @lensq = @dx * @dx + @dy * @dy
       end
 
-      attr_reader :s
-      attr_reader :e
-      attr_reader :dx
-      attr_reader :dy
+      attr_reader :s, :e, :dx, :dy
 
       def to_s
         "#{@s} - #{@e}"
       end
 
-      def eql?(rhs)
-        rhs.is_a?(Segment) && @s == rhs.s && @e == rhs.e
+      def eql?(other)
+        other.is_a?(Segment) && @s == other.s && @e == other.e
       end
       alias == eql?
 
@@ -45,23 +42,23 @@ module RGeo
       # a positive value if the point is to the right, or
       # 0 if the point is collinear to the segment.
 
-      def side(p)
-        px = p.x
-        py = p.y
+      def side(point)
+        px = point.x
+        py = point.y
         (@sx - px) * (@ey - py) - (@sy - py) * (@ex - px)
       end
 
-      def tproj(p)
+      def tproj(point)
         if @lensq == 0
           nil
         else
-          (@dx * (p.x - @sx) + @dy * (p.y - @sy)) / @lensq
+          (@dx * (point.x - @sx) + @dy * (point.y - @sy)) / @lensq
         end
       end
 
-      def contains_point?(p)
-        if side(p) == 0
-          t = tproj(p)
+      def contains_point?(point)
+        if side(point) == 0
+          t = tproj(point)
           t && t >= 0.0 && t <= 1.0
         else
           false
@@ -84,11 +81,9 @@ module RGeo
         s2 = seg.s
         # Handle degenerate cases
         if seg.degenerate?
-          if @lensq == 0 && @s == s2
-            return @s
-          else
-            return contains_point?(s2) ? s2 : nil
-          end
+          return @s if @lensq == 0 && @s == s2
+
+          return contains_point?(s2) ? s2 : nil
         elsif @lensq == 0
           return seg.contains_point?(@s) ? @s : nil
         end
@@ -132,13 +127,12 @@ module RGeo
             # If this is the case, return the closest point from
             # either segment.
             int_pt = @s.factory.point(x, y)
-            if contains_point?(int_pt)
-              int_pt
-            else
-              # find closest of @s, @e, seg.s, seg.e
-              [@e, seg.s, seg.e].reduce(@s) do |closest, pt|
-                int_pt.distance(pt) < int_pt.distance(closest) ? pt : closest
-              end
+
+            return int_pt if contains_point?(int_pt)
+
+            # find closest of @s, @e, seg.s, seg.e
+            [@e, seg.s, seg.e].reduce(@s) do |closest, pt|
+              int_pt.distance(pt) < int_pt.distance(closest) ? pt : closest
             end
           end
         end

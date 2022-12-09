@@ -12,6 +12,8 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::LineStringTests
 
   def setup
+    skip "CAPI not supported" unless RGeo::Geos.capi_supported?
+
     @factory = RGeo::Geos.factory
   end
 
@@ -50,4 +52,4 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
-end if RGeo::Geos.capi_supported?
+end

@@ -56,8 +56,7 @@ module RGeo
         end
 
         def test_marshal_dump_load_factory
-          data = Marshal.dump(@factory)
-          factory2 = Marshal.load(data)
+          factory2 = Marshal.load(Marshal.dump(@factory))
           assert_equal(@factory, factory2)
           assert_equal(srid, factory2.srid)
         end

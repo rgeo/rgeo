@@ -45,11 +45,11 @@ class CartesianCalculationsTest < Minitest::Test # :nodoc:
     @li_seg5 = RGeo::Cartesian::Segment.new(@point14, @point15)
   end
 
-  def assert_close_enough(v1, v2)
-    diff = (v1 - v2).abs
+  def assert_close_enough(val1, val2)
+    diff = (val1 - val2).abs
     # denom = (v1 + v2).abs
     # diff /= denom if denom > 0.01
-    assert(diff < 0.00000001, "#{v1} is not close to #{v2}")
+    assert(diff < 0.00000001, "#{val1} is not close to #{val2}")
   end
 
   def test_segment_degenerate

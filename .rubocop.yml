@@ -1,7 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.5
+  # Version support must stay 2.6 for JRuby. We do not advise using it
+  TargetRubyVersion: 2.6
   NewCops: enable
 
 Layout/ParameterAlignment:
@@ -34,6 +35,13 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Naming/MethodParameterName:
+  AllowedNames:
+    - x
+    - y
+    - z
+    - m
+
 Naming/PredicateName:
   AllowedMethods:
     - is_a?
@@ -41,6 +49,10 @@ Naming/PredicateName:
 
 Style/CaseEquality:
   Enabled: false
+
+Style/GlobalVars:
+  Exclude:
+    - 'ext/geos_c_impl/extconf.rb'
 
 Style/NumericPredicate:
   Enabled: false

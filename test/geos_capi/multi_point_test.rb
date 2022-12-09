@@ -11,6 +11,12 @@ require "test_helper"
 class GeosMultiPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPointTests
 
+  def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
+
+    super
+  end
+
   def create_factory(opts = {})
     RGeo::Geos.factory(opts)
   end
@@ -21,4 +27,4 @@ class GeosMultiPointTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
-end if RGeo::Geos.capi_supported?
+end

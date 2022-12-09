@@ -39,7 +39,6 @@ module RGeo
     # [<tt>:little_endian</tt>]
     #   If true, output little endian (NDR) byte order. If false, output
     #   big endian (XDR), or network byte order. Default is false.
-
     class WKBGenerator
       # :stopdoc:
       TYPE_CODES = {
@@ -126,7 +125,7 @@ module RGeo
 
         def emit(hex_format)
           str = @buffer.join
-          hex_format ? str.unpack("H*")[0] : str
+          hex_format ? str.unpack1("H*") : str
         end
 
         def z?
@@ -139,79 +138,75 @@ module RGeo
       end
       private_constant :Result
 
-      def emit_byte(value, rv)
-        rv << [value].pack("C")
+      def emit_byte(value, rval)
+        rval << [value].pack("C")
       end
 
-      def emit_integer(value, rv)
-        rv << [value].pack(@little_endian ? "V" : "N")
+      def emit_integer(value, rval)
+        rval << [value].pack(@little_endian ? "V" : "N")
       end
 
-      def emit_doubles(array, rv)
-        rv << array.pack(@little_endian ? "E*" : "G*")
+      def emit_doubles(array, rval)
+        rval << array.pack(@little_endian ? "E*" : "G*")
       end
 
-      def emit_line_string_coords(obj, rv)
+      def emit_line_string_coords(obj, rval)
         array = []
-        obj.points.each { |pt| point_coords(pt, rv, array) }
-        emit_integer(obj.num_points, rv)
-        emit_doubles(array, rv)
+        obj.points.each { |pt| point_coords(pt, rval, array) }
+        emit_integer(obj.num_points, rval)
+        emit_doubles(array, rval)
       end
 
-      def point_coords(obj, rv, array = [])
+      def point_coords(obj, rval, array = [])
         array << obj.x
         array << obj.y
-        array << obj.z if rv.z?
-        array << obj.m if rv.m?
+        array << obj.z if rval.z?
+        array << obj.m if rval.m?
         array
       end
 
-      def generate_feature(obj, rv, toplevel = false)
-        emit_byte(@little_endian ? 1 : 0, rv)
+      def generate_feature(obj, rval, toplevel = false)
+        emit_byte(@little_endian ? 1 : 0, rval)
         type = obj.geometry_type
         type_code = TYPE_CODES[type]
-        unless type_code
-          raise Error::ParseError, "Unrecognized Geometry Type: #{type}"
-        end
+        raise Error::ParseError, "Unrecognized Geometry Type: #{type}" unless type_code
         emit_srid = false
-        if @type_format == :ewkb
-          type_code |= 0x80000000 if rv.z?
-          type_code |= 0x40000000 if rv.m?
+        case @type_format
+        when :ewkb
+          type_code |= 0x80000000 if rval.z?
+          type_code |= 0x40000000 if rval.m?
           if @emit_ewkb_srid && toplevel
             type_code |= 0x20000000
             emit_srid = true
           end
-        elsif @type_format == :wkb12
-          type_code += 1000 if rv.z?
-          type_code += 2000 if rv.m?
+        when :wkb12
+          type_code += 1000 if rval.z?
+          type_code += 2000 if rval.m?
         end
-        emit_integer(type_code, rv)
-        emit_integer(obj.srid, rv) if emit_srid
+        emit_integer(type_code, rval)
+        emit_integer(obj.srid, rval) if emit_srid
+        type_is_collection = [
+          Feature::GeometryCollection,
+          Feature::MultiPoint,
+          Feature::MultiLineString,
+          Feature::MultiPolygon
+        ].include?(type)
         if type == Feature::Point
-          emit_doubles(point_coords(obj, rv), rv)
+          emit_doubles(point_coords(obj, rval), rval)
         elsif type.subtype_of?(Feature::LineString)
-          emit_line_string_coords(obj, rv)
+          emit_line_string_coords(obj, rval)
         elsif type == Feature::Polygon
           exterior_ring = obj.exterior_ring
           if exterior_ring.empty?
-            emit_integer(0, rv)
+            emit_integer(0, rval)
           else
-            emit_integer(1 + obj.num_interior_rings, rv)
-            emit_line_string_coords(exterior_ring, rv)
-            obj.interior_rings.each { |r| emit_line_string_coords(r, rv) }
+            emit_integer(1 + obj.num_interior_rings, rval)
+            emit_line_string_coords(exterior_ring, rval)
+            obj.interior_rings.each { |r| emit_line_string_coords(r, rval) }
           end
-        elsif type == Feature::GeometryCollection
-          emit_integer(obj.num_geometries, rv)
-          obj.each { |g| generate_feature(g, rv) }
-        elsif type == Feature::MultiPoint
-          emit_integer(obj.num_geometries, rv)
-          obj.each { |g| generate_feature(g, rv) }
-        elsif type == Feature::MultiLineString
-          emit_integer(obj.num_geometries, rv)
-          obj.each { |g| generate_feature(g, rv) }
-        elsif type == Feature::MultiPolygon
-          emit_integer(obj.num_geometries, rv)
-          obj.each { |g| generate_feature(g, rv) }
+        elsif type_is_collection
+          emit_integer(obj.num_geometries, rval)
+          obj.each { |g| generate_feature(g, rval) }
         end
       end
     end

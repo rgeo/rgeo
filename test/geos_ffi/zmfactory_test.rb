@@ -12,6 +12,8 @@ class GeosFFIZMFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
     @factory = RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true,
                                   srid: 1000, buffer_resolution: 2, native_interface: :ffi)
     @srid = 1000
@@ -48,4 +50,4 @@ class GeosFFIZMFactoryTest < Minitest::Test # :nodoc:
     assert_nil(point.m_geometry.z)
     assert_equal(4, point.m_geometry.m)
   end
-end if RGeo::Geos.ffi_supported?
+end

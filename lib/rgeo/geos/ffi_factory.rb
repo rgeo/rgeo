@@ -9,10 +9,21 @@
 module RGeo
   module Geos
     # This the FFI-GEOS implementation of RGeo::Feature::Factory.
-
     class FFIFactory
       include Feature::Factory::Instance
       include ImplHelper::Utils
+
+      attr_reader :coordinate_dimension, :spatial_dimension, :_has_3d, :_auto_prepare
+
+      # Returns the SRID of geometries created by this factory.
+      attr_reader :srid
+
+      # Returns the resolution used by buffer calculations on geometries
+      # created by this factory
+      attr_reader :buffer_resolution
+
+      # See RGeo::Feature::Factory#coord_sys
+      attr_reader :coord_sys
 
       # Create a new factory. Returns nil if the FFI-GEOS implementation
       # is not supported.
@@ -22,9 +33,11 @@ module RGeo
       def initialize(opts = {})
         @has_z = opts[:has_z_coordinate] ? true : false
         @has_m = opts[:has_m_coordinate] ? true : false
+
         if @has_z && @has_m
           raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
         end
+
         @coordinate_dimension = 2
         @coordinate_dimension += 1 if @has_z
         @coordinate_dimension += 1 if @has_m
@@ -81,7 +94,6 @@ module RGeo
           @wkb_parser = nil
         end
       end
-      attr_reader :coordinate_dimension, :spatial_dimension
 
       # Standard object inspection output
 
@@ -91,12 +103,12 @@ module RGeo
 
       # Factory equivalence test.
 
-      def eql?(rhs)
-        rhs.is_a?(self.class) && @srid == rhs.srid &&
-          @has_z == rhs.property(:has_z_coordinate) &&
-          @has_m == rhs.property(:has_m_coordinate) &&
-          @buffer_resolution == rhs.property(:buffer_resolution) &&
-          @coord_sys.eql?(rhs.coord_sys)
+      def eql?(other)
+        other.is_a?(self.class) && @srid == other.srid &&
+          @has_z == other.property(:has_z_coordinate) &&
+          @has_m == other.property(:has_m_coordinate) &&
+          @buffer_resolution == other.property(:buffer_resolution) &&
+          @coord_sys.eql?(other.coord_sys)
       end
       alias == eql?
 
@@ -125,11 +137,9 @@ module RGeo
       end
 
       def marshal_load(data) # :nodoc:
-        if (coord_sys_data = data["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data)
-        else
-          coord_sys = nil
-        end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = data["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           has_z_coordinate: data["hasz"],
           has_m_coordinate: data["hasm"],
@@ -160,11 +170,9 @@ module RGeo
       end
 
       def init_with(coder) # :nodoc:
-        if (coord_sys_data = coder["cs"])
-          coord_sys = CoordSys::CONFIG.default_coord_sys_class.create_from_wkt(coord_sys_data.to_s)
-        else
-          coord_sys = nil
-        end
+        cs_class = CoordSys::CONFIG.default_coord_sys_class
+        coord_sys = coder["cs"]&.then { |cs| cs_class.create_from_wkt(cs) }
+
         initialize(
           has_z_coordinate: coder["has_z_coordinate"],
           has_m_coordinate: coder["has_m_coordinate"],
@@ -178,15 +186,6 @@ module RGeo
           coord_sys: coord_sys
         )
       end
-
-      # Returns the SRID of geometries created by this factory.
-
-      attr_reader :srid
-
-      # Returns the resolution used by buffer calculations on geometries
-      # created by this factory
-
-      attr_reader :buffer_resolution
 
       # See RGeo::Feature::Factory#property
       def property(name_)
@@ -328,8 +327,13 @@ module RGeo
       def multi_point(elems)
         elems = elems.to_a unless elems.is_a?(Array)
         elems = elems.map do |elem|
-          elem = RGeo::Feature.cast(elem, self, RGeo::Feature::Point,
-            :force_new, :keep_subtype)
+          elem = RGeo::Feature.cast(
+            elem,
+            self,
+            RGeo::Feature::Point,
+            :force_new,
+            :keep_subtype
+          )
           return unless elem
           elem.detach_fg_geom
         end
@@ -367,13 +371,9 @@ module RGeo
         FFIMultiPolygonImpl.new(self, fg_geom, klasses)
       end
 
-      # See RGeo::Feature::Factory#coord_sys
-
-      attr_reader :coord_sys
-
       # See RGeo::Feature::Factory#override_cast
 
-      def override_cast(original, ntype, flags)
+      def override_cast(_original, _ntype, _flags)
         false
         # TODO
       end
@@ -421,13 +421,8 @@ module RGeo
         klass.new(self, fg_geom, klasses)
       end
 
-      attr_reader :_has_3d # :nodoc:
-      attr_reader :_auto_prepare # :nodoc:
-
       def convert_to_fg_geometry(obj, type = nil)
-        if type && obj.factory != self
-          obj = Feature.cast(obj, self, type)
-        end
+        obj = Feature.cast(obj, self, type) if type && obj.factory != self
 
         geom = obj&.fg_geom
         raise RGeo::Error::InvalidGeometry, "Unable to cast the geometry to the FFI Factory" if geom.nil?
@@ -484,7 +479,7 @@ module RGeo
 
       def create_fg_linear_ring(points)
         size = points.size
-        return if size == 1 || size == 2
+        return if size.between?(1, 2)
         if size > 0 && points.first != points.last
           points += [points.first]
           size += 1

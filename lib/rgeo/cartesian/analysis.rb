@@ -10,7 +10,6 @@ module RGeo
   module Cartesian
     # This provides includes some spatial analysis algorithms supporting
     # Cartesian data.
-
     module Analysis
       class << self
         # Check orientation of a ring, returns `true` if it is counter-clockwise
@@ -79,8 +78,11 @@ module RGeo
           sin = 0.0
           cos = 1.0
           angs.each_slice(2) do |(x, y)|
-            ready = y > 0.0 && (sin > 0.0 || sin == 0.0 && direction == -1) || y < 0.0 && (sin < 0.0 || sin == 0.0 && direction == 1)
-            if y != 0.0
+            ready = y > 0.0 &&
+              (sin > 0.0 || sin == 0 && direction == -1) ||
+              y < 0.0 &&
+              (sin < 0.0 || sin == 0 && direction == 1)
+            unless y == 0
               s = sin * x + cos * y
               c = cos * x - sin * y
               r = Math.sqrt(s * s + c * c)

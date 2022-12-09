@@ -218,7 +218,7 @@ module RGeo
           point2 = @factory.point(0, 1)
           point3 = @factory.point(1, 0)
           exterior = @factory.linear_ring([point1, point2, point3, point1])
-          boundary =  @factory.multi_line_string([exterior])
+          boundary = @factory.multi_line_string([exterior])
           polygon = @factory.polygon(exterior)
           assert_equal(boundary, polygon.boundary)
         end
@@ -233,7 +233,7 @@ module RGeo
           point7 = @factory.point(6, 4)
           exterior = @factory.linear_ring([point1, point2, point3, point4, point1])
           interior = @factory.linear_ring([point5, point6, point7, point5])
-          boundary =  @factory.multi_line_string([exterior, interior])
+          boundary = @factory.multi_line_string([exterior, interior])
           polygon = @factory.polygon(exterior, [interior])
           assert_equal(boundary, polygon.boundary)
         end
@@ -267,10 +267,10 @@ module RGeo
           line_string = poly1.exterior_ring
 
           case line_string.class.name
-          when "GeosPolygonTest"
-          when "RGeo::Geos::FFILinearRingImpl"
-          when "RGeo::Geos::CAPILinearRingImpl"
-          when "GeosFFIPolygonTest"
+          when "GeosPolygonTest",
+            "RGeo::Geos::FFILinearRingImpl",
+            "RGeo::Geos::CAPILinearRingImpl",
+            "GeosFFIPolygonTest"
             assert(line_string.points.count == 9)
           else
             assert(line_string.num_points == 4)

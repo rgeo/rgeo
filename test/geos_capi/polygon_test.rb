@@ -11,11 +11,12 @@ require_relative "../test_helper"
 class GeosPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
-  def assert_close_enough(p1, p2)
-    assert((p1.x - p2.x).abs < 0.00000001 && (p1.y - p2.y).abs < 0.00000001)
+  def assert_close_enough(pt1, pt2)
+    assert((pt1.x - pt2.x).abs < 0.00000001 && (pt1.y - pt2.y).abs < 0.00000001)
   end
 
   def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory
   end
 
@@ -125,14 +126,14 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
 
   def test_is_valid_polygon
     polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
     assert_equal(polygon.valid?, true)
 
     polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -141,7 +142,7 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
 
   def test_invalid_reason
     polygon_coordinates = [[-1, -1], [-1, 0], [1, 0], [1, 1], [0, 1], [0, -1], [-1, -1]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -150,7 +151,7 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
 
   def test_invalid_reason_with_valid_polygon
     polygon_coordinates = [[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
     assert_nil(polygon.invalid_reason)
@@ -159,7 +160,7 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
   def test_self_intersecting_polygon
     # issue 218
     polygon_coordinates = [[0, 0], [1, 1], [0, 1], [1, 0], [0, 0]]
-    points_arr = polygon_coordinates.map{ |v| @factory.point(v[0], v[1]) }
+    points_arr = polygon_coordinates.map { |v| @factory.point(v[0], v[1]) }
     outer_ring = @factory.linear_ring(points_arr)
     polygon = @factory.polygon(outer_ring)
 
@@ -172,4 +173,4 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
-end if RGeo::Geos.capi_supported?
+end

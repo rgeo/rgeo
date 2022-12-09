@@ -42,7 +42,6 @@ module RGeo
     # [<tt>:default_srid</tt>]
     #   A SRID to pass to the factory generator if no SRID is present in
     #   the input. Defaults to nil (i.e. don't specify a SRID).
-
     class WKBParser
       # Create and configure a WKB parser. See the WKBParser
       # documentation for the options that can be passed.
@@ -118,9 +117,7 @@ module RGeo
             obj = parse_object(false)
             unless @ignore_extra_bytes
               bytes = bytes_remaining
-              if bytes > 0
-                raise Error::ParseError, "Found #{bytes} extra bytes at the end of the stream."
-              end
+              raise Error::ParseError, "Found #{bytes} extra bytes at the end of the stream." if bytes > 0
             end
           ensure
             @data = nil
@@ -133,7 +130,7 @@ module RGeo
       private
 
       def parse_object(contained)
-        endian_value = get_byte
+        endian_value = byte
         case endian_value
         when 0
           little_endian = false
@@ -161,14 +158,20 @@ module RGeo
           if contained != true && contained != type_code
             raise Error::ParseError, "Enclosed type=#{type_code} is different from container constraint #{contained}"
           end
+
           if has_z != @cur_has_z
             raise Error::ParseError, "Enclosed hasZ=#{has_z} is different from toplevel hasZ=#{@cur_has_z}"
           end
+
           if has_m != @cur_has_m
             raise Error::ParseError, "Enclosed hasM=#{has_m} is different from toplevel hasM=#{@cur_has_m}"
           end
+
           if srid && srid != @cur_srid
-            raise Error::ParseError, "Enclosed SRID #{srid} is different from toplevel srid #{@cur_srid || '(unspecified)'}"
+            raise(
+              Error::ParseError,
+              "Enclosed SRID #{srid} is different from toplevel srid #{@cur_srid || '(unspecified)'}"
+            )
           end
         else
           @cur_has_z = has_z
@@ -176,9 +179,11 @@ module RGeo
           @cur_dims = 2 + (@cur_has_z ? 1 : 0) + (@cur_has_m ? 1 : 0)
           @cur_srid = srid
           @cur_factory = @factory_generator.call(srid: @cur_srid, has_z_coordinate: has_z, has_m_coordinate: has_m)
+
           if @cur_has_z && !@cur_factory.property(:has_z_coordinate)
             raise Error::ParseError, "Data has Z coordinates but the factory doesn't have Z coordinates"
           end
+
           if @cur_has_m && !@cur_factory.property(:has_m_coordinate)
             raise Error::ParseError, "Data has M coordinates but the factory doesn't have M coordinates"
           end
@@ -222,29 +227,23 @@ module RGeo
         @len - @pos
       end
 
-      def get_byte
-        if @pos + 1 > @len
-          raise Error::ParseError, "Not enough bytes left to fulfill 1 byte"
-        end
+      def byte
+        raise Error::ParseError, "Not enough bytes left to fulfill 1 byte" if @pos + 1 > @len
         str = @data[@pos, 1]
         @pos += 1
-        str.unpack("C").first
+        str.unpack1("C")
       end
 
       def get_integer(little_endian)
-        if @pos + 4 > @len
-          raise Error::ParseError, "Not enough bytes left to fulfill 1 integer"
-        end
+        raise Error::ParseError, "Not enough bytes left to fulfill 1 integer" if @pos + 4 > @len
         str = @data[@pos, 4]
         @pos += 4
-        str.unpack(little_endian ? "V" : "N").first
+        str.unpack1(little_endian ? "V" : "N")
       end
 
       def get_doubles(little_endian, count)
         len = 8 * count
-        if @pos + len > @len
-          raise Error::ParseError, "Not enough bytes left to fulfill #{count} doubles"
-        end
+        raise Error::ParseError, "Not enough bytes left to fulfill #{count} doubles" if @pos + len > @len
         str = @data[@pos, len]
         @pos += len
         str.unpack("#{little_endian ? 'E' : 'G'}*")

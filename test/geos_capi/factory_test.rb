@@ -12,6 +12,7 @@ class GeosFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
 
   def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory(srid: 1000)
     @srid = 1000
   end
@@ -21,4 +22,4 @@ class GeosFactoryTest < Minitest::Test # :nodoc:
     assert_equal(true, RGeo::Geos.capi_geos?(@factory))
     assert_equal(false, RGeo::Geos.ffi_geos?(@factory))
   end
-end if RGeo::Geos.capi_supported?
+end

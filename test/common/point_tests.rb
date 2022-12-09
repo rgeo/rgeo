@@ -10,13 +10,13 @@ module RGeo
   module Tests # :nodoc:
     module Common # :nodoc:
       module PointTests # :nodoc:
-        def assert_close_enough(p1, p2)
-          assert_in_delta(p1.x, p2.x, 1e-8, "x axis not close enough")
-          assert_in_delta(p1.y, p2.y, 1e-8, "y axis not close enough")
+        def assert_close_enough(pt1, pt2)
+          assert_in_delta(pt1.x, pt2.x, 1e-8, "x axis not close enough")
+          assert_in_delta(pt1.y, pt2.y, 1e-8, "y axis not close enough")
         end
 
-        def assert_contains_approx(p, mp)
-          assert(mp.any? { |q| (p.x - q.x).abs < 1e-8 && (p.y - q.y).abs < 1e-8 })
+        def assert_contains_approx(point, multipt)
+          assert(multipt.any? { |q| (point.x - q.x).abs < 1e-8 && (point.y - q.y).abs < 1e-8 })
         end
 
         def test_creation
@@ -294,22 +294,19 @@ module RGeo
 
         def test_marshal_roundtrip
           point = @factory.point(11, 12)
-          data = Marshal.dump(point)
-          point2 = Marshal.load(data)
+          point2 = Marshal.load(Marshal.dump(point))
           assert_equal(point, point2)
         end
 
         def test_marshal_roundtrip_3d
           point = @zfactory.point(11, 12, 13)
-          data = Marshal.dump(point)
-          point2 = Marshal.load(data)
+          point2 = Marshal.load(Marshal.dump(point))
           assert_equal(point, point2)
         end
 
         def test_marshal_roundtrip_4d
           point = @zmfactory.point(11, 12, 13, 14)
-          data = Marshal.dump(point)
-          point2 = Marshal.load(data)
+          point2 = Marshal.load(Marshal.dump(point))
           assert_equal(point, point2)
         end
 

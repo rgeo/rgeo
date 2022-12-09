@@ -19,9 +19,7 @@ module RGeo
         # LineStrings in general need to check that there's not one point
         # GEOS doesn't allow instantiation of single point LineStrings so
         # we should handle it.
-        if @points.size == 1
-          raise Error::InvalidGeometry, "LineString Cannot Have 1 Point"
-        end
+        raise Error::InvalidGeometry, "LineString Cannot Have 1 Point" if @points.size == 1
         init_geometry
       end
 
@@ -29,8 +27,8 @@ module RGeo
         @points.size
       end
 
-      def point_n(n)
-        n < 0 ? nil : @points[n]
+      def point_n(idx)
+        idx < 0 ? nil : @points[idx]
       end
 
       def points
@@ -64,10 +62,9 @@ module RGeo
       end
 
       def closed?
-        unless defined?(@closed)
-          @closed = @points.size > 2 && @points.first == @points.last
-        end
-        @closed
+        return @closed if defined?(@closed)
+
+        @closed = @points.size > 2 && @points.first == @points.last
       end
 
       def ring?
@@ -111,15 +108,15 @@ module RGeo
       def point_intersect_segment?(point, start_point, end_point)
         return false unless point_collinear?(point, start_point, end_point)
 
-        if start_point.x != end_point.x
-          between_coordinate?(point.x, start_point.x, end_point.x)
-        else
+        if start_point.x == end_point.x
           between_coordinate?(point.y, start_point.y, end_point.y)
+        else
+          between_coordinate?(point.x, start_point.x, end_point.x)
         end
       end
 
-      def point_collinear?(a, b, c)
-        (b.x - a.x) * (c.y - a.y) == (c.x - a.x) * (b.y - a.y)
+      def point_collinear?(pt1, pt2, pt3)
+        (pt2.x - pt1.x) * (pt3.y - pt1.y) == (pt3.x - pt1.x) * (pt2.y - pt1.y)
       end
 
       def between_coordinate?(coord, start_coord, end_coord)
@@ -137,9 +134,7 @@ module RGeo
       def initialize(factory, start, stop)
         self.factory = factory
         cstart = Feature.cast(start, factory, Feature::Point)
-        unless cstart
-          raise Error::InvalidGeometry, "Could not cast start: #{start}"
-        end
+        raise Error::InvalidGeometry, "Could not cast start: #{start}" unless cstart
         cstop = Feature.cast(stop, factory, Feature::Point)
         raise Error::InvalidGeometry, "Could not cast end: #{stop}" unless cstop
         @points = [cstart, cstop]
@@ -158,9 +153,7 @@ module RGeo
     module BasicLinearRingMethods # :nodoc:
       def initialize(factory, points)
         super
-        unless @points.size >= 4 || @points.size == 0
-          raise Error::InvalidGeometry, "LinearRings must have 0 or >= 4 points"
-        end
+        raise Error::InvalidGeometry, "LinearRings must have 0 or >= 4 points" if @points.size.between?(1, 3)
       end
 
       def geometry_type
@@ -176,10 +169,11 @@ module RGeo
       # Close ring if necessary.
       def init_geometry
         super
-        if @points.size > 0
-          @points << @points.first if @points.first != @points.last
-          @points = @points.chunk { |x| x }.map(&:first)
-        end
+
+        return if @points.empty?
+
+        @points << @points.first if @points.first != @points.last
+        @points = @points.chunk { |x| x }.map(&:first)
       end
     end
   end

@@ -13,7 +13,6 @@ module RGeo
     # map visualization, an envelope in a projected coordinate system, or
     # a spatial constraint. It must be attached to a Geographic::Factory
     # that has a projection.
-
     class ProjectedWindow
       # Create a new ProjectedWindow given the Geographic::Factory, and the
       # x and y extents of the rectangle.
@@ -64,10 +63,10 @@ module RGeo
         to_s
       end
 
-      def eql?(obj_) # :nodoc:
-        return false unless obj_.is_a?(ProjectedWindow)
-        @factory == obj_.factory && @x_min == obj_.x_min && @x_max == obj_.x_max &&
-          @y_min = obj_.y_min && @y_max = obj_.y_max
+      def eql?(other) # :nodoc:
+        return false unless other.is_a?(ProjectedWindow)
+        @factory == other.factory && @x_min == other.x_min && @x_max == other.x_max &&
+          @y_min = other.y_min && @y_max = other.y_max
       end
       alias == eql?
 
@@ -79,23 +78,18 @@ module RGeo
       # Note that this factory is the overall geography factory, not the
       # projected factory (which can be obtained by calling
       # Geographic::Factory#projection_factory on this factory).
-
       attr_reader :factory
 
       # Returns the lower limit in the x (easting) direction.
-
       attr_reader :x_min
 
       # Returns the upper limit in the x (easting) direction.
-
       attr_reader :x_max
 
       # Returns the lower limit in the y (northing) direction.
-
       attr_reader :y_min
 
       # Returns the upper limit in the y (northing) direction.
-
       attr_reader :y_max
 
       # Returns true if the projection wraps along the x axis, and this
@@ -146,35 +140,45 @@ module RGeo
       # (lat/lng) space, as a Feature::Point object.
 
       def sw_point
-        @sw ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_min))
+        return @sw_point if defined?(@sw_point)
+
+        @sw_point = @factory.unproject(@factory.projection_factory.point(@x_min, @y_min))
       end
 
       # Returns the southeast corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def se_point
-        @se ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_min))
+        return @se_point if defined?(@se_point)
+
+        @se_point = @factory.unproject(@factory.projection_factory.point(@x_max, @y_min))
       end
 
       # Returns the northwest corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def nw_point
-        @nw ||= @factory.unproject(@factory.projection_factory.point(@x_min, @y_max))
+        return @nw_point if defined?(@nw_point)
+
+        @nw_point = @factory.unproject(@factory.projection_factory.point(@x_min, @y_max))
       end
 
       # Returns the northeast corner of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def ne_point
-        @ne ||= @factory.unproject(@factory.projection_factory.point(@x_max, @y_max))
+        return @ne_point if defined?(@ne_point)
+
+        @ne_point = @factory.unproject(@factory.projection_factory.point(@x_max, @y_max))
       end
 
       # Returns the center of the rectangle in _unprojected_
       # (lat/lng) space, as a Feature::Point object.
 
       def center_point
-        @center ||= @factory.unproject(@factory.projection_factory.point(*center_xy))
+        return @center_point if defined?(@center_point)
+
+        @center_point = @factory.unproject(@factory.projection_factory.point(*center_xy))
       end
 
       # Returns a random point inside the rectangle in _unprojected_
@@ -233,7 +237,7 @@ module RGeo
 
       def scaled_by(x_factor_, y_factor_ = nil)
         y_factor_ ||= x_factor_
-        if x_factor_ != 1.0 || y_factor_ != 1.0
+        if x_factor_ != 1 || y_factor_ != 1
           x_, y_ = *center_xy
           xr_ = x_span * 0.5 * x_factor_
           yr_ = y_span * 0.5 * y_factor_
@@ -287,9 +291,14 @@ module RGeo
 
       def with_margin(x_margin_, y_margin_ = nil)
         y_margin_ ||= x_margin_
-        if x_margin_ != 0.0 || y_margin_ != 0.0
-          ProjectedWindow.new(@factory, @x_min - x_margin_, @y_min - y_margin_,
-            @x_max + x_margin_, @y_max + y_margin_)
+        if x_margin_ != 0 || y_margin_ != 0
+          ProjectedWindow.new(
+            @factory,
+            @x_min - x_margin_,
+            @y_min - y_margin_,
+            @x_max + x_margin_,
+            @y_max + y_margin_
+          )
         else
           self
         end
@@ -318,8 +327,13 @@ module RGeo
           y_margin_ ||= x_margin_
           factory_ = point_.factory
           projection_ = factory_.project(point_)
-          ProjectedWindow.new(factory_, projection_.x - x_margin_, projection_.y - y_margin_,
-            projection_.x + x_margin_, projection_.y + y_margin_)
+          ProjectedWindow.new(
+            factory_,
+            projection_.x - x_margin_,
+            projection_.y - y_margin_,
+            projection_.x + x_margin_,
+            projection_.y + y_margin_
+          )
         end
 
         # Creates a new window that contains all of the given points.

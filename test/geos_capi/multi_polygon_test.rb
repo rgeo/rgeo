@@ -11,6 +11,12 @@ require "test_helper"
 class GeosMultiPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
 
+  def setup
+    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
+
+    super
+  end
+
   def create_factories
     @factory = RGeo::Geos.factory
   end
@@ -35,4 +41,4 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
-end if RGeo::Geos.capi_supported?
+end

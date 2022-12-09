@@ -45,7 +45,6 @@ module RGeo
     # include this module itself. Therefore, you should not depend on the
     # kind_of? method to check type. Instead, use the provided check_type
     # class method (or === operator) defined in the Type module.
-
     module Polygon
       include Surface
       extend Type
@@ -84,7 +83,7 @@ module RGeo
       # if the given N is out of range. N is zero-based.
       # Does not support negative indexes.
 
-      def interior_ring_n(n)
+      def interior_ring_n(_idx)
         raise Error::UnsupportedOperation, "Method Polygon#interior_ring_n not defined."
       end
 

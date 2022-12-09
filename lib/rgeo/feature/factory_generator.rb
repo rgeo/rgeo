@@ -31,7 +31,6 @@ module RGeo
     # necessarily include this module itself. Therefore, you should not
     # depend on the kind_of? method to determine if an object is a
     # factory generator.
-
     module FactoryGenerator
       # Generate a factory given a configuration as a hash.
       #
@@ -67,7 +66,7 @@ module RGeo
       # [<tt>:has_m_coordinate</tt>]
       #   Support M coordinates. Default is usually false.
 
-      def call(config = {})
+      def call(_config = {})
         nil
       end
 
@@ -75,7 +74,7 @@ module RGeo
       # factory.
 
       def self.single(factory)
-        proc { |c| factory }
+        proc { |_c| factory }
       end
 
       # Return a new FactoryGenerator that calls the given delegate, but
@@ -84,7 +83,7 @@ module RGeo
       # force certain values to override the given configuration.
 
       def self.decorate(delegate, default_config = {}, force_config = {})
-        proc { |c| delegate_.call(default_config.merge(c).merge(force_config)) }
+        proc { |c| delegate.call(default_config.merge(c).merge(force_config)) }
       end
     end
   end

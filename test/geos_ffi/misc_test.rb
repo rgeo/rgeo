@@ -11,6 +11,8 @@ require_relative "../common/validity_tests"
 
 class GeosFFIMiscTest < Minitest::Test # :nodoc:
   def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
     @factory = RGeo::Geos.factory(srid: 4326, native_interface: :ffi)
   end
 
@@ -45,7 +47,8 @@ class GeosFFIMiscTest < Minitest::Test # :nodoc:
     factory_no_auto_prepare =
       RGeo::Geos.factory(srid: 4326, native_interface: :ffi, auto_prepare: :disabled)
     polygon2 = factory_no_auto_prepare.polygon(
-      factory_no_auto_prepare.linear_ring([p1, p2, p3, p1]))
+      factory_no_auto_prepare.linear_ring([p1, p2, p3, p1])
+    )
     assert_equal(false, polygon2.prepared?)
     polygon2.intersects?(p1)
     assert_equal(false, polygon2.prepared?)
@@ -67,8 +70,20 @@ class GeosFFIMiscTest < Minitest::Test # :nodoc:
   end
 
   def test_unary_union_mixed_collection
-    collection = @factory.parse_wkt("GEOMETRYCOLLECTION (POLYGON ((0 0, 0 90, 90 90, 90 0, 0 0)),   POLYGON ((120 0, 120 90, 210 90, 210 0, 120 0)),  LINESTRING (40 50, 40 140),  LINESTRING (160 50, 160 140),  POINT (60 50),  POINT (60 140),  POINT (40 140))")
-    expected = @factory.parse_wkt("GEOMETRYCOLLECTION (POINT (60 140),   LINESTRING (40 90, 40 140), LINESTRING (160 90, 160 140), POLYGON ((0 0, 0 90, 40 90, 90 90, 90 0, 0 0)), POLYGON ((120 0, 120 90, 160 90, 210 90, 210 0, 120 0)))")
+    geometrycollection = "GEOMETRYCOLLECTION (POLYGON ((0 0, 0 90, 90 90, 90 0, 0 0)), " \
+                         "POLYGON ((120 0, 120 90, 210 90, 210 0, 120 0)), " \
+                         "LINESTRING (40 50, 40 140), " \
+                         "LINESTRING (160 50, 160 140), " \
+                         "POINT (60 50), " \
+                         "POINT (60 140), " \
+                         "POINT (40 140))"
+    expected_geometrycollection = "GEOMETRYCOLLECTION (POINT (60 140), " \
+                                  "LINESTRING (40 90, 40 140), " \
+                                  "LINESTRING (160 90, 160 140), " \
+                                  "POLYGON ((0 0, 0 90, 40 90, 90 90, 90 0, 0 0)), " \
+                                  "POLYGON ((120 0, 120 90, 160 90, 210 90, 210 0, 120 0)))"
+    collection = @factory.parse_wkt(geometrycollection)
+    expected = @factory.parse_wkt(expected_geometrycollection)
     geom = collection.unary_union
     if RGeo::Geos::Utils.ffi_supports_unary_union
       # Representation may differ, hence the test with `==` rather than `eql?`
@@ -84,8 +99,6 @@ class GeosFFIMiscTest < Minitest::Test # :nodoc:
       @factory.point(1, 1).contains?(test_struct.new(factory: @factory))
     end
   end
-end if RGeo::Geos.ffi_supported?
-
-unless RGeo::Geos.ffi_supported?
-  puts "WARNING: FFI-GEOS support not available. Related tests skipped."
 end
+
+puts "WARNING: FFI-GEOS support not available. Related tests skipped." unless RGeo::Geos.ffi_supported?

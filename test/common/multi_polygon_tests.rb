@@ -94,7 +94,9 @@ module RGeo
         end
 
         def test_wkt_creation_simple
-          parsed_geom = @factory.parse_wkt("MULTIPOLYGON(((0 0, 0 -10, -10 0, 0 0)), ((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))")
+          multipolygon = "MULTIPOLYGON (((0 0, 0 -10, -10 0, 0 0)), " \
+                         "((0 0, 0 10, 10 10, 10 0, 0 0), (4 4, 5 6, 6 4, 4 4)))"
+          parsed_geom = @factory.parse_wkt(multipolygon)
           built_geom = @factory.multi_polygon([@poly1, @poly2])
           assert(built_geom.eql?(parsed_geom))
         end
@@ -186,7 +188,9 @@ module RGeo
         end
 
         def test_boundary
-          parsed_geom = @factory.parse_wkt("MULTILINESTRING ((0.0 0.0, 0.0 -10.0, -10.0 0.0, 0.0 0.0), (0.0 0.0, 0.0 10.0, 10.0 10.0, 10.0 0.0, 0.0 0.0), (4.0 4.0, 5.0 6.0, 6.0 4.0, 4.0 4.0))")
+          multilinestring = "MULTILINESTRING ((0.0 0.0, 0.0 -10.0, -10.0 0.0, 0.0 0.0), " \
+                            "(0.0 0.0, 0.0 10.0, 10.0 10.0, 10.0 0.0, 0.0 0.0), (4.0 4.0, 5.0 6.0, 6.0 4.0, 4.0 4.0))"
+          parsed_geom = @factory.parse_wkt(multilinestring)
           built_geom = @factory.multi_polygon([@poly1, @poly2])
           boundary_geom = built_geom.boundary
           parsed_coordinates = parsed_geom.coordinates

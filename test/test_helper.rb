@@ -39,6 +39,4 @@ end
 
 # Live test for our implementation of Ruby's compaction methods (rb_gc_mark_movable
 # and rb_gc_location), enabling compaction for every major collection.
-if defined?(GC.auto_compact) == "method"
-  GC.auto_compact = true
-end
+GC.auto_compact = true if defined?(GC.auto_compact) == "method"

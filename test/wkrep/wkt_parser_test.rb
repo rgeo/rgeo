@@ -333,7 +333,9 @@ class WKTParserTest < Minitest::Test # :nodoc:
   def test_multipolygon_basic
     factory = RGeo::Cartesian.preferred_factory(has_z_coordinate: true)
     parser = RGeo::WKRep::WKTParser.new(factory)
-    obj = parser.parse("MULTIPOLYGON(((-1 -2 0, -3 -4 0, -5 -7 0, -1 -2 0)),((0 0 -1, 10 0 -2, 10 10 -3, 0 10 -4, 0 0 -5),(1 1 -6, 2 3 -7, 3 1 -8, 1 1 -9)))")
+    multipolygon = "MULTIPOLYGON (((-1 -2 0, -3 -4 0, -5 -7 0, -1 -2 0)), " \
+                   "((0 0 -1, 10 0 -2, 10 10 -3, 0 10 -4, 0 0 -5), (1 1 -6, 2 3 -7, 3 1 -8, 1 1 -9)))"
+    obj = parser.parse(multipolygon)
     assert_equal(RGeo::Feature::MultiPolygon, obj.geometry_type)
     assert_equal(2, obj.num_geometries)
     assert_equal(4, obj[0].exterior_ring.num_points)

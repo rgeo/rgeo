@@ -12,6 +12,8 @@ class GeosFFIPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
 
   def setup
+    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+
     @factory = RGeo::Geos.factory(native_interface: :ffi)
   end
 
@@ -52,4 +54,4 @@ class GeosFFIPolygonTest < Minitest::Test # :nodoc:
 
     assert_equal(polygon.valid?, false)
   end
-end if RGeo::Geos.ffi_supported?
+end

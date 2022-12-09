@@ -19,8 +19,40 @@ module RGeo
     # adding the geometries to it. You may then query it for the bounds,
     # or use it to determine whether it encloses other geometries or
     # bounding boxes.
-
     class BoundingBox
+      # Returns the bounding box's factory.
+      attr_reader :factory
+
+      # Returns true if this bounding box tracks Z coordinates.
+      attr_reader :has_z
+
+      # Returns true if this bounding box tracks M coordinates.
+      attr_reader :has_m
+
+      # Returns the minimum X, or nil if this bounding box is empty.
+      attr_reader :min_x
+
+      # Returns the maximum X, or nil if this bounding box is empty.
+      attr_reader :max_x
+
+      # Returns the minimum Y, or nil if this bounding box is empty.
+      attr_reader :min_y
+
+      # Returns the maximum Y, or nil if this bounding box is empty.
+      attr_reader :max_y
+
+      # Returns the minimum Z, or nil if this bounding box is empty.
+      attr_reader :min_z
+
+      # Returns the maximum Z, or nil if this bounding box is empty.
+      attr_reader :max_z
+
+      # Returns the minimum M, or nil if this bounding box is empty.
+      attr_reader :min_m
+
+      # Returns the maximum M, or nil if this bounding box is empty.
+      attr_reader :max_m
+
       # Create a bounding box given two corner points.
       # The bounding box will be given the factory of the first point.
       # You may also provide the same options available to
@@ -69,18 +101,14 @@ module RGeo
         end
       end
 
-      def eql?(rhs) # :nodoc:
-        rhs.is_a?(BoundingBox) && @factory == rhs.factory &&
-          @min_x == rhs.min_x && @max_x == rhs.max_x &&
-          @min_y == rhs.min_y && @max_y == rhs.max_y &&
-          @min_z == rhs.min_z && @max_z == rhs.max_z &&
-          @min_m == rhs.min_m && @max_m == rhs.max_m
+      def eql?(other) # :nodoc:
+        other.is_a?(BoundingBox) && @factory == other.factory &&
+          @min_x == other.min_x && @max_x == other.max_x &&
+          @min_y == other.min_y && @max_y == other.max_y &&
+          @min_z == other.min_z && @max_z == other.max_z &&
+          @min_m == other.min_m && @max_m == other.max_m
       end
       alias == eql?
-
-      # Returns the bounding box's factory.
-
-      attr_reader :factory
 
       # Returns true if this bounding box is still empty.
 
@@ -105,22 +133,6 @@ module RGeo
         @min_x && (@min_x == @max_x || @min_y == @max_y)
       end
 
-      # Returns true if this bounding box tracks Z coordinates.
-
-      attr_reader :has_z
-
-      # Returns true if this bounding box tracks M coordinates.
-
-      attr_reader :has_m
-
-      # Returns the minimum X, or nil if this bounding box is empty.
-
-      attr_reader :min_x
-
-      # Returns the maximum X, or nil if this bounding box is empty.
-
-      attr_reader :max_x
-
       # Returns the midpoint X, or nil if this bounding box is empty.
 
       def center_x
@@ -132,14 +144,6 @@ module RGeo
       def x_span
         @max_x ? @max_x - @min_x : 0
       end
-
-      # Returns the minimum Y, or nil if this bounding box is empty.
-
-      attr_reader :min_y
-
-      # Returns the maximum Y, or nil if this bounding box is empty.
-
-      attr_reader :max_y
 
       # Returns the midpoint Y, or nil if this bounding box is empty.
 
@@ -153,14 +157,6 @@ module RGeo
         @max_y ? @max_y - @min_y : 0
       end
 
-      # Returns the minimum Z, or nil if this bounding box is empty.
-
-      attr_reader :min_z
-
-      # Returns the maximum Z, or nil if this bounding box is empty.
-
-      attr_reader :max_z
-
       # Returns the midpoint Z, or nil if this bounding box is empty or has no Z.
 
       def center_z
@@ -170,16 +166,12 @@ module RGeo
       # Returns the Z span, 0 if this bounding box is empty, or nil if it has no Z.
 
       def z_span
-        @has_z ? (@max_z ? @max_z - @min_z : 0) : nil
+        return unless @has_z
+
+        return 0 unless @max_z
+
+        @max_z - @min_z
       end
-
-      # Returns the minimum M, or nil if this bounding box is empty.
-
-      attr_reader :min_m
-
-      # Returns the maximum M, or nil if this bounding box is empty.
-
-      attr_reader :max_m
 
       # Returns the midpoint M, or nil if this bounding box is empty or has no M.
 
@@ -190,31 +182,37 @@ module RGeo
       # Returns the M span, 0 if this bounding box is empty, or nil if it has no M.
 
       def m_span
-        @has_m ? (@max_m ? @max_m - @min_m : 0) : nil
+        return unless @has_m
+
+        return 0 unless @max_m
+
+        @max_m - @min_m
       end
 
       # Returns a point representing the minimum extent in all dimensions,
       # or nil if this bounding box is empty.
 
       def min_point
-        if @min_x
-          extras = []
-          extras << @min_z if @has_z
-          extras << @min_m if @has_m
-          @factory.point(@min_x, @min_y, *extras)
-        end
+        return unless @min_x
+
+        extras = []
+        extras << @min_z if @has_z
+        extras << @min_m if @has_m
+
+        @factory.point(@min_x, @min_y, *extras)
       end
 
       # Returns a point representing the maximum extent in all dimensions,
       # or nil if this bounding box is empty.
 
       def max_point
-        if @min_x
-          extras = []
-          extras << @max_z if @has_z
-          extras << @max_m if @has_m
-          @factory.point(@max_x, @max_y, *extras)
-        end
+        return unless @min_x
+
+        extras = []
+        extras << @max_z if @has_z
+        extras << @max_m if @has_m
+
+        @factory.point(@max_x, @max_y, *extras)
       end
 
       # Adjusts the extents of this bounding box to encompass the given
@@ -280,21 +278,18 @@ module RGeo
       #   have M. Default is false.
 
       def contains?(rhs, opts = {})
-        if Feature::Geometry === rhs
-          contains?(BoundingBox.new(@factory).add(rhs))
-        elsif rhs.empty?
-          true
-        elsif empty?
-          false
-        elsif @min_x > rhs.min_x || @max_x < rhs.max_x || @min_y > rhs.min_y || @max_y < rhs.max_y
-          false
-        elsif @has_m && rhs.has_m && !opts[:ignore_m] && (@min_m > rhs.min_m || @max_m < rhs.max_m)
-          false
-        elsif @has_z && rhs.has_z && !opts[:ignore_z] && (@min_z > rhs.min_z || @max_z < rhs.max_z) # rubocop:disable Style/IfWithBooleanLiteralBranches
-          false
-        else
-          true
-        end
+        return contains?(BoundingBox.new(@factory).add(rhs)) if Feature::Geometry === rhs
+
+        return true if rhs.empty?
+
+        return false if empty?
+
+        cmp_xymz =
+          (@min_x > rhs.min_x || @max_x < rhs.max_x || @min_y > rhs.min_y || @max_y < rhs.max_y) ||
+          (@has_m && rhs.has_m && !opts[:ignore_m] && (@min_m > rhs.min_m || @max_m < rhs.max_m)) ||
+          (@has_z && rhs.has_z && !opts[:ignore_z] && (@min_z > rhs.min_z || @max_z < rhs.max_z))
+
+        !cmp_xymz
       end
 
       # Returns this bounding box subdivided, as an array of bounding boxes.

@@ -48,7 +48,6 @@ module RGeo
     # [<tt>:default_srid</tt>]
     #   A SRID to pass to the factory generator if no SRID is present in
     #   the input. Defaults to nil (i.e. don't specify a SRID).
-
     class WKTParser
       # Create and configure a WKT parser. See the WKTParser
       # documentation for the options that can be passed.
@@ -66,7 +65,12 @@ module RGeo
         end
         @support_ewkt = opts[:support_ewkt] ? true : false
         @support_wkt12 = opts[:support_wkt12] ? true : false
-        @strict_wkt11 = @support_ewkt || @support_wkt12 ? false : opts[:strict_wkt11] ? true : false
+        @strict_wkt11 =
+          if @support_ewkt || @support_wkt12
+            false
+          else
+            opts[:strict_wkt11] ? true : false
+          end
         @ignore_extra_tokens = opts[:ignore_extra_tokens] ? true : false
         @default_srid = opts[:default_srid]
         @mutex = Mutex.new
@@ -127,12 +131,13 @@ module RGeo
           @cur_expect_m = nil
           @cur_srid = @default_srid
           if @support_ewkt && str =~ /^srid=(\d+);/i
-            str = $'
+            str = Regexp.last_match&.post_match
             @cur_srid = Regexp.last_match(1).to_i
           end
           begin
             start_scanner(str)
             obj = parse_type_tag
+
             if @cur_token && !@ignore_extra_tokens
               raise Error::ParseError, "Extra tokens beginning with #{@cur_token.inspect}."
             end
@@ -149,14 +154,19 @@ module RGeo
         if @cur_expect_z && !@cur_factory_support_z
           raise Error::ParseError, "Geometry calls for Z coordinate but factory doesn't support it."
         end
-        if @cur_expect_m && !@cur_factory_support_m
-          raise Error::ParseError, "Geometry calls for M coordinate but factory doesn't support it."
-        end
+
+        return unless @cur_expect_m && !@cur_factory_support_m
+
+        raise Error::ParseError, "Geometry calls for M coordinate but factory doesn't support it."
       end
 
       def ensure_factory
         unless @cur_factory
-          @cur_factory = @factory_generator.call(srid: @cur_srid, has_z_coordinate: @cur_expect_z, has_m_coordinate: @cur_expect_m)
+          @cur_factory = @factory_generator.call(
+            srid: @cur_srid,
+            has_z_coordinate: @cur_expect_z,
+            has_m_coordinate: @cur_expect_m
+          )
           @cur_factory_support_z = @cur_factory.property(:has_z_coordinate) ? true : false
           @cur_factory_support_m = @cur_factory.property(:has_m_coordinate) ? true : false
           check_factory_support unless @cur_expect_z.nil?
@@ -238,9 +248,11 @@ module RGeo
           num_extras -= 1 if @cur_expect_z
           @cur_expect_m = num_extras > 0 && (!@cur_factory || @cur_factory_support_m) ? true : false
           num_extras -= 1 if @cur_expect_m
+
           if num_extras > 0
             raise Error::ParseError, "Found #{extra.size + 2} coordinates, which is too many for this factory."
           end
+
           ensure_factory
         else
           val = 0
@@ -390,13 +402,11 @@ module RGeo
       end
 
       def expect_token_type(type)
-        unless type === @cur_token
-          raise Error::ParseError, "#{type.inspect} expected but #{@cur_token.inspect} found."
-        end
+        raise Error::ParseError, "#{type.inspect} expected but #{@cur_token.inspect} found." unless type === @cur_token
       end
 
       def next_token
-        if @scanner.scan_until(/\(|\)|\[|\]|,|[^\s\(\)\[\],]+/)
+        if @scanner.scan_until(/\(|\)|\[|\]|,|[^\s()\[\],]+/)
           token = @scanner.matched
           case token
           when /^[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?$/

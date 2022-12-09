@@ -23,9 +23,11 @@ module RGeo
             next_token
             return value
           end
+
           unless @cur_token.is_a?(TypeString)
             raise Error::ParseError, "Found token #{@cur_token} when we expected a value"
           end
+
           type = @cur_token
           next_token
           consume_tokentype(:begin)
@@ -47,9 +49,11 @@ module RGeo
             obj = AxisInfo.create(args.shift(QuotedString), args.shift(TypeString))
           when "TOWGS84"
             bursa_wolf_params = args.find_all(Numeric)
+
             unless bursa_wolf_params.size == 7
               raise Error::ParseError, "Expected 7 Bursa Wolf parameters but found #{bursa_wolf_params.size}"
             end
+
             obj = WGS84ConversionInfo.create(*bursa_wolf_params)
           when "UNIT"
             klass = case containing_type
@@ -66,7 +70,13 @@ module RGeo
           when "PRIMEM"
             obj = PrimeMeridian.create(args.shift(QuotedString), nil, args.shift(Numeric), *args.create_optionals)
           when "SPHEROID"
-            obj = Ellipsoid.create_flattened_sphere(args.shift(QuotedString), args.shift(Numeric), args.shift(Numeric), args.find_first(LinearUnit), *args.create_optionals)
+            obj = Ellipsoid.create_flattened_sphere(
+              args.shift(QuotedString),
+              args.shift(Numeric),
+              args.shift(Numeric),
+              args.find_first(LinearUnit),
+              *args.create_optionals
+            )
           when "PROJECTION"
             name = args.shift(QuotedString)
             obj = Projection.create(name, name, args.find_all(ProjectionParameter), *args.create_optionals)
@@ -87,15 +97,18 @@ module RGeo
             optionals = args.create_optionals
             obj = CoordinateSystem.create(defn, dim, *optionals)
           when "COMPD_CS"
-            obj = CompoundCoordinateSystem.create(args.shift(QuotedString), args.shift(CoordinateSystem), args.shift(CoordinateSystem), *args.create_optionals)
+            obj = CompoundCoordinateSystem.create(
+              args.shift(QuotedString),
+              args.shift(CoordinateSystem),
+              args.shift(CoordinateSystem),
+              *args.create_optionals
+            )
           when "LOCAL_CS"
             name = args.shift(QuotedString)
             local_datum = args.find_first(LocalDatum)
             unit = args.find_first(Unit)
             axes = args.find_all(AxisInfo)
-            unless axes.size > 0
-              raise Error::ParseError, "Expected at least one AXIS in a LOCAL_CS"
-            end
+            raise Error::ParseError, "Expected at least one AXIS in a LOCAL_CS" unless axes.size > 0
             obj = LocalCoordinateSystem.create(name, local_datum, unit, axes, *args.create_optionals)
           when "GEOCCS"
             name = args.shift(QuotedString)
@@ -103,10 +116,21 @@ module RGeo
             prime_meridian = args.find_first(PrimeMeridian)
             linear_unit = args.find_first(LinearUnit)
             axes = args.find_all(AxisInfo)
+
             unless axes.size == 0 || axes.size == 3
               raise Error::ParseError, "GEOCCS must contain either 0 or 3 AXIS parameters"
             end
-            obj = GeocentricCoordinateSystem.create(name, horizontal_datum, prime_meridian, linear_unit, axes[0], axes[1], axes[2], *args.create_optionals)
+
+            obj = GeocentricCoordinateSystem.create(
+              name,
+              horizontal_datum,
+              prime_meridian,
+              linear_unit,
+              axes[0],
+              axes[1],
+              axes[2],
+              *args.create_optionals
+            )
           when "VERT_CS"
             name = args.shift(QuotedString)
             vertical_datum = args.find_first(VerticalDatum)
@@ -119,10 +143,20 @@ module RGeo
             prime_meridian = args.find_first(PrimeMeridian)
             angular_unit = args.find_first(AngularUnit)
             axes = args.find_all(AxisInfo)
+
             unless axes.size == 0 || axes.size == 2
               raise Error::ParseError, "GEOGCS must contain either 0 or 2 AXIS parameters"
             end
-            obj = GeographicCoordinateSystem.create(name, angular_unit, horizontal_datum, prime_meridian, axes[0], axes[1], *args.create_optionals)
+
+            obj = GeographicCoordinateSystem.create(
+              name,
+              angular_unit,
+              horizontal_datum,
+              prime_meridian,
+              axes[0],
+              axes[1],
+              *args.create_optionals
+            )
           when "PROJCS"
             name = args.shift(QuotedString)
             geographic_coordinate_system = args.find_first(GeographicCoordinateSystem)
@@ -131,10 +165,20 @@ module RGeo
             projection.instance_variable_get(:@parameters).concat(parameters)
             linear_unit = args.find_first(LinearUnit)
             axes = args.find_all(AxisInfo)
+
             unless axes.size == 0 || axes.size == 2
               raise Error::ParseError, "PROJCS must contain either 0 or 2 AXIS parameters"
             end
-            obj = ProjectedCoordinateSystem.create(name, geographic_coordinate_system, projection, linear_unit, axes[0], axes[1], *args.create_optionals)
+
+            obj = ProjectedCoordinateSystem.create(
+              name,
+              geographic_coordinate_system,
+              projection,
+              linear_unit,
+              axes[0],
+              axes[1],
+              *args.create_optionals
+            )
           else
             raise Error::ParseError, "Unrecognized type: #{type}"
           end
@@ -150,9 +194,9 @@ module RGeo
         end
 
         def expect_tokentype(type) # :nodoc:
-          unless type === @cur_token
-            raise Error::ParseError, "#{type.inspect} expected but #{@cur_token.inspect} found."
-          end
+          return if type === @cur_token
+
+          raise Error::ParseError, "#{type.inspect} expected but #{@cur_token.inspect} found."
         end
 
         def next_token # :nodoc:
@@ -176,13 +220,14 @@ module RGeo
           when "", nil
             @cur_token = nil
           else
-            @scanner.scan_until(/[^\s\(\)\[\],"]+/)
+            @scanner.scan_until(/[^\s()\[\],"]+/)
             token = @scanner.matched
-            if token =~ /^[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?$/
-              @cur_token = token.to_f
-            else
+
+            unless token =~ /^[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?$/
               raise Error::ParseError, "Bad token: #{token.inspect}"
             end
+
+            @cur_token = token.to_f
           end
           @cur_token
         end
@@ -207,13 +252,12 @@ module RGeo
         end
 
         class ExtensionClause # :nodoc:
+          attr_reader :key, :value
+
           def initialize(key, value) # :nodoc:
             @key = key
             @value = value
           end
-
-          attr_reader :key # :nodoc:
-          attr_reader :value # :nodoc:
         end
 
         class ArgumentList # :nodoc:
@@ -226,12 +270,13 @@ module RGeo
           end
 
           def assert_empty # :nodoc:
-            if @values.size > 0
-              names = @values.map do |val|
-                val.is_a?(Base) ? val.wkt_typename : val.inspect
-              end
-              raise Error::ParseError, "#{@values.size} unexpected arguments: #{names.join(', ')}"
+            return if @values.empty?
+
+            names = @values.map do |val|
+              val.is_a?(Base) ? val.wkt_typename : val.inspect
             end
+
+            raise Error::ParseError, "#{@values.size} unexpected arguments: #{names.join(', ')}"
           end
 
           def find_first(klass) # :nodoc:
@@ -266,12 +311,8 @@ module RGeo
 
           def shift(klass = nil) # :nodoc:
             val = @values.shift
-            unless val
-              raise Error::ParseError, "No arguments left... expected #{klass}"
-            end
-            if klass && !val.is_a?(klass)
-              raise Error::ParseError, "Expected #{klass} but got #{val.class}"
-            end
+            raise Error::ParseError, "No arguments left... expected #{klass}" unless val
+            raise Error::ParseError, "Expected #{klass} but got #{val.class}" if klass && !val.is_a?(klass)
             val
           end
         end
