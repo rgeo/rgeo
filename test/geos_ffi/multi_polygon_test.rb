@@ -7,15 +7,11 @@
 # -----------------------------------------------------------------------------
 
 require "test_helper"
+require_relative "skip_ffi"
 
 class GeosFFIMultiPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::MultiPolygonTests
-
-  def setup
-    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
-
-    super
-  end
+  include SkipFFI
 
   def create_factories
     @factory = RGeo::Geos.factory(native_interface: :ffi)

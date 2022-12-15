@@ -8,11 +8,12 @@
 
 require_relative "../test_helper"
 require_relative "../common/validity_tests"
+require_relative "skip_ffi"
 
 class GeosFFIMiscTest < Minitest::Test # :nodoc:
-  def setup
-    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
+  prepend SkipFFI
 
+  def setup
     @factory = RGeo::Geos.factory(srid: 4326, native_interface: :ffi)
   end
 

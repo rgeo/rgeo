@@ -7,12 +7,13 @@
 # -----------------------------------------------------------------------------
 
 require "test_helper"
+require_relative "skip_capi"
 
 class GeosFactoryTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::FactoryTests
+  prepend SkipCAPI
 
   def setup
-    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
     @factory = RGeo::Geos.factory(srid: 1000)
     @srid = 1000
   end

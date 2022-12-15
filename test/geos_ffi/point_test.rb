@@ -7,13 +7,13 @@
 # -----------------------------------------------------------------------------
 
 require "test_helper"
+require_relative "skip_ffi"
 
 class GeosFFIPointTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PointTests
+  include SkipFFI
 
   def setup
-    skip "Needs GEOS FFI." unless RGeo::Geos.ffi_supported?
-
     @factory = RGeo::Geos.factory(native_interface: :ffi, buffer_resolution: 8)
     @zfactory = RGeo::Geos.factory(has_z_coordinate: true, native_interface: :ffi)
     @mfactory = RGeo::Geos.factory(has_m_coordinate: true, native_interface: :ffi)

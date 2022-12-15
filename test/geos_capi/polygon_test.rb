@@ -7,17 +7,18 @@
 # -----------------------------------------------------------------------------
 
 require_relative "../test_helper"
+require_relative "skip_capi"
 
 class GeosPolygonTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::PolygonTests
+  prepend SkipCAPI
+
+  def setup
+    @factory = RGeo::Geos.factory
+  end
 
   def assert_close_enough(pt1, pt2)
     assert((pt1.x - pt2.x).abs < 0.00000001 && (pt1.y - pt2.y).abs < 0.00000001)
-  end
-
-  def setup
-    skip "Needs GEOS CAPI." unless RGeo::Geos.capi_supported?
-    @factory = RGeo::Geos.factory
   end
 
   def test_intersection

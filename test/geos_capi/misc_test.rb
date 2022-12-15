@@ -9,6 +9,7 @@
 require "ostruct"
 require_relative "../test_helper"
 require_relative "../common/validity_tests"
+require_relative "skip_capi"
 
 class GeosMiscTest < Minitest::Test # :nodoc:
   def setup
