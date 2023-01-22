@@ -100,7 +100,7 @@ module RGeo
           support_z = factory.property(:has_z_coordinate)
           support_m = factory.property(:has_m_coordinate)
         end
-        str = generate_feature(obj, support_z, support_m, true)
+        str = generate_feature(obj, support_z, support_m, toplevel: true)
         case @convert_case
         when :upper
           str.upcase
@@ -113,7 +113,7 @@ module RGeo
 
       private
 
-      def generate_feature(obj, support_z, support_m, toplevel = false)
+      def generate_feature(obj, support_z, support_m, toplevel: false)
         type = obj.geometry_type
         type = Feature::LineString if type.subtype_of?(Feature::LineString)
         tag = type.type_name.dup

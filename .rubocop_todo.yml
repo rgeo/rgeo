@@ -45,13 +45,3 @@ Naming/VariableNumber:
 # Offense count: 60
 Style/Documentation:
   Enabled: false
-
-# Offense count: 5
-# Configuration parameters: AllowedMethods.
-# AllowedMethods: respond_to_missing?
-Style/OptionalBooleanParameter:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-    - 'lib/rgeo/wkrep/wkb_generator.rb'
-    - 'lib/rgeo/wkrep/wkt_generator.rb'
-    - 'lib/rgeo/wkrep/wkt_parser.rb'

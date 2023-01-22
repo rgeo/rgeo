@@ -106,7 +106,7 @@ module RGeo
           has_m = false
         end
         result = Result.new(has_z, has_m)
-        generate_feature(obj, result, true)
+        generate_feature(obj, result, toplevel: true)
         result.emit(@hex_format)
       end
 
@@ -165,7 +165,7 @@ module RGeo
         array
       end
 
-      def generate_feature(obj, rval, toplevel = false)
+      def generate_feature(obj, rval, toplevel: false)
         emit_byte(@little_endian ? 1 : 0, rval)
         type = obj.geometry_type
         type_code = TYPE_CODES[type]
