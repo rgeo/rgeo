@@ -212,7 +212,7 @@ module RGeo
         end
         case type
         when "point"
-          parse_point(true)
+          parse_point(convert_empty: true)
         when "linestring"
           parse_line_string
         when "polygon"
@@ -273,7 +273,7 @@ module RGeo
         @cur_factory.point(x, y, *extra)
       end
 
-      def parse_point(convert_empty = false)
+      def parse_point(convert_empty: false)
         if convert_empty && @cur_token == "empty"
           point = ensure_factory.multi_point([])
         else
