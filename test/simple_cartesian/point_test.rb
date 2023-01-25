@@ -29,7 +29,7 @@ class CartesianPointTest < Minitest::Test # :nodoc:
     assert_in_delta(13, point1.distance(point2), 0.0001)
   end
 
-  def test_lon_180
+  def test_lon180
     factory = RGeo::Geographic.simple_mercator_factory
     points = [
       [48.02006, -179.47466],

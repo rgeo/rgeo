@@ -55,11 +55,11 @@ module RGeo
           end
         end
 
-        def ffi_supports_prepared_level_1
+        def ffi_supports_prepared_level1
           FFI_SUPPORTED && ::Geos::FFIGeos.respond_to?(:GEOSPreparedContains_r)
         end
 
-        def ffi_supports_prepared_level_2
+        def ffi_supports_prepared_level2
           FFI_SUPPORTED && ::Geos::FFIGeos.respond_to?(:GEOSPreparedDisjoint_r)
         end
 

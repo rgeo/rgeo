@@ -14,7 +14,7 @@ module RGeo
       def initialize(geography_factory, opts = {})
         @geography_factory = geography_factory
         @projection_factory = Cartesian.preferred_factory(srid: 3857,
-                                                          coord_sys: SimpleMercatorProjector._coordsys_3857,
+                                                          coord_sys: SimpleMercatorProjector._coordsys3857,
                                                           buffer_resolution: opts[:buffer_resolution],
                                                           has_z_coordinate: opts[:has_z_coordinate],
                                                           has_m_coordinate: opts[:has_m_coordinate])
@@ -104,10 +104,10 @@ module RGeo
         )
       end
 
-      def self._coordsys_3857 # :nodoc:
-        return @coordsys_3857 if defined?(@coordsys_3857)
+      def self._coordsys3857 # :nodoc:
+        return @coordsys3857 if defined?(@coordsys3857)
 
-        @coordsys_3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857)
+        @coordsys3857 = CoordSys::CONFIG.default_coord_sys_class.create(3857)
       end
     end
   end

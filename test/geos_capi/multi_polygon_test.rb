@@ -23,7 +23,7 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
     assert_equal(@factory.collection([]), @factory.multi_polygon([]).centroid)
   end
 
-  def test_geos_bug_582
+  def test_geos_bug582
     f = RGeo::Geos.factory(buffer_resolution: 2)
     p1 = f.polygon(f.linear_ring([]))
     p2 = f.polygon(f.linear_ring([f.point(0, 0), f.point(0, 1), f.point(1, 1), f.point(1, 0)]))
