@@ -9,6 +9,7 @@
 * Add `transform` method to `Geometry`. #342
 * Fix rubocop_todos and other refactoring. (@thestelz) #338
 * Fix Style/OptionalBooleanParameter from rubocop_todos. (@haroon26) #349
+* Fix Lint/MissingSuper from rubocop_todos. (@haroon26) #352
 
 **Bug Fixes**
 
