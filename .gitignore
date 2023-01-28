@@ -14,3 +14,4 @@ mkmf.log
 Gemfile.lock
 /yardoc
 /.yardoc
+.tool-versions
