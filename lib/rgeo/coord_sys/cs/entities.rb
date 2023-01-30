@@ -251,6 +251,7 @@ module RGeo
         # :startdoc:
 
         def initialize(name, orientation) # :nodoc:
+          super()
           @name = name
           @orientation =
             case orientation
@@ -302,6 +303,7 @@ module RGeo
       # system that the projected coordinate system is based on.
       class ProjectionParameter < Base
         def initialize(name, value) # :nodoc:
+          super()
           @name = name
           @value = value.to_f
         end
@@ -339,6 +341,7 @@ module RGeo
       # points East, and the Z axis points North.
       class WGS84ConversionInfo < Base
         def initialize(dx_meters, dy_meters, dz_meters, ex_arc_seconds, ey_arc_seconds, ez_arc_seconds, ppm) # :nodoc:
+          super()
           @dx = dx_meters.to_f
           @dy = dy_meters.to_f
           @dz = dz_meters.to_f
@@ -427,6 +430,7 @@ module RGeo
       class Info < Base
         def initialize(name, authority = nil, authority_code = nil, abbreviation = nil, init_alias = nil,
                        remarks = nil, extensions = nil) # :nodoc:
+          super()
           @name = name
           @authority = authority ? authority.to_s : nil
           @authority_code = authority_code ? authority_code.to_s : nil
