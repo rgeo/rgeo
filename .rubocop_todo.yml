@@ -6,11 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 4
-Lint/MissingSuper:
-  Exclude:
-    - 'lib/rgeo/coord_sys/cs/entities.rb'
-
 # Offense count: 3
 Lint/NonLocalExitFromIterator:
   Exclude:
