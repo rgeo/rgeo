@@ -89,7 +89,7 @@ class GeosMiscTest < Minitest::Test # :nodoc:
     assert_equal(false, polygon2.prepared?)
   end
 
-  def test_gh_21
+  def test_gh21
     # Test for GH-21 (seg fault in rgeo_convert_to_geos_geometry)
     # This seemed to fail under Ruby 1.8.7 only.
     f = RGeo::Geographic.simple_mercator_factory

@@ -22,21 +22,6 @@ Metrics/BlockNesting:
   Exclude:
     - 'lib/rgeo/feature/types.rb'
 
-# Offense count: 20
-# Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers.
-# SupportedStyles: snake_case, normalcase, non_integer
-# AllowedIdentifiers: capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339
-Naming/VariableNumber:
-  Exclude:
-    - 'lib/rgeo/geographic/interface.rb'
-    - 'lib/rgeo/geographic/simple_mercator_projector.rb'
-    - 'lib/rgeo/geos/utils.rb'
-    - 'test/coord_sys/ogc_cs_test.rb'
-    - 'test/coord_sys/sr_org_test.rb'
-    - 'test/geos_capi/misc_test.rb'
-    - 'test/geos_capi/multi_polygon_test.rb'
-    - 'test/simple_cartesian/point_test.rb'
-
 # Offense count: 60
 Style/Documentation:
   Enabled: false

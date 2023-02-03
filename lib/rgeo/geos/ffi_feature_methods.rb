@@ -168,43 +168,43 @@ module RGeo
 
       def disjoint?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep = request_prepared if Utils.ffi_supports_prepared_level2
         prep ? prep.disjoint?(fg) : @fg_geom.disjoint?(fg)
       end
 
       def intersects?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_1
+        prep = request_prepared if Utils.ffi_supports_prepared_level1
         prep ? prep.intersects?(fg) : @fg_geom.intersects?(fg)
       end
 
       def touches?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep = request_prepared if Utils.ffi_supports_prepared_level2
         prep ? prep.touches?(fg) : @fg_geom.touches?(fg)
       end
 
       def crosses?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep = request_prepared if Utils.ffi_supports_prepared_level2
         prep ? prep.crosses?(fg) : @fg_geom.crosses?(fg)
       end
 
       def within?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep = request_prepared if Utils.ffi_supports_prepared_level2
         prep ? prep.within?(fg) : @fg_geom.within?(fg)
       end
 
       def contains?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_1
+        prep = request_prepared if Utils.ffi_supports_prepared_level1
         prep ? prep.contains?(fg) : @fg_geom.contains?(fg)
       end
 
       def overlaps?(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
-        prep = request_prepared if Utils.ffi_supports_prepared_level_2
+        prep = request_prepared if Utils.ffi_supports_prepared_level2
         prep ? prep.overlaps?(fg) : @fg_geom.overlaps?(fg)
       end
 

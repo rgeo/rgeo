@@ -506,7 +506,7 @@ class OgcCsTest < Minitest::Test # :nodoc:
     assert_equal(ct.target_cs, inv_ct.source_cs)
   end
 
-  def test_parse_epsg_6055
+  def test_parse_epsg6055
     input = 'DATUM["Popular_Visualisation_Datum",SPHEROID["Popular Visualisation Sphere",6378137.0,0.0,' \
             'AUTHORITY["EPSG","7059"]],TOWGS84[0.0,0.0,0.0,0.0,0.0,0.0,0.0],AUTHORITY["EPSG","6055"]]'
     obj = RGeo::CoordSys::CS.create_from_wkt(input)
@@ -525,7 +525,7 @@ class OgcCsTest < Minitest::Test # :nodoc:
     assert_equal(input, obj.to_wkt)
   end
 
-  def test_parse_epsg_7405
+  def test_parse_epsg7405
     input = 'COMPD_CS["OSGB36 / British National Grid + ODN",PROJCS["OSGB 1936 / British National Grid",GEOGCS[' \
             '"OSGB 1936",DATUM["OSGB 1936",SPHEROID["Airy 1830",6377563.396,299.3249646,AUTHORITY["EPSG","7001"]],' \
             'TOWGS84[446.448,-125.157,542.06,0.15,0.247,0.842,-4.2261596151967575],AUTHORITY["EPSG","6277"]],' \

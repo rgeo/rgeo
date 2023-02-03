@@ -106,7 +106,7 @@ module RGeo
           "Spherical",
           has_z_coordinate: opts[:has_z_coordinate],
           has_m_coordinate: opts[:has_m_coordinate],
-          coord_sys: coord_sys || coord_sys_4055,
+          coord_sys: coord_sys || coord_sys4055,
           buffer_resolution: opts[:buffer_resolution],
           wkt_parser: opts[:wkt_parser],
           wkb_parser: opts[:wkb_parser],
@@ -189,7 +189,7 @@ module RGeo
       def simple_mercator_factory(opts = {})
         factory = Geographic::Factory.new(
           "Projected",
-          coord_sys: coord_sys_4326,
+          coord_sys: coord_sys4326,
           srid: 4326,
           wkt_parser: opts[:wkt_parser],
           wkb_parser: opts[:wkb_parser],
@@ -379,16 +379,16 @@ module RGeo
 
       private
 
-      def coord_sys_4055
-        return @coord_sys_4055 if defined?(@coord_sys_4055)
+      def coord_sys4055
+        return @coord_sys4055 if defined?(@coord_sys4055)
 
-        @coord_sys_4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055)
+        @coord_sys4055 = CoordSys::CONFIG.default_coord_sys_class.create(4055)
       end
 
-      def coord_sys_4326
-        return @coord_sys_4326 if defined?(@coord_sys_4326)
+      def coord_sys4326
+        return @coord_sys4326 if defined?(@coord_sys4326)
 
-        @coord_sys_4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326)
+        @coord_sys4326 = CoordSys::CONFIG.default_coord_sys_class.create(4326)
       end
     end
   end
