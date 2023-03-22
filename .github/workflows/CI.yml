@@ -13,11 +13,11 @@ jobs:
       matrix:
         ruby:
           - head
+          - '3.2'
           - '3.1'
           - '3.0'
           - '2.7'
-          - '2.6'
-          - "jruby-9.3.7.0"
+          - "jruby"
         os:
           - ubuntu
           # Windows users, feel free to open a PR :)
@@ -29,7 +29,7 @@ jobs:
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -55,7 +55,7 @@ jobs:
   Memcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
@@ -69,7 +69,7 @@ jobs:
   RuboCop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 'head'
@@ -82,7 +82,7 @@ jobs:
     #   outdated clang-format package.
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install clang-format
         run: sudo apt-get install -yqq clang-format
       - name: Show version

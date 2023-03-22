@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Daniel Azuma", "Tee Parham"]
   spec.email = ["dazuma@gmail.com", "parhameter@gmail.com", "kfdoggett@gmail.com", "buonomo.ulysse@gmail.com"]
   spec.homepage = "https://github.com/rgeo/rgeo"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.required_ruby_version = ">= 2.7.7"
   spec.license = "BSD-3-Clause"
 
   spec.metadata["rubygems_mfa_required"] = "true"
