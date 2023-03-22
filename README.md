@@ -5,11 +5,10 @@
 
 RGeo is a geospatial data library for Ruby.
 
-:warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning:
+***Contributors Wanted!***
 
-This organization is looking for maintainers, see [this issue](https://github.com/rgeo/rgeo/issues/216) for more information.
+If you use RGeo and are interested in contributing, please check out our [open issues](https://github.com/rgeo/rgeo/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%2C%22help+wanted%22) to see if there's anything you're able to help with.
 
-:warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning::warning:
 
 ### Summary
 
