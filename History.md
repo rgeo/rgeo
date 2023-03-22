@@ -4,6 +4,7 @@
 
 * Fix Naming/VariableNumber from rubocop_todos. (@haroon26) #351
 * Fix Lint/MissingSuper from rubocop_todos. (@haroon26) #352
+* Drop support for Ruby 2.6. (@seuros) #353
 
 ### 3.0.0 / 2023-01-25
 
