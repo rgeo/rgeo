@@ -25,7 +25,7 @@ jobs:
           - '3.9.4'
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'macos' }}
-    name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
+    name: Ruby ${{ matrix.ruby }}, Geos ${{ matrix.geos }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v2
