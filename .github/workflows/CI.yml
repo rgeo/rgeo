@@ -22,7 +22,7 @@ jobs:
           - ubuntu
           - macos
         geos:
-          - '3.11.2'
+          - '3.9.4'
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
