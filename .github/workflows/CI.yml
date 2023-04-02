@@ -20,13 +20,9 @@ jobs:
           - "jruby"
         os:
           - ubuntu
-          # Windows users, feel free to open a PR :)
-          # - windows
           - macos
-        exclude:
-          - os: windows # See issue #242, windows support would be welcome.
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v3
@@ -42,9 +38,6 @@ jobs:
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install geos
-      - name: Install Geos (Windows)
-        if: matrix.os == 'windows'
-        run: TODO
       - name: Bundle Install
         run: bundle install
       - name: Set Maintainer Mode
