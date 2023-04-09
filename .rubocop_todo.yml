@@ -11,12 +11,6 @@
 Metrics/AbcSize:
   Max: 180
 
-# Offense count: 4
-# Configuration parameters: CountBlocks.
-Metrics/BlockNesting:
-  Exclude:
-    - 'lib/rgeo/feature/types.rb'
-
 # Offense count: 60
 Style/Documentation:
   Enabled: false
