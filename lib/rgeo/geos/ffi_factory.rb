@@ -295,10 +295,8 @@ module RGeo
         inner_rings = inner_rings.to_a unless inner_rings.is_a?(Array)
         return unless RGeo::Feature::LineString.check_type(outer_ring)
         outer_ring = create_fg_linear_ring(outer_ring.points)
-        inner_rings = inner_rings.map do |r|
-          return unless RGeo::Feature::LineString.check_type(r)
-          create_fg_linear_ring(r.points)
-        end
+        return unless inner_rings.all? { |r| RGeo::Feature::LineString.check_type(r) }
+        inner_rings = inner_rings.map { |r| create_fg_linear_ring(r.points) }
         inner_rings.compact!
         fg_geom = ::Geos::Utils.create_polygon(outer_ring, *inner_rings)
         FFIPolygonImpl.new(self, fg_geom, nil)
@@ -327,16 +325,16 @@ module RGeo
       def multi_point(elems)
         elems = elems.to_a unless elems.is_a?(Array)
         elems = elems.map do |elem|
-          elem = RGeo::Feature.cast(
+          RGeo::Feature.cast(
             elem,
             self,
             RGeo::Feature::Point,
             :force_new,
             :keep_subtype
           )
-          return unless elem
-          elem.detach_fg_geom
         end
+        return unless elems.all?
+        elems = elems.map(&:detach_fg_geom)
         klasses = Array.new(elems.size, FFIPointImpl)
         fg_geom = ::Geos::Utils.create_collection(::Geos::GeomTypes::GEOS_MULTIPOINT, elems)
         FFIMultiPointImpl.new(self, fg_geom, klasses)
@@ -485,8 +483,8 @@ module RGeo
           size += 1
         end
         cs = ::Geos::CoordinateSequence.new(size, 3)
+        return unless points.all? { |p| RGeo::Feature::Point.check_type(p) }
         points.each_with_index do |p, i|
-          return unless RGeo::Feature::Point.check_type(p)
           cs.set_x(i, p.x)
           cs.set_y(i, p.y)
           if @has_z
