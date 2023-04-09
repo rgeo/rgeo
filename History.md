@@ -2,6 +2,7 @@
 
 **Minor Changes**
 
+* Fix Lint/NonLocalExitFromIterator and Metrics/BlockNesting from rubocop_todos. (@teckwan) #356
 * Fix Naming/VariableNumber from rubocop_todos. (@haroon26) #351
 * Fix Lint/MissingSuper from rubocop_todos. (@haroon26) #352
 * Drop support for Ruby 2.6. (@seuros) #353
