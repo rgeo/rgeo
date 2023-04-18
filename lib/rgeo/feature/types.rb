@@ -191,21 +191,15 @@ module RGeo
           if nfactory == factory
             force_new ? obj.dup : obj
           elsif type == Point
-            cs = ncs = nil
-            if project
-              cs = factory.coord_sys
-              ncs = nfactory.coord_sys
-            end
-            hasz = factory.property(:has_z_coordinate)
-            nhasz = nfactory.property(:has_z_coordinate)
-            if cs && ncs
-              coords = cs.transform_coords(ncs, obj.x, obj.y, hasz ? obj.z : nil)
-              coords << (hasz ? obj.z : 0.0) if nhasz && coords.size < 3
-            else
-              coords = [obj.x, obj.y]
-              coords << (hasz ? obj.z : 0.0) if nhasz
-            end
-            coords << (factory.property(:has_m_coordinate) ? obj.m : 0.0) if nfactory.property(:has_m_coordinate)
+            z = factory.property(:has_z_coordinate) ? obj.z : nil
+            coords = if project && (cs = factory.coord_sys) && (ncs = nfactory.coord_sys)
+                       cs.transform_coords(ncs, obj.x, obj.y, z)
+                     else
+                       [obj.x, obj.y]
+                     end
+            coords << (z || 0.0) if nfactory.property(:has_z_coordinate) && coords.size < 3
+            m = factory.property(:has_m_coordinate) ? obj.m : nil
+            coords << (m || 0.0) if nfactory.property(:has_m_coordinate)
             nfactory.point(*coords)
           elsif type == Line
             nfactory.line(cast(obj.start_point, nfactory, opts), cast(obj.end_point, nfactory, opts))

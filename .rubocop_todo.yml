@@ -6,21 +6,10 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 3
-Lint/NonLocalExitFromIterator:
-  Exclude:
-    - 'lib/rgeo/geos/ffi_factory.rb'
-
 # Offense count: 141
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:
   Max: 180
-
-# Offense count: 4
-# Configuration parameters: CountBlocks.
-Metrics/BlockNesting:
-  Exclude:
-    - 'lib/rgeo/feature/types.rb'
 
 # Offense count: 60
 Style/Documentation:
