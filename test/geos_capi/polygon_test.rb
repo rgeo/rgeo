@@ -90,7 +90,12 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     simplified = poly.simplify_preserve_topology(1)
     interior_points = simplified.interior_rings[0].points
 
-    assert_equal 5, interior_points.length
+    # https://github.com/libgeos/geos/pull/784
+    if geos_version_match(">= 3.12.0")
+      assert_equal 4, interior_points.length
+    else
+      assert_equal 5, interior_points.length
+    end
   end
 
   def test_buffer_with_style

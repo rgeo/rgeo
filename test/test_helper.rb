@@ -18,6 +18,12 @@ def psych_load(*args)
   end
 end
 
+# Check if GEOS version match requirement, this will
+# be either the CAPI or FFI depending on installation.
+def geos_version_match(requirement)
+  Gem::Requirement.new(requirement).satisfied_by? Gem::Version.new(RGeo::Geos.version)
+end
+
 require_relative "common/factory_tests"
 require_relative "common/geometry_collection_tests"
 require_relative "common/line_string_tests"

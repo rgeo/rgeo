@@ -7,6 +7,10 @@
 * Fix Lint/MissingSuper from rubocop_todos. (@haroon26) #352
 * Drop support for Ruby 2.6. (@seuros) #353
 
+**Bug Fixes**
+
+* Support GEOS 3.12 #361
+
 ### 3.0.0 / 2023-01-25
 
 **Breaking Changes**

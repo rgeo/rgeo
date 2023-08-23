@@ -6,7 +6,7 @@ require_relative "../test_helper"
 # If this test raises an error, then the Examples.md file should
 # be updated.
 
-class ExamplesTest < MiniTest::Test
+class ExamplesTest < Minitest::Test
   def test_examples
     unless RGeo::Geos.ffi_supported? && RGeo::Geos.capi_supported?
       skip "Examples can only be run with FFI and CAPI support"

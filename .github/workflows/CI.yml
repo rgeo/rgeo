@@ -5,6 +5,12 @@ on:
     branches:
       - main
   pull_request:
+  workflow_dispatch:
+
+# This allows a subsequently queued workflow run to interrupt previous runs.
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
 jobs:
   Test:
@@ -49,7 +55,7 @@ jobs:
         run: bundle install
       - name: Set Maintainer Mode
         if: ${{ github.event.pull_request }}
-        run: export MAINTAINER_MODE=1
+        run: export MAINTAINER_MODE='-Wold-style-definition'
       - name: Test
         run: bundle exec rake
   Memcheck:
