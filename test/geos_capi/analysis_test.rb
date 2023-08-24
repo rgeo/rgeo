@@ -20,11 +20,20 @@ module GeosCapi
       assert_raises(RGeo::Error::RGeoError) { RGeo::Geos::Analysis.ccw?(ring) }
     end
 
-    def test_ccw_p_raises_if_no_coordseq
+    def test_ccw_p_false_if_not_enough
       skip "Needs GEOS 3.7+" unless RGeo::Geos::Analysis.ccw_supported?
       factory = RGeo::Geos.factory(native_interface: :capi)
-      point = factory.point(1, 2)
-      assert_raises(RGeo::Error::InvalidGeometry) { RGeo::Geos::Analysis.ccw?(point) }
+      pt1 = factory.point(1, 2)
+      pt2 = factory.point(2, 0)
+      seq = factory.line_string([pt1, pt2])
+      # https://github.com/libgeos/geos/pull/878
+      if geos_version_match(">= 3.12.0")
+        assert_equal(false, RGeo::Geos::Analysis.ccw?(pt1))
+        assert_equal(false, RGeo::Geos::Analysis.ccw?(seq))
+      else
+        assert_raises(RGeo::Error::InvalidGeometry) { RGeo::Geos::Analysis.ccw?(pt1) }
+        assert_raises(RGeo::Error::InvalidGeometry) { RGeo::Geos::Analysis.ccw?(seq) }
+      end
     end
 
     def test_ccw_p_returns_true_if_ccw

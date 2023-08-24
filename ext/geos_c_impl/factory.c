@@ -378,6 +378,7 @@ method_factory_write_for_marshal(VALUE self, VALUE obj)
   wkb_writer = self_data->marshal_wkb_writer;
   if (!wkb_writer) {
     wkb_writer = GEOSWKBWriter_create();
+    GEOSWKBWriter_setOutputDimension(wkb_writer, 2);
     if (has_3d) {
       GEOSWKBWriter_setOutputDimension(wkb_writer, 3);
     }
@@ -427,6 +428,7 @@ method_factory_write_for_psych(VALUE self, VALUE obj)
   wkt_writer = self_data->psych_wkt_writer;
   if (!wkt_writer) {
     wkt_writer = GEOSWKTWriter_create();
+    GEOSWKTWriter_setOutputDimension(wkt_writer, 2);
     GEOSWKTWriter_setTrim(wkt_writer, 1);
     if (has_3d) {
       GEOSWKTWriter_setOutputDimension(wkt_writer, 3);
