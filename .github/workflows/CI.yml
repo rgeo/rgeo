@@ -52,7 +52,7 @@ jobs:
         if: steps.geos-cache.outputs.cache-hit != 'true'
         run: |
           wget -c https://download.osgeo.org/geos/geos-${{ matrix.geos }}.tar.bz2
-          tar -xf geo-${{ matrix.geos }}.tar.bz2
+          tar -xf geos-${{ matrix.geos }}.tar.bz2
           cd geos-${{ matrix.geos }}
           mkdir build
           cd build
