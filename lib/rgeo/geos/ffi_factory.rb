@@ -56,6 +56,7 @@ module RGeo
           @wkt_writer = nil
         else
           @wkt_writer = ::Geos::WktWriter.new
+          @wkt_writer.output_dimensions = 2
           @wkt_writer.trim = true
           @wkt_generator = nil
         end
@@ -66,6 +67,7 @@ module RGeo
           @wkb_writer = nil
         else
           @wkb_writer = ::Geos::WkbWriter.new
+          @wkb_writer.output_dimensions = 2
           @wkb_generator = nil
         end
 
@@ -447,6 +449,7 @@ module RGeo
       def write_for_marshal(geom)
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
           wkb_writer = ::Geos::WkbWriter.new
+          wkb_writer.output_dimensions = 2
           wkb_writer.output_dimensions = 3 if @_has_3d
           wkb_writer.write(geom.fg_geom)
         else
@@ -461,6 +464,7 @@ module RGeo
       def write_for_psych(geom)
         if Utils.ffi_supports_set_output_dimension || !@_has_3d
           wkt_writer = ::Geos::WktWriter.new
+          wkt_writer.output_dimensions = 2
           wkt_writer.trim = true
           wkt_writer.output_dimensions = 3 if @_has_3d
           wkt_writer.write(geom.fg_geom)

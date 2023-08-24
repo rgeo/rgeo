@@ -266,6 +266,7 @@ method_geometry_as_text(VALUE self)
       wkt_writer = factory_data->wkt_writer;
       if (!wkt_writer) {
         wkt_writer = GEOSWKTWriter_create();
+        GEOSWKTWriter_setOutputDimension(wkt_writer, 2);
         GEOSWKTWriter_setTrim(wkt_writer, 1);
         factory_data->wkt_writer = wkt_writer;
       }
@@ -304,6 +305,7 @@ method_geometry_as_binary(VALUE self)
 
       if (!wkb_writer) {
         wkb_writer = GEOSWKBWriter_create();
+        GEOSWKBWriter_setOutputDimension(wkb_writer, 2);
         factory_data->wkb_writer = wkb_writer;
       }
       str = (char*)GEOSWKBWriter_write(wkb_writer, self_geom, &size);

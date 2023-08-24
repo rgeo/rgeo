@@ -5,7 +5,7 @@ require "set"
 
 require_relative "../test_helper"
 
-class DocumentationLinksTest < MiniTest::Test # :nodoc:
+class DocumentationLinksTest < Minitest::Test # :nodoc:
   def test_every_markdown_documents_linked
     root_path = File.join(__dir__, "..", "..")
     by_files = Dir[File.join(root_path, "doc", "*.md")]
