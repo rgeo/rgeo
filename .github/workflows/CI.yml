@@ -63,12 +63,12 @@ jobs:
           mkdir build
           cd build
           cmake ..
-          cmake --build . -j8
+          cmake --build . -j2
           cd ../../
       - name: Install Geos
         run: |
           cd geos-${{ matrix.geos }}/build
-          cmake --build . --target install
+          sudo cmake --build . --target install
           cd ../../
       - uses: ruby/setup-ruby@v1
         with:
