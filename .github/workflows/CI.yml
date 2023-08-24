@@ -41,11 +41,6 @@ jobs:
     name: Ruby ${{ matrix.ruby }}, Geos ${{ matrix.geos }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v2
-        with:
-          id: geos-cache
-          path: ./geos-${{ matrix.geos }}
-          key: geos-${{ matrix.geos }}-${{ matrix.os }}
       - name: Install Packages (Linux)
         if: matrix.os == 'ubuntu'
         run: |
@@ -54,6 +49,11 @@ jobs:
       - name: Install Packages (Mac)
         if: matrix.os == 'macos'
         run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install cmake
+      - uses: actions/cache@v2
+        id: geos-cache
+        with:
+          path: ./geos-${{ matrix.geos }}
+          key: geos-${{ matrix.geos }}-${{ matrix.os }}
       - name: Download and Compile Geos
         if: steps.geos-cache.outputs.cache-hit != 'true'
         run: |
@@ -68,7 +68,7 @@ jobs:
       - name: Install Geos
         run: |
           cd geos-${{ matrix.geos }}/build
-          sudo cmake --build . --target install
+          cmake --build . --target install
           cd ../../
       - uses: ruby/setup-ruby@v1
         with:
