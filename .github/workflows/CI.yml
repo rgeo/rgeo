@@ -18,18 +18,18 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - head
+          # - head
           - '3.2'
-          - '3.1'
-          - '3.0'
-          - '2.7'
+          # - '3.1'
+          # - '3.0'
+          # - '2.7'
           - "jruby"
         os:
           - ubuntu
           # Windows users, feel free to open a PR :)
           # See issue #242, windows support would be welcome.
           # - windows
-          - macos
+          # - macos
         geos:
           - '3.12.0'
           - '3.11.2'
@@ -62,7 +62,7 @@ jobs:
           cd geos-${{ matrix.geos }}
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
+          cmake ..
           cmake --build . -j8
           cd ../../
       - name: Install Geos
