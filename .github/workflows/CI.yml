@@ -70,6 +70,7 @@ jobs:
           cd geos-${{ matrix.geos }}/build
           sudo cmake --build . --target install
           cd ../../
+          sudo ldconfig
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
