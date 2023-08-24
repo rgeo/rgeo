@@ -5,7 +5,7 @@ require_relative "../test_helper"
 # Ensure that compatiblity table stays up to date. If this test fails
 # and your diff shows a checkmark instead of a red X, thanks for adding
 # that feature ! Otherwise, please take a look at your contribution.
-class FactoryCompatibilityTableTest < MiniTest::Test # :nodoc:
+class FactoryCompatibilityTableTest < Minitest::Test # :nodoc:
   def test_table_ok
     unless RGeo::Geos.ffi_supported? && RGeo::Geos.capi_supported?
       skip "Factory Compatibility table can only be generated with FFI and CAPI support"
