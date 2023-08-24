@@ -21,30 +21,53 @@ jobs:
         os:
           - ubuntu
           # Windows users, feel free to open a PR :)
+          # See issue #242, windows support would be welcome.
           # - windows
           - macos
-        exclude:
-          - os: windows # See issue #242, windows support would be welcome.
+        geos:
+          - '3.12.0'
+          - '3.11.2'
+          - '3.10.5'
+          - '3.9.4'
+          - '3.8.3'
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
-    name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
+    name: Ruby ${{ matrix.ruby }}, Geos ${{ matrix.geos }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          id: geos-cache
+          path: ./geos-${{ matrix.geos }}
+          key: geos-${{ matrix.geos }}-${{ matrix.os }}
+      - name: Install Packages (Linux)
+        if: matrix.os == 'ubuntu'
+        run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get install curl libcurl4-openssl-dev libssl-dev cmake
+      - name: Install Packages (Mac)
+        if: matrix.os == 'macos'
+        run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install cmake
+      - name: Download and Compile Geos
+        if: steps.geos-cache.outputs.cache-hit != 'true'
+        run: |
+          wget -c https://download.osgeo.org/geos/geos-${{ matrix.geos }}.tar.bz2
+          tar -xf geo-${{ matrix.geos }}.tar.bz2
+          cd geos-${{ matrix.geos }}
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build . -j8
+          cd ../../
+      - name: Install Geos
+        run: |
+          cd geos-${{ matrix.geos }}/build
+          sudo cmake --build . --target install
+          cd ../../
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Install Geos (Linux)
-        if: matrix.os == 'ubuntu'
-        run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get install -yqq libgeos-dev
-      - name: Install Geos (Mac)
-        if: matrix.os == 'macos'
-        run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install geos
-      - name: Install Geos (Windows)
-        if: matrix.os == 'windows'
-        run: TODO
       - name: Bundle Install
         run: bundle install
       - name: Set Maintainer Mode
