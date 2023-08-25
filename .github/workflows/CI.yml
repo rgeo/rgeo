@@ -48,9 +48,7 @@ jobs:
           sudo apt-get install curl libcurl4-openssl-dev libssl-dev cmake
       - name: Install Packages (Mac)
         if: matrix.os == 'macos'
-        run: |
-          HOMEBREW_NO_INSTALL_CLEANUP=1 brew install cmake --force
-          ls /usr/local/Cellar/cmake
+        run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install --force cmake 
       - uses: actions/cache@v2
         id: geos-cache
         with:
