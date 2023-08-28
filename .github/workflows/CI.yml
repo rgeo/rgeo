@@ -50,6 +50,7 @@ jobs:
         if: matrix.os == 'macos'
         run: |
           brew update
+          brew upgrade
           HOMEBREW_NO_INSTALL_CLEANUP=1 brew install --force cmake
       - uses: actions/cache@v2
         id: geos-cache
