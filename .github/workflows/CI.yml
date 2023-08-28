@@ -76,6 +76,9 @@ jobs:
       - name: ldconfig
         if: matrix.os == 'ubuntu'
         run: sudo ldconfig
+      - name: Set GEOS_LIBRARY_PATH (macos jruby)
+        if: matrix.os == 'macos' && matrix.ruby == 'jruby'
+        run: export GEOS_LIBRARY_PATH=/usr/local/lib/libgeos_c.dylib
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
