@@ -45,7 +45,7 @@ jobs:
         if: matrix.os == 'ubuntu'
         run: |
           sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
-          sudo apt-get install curl libcurl4-openssl-dev libssl-dev cmake
+          sudo apt-get -yqq install curl libcurl4-openssl-dev libssl-dev cmake
       - name: Install Packages (Mac)
         if: matrix.os == 'macos'
         run: |
