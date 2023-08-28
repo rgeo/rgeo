@@ -102,4 +102,4 @@ class GeosFFIMiscTest < Minitest::Test # :nodoc:
   end
 end
 
-puts "WARNING: FFI-GEOS support not available. Related tests skipped." unless RGeo::Geos.ffi_supported?
+puts "WARNING: FFI-GEOS support not available. Related tests skipped. Reason: #{RGeo::Geos::FFI_SUPPORT_EXCEPTION}" unless RGeo::Geos.ffi_supported?
