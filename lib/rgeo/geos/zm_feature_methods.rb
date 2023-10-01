@@ -128,7 +128,6 @@ module RGeo
       def relate?(rhs, pattern)
         @zgeometry.relate?(RGeo::Feature.cast(rhs, self).z_geometry, pattern)
       end
-      alias relate relate? # DEPRECATED
 
       def distance(rhs)
         @zgeometry.distance(RGeo::Feature.cast(rhs, self).z_geometry)
