@@ -53,7 +53,7 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
     assert_equal expected, input.polygonize
   end
 
-  def test_polygonize_dangle
+  def test_segmentize
     input = @factory.parse_wkt("LINESTRING(0 0, 0 10)")
     expected = @factory.parse_wkt("LINESTRING (0 0, 0 5, 0 10)")
 
