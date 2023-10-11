@@ -43,8 +43,7 @@ RGeo works with the following Ruby implementations:
 
 Some features also require the following:
 
-*   GEOS 3.2 or later is highly recommended. (3.3.3 or later preferred.) Some
-    functions will not be available without it. This C/C++ library may be
+*   GEOS 3.10 or later is highly recommended. Some functions will not be available without it. This C/C++ library may be
     available via your operating system's package manager (`sudo aptitude
     install libgeos-dev` for debian based Linux distributions, `yum install geos geos-devel` for redhat based Linux distributions), or you can
     download it from http://trac.osgeo.org/geos

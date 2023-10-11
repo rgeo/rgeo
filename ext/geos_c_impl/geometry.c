@@ -741,6 +741,27 @@ method_geometry_buffer(VALUE self, VALUE distance)
 }
 
 static VALUE
+method_geometry_segmentize(VALUE self, VALUE max_segment_length)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  VALUE factory;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    factory = self_data->factory;
+    result = rgeo_wrap_geos_geometry(
+      factory,
+      GEOSDensify(self_geom, rb_num2dbl(max_segment_length)),
+      Qnil);
+  }
+  return result;
+}
+
+static VALUE
 method_geometry_buffer_with_style(VALUE self,
                                   VALUE distance,
                                   VALUE endCapStyle,
@@ -1308,6 +1329,8 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
+  rb_define_method(
+    geos_geometry_methods, "segmentize", method_geometry_segmentize, 1);
 }
 
 RGEO_END_C

@@ -179,4 +179,11 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
+
+  def test_segmentize
+    input = @factory.parse_wkt("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
+    expected = @factory.parse_wkt("POLYGON ((0 0, 5 0, 10 0, 10 5, 10 10, 5 10, 0 10, 0 5, 0 0))")
+
+    assert_equal expected, input.segmentize(5)
+  end
 end
