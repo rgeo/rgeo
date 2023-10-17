@@ -754,9 +754,7 @@ method_geometry_segmentize(VALUE self, VALUE max_segment_length)
   if (self_geom) {
     factory = self_data->factory;
     result = rgeo_wrap_geos_geometry(
-      factory,
-      GEOSDensify(self_geom, rb_num2dbl(max_segment_length)),
-      Qnil);
+      factory, GEOSDensify(self_geom, rb_num2dbl(max_segment_length)), Qnil);
   }
   return result;
 }
