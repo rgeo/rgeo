@@ -58,5 +58,9 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
     expected = @factory.parse_wkt("LINESTRING (0 0, 0 5, 0 10)")
 
     assert_equal expected, input.segmentize(5)
+
+    assert_raises(TypeError, "no implicit conversion to float from string") { input.segmentize("a") }
+    assert_raises(TypeError, "no implicit conversion to float from nil") { input.segmentize(nil) }
+    assert_raises(RGeo::Error::InvalidGeometry, "Tolerance must be positive") { input.segmentize(0) }
   end
 end
