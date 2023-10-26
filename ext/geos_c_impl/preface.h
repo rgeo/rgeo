@@ -23,6 +23,9 @@
 #ifdef HAVE_GEOSCOORDSEQ_ISCCW_R
 #define RGEO_GEOS_SUPPORTS_ISCCW
 #endif
+#ifdef HAVE_GEOSDENSIFY
+#define RGEO_GEOS_SUPPORTS_DENSIFY
+#endif
 #ifdef HAVE_RB_GC_MARK_MOVABLE
 #define mark rb_gc_mark_movable
 #else

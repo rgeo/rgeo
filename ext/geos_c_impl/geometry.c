@@ -740,6 +740,7 @@ method_geometry_buffer(VALUE self, VALUE distance)
   return result;
 }
 
+#ifdef RGEO_GEOS_SUPPORTS_DENSIFY
 static VALUE
 method_geometry_segmentize(VALUE self, VALUE max_segment_length)
 {
@@ -758,6 +759,7 @@ method_geometry_segmentize(VALUE self, VALUE max_segment_length)
   }
   return result;
 }
+#endif
 
 static VALUE
 method_geometry_buffer_with_style(VALUE self,
@@ -1327,8 +1329,10 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
+#ifdef RGEO_GEOS_SUPPORTS_DENSIFY
   rb_define_method(
     geos_geometry_methods, "segmentize", method_geometry_segmentize, 1);
+#endif
 }
 
 RGEO_END_C
