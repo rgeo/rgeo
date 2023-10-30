@@ -7,9 +7,12 @@
 # -----------------------------------------------------------------------------
 
 require_relative "../test_helper"
+require_relative "./skip_capi"
+
 
 class GeosLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::LineStringTests
+  prepend SkipCAPI
 
   def setup
     skip "CAPI not supported" unless RGeo::Geos.capi_supported?
@@ -54,6 +57,8 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   end
 
   def test_segmentize
+    skip_geos_version_less_then("3.10")
+
     input = @factory.parse_wkt("LINESTRING(0 0, 0 10)")
     expected = @factory.parse_wkt("LINESTRING (0 0, 0 5, 0 10)")
 

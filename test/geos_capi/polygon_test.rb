@@ -181,6 +181,8 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
   end
 
   def test_segmentize
+    skip_geos_version_less_then("3.10")
+
     input = @factory.parse_wkt("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
     expected = @factory.parse_wkt("POLYGON ((0 0, 5 0, 10 0, 10 5, 10 10, 5 10, 0 10, 0 5, 0 0))")
 
