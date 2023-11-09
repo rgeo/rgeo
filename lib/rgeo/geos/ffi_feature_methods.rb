@@ -212,7 +212,6 @@ module RGeo
         fg = factory.convert_to_fg_geometry(rhs)
         @fg_geom.relate_pattern(fg, pattern)
       end
-      alias relate relate? # DEPRECATED
 
       def distance(rhs)
         fg = factory.convert_to_fg_geometry(rhs)
