@@ -7,9 +7,11 @@
 # -----------------------------------------------------------------------------
 
 require_relative "../test_helper"
+require_relative "./skip_capi"
 
 class GeosLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::LineStringTests
+  prepend SkipCAPI
 
   def setup
     skip "CAPI not supported" unless RGeo::Geos.capi_supported?
@@ -51,5 +53,18 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
     expected = @factory.parse_wkt("GEOMETRYCOLLECTION EMPTY")
 
     assert_equal expected, input.polygonize
+  end
+
+  def test_segmentize
+    skip_geos_version_less_then("3.10")
+
+    input = @factory.parse_wkt("LINESTRING(0 0, 0 10)")
+    expected = @factory.parse_wkt("LINESTRING (0 0, 0 5, 0 10)")
+
+    assert_equal expected, input.segmentize(5)
+
+    assert_raises(TypeError, "no implicit conversion to float from string") { input.segmentize("a") }
+    assert_raises(TypeError, "no implicit conversion to float from nil") { input.segmentize(nil) }
+    assert_raises(RGeo::Error::InvalidGeometry, "Tolerance must be positive") { input.segmentize(0) }
   end
 end
