@@ -1,4 +1,4 @@
-### Current
+### 3.0.1 / 2023-11-15
 
 **Minor Changes**
 
