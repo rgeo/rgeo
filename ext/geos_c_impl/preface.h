@@ -26,6 +26,9 @@
 #ifdef HAVE_GEOSDENSIFY
 #define RGEO_GEOS_SUPPORTS_DENSIFY
 #endif
+#ifdef HAVE_GEOSPOLYGONHULLSIMPLIFY
+#define RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
+#endif
 #ifdef HAVE_RB_GC_MARK_MOVABLE
 #define mark rb_gc_mark_movable
 #else

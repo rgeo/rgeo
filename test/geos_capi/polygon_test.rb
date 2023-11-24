@@ -98,6 +98,160 @@ class GeosPolygonTest < Minitest::Test # :nodoc:
     end
   end
 
+  def test_simplify_polygon_hull
+    skip_geos_version_less_then("3.11")
+
+    # Input polygon (8 vertices):
+    # +-----+
+    # |     |
+    # +---+ |
+    #     | |
+    # +---+ |
+    # |     |
+    # +-----+
+    input_polygon = @factory.parse_wkt("POLYGON ((0 0, 0 2, 4 2, 4 4, 0 4, 0 6, 6 6, 6 0, 0 0))")
+
+    # Exected polygon with `is_outer` true and `vertex_fraction` 0.0 (minimum possible to cover the polygon):
+    # +-----+
+    # |     |
+    # |     |
+    # |     |
+    # |     |
+    # |     |
+    # +-----+
+    expected_polygon_outer_true_vert0 = @factory.parse_wkt("POLYGON ((0 0, 0 6, 6 6, 6 0, 0 0))")
+
+    # Exected polygon with `is_outer` true and `vertex_fraction` 0.500001 (4 vertices):
+    # +-----+
+    # |     |
+    # |     |
+    # |     |
+    # |     |
+    # |     |
+    # +-----+
+    expected_polygon_outer_true_vert0500001 = @factory.parse_wkt("POLYGON ((0 0, 0 6, 6 6, 6 0, 0 0))")
+
+    # Exected polygon with `is_outer` true and `vertex_fraction` 0.750001 (6 vertices):
+    # +-----+
+    # |     |
+    # +     |
+    # |     |
+    # +     |
+    # |     |
+    # +-----+
+    expected_polygon_outer_true_vert0750001 = @factory.parse_wkt("POLYGON ((0 0, 0 2, 0 4, 0 6, 6 6, 6 0, 0 0))")
+
+    # Exected polygon with `is_outer` true and `vertex_fraction` 1.0 (all vertices):
+    # +-----+
+    # |     |
+    # +---+ |
+    #     | |
+    # +---+ |
+    # |     |
+    # +-----+
+    expected_polygon_outer_true_vert1 = input_polygon
+
+    # Exected polygon with `is_outer` false and `vertex_fraction` 0 (minimum possible, triangle):
+    # Version 1:
+    # +-----+
+    #   \  /
+    #     +
+    #
+    #
+    #
+    #
+    # Version 2:
+    #       +
+    #      /|
+    #     + |
+    #     | |
+    #      \|
+    #      ||
+    #       +
+    # NOTE: We could receve 2 different results here, depending on the GEOS version and OS.
+    #       Both are valid results, so we check for any.
+    expected_polygons_outer_false_vert0 = [
+      @factory.parse_wkt("POLYGON ((6 6, 0 6, 4 4, 6 6))"),
+      @factory.parse_wkt("POLYGON ((6 0, 6 6, 4 2, 6 0))")
+    ]
+
+    # Exected polygon with `is_outer` false and `vertex_fraction` 0.5 (3 vertices):
+    # NOTE: `vertex_fraction` 0.5 shoud give us 4 vertices (8 * 0.5). But we have only 3 vertices in the result.
+    #       To get 4 vertices in the result we need to use `vertex_fraction` 0.500001.
+    #       Documenting this behavior of GEOSPolygonHullSimplify as is.
+    expected_polygons_outer_false_vert05 = expected_polygons_outer_false_vert0
+
+    # Exected polygon with `is_outer` false and `vertex_fraction` 0.500001 (4 vertices):
+    # Version 1:
+    # +-----+
+    #   \   |
+    #     + |
+    #     | |
+    #      \|
+    #      ||
+    #       +
+    # Version 2:
+    #       +
+    #      ||
+    #      /|
+    #     | |
+    #     + |
+    #   /   |
+    # +-----+
+    # NOTE: We could receve 2 different results here, depending on the GEOS version and OS.
+    #       Both are valid results, so we check for any.
+    expected_polygons_outer_false_vert0500001 = [
+      @factory.parse_wkt("POLYGON ((6 0, 6 6, 0 6, 4 4, 6 0))"),
+      @factory.parse_wkt("POLYGON ((0 0, 6 0, 6 6, 4 2, 0 0))")
+    ]
+
+    # Exected polygon with `is_outer` false and `vertex_fraction` 1.0 (all vertices):
+    # +-----+
+    # |     |
+    # +---+ |
+    #     | |
+    # +---+ |
+    # |     |
+    # +-----+
+    expected_polygon_outer_false_vert1 = input_polygon
+
+    # With `is_outer` true:
+    assert_equal(
+      expected_polygon_outer_true_vert0,
+      input_polygon.simplify_polygon_hull(0.0, true)
+    )
+    assert_equal(
+      expected_polygon_outer_true_vert0500001,
+      input_polygon.simplify_polygon_hull(0.500001, true)
+    )
+    assert_equal(
+      expected_polygon_outer_true_vert0750001,
+      input_polygon.simplify_polygon_hull(0.750001, true)
+    )
+    assert_equal(
+      expected_polygon_outer_true_vert1,
+      input_polygon.simplify_polygon_hull(1.0, true)
+    )
+
+    # With `is_outer` false:
+    assert_includes(
+      expected_polygons_outer_false_vert0,
+      input_polygon.simplify_polygon_hull(0.0, false)
+    )
+    assert_includes(
+      expected_polygons_outer_false_vert05,
+      input_polygon.simplify_polygon_hull(0.5, false)
+    )
+    assert_includes(
+      expected_polygons_outer_false_vert0500001,
+      input_polygon.simplify_polygon_hull(0.500001, false)
+    )
+    assert_equal(
+      expected_polygon_outer_false_vert1,
+      input_polygon.simplify_polygon_hull(1.0, false)
+    )
+  end
+
   def test_buffer_with_style
     polygon_coordinates = [[0.514589803375032, 4.299999999999999],
                            [6.0, 4.3],
