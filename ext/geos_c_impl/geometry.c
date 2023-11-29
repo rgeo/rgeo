@@ -831,6 +831,7 @@ method_geometry_simplify_preserve_topology(VALUE self, VALUE tolerance)
   return result;
 }
 
+#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
 static VALUE
 method_geometry_simplify_polygon_hull(VALUE self,
                                       VALUE vertex_fraction,
@@ -856,6 +857,7 @@ method_geometry_simplify_polygon_hull(VALUE self,
   }
   return result;
 }
+#endif
 
 static VALUE
 method_geometry_convex_hull(VALUE self)
