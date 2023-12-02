@@ -40,7 +40,11 @@ require_relative "support/minitest/fixtures"
 # Static test for missed references in our CAPI codebase (or FFI interface).
 # See https://alanwu.space/post/check-compaction/
 if defined?(GC.verify_compaction_references) == "method"
-  GC.verify_compaction_references(double_heap: true, toward: :empty)
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.2.0")
+    GC.verify_compaction_references(expand_heap: true, toward: :empty)
+  else
+    GC.verify_compaction_references(double_heap: true, toward: :empty)
+  end
 end
 
 # Live test for our implementation of Ruby's compaction methods (rb_gc_mark_movable
