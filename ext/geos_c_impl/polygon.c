@@ -231,6 +231,34 @@ method_polygon_interior_rings(VALUE self)
   return result;
 }
 
+#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
+static VALUE
+method_polygon_simplify_polygon_hull(VALUE self,
+                                     VALUE vertex_fraction,
+                                     VALUE is_outer)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  VALUE factory;
+
+  unsigned int is_outer_uint = RTEST(is_outer) ? 1 : 0;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    factory = self_data->factory;
+    result = rgeo_wrap_geos_geometry(
+      factory,
+      GEOSPolygonHullSimplify(
+        self_geom, is_outer_uint, rb_num2dbl(vertex_fraction)),
+      Qnil);
+  }
+  return result;
+}
+#endif
+
 static VALUE
 cmethod_create(VALUE module,
                VALUE factory,
@@ -335,6 +363,13 @@ rgeo_init_geos_polygon()
     geos_polygon_methods, "interior_rings", method_polygon_interior_rings, 0);
   rb_define_method(
     geos_polygon_methods, "coordinates", method_polygon_coordinates, 0);
+
+#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
+  rb_define_method(geos_polygon_methods,
+                   "simplify_polygon_hull",
+                   method_polygon_simplify_polygon_hull,
+                   2);
+#endif
 }
 
 st_index_t
