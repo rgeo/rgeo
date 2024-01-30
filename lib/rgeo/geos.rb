@@ -26,7 +26,11 @@ module RGeo
     begin
       require_relative "geos/geos_c_impl"
     rescue LoadError
-      require "geos/geos_c_impl"
+      begin
+        require "geos/geos_c_impl"
+      rescue LoadError
+        # continue
+      end
     end
     CAPI_SUPPORTED = RGeo::Geos.const_defined?(:CAPIGeometryMethods)
     if CAPI_SUPPORTED
