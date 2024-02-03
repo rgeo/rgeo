@@ -26,6 +26,8 @@ module RGeo
     begin
       require_relative "geos/geos_c_impl"
     rescue LoadError
+      # fall back to a system-wide search if the c-extension is stored in different location
+      # important for systems such as Amazon Linux
       begin
         require "geos/geos_c_impl"
       rescue LoadError
