@@ -26,7 +26,13 @@ module RGeo
     begin
       require_relative "geos/geos_c_impl"
     rescue LoadError
-      # continue
+      # fall back to a system-wide search if the c-extension is stored in different location
+      # important for systems such as Amazon Linux
+      begin
+        require "geos/geos_c_impl"
+      rescue LoadError
+        # continue
+      end
     end
     CAPI_SUPPORTED = RGeo::Geos.const_defined?(:CAPIGeometryMethods)
     if CAPI_SUPPORTED
