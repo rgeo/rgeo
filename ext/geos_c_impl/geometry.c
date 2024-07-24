@@ -1132,8 +1132,10 @@ method_geometry_invalid_reason_location(VALUE self)
 }
 
 static VALUE
-method_geometry_make_valid(VALUE self)
+method_geometry_make_valid(int argc, VALUE* argv, VALUE self)
 {
+  rb_check_arity(argc, 0, 1);
+
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
   GEOSGeometry* valid_geom;
@@ -1142,8 +1144,24 @@ method_geometry_make_valid(VALUE self)
   if (!self_geom)
     return Qnil;
 
+  VALUE opts, kwargs[2];
+  static ID kwarg_ids[2];
+  kwarg_ids[0] = rb_intern_const("method");
+  kwarg_ids[1] = rb_intern_const("keep_collapsed");
+  rb_scan_args(argc, argv, ":", &opts);
+  rb_get_kwargs(opts, kwarg_ids, 0, 2, kwargs);
+
+  GEOSMakeValidParams* params = GEOSMakeValidParams_create();
+  if (kwargs[0] == ID2SYM(rb_intern("structure"))) {
+    GEOSMakeValidParams_setMethod(params, 1);
+    if (kwargs[1] == Qtrue) {
+      GEOSMakeValidParams_setKeepCollapsed(params, 1);
+    }
+  }
+
   // According to GEOS implementation, MakeValid always returns.
-  valid_geom = GEOSMakeValid(self_geom);
+  valid_geom = GEOSMakeValidWithParams(self_geom, params);
+  GEOSMakeValidParams_destroy(params);
   if (!valid_geom) {
     rb_raise(rb_eRGeoInvalidGeometry,
              "%" PRIsVALUE,
@@ -1326,7 +1344,7 @@ rgeo_init_geos_geometry()
                    method_geometry_point_on_surface,
                    0);
   rb_define_method(
-    geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
+    geos_geometry_methods, "make_valid", method_geometry_make_valid, -1);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
 #ifdef RGEO_GEOS_SUPPORTS_DENSIFY
