@@ -37,4 +37,33 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.polygonize
   end
+
+  INVALID_MULTIPOLYGON = "MULTIPOLYGON (((0 0, 2 0, 2 3, 0 3, 0 0)), ((-1 1, 1 1, 1 2, -1 2, -1 1)))"
+  JOINED_POLYGON = "POLYGON ((-1 2, 0 2, 0 3, 2 3, 2 0, 0 0, 0 1, -1 1, -1 2))"
+
+  # default make_valid uses linework method and intersection is removed
+  def test_make_valid
+    multipolygon = @factory.parse_wkt(INVALID_MULTIPOLYGON)
+    expected = @factory.parse_wkt("MULTIPOLYGON (((0 2, 0 1, -1 1, -1 2, 0 2)), " \
+                                  "((0 3, 2 3, 2 0, 0 0, 0 1, 1 1, 1 2, 0 2, 0 3)))")
+
+    assert_equal expected, multipolygon.make_valid
+  end
+
+  # make_valid with method structure joins intersected polygons
+  def test_make_valid_method_structure
+    multipolygon = @factory.parse_wkt(INVALID_MULTIPOLYGON)
+    expected = @factory.parse_wkt(JOINED_POLYGON)
+
+    assert_equal expected, multipolygon.make_valid(method: :structure)
+  end
+
+  # make_valid with method structure and keep_collapsed has no effect - works as method=structure
+  def test_make_valid_method_structure_keep_collapsed
+    multipolygon = @factory.parse_wkt(INVALID_MULTIPOLYGON)
+    expected = @factory.parse_wkt(JOINED_POLYGON)
+
+    assert_equal expected, multipolygon.make_valid(method: :structure, keep_collapsed: false)
+    assert_equal expected, multipolygon.make_valid(method: :structure, keep_collapsed: true)
+  end
 end

@@ -67,4 +67,34 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
     assert_raises(TypeError, "no implicit conversion to float from nil") { input.segmentize(nil) }
     assert_raises(RGeo::Error::InvalidGeometry, "Tolerance must be positive") { input.segmentize(0) }
   end
+
+  INVALID_LINESTRING = "LINESTRING(0 0, 0 0)"
+
+  # default (method=linework) removes duplicated points
+  def test_make_valid
+    input = @factory.parse_wkt(INVALID_LINESTRING)
+    expected = @factory.parse_wkt("POINT(0 0)")
+    assert_equal expected, input.make_valid
+  end
+
+  # method=structure removes all intersections
+  def test_make_valid_method_structure
+    input = @factory.parse_wkt(INVALID_LINESTRING)
+    expected = @factory.parse_wkt("LINESTRING EMPTY")
+    assert_equal expected, input.make_valid(method: :structure)
+  end
+
+  # method=structure with reset keep_collapsed flag acts same
+  def test_make_valid_method_structure_keep_collapsed_reset
+    input = @factory.parse_wkt(INVALID_LINESTRING)
+    expected = @factory.parse_wkt("LINESTRING EMPTY")
+    assert_equal expected, input.make_valid(method: :structure, keep_collapsed: false)
+  end
+
+  # method=structure with keep_collapsed set removes duplicated points
+  def test_make_valid_method_structure_keep_collapsed_set
+    input = @factory.parse_wkt(INVALID_LINESTRING)
+    expected = @factory.parse_wkt("POINT(0 0)")
+    assert_equal expected, input.make_valid(method: :structure, keep_collapsed: true)
+  end
 end
