@@ -1131,6 +1131,45 @@ method_geometry_invalid_reason_location(VALUE self)
   return result;
 }
 
+void
+rgeo_make_valid_check_method(VALUE m, GEOSMakeValidParams* params)
+{
+  if (m == Qundef || m == Qnil || m == ID2SYM(rb_intern("structure")) ||
+      m == ID2SYM(rb_intern("linework")) ||
+      rb_funcall(m, rb_intern("=="), 1, rb_str_new2("structure")) ||
+      rb_funcall(m, rb_intern("=="), 1, rb_str_new2("linework")))
+    return;
+
+  GEOSMakeValidParams_destroy(params);
+  rb_raise(rb_eArgError,
+           "method should be one of :linework, :structure or nil");
+}
+
+void
+rgeo_make_valid_apply_params(int argc, VALUE* argv, GEOSMakeValidParams* params)
+{
+  VALUE opts, kwargs[2];
+  static ID kwarg_ids[2];
+  kwarg_ids[0] = rb_intern_const("method");
+  kwarg_ids[1] = rb_intern_const("keep_collapsed");
+  rb_scan_args(argc, argv, ":", &opts);
+  rb_get_kwargs(opts, kwarg_ids, 0, 2, kwargs);
+
+  rgeo_make_valid_check_method(kwargs[0], params);
+
+  if (kwargs[0] == Qundef && kwargs[1] == Qundef) {
+    // default behaviour for GEOSMakeValid_r: method=linework, keepCollapsed=1
+    GEOSMakeValidParams_setMethod(params, 0);
+    GEOSMakeValidParams_setKeepCollapsed(params, 1);
+  } else {
+    bool isMethodStructure =
+      kwargs[0] == ID2SYM(rb_intern("structure")) ||
+      rb_funcall(kwargs[0], rb_intern("=="), 1, rb_str_new2("structure"));
+    GEOSMakeValidParams_setMethod(params, isMethodStructure ? 1 : 0);
+    GEOSMakeValidParams_setKeepCollapsed(params, kwargs[1] == Qtrue ? 1 : 0);
+  }
+}
+
 static VALUE
 method_geometry_make_valid(int argc, VALUE* argv, VALUE self)
 {
@@ -1144,24 +1183,13 @@ method_geometry_make_valid(int argc, VALUE* argv, VALUE self)
   if (!self_geom)
     return Qnil;
 
-  VALUE opts, kwargs[2];
-  static ID kwarg_ids[2];
-  kwarg_ids[0] = rb_intern_const("method");
-  kwarg_ids[1] = rb_intern_const("keep_collapsed");
-  rb_scan_args(argc, argv, ":", &opts);
-  rb_get_kwargs(opts, kwarg_ids, 0, 2, kwargs);
-
   GEOSMakeValidParams* params = GEOSMakeValidParams_create();
-  if (kwargs[0] == ID2SYM(rb_intern("structure"))) {
-    GEOSMakeValidParams_setMethod(params, 1);
-    if (kwargs[1] == Qtrue) {
-      GEOSMakeValidParams_setKeepCollapsed(params, 1);
-    }
-  }
+  rgeo_make_valid_apply_params(argc, argv, params);
 
   // According to GEOS implementation, MakeValid always returns.
   valid_geom = GEOSMakeValidWithParams(self_geom, params);
   GEOSMakeValidParams_destroy(params);
+
   if (!valid_geom) {
     rb_raise(rb_eRGeoInvalidGeometry,
              "%" PRIsVALUE,
