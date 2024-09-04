@@ -1010,7 +1010,7 @@ rgeo_geos_coordseqs_eql(const GEOSGeometry* geom1,
               result = Qnil;
               break;
             }
-          } // Iteration over coords
+          }      // Iteration over coords
         } else { // Lengths are different
           result = Qfalse;
         }
