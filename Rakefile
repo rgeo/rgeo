@@ -6,11 +6,7 @@ require "ruby_memcheck"
 require "bundler/gem_tasks"
 require "yard"
 
-RubyMemcheck.config(
-  binary_name: "geos_c_impl",
-  # valgrind_generate_suppressions: true,
-  valgrind_suppressions_dir: "test/valgrind/suppressions"
-)
+RubyMemcheck.config(binary_name: "geos_c_impl")
 
 # Build tasks
 
