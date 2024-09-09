@@ -145,8 +145,8 @@ module RGeo
       # (see RGeo::ImplHelper::ValidityCheck#make_valid)
       # Only available since GEOS 3.8+
       if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
-        def make_valid
-          @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
+        def make_valid(**kwargs)
+          @factory.wrap_fg_geom(@fg_geom.make_valid(**kwargs), nil)
         rescue ::Geos::GEOSException
           raise Error::UnsupportedOperation
         end
