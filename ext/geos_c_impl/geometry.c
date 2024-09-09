@@ -1331,10 +1331,10 @@ rgeo_init_geos_geometry()
                    "point_on_surface",
                    method_geometry_point_on_surface,
                    0);
-  rb_define_method(geos_geometry_methods,
-                   "geometry_make_valid",
-                   method_geometry_make_valid,
-                   2);
+  rb_define_private_method(geos_geometry_methods,
+                           "geometry_make_valid",
+                           method_geometry_make_valid,
+                           2);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
 #ifdef RGEO_GEOS_SUPPORTS_DENSIFY

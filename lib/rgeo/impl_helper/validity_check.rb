@@ -122,7 +122,7 @@ module RGeo
       # Try and make the geometry valid, this may change its shape.
       # Returns a valid copy of the geometry.
       def make_valid(method: nil, keep_collapsed: nil)
-        unless respond_to?(:geometry_make_valid)
+        unless respond_to?(:geometry_make_valid, true)
           raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
         end
 
