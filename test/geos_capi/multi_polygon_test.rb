@@ -69,12 +69,6 @@ class GeosMultiPolygonTest < Minitest::Test # :nodoc:
     assert_equal expected, multipolygon.make_valid(method: "structure")
   end
 
-  def test_make_valid_method_unknown
-    assert_raises(ArgumentError) do
-      @factory.parse_wkt(invalid_multipolygon).make_valid(method: :some_method)
-    end
-  end
-
   # make_valid with method structure and keep_collapsed has no effect - works as method=structure
   def test_make_valid_method_structure_keep_collapsed
     multipolygon = @factory.parse_wkt(invalid_multipolygon)

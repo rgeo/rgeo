@@ -55,8 +55,8 @@ module RGeo
       end
 
       # (see RGeo::ImplHelper::ValidityCheck#make_valid)
-      def make_valid
-        factory.unproject projection.make_valid
+      def make_valid(**kwargs)
+        factory.unproject projection.make_valid(**kwargs)
       end
 
       def boundary
