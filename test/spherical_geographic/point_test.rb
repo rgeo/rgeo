@@ -41,12 +41,27 @@ class SphericalPointTest < Minitest::Test # :nodoc:
     assert_equal(4055, point.srid)
   end
 
-  def test_distance
+  def test_point_distance
     point1 = @factory.point(0, 10)
     point2 = @factory.point(0, 10)
     point3 = @factory.point(0, 40)
     assert_in_delta(0, point1.distance(point2), 0.0001)
     assert_in_delta(Math::PI / 6.0 * RGeo::Geographic::SphericalMath::RADIUS, point1.distance(point3), 0.0001)
+  end
+
+  def test_line_string_distance
+    line_string = @factory.line_string([
+      @factory.point(-10.0, 0.0),
+      @factory.point(10.0, 0.0),
+      @factory.point(30.0, 0.0),
+      @factory.point(50.0, 0.0)
+    ])
+    point1 = @factory.point(-5.0, 1.0)
+    point2 = @factory.point(20.0, 2.0)
+    point1_distance_rad = point1.distance(line_string) / (2 * Math::PI * RGeo::Geographic::SphericalMath::RADIUS)
+    point2_distance_rad = point2.distance(line_string) / (2 * Math::PI * RGeo::Geographic::SphericalMath::RADIUS)
+    assert_in_delta(1.0/360.0, point1_distance_rad, 1E-8)
+    assert_in_delta(2.0/360.0, point2_distance_rad, 1E-8)
   end
 
   def test_floating_point_perturbation

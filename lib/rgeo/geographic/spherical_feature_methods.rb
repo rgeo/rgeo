@@ -40,6 +40,8 @@ module RGeo
         case rhs
         when SphericalPointImpl
           xyz.dist_to_point(rhs.xyz) * SphericalMath::RADIUS
+        when SphericalLineStringImpl
+          rhs.distance(self)
         else
           super
         end
@@ -160,7 +162,45 @@ module RGeo
         end
       end
 
+      def distance(rhs)
+        rhs = Feature.cast(rhs, @factory)
+        case rhs
+        when SphericalPointImpl
+          dist_to_point(rhs)
+        else
+          super
+        end
+      end
+
+      def closest_point(rhs)
+        rhs = Feature.cast(rhs, @factory)
+        case rhs
+        when SphericalPointImpl
+          xyz = closest_xyz(rhs)
+          factory.point(xyz.lon, xyz.lat)
+        else
+          raise Error::UnsupportedOperation, "Method closest_point not defined for #{rhs.class}."
+        end
+      end
+
       private
+
+      def closest_xyz(point)
+        distances_points = arcs.map do |arc|
+          [arc.dist_to_point(point.xyz), arc.closest_point(point.xyz)]
+        end
+
+        distances_points.min { |a, b| a.first <=> b.first }.last
+      end
+
+      def dist_to_point(point)
+        distances = arcs.map do |arc|
+          arc.dist_to_point(point.xyz)
+        end
+
+        # Convert the minimum distance from radians to meters
+        distances.min * SphericalMath::RADIUS
+      end
 
       # TODO: replace with better algorithm (https://github.com/rgeo/rgeo/issues/274)
       # Very simple algorithm to determine if 2 LineStrings intersect.

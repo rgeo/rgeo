@@ -159,4 +159,89 @@ class SphericalCalculationsTest < Minitest::Test # :nodoc:
     arc2 = RGeo::Geographic::SphericalMath::ArcXYZ.new(point3, point4)
     assert_equal(true, arc1.intersects_arc?(arc2))
   end
+
+  def test_arc_project_point_on_great_circle
+    point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+    point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(0, 1, 0)
+
+    # Point on the x-y plane, within the circle defined by the arc
+    point3 = RGeo::Geographic::SphericalMath::PointXYZ.new(0.5, 0.5, 0)
+
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(point1, point2)
+    projected_point = arc.project_point(point3)
+
+    # Projected point should lie on the great circle defined by the arc
+    # Since arc is on the x-y plane, the z-coordinate of the projected point should be close to 0.
+    assert_in_delta(projected_point.z, 0.0, 1E-8)
+
+    # Check if the projected point lies on the arc.
+    # Since we're projecting from the z-axis, the result should be on the arc.
+    # For arc from (1,0,0) to (0,1,0), we expect a point on this circle, i.e., x^2 + y^2 = 1
+    # Projected point should lie on the circle defined by the arc
+    assert_in_delta(projected_point.x**2 + projected_point.y**2, 1.0, 1E-8)
+  end
+
+  def test_arc_project_point_on_arc
+    point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+    point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(0, 1, 0)
+    point3 = RGeo::Geographic::SphericalMath::PointXYZ.new(0.5, 0.5, Math.sqrt(0.5)) # Point near the plane of the arc
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(point1, point2)
+    projected_point = arc.project_point(point3)
+
+    # Closest point should be on the arc's great circle plane and normalized
+    assert_in_delta(Math.sqrt(projected_point.x**2 + projected_point.y**2 + projected_point.z**2), 1.0, 1E-8)
+
+    # Since point1 and point2 define a great circle in the xy-plane, z should be 0 for the closest point
+    assert_in_delta(projected_point.z, 0.0, 1E-8)
+  end
+
+  def test_arc_project_point_outside_arc
+    point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)  # Point on x-axis
+    point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(0, 1, 0)  # Point on y-axis
+
+    # Choose a point that projects outside of the arc segment
+    point3 = RGeo::Geographic::SphericalMath::PointXYZ.new(-0.5, -0.5, Math.sqrt(0.5)) # Point near the plane of the arc
+
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(point1, point2)
+    projected_point = arc.project_point(point3)
+
+    # Check if the projected point lies on the great circle plane
+    assert_in_delta(projected_point.z, 0.0, 1E-8)
+
+    # Ensure the projected point is on the great circle defined by the arc
+    assert_in_delta(Math.sqrt(projected_point.x**2 + projected_point.y**2 + projected_point.z**2), 1.0, 1E-8)
+
+    # Check if the projected point is within the bounds of the arc
+    refute(arc.contains_point?(projected_point), "Projected point should not be within the arc segment")
+  end
+
+  def test_arc_closest_point_on_arc
+    point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)
+    point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(0, 1, 0)
+    point3 = RGeo::Geographic::SphericalMath::PointXYZ.new(0.5, 0.5, Math.sqrt(0.5)) # Point near the plane of the arc
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(point1, point2)
+    closest_point = arc.closest_point(point3)
+
+    # Closest point should be on the arc's great circle plane and normalized
+    assert_in_delta(Math.sqrt(closest_point.x**2 + closest_point.y**2 + closest_point.z**2), 1.0, 1E-8)
+
+    # Since point1 and point2 define a great circle in the xy-plane, z should be 0 for the closest point
+    assert_in_delta(closest_point.z, 0.0, 1E-8)
+    assert(arc.contains_point?(closest_point))
+  end
+
+  def test_arc_closest_point_outside_arc
+    point1 = RGeo::Geographic::SphericalMath::PointXYZ.new(1, 0, 0)  # Point on x-axis
+    point2 = RGeo::Geographic::SphericalMath::PointXYZ.new(0, 1, 0)  # Point on y-axis
+
+    # Choose a point that closests outside of the arc segment
+    point3 = RGeo::Geographic::SphericalMath::PointXYZ.new(1.0, -0.5, 0) # Point near the plane of the arc
+
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(point1, point2)
+    closest_point = arc.closest_point(point3)
+
+    # Since the projected point is outside the arc, it shoudl return the closer end of the arc
+    assert_equal(closest_point, point1)
+  end
+
 end
