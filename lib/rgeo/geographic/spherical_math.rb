@@ -43,17 +43,19 @@ module RGeo
         alias == eql?
 
         def latlon
-          lat_rad = Math.asin(@z)
-          lon_rad = Math.atan2(@y, @x)
-          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lat_rad / rpd, lon_rad / rpd]
+          [lat, lon]
         end
 
         def lonlat
-          lat_rad = Math.asin(@z)
-          lon_rad = Math.atan2(@y, @x)
-          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lon_rad / rpd, lat_rad / rpd]
+          [lon, lat]
+        end
+
+        def lat
+          Math.asin(@z) / ImplHelper::Math::RADIANS_PER_DEGREE
+        end
+
+        def lon
+          Math.atan2(@y, @x) / ImplHelper::Math::RADIANS_PER_DEGREE
         end
 
         def *(other)
@@ -142,6 +144,38 @@ module RGeo
         def degenerate?
           my_axis = axis
           my_axis.x == 0 && my_axis.y == 0 && my_axis.z == 0
+        end
+
+        def dist_to_point(obj)
+          closest_point(obj).dist_to_point(obj)
+        end
+
+        # returns PointXYZ
+        def closest_point(obj)
+          projection = project_point(obj)
+
+          # Check if the projected point is within the bounds of the arc
+          if contains_point?(projection)
+            projection
+          else
+            # If not within the arc, return the closer endpoint of the arc
+            s.dist_to_point(obj) < e.dist_to_point(obj) ? s : e
+          end
+        end
+
+        # returns PointXYZ
+        def project_point(obj)
+          # Project the point onto the plane of the great circle defined by the arc
+          point_to_plane_distance = obj * axis
+          projection = PointXYZ.new(
+            obj.x - point_to_plane_distance * axis.x,
+            obj.y - point_to_plane_distance * axis.y,
+            obj.z - point_to_plane_distance * axis.z
+          )
+
+          # Normalize the projection to ensure it lies on the great circle
+          magnitude = Math.sqrt(projection.x**2 + projection.y**2 + projection.z**2)
+          PointXYZ.new(projection.x / magnitude, projection.y / magnitude, projection.z / magnitude)
         end
 
         def axis
