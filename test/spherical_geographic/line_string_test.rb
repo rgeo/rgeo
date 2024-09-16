@@ -11,18 +11,22 @@ require "test_helper"
 class SphericalLineStringTest < Minitest::Test # :nodoc:
   def setup
     @factory = RGeo::Geographic.spherical_factory
-    @equator_line_string = @factory.line_string([
-      @factory.point(-10.0, 0.0),
-      @factory.point(10.0, 0.0),
-      @factory.point(30.0, 0.0),
-      @factory.point(50.0, 0.0)
-    ])
-    @null_meridian_line_string = @factory.line_string([
-      @factory.point(0.0, -10.0),
-      @factory.point(0.0, 10.0),
-      @factory.point(0.0, 30.0),
-      @factory.point(0.0, 80.0)
-    ])
+    @equator_line_string = @factory.line_string(
+      [
+        @factory.point(-10.0, 0.0),
+        @factory.point(10.0, 0.0),
+        @factory.point(30.0, 0.0),
+        @factory.point(50.0, 0.0)
+      ]
+    )
+    @null_meridian_line_string = @factory.line_string(
+      [
+        @factory.point(0.0, -10.0),
+        @factory.point(0.0, 10.0),
+        @factory.point(0.0, 30.0),
+        @factory.point(0.0, 80.0)
+      ]
+    )
   end
 
   include RGeo::Tests::Common::LineStringTests
@@ -30,10 +34,11 @@ class SphericalLineStringTest < Minitest::Test # :nodoc:
   def test_point_distance
     point1 = @factory.point(-5.0, 1.0)
     point2 = @factory.point(20.0, 2.0)
-    point1_distance_rad = @equator_line_string.distance(point1) / (2 * Math::PI * RGeo::Geographic::SphericalMath::RADIUS)
-    point2_distance_rad = @equator_line_string.distance(point2) / (2 * Math::PI * RGeo::Geographic::SphericalMath::RADIUS)
-    assert_in_delta(1.0/360.0, point1_distance_rad, 1E-8)
-    assert_in_delta(2.0/360.0, point2_distance_rad, 1E-8)
+    earth_circumference_meters = 2 * Math::PI * RGeo::Geographic::SphericalMath::RADIUS
+    point1_distance_rad = @equator_line_string.distance(point1) / earth_circumference_meters
+    point2_distance_rad = @equator_line_string.distance(point2) / earth_circumference_meters
+    assert_in_delta(1.0 / 360.0, point1_distance_rad, 1E-8)
+    assert_in_delta(2.0 / 360.0, point2_distance_rad, 1E-8)
   end
 
   def test_closest_point_on_equator

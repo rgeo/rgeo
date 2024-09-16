@@ -243,5 +243,4 @@ class SphericalCalculationsTest < Minitest::Test # :nodoc:
     # Since the projected point is outside the arc, it shoudl return the closer end of the arc
     assert_equal(closest_point, point1)
   end
-
 end
