@@ -152,6 +152,8 @@ module RGeo
 
         # returns PointXYZ
         def closest_point(obj)
+          return s if e == s
+
           projection = project_point(obj)
 
           # Check if the projected point is within the bounds of the arc
