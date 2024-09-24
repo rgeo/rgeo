@@ -66,6 +66,18 @@ class SphericalPointTest < Minitest::Test # :nodoc:
     assert_in_delta(2.0 / 360.0, point2_distance_rad, 1E-8)
   end
 
+  def test_line_string_diagonal_arc
+    # https://jsfiddle.net/kLocyn6s/44/
+    seattle = @factory.point(-122.2, 47.5)
+    brussels = @factory.point(4.35, 50.8)
+    reykjavik = @factory.point(-21.83, 64.13)
+
+    seattle_brussels_arc = @factory.line_string([seattle, brussels])
+    distance = reykjavik.distance(seattle_brussels_arc)
+    # This isn't very precise, but it shows, that the arc is broadly near (50km) reykjavik:
+    assert_in_delta(50_000, distance, 50_000)
+  end
+
   def test_floating_point_perturbation
     # A naive way of wrapping longitudes to [-180,180] might cause
     # perturbation due to floating point errors. Make sure this
