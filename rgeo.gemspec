@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 2.7.7"
   spec.license = "BSD-3-Clause"
 
+  spec.metadata["funding_uri"] = "https://opencollective.com/rgeo"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.files = Dir["lib/**/*.rb", "ext/**/*.{rb,c,h}", "LICENSE.txt", "README.md", ".yardopts"]
