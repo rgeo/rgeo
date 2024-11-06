@@ -323,7 +323,7 @@ module RGeo
           # Now we should have all the coordinate system info.
           factory = Geographic::Factory.new(
             "Projected",
-            coord_sys: coord_sys,
+            coord_sys:,
             srid: srid.to_i,
             has_z_coordinate: projection_factory.property(:has_z_coordinate),
             has_m_coordinate: projection_factory.property(:has_m_coordinate),
@@ -355,7 +355,7 @@ module RGeo
           # Now we should have all the coordinate system info.
           factory = Geographic::Factory.new(
             "Projected",
-            coord_sys: coord_sys,
+            coord_sys:,
             srid: srid.to_i,
             has_z_coordinate: opts[:has_z_coordinate],
             has_m_coordinate: opts[:has_m_coordinate],

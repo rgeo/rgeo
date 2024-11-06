@@ -139,7 +139,7 @@ module RGeo
           wkt_parser: symbolize_hash(data_["wktp"]),
           wkb_parser: symbolize_hash(data_["wkbp"]),
           buffer_resolution: data_["bufr"],
-          coord_sys: coord_sys
+          coord_sys:
         )
         proj_klass = data_["prjc"]
         proj_factory = data_["prjf"]
@@ -189,7 +189,7 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           buffer_resolution: coder["buffer_resolution"],
-          coord_sys: coord_sys
+          coord_sys:
         )
         proj_klass = coder["projectorclass"]
         proj_factory = coder["projection_factory"]

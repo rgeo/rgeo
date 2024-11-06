@@ -121,7 +121,7 @@ module RGeo
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
           buffer_resolution: data["bufr"],
-          coord_sys: coord_sys
+          coord_sys:
         )
       end
 
@@ -152,7 +152,7 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           buffer_resolution: coder["buffer_resolution"],
-          coord_sys: coord_sys
+          coord_sys:
         )
       end
 

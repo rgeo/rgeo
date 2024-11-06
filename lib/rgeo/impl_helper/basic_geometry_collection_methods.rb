@@ -35,8 +35,8 @@ module RGeo
         @elements[idx]
       end
 
-      def each(&block)
-        @elements.each(&block)
+      def each(&)
+        @elements.each(&)
       end
 
       def geometries

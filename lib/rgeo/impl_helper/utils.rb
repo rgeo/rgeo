@@ -27,7 +27,7 @@ module RGeo
         # Create a coord sys based on the SRID if one was not given
         coord_sys = coord_sys_class.create(srid) if coord_sys.nil? && srid != 0
 
-        { coord_sys: coord_sys, srid: srid }
+        { coord_sys:, srid: }
       end
 
       private

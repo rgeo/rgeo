@@ -152,7 +152,7 @@ module RGeo
           wkt_parser: data["wktp"] && symbolize_hash(data["wktp"]),
           wkb_parser: data["wkbp"] && symbolize_hash(data["wkbp"]),
           auto_prepare: (data["apre"] ? :simple : :disabled),
-          coord_sys: coord_sys
+          coord_sys:
         )
       end
 
@@ -185,7 +185,7 @@ module RGeo
           wkt_parser: coder["wkt_parser"] && symbolize_hash(coder["wkt_parser"]),
           wkb_parser: coder["wkb_parser"] && symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
-          coord_sys: coord_sys
+          coord_sys:
         )
       end
 
