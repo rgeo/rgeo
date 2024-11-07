@@ -1,5 +1,9 @@
 ### Unreleased
 
+**Breaking Changes**
+
+* Require ruby 3.1.4+ (@teeparham) #374
+
 **Minor Changes**
 
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
