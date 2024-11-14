@@ -47,7 +47,7 @@ module RGeo
           buffer_resolution: opts[:buffer_resolution], auto_prepare: opts[:auto_prepare],
           wkt_generator: opts[:wkt_generator], wkt_parser: opts[:wkt_parser],
           wkb_generator: opts[:wkb_generator], wkb_parser: opts[:wkb_parser],
-          srid: srid.to_i, coord_sys: coord_sys
+          srid: srid.to_i, coord_sys:
         }
         native_interface = opts[:native_interface] || Geos.preferred_native_interface
         if native_interface == :ffi
@@ -125,7 +125,7 @@ module RGeo
           wkt_parser: symbolize_hash(data["wktp"]),
           wkb_parser: symbolize_hash(data["wkbp"]),
           auto_prepare: (data["apre"] ? :simple : :disabled),
-          coord_sys: coord_sys
+          coord_sys:
         )
       end
 
@@ -161,7 +161,7 @@ module RGeo
           wkt_parser: symbolize_hash(coder["wkt_parser"]),
           wkb_parser: symbolize_hash(coder["wkb_parser"]),
           auto_prepare: coder["auto_prepare"] == "disabled" ? :disabled : :simple,
-          coord_sys: coord_sys
+          coord_sys:
         )
       end
 

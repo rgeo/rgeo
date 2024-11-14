@@ -821,8 +821,8 @@ module RGeo
         private
 
         def wkt_content(standard_brackets)
-          array = [@ellipsoid.to_wkt(standard_brackets: standard_brackets)]
-          array << @wgs84_parameters.to_wkt(standard_brackets: standard_brackets) if @wgs84_parameters
+          array = [@ellipsoid.to_wkt(standard_brackets:)]
+          array << @wgs84_parameters.to_wkt(standard_brackets:) if @wgs84_parameters
           array
         end
       end
@@ -855,8 +855,8 @@ module RGeo
 
         # Iterates over the parameters of the projection.
 
-        def each_parameter(&block)
-          @parameters.each(&block)
+        def each_parameter(&)
+          @parameters.each(&)
         end
 
         def wkt_typename
@@ -1028,7 +1028,7 @@ module RGeo
         private
 
         def wkt_content(standard_brackets)
-          [@head.to_wkt(standard_brackets: standard_brackets), @tail.to_wkt(standard_brackets: standard_brackets)]
+          [@head.to_wkt(standard_brackets:), @tail.to_wkt(standard_brackets:)]
         end
       end
 
@@ -1092,9 +1092,9 @@ module RGeo
 
         def wkt_content(standard_brackets)
           [
-            @local_datum.to_wkt(standard_brackets: standard_brackets),
-            @unit.to_wkt(standard_brackets: standard_brackets)
-          ] + @axes.map { |ax| ax.to_wkt(standard_brackets: standard_brackets) }
+            @local_datum.to_wkt(standard_brackets:),
+            @unit.to_wkt(standard_brackets:)
+          ] + @axes.map { |ax| ax.to_wkt(standard_brackets:) }
         end
       end
 
@@ -1165,13 +1165,13 @@ module RGeo
 
         def wkt_content(standard_brackets)
           arr = [
-            @horizontal_datum.to_wkt(standard_brackets: standard_brackets),
-            @prime_meridian.to_wkt(standard_brackets: standard_brackets),
-            @linear_unit.to_wkt(standard_brackets: standard_brackets)
+            @horizontal_datum.to_wkt(standard_brackets:),
+            @prime_meridian.to_wkt(standard_brackets:),
+            @linear_unit.to_wkt(standard_brackets:)
           ]
-          arr << @axis0.to_wkt(standard_brackets: standard_brackets) if @axis0
-          arr << @axis1.to_wkt(standard_brackets: standard_brackets) if @axis1
-          arr << @axis2.to_wkt(standard_brackets: standard_brackets) if @axis2
+          arr << @axis0.to_wkt(standard_brackets:) if @axis0
+          arr << @axis1.to_wkt(standard_brackets:) if @axis1
+          arr << @axis2.to_wkt(standard_brackets:) if @axis2
           arr
         end
       end
@@ -1226,10 +1226,10 @@ module RGeo
 
         def wkt_content(standard_brackets)
           arr = [
-            @vertical_datum.to_wkt(standard_brackets: standard_brackets),
-            @vertical_unit.to_wkt(standard_brackets: standard_brackets)
+            @vertical_datum.to_wkt(standard_brackets:),
+            @vertical_unit.to_wkt(standard_brackets:)
           ]
-          arr << @axis.to_wkt(standard_brackets: standard_brackets) if @axis
+          arr << @axis.to_wkt(standard_brackets:) if @axis
           arr
         end
       end
@@ -1328,12 +1328,12 @@ module RGeo
 
         def wkt_content(standard_brackets)
           arr = [
-            @horizontal_datum.to_wkt(standard_brackets: standard_brackets),
-            @prime_meridian.to_wkt(standard_brackets: standard_brackets),
-            @angular_unit.to_wkt(standard_brackets: standard_brackets)
+            @horizontal_datum.to_wkt(standard_brackets:),
+            @prime_meridian.to_wkt(standard_brackets:),
+            @angular_unit.to_wkt(standard_brackets:)
           ]
-          arr << @axis0.to_wkt(standard_brackets: standard_brackets) if @axis0
-          arr << @axis1.to_wkt(standard_brackets: standard_brackets) if @axis1
+          arr << @axis0.to_wkt(standard_brackets:) if @axis0
+          arr << @axis1.to_wkt(standard_brackets:) if @axis1
           arr
         end
       end
@@ -1397,13 +1397,13 @@ module RGeo
 
         def wkt_content(standard_brackets)
           arr = [
-            @geographic_coordinate_system.to_wkt(standard_brackets: standard_brackets),
-            @projection.to_wkt(standard_brackets: standard_brackets)
+            @geographic_coordinate_system.to_wkt(standard_brackets:),
+            @projection.to_wkt(standard_brackets:)
           ]
-          @projection.each_parameter { |param| arr << param.to_wkt(standard_brackets: standard_brackets) }
-          arr << @linear_unit.to_wkt(standard_brackets: standard_brackets)
-          arr << @axis0.to_wkt(standard_brackets: standard_brackets) if @axis0
-          arr << @axis1.to_wkt(standard_brackets: standard_brackets) if @axis1
+          @projection.each_parameter { |param| arr << param.to_wkt(standard_brackets:) }
+          arr << @linear_unit.to_wkt(standard_brackets:)
+          arr << @axis0.to_wkt(standard_brackets:) if @axis0
+          arr << @axis1.to_wkt(standard_brackets:) if @axis1
           arr
         end
       end
@@ -1550,8 +1550,8 @@ module RGeo
         private
 
         def wkt_content(standard_brackets)
-          source_cs_wkt = "SOURCECS[#{source_cs.to_wkt(standard_brackets: standard_brackets)}]"
-          target_cs_wkt = "TARGETCS[#{target_cs.to_wkt(standard_brackets: standard_brackets)}]"
+          source_cs_wkt = "SOURCECS[#{source_cs.to_wkt(standard_brackets:)}]"
+          target_cs_wkt = "TARGETCS[#{target_cs.to_wkt(standard_brackets:)}]"
 
           [source_cs_wkt, target_cs_wkt]
         end

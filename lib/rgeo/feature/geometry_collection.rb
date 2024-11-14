@@ -94,7 +94,7 @@ module RGeo
       # Note that all GeometryCollection implementations must also
       # include the Enumerable mixin.
 
-      def each(&_block)
+      def each(&)
         raise Error::UnsupportedOperation, "Method #{self.class}#each not defined."
       end
 
