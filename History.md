@@ -8,6 +8,7 @@
 
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
 * Prevent `#centroid` to be called in more than 2d in CAPI.
+* Guard against unknown options in CAPI factory.
 
 **Bug Fixes**
 
