@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 require_relative "skip_capi"
 
 class GeosMultiPolygonTest < Minitest::Test # :nodoc:
