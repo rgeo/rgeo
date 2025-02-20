@@ -8,6 +8,10 @@
 
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
 
+**Bug Fixes**
+
+* Fix `#as_text` in CAPI to show correct number of dimensions.
+
 ### 3.0.1 / 2023-11-15
 
 **Minor Changes**

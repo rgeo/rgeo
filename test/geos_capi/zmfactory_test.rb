@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 require_relative "skip_capi"
 
 class GeosZMFactoryTest < Minitest::Test # :nodoc:
@@ -37,6 +37,11 @@ class GeosZMFactoryTest < Minitest::Test # :nodoc:
     assert(!@factory.z_factory.property(:has_m_coordinate))
     assert(!@factory.m_factory.property(:has_z_coordinate))
     assert(@factory.m_factory.property(:has_m_coordinate))
+  end
+
+  def test_inspect_shows_more_than_2d
+    point = @factory.point(1, 2, 3, 4)
+    assert_match("POINT (1.0 2.0 3.0 4.0)", point.inspect)
   end
 
   def test_4d_point

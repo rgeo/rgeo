@@ -6,7 +6,7 @@
 #
 # -----------------------------------------------------------------------------
 
-require "test_helper"
+require_relative "../test_helper"
 require_relative "skip_ffi"
 
 class GeosFFIZMFactoryTest < Minitest::Test # :nodoc:
@@ -17,6 +17,11 @@ class GeosFFIZMFactoryTest < Minitest::Test # :nodoc:
     @factory = RGeo::Geos.factory(has_z_coordinate: true, has_m_coordinate: true,
                                   srid: 1000, buffer_resolution: 2, native_interface: :ffi)
     @srid = 1000
+  end
+
+  def test_inspect_shows_more_than_2d
+    point = @factory.point(1, 2, 3, 4)
+    assert_match("POINT (1.0 2.0 3.0 4.0)", point.inspect)
   end
 
   def test_is_geos_factory
