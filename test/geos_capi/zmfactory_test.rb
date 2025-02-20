@@ -44,7 +44,7 @@ class GeosZMFactoryTest < Minitest::Test # :nodoc:
     point2 = @factory.point(0, 1, 0, 0)
     point3 = @factory.point(1, 0, 0, 0)
     polygon = @factory.polygon(@factory.linear_ring([point1, point2, point3, point1]))
-    assert_raises(RGeo::Error::UnsupportedOperation, "more than 2 dimensions") do
+    assert_raises(RGeo::Error::UnsupportedOperation) do
       polygon.centroid
     end
   end
