@@ -40,9 +40,9 @@ module RGeo
               x_min_ = center_ - width_ * 0.499999999
               x_max_ = center_ + width_ * 0.499999999
             end
-            x_max_ = x_max_ % width_
+            x_max_ %= width_
             x_max_ -= width_ if x_max_ >= limits_.x_max
-            x_min_ = x_min_ % width_
+            x_min_ %= width_
             x_min_ -= width_ if x_min_ >= limits_.x_max
           else
             x_max_ = limits_.x_max if x_max_ > limits_.x_max
@@ -202,7 +202,7 @@ module RGeo
           x_ = projection_.x
           limits_ = @factory.projection_limits_window
           width_ = limits_.x_span
-          x_ = x_ % width_
+          x_ %= width_
           x_ -= width_ if x_ >= limits_.x_max
           if @x_max < @x_min
             x_ <= @x_max || x_ >= @x_min
@@ -218,7 +218,7 @@ module RGeo
       # this window.
 
       def contains_window?(window_)
-        return if window_.factory != @factory
+        return false if window_.factory != @factory
         if window_.y_max <= @y_max && window_.y_min >= @y_min
           if (@x_max < @x_min) == window_.crosses_seam?
             window_.x_max <= @x_max && window_.x_min >= @x_min
@@ -359,7 +359,7 @@ module RGeo
             proj_ = factory_.project(p_)
             x_ = proj_.x
             if x_array_
-              x_ = x_ % width_
+              x_ %= width_
               x_ -= width_ if x_ >= limits_.x_max
               x_array_ << x_
             else

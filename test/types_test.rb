@@ -116,7 +116,7 @@ end
 # based on difference between "value" attribute
 class TestAffineCoordinateSystem < RGeo::CoordSys::CS::CoordinateSystem
   def initialize(value, dimension, *optional)
-    super(value, dimension, *optional)
+    super
     @value = value
   end
   attr_accessor :value

@@ -228,7 +228,7 @@ module RGeo
       #
       # @return [String] invalid_reason
       def check_no_self_intersections(ring)
-        return Error::SELF_INTERSECTION unless ring.simple?
+        Error::SELF_INTERSECTION unless ring.simple?
       end
 
       # Check that rings do not self intersect in a polygon

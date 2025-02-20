@@ -117,7 +117,7 @@ module RGeo
             linear_unit = args.find_first(LinearUnit)
             axes = args.find_all(AxisInfo)
 
-            unless axes.size == 0 || axes.size == 3
+            unless [0, 3].include?(axes.size)
               raise Error::ParseError, "GEOCCS must contain either 0 or 3 AXIS parameters"
             end
 
@@ -144,7 +144,7 @@ module RGeo
             angular_unit = args.find_first(AngularUnit)
             axes = args.find_all(AxisInfo)
 
-            unless axes.size == 0 || axes.size == 2
+            unless [0, 2].include?(axes.size)
               raise Error::ParseError, "GEOGCS must contain either 0 or 2 AXIS parameters"
             end
 
@@ -166,7 +166,7 @@ module RGeo
             linear_unit = args.find_first(LinearUnit)
             axes = args.find_all(AxisInfo)
 
-            unless axes.size == 0 || axes.size == 2
+            unless [0, 2].include?(axes.size)
               raise Error::ParseError, "PROJCS must contain either 0 or 2 AXIS parameters"
             end
 

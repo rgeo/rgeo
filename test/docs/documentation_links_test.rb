@@ -9,15 +9,13 @@ class DocumentationLinksTest < Minitest::Test # :nodoc:
   def test_every_markdown_documents_linked
     root_path = File.join(__dir__, "..", "..")
     by_files = Dir[File.join(root_path, "doc", "*.md")]
-               .map { |path| Pathname.new(path).relative_path_from(Pathname.new(root_path)) }
-               .map { |file| "https://github.com/rgeo/rgeo/blob/main/#{file}" }
-               .to_set
+               .to_set { |path| Pathname.new(path).relative_path_from(Pathname.new(root_path)) }
+               .to_set { |file| "https://github.com/rgeo/rgeo/blob/main/#{file}" }
 
     in_readme = File
                 .foreach(File.join(root_path, "README.md"))
                 .grep(%r{https://github\.com/rgeo/rgeo/blob/main/doc})
-                .map { |line| line[%r{https://github\.com/rgeo/rgeo/blob/main/doc/.*?\.md}] }
-                .to_set
+                .to_set { |line| line[%r{https://github\.com/rgeo/rgeo/blob/main/doc/.*?\.md}] }
 
     assert(
       (by_files - in_readme).size == 0,

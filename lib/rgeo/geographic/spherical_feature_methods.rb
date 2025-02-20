@@ -99,7 +99,7 @@ module RGeo
       # Ensure coordinates fall within a valid range.
       def init_geometry
         if @x < -180.0 || @x > 180.0
-          @x = @x % 360.0
+          @x %= 360.0
           @x -= 360.0 if @x > 180.0
         end
         @y = 90.0 if @y > 90.0

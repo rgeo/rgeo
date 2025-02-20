@@ -82,7 +82,7 @@ module RGeo
           "tag_format" => @tag_format.to_s,
           "emit_ewkt_srid" => @emit_ewkt_srid,
           "square_brackets" => @square_brackets,
-          "convert_case" => @convert_case ? @convert_case.to_s : nil
+          "convert_case" => @convert_case&.to_s
         }
       end
 
@@ -153,9 +153,9 @@ module RGeo
       end
 
       def generate_coords(obj, support_z, support_m)
-        str = +"#{obj.x} #{obj.y}"
-        str << " #{obj.z}" if support_z
-        str << " #{obj.m}" if support_m
+        str = "#{obj.x} #{obj.y}"
+        str += " #{obj.z}" if support_z
+        str += " #{obj.m}" if support_m
         str
       end
 

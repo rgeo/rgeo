@@ -432,11 +432,11 @@ module RGeo
                        remarks = nil, extensions = nil) # :nodoc:
           super()
           @name = name
-          @authority = authority ? authority.to_s : nil
-          @authority_code = authority_code ? authority_code.to_s : nil
-          @abbreviation = abbreviation ? abbreviation.to_s : nil
-          @alias = init_alias ? init_alias.to_s : nil
-          @remarks = remarks ? remarks.to_s : nil
+          @authority = authority&.to_s
+          @authority_code = authority_code&.to_s
+          @abbreviation = abbreviation&.to_s
+          @alias = init_alias&.to_s
+          @remarks = remarks&.to_s
           @extensions = {}
           extensions&.each { |k, v| @extensions[k.to_s] = v.to_s }
         end
