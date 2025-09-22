@@ -408,9 +408,7 @@ method_geometry_disjoint(VALUE self, VALUE rhs)
   const GEOSGeometry* self_geom;
   const GEOSGeometry* rhs_geom;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -421,12 +419,10 @@ method_geometry_disjoint(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       result = GEOSPreparedDisjoint(prep, rhs_geom) ? Qtrue : Qfalse;
     else
-#endif
       result = GEOSDisjoint(self_geom, rhs_geom) ? Qtrue : Qfalse;
   }
   return result;
@@ -441,9 +437,7 @@ method_geometry_intersects(VALUE self, VALUE rhs)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED1
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -454,12 +448,10 @@ method_geometry_intersects(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED1
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       val = GEOSPreparedIntersects(prep, rhs_geom);
     else
-#endif
       val = GEOSIntersects(self_geom, rhs_geom);
     if (val == 0) {
       result = Qfalse;
@@ -479,9 +471,7 @@ method_geometry_touches(VALUE self, VALUE rhs)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -492,12 +482,10 @@ method_geometry_touches(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       val = GEOSPreparedTouches(prep, rhs_geom);
     else
-#endif
       val = GEOSTouches(self_geom, rhs_geom);
     if (val == 0) {
       result = Qfalse;
@@ -517,9 +505,7 @@ method_geometry_crosses(VALUE self, VALUE rhs)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -530,12 +516,10 @@ method_geometry_crosses(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       val = GEOSPreparedCrosses(prep, rhs_geom);
     else
-#endif
       val = GEOSCrosses(self_geom, rhs_geom);
     if (val == 0) {
       result = Qfalse;
@@ -555,9 +539,7 @@ method_geometry_within(VALUE self, VALUE rhs)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -568,12 +550,10 @@ method_geometry_within(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       val = GEOSPreparedWithin(prep, rhs_geom);
     else
-#endif
       val = GEOSWithin(self_geom, rhs_geom);
     if (val == 0) {
       result = Qfalse;
@@ -593,9 +573,7 @@ method_geometry_contains(VALUE self, VALUE rhs)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED1
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -606,12 +584,10 @@ method_geometry_contains(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED1
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       val = GEOSPreparedContains(prep, rhs_geom);
     else
-#endif
       val = GEOSContains(self_geom, rhs_geom);
     if (val == 0) {
       result = Qfalse;
@@ -631,9 +607,7 @@ method_geometry_overlaps(VALUE self, VALUE rhs)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
   const GEOSPreparedGeometry* prep;
-#endif
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -644,12 +618,10 @@ method_geometry_overlaps(VALUE self, VALUE rhs)
     if (state) {
       rb_jump_tag(state);
     }
-#ifdef RGEO_GEOS_SUPPORTS_PREPARED2
     prep = rgeo_request_prepared_geometry(self_data);
     if (prep)
       val = GEOSPreparedOverlaps(prep, rhs_geom);
     else
-#endif
       val = GEOSOverlaps(self_geom, rhs_geom);
     if (val == 0) {
       result = Qfalse;
@@ -740,7 +712,6 @@ method_geometry_buffer(VALUE self, VALUE distance)
   return result;
 }
 
-#ifdef RGEO_GEOS_SUPPORTS_DENSIFY
 static VALUE
 method_geometry_segmentize(VALUE self, VALUE max_segment_length)
 {
@@ -759,7 +730,6 @@ method_geometry_segmentize(VALUE self, VALUE max_segment_length)
   }
   return result;
 }
-#endif
 
 static VALUE
 method_geometry_buffer_with_style(VALUE self,
@@ -903,7 +873,6 @@ method_geometry_union(VALUE self, VALUE rhs)
 static VALUE
 method_geometry_unary_union(VALUE self)
 {
-#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
 
@@ -913,7 +882,6 @@ method_geometry_unary_union(VALUE self)
     return rgeo_wrap_geos_geometry(
       self_data->factory, GEOSUnaryUnion(self_geom), Qnil);
   }
-#endif
 
   return Qnil;
 }
@@ -1329,10 +1297,8 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
-#ifdef RGEO_GEOS_SUPPORTS_DENSIFY
   rb_define_method(
     geos_geometry_methods, "segmentize", method_geometry_segmentize, 1);
-#endif
 }
 
 RGEO_END_C

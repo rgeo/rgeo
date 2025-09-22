@@ -231,7 +231,6 @@ method_polygon_interior_rings(VALUE self)
   return result;
 }
 
-#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
 static VALUE
 method_polygon_simplify_polygon_hull(VALUE self,
                                      VALUE vertex_fraction,
@@ -257,7 +256,6 @@ method_polygon_simplify_polygon_hull(VALUE self,
   }
   return result;
 }
-#endif
 
 static VALUE
 cmethod_create(VALUE module,
@@ -364,12 +362,10 @@ rgeo_init_geos_polygon()
   rb_define_method(
     geos_polygon_methods, "coordinates", method_polygon_coordinates, 0);
 
-#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
   rb_define_method(geos_polygon_methods,
                    "simplify_polygon_hull",
                    method_polygon_simplify_polygon_hull,
                    2);
-#endif
 }
 
 st_index_t
