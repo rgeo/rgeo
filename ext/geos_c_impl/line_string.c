@@ -297,6 +297,32 @@ method_line_string_interpolate_point(VALUE self, VALUE loc_num)
 }
 
 static VALUE
+method_line_string_substring(VALUE self, VALUE start_fraction, VALUE end_fraction)
+{
+  VALUE result = Qnil;
+  VALUE factory;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* substring;
+
+  double start_frac = NUM2DBL(start_fraction);
+  double end_frac = NUM2DBL(end_fraction);
+
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    substring = GEOSLineSubstring(self_geom, start_frac, end_frac);
+    if (substring) {
+      result = rgeo_wrap_geos_geometry(factory, substring, rgeo_geos_line_string_class);
+    }
+  }
+
+  return result;
+}
+
+static VALUE
 method_line_string_is_closed(VALUE self)
 {
   VALUE result;
@@ -695,6 +721,10 @@ rgeo_init_geos_line_string()
                    "interpolate_point",
                    method_line_string_interpolate_point,
                    1);
+  rb_define_method(geos_line_string_methods,
+                   "line_substring",
+                   method_line_string_substring,
+                   2);
   rb_define_method(
     geos_line_string_methods, "closed?", method_line_string_is_closed, 0);
   rb_define_method(

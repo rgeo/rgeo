@@ -363,6 +363,32 @@ method_geometry_is_simple(VALUE self)
 }
 
 static VALUE
+method_geometry_simple_detail(VALUE self)
+{
+  VALUE result;
+  VALUE factory;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* location = NULL;
+  char is_simple;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  factory = self_data->factory;
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    is_simple = GEOSisSimpleDetail(self_geom, 0, &location);
+    if (is_simple == 1) {
+      result = Qnil;
+    } else if (is_simple == 0 && location) {
+      result = rgeo_wrap_geos_geometry(factory, location, rgeo_geos_point_class);
+    }
+  }
+  return result;
+}
+
+static VALUE
 method_geometry_equals(VALUE self, VALUE rhs)
 {
   VALUE result;
@@ -641,6 +667,7 @@ method_geometry_relate(VALUE self, VALUE rhs, VALUE pattern)
   const GEOSGeometry* rhs_geom;
   char val;
   int state = 0;
+  const GEOSPreparedGeometry* prep;
 
   result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
@@ -652,11 +679,49 @@ method_geometry_relate(VALUE self, VALUE rhs, VALUE pattern)
       rb_jump_tag(state);
     }
 
-    val = GEOSRelatePattern(self_geom, rhs_geom, StringValuePtr(pattern));
+    prep = rgeo_request_prepared_geometry(self_data);
+    if (prep)
+      val = GEOSPreparedRelatePattern(prep, rhs_geom, StringValuePtr(pattern));
+    else
+      val = GEOSRelatePattern(self_geom, rhs_geom, StringValuePtr(pattern));
     if (val == 0) {
       result = Qfalse;
     } else if (val == 1) {
       result = Qtrue;
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_relate_matrix(VALUE self, VALUE rhs)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  const GEOSGeometry* rhs_geom;
+  char* matrix;
+  int state = 0;
+  const GEOSPreparedGeometry* prep;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+  if (self_geom) {
+    rhs_geom =
+      rgeo_convert_to_geos_geometry(self_data->factory, rhs, Qnil, &state);
+    if (state) {
+      rb_jump_tag(state);
+    }
+
+    prep = rgeo_request_prepared_geometry(self_data);
+    if (prep)
+      matrix = GEOSPreparedRelate(prep, rhs_geom);
+    else
+      matrix = GEOSRelate(self_geom, rhs_geom);
+    if (matrix) {
+      result = rb_str_new_cstr(matrix);
+      GEOSFree(matrix);
     }
   }
   return result;
@@ -1235,6 +1300,8 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "empty?", method_geometry_is_empty, 0);
   rb_define_method(
     geos_geometry_methods, "simple?", method_geometry_is_simple, 0);
+  rb_define_method(
+    geos_geometry_methods, "simple_detail", method_geometry_simple_detail, 0);
   rb_define_method(geos_geometry_methods, "equals?", method_geometry_equals, 1);
   rb_define_method(geos_geometry_methods, "==", method_geometry_equals, 1);
   rb_define_method(
@@ -1254,6 +1321,8 @@ rgeo_init_geos_geometry()
   rb_define_method(
     geos_geometry_methods, "overlaps?", method_geometry_overlaps, 1);
   rb_define_method(geos_geometry_methods, "relate?", method_geometry_relate, 2);
+  rb_define_method(
+    geos_geometry_methods, "relate_matrix", method_geometry_relate_matrix, 1);
   rb_define_method(
     geos_geometry_methods, "distance", method_geometry_distance, 1);
   rb_define_method(geos_geometry_methods, "buffer", method_geometry_buffer, 1);

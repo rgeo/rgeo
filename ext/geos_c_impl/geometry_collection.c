@@ -533,6 +533,99 @@ method_multi_polygon_centroid(VALUE self)
 }
 
 static VALUE
+method_geometry_collection_coverage_is_valid(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* invalid_edges = NULL;
+  int is_valid;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    is_valid = GEOSCoverageIsValid(self_geom, 0.0, &invalid_edges);
+    if (is_valid == 1) {
+      result = Qtrue;
+    } else if (is_valid == 0) {
+      result = Qfalse;
+    }
+    if (invalid_edges) {
+      GEOSGeom_destroy(invalid_edges);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_coverage_invalid_edges(VALUE self, VALUE gap_width)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* invalid_edges = NULL;
+  double gap = NUM2DBL(gap_width);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    GEOSCoverageIsValid(self_geom, gap, &invalid_edges);
+    if (invalid_edges) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, invalid_edges, Qnil);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_coverage_simplify_vw(VALUE self, VALUE tolerance, VALUE preserve_boundary)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* simplified;
+  double tol = NUM2DBL(tolerance);
+  int preserve = RTEST(preserve_boundary) ? 1 : 0;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    simplified = GEOSCoverageSimplifyVW(self_geom, tol, preserve);
+    if (simplified) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, simplified, Qnil);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_coverage_union(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* unioned;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    unioned = GEOSCoverageUnion(self_geom);
+    if (unioned) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, unioned, Qnil);
+    }
+  }
+  return result;
+}
+
+static VALUE
 cmethod_geometry_collection_create(VALUE module, VALUE factory, VALUE array)
 {
   return create_geometry_collection(
@@ -624,6 +717,22 @@ rgeo_init_geos_geometry_collection()
   rb_define_method(geos_geometry_collection_methods,
                    "node",
                    method_geometry_collection_node,
+                   0);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_is_valid?",
+                   method_geometry_collection_coverage_is_valid,
+                   0);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_invalid_edges",
+                   method_geometry_collection_coverage_invalid_edges,
+                   1);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_simplify_vw",
+                   method_geometry_collection_coverage_simplify_vw,
+                   2);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_union",
+                   method_geometry_collection_coverage_union,
                    0);
 
   // Methods for MultiPointImpl
