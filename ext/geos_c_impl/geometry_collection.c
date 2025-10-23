@@ -533,6 +533,140 @@ method_multi_polygon_centroid(VALUE self)
 }
 
 static VALUE
+build_clusters_array(VALUE factory, const GEOSGeometry* geom, GEOSClusterInfo* clusters)
+{
+  VALUE result;
+  VALUE cluster_geoms;
+  size_t num_clusters;
+  size_t cluster_size;
+  const size_t* input_indices;
+  GEOSGeometry** geoms_array;
+  GEOSGeometry* cluster_geom;
+  size_t i, j;
+  int num_geoms;
+
+  num_clusters = GEOSClusterInfo_getNumClusters(clusters);
+  result = rb_ary_new2(num_clusters);
+  num_geoms = GEOSGetNumGeometries(geom);
+
+  for (i = 0; i < num_clusters; i++) {
+    cluster_size = GEOSClusterInfo_getClusterSize(clusters, i);
+    input_indices = GEOSClusterInfo_getInputsForClusterN(clusters, i);
+
+    geoms_array = ALLOC_N(GEOSGeometry*, cluster_size);
+    for (j = 0; j < cluster_size; j++) {
+      size_t idx = input_indices[j];
+      if (idx < (size_t)num_geoms) {
+        geoms_array[j] = GEOSGeom_clone(GEOSGetGeometryN(geom, (int)idx));
+      }
+    }
+
+    cluster_geom = GEOSGeom_createCollection(
+      GEOS_GEOMETRYCOLLECTION, geoms_array, (unsigned int)cluster_size);
+    xfree(geoms_array);
+
+    if (cluster_geom) {
+      cluster_geoms = rgeo_wrap_geos_geometry(factory, cluster_geom, Qnil);
+      rb_ary_push(result, cluster_geoms);
+    }
+  }
+
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_dbscan(VALUE self, VALUE eps, VALUE min_points)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+  double epsilon = NUM2DBL(eps);
+  unsigned int min_pts = NUM2UINT(min_points);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterDBSCAN(self_geom, epsilon, min_pts);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_by_distance(VALUE self, VALUE distance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+  double d = NUM2DBL(distance);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterGeometryDistance(self_geom, d);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_by_intersects(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterGeometryIntersects(self_geom);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_by_envelope_distance(VALUE self, VALUE distance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+  double d = NUM2DBL(distance);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterEnvelopeDistance(self_geom, d);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
 method_geometry_collection_coverage_is_valid(VALUE self)
 {
   VALUE result;
@@ -734,6 +868,22 @@ rgeo_init_geos_geometry_collection()
                    "coverage_union",
                    method_geometry_collection_coverage_union,
                    0);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_dbscan",
+                   method_geometry_collection_cluster_dbscan,
+                   2);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_by_distance",
+                   method_geometry_collection_cluster_by_distance,
+                   1);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_by_intersects",
+                   method_geometry_collection_cluster_by_intersects,
+                   0);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_by_envelope_distance",
+                   method_geometry_collection_cluster_by_envelope_distance,
+                   1);
 
   // Methods for MultiPointImpl
   geos_multi_point_methods =
