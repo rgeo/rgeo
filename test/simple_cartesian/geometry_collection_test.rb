@@ -10,6 +10,7 @@ require "test_helper"
 
 class CartesianGeometryCollectionTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::GeometryCollectionTests
+  include RGeo::Tests::Common::EqualityReturnsBooleanTests
 
   def create_factory
     @factory = RGeo::Cartesian.simple_factory

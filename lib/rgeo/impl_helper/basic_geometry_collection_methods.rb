@@ -58,6 +58,7 @@ module RGeo
       def rep_equals?(rhs)
         if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @elements.size == rhs.num_geometries
           rhs.each_with_index { |p, i| return false unless @elements[i].rep_equals?(p) }
+          true
         else
           false
         end

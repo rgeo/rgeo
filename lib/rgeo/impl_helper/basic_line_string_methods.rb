@@ -74,6 +74,7 @@ module RGeo
       def rep_equals?(rhs)
         if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @points.size == rhs.num_points
           rhs.points.each_with_index { |p, i| return false unless @points[i].rep_equals?(p) }
+          true
         else
           false
         end

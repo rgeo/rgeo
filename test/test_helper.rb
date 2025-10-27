@@ -33,6 +33,7 @@ require_relative "common/multi_polygon_tests"
 require_relative "common/point_tests"
 require_relative "common/polygon_tests"
 require_relative "common/validity_tests"
+require_relative "common/equality_returns_boolean_tests"
 
 require_relative "support/minitest/assert_wkt_similar"
 require_relative "support/minitest/fixtures"

@@ -9,11 +9,12 @@
 require "test_helper"
 
 class CartesianLineStringTest < Minitest::Test # :nodoc:
+  include RGeo::Tests::Common::LineStringTests
+  include RGeo::Tests::Common::EqualityReturnsBooleanTests
+
   def setup
     @factory = RGeo::Cartesian.simple_factory
   end
-
-  include RGeo::Tests::Common::LineStringTests
 
   undef_method :test_fully_equal
   undef_method :test_geometrically_equal_but_different_type

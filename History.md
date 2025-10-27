@@ -8,6 +8,10 @@
 
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
 
+**Bug Fixes**
+
+* Fix `Polygon#eql?`, `LineString#eql?`, and `GeometryCollection#eql?` returning arrays instead of boolean values
+
 ### 3.0.1 / 2023-11-15
 
 **Minor Changes**
