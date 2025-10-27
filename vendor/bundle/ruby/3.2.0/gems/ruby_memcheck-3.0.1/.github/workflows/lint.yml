@@ -1,0 +1,10 @@
+name: Lint
+on: [push, pull_request]
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+      - run: bundle install --jobs=3 --retry=3 --path=vendor/bundle
+      - run: bundle exec rubocop

@@ -1,0 +1,49 @@
+---
+name: FFI Geos
+'on':
+  push:
+    branches:
+    - master
+    - github-actions
+  pull_request:
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        ruby: [ '3.0', '3.1', '3.2', '3.3' ]
+    name: Ruby ${{ matrix.ruby }} tests
+    steps:
+    - name: Check out app
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up apt packages
+      run: sudo apt-get -yqq install libgeos-dev
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Bundle install
+      run: |-
+        gem update --system
+        bundle install --path=.bundle --jobs 2 --retry 3
+    - name: Run Tests
+      env:
+        COVERAGE: 'true'
+        CI: 'true'
+      run: bundle exec rake test
+    - name: Fix coverage report
+      if: always()
+      run: sed -i "s/\/home\/runner\/work\/ffi-geos\/ffi-geos\//\/github\/workspace\//g" coverage/coverage.json || true
+    - name: Run rubocop
+      if: always()
+      env:
+        RAILS_ENV: test
+      run: bundle exec rubocop --parallel --format=json > rubocop-report.json || true
+    - name: Run SonarCloud
+      if: always()
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        SONAR_TOKEN: "${{ secrets.SONAR_CLOUD_TOKEN }}"

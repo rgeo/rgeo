@@ -1,0 +1,38 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        entry:
+          - { ruby: '3.0', allowed-failure: false }
+          - { ruby: '3.1', allowed-failure: false }
+          - { ruby: '3.2', allowed-failure: false }
+          - { ruby: '3.3', allowed-failure: false }
+          - { ruby: '3.4', allowed-failure: false }
+          - { ruby: ruby-head, allowed-failure: false }
+    name: ruby ${{ matrix.entry.ruby }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.entry.ruby }}
+      # - run: sudo apt-get install -y valgrind
+      # We cannot use Valgrind from apt because we need at least Valgrind 3.20.0
+      # to support DWARF 5
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libc6-dbg
+      - name: Install Valgrind from source
+        run: |
+          wget https://sourceware.org/pub/valgrind/valgrind-3.21.0.tar.bz2
+          tar xvf valgrind-3.21.0.tar.bz2
+          cd valgrind-3.21.0
+          ./configure
+          make
+          sudo make install
+      - run: bundle install --jobs=3 --retry=3
+      - run: bundle exec rake
+        continue-on-error: ${{ matrix.entry.allowed-failure }}
