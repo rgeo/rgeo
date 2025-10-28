@@ -66,7 +66,7 @@ module RGeo
       def eql?(other) # :nodoc:
         return false unless other.is_a?(ProjectedWindow)
         @factory == other.factory && @x_min == other.x_min && @x_max == other.x_max &&
-          @y_min == other.y_min && @y_max = other.y_max
+          @y_min == other.y_min && @y_max == other.y_max
       end
       alias == eql?
 

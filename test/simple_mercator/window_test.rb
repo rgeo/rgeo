@@ -184,9 +184,13 @@ class MercatorWindowTest < Minitest::Test # :nodoc:
     window2 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 10, 10)
     refute(window1.eql?(window2))
 
+    window1 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 5, 10)
+    window2 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 5, 5)
+    refute(window1.eql?(window2))
+
     window1 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 10, 10)
     window2 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 10, 10)
-    assert(window1.eql?(window1))
+    assert(window1.eql?(window2))
   end
 
   private
