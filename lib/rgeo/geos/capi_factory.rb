@@ -386,5 +386,15 @@ module RGeo
 
       # :startdoc:
     end
+
+    # Reopen Analysis to add deprecated method
+    module Analysis
+      class << self
+        def ccw_supported?
+          warn "RGeo::Geos::Analysis.ccw_supported? is deprecated. GEOS 3.14+ is now required.", uplevel: 1
+          true
+        end
+      end
+    end
   end
 end
