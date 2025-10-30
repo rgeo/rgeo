@@ -3,28 +3,29 @@
 
 VALUE
 extract_points_from_coordinate_sequence(const GEOSCoordSequence* coord_sequence,
-                                        int zCoordinate)
+                                        int has_z, int has_m)
 {
   VALUE result = Qnil;
   VALUE point;
   unsigned int count;
   unsigned int i;
   double val;
+  int dims = 2 + (has_z ? 1 : 0) + (has_m ? 1 : 0);
 
   if (GEOSCoordSeq_getSize(coord_sequence, &count)) {
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
-      if (zCoordinate) {
-        point = rb_ary_new2(3);
-      } else {
-        point = rb_ary_new2(2);
-      }
+      point = rb_ary_new2(dims);
       GEOSCoordSeq_getX(coord_sequence, i, &val);
       rb_ary_push(point, rb_float_new(val));
       GEOSCoordSeq_getY(coord_sequence, i, &val);
       rb_ary_push(point, rb_float_new(val));
-      if (zCoordinate) {
+      if (has_z) {
         GEOSCoordSeq_getZ(coord_sequence, i, &val);
+        rb_ary_push(point, rb_float_new(val));
+      }
+      if (has_m) {
+        GEOSCoordSeq_getM(coord_sequence, i, &val);
         rb_ary_push(point, rb_float_new(val));
       }
       rb_ary_push(result, point);
@@ -35,7 +36,7 @@ extract_points_from_coordinate_sequence(const GEOSCoordSequence* coord_sequence,
 }
 
 VALUE
-extract_points_from_polygon(const GEOSGeometry* polygon, int zCoordinate)
+extract_points_from_polygon(const GEOSGeometry* polygon, int has_z, int has_m)
 {
   VALUE result = Qnil;
 
@@ -54,7 +55,7 @@ extract_points_from_polygon(const GEOSGeometry* polygon, int zCoordinate)
 
       rb_ary_push(
         result,
-        extract_points_from_coordinate_sequence(coord_sequence, zCoordinate));
+        extract_points_from_coordinate_sequence(coord_sequence, has_z, has_m));
 
       for (i = 0; i < interior_ring_count; ++i) {
         ring = GEOSGetInteriorRingN(polygon, i);
@@ -62,7 +63,7 @@ extract_points_from_polygon(const GEOSGeometry* polygon, int zCoordinate)
         if (coord_sequence) {
           rb_ary_push(result,
                       extract_points_from_coordinate_sequence(coord_sequence,
-                                                              zCoordinate));
+                                                              has_z, has_m));
         }
       }
     }

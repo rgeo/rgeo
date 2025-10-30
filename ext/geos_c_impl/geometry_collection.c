@@ -284,14 +284,16 @@ method_multi_point_coordinates(VALUE self)
   const GEOSGeometry* point;
   unsigned int count;
   unsigned int i;
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
 
     count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
@@ -300,7 +302,7 @@ method_multi_point_coordinates(VALUE self)
       coord_sequence = GEOSGeom_getCoordSeq(point);
       rb_ary_push(result,
                   rb_ary_pop(extract_points_from_coordinate_sequence(
-                    coord_sequence, zCoordinate)));
+                    coord_sequence, has_z, has_m)));
     }
   }
 
@@ -365,14 +367,16 @@ method_multi_line_string_coordinates(VALUE self)
   const GEOSGeometry* line_string;
   unsigned int count;
   unsigned int i;
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
     count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
@@ -380,7 +384,7 @@ method_multi_line_string_coordinates(VALUE self)
       coord_sequence = GEOSGeom_getCoordSeq(line_string);
       rb_ary_push(
         result,
-        extract_points_from_coordinate_sequence(coord_sequence, zCoordinate));
+        extract_points_from_coordinate_sequence(coord_sequence, has_z, has_m));
     }
   }
 
@@ -477,19 +481,21 @@ method_multi_polygon_coordinates(VALUE self)
   const GEOSGeometry* poly;
   unsigned int count;
   unsigned int i;
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
     count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
       poly = GEOSGetGeometryN(self_geom, i);
-      rb_ary_push(result, extract_points_from_polygon(poly, zCoordinate));
+      rb_ary_push(result, extract_points_from_polygon(poly, has_z, has_m));
     }
   }
 
