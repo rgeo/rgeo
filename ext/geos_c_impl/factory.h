@@ -105,8 +105,8 @@ extern const rb_data_type_t rgeo_geometry_type;
   (_RGEO_TYPEDDATA_P(object, &rgeo_geometry_type))
 
 #define _RGEO_TYPEDDATA_P(object, data_type)                                   \
-  (TYPE(object) == T_DATA && RTYPEDDATA(object)->typed_flag == 1 &&            \
-   RTYPEDDATA(object)->type == data_type)
+  (RB_TYPE_P(object, T_DATA) && RTYPEDDATA_P(object) &&                        \
+   RTYPEDDATA_TYPE(object) == data_type)
 
 // Returns the RGeo_FactoryData* given a ruby Factory object
 #define RGEO_FACTORY_DATA_PTR(factory)                                         \
