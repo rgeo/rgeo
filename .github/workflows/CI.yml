@@ -26,9 +26,10 @@ jobs:
       matrix:
         ruby:
           - head
+          - "4.0.0-preview3"
+          - "3.4"
           - "3.3"
           - "3.2"
-          - "3.1"
           - "jruby"
         os:
           - ubuntu
@@ -38,10 +39,10 @@ jobs:
         exclude:
           - os: windows # See issue #242, windows support would be welcome.
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.ruby == '4.0.0-preview3' || matrix.os == 'windows' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
@@ -67,7 +68,7 @@ jobs:
   Memcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "head"
@@ -81,7 +82,7 @@ jobs:
   RuboCop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "head"
@@ -91,7 +92,7 @@ jobs:
   clang-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install clang-format
         run: |
           # Information at https://apt.llvm.org/
