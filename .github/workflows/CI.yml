@@ -26,7 +26,7 @@ jobs:
       matrix:
         ruby:
           - head
-          - "4.0.0-preview3"
+          - "4.0"
           - "3.4"
           - "3.3"
           - "3.2"
@@ -39,7 +39,7 @@ jobs:
         exclude:
           - os: windows # See issue #242, windows support would be welcome.
     runs-on: ${{ matrix.os }}-latest
-    continue-on-error: ${{ matrix.ruby == 'head' || matrix.ruby == '4.0.0-preview3' || matrix.os == 'windows' || matrix.os == 'macos' }}
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
     name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v6
