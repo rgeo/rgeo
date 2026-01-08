@@ -8,6 +8,10 @@
 
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
 
+**Bug Fixes**
+
+* Fix `ProjectedWindow#eql?` method to compare rather than set y min and max [#383](https://github.com/rgeo/rgeo/pull/383)
+
 ### 3.0.1 / 2023-11-15
 
 **Minor Changes**

@@ -178,6 +178,21 @@ class MercatorWindowTest < Minitest::Test # :nodoc:
     end
   end
 
+  def test_eql
+    # Tests issue https://github.com/rgeo/rgeo/issues/379
+    window1 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 5, 10, 10)
+    window2 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 10, 10)
+    refute(window1.eql?(window2))
+
+    window1 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 5, 10)
+    window2 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 5, 5)
+    refute(window1.eql?(window2))
+
+    window1 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 10, 10)
+    window2 = RGeo::Geographic::ProjectedWindow.new(@factory, 0, 0, 10, 10)
+    assert(window1.eql?(window2))
+  end
+
   private
 
   def assert_window_contains_window(window, south:, west:, north:, east:)
