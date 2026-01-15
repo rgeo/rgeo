@@ -64,7 +64,7 @@ module RGeo
 
         return false unless proper_match
 
-        rhs_rings = rhs.instance_variable_get(:@interior_rings)
+        rhs_rings = rhs.interior_rings
         @interior_rings.size.times { |i| return false unless @interior_rings[i].rep_equals?(rhs_rings[i]) }
       end
 

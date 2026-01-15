@@ -7,6 +7,7 @@
 * Add support for Ruby 4.0
 * Require ruby 3.1.4+ (@teeparham) [#374](https://github.com/rgeo/rgeo/pull/374)
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
+* Optimize Ruby array operations (MultiLineString#length +26%, Polygon#rep_equals? +4%) [#389](https://github.com/rgeo/rgeo/pull/389)
 
 **Bug Fixes**
 
