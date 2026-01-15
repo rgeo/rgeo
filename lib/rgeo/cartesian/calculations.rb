@@ -131,9 +131,16 @@ module RGeo
             return int_pt if contains_point?(int_pt)
 
             # find closest of @s, @e, seg.s, seg.e
-            [@e, seg.s, seg.e].reduce(@s) do |closest, pt|
-              int_pt.distance(pt) < int_pt.distance(closest) ? pt : closest
+            closest = @s
+            closest_dist = int_pt.distance(@s)
+            [@e, seg.s, seg.e].each do |pt|
+              dist = int_pt.distance(pt)
+              if dist < closest_dist
+                closest = pt
+                closest_dist = dist
+              end
             end
+            closest
           end
         end
       end
