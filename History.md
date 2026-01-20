@@ -1,16 +1,17 @@
 ### Unreleased
 
-**Breaking Changes**
-
-* Require ruby 3.1.4+ (@teeparham) #374
+### 3.1.0 / 2025-01-20
 
 **Minor Changes**
 
+* Add support for Ruby 4.0
+* Require ruby 3.1.4+ (@teeparham) [#374](https://github.com/rgeo/rgeo/pull/374)
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
 
 **Bug Fixes**
 
 * Fix `ProjectedWindow#eql?` method to compare rather than set y min and max [#383](https://github.com/rgeo/rgeo/pull/383)
+* Fix C compilation for Ruby 4.0 [#388](https://github.com/rgeo/rgeo/pull/388)
 
 ### 3.0.1 / 2023-11-15
 
