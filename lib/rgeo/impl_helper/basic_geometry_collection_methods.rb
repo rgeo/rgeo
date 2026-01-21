@@ -106,10 +106,7 @@ module RGeo
             add_boundary(hash, line.end_point)
           end
         end
-        array = []
-        hash.each do |_hval, data_|
-          array << data_[0] if data_[1].odd?
-        end
+        array = hash.filter_map { |_, data| data[0] if data[1].odd? }
         factory.multipoint([array])
       end
 

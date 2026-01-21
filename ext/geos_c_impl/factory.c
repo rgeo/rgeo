@@ -428,11 +428,8 @@ method_factory_write_for_psych(VALUE self, VALUE obj)
   wkt_writer = self_data->psych_wkt_writer;
   if (!wkt_writer) {
     wkt_writer = GEOSWKTWriter_create();
-    GEOSWKTWriter_setOutputDimension(wkt_writer, 2);
+    GEOSWKTWriter_setOutputDimension(wkt_writer, has_3d ? 3 : 2);
     GEOSWKTWriter_setTrim(wkt_writer, 1);
-    if (has_3d) {
-      GEOSWKTWriter_setOutputDimension(wkt_writer, 3);
-    }
     self_data->psych_wkt_writer = wkt_writer;
   }
   result = Qnil;

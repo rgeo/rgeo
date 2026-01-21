@@ -10,6 +10,7 @@
 #include <ruby.h>
 
 #include "coordinates.h"
+#include "errors.h"
 #include "factory.h"
 #include "geometry.h"
 #include "globals.h"
@@ -88,8 +89,15 @@ method_polygon_centroid(VALUE self)
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
 
-  result = Qnil;
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
+
+  if (RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
+      RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M) {
+    rb_raise(rb_eRGeoUnsupportedOperation,
+             "Geos cannot compute centroid for more than 2 dimensions");
+  }
+
+  result = Qnil;
   self_geom = self_data->geom;
   if (self_geom) {
     result = rgeo_wrap_geos_geometry(

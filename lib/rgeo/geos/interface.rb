@@ -164,10 +164,12 @@ module RGeo
       def factory(opts = {})
         return unless supported?
 
-        native_interface = opts[:native_interface] || Geos.preferred_native_interface
+        opts = opts.dup
+
+        native_interface = opts.delete(:native_interface) || Geos.preferred_native_interface
 
         if opts[:has_z_coordinate] && opts[:has_m_coordinate]
-          ZMFactory.new(opts)
+          ZMFactory.new(opts.merge(native_interface:))
         elsif native_interface == :ffi
           FFIFactory.new(opts)
         else

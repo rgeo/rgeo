@@ -253,7 +253,7 @@ module RGeo
       # or not it wraps.
 
       def projection_wraps?
-        @projector ? @projector.wraps? : nil
+        @projector&.wraps? || false
       end
 
       # Returns a ProjectedWindow specifying the limits of the domain of

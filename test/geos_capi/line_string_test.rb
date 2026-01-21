@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 require_relative "../test_helper"
-require_relative "./skip_capi"
+require_relative "skip_capi"
 
 class GeosLineStringTest < Minitest::Test # :nodoc:
   include RGeo::Tests::Common::LineStringTests
@@ -63,8 +63,8 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
 
     assert_equal expected, input.segmentize(5)
 
-    assert_raises(TypeError, "no implicit conversion to float from string") { input.segmentize("a") }
-    assert_raises(TypeError, "no implicit conversion to float from nil") { input.segmentize(nil) }
-    assert_raises(RGeo::Error::InvalidGeometry, "Tolerance must be positive") { input.segmentize(0) }
+    assert_raises(TypeError) { input.segmentize("a") }
+    assert_raises(TypeError) { input.segmentize(nil) }
+    assert_raises(RGeo::Error::InvalidGeometry) { input.segmentize(0) }
   end
 end

@@ -1,10 +1,5 @@
 pkg
 tmp
-.rbx
-.#*
-*.dSYM
-*.class
-*.jar
 *.bundle
 *.o
 *.so
@@ -14,4 +9,3 @@ mkmf.log
 Gemfile.lock
 /yardoc
 /.yardoc
-.tool-versions

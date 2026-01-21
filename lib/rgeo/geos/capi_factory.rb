@@ -23,29 +23,31 @@ module RGeo
           # Make sure GEOS is available
           return unless respond_to?(:_create)
 
+          opts = opts.dup
+
           # Get flags to pass to the C extension
           flags = 0
-          flags |= 2 if opts[:has_z_coordinate]
-          flags |= 4 if opts[:has_m_coordinate]
+          flags |= 2 if opts.delete(:has_z_coordinate)
+          flags |= 4 if opts.delete(:has_m_coordinate)
 
           if flags & 6 == 6
             raise Error::UnsupportedOperation, "GEOS cannot support both Z and M coordinates at the same time."
           end
 
-          flags |= 8 unless opts[:auto_prepare] == :disabled
+          flags |= 8 unless opts.delete(:auto_prepare) == :disabled
 
           # Buffer resolution
-          buffer_resolution = opts[:buffer_resolution].to_i
+          buffer_resolution = opts.delete(:buffer_resolution).to_i
           buffer_resolution = 1 if buffer_resolution < 1
 
           # Interpret the generator options
-          wkt_generator = opts[:wkt_generator]
+          wkt_generator = opts.delete(:wkt_generator)
           wkt_generator =
             case wkt_generator
             when Hash
               WKRep::WKTGenerator.new(wkt_generator)
             end
-          wkb_generator = opts[:wkb_generator]
+          wkb_generator = opts.delete(:wkb_generator)
           wkb_generator =
             case wkb_generator
             when Hash
@@ -53,7 +55,12 @@ module RGeo
             end
 
           # Coordinate system (srid and coord_sys)
-          coord_sys_info = ImplHelper::Utils.setup_coord_sys(opts[:srid], opts[:coord_sys], opts[:coord_sys_class])
+          coord_sys_info = ImplHelper::Utils.setup_coord_sys(
+            opts.delete(:srid),
+            opts.delete(:coord_sys),
+            opts.delete(:coord_sys_class)
+          )
+
           srid = coord_sys_info[:srid]
           coord_sys = coord_sys_info[:coord_sys]
 
@@ -68,19 +75,22 @@ module RGeo
           )
 
           # Interpret parser options
-          wkt_parser = opts[:wkt_parser]
+          wkt_parser = opts.delete(:wkt_parser)
           wkt_parser =
             case wkt_parser
             when Hash
               WKRep::WKTParser.new(result, wkt_parser)
             end
-          wkb_parser = opts[:wkb_parser]
+          wkb_parser = opts.delete(:wkb_parser)
           wkb_parser =
             case wkb_parser
             when Hash
               WKRep::WKBParser.new(result, wkb_parser)
             end
           result._set_wkrep_parsers(wkt_parser, wkb_parser)
+
+          # Check for unexpected options
+          raise Error::UnsupportedOperation, "Unrecognized option(s): #{opts.keys.join(', ')}" unless opts.empty?
 
           # Return the result
           result

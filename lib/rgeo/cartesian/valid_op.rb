@@ -13,7 +13,7 @@ module RGeo
     module ValidOpHelpers
       include ImplHelper::ValidOpHelpers
 
-      module_function(*ImplHelper::ValidOpHelpers.singleton_methods) # rubocop:disable Style/AccessModifierDeclarations
+      module_function(*ImplHelper::ValidOpHelpers.singleton_methods)
 
       module_function
 

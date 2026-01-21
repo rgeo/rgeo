@@ -71,7 +71,7 @@ module RGeo
 
           klass.class_eval do
             methods_to_check.each do |method_sym|
-              copy = "unsafe_#{SYMBOL2NAME[method_sym]}".to_sym
+              copy = :"unsafe_#{SYMBOL2NAME[method_sym]}"
               alias_method copy, method_sym
               undef_method method_sym
               define_method(method_sym) do |*args|
