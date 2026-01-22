@@ -43,11 +43,15 @@ RGeo works with the following Ruby implementations:
 
 Some features also require the following:
 
-*   GEOS 3.2 or later is highly recommended. (3.3.3 or later preferred.) Some
-    functions will not be available without it. This C/C++ library may be
-    available via your operating system's package manager (`sudo aptitude
-    install libgeos-dev` for debian based Linux distributions, `yum install geos geos-devel` for redhat based Linux distributions), or you can
-    download it from http://trac.osgeo.org/geos
+*   **GEOS 3.14.0 or later is required.** This C/C++ library provides the underlying
+    geometric operations. GEOS 3.14+ requires a C++17 compiler (GCC 8+, Clang 5+).
+    GEOS may be available via your operating system's package manager:
+    *   macOS: `brew install geos`
+    *   Debian/Ubuntu: `sudo apt install libgeos-dev`
+    *   RHEL/CentOS: `yum install geos geos-devel`
+    *   Alpine: `apk add geos-dev`
+
+    Or download from https://libgeos.org
 *   On some platforms, you should install the ffi-geos gem (version 1.2.0 or
     later recommended.) JRuby requires this gem to link properly with Geos,
     and Windows builds probably do as well.

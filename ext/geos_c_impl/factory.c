@@ -347,10 +347,6 @@ method_factory_read_for_psych(VALUE self, VALUE str)
   return result;
 }
 
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-static VALUE marshal_wkb_generator;
-#endif
-
 static VALUE
 method_factory_write_for_marshal(VALUE self, VALUE obj)
 {
@@ -364,17 +360,6 @@ method_factory_write_for_marshal(VALUE self, VALUE obj)
 
   self_data = RGEO_FACTORY_DATA_PTR(self);
   has_3d = self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  if (has_3d) {
-    if (NIL_P(marshal_wkb_generator)) {
-      marshal_wkb_generator =
-        rb_funcall(rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
-                   rb_intern("marshal_wkb_generator"),
-                   0);
-    }
-    return rb_funcall(marshal_wkb_generator, rb_intern("generate"), 1, obj);
-  }
-#endif
   wkb_writer = self_data->marshal_wkb_writer;
   if (!wkb_writer) {
     wkb_writer = GEOSWKBWriter_create();
@@ -398,10 +383,6 @@ method_factory_write_for_marshal(VALUE self, VALUE obj)
   return result;
 }
 
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-static VALUE psych_wkt_generator;
-#endif
-
 static VALUE
 method_factory_write_for_psych(VALUE self, VALUE obj)
 {
@@ -414,17 +395,6 @@ method_factory_write_for_psych(VALUE self, VALUE obj)
 
   self_data = RGEO_FACTORY_DATA_PTR(self);
   has_3d = self_data->flags & RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  if (has_3d) {
-    if (NIL_P(psych_wkt_generator)) {
-      psych_wkt_generator =
-        rb_funcall(rb_const_get_at(rgeo_geos_module, rb_intern("Utils")),
-                   rb_intern("psych_wkt_generator"),
-                   0);
-    }
-    return rb_funcall(psych_wkt_generator, rb_intern("generate"), 1, obj);
-  }
-#endif
   wkt_writer = self_data->psych_wkt_writer;
   if (!wkt_writer) {
     wkt_writer = GEOSWKTWriter_create();
@@ -458,11 +428,7 @@ cmethod_factory_geos_version(VALUE klass)
 static VALUE
 cmethod_factory_supports_unary_union(VALUE klass)
 {
-#ifdef RGEO_GEOS_SUPPORTS_UNARYUNION
   return Qtrue;
-#else
-  return Qfalse;
-#endif
 }
 
 static VALUE
@@ -623,15 +589,6 @@ void
 rgeo_init_geos_factory()
 {
   VALUE geos_factory_class;
-
-#ifndef RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
-  /* We favor rb_gc_register_address over rb_gc_register_mark_object because
-   * the value changes at runtime */
-  psych_wkt_generator = Qnil;
-  rb_gc_register_address(&psych_wkt_generator);
-  marshal_wkb_generator = Qnil;
-  rb_gc_register_address(&marshal_wkb_generator);
-#endif
 
   geos_factory_class =
     rb_define_class_under(rgeo_geos_module, "CAPIFactory", rb_cObject);

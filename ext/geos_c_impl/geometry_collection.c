@@ -284,14 +284,16 @@ method_multi_point_coordinates(VALUE self)
   const GEOSGeometry* point;
   unsigned int count;
   unsigned int i;
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
 
     count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
@@ -300,7 +302,7 @@ method_multi_point_coordinates(VALUE self)
       coord_sequence = GEOSGeom_getCoordSeq(point);
       rb_ary_push(result,
                   rb_ary_pop(extract_points_from_coordinate_sequence(
-                    coord_sequence, zCoordinate)));
+                    coord_sequence, has_z, has_m)));
     }
   }
 
@@ -365,14 +367,16 @@ method_multi_line_string_coordinates(VALUE self)
   const GEOSGeometry* line_string;
   unsigned int count;
   unsigned int i;
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
     count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
@@ -380,7 +384,7 @@ method_multi_line_string_coordinates(VALUE self)
       coord_sequence = GEOSGeom_getCoordSeq(line_string);
       rb_ary_push(
         result,
-        extract_points_from_coordinate_sequence(coord_sequence, zCoordinate));
+        extract_points_from_coordinate_sequence(coord_sequence, has_z, has_m));
     }
   }
 
@@ -477,19 +481,21 @@ method_multi_polygon_coordinates(VALUE self)
   const GEOSGeometry* poly;
   unsigned int count;
   unsigned int i;
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
     count = GEOSGetNumGeometries(self_geom);
     result = rb_ary_new2(count);
     for (i = 0; i < count; ++i) {
       poly = GEOSGetGeometryN(self_geom, i);
-      rb_ary_push(result, extract_points_from_polygon(poly, zCoordinate));
+      rb_ary_push(result, extract_points_from_polygon(poly, has_z, has_m));
     }
   }
 
@@ -531,6 +537,248 @@ method_multi_polygon_centroid(VALUE self)
   }
   return result;
 }
+
+#ifdef RGEO_GEOS_CLUSTERING
+
+static VALUE
+build_clusters_array(VALUE factory,
+                     const GEOSGeometry* geom,
+                     GEOSClusterInfo* clusters)
+{
+  VALUE result;
+  VALUE cluster_geoms;
+  size_t num_clusters;
+  size_t cluster_size;
+  const size_t* input_indices;
+  GEOSGeometry** geoms_array;
+  GEOSGeometry* cluster_geom;
+  size_t i, j;
+  int num_geoms;
+
+  num_clusters = GEOSClusterInfo_getNumClusters(clusters);
+  result = rb_ary_new2(num_clusters);
+  num_geoms = GEOSGetNumGeometries(geom);
+
+  for (i = 0; i < num_clusters; i++) {
+    cluster_size = GEOSClusterInfo_getClusterSize(clusters, i);
+    input_indices = GEOSClusterInfo_getInputsForClusterN(clusters, i);
+
+    geoms_array = ALLOC_N(GEOSGeometry*, cluster_size);
+    for (j = 0; j < cluster_size; j++) {
+      size_t idx = input_indices[j];
+      if (idx < (size_t)num_geoms) {
+        geoms_array[j] = GEOSGeom_clone(GEOSGetGeometryN(geom, (int)idx));
+      }
+    }
+
+    cluster_geom = GEOSGeom_createCollection(
+      GEOS_GEOMETRYCOLLECTION, geoms_array, (unsigned int)cluster_size);
+    xfree(geoms_array);
+
+    if (cluster_geom) {
+      cluster_geoms = rgeo_wrap_geos_geometry(factory, cluster_geom, Qnil);
+      rb_ary_push(result, cluster_geoms);
+    }
+  }
+
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_dbscan(VALUE self,
+                                          VALUE eps,
+                                          VALUE min_points)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+  double epsilon = NUM2DBL(eps);
+  unsigned int min_pts = NUM2UINT(min_points);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterDBSCAN(self_geom, epsilon, min_pts);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_by_distance(VALUE self, VALUE distance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+  double d = NUM2DBL(distance);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterGeometryDistance(self_geom, d);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_by_intersects(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterGeometryIntersects(self_geom);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_cluster_by_envelope_distance(VALUE self,
+                                                        VALUE distance)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSClusterInfo* clusters;
+  double d = NUM2DBL(distance);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    clusters = GEOSClusterEnvelopeDistance(self_geom, d);
+    if (clusters) {
+      result = build_clusters_array(self_data->factory, self_geom, clusters);
+      GEOSClusterInfo_destroy(clusters);
+    }
+  }
+  return result;
+}
+
+#endif // RGEO_GEOS_CLUSTERING
+
+#ifdef RGEO_GEOS_COVERAGE
+
+static VALUE
+method_geometry_collection_coverage_is_valid(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* invalid_edges = NULL;
+  int is_valid;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    is_valid = GEOSCoverageIsValid(self_geom, 0.0, &invalid_edges);
+    if (is_valid == 1) {
+      result = Qtrue;
+    } else if (is_valid == 0) {
+      result = Qfalse;
+    }
+    if (invalid_edges) {
+      GEOSGeom_destroy(invalid_edges);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_coverage_invalid_edges(VALUE self, VALUE gap_width)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* invalid_edges = NULL;
+  double gap = NUM2DBL(gap_width);
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    GEOSCoverageIsValid(self_geom, gap, &invalid_edges);
+    if (invalid_edges) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, invalid_edges, Qnil);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_coverage_simplify_vw(VALUE self,
+                                                VALUE tolerance,
+                                                VALUE preserve_boundary)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* simplified;
+  double tol = NUM2DBL(tolerance);
+  int preserve = RTEST(preserve_boundary) ? 1 : 0;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    simplified = GEOSCoverageSimplifyVW(self_geom, tol, preserve);
+    if (simplified) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, simplified, Qnil);
+    }
+  }
+  return result;
+}
+
+static VALUE
+method_geometry_collection_coverage_union(VALUE self)
+{
+  VALUE result;
+  RGeo_GeometryData* self_data;
+  const GEOSGeometry* self_geom;
+  GEOSGeometry* unioned;
+
+  result = Qnil;
+  self_data = RGEO_GEOMETRY_DATA_PTR(self);
+  self_geom = self_data->geom;
+
+  if (self_geom) {
+    unioned = GEOSCoverageUnion(self_geom);
+    if (unioned) {
+      result = rgeo_wrap_geos_geometry(self_data->factory, unioned, Qnil);
+    }
+  }
+  return result;
+}
+
+#endif // RGEO_GEOS_COVERAGE
 
 static VALUE
 cmethod_geometry_collection_create(VALUE module, VALUE factory, VALUE array)
@@ -625,6 +873,44 @@ rgeo_init_geos_geometry_collection()
                    "node",
                    method_geometry_collection_node,
                    0);
+
+#ifdef RGEO_GEOS_COVERAGE
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_is_valid?",
+                   method_geometry_collection_coverage_is_valid,
+                   0);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_invalid_edges",
+                   method_geometry_collection_coverage_invalid_edges,
+                   1);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_simplify_vw",
+                   method_geometry_collection_coverage_simplify_vw,
+                   2);
+  rb_define_method(geos_geometry_collection_methods,
+                   "coverage_union",
+                   method_geometry_collection_coverage_union,
+                   0);
+#endif
+
+#ifdef RGEO_GEOS_CLUSTERING
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_dbscan",
+                   method_geometry_collection_cluster_dbscan,
+                   2);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_by_distance",
+                   method_geometry_collection_cluster_by_distance,
+                   1);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_by_intersects",
+                   method_geometry_collection_cluster_by_intersects,
+                   0);
+  rb_define_method(geos_geometry_collection_methods,
+                   "cluster_by_envelope_distance",
+                   method_geometry_collection_cluster_by_envelope_distance,
+                   1);
+#endif
 
   // Methods for MultiPointImpl
   geos_multi_point_methods =
