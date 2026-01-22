@@ -4,7 +4,7 @@
   Requires GEOS 3.14.0 or later
 */
 
-#ifdef HAVE_GEOSCOORDSEQ_HASZ
+#ifdef HAVE_GEOSLINESUBSTRING
 #define RGEO_GEOS_SUPPORTED
 #endif
 

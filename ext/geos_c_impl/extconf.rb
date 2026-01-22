@@ -40,8 +40,8 @@ end
 
 found_geos = false
 if have_header("geos_c.h")
-  # Check for GEOS 3.14+ API - if missing, compilation will fail with clear error
-  found_geos = true if have_func("GEOSCoordSeq_hasZ", "geos_c.h")
+  # Check for GEOS 3.14+ API (GEOSLineSubstring was added in 3.14)
+  found_geos = true if have_func("GEOSLineSubstring", "geos_c.h")
   have_func("rb_memhash", "ruby.h")
   have_func("rb_gc_mark_movable", "ruby.h")
 end
