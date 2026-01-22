@@ -51,7 +51,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   # GEOS 3.14+ Clustering features
 
   def test_cluster_dbscan_basic
-
     # Create 3 clusters of points
     points = [
       # Cluster 1
@@ -70,11 +69,10 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
 
     assert_instance_of Array, clusters
     # Should have clusters for points in dense regions
-    assert clusters.any? { |c| c.is_a?(RGeo::Geos::CAPIGeometryCollectionImpl) }
+    assert(clusters.any? { |c| c.is_a?(RGeo::Geos::CAPIGeometryCollectionImpl) })
   end
 
   def test_cluster_by_distance
-
     points = [
       @factory.point(0, 0),
       @factory.point(1, 0),
@@ -93,7 +91,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   end
 
   def test_cluster_by_intersects
-
     # Two overlapping polygons and one separate
     polys = [
       @factory.parse_wkt("POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))"),
@@ -109,7 +106,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   end
 
   def test_cluster_by_envelope_distance
-
     points = [
       @factory.point(0, 0),
       @factory.point(1, 0),
@@ -127,7 +123,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   # GEOS 3.14+ Coverage features
 
   def test_coverage_is_valid_with_valid_coverage
-
     # A valid coverage: two adjacent non-overlapping polygons
     polys = [
       @factory.parse_wkt("POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))"),
@@ -139,7 +134,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   end
 
   def test_coverage_is_valid_with_invalid_coverage
-
     # An invalid coverage: two overlapping polygons
     polys = [
       @factory.parse_wkt("POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))"),
@@ -151,7 +145,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   end
 
   def test_coverage_invalid_edges
-
     # Overlapping polygons - should return invalid edges
     polys = [
       @factory.parse_wkt("POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))"),
@@ -165,7 +158,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   end
 
   def test_coverage_simplify_vw
-
     # Two adjacent polygons
     polys = [
       @factory.parse_wkt("POLYGON((0 0, 1 0, 1 0.1, 1 1, 0 1, 0 0))"),
@@ -180,7 +172,6 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
   end
 
   def test_coverage_union
-
     # Two adjacent non-overlapping polygons
     polys = [
       @factory.parse_wkt("POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))"),

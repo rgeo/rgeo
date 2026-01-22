@@ -71,7 +71,6 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   # GEOS 3.14+ features
 
   def test_line_substring_full_line
-
     line = @factory.parse_wkt("LINESTRING(0 0, 10 0)")
     result = line.line_substring(0.0, 1.0)
 
@@ -79,7 +78,6 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   end
 
   def test_line_substring_first_half
-
     line = @factory.parse_wkt("LINESTRING(0 0, 10 0)")
     expected = @factory.parse_wkt("LINESTRING(0 0, 5 0)")
     result = line.line_substring(0.0, 0.5)
@@ -88,7 +86,6 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   end
 
   def test_line_substring_second_half
-
     line = @factory.parse_wkt("LINESTRING(0 0, 10 0)")
     expected = @factory.parse_wkt("LINESTRING(5 0, 10 0)")
     result = line.line_substring(0.5, 1.0)
@@ -97,7 +94,6 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   end
 
   def test_line_substring_middle_portion
-
     line = @factory.parse_wkt("LINESTRING(0 0, 10 0)")
     expected = @factory.parse_wkt("LINESTRING(2.5 0, 7.5 0)")
     result = line.line_substring(0.25, 0.75)
@@ -106,7 +102,6 @@ class GeosLineStringTest < Minitest::Test # :nodoc:
   end
 
   def test_line_substring_complex_line
-
     line = @factory.parse_wkt("LINESTRING(0 0, 5 0, 5 5, 10 5)")
     # Total length = 5 + 5 + 5 = 15
     # 0.0 to 0.5 = first 7.5 units = (0,0) to (5,0) to (5,2.5)
