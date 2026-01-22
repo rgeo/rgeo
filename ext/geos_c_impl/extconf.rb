@@ -40,14 +40,16 @@ end
 
 found_geos = false
 if have_header("geos_c.h")
-  # Minimum: GEOS 3.12+ (has GEOSCoordSeq_setM for native M-coordinate support)
+  # Minimum: GEOS 3.14+ (has GEOSCoordSeq_setM for native M-coordinate support)
+  # GEOSCoordSeq_setM, GEOSCoordSeq_getM, and GEOSLineSubstring were all added in 3.14
   found_geos = true if have_func("GEOSCoordSeq_setM", "geos_c.h")
 
-  # Optional: GEOS 3.14+ features (detected for conditional compilation)
-  have_func("GEOSLineSubstring", "geos_c.h")
+  # Optional: Additional GEOS 3.14+ features (detected for conditional compilation)
+  # These may not be present in all 3.14 builds
   have_func("GEOSClusterDBSCAN", "geos_c.h")
   have_func("GEOSCoverageIsValid", "geos_c.h")
   have_func("GEOSisSimpleDetail", "geos_c.h")
+  have_func("GEOSLineSubstring", "geos_c.h")
 
   have_func("rb_memhash", "ruby.h")
   have_func("rb_gc_mark_movable", "ruby.h")
@@ -56,8 +58,8 @@ end
 if found_geos
   create_makefile("rgeo/geos/geos_c_impl")
 else
-  puts "**** WARNING: Unable to find GEOS 3.12+ or later."
-  puts "**** This version of rgeo requires GEOS 3.12.0 or later."
+  puts "**** WARNING: Unable to find GEOS 3.14+ or later."
+  puts "**** This version of rgeo requires GEOS 3.14.0 or later for M-coordinate support."
   puts "**** Please upgrade GEOS or use an older version of rgeo (3.0.x supports older GEOS)."
   puts "**** See https://libgeos.org for GEOS installation."
 

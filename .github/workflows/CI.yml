@@ -39,38 +39,22 @@ jobs:
           # Windows users, feel free to open a PR :)
           # - windows
           - macos
-        geos:
-          - stable     # GEOS 3.12.x from ubuntugis PPA
-          - bleeding   # GEOS 3.14.x from source
         exclude:
           - os: windows # See issue #242, windows support would be welcome.
-          - os: macos
-            geos: stable  # macOS uses Homebrew, no geos matrix needed
     runs-on: ${{ matrix.os }}-latest
     continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
-    name: Ruby ${{ matrix.ruby }} (${{ matrix.os }}${{ matrix.geos == 'bleeding' && ', GEOS 3.14' || '' }})
+    name: Ruby ${{ matrix.ruby }} (${{ matrix.os }})
     steps:
       - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Install Geos (Linux - stable)
-        if: matrix.os == 'ubuntu' && matrix.geos == 'stable'
+      - name: Install Geos (Linux)
+        if: matrix.os == 'ubuntu'
         run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-add-repository ppa:bleedingedge/noble-bleed
           sudo apt-get install -yqq libgeos-dev
-      - name: Install Geos (Linux - bleeding)
-        if: matrix.os == 'ubuntu' && matrix.geos == 'bleeding'
-        run: |
-          wget -q https://download.osgeo.org/geos/geos-3.14.0.tar.bz2
-          tar xjf geos-3.14.0.tar.bz2
-          cd geos-3.14.0
-          mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make -j$(nproc)
-          sudo make install
-          sudo ldconfig
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
         run: HOMEBREW_NO_INSTALL_CLEANUP=1 brew install geos
@@ -94,7 +78,7 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-add-repository ppa:bleedingedge/noble-bleed
           sudo apt-get install -yqq libgeos-dev valgrind
       - name: Test & Memcheck
         run: bundle exec rake test:valgrind

@@ -538,7 +538,7 @@ method_multi_polygon_centroid(VALUE self)
   return result;
 }
 
-#ifdef RGEO_GEOS_314
+#ifdef RGEO_GEOS_CLUSTERING
 
 static VALUE
 build_clusters_array(VALUE factory,
@@ -679,6 +679,10 @@ method_geometry_collection_cluster_by_envelope_distance(VALUE self,
   return result;
 }
 
+#endif // RGEO_GEOS_CLUSTERING
+
+#ifdef RGEO_GEOS_COVERAGE
+
 static VALUE
 method_geometry_collection_coverage_is_valid(VALUE self)
 {
@@ -774,7 +778,7 @@ method_geometry_collection_coverage_union(VALUE self)
   return result;
 }
 
-#endif // RGEO_GEOS_314
+#endif // RGEO_GEOS_COVERAGE
 
 static VALUE
 cmethod_geometry_collection_create(VALUE module, VALUE factory, VALUE array)
@@ -870,7 +874,7 @@ rgeo_init_geos_geometry_collection()
                    method_geometry_collection_node,
                    0);
 
-#ifdef RGEO_GEOS_314
+#ifdef RGEO_GEOS_COVERAGE
   rb_define_method(geos_geometry_collection_methods,
                    "coverage_is_valid?",
                    method_geometry_collection_coverage_is_valid,
@@ -887,6 +891,9 @@ rgeo_init_geos_geometry_collection()
                    "coverage_union",
                    method_geometry_collection_coverage_union,
                    0);
+#endif
+
+#ifdef RGEO_GEOS_CLUSTERING
   rb_define_method(geos_geometry_collection_methods,
                    "cluster_dbscan",
                    method_geometry_collection_cluster_dbscan,

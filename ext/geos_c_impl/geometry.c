@@ -362,7 +362,7 @@ method_geometry_is_simple(VALUE self)
   return result;
 }
 
-#ifdef RGEO_GEOS_314
+#ifdef RGEO_GEOS_SIMPLE_DETAIL
 static VALUE
 method_geometry_simple_detail(VALUE self)
 {
@@ -1303,7 +1303,7 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "empty?", method_geometry_is_empty, 0);
   rb_define_method(
     geos_geometry_methods, "simple?", method_geometry_is_simple, 0);
-#ifdef RGEO_GEOS_314
+#ifdef RGEO_GEOS_SIMPLE_DETAIL
   rb_define_method(
     geos_geometry_methods, "simple_detail", method_geometry_simple_detail, 0);
 #endif
