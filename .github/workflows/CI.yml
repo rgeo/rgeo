@@ -68,6 +68,70 @@ jobs:
         run: export MAINTAINER_MODE='-Wold-style-definition'
       - name: Test
         run: bundle exec rake
+  GeosTest:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - head
+          - '3.2'
+          - '3.1'
+          - '3.0'
+          - '2.7'
+          - "jruby"
+        os:
+          - ubuntu
+        geos:
+          - '3.12.0'
+          - '3.11.2'
+          - '3.10.5'
+          - '3.9.4'
+          - '3.8.3'
+    runs-on: ${{ matrix.os }}-latest
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.os == 'windows' || matrix.os == 'macos' }}
+    name: Ruby ${{ matrix.ruby }}, Geos ${{ matrix.geos }} (${{ matrix.os }})
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Packages
+        if: matrix.os == 'ubuntu'
+        run: |
+          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-get -yqq install curl libcurl4-openssl-dev libssl-dev cmake
+      - uses: actions/cache@v2
+        id: geos-cache
+        with:
+          path: ./geos-${{ matrix.geos }}
+          key: geos-${{ matrix.geos }}-${{ matrix.os }}
+      - name: Download and Compile Geos
+        if: steps.geos-cache.outputs.cache-hit != 'true'
+        run: |
+          wget -c https://download.osgeo.org/geos/geos-${{ matrix.geos }}.tar.bz2
+          tar -xf geos-${{ matrix.geos }}.tar.bz2
+          cd geos-${{ matrix.geos }}
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build . -j2
+          cd ../../
+      - name: Install Geos
+        run: |
+          cd geos-${{ matrix.geos }}/build
+          sudo cmake --build . --target install
+          cd ../../
+      - name: ldconfig
+        if: matrix.os == 'ubuntu'
+        run: sudo ldconfig
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Bundle Install
+        run: bundle install
+      - name: Set Maintainer Mode
+        if: ${{ github.event.pull_request }}
+        run: export MAINTAINER_MODE='-Wold-style-definition'
+      - name: Test
+        run: bundle exec rake
   Memcheck:
     runs-on: ubuntu-latest
     steps:
