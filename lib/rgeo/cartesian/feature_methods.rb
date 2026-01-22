@@ -83,7 +83,7 @@ module RGeo
       end
 
       def length
-        segments.inject(0.0) { |sum, seg| sum + seg.length }
+        segments.sum(&:length)
       end
 
       def crosses?(rhs)
@@ -126,7 +126,7 @@ module RGeo
 
     module MultiLineStringMethods # :nodoc:
       def length
-        inject(0.0) { |sum, geom| sum + geom.length }
+        sum(&:length)
       end
     end
   end

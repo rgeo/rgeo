@@ -44,7 +44,7 @@ module RGeo
       end
 
       def empty?
-        @points.size == 0
+        @points.empty?
       end
 
       def boundary
@@ -73,7 +73,8 @@ module RGeo
 
       def rep_equals?(rhs)
         if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @points.size == rhs.num_points
-          rhs.points.each_with_index { |p, i| return false unless @points[i].rep_equals?(p) }
+          rhs_points = rhs.points
+          @points.size.times { |i| return false unless @points[i].rep_equals?(rhs_points[i]) }
         else
           false
         end
