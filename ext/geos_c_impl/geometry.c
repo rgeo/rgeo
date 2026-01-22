@@ -1132,7 +1132,7 @@ method_geometry_invalid_reason_location(VALUE self)
 }
 
 static VALUE
-method_geometry_make_valid(VALUE self)
+method_geometry_make_valid(VALUE self, VALUE method, VALUE keepCollapsed)
 {
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
@@ -1142,8 +1142,14 @@ method_geometry_make_valid(VALUE self)
   if (!self_geom)
     return Qnil;
 
+  GEOSMakeValidParams* params = GEOSMakeValidParams_create();
+  GEOSMakeValidParams_setMethod(params, RB_NUM2INT(method));
+  GEOSMakeValidParams_setKeepCollapsed(params, RB_NUM2INT(keepCollapsed));
+
   // According to GEOS implementation, MakeValid always returns.
-  valid_geom = GEOSMakeValid(self_geom);
+  valid_geom = GEOSMakeValidWithParams(self_geom, params);
+  GEOSMakeValidParams_destroy(params);
+
   if (!valid_geom) {
     rb_raise(rb_eRGeoInvalidGeometry,
              "%" PRIsVALUE,
@@ -1325,8 +1331,10 @@ rgeo_init_geos_geometry()
                    "point_on_surface",
                    method_geometry_point_on_surface,
                    0);
-  rb_define_method(
-    geos_geometry_methods, "make_valid", method_geometry_make_valid, 0);
+  rb_define_private_method(geos_geometry_methods,
+                           "geometry_make_valid",
+                           method_geometry_make_valid,
+                           2);
   rb_define_method(
     geos_geometry_methods, "polygonize", method_geometry_polygonize, 0);
 #ifdef RGEO_GEOS_SUPPORTS_DENSIFY
