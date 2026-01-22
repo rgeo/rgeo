@@ -538,6 +538,8 @@ method_multi_polygon_centroid(VALUE self)
   return result;
 }
 
+#ifdef RGEO_GEOS_314
+
 static VALUE
 build_clusters_array(VALUE factory,
                      const GEOSGeometry* geom,
@@ -772,6 +774,8 @@ method_geometry_collection_coverage_union(VALUE self)
   return result;
 }
 
+#endif // RGEO_GEOS_314
+
 static VALUE
 cmethod_geometry_collection_create(VALUE module, VALUE factory, VALUE array)
 {
@@ -865,6 +869,8 @@ rgeo_init_geos_geometry_collection()
                    "node",
                    method_geometry_collection_node,
                    0);
+
+#ifdef RGEO_GEOS_314
   rb_define_method(geos_geometry_collection_methods,
                    "coverage_is_valid?",
                    method_geometry_collection_coverage_is_valid,
@@ -897,6 +903,7 @@ rgeo_init_geos_geometry_collection()
                    "cluster_by_envelope_distance",
                    method_geometry_collection_cluster_by_envelope_distance,
                    1);
+#endif
 
   // Methods for MultiPointImpl
   geos_multi_point_methods =

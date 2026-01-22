@@ -64,6 +64,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.point(100, 100)
     ]
     collection = @factory.collection(points)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:cluster_dbscan)
 
     clusters = collection.cluster_dbscan(2.0, 2)
 
@@ -80,6 +81,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.point(11, 10)
     ]
     collection = @factory.collection(points)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:cluster_by_distance)
 
     clusters = collection.cluster_by_distance(2.0)
 
@@ -98,6 +100,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.parse_wkt("POLYGON((10 10, 12 10, 12 12, 10 12, 10 10))")
     ]
     collection = @factory.collection(polys)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:cluster_by_intersects)
 
     clusters = collection.cluster_by_intersects
 
@@ -113,6 +116,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.point(11, 10)
     ]
     collection = @factory.collection(points)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:cluster_by_envelope_distance)
 
     clusters = collection.cluster_by_envelope_distance(2.0)
 
@@ -129,6 +133,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.parse_wkt("POLYGON((1 0, 2 0, 2 1, 1 1, 1 0))")
     ]
     collection = @factory.collection(polys)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:coverage_is_valid?)
 
     assert collection.coverage_is_valid?
   end
@@ -140,6 +145,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.parse_wkt("POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))")
     ]
     collection = @factory.collection(polys)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:coverage_is_valid?)
 
     refute collection.coverage_is_valid?
   end
@@ -151,6 +157,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.parse_wkt("POLYGON((1 1, 3 1, 3 3, 1 3, 1 1))")
     ]
     collection = @factory.collection(polys)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:coverage_invalid_edges)
 
     edges = collection.coverage_invalid_edges(0.0)
 
@@ -164,6 +171,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.parse_wkt("POLYGON((1 0, 2 0, 2 1, 1 1, 1 0.1, 1 0))")
     ]
     collection = @factory.collection(polys)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:coverage_simplify_vw)
 
     simplified = collection.coverage_simplify_vw(0.5, false)
 
@@ -178,6 +186,7 @@ class GeosGeometryCollectionTest < Minitest::Test # :nodoc:
       @factory.parse_wkt("POLYGON((1 0, 2 0, 2 1, 1 1, 1 0))")
     ]
     collection = @factory.collection(polys)
+    skip "GEOS 3.14+ required" unless collection.respond_to?(:coverage_union)
 
     union = collection.coverage_union
 

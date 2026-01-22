@@ -362,6 +362,7 @@ method_geometry_is_simple(VALUE self)
   return result;
 }
 
+#ifdef RGEO_GEOS_314
 static VALUE
 method_geometry_simple_detail(VALUE self)
 {
@@ -388,6 +389,7 @@ method_geometry_simple_detail(VALUE self)
   }
   return result;
 }
+#endif
 
 static VALUE
 method_geometry_equals(VALUE self, VALUE rhs)
@@ -1301,8 +1303,10 @@ rgeo_init_geos_geometry()
     geos_geometry_methods, "empty?", method_geometry_is_empty, 0);
   rb_define_method(
     geos_geometry_methods, "simple?", method_geometry_is_simple, 0);
+#ifdef RGEO_GEOS_314
   rb_define_method(
     geos_geometry_methods, "simple_detail", method_geometry_simple_detail, 0);
+#endif
   rb_define_method(geos_geometry_methods, "equals?", method_geometry_equals, 1);
   rb_define_method(geos_geometry_methods, "==", method_geometry_equals, 1);
   rb_define_method(

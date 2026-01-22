@@ -301,6 +301,7 @@ method_line_string_interpolate_point(VALUE self, VALUE loc_num)
   return result;
 }
 
+#ifdef RGEO_GEOS_314
 static VALUE
 method_line_string_substring(VALUE self,
                              VALUE start_fraction,
@@ -329,6 +330,7 @@ method_line_string_substring(VALUE self,
 
   return result;
 }
+#endif
 
 static VALUE
 method_line_string_is_closed(VALUE self)
@@ -763,10 +765,12 @@ rgeo_init_geos_line_string()
                    "interpolate_point",
                    method_line_string_interpolate_point,
                    1);
+#ifdef RGEO_GEOS_314
   rb_define_method(geos_line_string_methods,
                    "line_substring",
                    method_line_string_substring,
                    2);
+#endif
   rb_define_method(
     geos_line_string_methods, "closed?", method_line_string_is_closed, 0);
   rb_define_method(

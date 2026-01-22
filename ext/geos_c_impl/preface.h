@@ -4,8 +4,14 @@
   Requires GEOS 3.14.0 or later
 */
 
-#ifdef HAVE_GEOSLINESUBSTRING
+// Minimum GEOS 3.12+ (native M-coordinate support)
+#ifdef HAVE_GEOSCOORDSEQ_SETM
 #define RGEO_GEOS_SUPPORTED
+#endif
+
+// GEOS 3.14+ features (optional)
+#ifdef HAVE_GEOSLINESUBSTRING
+#define RGEO_GEOS_314
 #endif
 
 #ifdef HAVE_RB_GC_MARK_MOVABLE

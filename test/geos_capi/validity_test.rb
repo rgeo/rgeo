@@ -36,6 +36,7 @@ class GeosValidityTest < Minitest::Test # :nodoc:
 
   def test_simple_detail_for_simple_geometry
     line = @factory.parse_wkt("LINESTRING(0 0, 1 1, 2 2)")
+    skip "GEOS 3.14+ required" unless line.respond_to?(:simple_detail)
 
     assert line.simple?
     assert_nil line.simple_detail
@@ -44,6 +45,7 @@ class GeosValidityTest < Minitest::Test # :nodoc:
   def test_simple_detail_for_non_simple_geometry
     # Self-intersecting line (figure 8 shape)
     line = @factory.parse_wkt("LINESTRING(0 0, 2 2, 0 2, 2 0)")
+    skip "GEOS 3.14+ required" unless line.respond_to?(:simple_detail)
 
     refute line.simple?
 
@@ -56,6 +58,7 @@ class GeosValidityTest < Minitest::Test # :nodoc:
 
   def test_simple_detail_for_point
     point = @factory.point(1, 2)
+    skip "GEOS 3.14+ required" unless point.respond_to?(:simple_detail)
 
     assert point.simple?
     assert_nil point.simple_detail
