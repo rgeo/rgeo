@@ -3,7 +3,8 @@
 
 VALUE
 extract_points_from_coordinate_sequence(const GEOSCoordSequence* coord_sequence,
-                                        int has_z, int has_m)
+                                        int has_z,
+                                        int has_m)
 {
   VALUE result = Qnil;
   VALUE point;
@@ -62,8 +63,8 @@ extract_points_from_polygon(const GEOSGeometry* polygon, int has_z, int has_m)
         coord_sequence = GEOSGeom_getCoordSeq(ring);
         if (coord_sequence) {
           rb_ary_push(result,
-                      extract_points_from_coordinate_sequence(coord_sequence,
-                                                              has_z, has_m));
+                      extract_points_from_coordinate_sequence(
+                        coord_sequence, has_z, has_m));
         }
       }
     }

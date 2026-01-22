@@ -302,7 +302,9 @@ method_line_string_interpolate_point(VALUE self, VALUE loc_num)
 }
 
 static VALUE
-method_line_string_substring(VALUE self, VALUE start_fraction, VALUE end_fraction)
+method_line_string_substring(VALUE self,
+                             VALUE start_fraction,
+                             VALUE end_fraction)
 {
   VALUE result = Qnil;
   VALUE factory;
@@ -320,7 +322,8 @@ method_line_string_substring(VALUE self, VALUE start_fraction, VALUE end_fractio
   if (self_geom) {
     substring = GEOSLineSubstring(self_geom, start_frac, end_frac);
     if (substring) {
-      result = rgeo_wrap_geos_geometry(factory, substring, rgeo_geos_line_string_class);
+      result = rgeo_wrap_geos_geometry(
+        factory, substring, rgeo_geos_line_string_class);
     }
   }
 
@@ -501,7 +504,8 @@ coord_seq_from_array(VALUE factory, VALUE array, char close)
   } else {
     close = 0;
   }
-  coord_seq = GEOSCoordSeq_createWithDimensions(len + close, has_z ? 1 : 0, has_m ? 1 : 0);
+  coord_seq = GEOSCoordSeq_createWithDimensions(
+    len + close, has_z ? 1 : 0, has_m ? 1 : 0);
   if (coord_seq) {
     for (i = 0; i < len; ++i) {
       unsigned int idx = 0;

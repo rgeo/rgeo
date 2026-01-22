@@ -539,7 +539,9 @@ method_multi_polygon_centroid(VALUE self)
 }
 
 static VALUE
-build_clusters_array(VALUE factory, const GEOSGeometry* geom, GEOSClusterInfo* clusters)
+build_clusters_array(VALUE factory,
+                     const GEOSGeometry* geom,
+                     GEOSClusterInfo* clusters)
 {
   VALUE result;
   VALUE cluster_geoms;
@@ -581,7 +583,9 @@ build_clusters_array(VALUE factory, const GEOSGeometry* geom, GEOSClusterInfo* c
 }
 
 static VALUE
-method_geometry_collection_cluster_dbscan(VALUE self, VALUE eps, VALUE min_points)
+method_geometry_collection_cluster_dbscan(VALUE self,
+                                          VALUE eps,
+                                          VALUE min_points)
 {
   VALUE result;
   RGeo_GeometryData* self_data;
@@ -650,7 +654,8 @@ method_geometry_collection_cluster_by_intersects(VALUE self)
 }
 
 static VALUE
-method_geometry_collection_cluster_by_envelope_distance(VALUE self, VALUE distance)
+method_geometry_collection_cluster_by_envelope_distance(VALUE self,
+                                                        VALUE distance)
 {
   VALUE result;
   RGeo_GeometryData* self_data;
@@ -722,7 +727,9 @@ method_geometry_collection_coverage_invalid_edges(VALUE self, VALUE gap_width)
 }
 
 static VALUE
-method_geometry_collection_coverage_simplify_vw(VALUE self, VALUE tolerance, VALUE preserve_boundary)
+method_geometry_collection_coverage_simplify_vw(VALUE self,
+                                                VALUE tolerance,
+                                                VALUE preserve_boundary)
 {
   VALUE result;
   RGeo_GeometryData* self_data;

@@ -382,7 +382,8 @@ method_geometry_simple_detail(VALUE self)
     if (is_simple == 1) {
       result = Qnil;
     } else if (is_simple == 0 && location) {
-      result = rgeo_wrap_geos_geometry(factory, location, rgeo_geos_point_class);
+      result =
+        rgeo_wrap_geos_geometry(factory, location, rgeo_geos_point_class);
     }
   }
   return result;
