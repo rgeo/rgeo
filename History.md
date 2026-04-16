@@ -1,5 +1,10 @@
 ### Unreleased
 
+**Bug Fixes**
+
+* Add a `:precision` option for `simple_factory` instances to reduce invalid self-intersection issues
+* Add a new tests to validate `simple_factory` polygons with non-integer vertices
+
 ### 3.1.0 / 2025-01-20
 
 **Minor Changes**
