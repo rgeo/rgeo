@@ -43,17 +43,19 @@ module RGeo
         alias == eql?
 
         def latlon
-          lat_rad = Math.asin(@z)
-          lon_rad = Math.atan2(@y, @x)
-          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lat_rad / rpd, lon_rad / rpd]
+          [lat, lon]
         end
 
         def lonlat
-          lat_rad = Math.asin(@z)
-          lon_rad = Math.atan2(@y, @x)
-          rpd = ImplHelper::Math::RADIANS_PER_DEGREE
-          [lon_rad / rpd, lat_rad / rpd]
+          [lon, lat]
+        end
+
+        def lat
+          Math.asin(@z) / ImplHelper::Math::RADIANS_PER_DEGREE
+        end
+
+        def lon
+          Math.atan2(@y, @x) / ImplHelper::Math::RADIANS_PER_DEGREE
         end
 
         def *(other)
@@ -122,6 +124,10 @@ module RGeo
       # Represents a finite arc on the sphere.
 
       class ArcXYZ # :nodoc:
+        # Projections onto the great-circle plane can leave residuals around 1e-16,
+        # so containment checks need tolerance instead of exact plane equality.
+        PLANE_EPSILON = 1E-12
+
         attr_reader :s, :e
 
         def initialize(start, stop)
@@ -144,16 +150,55 @@ module RGeo
           my_axis.x == 0 && my_axis.y == 0 && my_axis.z == 0
         end
 
+        def dist_to_point(obj)
+          closest_point(obj).dist_to_point(obj)
+        end
+
+        # returns PointXYZ
+        def closest_point(obj)
+          return s if e == s
+
+          projection = project_point(obj)
+
+          # Check if the projected point is within the bounds of the arc
+          if contains_point?(projection, PLANE_EPSILON)
+            projection
+          else
+            # If not within the arc, return the closer endpoint of the arc
+            s.dist_to_point(obj) < e.dist_to_point(obj) ? s : e
+          end
+        end
+
+        # returns PointXYZ
+        def project_point(obj)
+          # Project the point onto the plane of the great circle defined by the arc
+          # Floating-point error can leave the projected point about 1e-16 off the
+          # plane, so callers that test plane membership may need a small tolerance.
+          point_to_plane_distance = obj * axis
+          projection = PointXYZ.new(
+            obj.x - point_to_plane_distance * axis.x,
+            obj.y - point_to_plane_distance * axis.y,
+            obj.z - point_to_plane_distance * axis.z
+          )
+
+          # Normalize the projection to ensure it lies on the great circle
+          magnitude = Math.sqrt(projection.x**2 + projection.y**2 + projection.z**2)
+          PointXYZ.new(projection.x / magnitude, projection.y / magnitude, projection.z / magnitude)
+        end
+
         def axis
           @axis = @s % @e if @axis == false
           @axis
         end
 
-        def contains_point?(obj)
+        def contains_point?(obj, tolerance = 0)
           my_axis = axis
           s_axis = ArcXYZ.new(@s, obj).axis
           e_axis = ArcXYZ.new(obj, @e).axis
-          !s_axis || !e_axis || obj * my_axis == 0 && s_axis * my_axis > 0 && e_axis * my_axis > 0
+          !s_axis || !e_axis ||
+            (obj * my_axis).abs <= tolerance &&
+            s_axis * my_axis > 0 &&
+            e_axis * my_axis > 0
         end
 
         def intersects_arc?(obj)
