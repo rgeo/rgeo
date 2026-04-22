@@ -243,4 +243,17 @@ class SphericalCalculationsTest < Minitest::Test # :nodoc:
     # Since the projected point is outside the arc, it shoudl return the closer end of the arc
     assert_equal(closest_point, point1)
   end
+
+  def test_arc_contains_projected_point_with_floating_point_error
+    seattle = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(47.5, -122.2)
+    brussels = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(50.8, 4.35)
+    reykjavik = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(64.13, -21.83)
+
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(seattle, brussels)
+    projected_point = arc.project_point(reykjavik)
+
+    assert(arc.contains_point?(projected_point))
+    assert_in_delta(38_786.28, projected_point.dist_to_point(reykjavik) * RGeo::Geographic::SphericalMath::RADIUS,
+                    100.0)
+  end
 end

@@ -124,6 +124,10 @@ module RGeo
       # Represents a finite arc on the sphere.
 
       class ArcXYZ # :nodoc:
+        # Projections onto the great-circle plane can leave residuals around 1e-16,
+        # so containment checks need tolerance instead of exact plane equality.
+        PLANE_EPSILON = 1E-12
+
         attr_reader :s, :e
 
         def initialize(start, stop)
@@ -189,7 +193,10 @@ module RGeo
           my_axis = axis
           s_axis = ArcXYZ.new(@s, obj).axis
           e_axis = ArcXYZ.new(obj, @e).axis
-          !s_axis || !e_axis || obj * my_axis == 0 && s_axis * my_axis > 0 && e_axis * my_axis > 0
+          !s_axis || !e_axis ||
+            (obj * my_axis).abs <= PLANE_EPSILON &&
+            s_axis * my_axis > -PLANE_EPSILON &&
+            e_axis * my_axis > -PLANE_EPSILON
         end
 
         def intersects_arc?(obj)

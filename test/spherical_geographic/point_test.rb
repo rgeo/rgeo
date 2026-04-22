@@ -67,7 +67,7 @@ class SphericalPointTest < Minitest::Test # :nodoc:
   end
 
   def test_line_string_diagonal_arc
-    # https://jsfiddle.net/kLocyn6s/44/
+    # https://jsfiddle.net/sz29hr3w/3/
     seattle = @factory.point(-122.2, 47.5)
     brussels = @factory.point(4.35, 50.8)
     reykjavik = @factory.point(-21.83, 64.13)
