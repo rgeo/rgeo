@@ -195,8 +195,8 @@ module RGeo
           e_axis = ArcXYZ.new(obj, @e).axis
           !s_axis || !e_axis ||
             (obj * my_axis).abs <= PLANE_EPSILON &&
-            s_axis * my_axis > -PLANE_EPSILON &&
-            e_axis * my_axis > -PLANE_EPSILON
+            s_axis * my_axis > 0 &&
+            e_axis * my_axis > 0
         end
 
         def intersects_arc?(obj)
