@@ -161,7 +161,7 @@ module RGeo
           projection = project_point(obj)
 
           # Check if the projected point is within the bounds of the arc
-          if contains_point?(projection)
+          if contains_point?(projection, PLANE_EPSILON)
             projection
           else
             # If not within the arc, return the closer endpoint of the arc
@@ -172,6 +172,8 @@ module RGeo
         # returns PointXYZ
         def project_point(obj)
           # Project the point onto the plane of the great circle defined by the arc
+          # Floating-point error can leave the projected point about 1e-16 off the
+          # plane, so callers that test plane membership may need a small tolerance.
           point_to_plane_distance = obj * axis
           projection = PointXYZ.new(
             obj.x - point_to_plane_distance * axis.x,
@@ -189,12 +191,12 @@ module RGeo
           @axis
         end
 
-        def contains_point?(obj)
+        def contains_point?(obj, tolerance = 0)
           my_axis = axis
           s_axis = ArcXYZ.new(@s, obj).axis
           e_axis = ArcXYZ.new(obj, @e).axis
           !s_axis || !e_axis ||
-            (obj * my_axis).abs <= PLANE_EPSILON &&
+            (obj * my_axis).abs <= tolerance &&
             s_axis * my_axis > 0 &&
             e_axis * my_axis > 0
         end

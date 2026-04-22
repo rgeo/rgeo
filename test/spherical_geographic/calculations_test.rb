@@ -252,7 +252,8 @@ class SphericalCalculationsTest < Minitest::Test # :nodoc:
     arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(seattle, brussels)
     projected_point = arc.project_point(reykjavik)
 
-    assert(arc.contains_point?(projected_point))
+    refute(arc.contains_point?(projected_point))
+    assert(arc.contains_point?(projected_point, RGeo::Geographic::SphericalMath::ArcXYZ::PLANE_EPSILON))
     assert_in_delta(38_786.28, projected_point.dist_to_point(reykjavik) * RGeo::Geographic::SphericalMath::RADIUS,
                     100.0)
   end
