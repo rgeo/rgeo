@@ -245,16 +245,16 @@ class SphericalCalculationsTest < Minitest::Test # :nodoc:
   end
 
   def test_arc_contains_projected_point_with_floating_point_error
-    seattle = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(47.5, -122.2)
-    brussels = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(50.8, 4.35)
-    reykjavik = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(64.13, -21.83)
+    seattle = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(47.449, -122.309)
+    bern = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(46.9125, 7.4992)
+    reykjavik = RGeo::Geographic::SphericalMath::PointXYZ.from_latlon(64.13, -21.9406)
 
-    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(seattle, brussels)
+    arc = RGeo::Geographic::SphericalMath::ArcXYZ.new(seattle, bern)
     projected_point = arc.project_point(reykjavik)
 
     refute(arc.contains_point?(projected_point))
     assert(arc.contains_point?(projected_point, RGeo::Geographic::SphericalMath::ArcXYZ::PLANE_EPSILON))
-    assert_in_delta(38_786.28, projected_point.dist_to_point(reykjavik) * RGeo::Geographic::SphericalMath::RADIUS,
-                    100.0)
+    distance = projected_point.dist_to_point(reykjavik) * RGeo::Geographic::SphericalMath::RADIUS
+    assert_in_delta(3874, distance, 10.0)
   end
 end

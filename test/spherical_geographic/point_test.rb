@@ -67,15 +67,15 @@ class SphericalPointTest < Minitest::Test # :nodoc:
   end
 
   def test_line_string_diagonal_arc
-    # https://jsfiddle.net/sz29hr3w/3/
-    seattle = @factory.point(-122.2, 47.5)
-    brussels = @factory.point(4.35, 50.8)
-    reykjavik = @factory.point(-21.83, 64.13)
+    # https://jsfiddle.net/sz29hr3w/5/
+    seattle = @factory.point(-122.309, 47.449)
+    bern = @factory.point(7.4992, 46.9125)
+    reykjavik = @factory.point(-21.9406, 64.13)
 
-    seattle_brussels_arc = @factory.line_string([seattle, brussels])
-    distance = reykjavik.distance(seattle_brussels_arc)
-    # This isn't very precise, but it shows, that the arc is broadly near (50km) reykjavik:
-    assert_in_delta(50_000, distance, 50_000)
+    seattle_bern_arc = @factory.line_string([seattle, bern])
+    distance = reykjavik.distance(seattle_bern_arc)
+    # This isn't very precise, but it shows, that the arc is broadly near (5km) reykjavik:
+    assert_in_delta(5_000, distance, 5_000)
   end
 
   def test_floating_point_perturbation
