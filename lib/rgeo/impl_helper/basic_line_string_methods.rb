@@ -50,7 +50,7 @@ module RGeo
       def boundary
         array = []
         array << @points.first << @points.last if !empty? && !closed?
-        factory.multipoint([array])
+        factory.multi_point([array])
       end
 
       def start_point
