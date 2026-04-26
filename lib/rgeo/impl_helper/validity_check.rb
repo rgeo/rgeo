@@ -45,10 +45,6 @@ module RGeo
       }.tap { |h| h.default_proc = ->(_, key) { key.to_s } }.freeze
       private_constant :SYMBOL2NAME
 
-      GEOS_MAKE_VALID_LINEWORK = 0
-      GEOS_MAKE_VALID_STRUCTURE = 1
-      private_constant :GEOS_MAKE_VALID_LINEWORK, :GEOS_MAKE_VALID_STRUCTURE
-
       class << self
         # Note for contributors: this should be called after all methods
         # are loaded for a given feature classe. No worries though, this
@@ -78,12 +74,12 @@ module RGeo
               copy = "unsafe_#{SYMBOL2NAME[method_sym]}".to_sym
               alias_method copy, method_sym
               undef_method method_sym
-              define_method(method_sym) do |*args|
+              define_method(method_sym) do |*args, **kwargs|
                 check_validity!
                 args.each do |arg|
                   arg.check_validity! if RGeo::Feature::Geometry.check_type(arg)
                 end
-                method(copy).call(*args)
+                method(copy).call(*args, **kwargs)
               end
             end
           end
@@ -121,21 +117,13 @@ module RGeo
 
       # Try and make the geometry valid, this may change its shape.
       # Returns a valid copy of the geometry.
-      def make_valid(method: nil, keep_collapsed: nil)
-        unless respond_to?(:geometry_make_valid, true)
-          raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
+      def make_valid
+        if defined?(super) == "super"
+          raise Error::RGeoError, "ValidityCheck MUST be loaded before " \
+                                  "definition of #{self.class}##{__method__}."
         end
 
-        if method.nil? && keep_collapsed.nil?
-          # default behaviour for GEOSMakeValid_r:
-          # method=linework=0, keepCollapsed=1
-          geometry_make_valid(GEOS_MAKE_VALID_LINEWORK, 1)
-        else
-          geometry_make_valid(
-            method.to_s == "structure" ? GEOS_MAKE_VALID_STRUCTURE : GEOS_MAKE_VALID_LINEWORK,
-            keep_collapsed ? 1 : 0
-          )
-        end
+        raise Error::UnsupportedOperation, "Method #{self.class}##{__method__} not defined."
       end
 
       private

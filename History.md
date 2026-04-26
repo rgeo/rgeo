@@ -7,6 +7,7 @@
 **Minor Changes**
 
 * Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
+* Allow `make_valid` to accept `method:` (`:linework`/`:structure`) and `keep_collapsed:` keyword arguments on GEOS CAPI geometries, mirroring `GEOSMakeValidWithParams` (@balbesina) [#370](https://github.com/rgeo/rgeo/pull/370)
 
 **Bug Fixes**
 

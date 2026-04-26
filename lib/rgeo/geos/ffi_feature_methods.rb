@@ -145,8 +145,14 @@ module RGeo
       # (see RGeo::ImplHelper::ValidityCheck#make_valid)
       # Only available since GEOS 3.8+
       if ::Geos::FFIGeos.respond_to?(:GEOSMakeValid_r)
-        def make_valid(**kwargs)
-          @factory.wrap_fg_geom(@fg_geom.make_valid(**kwargs), nil)
+        def make_valid(method: nil, keep_collapsed: nil)
+          if Utils.make_valid_params(method:, keep_collapsed:)
+            raise Error::UnsupportedOperation,
+                  "`method:` and `keep_collapsed:` kwargs to make_valid are " \
+                  "not supported on the FFI GEOS implementation."
+          end
+
+          @factory.wrap_fg_geom(@fg_geom.make_valid, nil)
         rescue ::Geos::GEOSException
           raise Error::UnsupportedOperation
         end
