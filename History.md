@@ -1,17 +1,27 @@
 ### Unreleased
 
-**Breaking Changes**
-
-* Require ruby 3.1.4+ (@teeparham) #374
-
 **Minor Changes**
 
-* Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
 * Allow `make_valid` to accept `method:` (`:linework`/`:structure`) and `keep_collapsed:` keyword arguments on GEOS CAPI geometries, mirroring `GEOSMakeValidWithParams` (@balbesina) [#370](https://github.com/rgeo/rgeo/pull/370)
 
 **Bug Fixes**
 
+* Add a `:precision` option for `simple_factory` instances to reduce invalid self-intersection issues
+* Add a new tests to validate `simple_factory` polygons with non-integer vertices
+
+### 3.1.0 / 2025-01-20
+
+**Minor Changes**
+
+* Add support for Ruby 4.0
+* Require ruby 3.1.4+ (@teeparham) [#374](https://github.com/rgeo/rgeo/pull/374)
+* Add `simplify_polygon_hull` method to the CAPI factory (@oleksii-leonov) [#366](https://github.com/rgeo/rgeo/pull/366)
+* Optimize Ruby array operations (MultiLineString#length +26%, Polygon#rep_equals? +4%) [#389](https://github.com/rgeo/rgeo/pull/389)
+
+**Bug Fixes**
+
 * Fix `ProjectedWindow#eql?` method to compare rather than set y min and max [#383](https://github.com/rgeo/rgeo/pull/383)
+* Fix C compilation for Ruby 4.0 [#388](https://github.com/rgeo/rgeo/pull/388)
 
 ### 3.0.1 / 2023-11-15
 

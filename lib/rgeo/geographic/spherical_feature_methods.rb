@@ -139,7 +139,7 @@ module RGeo
       end
 
       def length
-        arcs.inject(0.0) { |sum, arc| sum + arc.length } * SphericalMath::RADIUS
+        arcs.sum(&:length) * SphericalMath::RADIUS
       end
 
       def intersects?(rhs)
@@ -209,7 +209,7 @@ module RGeo
 
     module SphericalMultiLineStringMethods # :nodoc:
       def length
-        inject(0.0) { |sum, geom| sum + geom.length }
+        sum(&:length)
       end
     end
 

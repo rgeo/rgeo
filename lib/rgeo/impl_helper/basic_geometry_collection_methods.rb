@@ -52,12 +52,13 @@ module RGeo
       end
 
       def empty?
-        @elements.size == 0
+        @elements.empty?
       end
 
       def rep_equals?(rhs)
         if rhs.is_a?(self.class) && rhs.factory.eql?(@factory) && @elements.size == rhs.num_geometries
-          rhs.each_with_index { |p, i| return false unless @elements[i].rep_equals?(p) }
+          rhs_elements = rhs.elements
+          @elements.size.times { |i| return false unless @elements[i].rep_equals?(rhs_elements[i]) }
         else
           false
         end
@@ -95,7 +96,7 @@ module RGeo
       end
 
       def length
-        @elements.inject(0.0) { |sum, obj| sum + obj.length }
+        @elements.sum(&:length)
       end
 
       def boundary
@@ -171,7 +172,7 @@ module RGeo
       end
 
       def area
-        @elements.inject(0.0) { |sum, obj| sum + obj.area }
+        @elements.sum(&:area)
       end
 
       def boundary

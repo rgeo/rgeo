@@ -81,6 +81,7 @@ module RGeo
 
         def test_validity_invalid_reason
           assert_nil(square_polygon.invalid_reason)
+          assert_nil(square_polygon_decimals.invalid_reason)
           assert_equal("Self-intersection", bowtie_polygon.invalid_reason)
         end
 
@@ -115,6 +116,20 @@ module RGeo
                 @factory.point(1, 1),
                 @factory.point(0, 1),
                 @factory.point(0, 0)
+              ]
+            )
+          )
+        end
+
+        def square_polygon_decimals
+          @square_polygon_decimals ||= @factory.polygon(
+            @factory.linear_ring(
+              [
+                @factory.point(-180.0, 90.0),
+                @factory.point(180.0, 90.0),
+                @factory.point(180.0, -85.044),
+                @factory.point(-180.0, -85.044),
+                @factory.point(-180.0, 90.0)
               ]
             )
           )

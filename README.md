@@ -36,7 +36,7 @@ Use the core **rgeo** gem to:
 
 RGeo works with the following Ruby implementations:
 
-*   MRI Ruby 2.6.0 or later.
+*   MRI Ruby 3.1.4 or later.
 *   Partial support for JRuby 9.0 or later. The FFI implementation of GEOS
     is available (ffi-geos gem required) but CAPI is not.
 *   See earlier versions for support for older ruby versions.

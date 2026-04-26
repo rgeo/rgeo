@@ -64,7 +64,8 @@ module RGeo
 
         return false unless proper_match
 
-        rhs.interior_rings.each_with_index { |r, i| return false unless @interior_rings[i].rep_equals?(r) }
+        rhs_rings = rhs.interior_rings
+        @interior_rings.size.times { |i| return false unless @interior_rings[i].rep_equals?(rhs_rings[i]) }
       end
 
       def hash

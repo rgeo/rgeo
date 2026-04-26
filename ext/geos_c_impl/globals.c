@@ -56,8 +56,7 @@ notice_handler(const char* fmt, ...)
 #endif
 }
 
-static void
-error_handler(const char* fmt, ...)
+NORETURN(static void error_handler(const char* fmt, ...))
 {
   // See https://en.cppreference.com/w/c/io/vfprintf
   va_list args1;
