@@ -9,7 +9,29 @@
 module RGeo
   module Geos
     module Utils # :nodoc:
+      MAKE_VALID_LINEWORK = 0
+      MAKE_VALID_STRUCTURE = 1
+      MAKE_VALID_METHODS = {
+        nil => MAKE_VALID_LINEWORK,
+        :linework => MAKE_VALID_LINEWORK,
+        :structure => MAKE_VALID_STRUCTURE,
+        "linework" => MAKE_VALID_LINEWORK,
+        "structure" => MAKE_VALID_STRUCTURE
+      }.freeze
+      private_constant :MAKE_VALID_LINEWORK, :MAKE_VALID_STRUCTURE, :MAKE_VALID_METHODS
+
       class << self
+        def make_valid_params(method:, keep_collapsed:)
+          return nil if method.nil? && keep_collapsed.nil?
+
+          method_int = MAKE_VALID_METHODS.fetch(method) do
+            raise ArgumentError,
+                  "Invalid `method:` value #{method.inspect}; " \
+                  "expected :linework or :structure."
+          end
+          [method_int, keep_collapsed ? 1 : 0]
+        end
+
         def ffi_coord_seqs_equal?(cs1, cs2, check_z)
           len1 = cs1.length
           len2 = cs2.length

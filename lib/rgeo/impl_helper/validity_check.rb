@@ -74,12 +74,12 @@ module RGeo
               copy = "unsafe_#{SYMBOL2NAME[method_sym]}".to_sym
               alias_method copy, method_sym
               undef_method method_sym
-              define_method(method_sym) do |*args|
+              define_method(method_sym) do |*args, **kwargs|
                 check_validity!
                 args.each do |arg|
                   arg.check_validity! if RGeo::Feature::Geometry.check_type(arg)
                 end
-                method(copy).call(*args)
+                method(copy).call(*args, **kwargs)
               end
             end
           end

@@ -1,5 +1,9 @@
 ### Unreleased
 
+**Minor Changes**
+
+* Allow `make_valid` to accept `method:` (`:linework`/`:structure`) and `keep_collapsed:` keyword arguments on GEOS CAPI geometries, mirroring `GEOSMakeValidWithParams` (@balbesina) [#370](https://github.com/rgeo/rgeo/pull/370)
+
 **Bug Fixes**
 
 * Add a `:precision` option for `simple_factory` instances to reduce invalid self-intersection issues

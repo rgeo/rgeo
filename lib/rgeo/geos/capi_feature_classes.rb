@@ -69,6 +69,12 @@ module RGeo
         str
       end
       alias to_s as_text
+
+      # (see RGeo::ImplHelper::ValidityCheck#make_valid)
+      def make_valid(method: nil, keep_collapsed: nil)
+        params = Utils.make_valid_params(method:, keep_collapsed:) || [0, 1]
+        geometry_make_valid(*params)
+      end
     end
 
     module CAPIGeometryCollectionMethods # :nodoc:
