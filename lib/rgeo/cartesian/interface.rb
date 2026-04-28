@@ -71,10 +71,12 @@ module RGeo
       #   CoordSys::CS::CoordinateSystem implementation used to instansiate
       #   a coord_sys based on the :srid given.
       # [<tt>:precision</tt>]
-      #   Set the rounding precision for new points created by this factory. This
-      #   will help eliminate precision-related issues that occasionally cause
-      #   falsely-reported segment intersections.
-      #   Default is 5.
+      #   Set the rounding precision for new points created by this factory.
+      #   When set, coordinates are rounded to the given number of decimal
+      #   places on point creation. When not set (the default), coordinates
+      #   are stored without modification.
+      #   Note: segment intersection calculations already handle floating-point
+      #   precision issues internally, so this option is typically not needed.
       # [<tt>:has_z_coordinate</tt>]
       #   Support a Z coordinate. Default is false.
       # [<tt>:has_m_coordinate</tt>]
