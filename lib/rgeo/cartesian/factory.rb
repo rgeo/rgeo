@@ -38,7 +38,7 @@ module RGeo
         @coord_sys = coord_sys_info[:coord_sys]
         @srid = coord_sys_info[:srid]
 
-        @precision = opts[:precision] || 5
+        @precision = opts[:precision]
 
         @buffer_resolution = opts[:buffer_resolution].to_i
         @buffer_resolution = 1 if @buffer_resolution < 1
@@ -188,7 +188,11 @@ module RGeo
       # See RGeo::Feature::Factory#point
 
       def point(x, y, *extra)
-        PointImpl.new(self, x.round(@precision), y.round(@precision), *extra)
+        if @precision
+          PointImpl.new(self, x.round(@precision), y.round(@precision), *extra)
+        else
+          PointImpl.new(self, x, y, *extra)
+        end
       end
 
       # See RGeo::Feature::Factory#line_string

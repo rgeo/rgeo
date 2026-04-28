@@ -117,6 +117,16 @@ module RGeo
 
           return nil if cross1 < 0.0 || cross1 > 1.0
           if cross2 >= 0.0 && cross2 <= 1.0
+            # When the intersection is exactly at a segment endpoint (cross
+            # parameter is exactly 0 or 1), return the endpoint object directly.
+            # This avoids floating-point rounding errors that occur when
+            # recomputing the coordinates via @sx + cross * @dx, which can
+            # produce a point very slightly off from the true endpoint.
+            return @s if cross1 == 0.0
+            return @e if cross1 == 1.0
+            return seg.s if cross2 == 0.0
+            return seg.e if cross2 == 1.0
+
             x = @sx + (cross1 * @dx)
             y = @sy + (cross1 * @dy)
 

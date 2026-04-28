@@ -110,4 +110,22 @@ class SweeplineIntersectorTest < Minitest::Test
     intersections = hourglass_li.proper_intersections
     assert_equal(@factory.point(0.5, 0.5), intersections.first.point)
   end
+
+  # Regression test: floating-point coordinates that produce cross parameters
+  # exactly at 0.0 or 1.0 should not generate false self-intersections.
+  # The value 90.0 - (-85.044) = 175.04399999999998 (not exactly 175.044),
+  # causing @sy + 1.0 * @dy to give 89.99999999999999 instead of 90.0.
+  def test_sweepline_proper_intersections_float_coordinates
+    pts = [
+      @factory.point(-180.0, 90.0),
+      @factory.point(180.0, 90.0),
+      @factory.point(180.0, -85.044),
+      @factory.point(-180.0, -85.044),
+      @factory.point(-180.0, 90.0)
+    ]
+    ring = @factory.line_string(pts)
+
+    li = RGeo::Cartesian::SweeplineIntersector.new(ring.segments)
+    assert_equal(0, li.proper_intersections.size)
+  end
 end
