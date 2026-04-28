@@ -1131,31 +1131,56 @@ method_geometry_invalid_reason_location(VALUE self)
   return result;
 }
 
+typedef struct {
+  const GEOSGeometry* self_geom;
+  GEOSMakeValidParams* params;
+  GEOSGeometry* valid_geom;
+} make_valid_ctx;
+
+static VALUE
+make_valid_perform(VALUE arg)
+{
+  make_valid_ctx* ctx = (make_valid_ctx*)arg;
+  ctx->valid_geom = GEOSMakeValidWithParams(ctx->self_geom, ctx->params);
+  return Qnil;
+}
+
+static VALUE
+make_valid_cleanup(VALUE arg)
+{
+  GEOSMakeValidParams_destroy(((make_valid_ctx*)arg)->params);
+  return Qnil;
+}
+
 static VALUE
 method_geometry_make_valid(VALUE self, VALUE method, VALUE keepCollapsed)
 {
   RGeo_GeometryData* self_data;
-  const GEOSGeometry* self_geom;
-  GEOSGeometry* valid_geom;
+  make_valid_ctx ctx;
+  int method_int;
+  int keep_collapsed_int;
+
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
-  self_geom = self_data->geom;
-  if (!self_geom)
+  ctx.self_geom = self_data->geom;
+  if (!ctx.self_geom)
     return Qnil;
 
-  GEOSMakeValidParams* params = GEOSMakeValidParams_create();
-  GEOSMakeValidParams_setMethod(params, RB_NUM2INT(method));
-  GEOSMakeValidParams_setKeepCollapsed(params, RB_NUM2INT(keepCollapsed));
+  method_int = RB_NUM2INT(method);
+  keep_collapsed_int = RB_NUM2INT(keepCollapsed);
 
-  // According to GEOS implementation, MakeValid always returns.
-  valid_geom = GEOSMakeValidWithParams(self_geom, params);
-  GEOSMakeValidParams_destroy(params);
+  ctx.params = GEOSMakeValidParams_create();
+  GEOSMakeValidParams_setMethod(ctx.params, method_int);
+  GEOSMakeValidParams_setKeepCollapsed(ctx.params, keep_collapsed_int);
+  ctx.valid_geom = NULL;
 
-  if (!valid_geom) {
+  rb_ensure(make_valid_perform, (VALUE)&ctx, make_valid_cleanup, (VALUE)&ctx);
+
+  if (!ctx.valid_geom) {
     rb_raise(rb_eRGeoInvalidGeometry,
              "%" PRIsVALUE,
              method_geometry_invalid_reason(self));
   }
-  return rgeo_wrap_geos_geometry(self_data->factory, valid_geom, Qnil);
+  return rgeo_wrap_geos_geometry(self_data->factory, ctx.valid_geom, Qnil);
 }
 
 static VALUE
