@@ -1131,7 +1131,8 @@ method_geometry_invalid_reason_location(VALUE self)
   return result;
 }
 
-typedef struct {
+typedef struct
+{
   const GEOSGeometry* self_geom;
   GEOSMakeValidParams* params;
   GEOSGeometry* valid_geom;
