@@ -121,16 +121,17 @@ method_polygon_coordinates(VALUE self)
   VALUE result = Qnil;
   RGeo_GeometryData* self_data;
   const GEOSGeometry* self_geom;
-
-  int zCoordinate;
+  int flags;
+  int has_z, has_m;
 
   self_data = RGEO_GEOMETRY_DATA_PTR(self);
   self_geom = self_data->geom;
 
   if (self_geom) {
-    zCoordinate = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags &
-                  RGEO_FACTORYFLAGS_SUPPORTS_Z_OR_M;
-    result = extract_points_from_polygon(self_geom, zCoordinate);
+    flags = RGEO_FACTORY_DATA_PTR(self_data->factory)->flags;
+    has_z = (flags & RGEO_FACTORYFLAGS_SUPPORTS_Z) ? 1 : 0;
+    has_m = (flags & RGEO_FACTORYFLAGS_SUPPORTS_M) ? 1 : 0;
+    result = extract_points_from_polygon(self_geom, has_z, has_m);
   }
   return result;
 }
@@ -231,7 +232,6 @@ method_polygon_interior_rings(VALUE self)
   return result;
 }
 
-#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
 static VALUE
 method_polygon_simplify_polygon_hull(VALUE self,
                                      VALUE vertex_fraction,
@@ -257,7 +257,6 @@ method_polygon_simplify_polygon_hull(VALUE self,
   }
   return result;
 }
-#endif
 
 static VALUE
 cmethod_create(VALUE module,
@@ -364,12 +363,10 @@ rgeo_init_geos_polygon()
   rb_define_method(
     geos_polygon_methods, "coordinates", method_polygon_coordinates, 0);
 
-#ifdef RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
   rb_define_method(geos_polygon_methods,
                    "simplify_polygon_hull",
                    method_polygon_simplify_polygon_hull,
                    2);
-#endif
 }
 
 st_index_t

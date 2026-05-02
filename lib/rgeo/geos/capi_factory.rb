@@ -239,9 +239,28 @@ module RGeo
       # See RGeo::Feature::Factory#point
 
       def point(x, y, *extra)
-        raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > (supports_z_or_m? ? 1 : 0)
-
-        CAPIPointImpl.create(self, x, y, extra[0].to_f)
+        if supports_z? && supports_m?
+          # 4D factory: point(x, y, z, m)
+          raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > 2
+          z = extra[0].to_f
+          m = extra[1].to_f
+        elsif supports_z?
+          # 3D Z factory: point(x, y, z)
+          raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > 1
+          z = extra[0].to_f
+          m = 0.0
+        elsif supports_m?
+          # 3D M factory: point(x, y, m)
+          raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > 1
+          z = 0.0
+          m = extra[0].to_f
+        else
+          # 2D factory
+          raise(RGeo::Error::InvalidGeometry, "Parse error") if extra.length > 0
+          z = 0.0
+          m = 0.0
+        end
+        CAPIPointImpl.create(self, x, y, z, m)
       end
 
       # See RGeo::Feature::Factory#line_string
@@ -366,6 +385,16 @@ module RGeo
       }.freeze
 
       # :startdoc:
+    end
+
+    # Reopen Analysis to add deprecated method
+    module Analysis
+      class << self
+        def ccw_supported?
+          warn "RGeo::Geos::Analysis.ccw_supported? is deprecated. GEOS 3.14+ is now required.", uplevel: 1
+          true
+        end
+      end
     end
   end
 end

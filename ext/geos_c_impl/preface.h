@@ -1,34 +1,37 @@
 /*
   Preface header for GEOS wrapper
+
+  Requires GEOS 3.14.0 or later (for M-coordinate support via GEOSCoordSeq_setM)
 */
 
-#ifdef HAVE_GEOS_C_H
-#ifdef HAVE_GEOSSETSRID_R
+// Minimum GEOS 3.14+ (native M-coordinate support)
+#ifdef HAVE_GEOSCOORDSEQ_SETM
 #define RGEO_GEOS_SUPPORTED
 #endif
+
+// Optional GEOS 3.14+ features that may not be in all builds
+#ifdef HAVE_GEOSCLUSTERDBSCAN
+#define RGEO_GEOS_CLUSTERING
 #endif
 
-#ifdef HAVE_GEOSPREPAREDCONTAINS_R
-#define RGEO_GEOS_SUPPORTS_PREPARED1
+#ifdef HAVE_GEOSLINESUBSTRING
+#define RGEO_GEOS_LINE_SUBSTRING
 #endif
-#ifdef HAVE_GEOSPREPAREDDISJOINT_R
-#define RGEO_GEOS_SUPPORTS_PREPARED2
+
+#ifdef HAVE_GEOSCOVERAGEISVALID
+#define RGEO_GEOS_COVERAGE
 #endif
-#ifdef HAVE_GEOSWKTWWRITER_SETOUTPUTDIMENSION_R
-#define RGEO_GEOS_SUPPORTS_SETOUTPUTDIMENSION
+
+#ifdef HAVE_GEOSSISSIMPLEDETAIL
+#define RGEO_GEOS_SIMPLE_DETAIL
 #endif
-#ifdef HAVE_GEOSUNARYUNION_R
-#define RGEO_GEOS_SUPPORTS_UNARYUNION
+
+// Legacy alias - all above features when available
+#if defined(RGEO_GEOS_CLUSTERING) && defined(RGEO_GEOS_COVERAGE) &&            \
+  defined(RGEO_GEOS_SIMPLE_DETAIL)
+#define RGEO_GEOS_314
 #endif
-#ifdef HAVE_GEOSCOORDSEQ_ISCCW_R
-#define RGEO_GEOS_SUPPORTS_ISCCW
-#endif
-#ifdef HAVE_GEOSDENSIFY
-#define RGEO_GEOS_SUPPORTS_DENSIFY
-#endif
-#ifdef HAVE_GEOSPOLYGONHULLSIMPLIFY
-#define RGEO_GEOS_SUPPORTS_POLYGON_HULL_SIMPLIFY
-#endif
+
 #ifdef HAVE_RB_GC_MARK_MOVABLE
 #define mark rb_gc_mark_movable
 #else

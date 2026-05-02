@@ -17,10 +17,11 @@ void
 rgeo_init_geos_point();
 
 /*
-  Creates a 3d point and returns the ruby object.
+  Creates a point and returns the ruby object.
+  Supports 2D, 3D (XYZ), 3D (XYM), or 4D (XYZM) based on factory flags.
 */
 VALUE
-rgeo_create_geos_point(VALUE factory, double x, double y, double z);
+rgeo_create_geos_point(VALUE factory, double x, double y, double z, double m);
 
 RGEO_END_C
 

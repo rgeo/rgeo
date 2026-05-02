@@ -53,7 +53,7 @@ jobs:
       - name: Install Geos (Linux)
         if: matrix.os == 'ubuntu'
         run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-add-repository ppa:bleedingedge/noble-bleed
           sudo apt-get install -yqq libgeos-dev
       - name: Install Geos (Mac)
         if: matrix.os == 'macos'
@@ -78,7 +78,7 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: |
-          sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+          sudo apt-add-repository ppa:bleedingedge/noble-bleed
           sudo apt-get install -yqq libgeos-dev valgrind
       - name: Test & Memcheck
         run: bundle exec rake test:valgrind
