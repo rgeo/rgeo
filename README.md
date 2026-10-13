@@ -73,6 +73,55 @@ If you are using proj.4 extensions, include
 gem "rgeo-proj4"
 ```
 
+### Dynamic spatial indexing
+
+`RGeo::Cartesian::RTree` is an in-memory, two-dimensional R-tree implemented
+in Ruby. It uses least-enlargement insertion and quadratic node splits, and
+allows new entries between queries without rebuilding the index:
+
+```ruby
+factory = RGeo::Geos.factory(native_interface: :capi)
+tree = RGeo::Cartesian::RTree.new
+tree.insert(factory.point(1, 2), :feature_a)
+tree.query(factory.point(1, 2)) # => [:feature_a]
+tree.insert(factory.point(10, 20), :feature_b)
+tree.query(factory.point(10, 20)) # => [:feature_b]
+```
+
+The tree works with simple Cartesian and GEOS CAPI/FFI factories, without
+requiring a native indexing dependency. The first successful insertion infers
+the Cartesian factory; subsequent inputs must use that same factory object.
+Queries on an empty tree do not bind a factory. No conversion or reprojection
+is performed. Empty geometry insertion is rejected; empty queries return an
+empty array, including collections containing only empty components. Z and M
+are ignored. `max_entries:` controls node capacity (an integer of at least 4,
+default 16); `size` includes duplicate entries.
+
+Results are unordered items whose bounding boxes intersect the query envelope,
+not exact geometry intersections or similarity matches. Compare candidates
+separately, and expand the query geometry when a positional tolerance is needed.
+The tree snapshots each bounding box and retains its original geometry and
+associated item. It supports insertion and spatial queries, not removal or
+nearest-neighbor search. Freezing prevents insertion but permits queries;
+duplication is not supported. Concurrent mutation requires external synchronization.
+
+To recover the geometries with their labels, use `query_intersections`:
+
+```ruby
+point = factory.point(1, 2)
+tree = RGeo::Cartesian::RTree.new
+tree.insert(point, :feature_a)
+tree.query_intersections(factory.point(1, 2)) # => { feature_a: point }
+```
+
+This method prunes bounding-box candidates and checks `intersects?`, returning
+the original indexed geometries, not clipped intersection geometries. It
+requires a backend supporting the exact predicate, such as GEOS CAPI/FFI.
+Empty results return `{}`. Items are used as Hash keys (labels): distinct
+matching geometries with equal labels raise `ArgumentError` rather than lose
+a result. Repeated entries for the same label and geometry collapse into one
+mapping. Keep labels stable while indexed.
+
 ### Upgrading to Version 3.0
 
 See [doc/Upgrading-to-v3.md](doc/Upgrading-to-v3.md) for a checklist of changes to make before upgrading to RGeo 3.0.

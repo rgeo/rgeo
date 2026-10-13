@@ -1,7 +1,12 @@
 ### Unreleased
 
+**Minor Changes**
+
+* Add `RGeo::Cartesian::RTree`, a dynamic two-dimensional index with factory inference, quadratic splits, candidate item queries, and exact label-to-geometry intersection queries.
+
 **Bug Fixes**
 
+* Fix R-tree queries for collections containing only empty geometry components.
 * Add a `:precision` option for `simple_factory` instances to reduce invalid self-intersection issues
 * Add a new tests to validate `simple_factory` polygons with non-integer vertices
 
